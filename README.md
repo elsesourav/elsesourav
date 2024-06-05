@@ -1,3 +1,4 @@
+![Example 1](https://raw.githubusercontent.com/leviarista/github-profile-header-generator/main/social/examples/example-1.png)
 <h1 align="center">Hi 👋, I'm Sourav Barui</h1>
 <h3 align="center">A passionate frontend developer from India</h3>
 <img align="right" alt="Coding" width="400" src="https://github.com/elsesourav/elsesourav/blob/main/bg1.gif?raw=true">
