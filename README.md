@@ -4,16 +4,6 @@
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=elsesourav&label=Profile%20views&color=0e75b6&style=flat" alt="sourav barui" /> </p>
 <p align="left"> <a href="https://twitter.com/elsesourav" target="blank"><img src="https://img.shields.io/twitter/follow/elsesourav?logo=twitter&style=for-the-badge" alt="sourav barui"  </p>
 
-- 🔭 I’m currently working on **Vexa Web App**
-
-- 🌱 I’m currently learning **DevOps**
-
-- 💬 Ask me about **Android , MEARN**
-
-- 📫 How to reach me **rishavchanda0@gmail.com**
-
-- ⚡ Fun fact **I am Funny**
-- 
 - 🌱 I’m currently learning **WASM, Next.js**
 
 - 📫 How to reach me **elsesourav@gamil.com**
