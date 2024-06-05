@@ -1,5 +1,5 @@
 ![Example 1](https://github.com/elsesourav/elsesourav/blob/main/bg.png)
-<h1 align="center">Hi 👋, I'm Sourav Barui</h1>
+<h1 align="center">Hello 👋, I'm Sourav Barui</h1>
 <h3 align="center">A passionate full stack developer from India</h3>
 <img align="right" alt="Coding" width="400" src="https://github.com/elsesourav/elsesourav/blob/main/bg1.gif?raw=true">
 
