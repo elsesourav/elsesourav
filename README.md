@@ -3,8 +3,6 @@
 
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=elsesourav&label=Profile%20views&color=0e75b6&style=flat" alt="elsesourav" /> </p>
 
-<p align="left"> <a href="https://github.com/ryo-ma/github-profile-trophy"><img src="https://github-profile-trophy.vercel.app/?username=elsesourav" alt="elsesourav" /></a> </p>
-
 - 🌱 I’m currently learning **WASM, Next.js**
 
 - 📫 How to reach me **elsesourav@gamil.com**
