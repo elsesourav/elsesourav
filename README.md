@@ -1,5 +1,6 @@
 <h1 align="center">Hi 👋, I'm Sourav Barui</h1>
 <h3 align="center">A passionate frontend developer from India</h3>
+<img align="right" alt="Coding" width="400" src="https://github.com/elsesourav/elsesourav/blob/main/bg1.gif?raw=true">
 
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=elsesourav&label=Profile%20views&color=0e75b6&style=flat" alt="sourav barui" /> </p>
 <p align="left"> <a href="https://twitter.com/elsesourav" target="blank"><img src="https://img.shields.io/twitter/follow/elsesourav?logo=twitter&style=for-the-badge" alt="sourav barui"  </p>
