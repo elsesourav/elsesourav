@@ -7,7 +7,7 @@
    <p>
       <img align="right" alt="Coding" width="400" src="https://github.com/elsesourav/elsesourav/blob/main/bg1.gif?raw=true">
    </p>
-
+   <br />
    <p>
       <img src="https://komarev.com/ghpvc/?username=elsesourav&label=Profile%20views&color=0e75b6&style=flat" alt="sourav barui" /><br/><br />
       <a href="https://x.com/elsesourav" target="blank">
