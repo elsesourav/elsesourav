@@ -101,11 +101,11 @@
 <br />
 
 <p align="center">
-<img src="https://github-readme-stats.vercel.app/api/top-langs?username=elsesourav&show_icons=true&locale=en&layout=compact" alt="elsesourav" height="200"/>
+<img src="https://github-readme-stats.vercel.app/api/top-langs?username=elsesourav&show_icons=true&locale=en&layout=compact" alt="elsesourav" height="100"/>
 &nbsp;&nbsp;&nbsp;&nbsp;
-<img src="https://github-readme-stats.vercel.app/api?username=elsesourav&show_icons=true&locale=en" alt="elsesourav" height="200"/>
+<img src="https://github-readme-stats.vercel.app/api?username=elsesourav&show_icons=true&locale=en" alt="elsesourav" height="100"/>
 &nbsp;&nbsp;&nbsp;&nbsp;
-<img  src="https://github-readme-streak-stats.herokuapp.com/?user=elsesourav&" alt="elsesourav" height="200"/>
+<img  src="https://github-readme-streak-stats.herokuapp.com/?user=elsesourav&" alt="elsesourav" height="100"/>
 </p>
 <br />
 
@@ -116,11 +116,13 @@
 ##### SCREENSHOTS
 ![image](./BreakoutBallGame.png)
 <br />
+<br />
 
 ## [**`User Manager`**](https://elsesourav.github.io/user-manager/)
 - The User Manager app is user friendly. Aims to simplify the management of users and groups. It provides a way to add delete users create groups and organize them effortlessly using drag and drop features. Open WhatsApp in Particular User, Run on both web and Android platforms. Best for **Network Marketing.** [Github Repo](https://github.com/elsesourav/user-manager/)
 ##### SCREENSHOTS
 ![image](./UserManager.png)
+<br />
 <br />
 
 ## [**`Neural Network Number Recognition`**](https://elsesourav.github.io/nn-number-rec/)
