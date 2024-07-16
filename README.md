@@ -2,10 +2,11 @@
 
 <h1 align="center"> Hello 👋, I'm Sourav Barui</h1>
 <h3 align="center">A passionate full stack developer from India</h3>
+<br />
 <img align="right" alt="Coding" width="400" src="https://github.com/elsesourav/elsesourav/blob/main/bg1.gif?raw=true">
 <br />
 <p align="left"><img src="https://komarev.com/ghpvc/?username=elsesourav&label=Profile%20views&color=0e75b6&style=flat" alt="sourav barui" /></p>
-<p align="left"> <a href="https://twitter.com/elsesourav" target="blank"><img src="https://img.shields.io/twitter/follow/elsesourav?logo=twitter&style=for-the-badge" alt="sourav barui"></p>
+<p align="left"><a href="https://x.com/elsesourav" target="blank"><img src="https://img.shields.io/twitter/follow/elsesourav?logo=x&style=for-the-badge" alt="sourav barui"></p>
 
 🌱 I’m currently learning **WASM, Next.js**
 
@@ -28,7 +29,6 @@
 </p>
 <br />
 <h3 align="left">Languages and Tools:</h3>
-<br />
 <p align="center">
    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noreferrer"> 
       <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="50" height="34"/> 
