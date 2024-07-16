@@ -8,12 +8,12 @@
       <img align="right" alt="Coding" width="400" src="https://github.com/elsesourav/elsesourav/blob/main/bg1.gif?raw=true">
    </p>
    <br />
+
    <p>
-      <img src="https://komarev.com/ghpvc/?username=elsesourav&label=Profile%20views&color=0e75b6&style=flat" alt="sourav barui" /><br/><br />
-      <a href="https://x.com/elsesourav" target="blank">
-         <img src="https://img.shields.io/twitter/follow/elsesourav?logo=x&style=for-the-badge" alt="sourav barui">
-      </a>
-   </p>
+   <img src="https://komarev.com/ghpvc/?username=elsesourav&label=Profile%20views&color=0e75b6&style=flat" alt="sourav barui" /><br/><br />
+   <a href="https://x.com/elsesourav" target="blank">
+      <img src="https://img.shields.io/twitter/follow/elsesourav?logo=x&style=for-the-badge" alt="sourav barui">
+   </a>
 
    🌱 I’m currently learning **WASM, Next.js**
 
@@ -22,18 +22,18 @@
    ### Connect with me:
    <p align="center">
       <a href="https://twitter.com/elsesourav" target="blank">
-            <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/twitter.svg" alt="elsesourav" height="30" width="50"/>
-         </a>
-         <a href="https://linkedin.com/in/elsesourav" target="blank">
-            <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="elsesourav" height="30" width="50"/>
-         </a>
-         <a href="https://fb.com/elsesourav" target="blank">
-            <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/facebook.svg" alt="elsesourav" height="30" width="50"/>
-         </a>
-         <a href="https://instagram.com/elsesourav" target="blank">
-            <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg" alt="elsesourav" height="30" width="50"/>
-         </a>
-      </p>
+         <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/twitter.svg" alt="elsesourav" height="30" width="50"/>
+      </a>
+      <a href="https://linkedin.com/in/elsesourav" target="blank">
+         <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="elsesourav" height="30" width="50"/>
+      </a>
+      <a href="https://fb.com/elsesourav" target="blank">
+         <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/facebook.svg" alt="elsesourav" height="30" width="50"/>
+      </a>
+      <a href="https://instagram.com/elsesourav" target="blank">
+         <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg" alt="elsesourav" height="30" width="50"/>
+      </a>
+   </p>
    </p>
 </p>
 <br />
