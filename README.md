@@ -4,13 +4,13 @@
 <h3 align="center">A passionate full stack developer from India</h3>
 
    <br />
-<span align="center">
-   <p>
+<p align="center">
+   <div>
       <img align="right" alt="Coding" width="400" src="https://github.com/elsesourav/elsesourav/blob/main/bg1.gif?raw=true">
-   </p>
+   </div>
    <br />
 
-   <span align="left">
+   <div align="left">
    <img src="https://komarev.com/ghpvc/?username=elsesourav&label=Profile%20views&color=0e75b6&style=flat" alt="sourav barui" />
    <br />
    <br />
@@ -25,7 +25,7 @@
    📫 How to reach me **elsesourav@gamil.com**
 
    ### Connect with me:
-   <p align="center">
+   <div align="center">
       <a href="https://twitter.com/elsesourav" target="blank">
          <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/twitter.svg" alt="elsesourav" height="30" width="50"/>
       </a>
@@ -38,9 +38,9 @@
       <a href="https://instagram.com/elsesourav" target="blank">
          <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg" alt="elsesourav" height="30" width="50"/>
       </a>
-   </p>
-   </span>
-</span>
+   </div>
+   </div>
+</p>
 <br />
 
 ### Languages and Tools:
