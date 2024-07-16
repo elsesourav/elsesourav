@@ -4,44 +4,38 @@
 <h3 align="center">A passionate full stack developer from India</h3>
 
 <br />
-<p align="center" style="display:grid;grid-template-columns: 1fr 1fr;">
-   <section align="left">
-   <img src="https://komarev.com/ghpvc/?username=elsesourav&label=Profile%20views&color=0e75b6&style=flat" alt="sourav barui" />
-   <br />
-   <br />
-   
-   <a href="https://x.com/elsesourav" target="blank">
-      <img align="center" src="https://img.shields.io/twitter/follow/elsesourav?logo=x&style=for-the-badge" alt="sourav barui">
-   </a>
-   <br />
-   <br />
-
-   🌱 I’m currently learning **WASM, Next.js**
-
-   📫 How to reach me **elsesourav@gamil.com**
-
-   ### Connect with me:
-   <div align="center">
-      <a href="https://twitter.com/elsesourav" target="blank">
-         <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/twitter.svg" alt="elsesourav" height="30" width="50"/>
-      </a>
-      <a href="https://linkedin.com/in/elsesourav" target="blank">
-         <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="elsesourav" height="30" width="50"/>
-      </a>
-      <a href="https://fb.com/elsesourav" target="blank">
-         <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/facebook.svg" alt="elsesourav" height="30" width="50"/>
-      </a>
-      <a href="https://instagram.com/elsesourav" target="blank">
-         <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg" alt="elsesourav" height="30" width="50"/>
-      </a>
+<div style="display: flex; justify-content: space-between;">
+   <div align="left">
+      <br />
+      <img height="22" src="https://komarev.com/ghpvc/?username=elsesourav&label=Profile%20views&color=0e75b6&style=flat" alt="sourav barui" />
+      <br /><br />
+      <a href="https://x.com/elsesourav" target="blank">
+         <img align="center" height="22" src="https://img.shields.io/twitter/follow/elsesourav?logo=x&style=for-the-badge" alt="sourav barui">
+      </a><br /><br />
+      🌱 I’m currently learning <b>WASM, Next.js</b>
+      <br /><br />
+      📫 How to reach me <b>elsesourav@gamil.com</b>
+      <h3>Connect with me:</h3>
+      <p align="center">
+         <a href="https://twitter.com/elsesourav" target="blank">
+            <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/twitter.svg" alt="elsesourav" height="30" width="50"/>
+         </a>
+         <a href="https://linkedin.com/in/elsesourav" target="blank">
+            <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="elsesourav" height="30" width="50"/>
+         </a>
+         <a href="https://fb.com/elsesourav" target="blank">
+            <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/facebook.svg" alt="elsesourav" height="30" width="50"/>
+         </a>
+         <a href="https://instagram.com/elsesourav" target="blank">
+            <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg" alt="elsesourav" height="30" width="50"/>
+         </a>
+      </p>
    </div>
-   </section>
-   <div>
-      <img alt="Coding" width="400" src="https://github.com/elsesourav/elsesourav/blob/main/bg1.gif?raw=true">
+   <div align="right">
+      <img alt="Coding"  width="80%" src="https://github.com/elsesourav/elsesourav/blob/main/bg1.gif?raw=true">
    </div>
-   <br />
-   
-</p>
+</div>
+
 <br />
 
 ### Languages and Tools:
