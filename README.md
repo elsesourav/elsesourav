@@ -4,7 +4,10 @@
 <h3 align="center">A passionate full stack developer from India</h3>
 
 <br />
-<div style="display: flex; justify-content: space-between;">
+<div>
+   <div align="right">
+      <img alt="Coding" src="https://github.com/elsesourav/elsesourav/blob/main/bg1.gif?raw=true">
+   </div>
    <div align="left">
       <br />
       <img height="22" src="https://komarev.com/ghpvc/?username=elsesourav&label=Profile%20views&color=0e75b6&style=flat" alt="sourav barui" />
@@ -30,9 +33,6 @@
             <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg" alt="elsesourav" height="30" width="50"/>
          </a>
       </span>
-   </div>
-   <div align="center">
-      <img alt="Coding"  width="40%" src="https://github.com/elsesourav/elsesourav/blob/main/bg1.gif?raw=true">
    </div>
 </div>
 
