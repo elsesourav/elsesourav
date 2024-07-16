@@ -3,8 +3,8 @@
 <h1 align="center"> Hello 👋, I'm Sourav Barui</h1>
 <h3 align="center">A passionate full stack developer from India</h3>
 <img align="right" alt="Coding" width="400" src="https://github.com/elsesourav/elsesourav/blob/main/bg1.gif?raw=true">
-
-<p align="left"> <img src="https://komarev.com/ghpvc/?username=elsesourav&label=Profile%20views&color=0e75b6&style=flat" alt="sourav barui" /> </p>
+&nbsp;
+<p align="left"><img src="https://komarev.com/ghpvc/?username=elsesourav&label=Profile%20views&color=0e75b6&style=flat" alt="sourav barui" /></p>
 <p align="left"> <a href="https://twitter.com/elsesourav" target="blank"><img src="https://img.shields.io/twitter/follow/elsesourav?logo=twitter&style=for-the-badge" alt="sourav barui">  </p>
 
 -  🌱 I’m currently learning **WASM, Next.js**
@@ -101,11 +101,11 @@
 <br />
 
 <p align="center">
-<img src="https://github-readme-stats.vercel.app/api/top-langs?username=elsesourav&show_icons=true&locale=en&layout=compact" alt="elsesourav" height="100"/>
+<img src="https://github-readme-stats.vercel.app/api/top-langs?username=elsesourav&show_icons=true&locale=en&layout=compact" alt="elsesourav" height="120"/>
 &nbsp;&nbsp;&nbsp;&nbsp;
-<img src="https://github-readme-stats.vercel.app/api?username=elsesourav&show_icons=true&locale=en" alt="elsesourav" height="100"/>
+<img src="https://github-readme-stats.vercel.app/api?username=elsesourav&show_icons=true&locale=en" alt="elsesourav" height="120"/>
 &nbsp;&nbsp;&nbsp;&nbsp;
-<img  src="https://github-readme-streak-stats.herokuapp.com/?user=elsesourav&" alt="elsesourav" height="100"/>
+<img  src="https://github-readme-streak-stats.herokuapp.com/?user=elsesourav&" alt="elsesourav" height="120"/>
 </p>
 <br />
 
