@@ -15,7 +15,7 @@
    <br />
    <br />
    <a href="https://x.com/elsesourav" target="blank">
-      <img src="https://img.shields.io/twitter/follow/elsesourav?logo=x&style=for-the-badge" alt="sourav barui">
+      <img align="center" src="https://img.shields.io/twitter/follow/elsesourav?logo=x&style=for-the-badge" alt="sourav barui">
    </a>
    <br />
    <br />
