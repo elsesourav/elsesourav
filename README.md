@@ -32,7 +32,7 @@
       </span>
    </div>
    <div align="center">
-      <img alt="Coding"  width="80%" src="https://github.com/elsesourav/elsesourav/blob/main/bg1.gif?raw=true">
+      <img alt="Coding"  width="40%" src="https://github.com/elsesourav/elsesourav/blob/main/bg1.gif?raw=true">
    </div>
 </div>
 
