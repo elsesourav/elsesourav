@@ -4,17 +4,21 @@
 <h3 align="center">A passionate full stack developer from India</h3>
 
    <br />
-<p align="center">
+<span align="center">
    <p>
       <img align="right" alt="Coding" width="400" src="https://github.com/elsesourav/elsesourav/blob/main/bg1.gif?raw=true">
    </p>
-
-   <p>
    <br />
-   <img src="https://komarev.com/ghpvc/?username=elsesourav&label=Profile%20views&color=0e75b6&style=flat" alt="sourav barui" /><br/><br />
+
+   <span align="left">
+   <img src="https://komarev.com/ghpvc/?username=elsesourav&label=Profile%20views&color=0e75b6&style=flat" alt="sourav barui" />
+   <br />
+   <br />
    <a href="https://x.com/elsesourav" target="blank">
       <img src="https://img.shields.io/twitter/follow/elsesourav?logo=x&style=for-the-badge" alt="sourav barui">
    </a>
+   <br />
+   <br />
 
    🌱 I’m currently learning **WASM, Next.js**
 
@@ -35,8 +39,8 @@
          <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg" alt="elsesourav" height="30" width="50"/>
       </a>
    </p>
-   </p>
-</p>
+   </span>
+</span>
 <br />
 
 ### Languages and Tools:
