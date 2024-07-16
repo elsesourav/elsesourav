@@ -16,7 +16,7 @@
       <br /><br />
       📫 How to reach me <b>elsesourav@gamil.com</b>
       <h3>Connect with me:</h3>
-      <p align="center">
+      <span align="center">
          <a href="https://twitter.com/elsesourav" target="blank">
             <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/twitter.svg" alt="elsesourav" height="30" width="50"/>
          </a>
@@ -29,9 +29,9 @@
          <a href="https://instagram.com/elsesourav" target="blank">
             <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg" alt="elsesourav" height="30" width="50"/>
          </a>
-      </p>
+      </span>
    </div>
-   <div align="right">
+   <div align="center">
       <img alt="Coding"  width="80%" src="https://github.com/elsesourav/elsesourav/blob/main/bg1.gif?raw=true">
    </div>
 </div>
