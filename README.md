@@ -1,4 +1,4 @@
-![Example 1](https://github.com/elsesourav/elsesourav/blob/main/bg.png)
+![Example 1](./imgs/bg.png)
 
 <h1 align="center"> Hello 👋, I'm Sourav Barui</h1>
 <h3 align="center">A passionate full stack developer from India</h3>
@@ -7,7 +7,7 @@
 <img align="right" alt="Coding" width="450" src="https://github.com/elsesourav/elsesourav/blob/main/bg1.gif?raw=true">
 
 <p align="left">
-   <img width="200" height="20" src="./transprent.png" />
+   <img width="200" height="20" src="./imgs/transprent.png" />
    <p><img height="30" src="https://komarev.com/ghpvc/?username=elsesourav&label=Profile%20views&color=0e75b6&style=flat" alt="sourav barui" /></p>
    <a href="https://x.com/elsesourav" target="blank">
       <img align="center" height="30" src="https://img.shields.io/twitter/follow/elsesourav?logo=x&style=for-the-badge" alt="sourav barui">
@@ -110,19 +110,19 @@
 ## [**`Breakout Ball Game`**](https://elsesourav.github.io/breakout-ball/) 👈🏻
 - Classic breakout gameplay with modern twists. Developed using WebAssembly, C++, JavaScript, HTML, CSS, and Firebase Database. [Github Repo](https://github.com/elsesourav/breakout-ball)
 ##### SCREENSHOTS
-![image](./BreakoutBallGame.png)
+![image](./imgs/BreakoutBallGame.png)
 <br />
 <br />
 
 ## [**`User Manager`**](https://elsesourav.github.io/user-manager/) 👈🏻
 - The User Manager app is user friendly. Aims to simplify the management of users and groups. It provides a way to add delete users create groups and organize them effortlessly using drag and drop features. Open WhatsApp in Particular User, Run on both web and Android platforms. Best for **Network Marketing.** [Github Repo](https://github.com/elsesourav/user-manager/)
 ##### SCREENSHOTS
-![image](./UserManager.png)
+![image](./imgs/UserManager.png)
 <br />
 <br />
 
 ## [**`Neural Network Number Recognition`**](https://elsesourav.github.io/nn-number-rec/) 👈🏻
 - Neural Network Number Recognition is a project designed to train a neural network to recognize handwritten numbers. The project includes features to input drawings, visualize the input, hidden, and output layers, dynamically change the learning rate, and save the trained network to achieve accurate number recognition. [Github Repo](https://github.com/elsesourav/nn-number-rec/)
 ##### SCREENSHOTS
-![image](./NN_NUM_REC.png)
+![image](./imgs/NN_NUM_REC.png)
 
