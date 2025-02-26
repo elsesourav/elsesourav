@@ -4,7 +4,7 @@
 <h3 align="center">A passionate full stack developer from India</h3>
 <br />
 
-<img align="right" alt="Coding" width="450" src="https://github.com/elsesourav/elsesourav/blob/main/bg1.gif?raw=true">
+<img align="right" alt="Coding" width="450" src="./imgs/bg1.gif?raw=true">
 
 <p align="left">
    <img width="200" height="20" src="./imgs/transprent.png" />
