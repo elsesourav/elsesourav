@@ -1,4 +1,4 @@
-![Example 1](./images/bg.png)
+
 
 <h1 align="center"> Hello 👋, I'm Sourav Barui</h1>
 <h3 align="center">A passionate full stack developer from India</h3>
