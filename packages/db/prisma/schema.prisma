@@ -1,0 +1,367 @@
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  extensions = [citext]
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum AppStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+enum LinkPlatform {
+  CHROME
+  ANDROID
+  GITHUB
+  WEBSITE
+  OTHER
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+enum StoreSectionType {
+  LATEST
+  UPCOMING
+  FEATURED
+}
+
+enum BannerPlacement {
+  HOME_HERO
+  LATEST
+  UPCOMING
+}
+
+enum ContentStatus {
+  DRAFT
+  SCHEDULED
+  PUBLISHED
+  ARCHIVED
+}
+
+model User {
+  id                String          @id @default(cuid())
+  name              String?
+  email             String          @unique
+  emailVerified     DateTime?       @map("email_verified")
+  image             String?
+  passwordHash      String?         @map("password_hash")
+  role              Role            @default(USER)
+  createdAt         DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+  accounts          Account[]
+  sessions          Session[]
+  createdApps       App[]           @relation("AppCreatedBy")
+  updatedApps       App[]           @relation("AppUpdatedBy")
+  libraries         UserLibrary[]
+  feedbacks         Feedback[]
+  moderatedFeedback Feedback[]      @relation("FeedbackModeratedBy")
+  downloadEvents    DownloadEvent[]
+  payments          Payment[]
+
+  @@index([role])
+  @@map("users")
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  icon      String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  apps      App[]
+
+  @@map("categories")
+}
+
+model App {
+  id               String             @id @default(cuid())
+  title            String
+  slug             String             @unique
+  shortDescription String             @map("short_description")
+  fullDescription  String             @map("full_description")
+  version          String
+  status           AppStatus          @default(DRAFT)
+  publishedAt      DateTime?          @map("published_at")
+  isPaid           Boolean            @default(false) @map("is_paid")
+  price            Decimal            @default(0) @db.Decimal(10, 2)
+  categoryId       String             @map("category_id")
+  createdById      String             @map("created_by")
+  updatedById      String?            @map("updated_by")
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
+  deletedAt        DateTime?          @map("deleted_at")
+  category         Category           @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  createdBy        User               @relation("AppCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+  updatedBy        User?              @relation("AppUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  media            AppMedia[]
+  links            AppLink[]
+  libraries        UserLibrary[]
+  feedbacks        Feedback[]
+  downloadEvents   DownloadEvent[]
+  payments         Payment[]
+  sectionItems     StoreSectionItem[]
+
+  @@index([categoryId])
+  @@index([status, createdAt])
+  @@index([publishedAt])
+  @@map("apps")
+}
+
+model StoreSectionItem {
+  id          String           @id @default(cuid())
+  appId       String           @map("app_id")
+  sectionType StoreSectionType @map("section_type")
+  orderIndex  Int              @default(0) @map("order_index")
+  releaseAt   DateTime?        @map("release_at")
+  startsAt    DateTime?        @map("starts_at")
+  endsAt      DateTime?        @map("ends_at")
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+  app         App              @relation(fields: [appId], references: [id], onDelete: Cascade)
+
+  @@unique([appId, sectionType])
+  @@index([sectionType, orderIndex])
+  @@index([sectionType, releaseAt])
+  @@index([startsAt, endsAt])
+  @@map("store_section_items")
+}
+
+model StoreBanner {
+  id        String          @id @default(cuid())
+  title     String
+  imageUrl  String          @map("image_url")
+  linkUrl   String?         @map("link_url")
+  placement BannerPlacement @default(HOME_HERO)
+  startsAt  DateTime?       @map("starts_at")
+  endsAt    DateTime?       @map("ends_at")
+  isActive  Boolean         @default(true) @map("is_active")
+  createdBy String?         @map("created_by")
+  updatedBy String?         @map("updated_by")
+  createdAt DateTime        @default(now()) @map("created_at")
+  updatedAt DateTime        @updatedAt @map("updated_at")
+
+  @@index([placement, isActive, startsAt, endsAt])
+  @@map("store_banners")
+}
+
+model ContentPage {
+  id             String               @id @default(cuid())
+  slug           String               @unique
+  title          String
+  summary        String?
+  body           String               @db.Text
+  seoTitle       String?              @map("seo_title")
+  seoDescription String?              @map("seo_description")
+  status         ContentStatus        @default(DRAFT)
+  publishAt      DateTime?            @map("publish_at")
+  publishedAt    DateTime?            @map("published_at")
+  createdBy      String?              @map("created_by")
+  updatedBy      String?              @map("updated_by")
+  createdAt      DateTime             @default(now()) @map("created_at")
+  updatedAt      DateTime             @updatedAt @map("updated_at")
+  versions       ContentPageVersion[]
+
+  @@index([status, publishAt])
+  @@index([slug, status])
+  @@map("content_pages")
+}
+
+model ContentPageVersion {
+  id             String        @id @default(cuid())
+  pageId         String        @map("page_id")
+  version        Int
+  title          String
+  summary        String?
+  body           String        @db.Text
+  seoTitle       String?       @map("seo_title")
+  seoDescription String?       @map("seo_description")
+  status         ContentStatus @default(DRAFT)
+  createdBy      String?       @map("created_by")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  page           ContentPage   @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@unique([pageId, version])
+  @@index([pageId, createdAt])
+  @@map("content_page_versions")
+}
+
+model ThemeConfig {
+  id              String   @id @default(cuid())
+  name            String   @unique
+  isActive        Boolean  @default(false) @map("is_active")
+  primaryColor    String   @map("primary_color")
+  secondaryColor  String   @map("secondary_color")
+  accentColor     String   @map("accent_color")
+  backgroundColor String   @map("background_color")
+  foregroundColor String   @map("foreground_color")
+  fontSans        String   @map("font_sans")
+  fontHeading     String   @map("font_heading")
+  headingScale    Decimal  @default(1) @map("heading_scale") @db.Decimal(3, 2)
+  createdBy       String?  @map("created_by")
+  updatedBy       String?  @map("updated_by")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@index([isActive, updatedAt])
+  @@map("theme_configs")
+}
+
+model AppMedia {
+  id        String    @id @default(cuid())
+  appId     String    @map("app_id")
+  type      MediaType
+  url       String
+  alt       String?
+  sortOrder Int       @default(0) @map("sort_order")
+  createdAt DateTime  @default(now()) @map("created_at")
+  app       App       @relation(fields: [appId], references: [id], onDelete: Cascade)
+
+  @@index([appId])
+  @@index([appId, sortOrder])
+  @@map("app_media")
+}
+
+model AppLink {
+  id            String       @id @default(cuid())
+  appId         String       @map("app_id")
+  platform      LinkPlatform
+  downloadUrl   String       @map("download_url")
+  sourceCodeUrl String?      @map("source_code_url")
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+  app           App          @relation(fields: [appId], references: [id], onDelete: Cascade)
+
+  @@unique([appId, platform])
+  @@index([appId])
+  @@map("app_links")
+}
+
+model UserLibrary {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  appId     String   @map("app_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  app       App      @relation(fields: [appId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, appId])
+  @@index([userId])
+  @@index([appId])
+  @@map("user_library")
+}
+
+model Feedback {
+  id            String    @id @default(cuid())
+  userId        String    @map("user_id")
+  appId         String    @map("app_id")
+  message       String
+  rating        Int
+  isHidden      Boolean   @default(false) @map("is_hidden")
+  moderatedAt   DateTime? @map("moderated_at")
+  moderatedById String?   @map("moderated_by")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  app           App       @relation(fields: [appId], references: [id], onDelete: Cascade)
+  moderatedBy   User?     @relation("FeedbackModeratedBy", fields: [moderatedById], references: [id], onDelete: SetNull)
+
+  @@index([appId, createdAt])
+  @@index([userId, createdAt])
+  @@map("feedback")
+}
+
+model DownloadEvent {
+  id        String       @id @default(cuid())
+  userId    String?      @map("user_id")
+  appId     String       @map("app_id")
+  platform  LinkPlatform
+  ipHash    String?      @map("ip_hash")
+  userAgent String?      @map("user_agent")
+  createdAt DateTime     @default(now()) @map("created_at")
+  user      User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  app       App          @relation(fields: [appId], references: [id], onDelete: Cascade)
+
+  @@index([appId, createdAt])
+  @@index([userId, createdAt])
+  @@map("download_events")
+}
+
+model Payment {
+  id                String        @id @default(cuid())
+  userId            String        @map("user_id")
+  appId             String        @map("app_id")
+  amount            Decimal       @db.Decimal(10, 2)
+  status            PaymentStatus @default(PENDING)
+  paymentProvider   String        @map("payment_provider")
+  providerReference String?       @unique @map("provider_reference")
+  createdAt         DateTime      @default(now()) @map("created_at")
+  updatedAt         DateTime      @updatedAt @map("updated_at")
+  user              User          @relation(fields: [userId], references: [id], onDelete: Restrict)
+  app               App           @relation(fields: [appId], references: [id], onDelete: Restrict)
+
+  @@index([userId, createdAt])
+  @@index([appId, createdAt])
+  @@map("payments")
+}
+
+model Account {
+  userId            String   @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String   @map("provider_account_id")
+  refresh_token     String?  @db.Text
+  access_token      String?  @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?  @db.Text
+  session_state     String?
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Session {
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}

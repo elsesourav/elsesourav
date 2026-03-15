@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #111827;
+  --brand-primary: #1f2937;
+  --brand-secondary: #111827;
+  --brand-accent: #f59e0b;
+  --brand-font-sans: "Inter";
+  --brand-font-heading: "Manrope";
+  --brand-heading-scale: 1.05;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--background) 86%, var(--brand-accent) 14%) 0,
+    var(--background) 200px
+  );
+  color: var(--foreground);
+  font-family: var(--brand-font-sans), "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--brand-primary);
+  font-family:
+    var(--brand-font-heading), var(--brand-font-sans), "Segoe UI", Helvetica,
+    Arial, sans-serif;
+  letter-spacing: -0.02em;
+}

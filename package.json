@@ -1,0 +1,36 @@
+{
+  "name": "elsesourav",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "services/*"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev --workspace web",
+    "dev:auth": "npm run dev --workspace @elsesourav/auth-service",
+    "dev:catalog": "npm run dev --workspace @elsesourav/catalog-service",
+    "dev:user": "npm run dev --workspace @elsesourav/user-service",
+    "dev:content": "npm run dev --workspace @elsesourav/content-service",
+    "dev:theme": "npm run dev --workspace @elsesourav/theme-service",
+    "dev": "npm run dev --workspace web",
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "start": "npm run start --workspace web",
+    "ci:verify-prisma-generated": "bash ./scripts/verify-prisma-generated.sh",
+    "db:generate": "npm run db:generate --workspace @elsesourav/db",
+    "db:migrate": "npm run db:migrate --workspace @elsesourav/db",
+    "db:seed": "npm run db:seed --workspace @elsesourav/db",
+    "db:studio": "npm run db:studio --workspace @elsesourav/db",
+    "dev:services": "set -a; [ -f ./.env ] && . ./.env; set +a; concurrently --kill-others-on-fail -n AUTH,CATALOG,USER,CONTENT,THEME -c green,yellow,blue,magenta,cyan \"npm run dev:auth\" \"npm run dev:catalog\" \"npm run dev:user\" \"npm run dev:content\" \"npm run dev:theme\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

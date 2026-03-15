@@ -1,0 +1,26 @@
+{
+  "name": "@elsesourav/user-service",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@elsesourav/config": "*",
+    "@elsesourav/db": "*",
+    "@elsesourav/types": "*",
+    "@elsesourav/validation": "*",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.19.24",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}

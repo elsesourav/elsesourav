@@ -1,0 +1,27 @@
+{
+  "name": "@elsesourav/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "db:generate": "prisma generate --config prisma.config.ts",
+    "db:migrate": "prisma migrate dev --config prisma.config.ts",
+    "db:deploy": "prisma migrate deploy --config prisma.config.ts",
+    "db:studio": "prisma studio --config prisma.config.ts",
+    "db:seed": "tsx prisma/seed.ts",
+    "postinstall": "npm run db:generate",
+    "typecheck": "npm run db:generate && tsc --noEmit"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.0.1",
+    "@prisma/client": "^7.0.1",
+    "bcryptjs": "^3.0.2"
+  },
+  "devDependencies": {
+    "prisma": "^7.0.1",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.3"
+  }
+}
