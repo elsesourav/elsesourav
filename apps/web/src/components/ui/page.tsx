@@ -28,7 +28,7 @@ export function PageShell({
   return (
     <main
       className={cn(
-        "mx-auto flex w-full flex-col gap-8 px-6 py-12 sm:px-10",
+        "mx-auto flex w-full flex-col gap-8 px-6 py-12 text-[#14171f] sm:px-10",
         shellWidthClass[width],
         center && "min-h-screen justify-center",
         className,
@@ -65,17 +65,15 @@ export function PageHeader({
     >
       <div className={textAlign}>
         {eyebrow ? (
-          <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">
+          <p className="text-xs uppercase tracking-[0.2em] text-[#4a5262]">
             {eyebrow}
           </p>
         ) : null}
-        <h1 className="text-3xl font-semibold tracking-tight text-neutral-900 sm:text-4xl">
+        <h1 className="text-3xl font-semibold tracking-tight text-[#0e1118] sm:text-4xl">
           {title}
         </h1>
         {description ? (
-          <p className="mt-2 max-w-2xl text-sm text-neutral-600">
-            {description}
-          </p>
+          <p className="mt-2 max-w-2xl text-sm text-[#3f4757]">{description}</p>
         ) : null}
       </div>
       {actions ? <div>{actions}</div> : null}
@@ -98,13 +96,13 @@ export function LinkCard({
     <Link
       href={href}
       className={cn(
-        "block rounded-xl border border-neutral-200 bg-white/80 p-4 shadow-sm transition hover:bg-white",
+        "block rounded-xl border border-black/10 bg-white p-4 shadow-[0_14px_30px_-24px_rgba(20,23,31,0.65)] transition hover:border-black/20 hover:bg-[#fcfcfe]",
         className,
       )}
     >
-      <p className="text-sm font-medium text-neutral-900">{title}</p>
+      <p className="text-sm font-semibold text-[#121722]">{title}</p>
       {description ? (
-        <p className="mt-1 text-xs text-neutral-600">{description}</p>
+        <p className="mt-1 text-xs text-[#495160]">{description}</p>
       ) : null}
     </Link>
   );
@@ -118,11 +116,9 @@ export function StatCard({
   value: string | number;
 }) {
   return (
-    <article className="rounded-xl border border-neutral-200 bg-white/80 p-4 shadow-sm">
-      <p className="text-xs uppercase tracking-wide text-neutral-500">
-        {label}
-      </p>
-      <p className="mt-1 text-2xl font-semibold text-neutral-900">{value}</p>
+    <article className="rounded-xl border border-black/10 bg-white p-4 shadow-[0_14px_30px_-24px_rgba(20,23,31,0.65)]">
+      <p className="text-xs uppercase tracking-wide text-[#4a5262]">{label}</p>
+      <p className="mt-1 text-2xl font-semibold text-[#0f131d]">{value}</p>
     </article>
   );
 }

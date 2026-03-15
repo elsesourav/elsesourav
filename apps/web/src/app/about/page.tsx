@@ -38,9 +38,9 @@ export default async function AboutPage() {
     <PageShell>
       <PageHeader eyebrow="Dynamic Content" title={payload.data.title} />
       {payload.data.summary ? (
-        <p className="mt-3 text-neutral-600">{payload.data.summary}</p>
+        <p className="mt-3 text-[#3f4757]">{payload.data.summary}</p>
       ) : null}
-      <article className="rounded-xl border border-neutral-200 bg-white/80 p-5 leading-7 text-neutral-800 shadow-sm">
+      <article className="rounded-xl border border-black/10 bg-white p-5 leading-7 text-[#1f2633] shadow-[0_14px_30px_-24px_rgba(20,23,31,0.65)]">
         {payload.data.body}
       </article>
     </PageShell>

@@ -2,6 +2,9 @@ import { LinkCard, PageHeader, PageShell } from "@/components/ui/page";
 
 const quickLinks = [
   { href: "/apps", title: "Browse apps" },
+  { href: "/feedback", title: "Recent feedback" },
+  { href: "/library", title: "Your library" },
+  { href: "/history", title: "Download history" },
   { href: "/about", title: "About" },
   { href: "/admin", title: "Open admin" },
   { href: "/login", title: "Login" },

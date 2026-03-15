@@ -9,9 +9,9 @@ type RegisterApiResponse = {
 };
 
 const formClassName =
-  "grid gap-3 rounded-2xl border border-black/10 bg-white/90 p-4 shadow-[0_12px_28px_-22px_rgba(20,23,31,0.55)]";
+  "grid gap-3 rounded-2xl border border-black/15 bg-white p-4 shadow-[0_14px_30px_-24px_rgba(20,23,31,0.65)]";
 const inputClassName =
-  "rounded-xl border border-black/10 bg-white px-3 py-2 text-sm text-[#14171f] placeholder:text-[#6d7587]";
+  "rounded-xl border border-black/20 bg-white px-3 py-2 text-sm text-[#14171f] placeholder:text-[#6d7587]";
 const buttonClassName =
   "rounded-full bg-[#14171f] px-4 py-2 text-sm font-medium text-white disabled:opacity-60";
 

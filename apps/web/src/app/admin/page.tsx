@@ -13,15 +13,15 @@ import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-const apiLinks = [
-  { href: "/api/admin/apps", title: "Admin apps API" },
-  { href: "/api/admin/categories", title: "Admin categories API" },
-  { href: "/api/admin/users", title: "Admin users API" },
-  { href: "/api/admin/feedback", title: "Admin feedback API" },
-  { href: "/api/admin/store/sections/items", title: "Section items API" },
-  { href: "/api/admin/store/banners", title: "Banner manager API" },
-  { href: "/api/admin/content/pages", title: "Content manager API" },
-  { href: "/api/admin/theme/configs", title: "Theme manager API" },
+const dataPageLinks = [
+  { href: "/admin/apps", title: "Apps" },
+  { href: "/admin/categories", title: "Categories" },
+  { href: "/admin/users", title: "Users" },
+  { href: "/admin/feedback", title: "Feedback" },
+  { href: "/admin/store/sections", title: "Store sections" },
+  { href: "/admin/store/banners", title: "Store banners" },
+  { href: "/admin/content/pages", title: "Content pages" },
+  { href: "/admin/theme/configs", title: "Theme configs" },
 ] as const;
 
 export default async function AdminPage() {
@@ -70,7 +70,7 @@ export default async function AdminPage() {
 
       <Link
         href="/admin/control"
-        className="inline-flex w-fit rounded-lg border border-neutral-300 bg-white/80 px-3 py-2 text-xs font-medium text-neutral-700 shadow-sm hover:bg-white"
+        className="inline-flex w-fit rounded-lg border border-black/20 bg-white px-3 py-2 text-xs font-semibold text-[#14171f] shadow-[0_14px_30px_-24px_rgba(20,23,31,0.65)] hover:bg-[#f7f8fb]"
       >
         Open microservice controls
       </Link>
@@ -88,17 +88,17 @@ export default async function AdminPage() {
           {recentApps.map((app) => (
             <article
               key={app.id}
-              className="rounded-xl border border-neutral-200 bg-white/80 p-3 text-sm shadow-sm"
+              className="rounded-xl border border-black/10 bg-white p-3 text-sm shadow-[0_14px_30px_-24px_rgba(20,23,31,0.65)]"
             >
-              <p className="font-medium">{app.title}</p>
-              <p className="text-neutral-500">{app.status}</p>
+              <p className="font-semibold text-[#121722]">{app.title}</p>
+              <p className="text-[#4a5262]">{app.status}</p>
             </article>
           ))}
         </div>
       </section>
 
       <section className="grid gap-3 sm:grid-cols-2">
-        {apiLinks.map((item) => (
+        {dataPageLinks.map((item) => (
           <LinkCard key={item.href} href={item.href} title={item.title} />
         ))}
       </section>

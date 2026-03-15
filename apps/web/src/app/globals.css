@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #111827;
-  --brand-primary: #1f2937;
-  --brand-secondary: #111827;
+  --background: #f4f6fb;
+  --foreground: #0f1420;
+  --brand-primary: #1a2232;
+  --brand-secondary: #1f5ed4;
   --brand-accent: #f59e0b;
   --brand-font-sans: "Inter";
   --brand-font-heading: "Manrope";
@@ -20,13 +20,39 @@
 
 body {
   min-height: 100vh;
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--background) 86%, var(--brand-accent) 14%) 0,
-    var(--background) 200px
-  );
+  background:
+    radial-gradient(
+      900px 400px at 12% -10%,
+      color-mix(in srgb, var(--brand-accent) 16%, white 84%),
+      transparent 65%
+    ),
+    radial-gradient(
+      1000px 420px at 88% -20%,
+      color-mix(in srgb, var(--brand-secondary) 11%, white 89%),
+      transparent 62%
+    ),
+    var(--background);
   color: var(--foreground);
+  line-height: 1.5;
   font-family: var(--brand-font-sans), "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: var(--brand-secondary);
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  color: color-mix(in srgb, var(--brand-secondary) 85%, black 15%);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--brand-secondary) 20%, white 80%);
+}
+
+:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--brand-secondary) 72%, black 28%);
+  outline-offset: 2px;
 }
 
 h1,

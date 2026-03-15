@@ -9,7 +9,7 @@ export default function LoginPage() {
 
       <LoginForm />
 
-      <p className="text-center text-sm text-neutral-600">
+      <p className="text-center text-sm text-[#3f4757]">
         New here?{" "}
         <Link
           href="/register"

@@ -136,11 +136,11 @@ function ControlForm({
   }
 
   return (
-    <article className="rounded-2xl border border-black/10 bg-white/90 p-4 shadow-[0_12px_28px_-22px_rgba(20,23,31,0.55)]">
-      <h2 className="text-base font-semibold">{title}</h2>
+    <article className="rounded-2xl border border-black/15 bg-white p-4 shadow-[0_14px_30px_-24px_rgba(20,23,31,0.65)]">
+      <h2 className="text-base font-semibold text-[#131924]">{title}</h2>
       <form className="mt-3 space-y-3" onSubmit={onSubmit}>
         <textarea
-          className="min-h-44 w-full rounded-xl border border-black/10 bg-white px-3 py-2 font-mono text-xs"
+          className="min-h-44 w-full rounded-xl border border-black/20 bg-white px-3 py-2 font-mono text-xs text-[#14171f]"
           value={payload}
           onChange={(event) => setPayload(event.target.value)}
         />
@@ -153,7 +153,7 @@ function ControlForm({
         </button>
       </form>
       {result ? (
-        <pre className="mt-3 overflow-auto rounded-xl border border-black/10 bg-[#f6f7fb] p-3 text-xs">
+        <pre className="mt-3 overflow-auto rounded-xl border border-black/20 bg-[#f5f7fb] p-3 text-xs text-[#252c39]">
           {`status: ${result.status}\n${result.body}`}
         </pre>
       ) : null}

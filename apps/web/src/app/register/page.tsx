@@ -13,7 +13,7 @@ export default function RegisterPage() {
 
       <RegisterForm />
 
-      <p className="text-center text-sm text-neutral-600">
+      <p className="text-center text-sm text-[#3f4757]">
         Already have an account?{" "}
         <Link
           href="/login"

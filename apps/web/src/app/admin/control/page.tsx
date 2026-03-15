@@ -4,10 +4,10 @@ import { AdminControlClient } from "./client";
 export const dynamic = "force-dynamic";
 
 const controlLinks = [
-  { href: "/api/admin/store/sections/items", title: "View section items" },
-  { href: "/api/admin/store/banners", title: "View banners" },
-  { href: "/api/admin/content/pages", title: "View content pages" },
-  { href: "/api/admin/theme/configs", title: "View theme configs" },
+  { href: "/admin/store/sections", title: "Open section items page" },
+  { href: "/admin/store/banners", title: "Open banners page" },
+  { href: "/admin/content/pages", title: "Open content pages" },
+  { href: "/admin/theme/configs", title: "Open theme configs" },
 ] as const;
 
 export default function AdminControlPage() {
