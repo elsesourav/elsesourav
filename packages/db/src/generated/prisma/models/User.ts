@@ -34,6 +34,8 @@ export type UserMinAggregateOutputType = {
   role: $Enums.Role | null
   createdAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
+  scheduledDeletionAt: Date | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -46,6 +48,8 @@ export type UserMaxAggregateOutputType = {
   role: $Enums.Role | null
   createdAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
+  scheduledDeletionAt: Date | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -58,6 +62,8 @@ export type UserCountAggregateOutputType = {
   role: number
   createdAt: number
   updatedAt: number
+  deletedAt: number
+  scheduledDeletionAt: number
   _all: number
 }
 
@@ -72,6 +78,8 @@ export type UserMinAggregateInputType = {
   role?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
+  scheduledDeletionAt?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -84,6 +92,8 @@ export type UserMaxAggregateInputType = {
   role?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
+  scheduledDeletionAt?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -96,6 +106,8 @@ export type UserCountAggregateInputType = {
   role?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
+  scheduledDeletionAt?: true
   _all?: true
 }
 
@@ -181,6 +193,8 @@ export type UserGroupByOutputType = {
   role: $Enums.Role
   createdAt: Date
   updatedAt: Date
+  deletedAt: Date | null
+  scheduledDeletionAt: Date | null
   _count: UserCountAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
@@ -214,6 +228,8 @@ export type UserWhereInput = {
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  scheduledDeletionAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   accounts?: Prisma.AccountListRelationFilter
   sessions?: Prisma.SessionListRelationFilter
   createdApps?: Prisma.AppListRelationFilter
@@ -223,6 +239,11 @@ export type UserWhereInput = {
   moderatedFeedback?: Prisma.FeedbackListRelationFilter
   downloadEvents?: Prisma.DownloadEventListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
+  appViewEvents?: Prisma.AppViewEventListRelationFilter
+  blogPosts?: Prisma.BlogPostListRelationFilter
+  blogComments?: Prisma.BlogCommentListRelationFilter
+  settings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
+  activityLogs?: Prisma.ActivityLogListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -235,6 +256,8 @@ export type UserOrderByWithRelationInput = {
   role?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  scheduledDeletionAt?: Prisma.SortOrderInput | Prisma.SortOrder
   accounts?: Prisma.AccountOrderByRelationAggregateInput
   sessions?: Prisma.SessionOrderByRelationAggregateInput
   createdApps?: Prisma.AppOrderByRelationAggregateInput
@@ -244,6 +267,11 @@ export type UserOrderByWithRelationInput = {
   moderatedFeedback?: Prisma.FeedbackOrderByRelationAggregateInput
   downloadEvents?: Prisma.DownloadEventOrderByRelationAggregateInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
+  appViewEvents?: Prisma.AppViewEventOrderByRelationAggregateInput
+  blogPosts?: Prisma.BlogPostOrderByRelationAggregateInput
+  blogComments?: Prisma.BlogCommentOrderByRelationAggregateInput
+  settings?: Prisma.UserSettingsOrderByWithRelationInput
+  activityLogs?: Prisma.ActivityLogOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -259,6 +287,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  scheduledDeletionAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   accounts?: Prisma.AccountListRelationFilter
   sessions?: Prisma.SessionListRelationFilter
   createdApps?: Prisma.AppListRelationFilter
@@ -268,6 +298,11 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   moderatedFeedback?: Prisma.FeedbackListRelationFilter
   downloadEvents?: Prisma.DownloadEventListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
+  appViewEvents?: Prisma.AppViewEventListRelationFilter
+  blogPosts?: Prisma.BlogPostListRelationFilter
+  blogComments?: Prisma.BlogCommentListRelationFilter
+  settings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
+  activityLogs?: Prisma.ActivityLogListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -280,6 +315,8 @@ export type UserOrderByWithAggregationInput = {
   role?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  scheduledDeletionAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
@@ -298,6 +335,8 @@ export type UserScalarWhereWithAggregatesInput = {
   role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  scheduledDeletionAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
 }
 
 export type UserCreateInput = {
@@ -310,6 +349,8 @@ export type UserCreateInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   createdApps?: Prisma.AppCreateNestedManyWithoutCreatedByInput
@@ -319,6 +360,11 @@ export type UserCreateInput = {
   moderatedFeedback?: Prisma.FeedbackCreateNestedManyWithoutModeratedByInput
   downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -331,6 +377,8 @@ export type UserUncheckedCreateInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   createdApps?: Prisma.AppUncheckedCreateNestedManyWithoutCreatedByInput
@@ -340,6 +388,11 @@ export type UserUncheckedCreateInput = {
   moderatedFeedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutModeratedByInput
   downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -352,6 +405,8 @@ export type UserUpdateInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   createdApps?: Prisma.AppUpdateManyWithoutCreatedByNestedInput
@@ -361,6 +416,11 @@ export type UserUpdateInput = {
   moderatedFeedback?: Prisma.FeedbackUpdateManyWithoutModeratedByNestedInput
   downloadEvents?: Prisma.DownloadEventUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -373,6 +433,8 @@ export type UserUncheckedUpdateInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   createdApps?: Prisma.AppUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -382,6 +444,11 @@ export type UserUncheckedUpdateInput = {
   moderatedFeedback?: Prisma.FeedbackUncheckedUpdateManyWithoutModeratedByNestedInput
   downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -394,6 +461,8 @@ export type UserCreateManyInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
 }
 
 export type UserUpdateManyMutationInput = {
@@ -406,6 +475,8 @@ export type UserUpdateManyMutationInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -418,6 +489,8 @@ export type UserUncheckedUpdateManyInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -430,6 +503,8 @@ export type UserCountOrderByAggregateInput = {
   role?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
+  scheduledDeletionAt?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -442,6 +517,8 @@ export type UserMaxOrderByAggregateInput = {
   role?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
+  scheduledDeletionAt?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -454,6 +531,8 @@ export type UserMinOrderByAggregateInput = {
   role?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
+  scheduledDeletionAt?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -516,6 +595,54 @@ export type UserUpdateOneWithoutUpdatedAppsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUpdatedAppsInput, Prisma.UserUpdateWithoutUpdatedAppsInput>, Prisma.UserUncheckedUpdateWithoutUpdatedAppsInput>
 }
 
+export type UserCreateNestedOneWithoutAppViewEventsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAppViewEventsInput, Prisma.UserUncheckedCreateWithoutAppViewEventsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAppViewEventsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutAppViewEventsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAppViewEventsInput, Prisma.UserUncheckedCreateWithoutAppViewEventsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAppViewEventsInput
+  upsert?: Prisma.UserUpsertWithoutAppViewEventsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAppViewEventsInput, Prisma.UserUpdateWithoutAppViewEventsInput>, Prisma.UserUncheckedUpdateWithoutAppViewEventsInput>
+}
+
+export type UserCreateNestedOneWithoutBlogPostsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBlogPostsInput, Prisma.UserUncheckedCreateWithoutBlogPostsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBlogPostsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutBlogPostsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBlogPostsInput, Prisma.UserUncheckedCreateWithoutBlogPostsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBlogPostsInput
+  upsert?: Prisma.UserUpsertWithoutBlogPostsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBlogPostsInput, Prisma.UserUpdateWithoutBlogPostsInput>, Prisma.UserUncheckedUpdateWithoutBlogPostsInput>
+}
+
+export type UserCreateNestedOneWithoutBlogCommentsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBlogCommentsInput, Prisma.UserUncheckedCreateWithoutBlogCommentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBlogCommentsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutBlogCommentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBlogCommentsInput, Prisma.UserUncheckedCreateWithoutBlogCommentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBlogCommentsInput
+  upsert?: Prisma.UserUpsertWithoutBlogCommentsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBlogCommentsInput, Prisma.UserUpdateWithoutBlogCommentsInput>, Prisma.UserUncheckedUpdateWithoutBlogCommentsInput>
+}
+
 export type UserCreateNestedOneWithoutLibrariesInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutLibrariesInput, Prisma.UserUncheckedCreateWithoutLibrariesInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutLibrariesInput
@@ -528,6 +655,36 @@ export type UserUpdateOneRequiredWithoutLibrariesNestedInput = {
   upsert?: Prisma.UserUpsertWithoutLibrariesInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLibrariesInput, Prisma.UserUpdateWithoutLibrariesInput>, Prisma.UserUncheckedUpdateWithoutLibrariesInput>
+}
+
+export type UserCreateNestedOneWithoutSettingsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSettingsInput, Prisma.UserUncheckedCreateWithoutSettingsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSettingsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSettingsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSettingsInput, Prisma.UserUncheckedCreateWithoutSettingsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSettingsInput
+  upsert?: Prisma.UserUpsertWithoutSettingsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSettingsInput, Prisma.UserUpdateWithoutSettingsInput>, Prisma.UserUncheckedUpdateWithoutSettingsInput>
+}
+
+export type UserCreateNestedOneWithoutActivityLogsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutActivityLogsInput, Prisma.UserUncheckedCreateWithoutActivityLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutActivityLogsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutActivityLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutActivityLogsInput, Prisma.UserUncheckedCreateWithoutActivityLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutActivityLogsInput
+  upsert?: Prisma.UserUpsertWithoutActivityLogsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutActivityLogsInput, Prisma.UserUpdateWithoutActivityLogsInput>, Prisma.UserUncheckedUpdateWithoutActivityLogsInput>
 }
 
 export type UserCreateNestedOneWithoutFeedbacksInput = {
@@ -628,6 +785,8 @@ export type UserCreateWithoutCreatedAppsInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   updatedApps?: Prisma.AppCreateNestedManyWithoutUpdatedByInput
@@ -636,6 +795,11 @@ export type UserCreateWithoutCreatedAppsInput = {
   moderatedFeedback?: Prisma.FeedbackCreateNestedManyWithoutModeratedByInput
   downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedAppsInput = {
@@ -648,6 +812,8 @@ export type UserUncheckedCreateWithoutCreatedAppsInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   updatedApps?: Prisma.AppUncheckedCreateNestedManyWithoutUpdatedByInput
@@ -656,6 +822,11 @@ export type UserUncheckedCreateWithoutCreatedAppsInput = {
   moderatedFeedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutModeratedByInput
   downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedAppsInput = {
@@ -673,6 +844,8 @@ export type UserCreateWithoutUpdatedAppsInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   createdApps?: Prisma.AppCreateNestedManyWithoutCreatedByInput
@@ -681,6 +854,11 @@ export type UserCreateWithoutUpdatedAppsInput = {
   moderatedFeedback?: Prisma.FeedbackCreateNestedManyWithoutModeratedByInput
   downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUpdatedAppsInput = {
@@ -693,6 +871,8 @@ export type UserUncheckedCreateWithoutUpdatedAppsInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   createdApps?: Prisma.AppUncheckedCreateNestedManyWithoutCreatedByInput
@@ -701,6 +881,11 @@ export type UserUncheckedCreateWithoutUpdatedAppsInput = {
   moderatedFeedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutModeratedByInput
   downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutUpdatedAppsInput = {
@@ -729,6 +914,8 @@ export type UserUpdateWithoutCreatedAppsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   updatedApps?: Prisma.AppUpdateManyWithoutUpdatedByNestedInput
@@ -737,6 +924,11 @@ export type UserUpdateWithoutCreatedAppsInput = {
   moderatedFeedback?: Prisma.FeedbackUpdateManyWithoutModeratedByNestedInput
   downloadEvents?: Prisma.DownloadEventUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedAppsInput = {
@@ -749,6 +941,8 @@ export type UserUncheckedUpdateWithoutCreatedAppsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   updatedApps?: Prisma.AppUncheckedUpdateManyWithoutUpdatedByNestedInput
@@ -757,6 +951,11 @@ export type UserUncheckedUpdateWithoutCreatedAppsInput = {
   moderatedFeedback?: Prisma.FeedbackUncheckedUpdateManyWithoutModeratedByNestedInput
   downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutUpdatedAppsInput = {
@@ -780,6 +979,8 @@ export type UserUpdateWithoutUpdatedAppsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   createdApps?: Prisma.AppUpdateManyWithoutCreatedByNestedInput
@@ -788,6 +989,11 @@ export type UserUpdateWithoutUpdatedAppsInput = {
   moderatedFeedback?: Prisma.FeedbackUpdateManyWithoutModeratedByNestedInput
   downloadEvents?: Prisma.DownloadEventUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUpdatedAppsInput = {
@@ -800,6 +1006,8 @@ export type UserUncheckedUpdateWithoutUpdatedAppsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   createdApps?: Prisma.AppUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -808,6 +1016,383 @@ export type UserUncheckedUpdateWithoutUpdatedAppsInput = {
   moderatedFeedback?: Prisma.FeedbackUncheckedUpdateManyWithoutModeratedByNestedInput
   downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutAppViewEventsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  passwordHash?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  createdApps?: Prisma.AppCreateNestedManyWithoutCreatedByInput
+  updatedApps?: Prisma.AppCreateNestedManyWithoutUpdatedByInput
+  libraries?: Prisma.UserLibraryCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
+  moderatedFeedback?: Prisma.FeedbackCreateNestedManyWithoutModeratedByInput
+  downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutAppViewEventsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  passwordHash?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  createdApps?: Prisma.AppUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedApps?: Prisma.AppUncheckedCreateNestedManyWithoutUpdatedByInput
+  libraries?: Prisma.UserLibraryUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
+  moderatedFeedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutModeratedByInput
+  downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutAppViewEventsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAppViewEventsInput, Prisma.UserUncheckedCreateWithoutAppViewEventsInput>
+}
+
+export type UserUpsertWithoutAppViewEventsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAppViewEventsInput, Prisma.UserUncheckedUpdateWithoutAppViewEventsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAppViewEventsInput, Prisma.UserUncheckedCreateWithoutAppViewEventsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAppViewEventsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAppViewEventsInput, Prisma.UserUncheckedUpdateWithoutAppViewEventsInput>
+}
+
+export type UserUpdateWithoutAppViewEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  createdApps?: Prisma.AppUpdateManyWithoutCreatedByNestedInput
+  updatedApps?: Prisma.AppUpdateManyWithoutUpdatedByNestedInput
+  libraries?: Prisma.UserLibraryUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
+  moderatedFeedback?: Prisma.FeedbackUpdateManyWithoutModeratedByNestedInput
+  downloadEvents?: Prisma.DownloadEventUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAppViewEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  createdApps?: Prisma.AppUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedApps?: Prisma.AppUncheckedUpdateManyWithoutUpdatedByNestedInput
+  libraries?: Prisma.UserLibraryUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
+  moderatedFeedback?: Prisma.FeedbackUncheckedUpdateManyWithoutModeratedByNestedInput
+  downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutBlogPostsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  passwordHash?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  createdApps?: Prisma.AppCreateNestedManyWithoutCreatedByInput
+  updatedApps?: Prisma.AppCreateNestedManyWithoutUpdatedByInput
+  libraries?: Prisma.UserLibraryCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
+  moderatedFeedback?: Prisma.FeedbackCreateNestedManyWithoutModeratedByInput
+  downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
+  blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutBlogPostsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  passwordHash?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  createdApps?: Prisma.AppUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedApps?: Prisma.AppUncheckedCreateNestedManyWithoutUpdatedByInput
+  libraries?: Prisma.UserLibraryUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
+  moderatedFeedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutModeratedByInput
+  downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
+  blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutBlogPostsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutBlogPostsInput, Prisma.UserUncheckedCreateWithoutBlogPostsInput>
+}
+
+export type UserUpsertWithoutBlogPostsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutBlogPostsInput, Prisma.UserUncheckedUpdateWithoutBlogPostsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutBlogPostsInput, Prisma.UserUncheckedCreateWithoutBlogPostsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutBlogPostsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutBlogPostsInput, Prisma.UserUncheckedUpdateWithoutBlogPostsInput>
+}
+
+export type UserUpdateWithoutBlogPostsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  createdApps?: Prisma.AppUpdateManyWithoutCreatedByNestedInput
+  updatedApps?: Prisma.AppUpdateManyWithoutUpdatedByNestedInput
+  libraries?: Prisma.UserLibraryUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
+  moderatedFeedback?: Prisma.FeedbackUpdateManyWithoutModeratedByNestedInput
+  downloadEvents?: Prisma.DownloadEventUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
+  blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutBlogPostsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  createdApps?: Prisma.AppUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedApps?: Prisma.AppUncheckedUpdateManyWithoutUpdatedByNestedInput
+  libraries?: Prisma.UserLibraryUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
+  moderatedFeedback?: Prisma.FeedbackUncheckedUpdateManyWithoutModeratedByNestedInput
+  downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
+  blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutBlogCommentsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  passwordHash?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  createdApps?: Prisma.AppCreateNestedManyWithoutCreatedByInput
+  updatedApps?: Prisma.AppCreateNestedManyWithoutUpdatedByInput
+  libraries?: Prisma.UserLibraryCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
+  moderatedFeedback?: Prisma.FeedbackCreateNestedManyWithoutModeratedByInput
+  downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutBlogCommentsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  passwordHash?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  createdApps?: Prisma.AppUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedApps?: Prisma.AppUncheckedCreateNestedManyWithoutUpdatedByInput
+  libraries?: Prisma.UserLibraryUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
+  moderatedFeedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutModeratedByInput
+  downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutBlogCommentsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutBlogCommentsInput, Prisma.UserUncheckedCreateWithoutBlogCommentsInput>
+}
+
+export type UserUpsertWithoutBlogCommentsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutBlogCommentsInput, Prisma.UserUncheckedUpdateWithoutBlogCommentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutBlogCommentsInput, Prisma.UserUncheckedCreateWithoutBlogCommentsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutBlogCommentsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutBlogCommentsInput, Prisma.UserUncheckedUpdateWithoutBlogCommentsInput>
+}
+
+export type UserUpdateWithoutBlogCommentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  createdApps?: Prisma.AppUpdateManyWithoutCreatedByNestedInput
+  updatedApps?: Prisma.AppUpdateManyWithoutUpdatedByNestedInput
+  libraries?: Prisma.UserLibraryUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
+  moderatedFeedback?: Prisma.FeedbackUpdateManyWithoutModeratedByNestedInput
+  downloadEvents?: Prisma.DownloadEventUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutBlogCommentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  createdApps?: Prisma.AppUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedApps?: Prisma.AppUncheckedUpdateManyWithoutUpdatedByNestedInput
+  libraries?: Prisma.UserLibraryUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
+  moderatedFeedback?: Prisma.FeedbackUncheckedUpdateManyWithoutModeratedByNestedInput
+  downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLibrariesInput = {
@@ -820,6 +1405,8 @@ export type UserCreateWithoutLibrariesInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   createdApps?: Prisma.AppCreateNestedManyWithoutCreatedByInput
@@ -828,6 +1415,11 @@ export type UserCreateWithoutLibrariesInput = {
   moderatedFeedback?: Prisma.FeedbackCreateNestedManyWithoutModeratedByInput
   downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLibrariesInput = {
@@ -840,6 +1432,8 @@ export type UserUncheckedCreateWithoutLibrariesInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   createdApps?: Prisma.AppUncheckedCreateNestedManyWithoutCreatedByInput
@@ -848,6 +1442,11 @@ export type UserUncheckedCreateWithoutLibrariesInput = {
   moderatedFeedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutModeratedByInput
   downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLibrariesInput = {
@@ -876,6 +1475,8 @@ export type UserUpdateWithoutLibrariesInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   createdApps?: Prisma.AppUpdateManyWithoutCreatedByNestedInput
@@ -884,6 +1485,11 @@ export type UserUpdateWithoutLibrariesInput = {
   moderatedFeedback?: Prisma.FeedbackUpdateManyWithoutModeratedByNestedInput
   downloadEvents?: Prisma.DownloadEventUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLibrariesInput = {
@@ -896,6 +1502,8 @@ export type UserUncheckedUpdateWithoutLibrariesInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   createdApps?: Prisma.AppUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -904,6 +1512,259 @@ export type UserUncheckedUpdateWithoutLibrariesInput = {
   moderatedFeedback?: Prisma.FeedbackUncheckedUpdateManyWithoutModeratedByNestedInput
   downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSettingsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  passwordHash?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  createdApps?: Prisma.AppCreateNestedManyWithoutCreatedByInput
+  updatedApps?: Prisma.AppCreateNestedManyWithoutUpdatedByInput
+  libraries?: Prisma.UserLibraryCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
+  moderatedFeedback?: Prisma.FeedbackCreateNestedManyWithoutModeratedByInput
+  downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSettingsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  passwordHash?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  createdApps?: Prisma.AppUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedApps?: Prisma.AppUncheckedCreateNestedManyWithoutUpdatedByInput
+  libraries?: Prisma.UserLibraryUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
+  moderatedFeedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutModeratedByInput
+  downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSettingsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSettingsInput, Prisma.UserUncheckedCreateWithoutSettingsInput>
+}
+
+export type UserUpsertWithoutSettingsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSettingsInput, Prisma.UserUncheckedUpdateWithoutSettingsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSettingsInput, Prisma.UserUncheckedCreateWithoutSettingsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSettingsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSettingsInput, Prisma.UserUncheckedUpdateWithoutSettingsInput>
+}
+
+export type UserUpdateWithoutSettingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  createdApps?: Prisma.AppUpdateManyWithoutCreatedByNestedInput
+  updatedApps?: Prisma.AppUpdateManyWithoutUpdatedByNestedInput
+  libraries?: Prisma.UserLibraryUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
+  moderatedFeedback?: Prisma.FeedbackUpdateManyWithoutModeratedByNestedInput
+  downloadEvents?: Prisma.DownloadEventUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSettingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  createdApps?: Prisma.AppUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedApps?: Prisma.AppUncheckedUpdateManyWithoutUpdatedByNestedInput
+  libraries?: Prisma.UserLibraryUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
+  moderatedFeedback?: Prisma.FeedbackUncheckedUpdateManyWithoutModeratedByNestedInput
+  downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutActivityLogsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  passwordHash?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  createdApps?: Prisma.AppCreateNestedManyWithoutCreatedByInput
+  updatedApps?: Prisma.AppCreateNestedManyWithoutUpdatedByInput
+  libraries?: Prisma.UserLibraryCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
+  moderatedFeedback?: Prisma.FeedbackCreateNestedManyWithoutModeratedByInput
+  downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutActivityLogsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  passwordHash?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  createdApps?: Prisma.AppUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedApps?: Prisma.AppUncheckedCreateNestedManyWithoutUpdatedByInput
+  libraries?: Prisma.UserLibraryUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
+  moderatedFeedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutModeratedByInput
+  downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutActivityLogsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutActivityLogsInput, Prisma.UserUncheckedCreateWithoutActivityLogsInput>
+}
+
+export type UserUpsertWithoutActivityLogsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutActivityLogsInput, Prisma.UserUncheckedUpdateWithoutActivityLogsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutActivityLogsInput, Prisma.UserUncheckedCreateWithoutActivityLogsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutActivityLogsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutActivityLogsInput, Prisma.UserUncheckedUpdateWithoutActivityLogsInput>
+}
+
+export type UserUpdateWithoutActivityLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  createdApps?: Prisma.AppUpdateManyWithoutCreatedByNestedInput
+  updatedApps?: Prisma.AppUpdateManyWithoutUpdatedByNestedInput
+  libraries?: Prisma.UserLibraryUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
+  moderatedFeedback?: Prisma.FeedbackUpdateManyWithoutModeratedByNestedInput
+  downloadEvents?: Prisma.DownloadEventUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutActivityLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  createdApps?: Prisma.AppUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedApps?: Prisma.AppUncheckedUpdateManyWithoutUpdatedByNestedInput
+  libraries?: Prisma.UserLibraryUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
+  moderatedFeedback?: Prisma.FeedbackUncheckedUpdateManyWithoutModeratedByNestedInput
+  downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFeedbacksInput = {
@@ -916,6 +1777,8 @@ export type UserCreateWithoutFeedbacksInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   createdApps?: Prisma.AppCreateNestedManyWithoutCreatedByInput
@@ -924,6 +1787,11 @@ export type UserCreateWithoutFeedbacksInput = {
   moderatedFeedback?: Prisma.FeedbackCreateNestedManyWithoutModeratedByInput
   downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFeedbacksInput = {
@@ -936,6 +1804,8 @@ export type UserUncheckedCreateWithoutFeedbacksInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   createdApps?: Prisma.AppUncheckedCreateNestedManyWithoutCreatedByInput
@@ -944,6 +1814,11 @@ export type UserUncheckedCreateWithoutFeedbacksInput = {
   moderatedFeedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutModeratedByInput
   downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFeedbacksInput = {
@@ -961,6 +1836,8 @@ export type UserCreateWithoutModeratedFeedbackInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   createdApps?: Prisma.AppCreateNestedManyWithoutCreatedByInput
@@ -969,6 +1846,11 @@ export type UserCreateWithoutModeratedFeedbackInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutModeratedFeedbackInput = {
@@ -981,6 +1863,8 @@ export type UserUncheckedCreateWithoutModeratedFeedbackInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   createdApps?: Prisma.AppUncheckedCreateNestedManyWithoutCreatedByInput
@@ -989,6 +1873,11 @@ export type UserUncheckedCreateWithoutModeratedFeedbackInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutModeratedFeedbackInput = {
@@ -1017,6 +1906,8 @@ export type UserUpdateWithoutFeedbacksInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   createdApps?: Prisma.AppUpdateManyWithoutCreatedByNestedInput
@@ -1025,6 +1916,11 @@ export type UserUpdateWithoutFeedbacksInput = {
   moderatedFeedback?: Prisma.FeedbackUpdateManyWithoutModeratedByNestedInput
   downloadEvents?: Prisma.DownloadEventUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFeedbacksInput = {
@@ -1037,6 +1933,8 @@ export type UserUncheckedUpdateWithoutFeedbacksInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   createdApps?: Prisma.AppUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1045,6 +1943,11 @@ export type UserUncheckedUpdateWithoutFeedbacksInput = {
   moderatedFeedback?: Prisma.FeedbackUncheckedUpdateManyWithoutModeratedByNestedInput
   downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutModeratedFeedbackInput = {
@@ -1068,6 +1971,8 @@ export type UserUpdateWithoutModeratedFeedbackInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   createdApps?: Prisma.AppUpdateManyWithoutCreatedByNestedInput
@@ -1076,6 +1981,11 @@ export type UserUpdateWithoutModeratedFeedbackInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   downloadEvents?: Prisma.DownloadEventUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutModeratedFeedbackInput = {
@@ -1088,6 +1998,8 @@ export type UserUncheckedUpdateWithoutModeratedFeedbackInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   createdApps?: Prisma.AppUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1096,6 +2008,11 @@ export type UserUncheckedUpdateWithoutModeratedFeedbackInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDownloadEventsInput = {
@@ -1108,6 +2025,8 @@ export type UserCreateWithoutDownloadEventsInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   createdApps?: Prisma.AppCreateNestedManyWithoutCreatedByInput
@@ -1116,6 +2035,11 @@ export type UserCreateWithoutDownloadEventsInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   moderatedFeedback?: Prisma.FeedbackCreateNestedManyWithoutModeratedByInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDownloadEventsInput = {
@@ -1128,6 +2052,8 @@ export type UserUncheckedCreateWithoutDownloadEventsInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   createdApps?: Prisma.AppUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1136,6 +2062,11 @@ export type UserUncheckedCreateWithoutDownloadEventsInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   moderatedFeedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutModeratedByInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDownloadEventsInput = {
@@ -1164,6 +2095,8 @@ export type UserUpdateWithoutDownloadEventsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   createdApps?: Prisma.AppUpdateManyWithoutCreatedByNestedInput
@@ -1172,6 +2105,11 @@ export type UserUpdateWithoutDownloadEventsInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   moderatedFeedback?: Prisma.FeedbackUpdateManyWithoutModeratedByNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDownloadEventsInput = {
@@ -1184,6 +2122,8 @@ export type UserUncheckedUpdateWithoutDownloadEventsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   createdApps?: Prisma.AppUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1192,6 +2132,11 @@ export type UserUncheckedUpdateWithoutDownloadEventsInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   moderatedFeedback?: Prisma.FeedbackUncheckedUpdateManyWithoutModeratedByNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPaymentsInput = {
@@ -1204,6 +2149,8 @@ export type UserCreateWithoutPaymentsInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   createdApps?: Prisma.AppCreateNestedManyWithoutCreatedByInput
@@ -1212,6 +2159,11 @@ export type UserCreateWithoutPaymentsInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   moderatedFeedback?: Prisma.FeedbackCreateNestedManyWithoutModeratedByInput
   downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPaymentsInput = {
@@ -1224,6 +2176,8 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   createdApps?: Prisma.AppUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1232,6 +2186,11 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   moderatedFeedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutModeratedByInput
   downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPaymentsInput = {
@@ -1260,6 +2219,8 @@ export type UserUpdateWithoutPaymentsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   createdApps?: Prisma.AppUpdateManyWithoutCreatedByNestedInput
@@ -1268,6 +2229,11 @@ export type UserUpdateWithoutPaymentsInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   moderatedFeedback?: Prisma.FeedbackUpdateManyWithoutModeratedByNestedInput
   downloadEvents?: Prisma.DownloadEventUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentsInput = {
@@ -1280,6 +2246,8 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   createdApps?: Prisma.AppUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1288,6 +2256,11 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   moderatedFeedback?: Prisma.FeedbackUncheckedUpdateManyWithoutModeratedByNestedInput
   downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -1300,6 +2273,8 @@ export type UserCreateWithoutAccountsInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   createdApps?: Prisma.AppCreateNestedManyWithoutCreatedByInput
   updatedApps?: Prisma.AppCreateNestedManyWithoutUpdatedByInput
@@ -1308,6 +2283,11 @@ export type UserCreateWithoutAccountsInput = {
   moderatedFeedback?: Prisma.FeedbackCreateNestedManyWithoutModeratedByInput
   downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -1320,6 +2300,8 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   createdApps?: Prisma.AppUncheckedCreateNestedManyWithoutCreatedByInput
   updatedApps?: Prisma.AppUncheckedCreateNestedManyWithoutUpdatedByInput
@@ -1328,6 +2310,11 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   moderatedFeedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutModeratedByInput
   downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -1356,6 +2343,8 @@ export type UserUpdateWithoutAccountsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   createdApps?: Prisma.AppUpdateManyWithoutCreatedByNestedInput
   updatedApps?: Prisma.AppUpdateManyWithoutUpdatedByNestedInput
@@ -1364,6 +2353,11 @@ export type UserUpdateWithoutAccountsInput = {
   moderatedFeedback?: Prisma.FeedbackUpdateManyWithoutModeratedByNestedInput
   downloadEvents?: Prisma.DownloadEventUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -1376,6 +2370,8 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   createdApps?: Prisma.AppUncheckedUpdateManyWithoutCreatedByNestedInput
   updatedApps?: Prisma.AppUncheckedUpdateManyWithoutUpdatedByNestedInput
@@ -1384,6 +2380,11 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   moderatedFeedback?: Prisma.FeedbackUncheckedUpdateManyWithoutModeratedByNestedInput
   downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -1396,6 +2397,8 @@ export type UserCreateWithoutSessionsInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   createdApps?: Prisma.AppCreateNestedManyWithoutCreatedByInput
   updatedApps?: Prisma.AppCreateNestedManyWithoutUpdatedByInput
@@ -1404,6 +2407,11 @@ export type UserCreateWithoutSessionsInput = {
   moderatedFeedback?: Prisma.FeedbackCreateNestedManyWithoutModeratedByInput
   downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1416,6 +2424,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   createdApps?: Prisma.AppUncheckedCreateNestedManyWithoutCreatedByInput
   updatedApps?: Prisma.AppUncheckedCreateNestedManyWithoutUpdatedByInput
@@ -1424,6 +2434,11 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   moderatedFeedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutModeratedByInput
   downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1452,6 +2467,8 @@ export type UserUpdateWithoutSessionsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   createdApps?: Prisma.AppUpdateManyWithoutCreatedByNestedInput
   updatedApps?: Prisma.AppUpdateManyWithoutUpdatedByNestedInput
@@ -1460,6 +2477,11 @@ export type UserUpdateWithoutSessionsInput = {
   moderatedFeedback?: Prisma.FeedbackUpdateManyWithoutModeratedByNestedInput
   downloadEvents?: Prisma.DownloadEventUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1472,6 +2494,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   createdApps?: Prisma.AppUncheckedUpdateManyWithoutCreatedByNestedInput
   updatedApps?: Prisma.AppUncheckedUpdateManyWithoutUpdatedByNestedInput
@@ -1480,6 +2504,11 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   moderatedFeedback?: Prisma.FeedbackUncheckedUpdateManyWithoutModeratedByNestedInput
   downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1497,6 +2526,10 @@ export type UserCountOutputType = {
   moderatedFeedback: number
   downloadEvents: number
   payments: number
+  appViewEvents: number
+  blogPosts: number
+  blogComments: number
+  activityLogs: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1509,6 +2542,10 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   moderatedFeedback?: boolean | UserCountOutputTypeCountModeratedFeedbackArgs
   downloadEvents?: boolean | UserCountOutputTypeCountDownloadEventsArgs
   payments?: boolean | UserCountOutputTypeCountPaymentsArgs
+  appViewEvents?: boolean | UserCountOutputTypeCountAppViewEventsArgs
+  blogPosts?: boolean | UserCountOutputTypeCountBlogPostsArgs
+  blogComments?: boolean | UserCountOutputTypeCountBlogCommentsArgs
+  activityLogs?: boolean | UserCountOutputTypeCountActivityLogsArgs
 }
 
 /**
@@ -1584,6 +2621,34 @@ export type UserCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.PaymentWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAppViewEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AppViewEventWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountBlogPostsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BlogPostWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountBlogCommentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BlogCommentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountActivityLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ActivityLogWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1595,6 +2660,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   role?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
+  scheduledDeletionAt?: boolean
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   createdApps?: boolean | Prisma.User$createdAppsArgs<ExtArgs>
@@ -1604,6 +2671,11 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   moderatedFeedback?: boolean | Prisma.User$moderatedFeedbackArgs<ExtArgs>
   downloadEvents?: boolean | Prisma.User$downloadEventsArgs<ExtArgs>
   payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
+  appViewEvents?: boolean | Prisma.User$appViewEventsArgs<ExtArgs>
+  blogPosts?: boolean | Prisma.User$blogPostsArgs<ExtArgs>
+  blogComments?: boolean | Prisma.User$blogCommentsArgs<ExtArgs>
+  settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
+  activityLogs?: boolean | Prisma.User$activityLogsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1617,6 +2689,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   role?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
+  scheduledDeletionAt?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1629,6 +2703,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   role?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
+  scheduledDeletionAt?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -1641,9 +2717,11 @@ export type UserSelectScalar = {
   role?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
+  scheduledDeletionAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "passwordHash" | "role" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "passwordHash" | "role" | "createdAt" | "updatedAt" | "deletedAt" | "scheduledDeletionAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
@@ -1654,6 +2732,11 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   moderatedFeedback?: boolean | Prisma.User$moderatedFeedbackArgs<ExtArgs>
   downloadEvents?: boolean | Prisma.User$downloadEventsArgs<ExtArgs>
   payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
+  appViewEvents?: boolean | Prisma.User$appViewEventsArgs<ExtArgs>
+  blogPosts?: boolean | Prisma.User$blogPostsArgs<ExtArgs>
+  blogComments?: boolean | Prisma.User$blogCommentsArgs<ExtArgs>
+  settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
+  activityLogs?: boolean | Prisma.User$activityLogsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1671,6 +2754,11 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     moderatedFeedback: Prisma.$FeedbackPayload<ExtArgs>[]
     downloadEvents: Prisma.$DownloadEventPayload<ExtArgs>[]
     payments: Prisma.$PaymentPayload<ExtArgs>[]
+    appViewEvents: Prisma.$AppViewEventPayload<ExtArgs>[]
+    blogPosts: Prisma.$BlogPostPayload<ExtArgs>[]
+    blogComments: Prisma.$BlogCommentPayload<ExtArgs>[]
+    settings: Prisma.$UserSettingsPayload<ExtArgs> | null
+    activityLogs: Prisma.$ActivityLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1682,6 +2770,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     role: $Enums.Role
     createdAt: Date
     updatedAt: Date
+    deletedAt: Date | null
+    scheduledDeletionAt: Date | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -2085,6 +3175,11 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   moderatedFeedback<T extends Prisma.User$moderatedFeedbackArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$moderatedFeedbackArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   downloadEvents<T extends Prisma.User$downloadEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$downloadEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DownloadEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.User$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  appViewEvents<T extends Prisma.User$appViewEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$appViewEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppViewEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  blogPosts<T extends Prisma.User$blogPostsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$blogPostsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BlogPostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  blogComments<T extends Prisma.User$blogCommentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$blogCommentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BlogCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  settings<T extends Prisma.User$settingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$settingsArgs<ExtArgs>>): Prisma.Prisma__UserSettingsClient<runtime.Types.Result.GetResult<Prisma.$UserSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  activityLogs<T extends Prisma.User$activityLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$activityLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2123,6 +3218,8 @@ export interface UserFieldRefs {
   readonly role: Prisma.FieldRef<"User", 'Role'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly scheduledDeletionAt: Prisma.FieldRef<"User", 'DateTime'>
 }
     
 
@@ -2729,6 +3826,121 @@ export type User$paymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.PaymentScalarFieldEnum | Prisma.PaymentScalarFieldEnum[]
+}
+
+/**
+ * User.appViewEvents
+ */
+export type User$appViewEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AppViewEvent
+   */
+  select?: Prisma.AppViewEventSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AppViewEvent
+   */
+  omit?: Prisma.AppViewEventOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AppViewEventInclude<ExtArgs> | null
+  where?: Prisma.AppViewEventWhereInput
+  orderBy?: Prisma.AppViewEventOrderByWithRelationInput | Prisma.AppViewEventOrderByWithRelationInput[]
+  cursor?: Prisma.AppViewEventWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AppViewEventScalarFieldEnum | Prisma.AppViewEventScalarFieldEnum[]
+}
+
+/**
+ * User.blogPosts
+ */
+export type User$blogPostsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BlogPost
+   */
+  select?: Prisma.BlogPostSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BlogPost
+   */
+  omit?: Prisma.BlogPostOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BlogPostInclude<ExtArgs> | null
+  where?: Prisma.BlogPostWhereInput
+  orderBy?: Prisma.BlogPostOrderByWithRelationInput | Prisma.BlogPostOrderByWithRelationInput[]
+  cursor?: Prisma.BlogPostWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BlogPostScalarFieldEnum | Prisma.BlogPostScalarFieldEnum[]
+}
+
+/**
+ * User.blogComments
+ */
+export type User$blogCommentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BlogComment
+   */
+  select?: Prisma.BlogCommentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BlogComment
+   */
+  omit?: Prisma.BlogCommentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BlogCommentInclude<ExtArgs> | null
+  where?: Prisma.BlogCommentWhereInput
+  orderBy?: Prisma.BlogCommentOrderByWithRelationInput | Prisma.BlogCommentOrderByWithRelationInput[]
+  cursor?: Prisma.BlogCommentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BlogCommentScalarFieldEnum | Prisma.BlogCommentScalarFieldEnum[]
+}
+
+/**
+ * User.settings
+ */
+export type User$settingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserSettings
+   */
+  select?: Prisma.UserSettingsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserSettings
+   */
+  omit?: Prisma.UserSettingsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserSettingsInclude<ExtArgs> | null
+  where?: Prisma.UserSettingsWhereInput
+}
+
+/**
+ * User.activityLogs
+ */
+export type User$activityLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ActivityLog
+   */
+  select?: Prisma.ActivityLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ActivityLog
+   */
+  omit?: Prisma.ActivityLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ActivityLogInclude<ExtArgs> | null
+  where?: Prisma.ActivityLogWhereInput
+  orderBy?: Prisma.ActivityLogOrderByWithRelationInput | Prisma.ActivityLogOrderByWithRelationInput[]
+  cursor?: Prisma.ActivityLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ActivityLogScalarFieldEnum | Prisma.ActivityLogScalarFieldEnum[]
 }
 
 /**

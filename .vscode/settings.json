@@ -1,0 +1,7 @@
+{
+  "chat.tools.terminal.autoApprove": {
+    "git add": true,
+    "npm run -w apps/web": true,
+    "npm run -w @elsesourav/validation": true
+  }
+}

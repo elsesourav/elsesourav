@@ -96,6 +96,8 @@ export type AdminCategory = {
   id: string;
   name: string;
   icon: string | null;
+  scheduledDeletionAt: string | null;
+  deletedAt: string | null;
   _count: {
     apps: number;
   };
@@ -215,6 +217,23 @@ export type UserHistoryItem = {
     title: string;
     slug: string;
   };
+};
+
+export type UserSettingsView = {
+  themeMode: "system" | "light" | "dark";
+  customTheme: Record<string, string> | null;
+  emailNotifications: boolean;
+  marketingEmails: boolean;
+  updatedAt: string | null;
+};
+
+export type UserDeletionScheduleView = {
+  scheduledDeletionAt: string | null;
+  deletedAt: string | null;
+  isScheduled: boolean;
+  minimumDelayDays: number;
+  maximumDelayDays: number;
+  defaultDelayDays: number;
 };
 
 export type PublicFeedbackItem = {

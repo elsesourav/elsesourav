@@ -3,9 +3,12 @@ import bcrypt from "bcryptjs";
 import {
   AppStatus,
   BannerPlacement,
+  BlogPostStatus,
   ContentStatus,
+  HelpArticleStatus,
   PrismaClient,
   Role,
+  SliderType,
   StoreSectionType,
 } from "../src/generated/prisma/client";
 
@@ -141,6 +144,74 @@ async function main() {
         releaseAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       },
     });
+
+    const starterTag = await prisma.appTag.upsert({
+      where: { slug: "starter" },
+      update: {
+        name: "Starter",
+      },
+      create: {
+        name: "Starter",
+        slug: "starter",
+      },
+    });
+
+    await prisma.appTagOnApp.upsert({
+      where: {
+        appId_tagId: {
+          appId: starterApp.id,
+          tagId: starterTag.id,
+        },
+      },
+      update: {},
+      create: {
+        appId: starterApp.id,
+        tagId: starterTag.id,
+      },
+    });
+
+    const existingSlider = await prisma.homeSlider.findFirst({
+      where: {
+        title: "Build Faster With ElseSourav",
+        type: SliderType.HERO,
+      },
+      select: { id: true },
+    });
+
+    if (!existingSlider) {
+      await prisma.homeSlider.create({
+        data: {
+          title: "Build Faster With ElseSourav",
+          description:
+            "Discover featured tools, upcoming releases, and curated developer workflows.",
+          type: SliderType.HERO,
+          appId: starterApp.id,
+          orderIndex: 0,
+          isActive: true,
+          createdBy: admin.id,
+          updatedBy: admin.id,
+        },
+      });
+    }
+
+    await prisma.appAggregateStat.upsert({
+      where: { appId: starterApp.id },
+      update: {
+        viewCount: 0,
+        downloadCount: 0,
+        libraryCount: 0,
+        feedbackCount: 0,
+        averageRating: 0,
+      },
+      create: {
+        appId: starterApp.id,
+        viewCount: 0,
+        downloadCount: 0,
+        libraryCount: 0,
+        feedbackCount: 0,
+        averageRating: 0,
+      },
+    });
   }
 
   const existingBanner = await prisma.storeBanner.findFirst({
@@ -210,6 +281,169 @@ async function main() {
       },
     },
   });
+
+  await prisma.profilePage.upsert({
+    where: { slug: "main" },
+    update: {
+      fullName: "Else Sourav",
+      headline: "Full-Stack Developer & Product Builder",
+      shortBio:
+        "I build practical software products with strong service architecture.",
+      bioMarkdown:
+        "I enjoy shipping reliable backend systems and polished user experiences. This platform shares my apps, articles, and product experiments.",
+      experienceMarkdown:
+        "- Building full-stack web products\n- Designing microservice APIs\n- Scaling developer workflows",
+      skills: ["TypeScript", "Next.js", "Node.js", "Prisma", "PostgreSQL"],
+      tools: ["VS Code", "GitHub Actions", "Docker", "Cloudinary"],
+      contactEmail: admin.email,
+      githubUrl: "https://github.com",
+      linkedinUrl: "https://www.linkedin.com",
+      websiteUrl: "https://elsesourav.com",
+      isActive: true,
+      updatedBy: admin.id,
+    },
+    create: {
+      slug: "main",
+      fullName: "Else Sourav",
+      headline: "Full-Stack Developer & Product Builder",
+      shortBio:
+        "I build practical software products with strong service architecture.",
+      bioMarkdown:
+        "I enjoy shipping reliable backend systems and polished user experiences. This platform shares my apps, articles, and product experiments.",
+      experienceMarkdown:
+        "- Building full-stack web products\n- Designing microservice APIs\n- Scaling developer workflows",
+      skills: ["TypeScript", "Next.js", "Node.js", "Prisma", "PostgreSQL"],
+      tools: ["VS Code", "GitHub Actions", "Docker", "Cloudinary"],
+      contactEmail: admin.email,
+      githubUrl: "https://github.com",
+      linkedinUrl: "https://www.linkedin.com",
+      websiteUrl: "https://elsesourav.com",
+      isActive: true,
+      createdBy: admin.id,
+      updatedBy: admin.id,
+    },
+  });
+
+  const engineeringTag = await prisma.blogTag.upsert({
+    where: { slug: "engineering" },
+    update: {
+      name: "Engineering",
+    },
+    create: {
+      name: "Engineering",
+      slug: "engineering",
+    },
+  });
+
+  await prisma.blogPost.upsert({
+    where: { slug: "welcome-to-the-platform" },
+    update: {
+      title: "Welcome to the Platform",
+      excerpt:
+        "How the services-first architecture powers apps, content, and user flows.",
+      contentMarkdown:
+        "This is the first blog post on the platform. It explains the architecture and what to expect next.",
+      status: BlogPostStatus.PUBLISHED,
+      publishAt: new Date(),
+      publishedAt: new Date(),
+      authorId: admin.id,
+      updatedBy: admin.id,
+      tags: {
+        deleteMany: {},
+        create: [{ tagId: engineeringTag.id }],
+      },
+    },
+    create: {
+      slug: "welcome-to-the-platform",
+      title: "Welcome to the Platform",
+      excerpt:
+        "How the services-first architecture powers apps, content, and user flows.",
+      contentMarkdown:
+        "This is the first blog post on the platform. It explains the architecture and what to expect next.",
+      status: BlogPostStatus.PUBLISHED,
+      publishAt: new Date(),
+      publishedAt: new Date(),
+      authorId: admin.id,
+      createdBy: admin.id,
+      updatedBy: admin.id,
+      tags: {
+        create: [{ tagId: engineeringTag.id }],
+      },
+    },
+  });
+
+  const helpCategory = await prisma.helpCategory.upsert({
+    where: { slug: "getting-started" },
+    update: {
+      name: "Getting Started",
+      description: "Start here for account, app, and troubleshooting basics.",
+      orderIndex: 0,
+      isActive: true,
+    },
+    create: {
+      name: "Getting Started",
+      slug: "getting-started",
+      description: "Start here for account, app, and troubleshooting basics.",
+      orderIndex: 0,
+      isActive: true,
+    },
+  });
+
+  await prisma.helpArticle.upsert({
+    where: { slug: "installing-apps" },
+    update: {
+      categoryId: helpCategory.id,
+      title: "Installing Apps",
+      summary: "How to install and track apps from the catalog.",
+      contentMarkdown:
+        "Browse apps, open the app details page, and choose the correct platform link. Your downloads and views are tracked automatically.",
+      status: HelpArticleStatus.PUBLISHED,
+      isFeatured: true,
+      publishAt: new Date(),
+      publishedAt: new Date(),
+      updatedBy: admin.id,
+    },
+    create: {
+      categoryId: helpCategory.id,
+      slug: "installing-apps",
+      title: "Installing Apps",
+      summary: "How to install and track apps from the catalog.",
+      contentMarkdown:
+        "Browse apps, open the app details page, and choose the correct platform link. Your downloads and views are tracked automatically.",
+      status: HelpArticleStatus.PUBLISHED,
+      isFeatured: true,
+      publishAt: new Date(),
+      publishedAt: new Date(),
+      createdBy: admin.id,
+      updatedBy: admin.id,
+    },
+  });
+
+  const existingTestimonial = await prisma.testimonial.findFirst({
+    where: {
+      authorName: "Early Platform User",
+      company: "Community",
+    },
+    select: { id: true },
+  });
+
+  if (!existingTestimonial) {
+    await prisma.testimonial.create({
+      data: {
+        authorName: "Early Platform User",
+        authorRole: "Developer",
+        company: "Community",
+        quoteMarkdown:
+          "The platform is fast, clean, and makes discovering useful tools very easy.",
+        rating: 5,
+        sortOrder: 0,
+        isFeatured: true,
+        isActive: true,
+        createdBy: admin.id,
+        updatedBy: admin.id,
+      },
+    });
+  }
 
   await prisma.themeConfig.upsert({
     where: { name: "Default Brand Theme" },

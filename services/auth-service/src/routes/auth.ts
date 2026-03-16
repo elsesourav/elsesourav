@@ -129,6 +129,24 @@ authRouter.post("/oauth/github/upsert", async (req, res) => {
       );
     }
 
+    const existingUser = await prisma.user.findUnique({
+      where: { email: parsed.data.email },
+      select: {
+        id: true,
+        deletedAt: true,
+      },
+    });
+
+    if (existingUser?.deletedAt) {
+      return sendFailure(
+        res,
+        requestId,
+        "CONFLICT",
+        "This account has been deleted.",
+        409,
+      );
+    }
+
     const user = await prisma.user.upsert({
       where: { email: parsed.data.email },
       update: {
@@ -187,8 +205,19 @@ authRouter.post("/login", async (req, res) => {
         name: true,
         role: true,
         passwordHash: true,
+        deletedAt: true,
       },
     });
+
+    if (user?.deletedAt) {
+      return sendFailure(
+        res,
+        requestId,
+        "UNAUTHORIZED",
+        "Invalid credentials.",
+        401,
+      );
+    }
 
     if (!user?.passwordHash) {
       return sendFailure(
@@ -281,10 +310,30 @@ authRouter.get("/session/verify", async (req, res) => {
       );
     }
 
+    const currentUser = await prisma.user.findUnique({
+      where: { id: payload.sub },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        deletedAt: true,
+      },
+    });
+
+    if (!currentUser || currentUser.deletedAt) {
+      return sendFailure(
+        res,
+        requestId,
+        "UNAUTHORIZED",
+        "Invalid or expired token.",
+        401,
+      );
+    }
+
     return sendSuccess(res, requestId, {
-      id: payload.sub,
-      email: payload.email,
-      role: payload.role,
+      id: currentUser.id,
+      email: currentUser.email,
+      role: currentUser.role,
     });
   } catch {
     return sendFailure(
@@ -323,14 +372,23 @@ authRouter.get("/users/:id", async (req, res) => {
         name: true,
         role: true,
         createdAt: true,
+        deletedAt: true,
       },
     });
 
-    if (!user) {
+    if (!user || user.deletedAt) {
       return sendFailure(res, requestId, "NOT_FOUND", "User not found.", 404);
     }
 
-    return sendSuccess(res, requestId, user);
+    const sanitizedUser = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      createdAt: user.createdAt,
+    };
+
+    return sendSuccess(res, requestId, sanitizedUser);
   } catch (error) {
     return sendFailure(
       res,

@@ -1,12 +1,18 @@
 import { AppStatus, Prisma, prisma } from "@elsesourav/db";
 import {
+  appTagAssignmentSchema,
+  appTagCreateSchema,
+  appTagUpdateSchema,
   bannerCreateSchema,
   bannerUpdateSchema,
   categorySchema,
   createAppSchema,
+  homeSliderCreateSchema,
+  homeSliderUpdateSchema,
   sectionItemCreateSchema,
   sectionItemsQuerySchema,
   sectionItemUpdateSchema,
+  sliderTypeSchema,
   updateAppSchema,
 } from "@elsesourav/validation";
 import { Router } from "express";
@@ -17,6 +23,18 @@ const idParamSchema = z.object({
   id: z.string().cuid(),
 });
 
+const sliderListQuerySchema = z.object({
+  type: sliderTypeSchema.optional(),
+  includeInactive: z
+    .enum(["true", "false"])
+    .optional()
+    .transform((value) => value === "true"),
+});
+
+const CATEGORY_DELETION_GRACE_DAYS = 30;
+const CATEGORY_DELETION_GRACE_MS =
+  CATEGORY_DELETION_GRACE_DAYS * 24 * 60 * 60 * 1000;
+
 export const adminCatalogRouter = Router();
 
 adminCatalogRouter.get("/stats", async (_req, res) => {
@@ -25,7 +43,12 @@ adminCatalogRouter.get("/stats", async (_req, res) => {
   try {
     const [appsCount, categoriesCount, recentApps] = await prisma.$transaction([
       prisma.app.count({ where: { deletedAt: null } }),
-      prisma.category.count(),
+      prisma.category.count({
+        where: {
+          deletedAt: null,
+          scheduledDeletionAt: null,
+        },
+      }),
       prisma.app.findMany({
         where: { deletedAt: null },
         orderBy: { createdAt: "desc" },
@@ -84,6 +107,29 @@ async function generateUniqueSlug(seed: string): Promise<string> {
   return candidate;
 }
 
+async function generateUniqueTagSlug(
+  seed: string,
+  excludeTagId?: string,
+): Promise<string> {
+  const base = toSlug(seed) || "tag";
+  let candidate = base;
+  let suffix = 2;
+
+  while (true) {
+    const existing = await prisma.appTag.findUnique({
+      where: { slug: candidate },
+      select: { id: true },
+    });
+
+    if (!existing || existing.id === excludeTagId) {
+      return candidate;
+    }
+
+    candidate = `${base}-${suffix}`;
+    suffix += 1;
+  }
+}
+
 adminCatalogRouter.get("/apps", async (_req, res) => {
   const requestId = getRequestId(res);
 
@@ -104,10 +150,29 @@ adminCatalogRouter.get("/apps", async (_req, res) => {
             downloadEvents: true,
           },
         },
+        tagLinks: {
+          select: {
+            tag: {
+              select: {
+                id: true,
+                name: true,
+                slug: true,
+              },
+            },
+          },
+        },
+        aggregateStat: true,
       },
     });
 
-    return sendSuccess(res, requestId, items);
+    return sendSuccess(
+      res,
+      requestId,
+      items.map((item) => ({
+        ...item,
+        tags: item.tagLinks.map((entry) => entry.tag),
+      })),
+    );
   } catch (error) {
     return sendFailure(
       res,
@@ -136,8 +201,12 @@ adminCatalogRouter.post("/apps", async (req, res) => {
       );
     }
 
-    const category = await prisma.category.findUnique({
-      where: { id: parsed.data.categoryId },
+    const category = await prisma.category.findFirst({
+      where: {
+        id: parsed.data.categoryId,
+        deletedAt: null,
+        scheduledDeletionAt: null,
+      },
       select: { id: true },
     });
 
@@ -146,7 +215,7 @@ adminCatalogRouter.post("/apps", async (req, res) => {
         res,
         requestId,
         "NOT_FOUND",
-        "Category does not exist.",
+        "Category is unavailable.",
         404,
       );
     }
@@ -165,6 +234,7 @@ adminCatalogRouter.post("/apps", async (req, res) => {
         publishedAt:
           parsed.data.status === AppStatus.PUBLISHED ? new Date() : null,
         isPaid: parsed.data.isPaid,
+        isFeatured: parsed.data.isFeatured,
         price: parsed.data.isPaid ? parsed.data.price : 0,
         categoryId: parsed.data.categoryId,
         createdById: userId ?? "system-admin",
@@ -230,8 +300,12 @@ adminCatalogRouter.put("/apps/:id", async (req, res) => {
     }
 
     if (parsed.data.categoryId) {
-      const category = await prisma.category.findUnique({
-        where: { id: parsed.data.categoryId },
+      const category = await prisma.category.findFirst({
+        where: {
+          id: parsed.data.categoryId,
+          deletedAt: null,
+          scheduledDeletionAt: null,
+        },
         select: { id: true },
       });
 
@@ -240,7 +314,7 @@ adminCatalogRouter.put("/apps/:id", async (req, res) => {
           res,
           requestId,
           "NOT_FOUND",
-          "Category does not exist.",
+          "Category is unavailable.",
           404,
         );
       }
@@ -339,11 +413,18 @@ adminCatalogRouter.get("/categories", async (_req, res) => {
 
   try {
     const categories = await prisma.category.findMany({
+      where: {
+        deletedAt: null,
+      },
       orderBy: { name: "asc" },
       include: {
         _count: {
           select: {
-            apps: true,
+            apps: {
+              where: {
+                deletedAt: null,
+              },
+            },
           },
         },
       },
@@ -382,6 +463,17 @@ adminCatalogRouter.post("/categories", async (req, res) => {
       data: {
         name: parsed.data.name,
         icon: parsed.data.icon,
+      },
+      include: {
+        _count: {
+          select: {
+            apps: {
+              where: {
+                deletedAt: null,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -425,11 +517,61 @@ adminCatalogRouter.put("/categories/:id", async (req, res) => {
       );
     }
 
+    const existing = await prisma.category.findUnique({
+      where: { id: parsedId.data.id },
+      select: {
+        id: true,
+        deletedAt: true,
+        scheduledDeletionAt: true,
+      },
+    });
+
+    if (!existing) {
+      return sendFailure(
+        res,
+        requestId,
+        "NOT_FOUND",
+        "Category not found.",
+        404,
+      );
+    }
+
+    if (existing.deletedAt) {
+      return sendFailure(
+        res,
+        requestId,
+        "CONFLICT",
+        "Category is already deleted.",
+        409,
+      );
+    }
+
+    if (existing.scheduledDeletionAt) {
+      return sendFailure(
+        res,
+        requestId,
+        "CONFLICT",
+        "Category is pending deletion. Restore it before updating.",
+        409,
+      );
+    }
+
     const category = await prisma.category.update({
       where: { id: parsedId.data.id },
       data: {
         name: parsed.data.name,
         icon: parsed.data.icon,
+      },
+      include: {
+        _count: {
+          select: {
+            apps: {
+              where: {
+                deletedAt: null,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -461,6 +603,45 @@ adminCatalogRouter.delete("/categories/:id", async (req, res) => {
       );
     }
 
+    const existing = await prisma.category.findUnique({
+      where: { id: parsedId.data.id },
+      select: {
+        id: true,
+        deletedAt: true,
+        scheduledDeletionAt: true,
+      },
+    });
+
+    if (!existing) {
+      return sendFailure(
+        res,
+        requestId,
+        "NOT_FOUND",
+        "Category not found.",
+        404,
+      );
+    }
+
+    if (existing.deletedAt) {
+      return sendFailure(
+        res,
+        requestId,
+        "CONFLICT",
+        "Category is already deleted.",
+        409,
+      );
+    }
+
+    if (existing.scheduledDeletionAt) {
+      return sendFailure(
+        res,
+        requestId,
+        "CONFLICT",
+        "Deletion is already scheduled for this category.",
+        409,
+      );
+    }
+
     const dependentApps = await prisma.app.count({
       where: {
         categoryId: parsedId.data.id,
@@ -478,7 +659,265 @@ adminCatalogRouter.delete("/categories/:id", async (req, res) => {
       );
     }
 
-    await prisma.category.delete({
+    const scheduledDeletionAt = new Date(
+      Date.now() + CATEGORY_DELETION_GRACE_MS,
+    );
+
+    const category = await prisma.category.update({
+      where: { id: parsedId.data.id },
+      data: {
+        scheduledDeletionAt,
+      },
+      include: {
+        _count: {
+          select: {
+            apps: {
+              where: {
+                deletedAt: null,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return sendSuccess(res, requestId, category);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to schedule category deletion.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.post("/categories/:id/restore", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedId = idParamSchema.safeParse(req.params);
+    if (!parsedId.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid id.",
+        400,
+      );
+    }
+
+    const existing = await prisma.category.findUnique({
+      where: { id: parsedId.data.id },
+      select: {
+        id: true,
+        deletedAt: true,
+        scheduledDeletionAt: true,
+      },
+    });
+
+    if (!existing) {
+      return sendFailure(
+        res,
+        requestId,
+        "NOT_FOUND",
+        "Category not found.",
+        404,
+      );
+    }
+
+    if (existing.deletedAt) {
+      return sendFailure(
+        res,
+        requestId,
+        "CONFLICT",
+        "Category is already deleted and cannot be restored.",
+        409,
+      );
+    }
+
+    if (!existing.scheduledDeletionAt) {
+      return sendFailure(
+        res,
+        requestId,
+        "CONFLICT",
+        "Category does not have a scheduled deletion.",
+        409,
+      );
+    }
+
+    const category = await prisma.category.update({
+      where: { id: parsedId.data.id },
+      data: {
+        scheduledDeletionAt: null,
+      },
+      include: {
+        _count: {
+          select: {
+            apps: {
+              where: {
+                deletedAt: null,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return sendSuccess(res, requestId, category);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to restore category.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.get("/tags", async (_req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const tags = await prisma.appTag.findMany({
+      orderBy: [{ name: "asc" }],
+      include: {
+        _count: {
+          select: {
+            appLinks: true,
+          },
+        },
+      },
+    });
+
+    return sendSuccess(res, requestId, tags);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to fetch tags.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.post("/tags", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsed = appTagCreateSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid tag payload.",
+        400,
+        parsed.error.flatten(),
+      );
+    }
+
+    const slugSeed = parsed.data.slug ?? parsed.data.name;
+    const slug = await generateUniqueTagSlug(slugSeed);
+
+    const tag = await prisma.appTag.create({
+      data: {
+        name: parsed.data.name,
+        slug,
+      },
+    });
+
+    return sendSuccess(res, requestId, tag, 201);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to create tag.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.patch("/tags/:id", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedId = idParamSchema.safeParse(req.params);
+    if (!parsedId.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid id.",
+        400,
+      );
+    }
+
+    const parsed = appTagUpdateSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid tag update payload.",
+        400,
+        parsed.error.flatten(),
+      );
+    }
+
+    const nextSlug =
+      parsed.data.slug || parsed.data.name
+        ? await generateUniqueTagSlug(
+            parsed.data.slug ?? parsed.data.name ?? "tag",
+            parsedId.data.id,
+          )
+        : undefined;
+
+    const tag = await prisma.appTag.update({
+      where: { id: parsedId.data.id },
+      data: {
+        name: parsed.data.name,
+        slug: nextSlug,
+      },
+    });
+
+    return sendSuccess(res, requestId, tag);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to update tag.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.delete("/tags/:id", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedId = idParamSchema.safeParse(req.params);
+    if (!parsedId.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid id.",
+        400,
+      );
+    }
+
+    await prisma.appTag.delete({
       where: { id: parsedId.data.id },
     });
 
@@ -488,7 +927,325 @@ adminCatalogRouter.delete("/categories/:id", async (req, res) => {
       res,
       requestId,
       "INTERNAL_ERROR",
-      "Failed to delete category.",
+      "Failed to delete tag.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.put("/apps/:id/tags", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedId = idParamSchema.safeParse(req.params);
+    if (!parsedId.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid app id.",
+        400,
+      );
+    }
+
+    const parsedBody = appTagAssignmentSchema.safeParse(req.body);
+    if (!parsedBody.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid app tag payload.",
+        400,
+        parsedBody.error.flatten(),
+      );
+    }
+
+    const app = await prisma.app.findUnique({
+      where: { id: parsedId.data.id },
+      select: { id: true },
+    });
+
+    if (!app) {
+      return sendFailure(res, requestId, "NOT_FOUND", "App not found.", 404);
+    }
+
+    await prisma.$transaction(async (tx) => {
+      await tx.appTagOnApp.deleteMany({
+        where: {
+          appId: parsedId.data.id,
+        },
+      });
+
+      if (parsedBody.data.tagIds.length > 0) {
+        await tx.appTagOnApp.createMany({
+          data: parsedBody.data.tagIds.map((tagId) => ({
+            appId: parsedId.data.id,
+            tagId,
+          })),
+          skipDuplicates: true,
+        });
+      }
+    });
+
+    const updatedApp = await prisma.app.findUnique({
+      where: { id: parsedId.data.id },
+      include: {
+        tagLinks: {
+          select: {
+            tag: {
+              select: {
+                id: true,
+                name: true,
+                slug: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return sendSuccess(res, requestId, {
+      appId: parsedId.data.id,
+      tags: updatedApp?.tagLinks.map((entry) => entry.tag) ?? [],
+    });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to update app tags.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.get("/sliders", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsed = sliderListQuerySchema.safeParse(req.query);
+    if (!parsed.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid slider query.",
+        400,
+        parsed.error.flatten(),
+      );
+    }
+
+    const where: Prisma.HomeSliderWhereInput = {};
+    if (parsed.data.type) {
+      where.type = parsed.data.type;
+    }
+    if (!parsed.data.includeInactive) {
+      where.isActive = true;
+    }
+
+    const sliders = await prisma.homeSlider.findMany({
+      where,
+      orderBy: [{ orderIndex: "asc" }, { updatedAt: "desc" }],
+      include: {
+        app: {
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+            status: true,
+          },
+        },
+      },
+    });
+
+    return sendSuccess(res, requestId, sliders);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to fetch sliders.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.post("/sliders", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsed = homeSliderCreateSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid slider payload.",
+        400,
+        parsed.error.flatten(),
+      );
+    }
+
+    if (parsed.data.appId) {
+      const app = await prisma.app.findUnique({
+        where: { id: parsed.data.appId },
+        select: { id: true },
+      });
+
+      if (!app) {
+        return sendFailure(
+          res,
+          requestId,
+          "NOT_FOUND",
+          "Linked app not found.",
+          404,
+        );
+      }
+    }
+
+    const userId = req.header("x-user-id") ?? null;
+
+    const slider = await prisma.homeSlider.create({
+      data: {
+        title: parsed.data.title,
+        description: parsed.data.description,
+        type: parsed.data.type,
+        imageUrl: parsed.data.imageUrl,
+        linkUrl: parsed.data.linkUrl,
+        appId: parsed.data.appId,
+        orderIndex: parsed.data.orderIndex,
+        startsAt: parsed.data.startsAt,
+        endsAt: parsed.data.endsAt,
+        isActive: parsed.data.isActive,
+        createdBy: userId,
+        updatedBy: userId,
+      },
+    });
+
+    return sendSuccess(res, requestId, slider, 201);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to create slider.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.patch("/sliders/:id", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedId = idParamSchema.safeParse(req.params);
+    if (!parsedId.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid id.",
+        400,
+      );
+    }
+
+    const parsed = homeSliderUpdateSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid slider update payload.",
+        400,
+        parsed.error.flatten(),
+      );
+    }
+
+    if (parsed.data.appId) {
+      const app = await prisma.app.findUnique({
+        where: { id: parsed.data.appId },
+        select: { id: true },
+      });
+
+      if (!app) {
+        return sendFailure(
+          res,
+          requestId,
+          "NOT_FOUND",
+          "Linked app not found.",
+          404,
+        );
+      }
+    }
+
+    const userId = req.header("x-user-id") ?? null;
+
+    const slider = await prisma.homeSlider.update({
+      where: { id: parsedId.data.id },
+      data: {
+        title: parsed.data.title,
+        description: parsed.data.description,
+        type: parsed.data.type,
+        imageUrl: parsed.data.imageUrl,
+        linkUrl: parsed.data.linkUrl,
+        appId: parsed.data.appId,
+        orderIndex: parsed.data.orderIndex,
+        startsAt: parsed.data.startsAt,
+        endsAt: parsed.data.endsAt,
+        isActive: parsed.data.isActive,
+        updatedBy: userId,
+      },
+    });
+
+    return sendSuccess(res, requestId, slider);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to update slider.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.delete("/sliders/:id", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedId = idParamSchema.safeParse(req.params);
+    if (!parsedId.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid id.",
+        400,
+      );
+    }
+
+    const userId = req.header("x-user-id") ?? null;
+
+    const slider = await prisma.homeSlider.update({
+      where: { id: parsedId.data.id },
+      data: {
+        isActive: false,
+        updatedBy: userId,
+      },
+    });
+
+    return sendSuccess(res, requestId, slider);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to disable slider.",
       500,
       error instanceof Error ? error.message : "Unknown error",
     );

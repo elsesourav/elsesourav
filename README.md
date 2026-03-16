@@ -1,302 +1,244 @@
 # ElseSourav Platform
 
-Microservices-based developer platform and app store with a Next.js BFF web app, service-oriented backend domains, and shared Prisma contracts.
+## Product Documentation
 
-## What This Repo Is
+ElseSourav is a portfolio-driven developer platform and app marketplace.
+It blends public app discovery, personalized user features, and a full admin
+control center powered by a microservice architecture.
 
-This repository contains a monorepo implementation of:
+This document explains what the platform does, how it is structured, what
+technologies it uses, and how the major domains work together.
 
-- A web UI + BFF gateway built with Next.js (App Router)
-- Dedicated backend services for auth, catalog, user domain, dynamic content, and theme management
-- Shared packages for config, database, validation, types, and caching
-- PostgreSQL (primary DB) and Redis (infrastructure)
+## 1. Product Purpose
 
-Current direction is a microservice architecture with centralized service-to-service access control and admin-managed merchandising/content/theme features.
+ElseSourav is designed to solve three connected problems in one system:
 
-## Architecture Overview
+1. Present developer products in a polished, searchable catalog.
+2. Provide a user account layer for engagement (library, history, feedback).
+3. Give admins full control over catalog merchandising, content, and theme.
+
+Instead of a static portfolio site, the platform behaves as a living product:
+
+- dynamic catalog and merchandising,
+- content publishing surfaces,
+- analytics-oriented user interactions,
+- centralized administrative operations.
+
+## 2. Primary Audience
+
+### Visitors
+
+- Browse apps and categories.
+- View app detail pages and platform content.
+- Explore blog/help/testimonial/profile content.
+
+### Registered users
+
+- Create account and sign in.
+- Save apps to personal library.
+- Track usage history and recently viewed records.
+- Submit feedback and ratings.
+
+### Admins
+
+- Manage apps, categories, tags, sections, banners, and sliders.
+- Moderate feedback and monitor platform-level stats.
+- Manage profile, blog, help center, testimonials, and content pages.
+- Manage and activate visual themes.
+
+## 3. Core Platform Capabilities
+
+### 3.1 Catalog and Discovery
+
+- Public app listing and app detail pages.
+- Category-based organization and tag-based classification.
+- Home/store merchandising with:
+  - latest/upcoming/featured section items,
+  - banner placements,
+  - home sliders.
+
+### 3.2 Identity and Access
+
+- Credentials login/register flow.
+- Optional GitHub OAuth integration.
+- Session-aware role model (`USER`, `ADMIN`).
+- Internal service authorization boundary via trusted headers.
+
+### 3.3 User Engagement Domain
+
+- Library (saved apps).
+- Download/view tracking and recent history.
+- Feedback creation and moderation lifecycle.
+- Aggregate + daily stats recalculation support.
+
+### 3.4 Content Domain
+
+- Structured content pages with status/versioning.
+- Profile content management.
+- Blog domain (tags, posts, comments moderation).
+- Help center domain (categories and articles).
+- Testimonial management.
+
+### 3.5 Theme and Brand Layer
+
+- Theme config CRUD and activation.
+- Centralized visual tokens served to web layout.
+- Runtime theme application to the frontend shell.
+
+## 4. System Architecture
+
+The platform is a monorepo with one web app and five backend services.
+
+### 4.1 Top-level structure
 
 - `apps/web`:
-  - Next.js app for public pages and admin UI
-  - BFF API routes under `apps/web/src/app/api/*` proxy requests to services
-  - NextAuth for user sessions
+  - Next.js web frontend and BFF API layer.
 - `services/auth-service`:
-  - credentials login/register
-  - JWT/session verification helpers and user admin endpoints
+  - authentication, account lookup, admin auth stats/users.
 - `services/catalog-service`:
-  - app listing/detail
-  - admin app/category CRUD
-  - sections and banners management
+  - apps, categories, tags, banners, sections, sliders.
 - `services/user-service`:
-  - library/bookmarks, download history, feedback
-  - admin moderation and user-side tracking endpoints
+  - library/history/feedback/tracking/moderation/stats.
 - `services/content-service`:
-  - dynamic pages (About and other CMS-like pages)
+  - profile/blog/help/pages/testimonials.
 - `services/theme-service`:
-  - active theme resolution + admin theme config management
-- `packages/db`:
-  - Prisma schema, Prisma config, seed logic
-  - generated Prisma client and db runtime wrapper
-- `packages/validation`, `packages/types`, `packages/config`, `packages/cache`:
-  - shared contracts and helpers used across apps/services
+  - theme configs and active theme retrieval.
+- `packages/db`, `packages/types`, `packages/validation`, `packages/config`, `packages/cache`:
+  - shared contracts and runtime foundations.
 
-### Security Model (Internal)
+### 4.2 Request flow model
 
-Services mounted under `/v1/*` require internal headers:
+1. Browser requests page or calls a web API route.
+2. Next.js BFF route validates user/admin session context.
+3. BFF proxies request to a target microservice.
+4. Service processes domain logic and DB access via Prisma.
+5. Response returns in a unified API response shape.
 
-- `x-internal-token` for service trust
-- `x-user-role: ADMIN` for admin-only endpoints
-- optional `x-user-id` for auditing/moderation metadata
+This keeps browser clients isolated from internal service trust headers.
 
-The web BFF is responsible for turning user session context into these internal headers.
+## 5. Technology Stack
 
-## Repository Layout
+### 5.1 Frontend and BFF
 
-```text
-.
-├── apps/
-│   └── web/
-├── services/
-│   ├── auth-service/
-│   ├── catalog-service/
-│   ├── user-service/
-│   ├── content-service/
-│   └── theme-service/
-├── packages/
-│   ├── db/
-│   ├── validation/
-│   ├── types/
-│   ├── config/
-│   └── cache/
-├── scripts/
-│   └── verify-prisma-generated.sh
-├── .github/workflows/
-│   └── prisma-generated-check.yml
-├── docker-compose.yml
-├── .env.example
-└── package.json
-```
+- Next.js 16 (App Router)
+- React 19
+- NextAuth (JWT session strategy)
+- TypeScript
 
-## Prerequisites
+### 5.2 Backend Services
 
-- Node.js `>= 20.19.0` (Prisma 7 requirement)
-- npm `>= 10`
-- Docker Desktop (for local Postgres + Redis)
+- Express 4
+- TypeScript
+- Shared Zod validation package
 
-## Environment Setup
+### 5.3 Data and Persistence
 
-### 1) Root environment
+- PostgreSQL (primary relational store)
+- Prisma 7 (schema, migration, client)
+- Redis (infrastructure layer; optional by feature path)
 
-Copy root env template:
+### 5.4 Security and Auth
 
-```bash
-cp .env.example .env
-```
+- NextAuth sessions in web layer
+- Service-to-service header trust with internal token
+- Role-based admin checks (`x-user-role: ADMIN`)
+- JWT support in auth service
 
-Important values to set:
-
-- `DATABASE_URL`
-- `INTERNAL_SERVICE_TOKEN` (minimum 16 chars)
-- `AUTH_JWT_SECRET` (minimum 16 chars)
-- `NEXTAUTH_SECRET` (minimum 32 chars)
-- optional: GitHub OAuth, Cloudinary, Redis, Sentry
+### 5.5 Tooling and Quality
 
-### 2) Web app environment
-
-Copy web env template:
+- npm workspaces monorepo
+- Vitest (web tests)
+- TypeScript typecheck across workspaces
+- Prisma generated-client drift verification script
 
-```bash
-cp apps/web/.env.example apps/web/.env.local
-```
+## 6. Data Domain Overview
 
-If you keep values only in root `.env`, ensure your local tooling loads those when running web.
-
-## Local Development (Full Stack)
-
-### 1) Start infrastructure
-
-```bash
-docker compose up -d
-```
+High-level domain entities include:
 
-This starts:
+- Identity: users, sessions, accounts, roles, user settings.
+- Catalog: apps, categories, app tags, media, links, sliders, store sections,
+  banners, aggregate stats, daily stats.
+- User interactions: library, download events, view events, feedback,
+  moderation metadata, activity logs.
+- Content: profile pages, content pages + versions, blog tags/posts/comments,
+  help categories/articles + versions, testimonials.
+- Theme: theme configs and active theme state.
 
-- Postgres on `localhost:5432`
-- Redis on `localhost:6379`
+Prisma schema is the canonical source of truth for relationships and constraints.
 
-### 2) Install dependencies
+## 7. API Domain Map
 
-```bash
-npm install
-```
+Service namespaces:
 
-### 3) Database initialize
-
-```bash
-npm run db:migrate
-npm run db:seed
-```
-
-Optional:
-
-```bash
-npm run db:studio
-```
-
-### 4) Start app + services (separate terminals)
-
-```bash
-npm run dev:web
-npm run dev:auth
-npm run dev:catalog
-npm run dev:user
-npm run dev:content
-npm run dev:theme
-```
+- Auth service: `/v1/auth/*`
+- Catalog service: `/v1/catalog/*`, `/v1/admin/catalog/*`
+- User service: `/v1/user/*`, `/v1/admin/user/*`
+- Content service: `/v1/content/*`, `/v1/admin/content/*`
+- Theme service: `/v1/theme/*`, `/v1/admin/theme/*`
 
-Web app default URL: `http://localhost:3000`
+Common behavior:
 
-## Service Ports and Base Routes
+- Service health endpoint: `GET /health`
+- Admin namespaces enforce admin-role checks.
+- Shared response envelope type in `@elsesourav/types`.
 
-- Auth service: `http://localhost:4001`
-  - health: `/health`
-  - API base: `/v1/auth`
-- Catalog service: `http://localhost:4002`
-  - health: `/health`
-  - API bases: `/v1/catalog`, `/v1/admin/catalog`
-- User service: `http://localhost:4003`
-  - health: `/health`
-  - API bases: `/v1/user`, `/v1/admin/user`
-- Content service: `http://localhost:4004`
-  - health: `/health`
-  - API bases: `/v1/content`, `/v1/admin/content`
-- Theme service: `http://localhost:4005`
-  - health: `/health`
-  - API bases: `/v1/theme`, `/v1/admin/theme`
+## 8. Security and Trust Boundaries
 
-Web/BFF health endpoint:
+### Internal trust headers
 
-- `GET /api/health`
+- `x-internal-token`
+- `x-user-role`
+- `x-user-id` (when user context is needed)
 
-## Useful Scripts
+### Enforcement model
 
-### Root scripts
+- Catalog/user/content/theme services enforce internal token on `/v1/*`.
+- Admin routes additionally require admin role.
+- Auth service uses route-level protection for sensitive internal/admin paths.
 
-```bash
-npm run dev:web
-npm run dev:auth
-npm run dev:catalog
-npm run dev:user
-npm run dev:content
-npm run dev:theme
+### Practical boundary
 
-npm run lint
-npm run typecheck
-npm run test
-npm run build
+Public clients should call web routes (BFF), not service ports directly.
 
-npm run db:generate
-npm run db:migrate
-npm run db:seed
-npm run db:studio
+## 9. User and Admin Experience Map
 
-npm run ci:verify-prisma-generated
-```
+### User journey
 
-### Web scripts (`apps/web`)
+1. Discover apps from home/catalog pages.
+2. Open app details and related content.
+3. Sign in/register.
+4. Save items to library and leave feedback.
+5. Review history/recently viewed data.
 
-```bash
-npm run dev
-npm run lint
-npm run typecheck
-npm run test
-npm run test:watch
-npm run build
-```
+### Admin journey
 
-## Testing and Quality
+1. Sign in with admin role.
+2. Use admin dashboard for platform metrics.
+3. Manage catalog entities and merchandising surfaces.
+4. Moderate feedback and monitor user activity indicators.
+5. Publish/manage content and theme states.
 
-Current baseline checks:
+## 10. Reliability and Quality Controls
 
-- Type checking across all workspaces
-- ESLint on web app
-- Vitest smoke tests in web utilities
-- Production build verification
+The platform relies on multiple quality layers:
 
-Run everything manually:
+- static typing across apps, packages, and services,
+- generated client consistency checks for Prisma,
+- test coverage in web utility and BFF proxy contracts,
+- health endpoints for runtime service diagnostics.
 
-```bash
-npm run test
-npm run lint
-npm run typecheck
-npm run build
-```
+## 11. Documentation Map
 
-## Prisma and Generated Client Workflow
+- Root product/system overview: this file.
+- Service-level runbook and service details: `services/README.md`.
+- Web app-specific notes: `apps/web/README.md`.
 
-This repo uses Prisma 7 with:
+## 12. Quick Reference (Minimal)
 
-- schema in `packages/db/prisma/schema.prisma`
-- config in `packages/db/prisma.config.ts`
-- generated client output in `packages/db/src/generated/prisma`
+For development and operational commands, see:
 
-Generate client manually:
+- `services/README.md` for service run and security behavior.
+- root `package.json` scripts for workspace-level commands.
 
-```bash
-npm run db:generate
-```
-
-A CI workflow verifies generated client drift:
-
-- workflow: `.github/workflows/prisma-generated-check.yml`
-- command: `npm run ci:verify-prisma-generated`
-
-## CI Notes
-
-Current CI includes Prisma generated-client verification on:
-
-- pull requests
-- pushes to `main`
-
-If you add additional workflows later, keep `npm ci`, `npm run typecheck`, and `npm run build` as standard guards.
-
-## Troubleshooting
-
-### Build fails with NEXTAUTH secret validation
-
-Ensure `NEXTAUTH_SECRET` is set and at least 32 characters.
-
-### Service proxy returns SERVICE_UNAVAILABLE
-
-Likely causes:
-
-- service is not running on expected port
-- service URL env vars are wrong
-- `INTERNAL_SERVICE_TOKEN` missing/mismatched
-
-### Database connection errors
-
-- verify Docker Postgres is running
-- confirm `DATABASE_URL` matches local credentials/db
-
-### Prisma drift check behavior locally
-
-If directory is not a git worktree, `ci:verify-prisma-generated` skips git diff checks by design.
-
-## Production/Deployment Considerations
-
-Before production rollout:
-
-- replace all placeholder secrets
-- configure managed Postgres/Redis
-- set strict CORS/proxy controls around internal services
-- add service-level integration tests and route-level E2E coverage
-- add observability (logs/metrics/traces + Sentry DSN)
-
-## Additional Docs
-
-- Service-focused runbook: `services/README.md`
-- Web app notes: `apps/web/README.md` (currently generic; can be customized)
-
----
-
-If you want, I can also rewrite `apps/web/README.md` and `services/README.md` so all docs are consistent with this root README.
+This root document intentionally focuses on product and architecture,
+not step-by-step local setup runbooks.

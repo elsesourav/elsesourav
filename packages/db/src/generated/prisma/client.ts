@@ -57,6 +57,36 @@ export type Category = Prisma.CategoryModel
  */
 export type App = Prisma.AppModel
 /**
+ * Model AppTag
+ * 
+ */
+export type AppTag = Prisma.AppTagModel
+/**
+ * Model AppTagOnApp
+ * 
+ */
+export type AppTagOnApp = Prisma.AppTagOnAppModel
+/**
+ * Model HomeSlider
+ * 
+ */
+export type HomeSlider = Prisma.HomeSliderModel
+/**
+ * Model AppViewEvent
+ * 
+ */
+export type AppViewEvent = Prisma.AppViewEventModel
+/**
+ * Model AppDailyStat
+ * 
+ */
+export type AppDailyStat = Prisma.AppDailyStatModel
+/**
+ * Model AppAggregateStat
+ * 
+ */
+export type AppAggregateStat = Prisma.AppAggregateStatModel
+/**
  * Model StoreSectionItem
  * 
  */
@@ -77,6 +107,46 @@ export type ContentPage = Prisma.ContentPageModel
  */
 export type ContentPageVersion = Prisma.ContentPageVersionModel
 /**
+ * Model ProfilePage
+ * 
+ */
+export type ProfilePage = Prisma.ProfilePageModel
+/**
+ * Model BlogTag
+ * 
+ */
+export type BlogTag = Prisma.BlogTagModel
+/**
+ * Model BlogPost
+ * 
+ */
+export type BlogPost = Prisma.BlogPostModel
+/**
+ * Model BlogPostTag
+ * 
+ */
+export type BlogPostTag = Prisma.BlogPostTagModel
+/**
+ * Model BlogComment
+ * 
+ */
+export type BlogComment = Prisma.BlogCommentModel
+/**
+ * Model HelpCategory
+ * 
+ */
+export type HelpCategory = Prisma.HelpCategoryModel
+/**
+ * Model HelpArticle
+ * 
+ */
+export type HelpArticle = Prisma.HelpArticleModel
+/**
+ * Model Testimonial
+ * 
+ */
+export type Testimonial = Prisma.TestimonialModel
+/**
  * Model ThemeConfig
  * 
  */
@@ -96,6 +166,41 @@ export type AppLink = Prisma.AppLinkModel
  * 
  */
 export type UserLibrary = Prisma.UserLibraryModel
+/**
+ * Model UserSettings
+ * 
+ */
+export type UserSettings = Prisma.UserSettingsModel
+/**
+ * Model ActivityLog
+ * 
+ */
+export type ActivityLog = Prisma.ActivityLogModel
+/**
+ * Model AppChangelog
+ * 
+ */
+export type AppChangelog = Prisma.AppChangelogModel
+/**
+ * Model BlogPostVersion
+ * 
+ */
+export type BlogPostVersion = Prisma.BlogPostVersionModel
+/**
+ * Model HelpArticleVersion
+ * 
+ */
+export type HelpArticleVersion = Prisma.HelpArticleVersionModel
+/**
+ * Model AppDescriptionVersion
+ * 
+ */
+export type AppDescriptionVersion = Prisma.AppDescriptionVersionModel
+/**
+ * Model GuestSession
+ * 
+ */
+export type GuestSession = Prisma.GuestSessionModel
 /**
  * Model Feedback
  * 

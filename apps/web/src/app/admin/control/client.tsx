@@ -1,5 +1,12 @@
 "use client";
 
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { enqueueNotification } from "@/store/slices/notificationsSlice";
+import {
+  selectIsPending,
+  startPending,
+  stopPending,
+} from "@/store/slices/uiSlice";
 import { FormEvent, useState } from "react";
 
 type ApiResult = {
@@ -103,13 +110,15 @@ function ControlForm({
   method = "POST",
   defaultPayload,
 }: ControlFormProps) {
+  const dispatch = useAppDispatch();
   const [payload, setPayload] = useState(defaultPayload);
   const [result, setResult] = useState<ApiResult | null>(null);
-  const [pending, setPending] = useState(false);
+  const pendingKey = `admin-control:${method}:${endpoint}`;
+  const pending = useAppSelector((state) => selectIsPending(state, pendingKey));
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setPending(true);
+    dispatch(startPending(pendingKey));
 
     try {
       const response = await fetch(endpoint, {
@@ -125,13 +134,29 @@ function ControlForm({
         status: response.status,
         body,
       });
+
+      dispatch(
+        enqueueNotification({
+          tone: response.ok ? "success" : "error",
+          message: response.ok
+            ? `${title} request succeeded (${response.status}).`
+            : `${title} request failed (${response.status}).`,
+        }),
+      );
     } catch (error) {
       setResult({
         status: 500,
         body: error instanceof Error ? error.message : "Unknown error",
       });
+
+      dispatch(
+        enqueueNotification({
+          tone: "error",
+          message: `${title} request failed before reaching the service.`,
+        }),
+      );
     } finally {
-      setPending(false);
+      dispatch(stopPending(pendingKey));
     }
   }
 

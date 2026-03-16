@@ -501,14 +501,6 @@ export type EnumStoreSectionTypeFieldUpdateOperationsInput = {
   set?: $Enums.StoreSectionType
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type StoreSectionItemCreateWithoutAppInput = {
   id?: string
   sectionType: $Enums.StoreSectionType

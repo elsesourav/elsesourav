@@ -80,3 +80,30 @@ export const ContentStatus = {
 } as const
 
 export type ContentStatus = (typeof ContentStatus)[keyof typeof ContentStatus]
+
+
+export const SliderType = {
+  HERO: 'HERO',
+  FEATURED: 'FEATURED',
+  PROMO: 'PROMO'
+} as const
+
+export type SliderType = (typeof SliderType)[keyof typeof SliderType]
+
+
+export const BlogPostStatus = {
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type BlogPostStatus = (typeof BlogPostStatus)[keyof typeof BlogPostStatus]
+
+
+export const HelpArticleStatus = {
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type HelpArticleStatus = (typeof HelpArticleStatus)[keyof typeof HelpArticleStatus]

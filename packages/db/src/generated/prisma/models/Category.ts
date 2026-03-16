@@ -30,6 +30,8 @@ export type CategoryMinAggregateOutputType = {
   icon: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  scheduledDeletionAt: Date | null
+  deletedAt: Date | null
 }
 
 export type CategoryMaxAggregateOutputType = {
@@ -38,6 +40,8 @@ export type CategoryMaxAggregateOutputType = {
   icon: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  scheduledDeletionAt: Date | null
+  deletedAt: Date | null
 }
 
 export type CategoryCountAggregateOutputType = {
@@ -46,6 +50,8 @@ export type CategoryCountAggregateOutputType = {
   icon: number
   createdAt: number
   updatedAt: number
+  scheduledDeletionAt: number
+  deletedAt: number
   _all: number
 }
 
@@ -56,6 +62,8 @@ export type CategoryMinAggregateInputType = {
   icon?: true
   createdAt?: true
   updatedAt?: true
+  scheduledDeletionAt?: true
+  deletedAt?: true
 }
 
 export type CategoryMaxAggregateInputType = {
@@ -64,6 +72,8 @@ export type CategoryMaxAggregateInputType = {
   icon?: true
   createdAt?: true
   updatedAt?: true
+  scheduledDeletionAt?: true
+  deletedAt?: true
 }
 
 export type CategoryCountAggregateInputType = {
@@ -72,6 +82,8 @@ export type CategoryCountAggregateInputType = {
   icon?: true
   createdAt?: true
   updatedAt?: true
+  scheduledDeletionAt?: true
+  deletedAt?: true
   _all?: true
 }
 
@@ -153,6 +165,8 @@ export type CategoryGroupByOutputType = {
   icon: string | null
   createdAt: Date
   updatedAt: Date
+  scheduledDeletionAt: Date | null
+  deletedAt: Date | null
   _count: CategoryCountAggregateOutputType | null
   _min: CategoryMinAggregateOutputType | null
   _max: CategoryMaxAggregateOutputType | null
@@ -182,6 +196,8 @@ export type CategoryWhereInput = {
   icon?: Prisma.StringNullableFilter<"Category"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Category"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Category"> | Date | string
+  scheduledDeletionAt?: Prisma.DateTimeNullableFilter<"Category"> | Date | string | null
+  deletedAt?: Prisma.DateTimeNullableFilter<"Category"> | Date | string | null
   apps?: Prisma.AppListRelationFilter
 }
 
@@ -191,6 +207,8 @@ export type CategoryOrderByWithRelationInput = {
   icon?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  scheduledDeletionAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   apps?: Prisma.AppOrderByRelationAggregateInput
 }
 
@@ -203,6 +221,8 @@ export type CategoryWhereUniqueInput = Prisma.AtLeast<{
   icon?: Prisma.StringNullableFilter<"Category"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Category"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Category"> | Date | string
+  scheduledDeletionAt?: Prisma.DateTimeNullableFilter<"Category"> | Date | string | null
+  deletedAt?: Prisma.DateTimeNullableFilter<"Category"> | Date | string | null
   apps?: Prisma.AppListRelationFilter
 }, "id" | "name">
 
@@ -212,6 +232,8 @@ export type CategoryOrderByWithAggregationInput = {
   icon?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  scheduledDeletionAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.CategoryCountOrderByAggregateInput
   _max?: Prisma.CategoryMaxOrderByAggregateInput
   _min?: Prisma.CategoryMinOrderByAggregateInput
@@ -226,6 +248,8 @@ export type CategoryScalarWhereWithAggregatesInput = {
   icon?: Prisma.StringNullableWithAggregatesFilter<"Category"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Category"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Category"> | Date | string
+  scheduledDeletionAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Category"> | Date | string | null
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Category"> | Date | string | null
 }
 
 export type CategoryCreateInput = {
@@ -234,6 +258,8 @@ export type CategoryCreateInput = {
   icon?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  scheduledDeletionAt?: Date | string | null
+  deletedAt?: Date | string | null
   apps?: Prisma.AppCreateNestedManyWithoutCategoryInput
 }
 
@@ -243,6 +269,8 @@ export type CategoryUncheckedCreateInput = {
   icon?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  scheduledDeletionAt?: Date | string | null
+  deletedAt?: Date | string | null
   apps?: Prisma.AppUncheckedCreateNestedManyWithoutCategoryInput
 }
 
@@ -252,6 +280,8 @@ export type CategoryUpdateInput = {
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   apps?: Prisma.AppUpdateManyWithoutCategoryNestedInput
 }
 
@@ -261,6 +291,8 @@ export type CategoryUncheckedUpdateInput = {
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   apps?: Prisma.AppUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
@@ -270,6 +302,8 @@ export type CategoryCreateManyInput = {
   icon?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  scheduledDeletionAt?: Date | string | null
+  deletedAt?: Date | string | null
 }
 
 export type CategoryUpdateManyMutationInput = {
@@ -278,6 +312,8 @@ export type CategoryUpdateManyMutationInput = {
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CategoryUncheckedUpdateManyInput = {
@@ -286,6 +322,8 @@ export type CategoryUncheckedUpdateManyInput = {
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CategoryCountOrderByAggregateInput = {
@@ -294,6 +332,8 @@ export type CategoryCountOrderByAggregateInput = {
   icon?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  scheduledDeletionAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type CategoryMaxOrderByAggregateInput = {
@@ -302,6 +342,8 @@ export type CategoryMaxOrderByAggregateInput = {
   icon?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  scheduledDeletionAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type CategoryMinOrderByAggregateInput = {
@@ -310,6 +352,8 @@ export type CategoryMinOrderByAggregateInput = {
   icon?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  scheduledDeletionAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type CategoryScalarRelationFilter = {
@@ -337,6 +381,8 @@ export type CategoryCreateWithoutAppsInput = {
   icon?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  scheduledDeletionAt?: Date | string | null
+  deletedAt?: Date | string | null
 }
 
 export type CategoryUncheckedCreateWithoutAppsInput = {
@@ -345,6 +391,8 @@ export type CategoryUncheckedCreateWithoutAppsInput = {
   icon?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  scheduledDeletionAt?: Date | string | null
+  deletedAt?: Date | string | null
 }
 
 export type CategoryCreateOrConnectWithoutAppsInput = {
@@ -369,6 +417,8 @@ export type CategoryUpdateWithoutAppsInput = {
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CategoryUncheckedUpdateWithoutAppsInput = {
@@ -377,6 +427,8 @@ export type CategoryUncheckedUpdateWithoutAppsInput = {
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -416,6 +468,8 @@ export type CategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   icon?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  scheduledDeletionAt?: boolean
+  deletedAt?: boolean
   apps?: boolean | Prisma.Category$appsArgs<ExtArgs>
   _count?: boolean | Prisma.CategoryCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["category"]>
@@ -426,6 +480,8 @@ export type CategorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   icon?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  scheduledDeletionAt?: boolean
+  deletedAt?: boolean
 }, ExtArgs["result"]["category"]>
 
 export type CategorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -434,6 +490,8 @@ export type CategorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   icon?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  scheduledDeletionAt?: boolean
+  deletedAt?: boolean
 }, ExtArgs["result"]["category"]>
 
 export type CategorySelectScalar = {
@@ -442,9 +500,11 @@ export type CategorySelectScalar = {
   icon?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  scheduledDeletionAt?: boolean
+  deletedAt?: boolean
 }
 
-export type CategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "icon" | "createdAt" | "updatedAt", ExtArgs["result"]["category"]>
+export type CategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "icon" | "createdAt" | "updatedAt" | "scheduledDeletionAt" | "deletedAt", ExtArgs["result"]["category"]>
 export type CategoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   apps?: boolean | Prisma.Category$appsArgs<ExtArgs>
   _count?: boolean | Prisma.CategoryCountOutputTypeDefaultArgs<ExtArgs>
@@ -463,6 +523,8 @@ export type $CategoryPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     icon: string | null
     createdAt: Date
     updatedAt: Date
+    scheduledDeletionAt: Date | null
+    deletedAt: Date | null
   }, ExtArgs["result"]["category"]>
   composites: {}
 }
@@ -892,6 +954,8 @@ export interface CategoryFieldRefs {
   readonly icon: Prisma.FieldRef<"Category", 'String'>
   readonly createdAt: Prisma.FieldRef<"Category", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Category", 'DateTime'>
+  readonly scheduledDeletionAt: Prisma.FieldRef<"Category", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"Category", 'DateTime'>
 }
     
 

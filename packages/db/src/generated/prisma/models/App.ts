@@ -44,6 +44,7 @@ export type AppMinAggregateOutputType = {
   status: $Enums.AppStatus | null
   publishedAt: Date | null
   isPaid: boolean | null
+  isFeatured: boolean | null
   price: runtime.Decimal | null
   categoryId: string | null
   createdById: string | null
@@ -63,6 +64,7 @@ export type AppMaxAggregateOutputType = {
   status: $Enums.AppStatus | null
   publishedAt: Date | null
   isPaid: boolean | null
+  isFeatured: boolean | null
   price: runtime.Decimal | null
   categoryId: string | null
   createdById: string | null
@@ -82,6 +84,7 @@ export type AppCountAggregateOutputType = {
   status: number
   publishedAt: number
   isPaid: number
+  isFeatured: number
   price: number
   categoryId: number
   createdById: number
@@ -111,6 +114,7 @@ export type AppMinAggregateInputType = {
   status?: true
   publishedAt?: true
   isPaid?: true
+  isFeatured?: true
   price?: true
   categoryId?: true
   createdById?: true
@@ -130,6 +134,7 @@ export type AppMaxAggregateInputType = {
   status?: true
   publishedAt?: true
   isPaid?: true
+  isFeatured?: true
   price?: true
   categoryId?: true
   createdById?: true
@@ -149,6 +154,7 @@ export type AppCountAggregateInputType = {
   status?: true
   publishedAt?: true
   isPaid?: true
+  isFeatured?: true
   price?: true
   categoryId?: true
   createdById?: true
@@ -255,6 +261,7 @@ export type AppGroupByOutputType = {
   status: $Enums.AppStatus
   publishedAt: Date | null
   isPaid: boolean
+  isFeatured: boolean
   price: runtime.Decimal
   categoryId: string
   createdById: string
@@ -297,6 +304,7 @@ export type AppWhereInput = {
   status?: Prisma.EnumAppStatusFilter<"App"> | $Enums.AppStatus
   publishedAt?: Prisma.DateTimeNullableFilter<"App"> | Date | string | null
   isPaid?: Prisma.BoolFilter<"App"> | boolean
+  isFeatured?: Prisma.BoolFilter<"App"> | boolean
   price?: Prisma.DecimalFilter<"App"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId?: Prisma.StringFilter<"App"> | string
   createdById?: Prisma.StringFilter<"App"> | string
@@ -314,6 +322,13 @@ export type AppWhereInput = {
   downloadEvents?: Prisma.DownloadEventListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
   sectionItems?: Prisma.StoreSectionItemListRelationFilter
+  tagLinks?: Prisma.AppTagOnAppListRelationFilter
+  viewEvents?: Prisma.AppViewEventListRelationFilter
+  dailyStats?: Prisma.AppDailyStatListRelationFilter
+  aggregateStat?: Prisma.XOR<Prisma.AppAggregateStatNullableScalarRelationFilter, Prisma.AppAggregateStatWhereInput> | null
+  sliders?: Prisma.HomeSliderListRelationFilter
+  changelogs?: Prisma.AppChangelogListRelationFilter
+  descriptionVersions?: Prisma.AppDescriptionVersionListRelationFilter
 }
 
 export type AppOrderByWithRelationInput = {
@@ -326,6 +341,7 @@ export type AppOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   isPaid?: Prisma.SortOrder
+  isFeatured?: Prisma.SortOrder
   price?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
@@ -343,6 +359,13 @@ export type AppOrderByWithRelationInput = {
   downloadEvents?: Prisma.DownloadEventOrderByRelationAggregateInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
   sectionItems?: Prisma.StoreSectionItemOrderByRelationAggregateInput
+  tagLinks?: Prisma.AppTagOnAppOrderByRelationAggregateInput
+  viewEvents?: Prisma.AppViewEventOrderByRelationAggregateInput
+  dailyStats?: Prisma.AppDailyStatOrderByRelationAggregateInput
+  aggregateStat?: Prisma.AppAggregateStatOrderByWithRelationInput
+  sliders?: Prisma.HomeSliderOrderByRelationAggregateInput
+  changelogs?: Prisma.AppChangelogOrderByRelationAggregateInput
+  descriptionVersions?: Prisma.AppDescriptionVersionOrderByRelationAggregateInput
 }
 
 export type AppWhereUniqueInput = Prisma.AtLeast<{
@@ -358,6 +381,7 @@ export type AppWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumAppStatusFilter<"App"> | $Enums.AppStatus
   publishedAt?: Prisma.DateTimeNullableFilter<"App"> | Date | string | null
   isPaid?: Prisma.BoolFilter<"App"> | boolean
+  isFeatured?: Prisma.BoolFilter<"App"> | boolean
   price?: Prisma.DecimalFilter<"App"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId?: Prisma.StringFilter<"App"> | string
   createdById?: Prisma.StringFilter<"App"> | string
@@ -375,6 +399,13 @@ export type AppWhereUniqueInput = Prisma.AtLeast<{
   downloadEvents?: Prisma.DownloadEventListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
   sectionItems?: Prisma.StoreSectionItemListRelationFilter
+  tagLinks?: Prisma.AppTagOnAppListRelationFilter
+  viewEvents?: Prisma.AppViewEventListRelationFilter
+  dailyStats?: Prisma.AppDailyStatListRelationFilter
+  aggregateStat?: Prisma.XOR<Prisma.AppAggregateStatNullableScalarRelationFilter, Prisma.AppAggregateStatWhereInput> | null
+  sliders?: Prisma.HomeSliderListRelationFilter
+  changelogs?: Prisma.AppChangelogListRelationFilter
+  descriptionVersions?: Prisma.AppDescriptionVersionListRelationFilter
 }, "id" | "slug">
 
 export type AppOrderByWithAggregationInput = {
@@ -387,6 +418,7 @@ export type AppOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   isPaid?: Prisma.SortOrder
+  isFeatured?: Prisma.SortOrder
   price?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
@@ -414,6 +446,7 @@ export type AppScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumAppStatusWithAggregatesFilter<"App"> | $Enums.AppStatus
   publishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"App"> | Date | string | null
   isPaid?: Prisma.BoolWithAggregatesFilter<"App"> | boolean
+  isFeatured?: Prisma.BoolWithAggregatesFilter<"App"> | boolean
   price?: Prisma.DecimalWithAggregatesFilter<"App"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId?: Prisma.StringWithAggregatesFilter<"App"> | string
   createdById?: Prisma.StringWithAggregatesFilter<"App"> | string
@@ -433,6 +466,7 @@ export type AppCreateInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -447,6 +481,13 @@ export type AppCreateInput = {
   downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutAppInput
   payments?: Prisma.PaymentCreateNestedManyWithoutAppInput
   sectionItems?: Prisma.StoreSectionItemCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateInput = {
@@ -459,6 +500,7 @@ export type AppUncheckedCreateInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId: string
   createdById: string
@@ -473,6 +515,13 @@ export type AppUncheckedCreateInput = {
   downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutAppInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAppInput
   sectionItems?: Prisma.StoreSectionItemUncheckedCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatUncheckedCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderUncheckedCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppUpdateInput = {
@@ -485,6 +534,7 @@ export type AppUpdateInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -499,6 +549,13 @@ export type AppUpdateInput = {
   downloadEvents?: Prisma.DownloadEventUpdateManyWithoutAppNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutAppNestedInput
   sectionItems?: Prisma.StoreSectionItemUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateInput = {
@@ -511,6 +568,7 @@ export type AppUncheckedUpdateInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -525,6 +583,13 @@ export type AppUncheckedUpdateInput = {
   downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutAppNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutAppNestedInput
   sectionItems?: Prisma.StoreSectionItemUncheckedUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUncheckedUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUncheckedUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateManyInput = {
@@ -537,6 +602,7 @@ export type AppCreateManyInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId: string
   createdById: string
@@ -556,6 +622,7 @@ export type AppUpdateManyMutationInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -572,6 +639,7 @@ export type AppUncheckedUpdateManyInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -601,6 +669,7 @@ export type AppCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   isPaid?: Prisma.SortOrder
+  isFeatured?: Prisma.SortOrder
   price?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
@@ -624,6 +693,7 @@ export type AppMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   isPaid?: Prisma.SortOrder
+  isFeatured?: Prisma.SortOrder
   price?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
@@ -643,6 +713,7 @@ export type AppMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   isPaid?: Prisma.SortOrder
+  isFeatured?: Prisma.SortOrder
   price?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
@@ -659,6 +730,11 @@ export type AppSumOrderByAggregateInput = {
 export type AppScalarRelationFilter = {
   is?: Prisma.AppWhereInput
   isNot?: Prisma.AppWhereInput
+}
+
+export type AppNullableScalarRelationFilter = {
+  is?: Prisma.AppWhereInput | null
+  isNot?: Prisma.AppWhereInput | null
 }
 
 export type AppCreateNestedManyWithoutCreatedByInput = {
@@ -803,6 +879,78 @@ export type DecimalFieldUpdateOperationsInput = {
   divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
+export type AppCreateNestedOneWithoutTagLinksInput = {
+  create?: Prisma.XOR<Prisma.AppCreateWithoutTagLinksInput, Prisma.AppUncheckedCreateWithoutTagLinksInput>
+  connectOrCreate?: Prisma.AppCreateOrConnectWithoutTagLinksInput
+  connect?: Prisma.AppWhereUniqueInput
+}
+
+export type AppUpdateOneRequiredWithoutTagLinksNestedInput = {
+  create?: Prisma.XOR<Prisma.AppCreateWithoutTagLinksInput, Prisma.AppUncheckedCreateWithoutTagLinksInput>
+  connectOrCreate?: Prisma.AppCreateOrConnectWithoutTagLinksInput
+  upsert?: Prisma.AppUpsertWithoutTagLinksInput
+  connect?: Prisma.AppWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AppUpdateToOneWithWhereWithoutTagLinksInput, Prisma.AppUpdateWithoutTagLinksInput>, Prisma.AppUncheckedUpdateWithoutTagLinksInput>
+}
+
+export type AppCreateNestedOneWithoutSlidersInput = {
+  create?: Prisma.XOR<Prisma.AppCreateWithoutSlidersInput, Prisma.AppUncheckedCreateWithoutSlidersInput>
+  connectOrCreate?: Prisma.AppCreateOrConnectWithoutSlidersInput
+  connect?: Prisma.AppWhereUniqueInput
+}
+
+export type AppUpdateOneWithoutSlidersNestedInput = {
+  create?: Prisma.XOR<Prisma.AppCreateWithoutSlidersInput, Prisma.AppUncheckedCreateWithoutSlidersInput>
+  connectOrCreate?: Prisma.AppCreateOrConnectWithoutSlidersInput
+  upsert?: Prisma.AppUpsertWithoutSlidersInput
+  disconnect?: Prisma.AppWhereInput | boolean
+  delete?: Prisma.AppWhereInput | boolean
+  connect?: Prisma.AppWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AppUpdateToOneWithWhereWithoutSlidersInput, Prisma.AppUpdateWithoutSlidersInput>, Prisma.AppUncheckedUpdateWithoutSlidersInput>
+}
+
+export type AppCreateNestedOneWithoutViewEventsInput = {
+  create?: Prisma.XOR<Prisma.AppCreateWithoutViewEventsInput, Prisma.AppUncheckedCreateWithoutViewEventsInput>
+  connectOrCreate?: Prisma.AppCreateOrConnectWithoutViewEventsInput
+  connect?: Prisma.AppWhereUniqueInput
+}
+
+export type AppUpdateOneRequiredWithoutViewEventsNestedInput = {
+  create?: Prisma.XOR<Prisma.AppCreateWithoutViewEventsInput, Prisma.AppUncheckedCreateWithoutViewEventsInput>
+  connectOrCreate?: Prisma.AppCreateOrConnectWithoutViewEventsInput
+  upsert?: Prisma.AppUpsertWithoutViewEventsInput
+  connect?: Prisma.AppWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AppUpdateToOneWithWhereWithoutViewEventsInput, Prisma.AppUpdateWithoutViewEventsInput>, Prisma.AppUncheckedUpdateWithoutViewEventsInput>
+}
+
+export type AppCreateNestedOneWithoutDailyStatsInput = {
+  create?: Prisma.XOR<Prisma.AppCreateWithoutDailyStatsInput, Prisma.AppUncheckedCreateWithoutDailyStatsInput>
+  connectOrCreate?: Prisma.AppCreateOrConnectWithoutDailyStatsInput
+  connect?: Prisma.AppWhereUniqueInput
+}
+
+export type AppUpdateOneRequiredWithoutDailyStatsNestedInput = {
+  create?: Prisma.XOR<Prisma.AppCreateWithoutDailyStatsInput, Prisma.AppUncheckedCreateWithoutDailyStatsInput>
+  connectOrCreate?: Prisma.AppCreateOrConnectWithoutDailyStatsInput
+  upsert?: Prisma.AppUpsertWithoutDailyStatsInput
+  connect?: Prisma.AppWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AppUpdateToOneWithWhereWithoutDailyStatsInput, Prisma.AppUpdateWithoutDailyStatsInput>, Prisma.AppUncheckedUpdateWithoutDailyStatsInput>
+}
+
+export type AppCreateNestedOneWithoutAggregateStatInput = {
+  create?: Prisma.XOR<Prisma.AppCreateWithoutAggregateStatInput, Prisma.AppUncheckedCreateWithoutAggregateStatInput>
+  connectOrCreate?: Prisma.AppCreateOrConnectWithoutAggregateStatInput
+  connect?: Prisma.AppWhereUniqueInput
+}
+
+export type AppUpdateOneRequiredWithoutAggregateStatNestedInput = {
+  create?: Prisma.XOR<Prisma.AppCreateWithoutAggregateStatInput, Prisma.AppUncheckedCreateWithoutAggregateStatInput>
+  connectOrCreate?: Prisma.AppCreateOrConnectWithoutAggregateStatInput
+  upsert?: Prisma.AppUpsertWithoutAggregateStatInput
+  connect?: Prisma.AppWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AppUpdateToOneWithWhereWithoutAggregateStatInput, Prisma.AppUpdateWithoutAggregateStatInput>, Prisma.AppUncheckedUpdateWithoutAggregateStatInput>
+}
+
 export type AppCreateNestedOneWithoutSectionItemsInput = {
   create?: Prisma.XOR<Prisma.AppCreateWithoutSectionItemsInput, Prisma.AppUncheckedCreateWithoutSectionItemsInput>
   connectOrCreate?: Prisma.AppCreateOrConnectWithoutSectionItemsInput
@@ -859,6 +1007,34 @@ export type AppUpdateOneRequiredWithoutLibrariesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AppUpdateToOneWithWhereWithoutLibrariesInput, Prisma.AppUpdateWithoutLibrariesInput>, Prisma.AppUncheckedUpdateWithoutLibrariesInput>
 }
 
+export type AppCreateNestedOneWithoutChangelogsInput = {
+  create?: Prisma.XOR<Prisma.AppCreateWithoutChangelogsInput, Prisma.AppUncheckedCreateWithoutChangelogsInput>
+  connectOrCreate?: Prisma.AppCreateOrConnectWithoutChangelogsInput
+  connect?: Prisma.AppWhereUniqueInput
+}
+
+export type AppUpdateOneRequiredWithoutChangelogsNestedInput = {
+  create?: Prisma.XOR<Prisma.AppCreateWithoutChangelogsInput, Prisma.AppUncheckedCreateWithoutChangelogsInput>
+  connectOrCreate?: Prisma.AppCreateOrConnectWithoutChangelogsInput
+  upsert?: Prisma.AppUpsertWithoutChangelogsInput
+  connect?: Prisma.AppWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AppUpdateToOneWithWhereWithoutChangelogsInput, Prisma.AppUpdateWithoutChangelogsInput>, Prisma.AppUncheckedUpdateWithoutChangelogsInput>
+}
+
+export type AppCreateNestedOneWithoutDescriptionVersionsInput = {
+  create?: Prisma.XOR<Prisma.AppCreateWithoutDescriptionVersionsInput, Prisma.AppUncheckedCreateWithoutDescriptionVersionsInput>
+  connectOrCreate?: Prisma.AppCreateOrConnectWithoutDescriptionVersionsInput
+  connect?: Prisma.AppWhereUniqueInput
+}
+
+export type AppUpdateOneRequiredWithoutDescriptionVersionsNestedInput = {
+  create?: Prisma.XOR<Prisma.AppCreateWithoutDescriptionVersionsInput, Prisma.AppUncheckedCreateWithoutDescriptionVersionsInput>
+  connectOrCreate?: Prisma.AppCreateOrConnectWithoutDescriptionVersionsInput
+  upsert?: Prisma.AppUpsertWithoutDescriptionVersionsInput
+  connect?: Prisma.AppWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AppUpdateToOneWithWhereWithoutDescriptionVersionsInput, Prisma.AppUpdateWithoutDescriptionVersionsInput>, Prisma.AppUncheckedUpdateWithoutDescriptionVersionsInput>
+}
+
 export type AppCreateNestedOneWithoutFeedbacksInput = {
   create?: Prisma.XOR<Prisma.AppCreateWithoutFeedbacksInput, Prisma.AppUncheckedCreateWithoutFeedbacksInput>
   connectOrCreate?: Prisma.AppCreateOrConnectWithoutFeedbacksInput
@@ -911,6 +1087,7 @@ export type AppCreateWithoutCreatedByInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -924,6 +1101,13 @@ export type AppCreateWithoutCreatedByInput = {
   downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutAppInput
   payments?: Prisma.PaymentCreateNestedManyWithoutAppInput
   sectionItems?: Prisma.StoreSectionItemCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutCreatedByInput = {
@@ -936,6 +1120,7 @@ export type AppUncheckedCreateWithoutCreatedByInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId: string
   updatedById?: string | null
@@ -949,6 +1134,13 @@ export type AppUncheckedCreateWithoutCreatedByInput = {
   downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutAppInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAppInput
   sectionItems?: Prisma.StoreSectionItemUncheckedCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatUncheckedCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderUncheckedCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutCreatedByInput = {
@@ -971,6 +1163,7 @@ export type AppCreateWithoutUpdatedByInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -984,6 +1177,13 @@ export type AppCreateWithoutUpdatedByInput = {
   downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutAppInput
   payments?: Prisma.PaymentCreateNestedManyWithoutAppInput
   sectionItems?: Prisma.StoreSectionItemCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutUpdatedByInput = {
@@ -996,6 +1196,7 @@ export type AppUncheckedCreateWithoutUpdatedByInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId: string
   createdById: string
@@ -1009,6 +1210,13 @@ export type AppUncheckedCreateWithoutUpdatedByInput = {
   downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutAppInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAppInput
   sectionItems?: Prisma.StoreSectionItemUncheckedCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatUncheckedCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderUncheckedCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutUpdatedByInput = {
@@ -1050,6 +1258,7 @@ export type AppScalarWhereInput = {
   status?: Prisma.EnumAppStatusFilter<"App"> | $Enums.AppStatus
   publishedAt?: Prisma.DateTimeNullableFilter<"App"> | Date | string | null
   isPaid?: Prisma.BoolFilter<"App"> | boolean
+  isFeatured?: Prisma.BoolFilter<"App"> | boolean
   price?: Prisma.DecimalFilter<"App"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId?: Prisma.StringFilter<"App"> | string
   createdById?: Prisma.StringFilter<"App"> | string
@@ -1085,6 +1294,7 @@ export type AppCreateWithoutCategoryInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1098,6 +1308,13 @@ export type AppCreateWithoutCategoryInput = {
   downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutAppInput
   payments?: Prisma.PaymentCreateNestedManyWithoutAppInput
   sectionItems?: Prisma.StoreSectionItemCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutCategoryInput = {
@@ -1110,6 +1327,7 @@ export type AppUncheckedCreateWithoutCategoryInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdById: string
   updatedById?: string | null
@@ -1123,6 +1341,13 @@ export type AppUncheckedCreateWithoutCategoryInput = {
   downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutAppInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAppInput
   sectionItems?: Prisma.StoreSectionItemUncheckedCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatUncheckedCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderUncheckedCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutCategoryInput = {
@@ -1151,7 +1376,7 @@ export type AppUpdateManyWithWhereWithoutCategoryInput = {
   data: Prisma.XOR<Prisma.AppUpdateManyMutationInput, Prisma.AppUncheckedUpdateManyWithoutCategoryInput>
 }
 
-export type AppCreateWithoutSectionItemsInput = {
+export type AppCreateWithoutTagLinksInput = {
   id?: string
   title: string
   slug: string
@@ -1161,6 +1386,7 @@ export type AppCreateWithoutSectionItemsInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1174,9 +1400,16 @@ export type AppCreateWithoutSectionItemsInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutAppInput
   downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutAppInput
   payments?: Prisma.PaymentCreateNestedManyWithoutAppInput
+  sectionItems?: Prisma.StoreSectionItemCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
 }
 
-export type AppUncheckedCreateWithoutSectionItemsInput = {
+export type AppUncheckedCreateWithoutTagLinksInput = {
   id?: string
   title: string
   slug: string
@@ -1186,6 +1419,7 @@ export type AppUncheckedCreateWithoutSectionItemsInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId: string
   createdById: string
@@ -1199,6 +1433,753 @@ export type AppUncheckedCreateWithoutSectionItemsInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutAppInput
   downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutAppInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAppInput
+  sectionItems?: Prisma.StoreSectionItemUncheckedCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatUncheckedCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderUncheckedCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
+}
+
+export type AppCreateOrConnectWithoutTagLinksInput = {
+  where: Prisma.AppWhereUniqueInput
+  create: Prisma.XOR<Prisma.AppCreateWithoutTagLinksInput, Prisma.AppUncheckedCreateWithoutTagLinksInput>
+}
+
+export type AppUpsertWithoutTagLinksInput = {
+  update: Prisma.XOR<Prisma.AppUpdateWithoutTagLinksInput, Prisma.AppUncheckedUpdateWithoutTagLinksInput>
+  create: Prisma.XOR<Prisma.AppCreateWithoutTagLinksInput, Prisma.AppUncheckedCreateWithoutTagLinksInput>
+  where?: Prisma.AppWhereInput
+}
+
+export type AppUpdateToOneWithWhereWithoutTagLinksInput = {
+  where?: Prisma.AppWhereInput
+  data: Prisma.XOR<Prisma.AppUpdateWithoutTagLinksInput, Prisma.AppUncheckedUpdateWithoutTagLinksInput>
+}
+
+export type AppUpdateWithoutTagLinksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
+  updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
+  media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
+  links?: Prisma.AppLinkUpdateManyWithoutAppNestedInput
+  libraries?: Prisma.UserLibraryUpdateManyWithoutAppNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutAppNestedInput
+  downloadEvents?: Prisma.DownloadEventUpdateManyWithoutAppNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutAppNestedInput
+  sectionItems?: Prisma.StoreSectionItemUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
+}
+
+export type AppUncheckedUpdateWithoutTagLinksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  media?: Prisma.AppMediaUncheckedUpdateManyWithoutAppNestedInput
+  links?: Prisma.AppLinkUncheckedUpdateManyWithoutAppNestedInput
+  libraries?: Prisma.UserLibraryUncheckedUpdateManyWithoutAppNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutAppNestedInput
+  downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutAppNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutAppNestedInput
+  sectionItems?: Prisma.StoreSectionItemUncheckedUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUncheckedUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUncheckedUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
+}
+
+export type AppCreateWithoutSlidersInput = {
+  id?: string
+  title: string
+  slug: string
+  shortDescription: string
+  fullDescription: string
+  version: string
+  status?: $Enums.AppStatus
+  publishedAt?: Date | string | null
+  isPaid?: boolean
+  isFeatured?: boolean
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
+  updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
+  media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
+  links?: Prisma.AppLinkCreateNestedManyWithoutAppInput
+  libraries?: Prisma.UserLibraryCreateNestedManyWithoutAppInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutAppInput
+  downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutAppInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutAppInput
+  sectionItems?: Prisma.StoreSectionItemCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatCreateNestedOneWithoutAppInput
+  changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
+}
+
+export type AppUncheckedCreateWithoutSlidersInput = {
+  id?: string
+  title: string
+  slug: string
+  shortDescription: string
+  fullDescription: string
+  version: string
+  status?: $Enums.AppStatus
+  publishedAt?: Date | string | null
+  isPaid?: boolean
+  isFeatured?: boolean
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  categoryId: string
+  createdById: string
+  updatedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  media?: Prisma.AppMediaUncheckedCreateNestedManyWithoutAppInput
+  links?: Prisma.AppLinkUncheckedCreateNestedManyWithoutAppInput
+  libraries?: Prisma.UserLibraryUncheckedCreateNestedManyWithoutAppInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutAppInput
+  downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutAppInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAppInput
+  sectionItems?: Prisma.StoreSectionItemUncheckedCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatUncheckedCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedCreateNestedOneWithoutAppInput
+  changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
+}
+
+export type AppCreateOrConnectWithoutSlidersInput = {
+  where: Prisma.AppWhereUniqueInput
+  create: Prisma.XOR<Prisma.AppCreateWithoutSlidersInput, Prisma.AppUncheckedCreateWithoutSlidersInput>
+}
+
+export type AppUpsertWithoutSlidersInput = {
+  update: Prisma.XOR<Prisma.AppUpdateWithoutSlidersInput, Prisma.AppUncheckedUpdateWithoutSlidersInput>
+  create: Prisma.XOR<Prisma.AppCreateWithoutSlidersInput, Prisma.AppUncheckedCreateWithoutSlidersInput>
+  where?: Prisma.AppWhereInput
+}
+
+export type AppUpdateToOneWithWhereWithoutSlidersInput = {
+  where?: Prisma.AppWhereInput
+  data: Prisma.XOR<Prisma.AppUpdateWithoutSlidersInput, Prisma.AppUncheckedUpdateWithoutSlidersInput>
+}
+
+export type AppUpdateWithoutSlidersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
+  updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
+  media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
+  links?: Prisma.AppLinkUpdateManyWithoutAppNestedInput
+  libraries?: Prisma.UserLibraryUpdateManyWithoutAppNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutAppNestedInput
+  downloadEvents?: Prisma.DownloadEventUpdateManyWithoutAppNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutAppNestedInput
+  sectionItems?: Prisma.StoreSectionItemUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUpdateOneWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
+}
+
+export type AppUncheckedUpdateWithoutSlidersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  media?: Prisma.AppMediaUncheckedUpdateManyWithoutAppNestedInput
+  links?: Prisma.AppLinkUncheckedUpdateManyWithoutAppNestedInput
+  libraries?: Prisma.UserLibraryUncheckedUpdateManyWithoutAppNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutAppNestedInput
+  downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutAppNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutAppNestedInput
+  sectionItems?: Prisma.StoreSectionItemUncheckedUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUncheckedUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedUpdateOneWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
+}
+
+export type AppCreateWithoutViewEventsInput = {
+  id?: string
+  title: string
+  slug: string
+  shortDescription: string
+  fullDescription: string
+  version: string
+  status?: $Enums.AppStatus
+  publishedAt?: Date | string | null
+  isPaid?: boolean
+  isFeatured?: boolean
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
+  updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
+  media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
+  links?: Prisma.AppLinkCreateNestedManyWithoutAppInput
+  libraries?: Prisma.UserLibraryCreateNestedManyWithoutAppInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutAppInput
+  downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutAppInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutAppInput
+  sectionItems?: Prisma.StoreSectionItemCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
+}
+
+export type AppUncheckedCreateWithoutViewEventsInput = {
+  id?: string
+  title: string
+  slug: string
+  shortDescription: string
+  fullDescription: string
+  version: string
+  status?: $Enums.AppStatus
+  publishedAt?: Date | string | null
+  isPaid?: boolean
+  isFeatured?: boolean
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  categoryId: string
+  createdById: string
+  updatedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  media?: Prisma.AppMediaUncheckedCreateNestedManyWithoutAppInput
+  links?: Prisma.AppLinkUncheckedCreateNestedManyWithoutAppInput
+  libraries?: Prisma.UserLibraryUncheckedCreateNestedManyWithoutAppInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutAppInput
+  downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutAppInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAppInput
+  sectionItems?: Prisma.StoreSectionItemUncheckedCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatUncheckedCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderUncheckedCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
+}
+
+export type AppCreateOrConnectWithoutViewEventsInput = {
+  where: Prisma.AppWhereUniqueInput
+  create: Prisma.XOR<Prisma.AppCreateWithoutViewEventsInput, Prisma.AppUncheckedCreateWithoutViewEventsInput>
+}
+
+export type AppUpsertWithoutViewEventsInput = {
+  update: Prisma.XOR<Prisma.AppUpdateWithoutViewEventsInput, Prisma.AppUncheckedUpdateWithoutViewEventsInput>
+  create: Prisma.XOR<Prisma.AppCreateWithoutViewEventsInput, Prisma.AppUncheckedCreateWithoutViewEventsInput>
+  where?: Prisma.AppWhereInput
+}
+
+export type AppUpdateToOneWithWhereWithoutViewEventsInput = {
+  where?: Prisma.AppWhereInput
+  data: Prisma.XOR<Prisma.AppUpdateWithoutViewEventsInput, Prisma.AppUncheckedUpdateWithoutViewEventsInput>
+}
+
+export type AppUpdateWithoutViewEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
+  updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
+  media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
+  links?: Prisma.AppLinkUpdateManyWithoutAppNestedInput
+  libraries?: Prisma.UserLibraryUpdateManyWithoutAppNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutAppNestedInput
+  downloadEvents?: Prisma.DownloadEventUpdateManyWithoutAppNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutAppNestedInput
+  sectionItems?: Prisma.StoreSectionItemUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
+}
+
+export type AppUncheckedUpdateWithoutViewEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  media?: Prisma.AppMediaUncheckedUpdateManyWithoutAppNestedInput
+  links?: Prisma.AppLinkUncheckedUpdateManyWithoutAppNestedInput
+  libraries?: Prisma.UserLibraryUncheckedUpdateManyWithoutAppNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutAppNestedInput
+  downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutAppNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutAppNestedInput
+  sectionItems?: Prisma.StoreSectionItemUncheckedUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUncheckedUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUncheckedUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
+}
+
+export type AppCreateWithoutDailyStatsInput = {
+  id?: string
+  title: string
+  slug: string
+  shortDescription: string
+  fullDescription: string
+  version: string
+  status?: $Enums.AppStatus
+  publishedAt?: Date | string | null
+  isPaid?: boolean
+  isFeatured?: boolean
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
+  updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
+  media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
+  links?: Prisma.AppLinkCreateNestedManyWithoutAppInput
+  libraries?: Prisma.UserLibraryCreateNestedManyWithoutAppInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutAppInput
+  downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutAppInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutAppInput
+  sectionItems?: Prisma.StoreSectionItemCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
+}
+
+export type AppUncheckedCreateWithoutDailyStatsInput = {
+  id?: string
+  title: string
+  slug: string
+  shortDescription: string
+  fullDescription: string
+  version: string
+  status?: $Enums.AppStatus
+  publishedAt?: Date | string | null
+  isPaid?: boolean
+  isFeatured?: boolean
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  categoryId: string
+  createdById: string
+  updatedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  media?: Prisma.AppMediaUncheckedCreateNestedManyWithoutAppInput
+  links?: Prisma.AppLinkUncheckedCreateNestedManyWithoutAppInput
+  libraries?: Prisma.UserLibraryUncheckedCreateNestedManyWithoutAppInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutAppInput
+  downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutAppInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAppInput
+  sectionItems?: Prisma.StoreSectionItemUncheckedCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderUncheckedCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
+}
+
+export type AppCreateOrConnectWithoutDailyStatsInput = {
+  where: Prisma.AppWhereUniqueInput
+  create: Prisma.XOR<Prisma.AppCreateWithoutDailyStatsInput, Prisma.AppUncheckedCreateWithoutDailyStatsInput>
+}
+
+export type AppUpsertWithoutDailyStatsInput = {
+  update: Prisma.XOR<Prisma.AppUpdateWithoutDailyStatsInput, Prisma.AppUncheckedUpdateWithoutDailyStatsInput>
+  create: Prisma.XOR<Prisma.AppCreateWithoutDailyStatsInput, Prisma.AppUncheckedCreateWithoutDailyStatsInput>
+  where?: Prisma.AppWhereInput
+}
+
+export type AppUpdateToOneWithWhereWithoutDailyStatsInput = {
+  where?: Prisma.AppWhereInput
+  data: Prisma.XOR<Prisma.AppUpdateWithoutDailyStatsInput, Prisma.AppUncheckedUpdateWithoutDailyStatsInput>
+}
+
+export type AppUpdateWithoutDailyStatsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
+  updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
+  media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
+  links?: Prisma.AppLinkUpdateManyWithoutAppNestedInput
+  libraries?: Prisma.UserLibraryUpdateManyWithoutAppNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutAppNestedInput
+  downloadEvents?: Prisma.DownloadEventUpdateManyWithoutAppNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutAppNestedInput
+  sectionItems?: Prisma.StoreSectionItemUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
+}
+
+export type AppUncheckedUpdateWithoutDailyStatsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  media?: Prisma.AppMediaUncheckedUpdateManyWithoutAppNestedInput
+  links?: Prisma.AppLinkUncheckedUpdateManyWithoutAppNestedInput
+  libraries?: Prisma.UserLibraryUncheckedUpdateManyWithoutAppNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutAppNestedInput
+  downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutAppNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutAppNestedInput
+  sectionItems?: Prisma.StoreSectionItemUncheckedUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUncheckedUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
+}
+
+export type AppCreateWithoutAggregateStatInput = {
+  id?: string
+  title: string
+  slug: string
+  shortDescription: string
+  fullDescription: string
+  version: string
+  status?: $Enums.AppStatus
+  publishedAt?: Date | string | null
+  isPaid?: boolean
+  isFeatured?: boolean
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
+  updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
+  media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
+  links?: Prisma.AppLinkCreateNestedManyWithoutAppInput
+  libraries?: Prisma.UserLibraryCreateNestedManyWithoutAppInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutAppInput
+  downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutAppInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutAppInput
+  sectionItems?: Prisma.StoreSectionItemCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatCreateNestedManyWithoutAppInput
+  sliders?: Prisma.HomeSliderCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
+}
+
+export type AppUncheckedCreateWithoutAggregateStatInput = {
+  id?: string
+  title: string
+  slug: string
+  shortDescription: string
+  fullDescription: string
+  version: string
+  status?: $Enums.AppStatus
+  publishedAt?: Date | string | null
+  isPaid?: boolean
+  isFeatured?: boolean
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  categoryId: string
+  createdById: string
+  updatedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  media?: Prisma.AppMediaUncheckedCreateNestedManyWithoutAppInput
+  links?: Prisma.AppLinkUncheckedCreateNestedManyWithoutAppInput
+  libraries?: Prisma.UserLibraryUncheckedCreateNestedManyWithoutAppInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutAppInput
+  downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutAppInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAppInput
+  sectionItems?: Prisma.StoreSectionItemUncheckedCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatUncheckedCreateNestedManyWithoutAppInput
+  sliders?: Prisma.HomeSliderUncheckedCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
+}
+
+export type AppCreateOrConnectWithoutAggregateStatInput = {
+  where: Prisma.AppWhereUniqueInput
+  create: Prisma.XOR<Prisma.AppCreateWithoutAggregateStatInput, Prisma.AppUncheckedCreateWithoutAggregateStatInput>
+}
+
+export type AppUpsertWithoutAggregateStatInput = {
+  update: Prisma.XOR<Prisma.AppUpdateWithoutAggregateStatInput, Prisma.AppUncheckedUpdateWithoutAggregateStatInput>
+  create: Prisma.XOR<Prisma.AppCreateWithoutAggregateStatInput, Prisma.AppUncheckedCreateWithoutAggregateStatInput>
+  where?: Prisma.AppWhereInput
+}
+
+export type AppUpdateToOneWithWhereWithoutAggregateStatInput = {
+  where?: Prisma.AppWhereInput
+  data: Prisma.XOR<Prisma.AppUpdateWithoutAggregateStatInput, Prisma.AppUncheckedUpdateWithoutAggregateStatInput>
+}
+
+export type AppUpdateWithoutAggregateStatInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
+  updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
+  media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
+  links?: Prisma.AppLinkUpdateManyWithoutAppNestedInput
+  libraries?: Prisma.UserLibraryUpdateManyWithoutAppNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutAppNestedInput
+  downloadEvents?: Prisma.DownloadEventUpdateManyWithoutAppNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutAppNestedInput
+  sectionItems?: Prisma.StoreSectionItemUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUpdateManyWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
+}
+
+export type AppUncheckedUpdateWithoutAggregateStatInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  media?: Prisma.AppMediaUncheckedUpdateManyWithoutAppNestedInput
+  links?: Prisma.AppLinkUncheckedUpdateManyWithoutAppNestedInput
+  libraries?: Prisma.UserLibraryUncheckedUpdateManyWithoutAppNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutAppNestedInput
+  downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutAppNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutAppNestedInput
+  sectionItems?: Prisma.StoreSectionItemUncheckedUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUncheckedUpdateManyWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUncheckedUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
+}
+
+export type AppCreateWithoutSectionItemsInput = {
+  id?: string
+  title: string
+  slug: string
+  shortDescription: string
+  fullDescription: string
+  version: string
+  status?: $Enums.AppStatus
+  publishedAt?: Date | string | null
+  isPaid?: boolean
+  isFeatured?: boolean
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
+  updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
+  media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
+  links?: Prisma.AppLinkCreateNestedManyWithoutAppInput
+  libraries?: Prisma.UserLibraryCreateNestedManyWithoutAppInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutAppInput
+  downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutAppInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
+}
+
+export type AppUncheckedCreateWithoutSectionItemsInput = {
+  id?: string
+  title: string
+  slug: string
+  shortDescription: string
+  fullDescription: string
+  version: string
+  status?: $Enums.AppStatus
+  publishedAt?: Date | string | null
+  isPaid?: boolean
+  isFeatured?: boolean
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  categoryId: string
+  createdById: string
+  updatedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  media?: Prisma.AppMediaUncheckedCreateNestedManyWithoutAppInput
+  links?: Prisma.AppLinkUncheckedCreateNestedManyWithoutAppInput
+  libraries?: Prisma.UserLibraryUncheckedCreateNestedManyWithoutAppInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutAppInput
+  downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutAppInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatUncheckedCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderUncheckedCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutSectionItemsInput = {
@@ -1227,6 +2208,7 @@ export type AppUpdateWithoutSectionItemsInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1240,6 +2222,13 @@ export type AppUpdateWithoutSectionItemsInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutAppNestedInput
   downloadEvents?: Prisma.DownloadEventUpdateManyWithoutAppNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutSectionItemsInput = {
@@ -1252,6 +2241,7 @@ export type AppUncheckedUpdateWithoutSectionItemsInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1265,6 +2255,13 @@ export type AppUncheckedUpdateWithoutSectionItemsInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutAppNestedInput
   downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutAppNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUncheckedUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUncheckedUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateWithoutMediaInput = {
@@ -1277,6 +2274,7 @@ export type AppCreateWithoutMediaInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1290,6 +2288,13 @@ export type AppCreateWithoutMediaInput = {
   downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutAppInput
   payments?: Prisma.PaymentCreateNestedManyWithoutAppInput
   sectionItems?: Prisma.StoreSectionItemCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutMediaInput = {
@@ -1302,6 +2307,7 @@ export type AppUncheckedCreateWithoutMediaInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId: string
   createdById: string
@@ -1315,6 +2321,13 @@ export type AppUncheckedCreateWithoutMediaInput = {
   downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutAppInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAppInput
   sectionItems?: Prisma.StoreSectionItemUncheckedCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatUncheckedCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderUncheckedCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutMediaInput = {
@@ -1343,6 +2356,7 @@ export type AppUpdateWithoutMediaInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1356,6 +2370,13 @@ export type AppUpdateWithoutMediaInput = {
   downloadEvents?: Prisma.DownloadEventUpdateManyWithoutAppNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutAppNestedInput
   sectionItems?: Prisma.StoreSectionItemUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutMediaInput = {
@@ -1368,6 +2389,7 @@ export type AppUncheckedUpdateWithoutMediaInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1381,6 +2403,13 @@ export type AppUncheckedUpdateWithoutMediaInput = {
   downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutAppNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutAppNestedInput
   sectionItems?: Prisma.StoreSectionItemUncheckedUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUncheckedUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUncheckedUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateWithoutLinksInput = {
@@ -1393,6 +2422,7 @@ export type AppCreateWithoutLinksInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1406,6 +2436,13 @@ export type AppCreateWithoutLinksInput = {
   downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutAppInput
   payments?: Prisma.PaymentCreateNestedManyWithoutAppInput
   sectionItems?: Prisma.StoreSectionItemCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutLinksInput = {
@@ -1418,6 +2455,7 @@ export type AppUncheckedCreateWithoutLinksInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId: string
   createdById: string
@@ -1431,6 +2469,13 @@ export type AppUncheckedCreateWithoutLinksInput = {
   downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutAppInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAppInput
   sectionItems?: Prisma.StoreSectionItemUncheckedCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatUncheckedCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderUncheckedCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutLinksInput = {
@@ -1459,6 +2504,7 @@ export type AppUpdateWithoutLinksInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1472,6 +2518,13 @@ export type AppUpdateWithoutLinksInput = {
   downloadEvents?: Prisma.DownloadEventUpdateManyWithoutAppNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutAppNestedInput
   sectionItems?: Prisma.StoreSectionItemUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutLinksInput = {
@@ -1484,6 +2537,7 @@ export type AppUncheckedUpdateWithoutLinksInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1497,6 +2551,13 @@ export type AppUncheckedUpdateWithoutLinksInput = {
   downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutAppNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutAppNestedInput
   sectionItems?: Prisma.StoreSectionItemUncheckedUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUncheckedUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUncheckedUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateWithoutLibrariesInput = {
@@ -1509,6 +2570,7 @@ export type AppCreateWithoutLibrariesInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1522,6 +2584,13 @@ export type AppCreateWithoutLibrariesInput = {
   downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutAppInput
   payments?: Prisma.PaymentCreateNestedManyWithoutAppInput
   sectionItems?: Prisma.StoreSectionItemCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutLibrariesInput = {
@@ -1534,6 +2603,7 @@ export type AppUncheckedCreateWithoutLibrariesInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId: string
   createdById: string
@@ -1547,6 +2617,13 @@ export type AppUncheckedCreateWithoutLibrariesInput = {
   downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutAppInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAppInput
   sectionItems?: Prisma.StoreSectionItemUncheckedCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatUncheckedCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderUncheckedCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutLibrariesInput = {
@@ -1575,6 +2652,7 @@ export type AppUpdateWithoutLibrariesInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1588,6 +2666,13 @@ export type AppUpdateWithoutLibrariesInput = {
   downloadEvents?: Prisma.DownloadEventUpdateManyWithoutAppNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutAppNestedInput
   sectionItems?: Prisma.StoreSectionItemUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutLibrariesInput = {
@@ -1600,6 +2685,7 @@ export type AppUncheckedUpdateWithoutLibrariesInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1613,6 +2699,309 @@ export type AppUncheckedUpdateWithoutLibrariesInput = {
   downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutAppNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutAppNestedInput
   sectionItems?: Prisma.StoreSectionItemUncheckedUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUncheckedUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUncheckedUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
+}
+
+export type AppCreateWithoutChangelogsInput = {
+  id?: string
+  title: string
+  slug: string
+  shortDescription: string
+  fullDescription: string
+  version: string
+  status?: $Enums.AppStatus
+  publishedAt?: Date | string | null
+  isPaid?: boolean
+  isFeatured?: boolean
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
+  updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
+  media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
+  links?: Prisma.AppLinkCreateNestedManyWithoutAppInput
+  libraries?: Prisma.UserLibraryCreateNestedManyWithoutAppInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutAppInput
+  downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutAppInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutAppInput
+  sectionItems?: Prisma.StoreSectionItemCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
+}
+
+export type AppUncheckedCreateWithoutChangelogsInput = {
+  id?: string
+  title: string
+  slug: string
+  shortDescription: string
+  fullDescription: string
+  version: string
+  status?: $Enums.AppStatus
+  publishedAt?: Date | string | null
+  isPaid?: boolean
+  isFeatured?: boolean
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  categoryId: string
+  createdById: string
+  updatedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  media?: Prisma.AppMediaUncheckedCreateNestedManyWithoutAppInput
+  links?: Prisma.AppLinkUncheckedCreateNestedManyWithoutAppInput
+  libraries?: Prisma.UserLibraryUncheckedCreateNestedManyWithoutAppInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutAppInput
+  downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutAppInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAppInput
+  sectionItems?: Prisma.StoreSectionItemUncheckedCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatUncheckedCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderUncheckedCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
+}
+
+export type AppCreateOrConnectWithoutChangelogsInput = {
+  where: Prisma.AppWhereUniqueInput
+  create: Prisma.XOR<Prisma.AppCreateWithoutChangelogsInput, Prisma.AppUncheckedCreateWithoutChangelogsInput>
+}
+
+export type AppUpsertWithoutChangelogsInput = {
+  update: Prisma.XOR<Prisma.AppUpdateWithoutChangelogsInput, Prisma.AppUncheckedUpdateWithoutChangelogsInput>
+  create: Prisma.XOR<Prisma.AppCreateWithoutChangelogsInput, Prisma.AppUncheckedCreateWithoutChangelogsInput>
+  where?: Prisma.AppWhereInput
+}
+
+export type AppUpdateToOneWithWhereWithoutChangelogsInput = {
+  where?: Prisma.AppWhereInput
+  data: Prisma.XOR<Prisma.AppUpdateWithoutChangelogsInput, Prisma.AppUncheckedUpdateWithoutChangelogsInput>
+}
+
+export type AppUpdateWithoutChangelogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
+  updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
+  media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
+  links?: Prisma.AppLinkUpdateManyWithoutAppNestedInput
+  libraries?: Prisma.UserLibraryUpdateManyWithoutAppNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutAppNestedInput
+  downloadEvents?: Prisma.DownloadEventUpdateManyWithoutAppNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutAppNestedInput
+  sectionItems?: Prisma.StoreSectionItemUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
+}
+
+export type AppUncheckedUpdateWithoutChangelogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  media?: Prisma.AppMediaUncheckedUpdateManyWithoutAppNestedInput
+  links?: Prisma.AppLinkUncheckedUpdateManyWithoutAppNestedInput
+  libraries?: Prisma.UserLibraryUncheckedUpdateManyWithoutAppNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutAppNestedInput
+  downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutAppNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutAppNestedInput
+  sectionItems?: Prisma.StoreSectionItemUncheckedUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUncheckedUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUncheckedUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
+}
+
+export type AppCreateWithoutDescriptionVersionsInput = {
+  id?: string
+  title: string
+  slug: string
+  shortDescription: string
+  fullDescription: string
+  version: string
+  status?: $Enums.AppStatus
+  publishedAt?: Date | string | null
+  isPaid?: boolean
+  isFeatured?: boolean
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
+  updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
+  media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
+  links?: Prisma.AppLinkCreateNestedManyWithoutAppInput
+  libraries?: Prisma.UserLibraryCreateNestedManyWithoutAppInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutAppInput
+  downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutAppInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutAppInput
+  sectionItems?: Prisma.StoreSectionItemCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
+}
+
+export type AppUncheckedCreateWithoutDescriptionVersionsInput = {
+  id?: string
+  title: string
+  slug: string
+  shortDescription: string
+  fullDescription: string
+  version: string
+  status?: $Enums.AppStatus
+  publishedAt?: Date | string | null
+  isPaid?: boolean
+  isFeatured?: boolean
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  categoryId: string
+  createdById: string
+  updatedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  media?: Prisma.AppMediaUncheckedCreateNestedManyWithoutAppInput
+  links?: Prisma.AppLinkUncheckedCreateNestedManyWithoutAppInput
+  libraries?: Prisma.UserLibraryUncheckedCreateNestedManyWithoutAppInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutAppInput
+  downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutAppInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAppInput
+  sectionItems?: Prisma.StoreSectionItemUncheckedCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatUncheckedCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderUncheckedCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
+}
+
+export type AppCreateOrConnectWithoutDescriptionVersionsInput = {
+  where: Prisma.AppWhereUniqueInput
+  create: Prisma.XOR<Prisma.AppCreateWithoutDescriptionVersionsInput, Prisma.AppUncheckedCreateWithoutDescriptionVersionsInput>
+}
+
+export type AppUpsertWithoutDescriptionVersionsInput = {
+  update: Prisma.XOR<Prisma.AppUpdateWithoutDescriptionVersionsInput, Prisma.AppUncheckedUpdateWithoutDescriptionVersionsInput>
+  create: Prisma.XOR<Prisma.AppCreateWithoutDescriptionVersionsInput, Prisma.AppUncheckedCreateWithoutDescriptionVersionsInput>
+  where?: Prisma.AppWhereInput
+}
+
+export type AppUpdateToOneWithWhereWithoutDescriptionVersionsInput = {
+  where?: Prisma.AppWhereInput
+  data: Prisma.XOR<Prisma.AppUpdateWithoutDescriptionVersionsInput, Prisma.AppUncheckedUpdateWithoutDescriptionVersionsInput>
+}
+
+export type AppUpdateWithoutDescriptionVersionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
+  updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
+  media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
+  links?: Prisma.AppLinkUpdateManyWithoutAppNestedInput
+  libraries?: Prisma.UserLibraryUpdateManyWithoutAppNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutAppNestedInput
+  downloadEvents?: Prisma.DownloadEventUpdateManyWithoutAppNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutAppNestedInput
+  sectionItems?: Prisma.StoreSectionItemUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
+}
+
+export type AppUncheckedUpdateWithoutDescriptionVersionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  media?: Prisma.AppMediaUncheckedUpdateManyWithoutAppNestedInput
+  links?: Prisma.AppLinkUncheckedUpdateManyWithoutAppNestedInput
+  libraries?: Prisma.UserLibraryUncheckedUpdateManyWithoutAppNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutAppNestedInput
+  downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutAppNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutAppNestedInput
+  sectionItems?: Prisma.StoreSectionItemUncheckedUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUncheckedUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUncheckedUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateWithoutFeedbacksInput = {
@@ -1625,6 +3014,7 @@ export type AppCreateWithoutFeedbacksInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1638,6 +3028,13 @@ export type AppCreateWithoutFeedbacksInput = {
   downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutAppInput
   payments?: Prisma.PaymentCreateNestedManyWithoutAppInput
   sectionItems?: Prisma.StoreSectionItemCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutFeedbacksInput = {
@@ -1650,6 +3047,7 @@ export type AppUncheckedCreateWithoutFeedbacksInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId: string
   createdById: string
@@ -1663,6 +3061,13 @@ export type AppUncheckedCreateWithoutFeedbacksInput = {
   downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutAppInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAppInput
   sectionItems?: Prisma.StoreSectionItemUncheckedCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatUncheckedCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderUncheckedCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutFeedbacksInput = {
@@ -1691,6 +3096,7 @@ export type AppUpdateWithoutFeedbacksInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1704,6 +3110,13 @@ export type AppUpdateWithoutFeedbacksInput = {
   downloadEvents?: Prisma.DownloadEventUpdateManyWithoutAppNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutAppNestedInput
   sectionItems?: Prisma.StoreSectionItemUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutFeedbacksInput = {
@@ -1716,6 +3129,7 @@ export type AppUncheckedUpdateWithoutFeedbacksInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1729,6 +3143,13 @@ export type AppUncheckedUpdateWithoutFeedbacksInput = {
   downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutAppNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutAppNestedInput
   sectionItems?: Prisma.StoreSectionItemUncheckedUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUncheckedUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUncheckedUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateWithoutDownloadEventsInput = {
@@ -1741,6 +3162,7 @@ export type AppCreateWithoutDownloadEventsInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1754,6 +3176,13 @@ export type AppCreateWithoutDownloadEventsInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutAppInput
   payments?: Prisma.PaymentCreateNestedManyWithoutAppInput
   sectionItems?: Prisma.StoreSectionItemCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutDownloadEventsInput = {
@@ -1766,6 +3195,7 @@ export type AppUncheckedCreateWithoutDownloadEventsInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId: string
   createdById: string
@@ -1779,6 +3209,13 @@ export type AppUncheckedCreateWithoutDownloadEventsInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutAppInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAppInput
   sectionItems?: Prisma.StoreSectionItemUncheckedCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatUncheckedCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderUncheckedCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutDownloadEventsInput = {
@@ -1807,6 +3244,7 @@ export type AppUpdateWithoutDownloadEventsInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1820,6 +3258,13 @@ export type AppUpdateWithoutDownloadEventsInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutAppNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutAppNestedInput
   sectionItems?: Prisma.StoreSectionItemUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutDownloadEventsInput = {
@@ -1832,6 +3277,7 @@ export type AppUncheckedUpdateWithoutDownloadEventsInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1845,6 +3291,13 @@ export type AppUncheckedUpdateWithoutDownloadEventsInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutAppNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutAppNestedInput
   sectionItems?: Prisma.StoreSectionItemUncheckedUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUncheckedUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUncheckedUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateWithoutPaymentsInput = {
@@ -1857,6 +3310,7 @@ export type AppCreateWithoutPaymentsInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1870,6 +3324,13 @@ export type AppCreateWithoutPaymentsInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutAppInput
   downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutAppInput
   sectionItems?: Prisma.StoreSectionItemCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutPaymentsInput = {
@@ -1882,6 +3343,7 @@ export type AppUncheckedCreateWithoutPaymentsInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId: string
   createdById: string
@@ -1895,6 +3357,13 @@ export type AppUncheckedCreateWithoutPaymentsInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutAppInput
   downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutAppInput
   sectionItems?: Prisma.StoreSectionItemUncheckedCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatUncheckedCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderUncheckedCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutPaymentsInput = {
@@ -1923,6 +3392,7 @@ export type AppUpdateWithoutPaymentsInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1936,6 +3406,13 @@ export type AppUpdateWithoutPaymentsInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutAppNestedInput
   downloadEvents?: Prisma.DownloadEventUpdateManyWithoutAppNestedInput
   sectionItems?: Prisma.StoreSectionItemUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutPaymentsInput = {
@@ -1948,6 +3425,7 @@ export type AppUncheckedUpdateWithoutPaymentsInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1961,6 +3439,13 @@ export type AppUncheckedUpdateWithoutPaymentsInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutAppNestedInput
   downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutAppNestedInput
   sectionItems?: Prisma.StoreSectionItemUncheckedUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUncheckedUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUncheckedUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateManyCreatedByInput = {
@@ -1973,6 +3458,7 @@ export type AppCreateManyCreatedByInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId: string
   updatedById?: string | null
@@ -1991,6 +3477,7 @@ export type AppCreateManyUpdatedByInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId: string
   createdById: string
@@ -2009,6 +3496,7 @@ export type AppUpdateWithoutCreatedByInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2022,6 +3510,13 @@ export type AppUpdateWithoutCreatedByInput = {
   downloadEvents?: Prisma.DownloadEventUpdateManyWithoutAppNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutAppNestedInput
   sectionItems?: Prisma.StoreSectionItemUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutCreatedByInput = {
@@ -2034,6 +3529,7 @@ export type AppUncheckedUpdateWithoutCreatedByInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2047,6 +3543,13 @@ export type AppUncheckedUpdateWithoutCreatedByInput = {
   downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutAppNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutAppNestedInput
   sectionItems?: Prisma.StoreSectionItemUncheckedUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUncheckedUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUncheckedUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateManyWithoutCreatedByInput = {
@@ -2059,6 +3562,7 @@ export type AppUncheckedUpdateManyWithoutCreatedByInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2077,6 +3581,7 @@ export type AppUpdateWithoutUpdatedByInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2090,6 +3595,13 @@ export type AppUpdateWithoutUpdatedByInput = {
   downloadEvents?: Prisma.DownloadEventUpdateManyWithoutAppNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutAppNestedInput
   sectionItems?: Prisma.StoreSectionItemUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutUpdatedByInput = {
@@ -2102,6 +3614,7 @@ export type AppUncheckedUpdateWithoutUpdatedByInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2115,6 +3628,13 @@ export type AppUncheckedUpdateWithoutUpdatedByInput = {
   downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutAppNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutAppNestedInput
   sectionItems?: Prisma.StoreSectionItemUncheckedUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUncheckedUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUncheckedUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateManyWithoutUpdatedByInput = {
@@ -2127,6 +3647,7 @@ export type AppUncheckedUpdateManyWithoutUpdatedByInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2145,6 +3666,7 @@ export type AppCreateManyCategoryInput = {
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
+  isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdById: string
   updatedById?: string | null
@@ -2163,6 +3685,7 @@ export type AppUpdateWithoutCategoryInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2176,6 +3699,13 @@ export type AppUpdateWithoutCategoryInput = {
   downloadEvents?: Prisma.DownloadEventUpdateManyWithoutAppNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutAppNestedInput
   sectionItems?: Prisma.StoreSectionItemUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutCategoryInput = {
@@ -2188,6 +3718,7 @@ export type AppUncheckedUpdateWithoutCategoryInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2201,6 +3732,13 @@ export type AppUncheckedUpdateWithoutCategoryInput = {
   downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutAppNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutAppNestedInput
   sectionItems?: Prisma.StoreSectionItemUncheckedUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUncheckedUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUncheckedUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateManyWithoutCategoryInput = {
@@ -2213,6 +3751,7 @@ export type AppUncheckedUpdateManyWithoutCategoryInput = {
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2234,6 +3773,12 @@ export type AppCountOutputType = {
   downloadEvents: number
   payments: number
   sectionItems: number
+  tagLinks: number
+  viewEvents: number
+  dailyStats: number
+  sliders: number
+  changelogs: number
+  descriptionVersions: number
 }
 
 export type AppCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2244,6 +3789,12 @@ export type AppCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.In
   downloadEvents?: boolean | AppCountOutputTypeCountDownloadEventsArgs
   payments?: boolean | AppCountOutputTypeCountPaymentsArgs
   sectionItems?: boolean | AppCountOutputTypeCountSectionItemsArgs
+  tagLinks?: boolean | AppCountOutputTypeCountTagLinksArgs
+  viewEvents?: boolean | AppCountOutputTypeCountViewEventsArgs
+  dailyStats?: boolean | AppCountOutputTypeCountDailyStatsArgs
+  sliders?: boolean | AppCountOutputTypeCountSlidersArgs
+  changelogs?: boolean | AppCountOutputTypeCountChangelogsArgs
+  descriptionVersions?: boolean | AppCountOutputTypeCountDescriptionVersionsArgs
 }
 
 /**
@@ -2305,6 +3856,48 @@ export type AppCountOutputTypeCountSectionItemsArgs<ExtArgs extends runtime.Type
   where?: Prisma.StoreSectionItemWhereInput
 }
 
+/**
+ * AppCountOutputType without action
+ */
+export type AppCountOutputTypeCountTagLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AppTagOnAppWhereInput
+}
+
+/**
+ * AppCountOutputType without action
+ */
+export type AppCountOutputTypeCountViewEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AppViewEventWhereInput
+}
+
+/**
+ * AppCountOutputType without action
+ */
+export type AppCountOutputTypeCountDailyStatsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AppDailyStatWhereInput
+}
+
+/**
+ * AppCountOutputType without action
+ */
+export type AppCountOutputTypeCountSlidersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HomeSliderWhereInput
+}
+
+/**
+ * AppCountOutputType without action
+ */
+export type AppCountOutputTypeCountChangelogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AppChangelogWhereInput
+}
+
+/**
+ * AppCountOutputType without action
+ */
+export type AppCountOutputTypeCountDescriptionVersionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AppDescriptionVersionWhereInput
+}
+
 
 export type AppSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2316,6 +3909,7 @@ export type AppSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   status?: boolean
   publishedAt?: boolean
   isPaid?: boolean
+  isFeatured?: boolean
   price?: boolean
   categoryId?: boolean
   createdById?: boolean
@@ -2333,6 +3927,13 @@ export type AppSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   downloadEvents?: boolean | Prisma.App$downloadEventsArgs<ExtArgs>
   payments?: boolean | Prisma.App$paymentsArgs<ExtArgs>
   sectionItems?: boolean | Prisma.App$sectionItemsArgs<ExtArgs>
+  tagLinks?: boolean | Prisma.App$tagLinksArgs<ExtArgs>
+  viewEvents?: boolean | Prisma.App$viewEventsArgs<ExtArgs>
+  dailyStats?: boolean | Prisma.App$dailyStatsArgs<ExtArgs>
+  aggregateStat?: boolean | Prisma.App$aggregateStatArgs<ExtArgs>
+  sliders?: boolean | Prisma.App$slidersArgs<ExtArgs>
+  changelogs?: boolean | Prisma.App$changelogsArgs<ExtArgs>
+  descriptionVersions?: boolean | Prisma.App$descriptionVersionsArgs<ExtArgs>
   _count?: boolean | Prisma.AppCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["app"]>
 
@@ -2346,6 +3947,7 @@ export type AppSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extension
   status?: boolean
   publishedAt?: boolean
   isPaid?: boolean
+  isFeatured?: boolean
   price?: boolean
   categoryId?: boolean
   createdById?: boolean
@@ -2368,6 +3970,7 @@ export type AppSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extension
   status?: boolean
   publishedAt?: boolean
   isPaid?: boolean
+  isFeatured?: boolean
   price?: boolean
   categoryId?: boolean
   createdById?: boolean
@@ -2390,6 +3993,7 @@ export type AppSelectScalar = {
   status?: boolean
   publishedAt?: boolean
   isPaid?: boolean
+  isFeatured?: boolean
   price?: boolean
   categoryId?: boolean
   createdById?: boolean
@@ -2399,7 +4003,7 @@ export type AppSelectScalar = {
   deletedAt?: boolean
 }
 
-export type AppOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "shortDescription" | "fullDescription" | "version" | "status" | "publishedAt" | "isPaid" | "price" | "categoryId" | "createdById" | "updatedById" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["app"]>
+export type AppOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "shortDescription" | "fullDescription" | "version" | "status" | "publishedAt" | "isPaid" | "isFeatured" | "price" | "categoryId" | "createdById" | "updatedById" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["app"]>
 export type AppInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -2411,6 +4015,13 @@ export type AppInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   downloadEvents?: boolean | Prisma.App$downloadEventsArgs<ExtArgs>
   payments?: boolean | Prisma.App$paymentsArgs<ExtArgs>
   sectionItems?: boolean | Prisma.App$sectionItemsArgs<ExtArgs>
+  tagLinks?: boolean | Prisma.App$tagLinksArgs<ExtArgs>
+  viewEvents?: boolean | Prisma.App$viewEventsArgs<ExtArgs>
+  dailyStats?: boolean | Prisma.App$dailyStatsArgs<ExtArgs>
+  aggregateStat?: boolean | Prisma.App$aggregateStatArgs<ExtArgs>
+  sliders?: boolean | Prisma.App$slidersArgs<ExtArgs>
+  changelogs?: boolean | Prisma.App$changelogsArgs<ExtArgs>
+  descriptionVersions?: boolean | Prisma.App$descriptionVersionsArgs<ExtArgs>
   _count?: boolean | Prisma.AppCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AppIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2437,6 +4048,13 @@ export type $AppPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     downloadEvents: Prisma.$DownloadEventPayload<ExtArgs>[]
     payments: Prisma.$PaymentPayload<ExtArgs>[]
     sectionItems: Prisma.$StoreSectionItemPayload<ExtArgs>[]
+    tagLinks: Prisma.$AppTagOnAppPayload<ExtArgs>[]
+    viewEvents: Prisma.$AppViewEventPayload<ExtArgs>[]
+    dailyStats: Prisma.$AppDailyStatPayload<ExtArgs>[]
+    aggregateStat: Prisma.$AppAggregateStatPayload<ExtArgs> | null
+    sliders: Prisma.$HomeSliderPayload<ExtArgs>[]
+    changelogs: Prisma.$AppChangelogPayload<ExtArgs>[]
+    descriptionVersions: Prisma.$AppDescriptionVersionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2448,6 +4066,7 @@ export type $AppPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     status: $Enums.AppStatus
     publishedAt: Date | null
     isPaid: boolean
+    isFeatured: boolean
     price: runtime.Decimal
     categoryId: string
     createdById: string
@@ -2859,6 +4478,13 @@ export interface Prisma__AppClient<T, Null = never, ExtArgs extends runtime.Type
   downloadEvents<T extends Prisma.App$downloadEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.App$downloadEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DownloadEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.App$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.App$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sectionItems<T extends Prisma.App$sectionItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.App$sectionItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StoreSectionItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tagLinks<T extends Prisma.App$tagLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.App$tagLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppTagOnAppPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  viewEvents<T extends Prisma.App$viewEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.App$viewEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppViewEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  dailyStats<T extends Prisma.App$dailyStatsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.App$dailyStatsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppDailyStatPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aggregateStat<T extends Prisma.App$aggregateStatArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.App$aggregateStatArgs<ExtArgs>>): Prisma.Prisma__AppAggregateStatClient<runtime.Types.Result.GetResult<Prisma.$AppAggregateStatPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  sliders<T extends Prisma.App$slidersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.App$slidersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HomeSliderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  changelogs<T extends Prisma.App$changelogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.App$changelogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppChangelogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  descriptionVersions<T extends Prisma.App$descriptionVersionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.App$descriptionVersionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppDescriptionVersionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2897,6 +4523,7 @@ export interface AppFieldRefs {
   readonly status: Prisma.FieldRef<"App", 'AppStatus'>
   readonly publishedAt: Prisma.FieldRef<"App", 'DateTime'>
   readonly isPaid: Prisma.FieldRef<"App", 'Boolean'>
+  readonly isFeatured: Prisma.FieldRef<"App", 'Boolean'>
   readonly price: Prisma.FieldRef<"App", 'Decimal'>
   readonly categoryId: Prisma.FieldRef<"App", 'String'>
   readonly createdById: Prisma.FieldRef<"App", 'String'>
@@ -3489,6 +5116,169 @@ export type App$sectionItemsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.StoreSectionItemScalarFieldEnum | Prisma.StoreSectionItemScalarFieldEnum[]
+}
+
+/**
+ * App.tagLinks
+ */
+export type App$tagLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AppTagOnApp
+   */
+  select?: Prisma.AppTagOnAppSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AppTagOnApp
+   */
+  omit?: Prisma.AppTagOnAppOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AppTagOnAppInclude<ExtArgs> | null
+  where?: Prisma.AppTagOnAppWhereInput
+  orderBy?: Prisma.AppTagOnAppOrderByWithRelationInput | Prisma.AppTagOnAppOrderByWithRelationInput[]
+  cursor?: Prisma.AppTagOnAppWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AppTagOnAppScalarFieldEnum | Prisma.AppTagOnAppScalarFieldEnum[]
+}
+
+/**
+ * App.viewEvents
+ */
+export type App$viewEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AppViewEvent
+   */
+  select?: Prisma.AppViewEventSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AppViewEvent
+   */
+  omit?: Prisma.AppViewEventOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AppViewEventInclude<ExtArgs> | null
+  where?: Prisma.AppViewEventWhereInput
+  orderBy?: Prisma.AppViewEventOrderByWithRelationInput | Prisma.AppViewEventOrderByWithRelationInput[]
+  cursor?: Prisma.AppViewEventWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AppViewEventScalarFieldEnum | Prisma.AppViewEventScalarFieldEnum[]
+}
+
+/**
+ * App.dailyStats
+ */
+export type App$dailyStatsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AppDailyStat
+   */
+  select?: Prisma.AppDailyStatSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AppDailyStat
+   */
+  omit?: Prisma.AppDailyStatOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AppDailyStatInclude<ExtArgs> | null
+  where?: Prisma.AppDailyStatWhereInput
+  orderBy?: Prisma.AppDailyStatOrderByWithRelationInput | Prisma.AppDailyStatOrderByWithRelationInput[]
+  cursor?: Prisma.AppDailyStatWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AppDailyStatScalarFieldEnum | Prisma.AppDailyStatScalarFieldEnum[]
+}
+
+/**
+ * App.aggregateStat
+ */
+export type App$aggregateStatArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AppAggregateStat
+   */
+  select?: Prisma.AppAggregateStatSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AppAggregateStat
+   */
+  omit?: Prisma.AppAggregateStatOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AppAggregateStatInclude<ExtArgs> | null
+  where?: Prisma.AppAggregateStatWhereInput
+}
+
+/**
+ * App.sliders
+ */
+export type App$slidersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HomeSlider
+   */
+  select?: Prisma.HomeSliderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HomeSlider
+   */
+  omit?: Prisma.HomeSliderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HomeSliderInclude<ExtArgs> | null
+  where?: Prisma.HomeSliderWhereInput
+  orderBy?: Prisma.HomeSliderOrderByWithRelationInput | Prisma.HomeSliderOrderByWithRelationInput[]
+  cursor?: Prisma.HomeSliderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HomeSliderScalarFieldEnum | Prisma.HomeSliderScalarFieldEnum[]
+}
+
+/**
+ * App.changelogs
+ */
+export type App$changelogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AppChangelog
+   */
+  select?: Prisma.AppChangelogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AppChangelog
+   */
+  omit?: Prisma.AppChangelogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AppChangelogInclude<ExtArgs> | null
+  where?: Prisma.AppChangelogWhereInput
+  orderBy?: Prisma.AppChangelogOrderByWithRelationInput | Prisma.AppChangelogOrderByWithRelationInput[]
+  cursor?: Prisma.AppChangelogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AppChangelogScalarFieldEnum | Prisma.AppChangelogScalarFieldEnum[]
+}
+
+/**
+ * App.descriptionVersions
+ */
+export type App$descriptionVersionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AppDescriptionVersion
+   */
+  select?: Prisma.AppDescriptionVersionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AppDescriptionVersion
+   */
+  omit?: Prisma.AppDescriptionVersionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AppDescriptionVersionInclude<ExtArgs> | null
+  where?: Prisma.AppDescriptionVersionWhereInput
+  orderBy?: Prisma.AppDescriptionVersionOrderByWithRelationInput | Prisma.AppDescriptionVersionOrderByWithRelationInput[]
+  cursor?: Prisma.AppDescriptionVersionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AppDescriptionVersionScalarFieldEnum | Prisma.AppDescriptionVersionScalarFieldEnum[]
 }
 
 /**

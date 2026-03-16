@@ -58,73 +58,214 @@ enum ContentStatus {
   ARCHIVED
 }
 
+enum SliderType {
+  HERO
+  FEATURED
+  PROMO
+}
+
+enum BlogPostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum HelpArticleStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
 model User {
-  id                String          @id @default(cuid())
-  name              String?
-  email             String          @unique
-  emailVerified     DateTime?       @map("email_verified")
-  image             String?
-  passwordHash      String?         @map("password_hash")
-  role              Role            @default(USER)
-  createdAt         DateTime        @default(now()) @map("created_at")
-  updatedAt         DateTime        @updatedAt @map("updated_at")
-  accounts          Account[]
-  sessions          Session[]
-  createdApps       App[]           @relation("AppCreatedBy")
-  updatedApps       App[]           @relation("AppUpdatedBy")
-  libraries         UserLibrary[]
-  feedbacks         Feedback[]
-  moderatedFeedback Feedback[]      @relation("FeedbackModeratedBy")
-  downloadEvents    DownloadEvent[]
-  payments          Payment[]
+  id                  String          @id @default(cuid())
+  name                String?
+  email               String          @unique
+  emailVerified       DateTime?       @map("email_verified")
+  image               String?
+  passwordHash        String?         @map("password_hash")
+  role                Role            @default(USER)
+  createdAt           DateTime        @default(now()) @map("created_at")
+  updatedAt           DateTime        @updatedAt @map("updated_at")
+  deletedAt           DateTime?       @map("deleted_at")
+  scheduledDeletionAt DateTime?       @map("scheduled_deletion_at")
+  accounts            Account[]
+  sessions            Session[]
+  createdApps         App[]           @relation("AppCreatedBy")
+  updatedApps         App[]           @relation("AppUpdatedBy")
+  libraries           UserLibrary[]
+  feedbacks           Feedback[]
+  moderatedFeedback   Feedback[]      @relation("FeedbackModeratedBy")
+  downloadEvents      DownloadEvent[]
+  payments            Payment[]
+  appViewEvents       AppViewEvent[]
+  blogPosts           BlogPost[]      @relation("BlogPostAuthor")
+  blogComments        BlogComment[]
+  settings            UserSettings?
+  activityLogs        ActivityLog[]
 
   @@index([role])
+  @@index([scheduledDeletionAt])
+  @@index([deletedAt])
   @@map("users")
 }
 
 model Category {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  icon      String?
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  apps      App[]
+  id                  String    @id @default(cuid())
+  name                String    @unique
+  icon                String?
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+  scheduledDeletionAt DateTime? @map("scheduled_deletion_at")
+  deletedAt           DateTime? @map("deleted_at")
+  apps                App[]
 
+  @@index([scheduledDeletionAt])
+  @@index([deletedAt])
   @@map("categories")
 }
 
 model App {
-  id               String             @id @default(cuid())
-  title            String
-  slug             String             @unique
-  shortDescription String             @map("short_description")
-  fullDescription  String             @map("full_description")
-  version          String
-  status           AppStatus          @default(DRAFT)
-  publishedAt      DateTime?          @map("published_at")
-  isPaid           Boolean            @default(false) @map("is_paid")
-  price            Decimal            @default(0) @db.Decimal(10, 2)
-  categoryId       String             @map("category_id")
-  createdById      String             @map("created_by")
-  updatedById      String?            @map("updated_by")
-  createdAt        DateTime           @default(now()) @map("created_at")
-  updatedAt        DateTime           @updatedAt @map("updated_at")
-  deletedAt        DateTime?          @map("deleted_at")
-  category         Category           @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  createdBy        User               @relation("AppCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
-  updatedBy        User?              @relation("AppUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
-  media            AppMedia[]
-  links            AppLink[]
-  libraries        UserLibrary[]
-  feedbacks        Feedback[]
-  downloadEvents   DownloadEvent[]
-  payments         Payment[]
-  sectionItems     StoreSectionItem[]
+  id                  String                  @id @default(cuid())
+  title               String
+  slug                String                  @unique
+  shortDescription    String                  @map("short_description")
+  fullDescription     String                  @map("full_description")
+  version             String
+  status              AppStatus               @default(DRAFT)
+  publishedAt         DateTime?               @map("published_at")
+  isPaid              Boolean                 @default(false) @map("is_paid")
+  isFeatured          Boolean                 @default(false) @map("is_featured")
+  price               Decimal                 @default(0) @db.Decimal(10, 2)
+  categoryId          String                  @map("category_id")
+  createdById         String                  @map("created_by")
+  updatedById         String?                 @map("updated_by")
+  createdAt           DateTime                @default(now()) @map("created_at")
+  updatedAt           DateTime                @updatedAt @map("updated_at")
+  deletedAt           DateTime?               @map("deleted_at")
+  category            Category                @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  createdBy           User                    @relation("AppCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+  updatedBy           User?                   @relation("AppUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  media               AppMedia[]
+  links               AppLink[]
+  libraries           UserLibrary[]
+  feedbacks           Feedback[]
+  downloadEvents      DownloadEvent[]
+  payments            Payment[]
+  sectionItems        StoreSectionItem[]
+  tagLinks            AppTagOnApp[]
+  viewEvents          AppViewEvent[]
+  dailyStats          AppDailyStat[]
+  aggregateStat       AppAggregateStat?
+  sliders             HomeSlider[]            @relation("SliderApp")
+  changelogs          AppChangelog[]
+  descriptionVersions AppDescriptionVersion[]
 
   @@index([categoryId])
   @@index([status, createdAt])
   @@index([publishedAt])
+  @@index([isFeatured, publishedAt])
   @@map("apps")
+}
+
+model AppTag {
+  id        String        @id @default(cuid())
+  name      String        @unique
+  slug      String        @unique
+  createdAt DateTime      @default(now()) @map("created_at")
+  updatedAt DateTime      @updatedAt @map("updated_at")
+  appLinks  AppTagOnApp[]
+
+  @@map("app_tags")
+}
+
+model AppTagOnApp {
+  id        String   @id @default(cuid())
+  appId     String   @map("app_id")
+  tagId     String   @map("tag_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  app       App      @relation(fields: [appId], references: [id], onDelete: Cascade)
+  tag       AppTag   @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([appId, tagId])
+  @@index([tagId])
+  @@map("app_tags_on_apps")
+}
+
+model HomeSlider {
+  id          String     @id @default(cuid())
+  title       String
+  description String?
+  type        SliderType @default(HERO)
+  imageUrl    String?    @map("image_url")
+  linkUrl     String?    @map("link_url")
+  appId       String?    @map("app_id")
+  orderIndex  Int        @default(0) @map("order_index")
+  startsAt    DateTime?  @map("starts_at")
+  endsAt      DateTime?  @map("ends_at")
+  isActive    Boolean    @default(true) @map("is_active")
+  createdBy   String?    @map("created_by")
+  updatedBy   String?    @map("updated_by")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  app         App?       @relation("SliderApp", fields: [appId], references: [id], onDelete: SetNull)
+
+  @@index([type, isActive, orderIndex])
+  @@index([startsAt, endsAt])
+  @@map("home_sliders")
+}
+
+model AppViewEvent {
+  id        String   @id @default(cuid())
+  appId     String   @map("app_id")
+  userId    String?  @map("user_id")
+  sessionId String?  @map("session_id")
+  source    String?
+  isUnique  Boolean  @default(false) @map("is_unique")
+  ipHash    String?  @map("ip_hash")
+  userAgent String?  @map("user_agent")
+  createdAt DateTime @default(now()) @map("created_at")
+  app       App      @relation(fields: [appId], references: [id], onDelete: Cascade)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([appId, createdAt])
+  @@index([userId, createdAt])
+  @@index([sessionId, createdAt])
+  @@map("app_view_events")
+}
+
+model AppDailyStat {
+  id            String   @id @default(cuid())
+  appId         String   @map("app_id")
+  date          DateTime @db.Date
+  viewCount     Int      @default(0) @map("view_count")
+  downloadCount Int      @default(0) @map("download_count")
+  libraryCount  Int      @default(0) @map("library_count")
+  feedbackCount Int      @default(0) @map("feedback_count")
+  averageRating Decimal  @default(0) @map("average_rating") @db.Decimal(3, 2)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  app           App      @relation(fields: [appId], references: [id], onDelete: Cascade)
+
+  @@unique([appId, date])
+  @@index([date])
+  @@map("app_daily_stats")
+}
+
+model AppAggregateStat {
+  appId            String    @id @map("app_id")
+  viewCount        Int       @default(0) @map("view_count")
+  downloadCount    Int       @default(0) @map("download_count")
+  libraryCount     Int       @default(0) @map("library_count")
+  feedbackCount    Int       @default(0) @map("feedback_count")
+  averageRating    Decimal   @default(0) @map("average_rating") @db.Decimal(3, 2)
+  lastViewedAt     DateTime? @map("last_viewed_at")
+  lastDownloadedAt DateTime? @map("last_downloaded_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+  app              App       @relation(fields: [appId], references: [id], onDelete: Cascade)
+
+  @@index([viewCount, updatedAt])
+  @@index([downloadCount, updatedAt])
+  @@map("app_aggregate_stats")
 }
 
 model StoreSectionItem {
@@ -205,6 +346,161 @@ model ContentPageVersion {
   @@map("content_page_versions")
 }
 
+model ProfilePage {
+  id                 String   @id @default(cuid())
+  slug               String   @unique
+  fullName           String   @map("full_name")
+  headline           String?
+  shortBio           String?  @map("short_bio")
+  bioMarkdown        String   @map("bio_markdown") @db.Text
+  experienceMarkdown String?  @map("experience_markdown") @db.Text
+  skills             Json?
+  tools              Json?
+  contactEmail       String?  @map("contact_email")
+  location           String?
+  websiteUrl         String?  @map("website_url")
+  githubUrl          String?  @map("github_url")
+  linkedinUrl        String?  @map("linkedin_url")
+  resumeUrl          String?  @map("resume_url")
+  avatarUrl          String?  @map("avatar_url")
+  coverImageUrl      String?  @map("cover_image_url")
+  isActive           Boolean  @default(true) @map("is_active")
+  createdBy          String?  @map("created_by")
+  updatedBy          String?  @map("updated_by")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  @@index([isActive, updatedAt])
+  @@map("profile_pages")
+}
+
+model BlogTag {
+  id        String        @id @default(cuid())
+  name      String        @unique
+  slug      String        @unique
+  createdAt DateTime      @default(now()) @map("created_at")
+  updatedAt DateTime      @updatedAt @map("updated_at")
+  posts     BlogPostTag[]
+
+  @@map("blog_tags")
+}
+
+model BlogPost {
+  id              String            @id @default(cuid())
+  slug            String            @unique
+  title           String
+  excerpt         String?
+  contentMarkdown String            @map("content_markdown") @db.Text
+  status          BlogPostStatus    @default(DRAFT)
+  publishAt       DateTime?         @map("publish_at")
+  publishedAt     DateTime?         @map("published_at")
+  authorId        String?           @map("author_id")
+  createdBy       String?           @map("created_by")
+  updatedBy       String?           @map("updated_by")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+  author          User?             @relation("BlogPostAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  tags            BlogPostTag[]
+  comments        BlogComment[]
+  versions        BlogPostVersion[]
+
+  @@index([status, publishedAt])
+  @@index([authorId, createdAt])
+  @@map("blog_posts")
+}
+
+model BlogPostTag {
+  id        String   @id @default(cuid())
+  postId    String   @map("post_id")
+  tagId     String   @map("tag_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  post      BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag       BlogTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, tagId])
+  @@index([tagId])
+  @@map("blog_post_tags")
+}
+
+model BlogComment {
+  id          String   @id @default(cuid())
+  postId      String   @map("post_id")
+  userId      String?  @map("user_id")
+  authorName  String?  @map("author_name")
+  authorEmail String?  @map("author_email")
+  content     String   @db.Text
+  isGuest     Boolean  @default(false) @map("is_guest")
+  isApproved  Boolean  @default(false) @map("is_approved")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  post        BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([postId, createdAt])
+  @@index([isApproved, createdAt])
+  @@map("blog_comments")
+}
+
+model HelpCategory {
+  id          String        @id @default(cuid())
+  name        String
+  slug        String        @unique
+  description String?
+  orderIndex  Int           @default(0) @map("order_index")
+  isActive    Boolean       @default(true) @map("is_active")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+  articles    HelpArticle[]
+
+  @@index([isActive, orderIndex])
+  @@map("help_categories")
+}
+
+model HelpArticle {
+  id              String               @id @default(cuid())
+  categoryId      String?              @map("category_id")
+  slug            String               @unique
+  title           String
+  summary         String?
+  contentMarkdown String               @map("content_markdown") @db.Text
+  status          HelpArticleStatus    @default(DRAFT)
+  isFeatured      Boolean              @default(false) @map("is_featured")
+  publishAt       DateTime?            @map("publish_at")
+  publishedAt     DateTime?            @map("published_at")
+  viewCount       Int                  @default(0) @map("view_count")
+  createdBy       String?              @map("created_by")
+  updatedBy       String?              @map("updated_by")
+  createdAt       DateTime             @default(now()) @map("created_at")
+  updatedAt       DateTime             @updatedAt @map("updated_at")
+  category        HelpCategory?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  versions        HelpArticleVersion[]
+
+  @@index([status, publishedAt])
+  @@index([categoryId, isFeatured])
+  @@map("help_articles")
+}
+
+model Testimonial {
+  id            String   @id @default(cuid())
+  authorName    String   @map("author_name")
+  authorRole    String?  @map("author_role")
+  company       String?
+  avatarUrl     String?  @map("avatar_url")
+  quoteMarkdown String   @map("quote_markdown") @db.Text
+  rating        Int      @default(5)
+  sourceUrl     String?  @map("source_url")
+  sortOrder     Int      @default(0) @map("sort_order")
+  isFeatured    Boolean  @default(true) @map("is_featured")
+  isActive      Boolean  @default(true) @map("is_active")
+  createdBy     String?  @map("created_by")
+  updatedBy     String?  @map("updated_by")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@index([isActive, isFeatured, sortOrder])
+  @@map("testimonials")
+}
+
 model ThemeConfig {
   id              String   @id @default(cuid())
   name            String   @unique
@@ -260,6 +556,7 @@ model UserLibrary {
   id        String   @id @default(cuid())
   userId    String   @map("user_id")
   appId     String   @map("app_id")
+  note      String?  @db.Text
   createdAt DateTime @default(now()) @map("created_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   app       App      @relation(fields: [appId], references: [id], onDelete: Cascade)
@@ -268,6 +565,106 @@ model UserLibrary {
   @@index([userId])
   @@index([appId])
   @@map("user_library")
+}
+
+model UserSettings {
+  id                 String   @id @default(cuid())
+  userId             String   @unique @map("user_id")
+  themeMode          String?  @map("theme_mode")
+  customTheme        Json?    @map("custom_theme")
+  emailNotifications Boolean  @default(true) @map("email_notifications")
+  marketingEmails    Boolean  @default(false) @map("marketing_emails")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_settings")
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  userId    String?  @map("user_id")
+  action    String
+  entity    String
+  entityId  String?  @map("entity_id")
+  metadata  Json?
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([entity, entityId])
+  @@index([action, createdAt])
+  @@map("activity_logs")
+}
+
+model AppChangelog {
+  id              String    @id @default(cuid())
+  appId           String    @map("app_id")
+  version         String
+  title           String?
+  contentMarkdown String    @map("content_markdown") @db.Text
+  releaseDate     DateTime? @map("release_date")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  app             App       @relation(fields: [appId], references: [id], onDelete: Cascade)
+
+  @@index([appId, releaseDate])
+  @@index([appId, version])
+  @@map("app_changelogs")
+}
+
+model BlogPostVersion {
+  id              String   @id @default(cuid())
+  postId          String   @map("post_id")
+  title           String
+  excerpt         String?
+  contentMarkdown String   @map("content_markdown") @db.Text
+  createdBy       String?  @map("created_by")
+  createdAt       DateTime @default(now()) @map("created_at")
+  post            BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@index([postId, createdAt])
+  @@map("blog_post_versions")
+}
+
+model HelpArticleVersion {
+  id              String      @id @default(cuid())
+  articleId       String      @map("article_id")
+  title           String
+  contentMarkdown String      @map("content_markdown") @db.Text
+  createdBy       String?     @map("created_by")
+  createdAt       DateTime    @default(now()) @map("created_at")
+  article         HelpArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@index([articleId])
+  @@index([articleId, createdAt])
+  @@map("help_article_versions")
+}
+
+model AppDescriptionVersion {
+  id                  String   @id @default(cuid())
+  appId               String   @map("app_id")
+  versionLabel        String   @map("version_label")
+  descriptionMarkdown String   @map("description_markdown") @db.Text
+  createdBy           String?  @map("created_by")
+  createdAt           DateTime @default(now()) @map("created_at")
+  app                 App      @relation(fields: [appId], references: [id], onDelete: Cascade)
+
+  @@index([appId])
+  @@index([appId, createdAt])
+  @@index([appId, versionLabel])
+  @@map("app_description_versions")
+}
+
+model GuestSession {
+  id         String    @id @default(cuid())
+  sessionId  String    @unique @map("session_id")
+  ipHash     String?   @map("ip_hash")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  lastSeenAt DateTime? @map("last_seen_at")
+
+  @@index([lastSeenAt])
+  @@map("guest_sessions")
 }
 
 model Feedback {

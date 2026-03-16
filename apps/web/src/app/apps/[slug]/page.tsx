@@ -7,6 +7,7 @@ import {
 } from "@/lib/view-models";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AppDetailActions } from "./app-detail-actions";
 
 export const dynamic = "force-dynamic";
 
@@ -51,6 +52,8 @@ export default async function AppDetailPage({
           {app.fullDescription}
         </p>
       </section>
+
+      <AppDetailActions appId={app.id} slug={app.slug} title={app.title} />
 
       <section className="space-y-3">
         <h2 className="text-xl font-medium">Links</h2>

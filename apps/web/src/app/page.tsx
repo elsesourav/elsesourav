@@ -5,6 +5,7 @@ const quickLinks = [
   { href: "/feedback", title: "Recent feedback" },
   { href: "/library", title: "Your library" },
   { href: "/history", title: "Download history" },
+  { href: "/settings", title: "Account settings" },
   { href: "/about", title: "About" },
   { href: "/admin", title: "Open admin" },
   { href: "/login", title: "Login" },

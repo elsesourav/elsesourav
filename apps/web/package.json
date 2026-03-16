@@ -16,11 +16,13 @@
     "@elsesourav/config": "*",
     "@elsesourav/types": "*",
     "@elsesourav/validation": "*",
+    "@reduxjs/toolkit": "^2.11.2",
     "cloudinary": "^2.7.0",
     "next": "16.1.6",
     "next-auth": "^5.0.0-beta.25",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-redux": "^9.2.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {

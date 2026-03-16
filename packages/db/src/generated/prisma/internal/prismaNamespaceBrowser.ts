@@ -54,14 +54,35 @@ export const ModelName = {
   User: 'User',
   Category: 'Category',
   App: 'App',
+  AppTag: 'AppTag',
+  AppTagOnApp: 'AppTagOnApp',
+  HomeSlider: 'HomeSlider',
+  AppViewEvent: 'AppViewEvent',
+  AppDailyStat: 'AppDailyStat',
+  AppAggregateStat: 'AppAggregateStat',
   StoreSectionItem: 'StoreSectionItem',
   StoreBanner: 'StoreBanner',
   ContentPage: 'ContentPage',
   ContentPageVersion: 'ContentPageVersion',
+  ProfilePage: 'ProfilePage',
+  BlogTag: 'BlogTag',
+  BlogPost: 'BlogPost',
+  BlogPostTag: 'BlogPostTag',
+  BlogComment: 'BlogComment',
+  HelpCategory: 'HelpCategory',
+  HelpArticle: 'HelpArticle',
+  Testimonial: 'Testimonial',
   ThemeConfig: 'ThemeConfig',
   AppMedia: 'AppMedia',
   AppLink: 'AppLink',
   UserLibrary: 'UserLibrary',
+  UserSettings: 'UserSettings',
+  ActivityLog: 'ActivityLog',
+  AppChangelog: 'AppChangelog',
+  BlogPostVersion: 'BlogPostVersion',
+  HelpArticleVersion: 'HelpArticleVersion',
+  AppDescriptionVersion: 'AppDescriptionVersion',
+  GuestSession: 'GuestSession',
   Feedback: 'Feedback',
   DownloadEvent: 'DownloadEvent',
   Payment: 'Payment',
@@ -95,7 +116,9 @@ export const UserScalarFieldEnum = {
   passwordHash: 'passwordHash',
   role: 'role',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
+  scheduledDeletionAt: 'scheduledDeletionAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -106,7 +129,9 @@ export const CategoryScalarFieldEnum = {
   name: 'name',
   icon: 'icon',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  scheduledDeletionAt: 'scheduledDeletionAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
@@ -122,6 +147,7 @@ export const AppScalarFieldEnum = {
   status: 'status',
   publishedAt: 'publishedAt',
   isPaid: 'isPaid',
+  isFeatured: 'isFeatured',
   price: 'price',
   categoryId: 'categoryId',
   createdById: 'createdById',
@@ -132,6 +158,94 @@ export const AppScalarFieldEnum = {
 } as const
 
 export type AppScalarFieldEnum = (typeof AppScalarFieldEnum)[keyof typeof AppScalarFieldEnum]
+
+
+export const AppTagScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AppTagScalarFieldEnum = (typeof AppTagScalarFieldEnum)[keyof typeof AppTagScalarFieldEnum]
+
+
+export const AppTagOnAppScalarFieldEnum = {
+  id: 'id',
+  appId: 'appId',
+  tagId: 'tagId',
+  createdAt: 'createdAt'
+} as const
+
+export type AppTagOnAppScalarFieldEnum = (typeof AppTagOnAppScalarFieldEnum)[keyof typeof AppTagOnAppScalarFieldEnum]
+
+
+export const HomeSliderScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  type: 'type',
+  imageUrl: 'imageUrl',
+  linkUrl: 'linkUrl',
+  appId: 'appId',
+  orderIndex: 'orderIndex',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  isActive: 'isActive',
+  createdBy: 'createdBy',
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HomeSliderScalarFieldEnum = (typeof HomeSliderScalarFieldEnum)[keyof typeof HomeSliderScalarFieldEnum]
+
+
+export const AppViewEventScalarFieldEnum = {
+  id: 'id',
+  appId: 'appId',
+  userId: 'userId',
+  sessionId: 'sessionId',
+  source: 'source',
+  isUnique: 'isUnique',
+  ipHash: 'ipHash',
+  userAgent: 'userAgent',
+  createdAt: 'createdAt'
+} as const
+
+export type AppViewEventScalarFieldEnum = (typeof AppViewEventScalarFieldEnum)[keyof typeof AppViewEventScalarFieldEnum]
+
+
+export const AppDailyStatScalarFieldEnum = {
+  id: 'id',
+  appId: 'appId',
+  date: 'date',
+  viewCount: 'viewCount',
+  downloadCount: 'downloadCount',
+  libraryCount: 'libraryCount',
+  feedbackCount: 'feedbackCount',
+  averageRating: 'averageRating',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AppDailyStatScalarFieldEnum = (typeof AppDailyStatScalarFieldEnum)[keyof typeof AppDailyStatScalarFieldEnum]
+
+
+export const AppAggregateStatScalarFieldEnum = {
+  appId: 'appId',
+  viewCount: 'viewCount',
+  downloadCount: 'downloadCount',
+  libraryCount: 'libraryCount',
+  feedbackCount: 'feedbackCount',
+  averageRating: 'averageRating',
+  lastViewedAt: 'lastViewedAt',
+  lastDownloadedAt: 'lastDownloadedAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AppAggregateStatScalarFieldEnum = (typeof AppAggregateStatScalarFieldEnum)[keyof typeof AppAggregateStatScalarFieldEnum]
 
 
 export const StoreSectionItemScalarFieldEnum = {
@@ -204,6 +318,146 @@ export const ContentPageVersionScalarFieldEnum = {
 export type ContentPageVersionScalarFieldEnum = (typeof ContentPageVersionScalarFieldEnum)[keyof typeof ContentPageVersionScalarFieldEnum]
 
 
+export const ProfilePageScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  fullName: 'fullName',
+  headline: 'headline',
+  shortBio: 'shortBio',
+  bioMarkdown: 'bioMarkdown',
+  experienceMarkdown: 'experienceMarkdown',
+  skills: 'skills',
+  tools: 'tools',
+  contactEmail: 'contactEmail',
+  location: 'location',
+  websiteUrl: 'websiteUrl',
+  githubUrl: 'githubUrl',
+  linkedinUrl: 'linkedinUrl',
+  resumeUrl: 'resumeUrl',
+  avatarUrl: 'avatarUrl',
+  coverImageUrl: 'coverImageUrl',
+  isActive: 'isActive',
+  createdBy: 'createdBy',
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProfilePageScalarFieldEnum = (typeof ProfilePageScalarFieldEnum)[keyof typeof ProfilePageScalarFieldEnum]
+
+
+export const BlogTagScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BlogTagScalarFieldEnum = (typeof BlogTagScalarFieldEnum)[keyof typeof BlogTagScalarFieldEnum]
+
+
+export const BlogPostScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  title: 'title',
+  excerpt: 'excerpt',
+  contentMarkdown: 'contentMarkdown',
+  status: 'status',
+  publishAt: 'publishAt',
+  publishedAt: 'publishedAt',
+  authorId: 'authorId',
+  createdBy: 'createdBy',
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BlogPostScalarFieldEnum = (typeof BlogPostScalarFieldEnum)[keyof typeof BlogPostScalarFieldEnum]
+
+
+export const BlogPostTagScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  tagId: 'tagId',
+  createdAt: 'createdAt'
+} as const
+
+export type BlogPostTagScalarFieldEnum = (typeof BlogPostTagScalarFieldEnum)[keyof typeof BlogPostTagScalarFieldEnum]
+
+
+export const BlogCommentScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  userId: 'userId',
+  authorName: 'authorName',
+  authorEmail: 'authorEmail',
+  content: 'content',
+  isGuest: 'isGuest',
+  isApproved: 'isApproved',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BlogCommentScalarFieldEnum = (typeof BlogCommentScalarFieldEnum)[keyof typeof BlogCommentScalarFieldEnum]
+
+
+export const HelpCategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  description: 'description',
+  orderIndex: 'orderIndex',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HelpCategoryScalarFieldEnum = (typeof HelpCategoryScalarFieldEnum)[keyof typeof HelpCategoryScalarFieldEnum]
+
+
+export const HelpArticleScalarFieldEnum = {
+  id: 'id',
+  categoryId: 'categoryId',
+  slug: 'slug',
+  title: 'title',
+  summary: 'summary',
+  contentMarkdown: 'contentMarkdown',
+  status: 'status',
+  isFeatured: 'isFeatured',
+  publishAt: 'publishAt',
+  publishedAt: 'publishedAt',
+  viewCount: 'viewCount',
+  createdBy: 'createdBy',
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HelpArticleScalarFieldEnum = (typeof HelpArticleScalarFieldEnum)[keyof typeof HelpArticleScalarFieldEnum]
+
+
+export const TestimonialScalarFieldEnum = {
+  id: 'id',
+  authorName: 'authorName',
+  authorRole: 'authorRole',
+  company: 'company',
+  avatarUrl: 'avatarUrl',
+  quoteMarkdown: 'quoteMarkdown',
+  rating: 'rating',
+  sourceUrl: 'sourceUrl',
+  sortOrder: 'sortOrder',
+  isFeatured: 'isFeatured',
+  isActive: 'isActive',
+  createdBy: 'createdBy',
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TestimonialScalarFieldEnum = (typeof TestimonialScalarFieldEnum)[keyof typeof TestimonialScalarFieldEnum]
+
+
 export const ThemeConfigScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -255,10 +509,99 @@ export const UserLibraryScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   appId: 'appId',
+  note: 'note',
   createdAt: 'createdAt'
 } as const
 
 export type UserLibraryScalarFieldEnum = (typeof UserLibraryScalarFieldEnum)[keyof typeof UserLibraryScalarFieldEnum]
+
+
+export const UserSettingsScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  themeMode: 'themeMode',
+  customTheme: 'customTheme',
+  emailNotifications: 'emailNotifications',
+  marketingEmails: 'marketingEmails',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserSettingsScalarFieldEnum = (typeof UserSettingsScalarFieldEnum)[keyof typeof UserSettingsScalarFieldEnum]
+
+
+export const ActivityLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  action: 'action',
+  entity: 'entity',
+  entityId: 'entityId',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type ActivityLogScalarFieldEnum = (typeof ActivityLogScalarFieldEnum)[keyof typeof ActivityLogScalarFieldEnum]
+
+
+export const AppChangelogScalarFieldEnum = {
+  id: 'id',
+  appId: 'appId',
+  version: 'version',
+  title: 'title',
+  contentMarkdown: 'contentMarkdown',
+  releaseDate: 'releaseDate',
+  createdAt: 'createdAt'
+} as const
+
+export type AppChangelogScalarFieldEnum = (typeof AppChangelogScalarFieldEnum)[keyof typeof AppChangelogScalarFieldEnum]
+
+
+export const BlogPostVersionScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  title: 'title',
+  excerpt: 'excerpt',
+  contentMarkdown: 'contentMarkdown',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt'
+} as const
+
+export type BlogPostVersionScalarFieldEnum = (typeof BlogPostVersionScalarFieldEnum)[keyof typeof BlogPostVersionScalarFieldEnum]
+
+
+export const HelpArticleVersionScalarFieldEnum = {
+  id: 'id',
+  articleId: 'articleId',
+  title: 'title',
+  contentMarkdown: 'contentMarkdown',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt'
+} as const
+
+export type HelpArticleVersionScalarFieldEnum = (typeof HelpArticleVersionScalarFieldEnum)[keyof typeof HelpArticleVersionScalarFieldEnum]
+
+
+export const AppDescriptionVersionScalarFieldEnum = {
+  id: 'id',
+  appId: 'appId',
+  versionLabel: 'versionLabel',
+  descriptionMarkdown: 'descriptionMarkdown',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt'
+} as const
+
+export type AppDescriptionVersionScalarFieldEnum = (typeof AppDescriptionVersionScalarFieldEnum)[keyof typeof AppDescriptionVersionScalarFieldEnum]
+
+
+export const GuestSessionScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  ipHash: 'ipHash',
+  createdAt: 'createdAt',
+  lastSeenAt: 'lastSeenAt'
+} as const
+
+export type GuestSessionScalarFieldEnum = (typeof GuestSessionScalarFieldEnum)[keyof typeof GuestSessionScalarFieldEnum]
 
 
 export const FeedbackScalarFieldEnum = {
@@ -352,6 +695,14 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
 export const QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -366,4 +717,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

@@ -28,6 +28,7 @@ export type UserLibraryMinAggregateOutputType = {
   id: string | null
   userId: string | null
   appId: string | null
+  note: string | null
   createdAt: Date | null
 }
 
@@ -35,6 +36,7 @@ export type UserLibraryMaxAggregateOutputType = {
   id: string | null
   userId: string | null
   appId: string | null
+  note: string | null
   createdAt: Date | null
 }
 
@@ -42,6 +44,7 @@ export type UserLibraryCountAggregateOutputType = {
   id: number
   userId: number
   appId: number
+  note: number
   createdAt: number
   _all: number
 }
@@ -51,6 +54,7 @@ export type UserLibraryMinAggregateInputType = {
   id?: true
   userId?: true
   appId?: true
+  note?: true
   createdAt?: true
 }
 
@@ -58,6 +62,7 @@ export type UserLibraryMaxAggregateInputType = {
   id?: true
   userId?: true
   appId?: true
+  note?: true
   createdAt?: true
 }
 
@@ -65,6 +70,7 @@ export type UserLibraryCountAggregateInputType = {
   id?: true
   userId?: true
   appId?: true
+  note?: true
   createdAt?: true
   _all?: true
 }
@@ -145,6 +151,7 @@ export type UserLibraryGroupByOutputType = {
   id: string
   userId: string
   appId: string
+  note: string | null
   createdAt: Date
   _count: UserLibraryCountAggregateOutputType | null
   _min: UserLibraryMinAggregateOutputType | null
@@ -173,6 +180,7 @@ export type UserLibraryWhereInput = {
   id?: Prisma.StringFilter<"UserLibrary"> | string
   userId?: Prisma.StringFilter<"UserLibrary"> | string
   appId?: Prisma.StringFilter<"UserLibrary"> | string
+  note?: Prisma.StringNullableFilter<"UserLibrary"> | string | null
   createdAt?: Prisma.DateTimeFilter<"UserLibrary"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   app?: Prisma.XOR<Prisma.AppScalarRelationFilter, Prisma.AppWhereInput>
@@ -182,6 +190,7 @@ export type UserLibraryOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   appId?: Prisma.SortOrder
+  note?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   app?: Prisma.AppOrderByWithRelationInput
@@ -195,6 +204,7 @@ export type UserLibraryWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.UserLibraryWhereInput | Prisma.UserLibraryWhereInput[]
   userId?: Prisma.StringFilter<"UserLibrary"> | string
   appId?: Prisma.StringFilter<"UserLibrary"> | string
+  note?: Prisma.StringNullableFilter<"UserLibrary"> | string | null
   createdAt?: Prisma.DateTimeFilter<"UserLibrary"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   app?: Prisma.XOR<Prisma.AppScalarRelationFilter, Prisma.AppWhereInput>
@@ -204,6 +214,7 @@ export type UserLibraryOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   appId?: Prisma.SortOrder
+  note?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.UserLibraryCountOrderByAggregateInput
   _max?: Prisma.UserLibraryMaxOrderByAggregateInput
@@ -217,11 +228,13 @@ export type UserLibraryScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"UserLibrary"> | string
   userId?: Prisma.StringWithAggregatesFilter<"UserLibrary"> | string
   appId?: Prisma.StringWithAggregatesFilter<"UserLibrary"> | string
+  note?: Prisma.StringNullableWithAggregatesFilter<"UserLibrary"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"UserLibrary"> | Date | string
 }
 
 export type UserLibraryCreateInput = {
   id?: string
+  note?: string | null
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutLibrariesInput
   app: Prisma.AppCreateNestedOneWithoutLibrariesInput
@@ -231,11 +244,13 @@ export type UserLibraryUncheckedCreateInput = {
   id?: string
   userId: string
   appId: string
+  note?: string | null
   createdAt?: Date | string
 }
 
 export type UserLibraryUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutLibrariesNestedInput
   app?: Prisma.AppUpdateOneRequiredWithoutLibrariesNestedInput
@@ -245,6 +260,7 @@ export type UserLibraryUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   appId?: Prisma.StringFieldUpdateOperationsInput | string
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -252,11 +268,13 @@ export type UserLibraryCreateManyInput = {
   id?: string
   userId: string
   appId: string
+  note?: string | null
   createdAt?: Date | string
 }
 
 export type UserLibraryUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -264,6 +282,7 @@ export type UserLibraryUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   appId?: Prisma.StringFieldUpdateOperationsInput | string
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -286,6 +305,7 @@ export type UserLibraryCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   appId?: Prisma.SortOrder
+  note?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -293,6 +313,7 @@ export type UserLibraryMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   appId?: Prisma.SortOrder
+  note?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -300,6 +321,7 @@ export type UserLibraryMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   appId?: Prisma.SortOrder
+  note?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -389,6 +411,7 @@ export type UserLibraryUncheckedUpdateManyWithoutAppNestedInput = {
 
 export type UserLibraryCreateWithoutUserInput = {
   id?: string
+  note?: string | null
   createdAt?: Date | string
   app: Prisma.AppCreateNestedOneWithoutLibrariesInput
 }
@@ -396,6 +419,7 @@ export type UserLibraryCreateWithoutUserInput = {
 export type UserLibraryUncheckedCreateWithoutUserInput = {
   id?: string
   appId: string
+  note?: string | null
   createdAt?: Date | string
 }
 
@@ -432,11 +456,13 @@ export type UserLibraryScalarWhereInput = {
   id?: Prisma.StringFilter<"UserLibrary"> | string
   userId?: Prisma.StringFilter<"UserLibrary"> | string
   appId?: Prisma.StringFilter<"UserLibrary"> | string
+  note?: Prisma.StringNullableFilter<"UserLibrary"> | string | null
   createdAt?: Prisma.DateTimeFilter<"UserLibrary"> | Date | string
 }
 
 export type UserLibraryCreateWithoutAppInput = {
   id?: string
+  note?: string | null
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutLibrariesInput
 }
@@ -444,6 +470,7 @@ export type UserLibraryCreateWithoutAppInput = {
 export type UserLibraryUncheckedCreateWithoutAppInput = {
   id?: string
   userId: string
+  note?: string | null
   createdAt?: Date | string
 }
 
@@ -476,11 +503,13 @@ export type UserLibraryUpdateManyWithWhereWithoutAppInput = {
 export type UserLibraryCreateManyUserInput = {
   id?: string
   appId: string
+  note?: string | null
   createdAt?: Date | string
 }
 
 export type UserLibraryUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   app?: Prisma.AppUpdateOneRequiredWithoutLibrariesNestedInput
 }
@@ -488,23 +517,27 @@ export type UserLibraryUpdateWithoutUserInput = {
 export type UserLibraryUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   appId?: Prisma.StringFieldUpdateOperationsInput | string
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserLibraryUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   appId?: Prisma.StringFieldUpdateOperationsInput | string
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserLibraryCreateManyAppInput = {
   id?: string
   userId: string
+  note?: string | null
   createdAt?: Date | string
 }
 
 export type UserLibraryUpdateWithoutAppInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutLibrariesNestedInput
 }
@@ -512,12 +545,14 @@ export type UserLibraryUpdateWithoutAppInput = {
 export type UserLibraryUncheckedUpdateWithoutAppInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserLibraryUncheckedUpdateManyWithoutAppInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -527,6 +562,7 @@ export type UserLibrarySelect<ExtArgs extends runtime.Types.Extensions.InternalA
   id?: boolean
   userId?: boolean
   appId?: boolean
+  note?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   app?: boolean | Prisma.AppDefaultArgs<ExtArgs>
@@ -536,6 +572,7 @@ export type UserLibrarySelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   userId?: boolean
   appId?: boolean
+  note?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   app?: boolean | Prisma.AppDefaultArgs<ExtArgs>
@@ -545,6 +582,7 @@ export type UserLibrarySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   userId?: boolean
   appId?: boolean
+  note?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   app?: boolean | Prisma.AppDefaultArgs<ExtArgs>
@@ -554,10 +592,11 @@ export type UserLibrarySelectScalar = {
   id?: boolean
   userId?: boolean
   appId?: boolean
+  note?: boolean
   createdAt?: boolean
 }
 
-export type UserLibraryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "appId" | "createdAt", ExtArgs["result"]["userLibrary"]>
+export type UserLibraryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "appId" | "note" | "createdAt", ExtArgs["result"]["userLibrary"]>
 export type UserLibraryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   app?: boolean | Prisma.AppDefaultArgs<ExtArgs>
@@ -581,6 +620,7 @@ export type $UserLibraryPayload<ExtArgs extends runtime.Types.Extensions.Interna
     id: string
     userId: string
     appId: string
+    note: string | null
     createdAt: Date
   }, ExtArgs["result"]["userLibrary"]>
   composites: {}
@@ -1010,6 +1050,7 @@ export interface UserLibraryFieldRefs {
   readonly id: Prisma.FieldRef<"UserLibrary", 'String'>
   readonly userId: Prisma.FieldRef<"UserLibrary", 'String'>
   readonly appId: Prisma.FieldRef<"UserLibrary", 'String'>
+  readonly note: Prisma.FieldRef<"UserLibrary", 'String'>
   readonly createdAt: Prisma.FieldRef<"UserLibrary", 'DateTime'>
 }
     
