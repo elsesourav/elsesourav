@@ -254,16 +254,32 @@ export function ThemeControls({
     primaryColor: resolveColor(customTheme, "lightPrimaryColor", themeMode),
     secondaryColor: resolveColor(customTheme, "lightSecondaryColor", themeMode),
     accentColor: resolveColor(customTheme, "lightAccentColor", themeMode),
-    backgroundColor: resolveColor(customTheme, "lightBackgroundColor", themeMode),
-    foregroundColor: resolveColor(customTheme, "lightForegroundColor", themeMode),
+    backgroundColor: resolveColor(
+      customTheme,
+      "lightBackgroundColor",
+      themeMode,
+    ),
+    foregroundColor: resolveColor(
+      customTheme,
+      "lightForegroundColor",
+      themeMode,
+    ),
   };
 
   const previewDarkPalette = {
     primaryColor: resolveColor(customTheme, "darkPrimaryColor", themeMode),
     secondaryColor: resolveColor(customTheme, "darkSecondaryColor", themeMode),
     accentColor: resolveColor(customTheme, "darkAccentColor", themeMode),
-    backgroundColor: resolveColor(customTheme, "darkBackgroundColor", themeMode),
-    foregroundColor: resolveColor(customTheme, "darkForegroundColor", themeMode),
+    backgroundColor: resolveColor(
+      customTheme,
+      "darkBackgroundColor",
+      themeMode,
+    ),
+    foregroundColor: resolveColor(
+      customTheme,
+      "darkForegroundColor",
+      themeMode,
+    ),
   };
 
   const sectionStatusClassName =

@@ -11,6 +11,33 @@ import {
 } from "./settings-form";
 
 describe("settings form logic", () => {
+  const createTheme = (
+    overrides: Partial<{
+      lightPrimaryColor: string;
+      lightSecondaryColor: string;
+      lightAccentColor: string;
+      lightBackgroundColor: string;
+      lightForegroundColor: string;
+      darkPrimaryColor: string;
+      darkSecondaryColor: string;
+      darkAccentColor: string;
+      darkBackgroundColor: string;
+      darkForegroundColor: string;
+    }> = {},
+  ) => ({
+    lightPrimaryColor: "",
+    lightSecondaryColor: "",
+    lightAccentColor: "",
+    lightBackgroundColor: "",
+    lightForegroundColor: "",
+    darkPrimaryColor: "",
+    darkSecondaryColor: "",
+    darkAccentColor: "",
+    darkBackgroundColor: "",
+    darkForegroundColor: "",
+    ...overrides,
+  });
+
   const deletionSchedule: UserDeletionScheduleView = {
     scheduledDeletionAt: null,
     deletedAt: null,
@@ -22,41 +49,33 @@ describe("settings form logic", () => {
 
   it("returns null for empty custom theme payload", () => {
     expect(
-      toCustomThemePayload({
-        primaryColor: " ",
-        secondaryColor: "",
-        accentColor: "",
-        backgroundColor: "",
-        foregroundColor: "",
-      }),
+      toCustomThemePayload(createTheme({ lightPrimaryColor: " " })),
     ).toBeNull();
   });
 
   it("trims and keeps only non-empty custom theme fields", () => {
     expect(
-      toCustomThemePayload({
-        primaryColor: " #111827 ",
-        secondaryColor: "",
-        accentColor: "#f59e0b",
-        backgroundColor: "",
-        foregroundColor: "",
-      }),
+      toCustomThemePayload(
+        createTheme({
+          lightPrimaryColor: " #111827 ",
+          darkAccentColor: "#22d3ee",
+        }),
+      ),
     ).toEqual({
-      primaryColor: "#111827",
-      accentColor: "#f59e0b",
+      lightPrimaryColor: "#111827",
+      darkAccentColor: "#22d3ee",
     });
   });
 
   it("detects invalid custom theme color field", () => {
     expect(
-      findInvalidCustomThemeField({
-        primaryColor: "#111827",
-        secondaryColor: "not-a-color",
-        accentColor: "#f59e0b",
-        backgroundColor: "",
-        foregroundColor: "",
-      }),
-    ).toBe("secondaryColor");
+      findInvalidCustomThemeField(
+        createTheme({
+          lightPrimaryColor: "#111827",
+          darkSecondaryColor: "not-a-color",
+        }),
+      ),
+    ).toBe("darkSecondaryColor");
   });
 
   it("clamps deletion delay to allowed range", () => {
@@ -121,25 +140,25 @@ describe("settings form logic", () => {
     const payload = toThemeSectionPayload(
       {
         themeMode: "dark",
-        customTheme: {
-          primaryColor: "#111827",
-          secondaryColor: "#1f2937",
-          accentColor: "#22d3ee",
-          backgroundColor: "#0f172a",
-          foregroundColor: "#e2e8f0",
-        },
+        customTheme: createTheme({
+          lightPrimaryColor: "#111827",
+          lightSecondaryColor: "#1f2937",
+          darkAccentColor: "#22d3ee",
+          darkBackgroundColor: "#0f172a",
+          darkForegroundColor: "#e2e8f0",
+        }),
         emailNotifications: false,
         marketingEmails: false,
       },
       {
         themeMode: "light",
-        customTheme: {
-          primaryColor: "#1f2937",
-          secondaryColor: "#111827",
-          accentColor: "#f59e0b",
-          backgroundColor: "#ffffff",
-          foregroundColor: "#171717",
-        },
+        customTheme: createTheme({
+          lightPrimaryColor: "#1f2937",
+          lightSecondaryColor: "#111827",
+          lightAccentColor: "#f59e0b",
+          lightBackgroundColor: "#ffffff",
+          lightForegroundColor: "#171717",
+        }),
         emailNotifications: true,
         marketingEmails: true,
       },
@@ -148,11 +167,11 @@ describe("settings form logic", () => {
     expect(payload).toEqual({
       themeMode: "dark",
       customTheme: {
-        primaryColor: "#111827",
-        secondaryColor: "#1f2937",
-        accentColor: "#22d3ee",
-        backgroundColor: "#0f172a",
-        foregroundColor: "#e2e8f0",
+        lightPrimaryColor: "#111827",
+        lightSecondaryColor: "#1f2937",
+        darkAccentColor: "#22d3ee",
+        darkBackgroundColor: "#0f172a",
+        darkForegroundColor: "#e2e8f0",
       },
       emailNotifications: true,
       marketingEmails: true,
@@ -163,25 +182,25 @@ describe("settings form logic", () => {
     const payload = toNotificationSectionPayload(
       {
         themeMode: "dark",
-        customTheme: {
-          primaryColor: "#111827",
-          secondaryColor: "#1f2937",
-          accentColor: "#22d3ee",
-          backgroundColor: "#0f172a",
-          foregroundColor: "#e2e8f0",
-        },
+        customTheme: createTheme({
+          lightPrimaryColor: "#111827",
+          lightSecondaryColor: "#1f2937",
+          darkAccentColor: "#22d3ee",
+          darkBackgroundColor: "#0f172a",
+          darkForegroundColor: "#e2e8f0",
+        }),
         emailNotifications: false,
         marketingEmails: false,
       },
       {
         themeMode: "light",
-        customTheme: {
-          primaryColor: "#1f2937",
-          secondaryColor: "#111827",
-          accentColor: "#f59e0b",
-          backgroundColor: "#ffffff",
-          foregroundColor: "#171717",
-        },
+        customTheme: createTheme({
+          lightPrimaryColor: "#1f2937",
+          lightSecondaryColor: "#111827",
+          lightAccentColor: "#f59e0b",
+          lightBackgroundColor: "#ffffff",
+          lightForegroundColor: "#171717",
+        }),
         emailNotifications: true,
         marketingEmails: true,
       },
@@ -190,11 +209,11 @@ describe("settings form logic", () => {
     expect(payload).toEqual({
       themeMode: "light",
       customTheme: {
-        primaryColor: "#1f2937",
-        secondaryColor: "#111827",
-        accentColor: "#f59e0b",
-        backgroundColor: "#ffffff",
-        foregroundColor: "#171717",
+        lightPrimaryColor: "#1f2937",
+        lightSecondaryColor: "#111827",
+        lightAccentColor: "#f59e0b",
+        lightBackgroundColor: "#ffffff",
+        lightForegroundColor: "#171717",
       },
       emailNotifications: false,
       marketingEmails: false,

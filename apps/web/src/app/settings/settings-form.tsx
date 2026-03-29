@@ -96,8 +96,7 @@ function fromCustomTheme(
   theme: Record<string, string> | null,
 ): CustomThemeInput {
   return {
-    lightPrimaryColor:
-      theme?.lightPrimaryColor ?? theme?.primaryColor ?? "",
+    lightPrimaryColor: theme?.lightPrimaryColor ?? theme?.primaryColor ?? "",
     lightSecondaryColor:
       theme?.lightSecondaryColor ?? theme?.secondaryColor ?? "",
     lightAccentColor: theme?.lightAccentColor ?? theme?.accentColor ?? "",
