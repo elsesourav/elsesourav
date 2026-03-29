@@ -1,13 +1,16 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import type { AdminCategory } from "@/lib/view-models";
+import { useAppDispatch } from "@/store/hooks";
+import { enqueueNotification } from "@/store/slices/notificationsSlice";
 import type { ApiResponse } from "@elsesourav/types";
-import { useState } from "react";
-
-type CategoryMutationFeedback = {
-  tone: "success" | "error";
-  message: string;
-};
+import { useMemo, useState, type FormEvent } from "react";
 
 type CategoryStatusTone = "active" | "pending" | "deleted";
 
@@ -20,10 +23,13 @@ type AdminCategoriesClientProps = {
   initialCategories: AdminCategory[];
 };
 
-const STATUS_CLASSNAMES: Record<CategoryStatusTone, string> = {
-  active: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  pending: "border-[#f2c9d1] bg-[#fff7f8] text-[#941e33]",
-  deleted: "border-black/20 bg-[#f3f4f6] text-[#3f4757]",
+const STATUS_BADGE_TONE: Record<
+  CategoryStatusTone,
+  "success" | "warning" | "neutral"
+> = {
+  active: "success",
+  pending: "warning",
+  deleted: "neutral",
 };
 
 function parseApiMessage(payload: unknown): string | null {
@@ -116,6 +122,7 @@ function toSortedCategories(items: AdminCategory[]): AdminCategory[] {
 export function AdminCategoriesClient({
   initialCategories,
 }: AdminCategoriesClientProps) {
+  const dispatch = useAppDispatch();
   const [categories, setCategories] = useState(() =>
     toSortedCategories(initialCategories),
   );
@@ -125,21 +132,50 @@ export function AdminCategoriesClient({
   const [pendingRowAction, setPendingRowAction] = useState<
     Record<string, boolean>
   >({});
-  const [feedback, setFeedback] = useState<CategoryMutationFeedback | null>(
-    null,
+  const [confirmAction, setConfirmAction] = useState<{
+    categoryId: string;
+    action: "schedule" | "restore";
+  } | null>(null);
+
+  const counts = useMemo(
+    () => ({
+      active: categories.filter(
+        (item) => item.deletedAt === null && item.scheduledDeletionAt === null,
+      ).length,
+      pending: categories.filter(
+        (item) => item.deletedAt === null && item.scheduledDeletionAt !== null,
+      ).length,
+      deleted: categories.filter((item) => item.deletedAt !== null).length,
+    }),
+    [categories],
   );
 
-  async function onCreateCategory(event: React.FormEvent<HTMLFormElement>) {
+  const confirmCategory =
+    confirmAction !== null
+      ? (categories.find((item) => item.id === confirmAction.categoryId) ??
+        null)
+      : null;
+
+  function pushNotification(tone: "success" | "error", message: string): void {
+    dispatch(
+      enqueueNotification({
+        tone,
+        message,
+      }),
+    );
+  }
+
+  async function onCreateCategory(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const normalizedName = name.trim();
     const normalizedIcon = icon.trim();
 
     if (normalizedName.length < 2) {
-      setFeedback({
-        tone: "error",
-        message: "Category name must contain at least 2 characters.",
-      });
+      pushNotification(
+        "error",
+        "Category name must contain at least 2 characters.",
+      );
       return;
     }
 
@@ -160,12 +196,11 @@ export function AdminCategoriesClient({
       const payload = await response.json().catch(() => null);
 
       if (!response.ok || !isApiSuccess<AdminCategory>(payload)) {
-        setFeedback({
-          tone: "error",
-          message:
-            parseApiMessage(payload) ??
+        pushNotification(
+          "error",
+          parseApiMessage(payload) ??
             "Failed to create category. Please try again.",
-        });
+        );
         return;
       }
 
@@ -174,16 +209,12 @@ export function AdminCategoriesClient({
       );
       setName("");
       setIcon("");
-      setFeedback({
-        tone: "success",
-        message: `Created category \"${payload.data.name}\".`,
-      });
+      pushNotification("success", `Created category \"${payload.data.name}\".`);
     } catch (error) {
-      setFeedback({
-        tone: "error",
-        message:
-          error instanceof Error ? error.message : "Failed to create category.",
-      });
+      pushNotification(
+        "error",
+        error instanceof Error ? error.message : "Failed to create category.",
+      );
     } finally {
       setCreating(false);
     }
@@ -212,25 +243,23 @@ export function AdminCategoriesClient({
       const payload = await response.json().catch(() => null);
 
       if (!response.ok || !isApiSuccess<AdminCategory>(payload)) {
-        setFeedback({
-          tone: "error",
-          message: parseApiMessage(payload) ?? failureFallback,
-        });
+        pushNotification("error", parseApiMessage(payload) ?? failureFallback);
         return;
       }
 
       setCategories((previous) =>
-        previous.map((item) => (item.id === category.id ? payload.data : item)),
+        toSortedCategories(
+          previous.map((item) =>
+            item.id === category.id ? payload.data : item,
+          ),
+        ),
       );
-      setFeedback({
-        tone: "success",
-        message: successMessage(payload.data),
-      });
+      pushNotification("success", successMessage(payload.data));
     } catch (error) {
-      setFeedback({
-        tone: "error",
-        message: error instanceof Error ? error.message : failureFallback,
-      });
+      pushNotification(
+        "error",
+        error instanceof Error ? error.message : failureFallback,
+      );
     } finally {
       setPendingRowAction((previous) => ({
         ...previous,
@@ -239,170 +268,212 @@ export function AdminCategoriesClient({
     }
   }
 
+  async function onConfirmAction() {
+    if (!confirmAction || !confirmCategory) {
+      return;
+    }
+
+    if (confirmAction.action === "restore") {
+      await runRowAction({
+        category: confirmCategory,
+        method: "POST",
+        endpoint: `/api/admin/categories/${confirmCategory.id}/restore`,
+        successMessage: (nextCategory) =>
+          `Restored category \"${nextCategory.name}\".`,
+        failureFallback: "Failed to restore category.",
+      });
+    } else {
+      await runRowAction({
+        category: confirmCategory,
+        method: "DELETE",
+        endpoint: `/api/admin/categories/${confirmCategory.id}`,
+        successMessage: (nextCategory) => {
+          const formatted = formatDeletionDate(
+            nextCategory.scheduledDeletionAt,
+          );
+          return formatted
+            ? `Scheduled deletion for \"${nextCategory.name}\" on ${formatted}.`
+            : `Scheduled deletion for \"${nextCategory.name}\".`;
+        },
+        failureFallback: "Failed to schedule category deletion.",
+      });
+    }
+
+    setConfirmAction(null);
+  }
+
   return (
     <section className="space-y-4">
-      <article className="rounded-xl border border-black/15 bg-white p-4 shadow-[0_14px_30px_-24px_rgba(20,23,31,0.65)]">
-        <h2 className="text-base font-semibold text-[#111722]">
-          Create category
-        </h2>
-        <p className="mt-1 text-xs text-[#4a5262]">
+      <Card className="shadow-[0_14px_30px_-24px_rgba(20,23,31,0.65)]">
+        <CardTitle>Create category</CardTitle>
+        <CardDescription className="mt-1 text-xs">
           Delete uses a 30-day grace period. Pending categories can be restored.
-        </p>
+        </CardDescription>
 
         <form
           className="mt-3 grid gap-3 sm:grid-cols-[1.2fr_1fr_auto]"
           onSubmit={onCreateCategory}
         >
-          <input
-            type="text"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            placeholder="Category name"
-            className="rounded-lg border border-black/20 bg-white px-3 py-2 text-sm text-[#14171f]"
-            maxLength={80}
-            required
-          />
-          <input
-            type="text"
-            value={icon}
-            onChange={(event) => setIcon(event.target.value)}
-            placeholder="Icon (optional)"
-            className="rounded-lg border border-black/20 bg-white px-3 py-2 text-sm text-[#14171f]"
-            maxLength={80}
-          />
-          <button
-            type="submit"
-            className="rounded-lg bg-[#14171f] px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
-            disabled={creating}
-          >
-            {creating ? "Creating..." : "Create"}
-          </button>
-        </form>
-      </article>
+          <div className="space-y-1.5">
+            <Label htmlFor="category-name">Name</Label>
+            <Input
+              id="category-name"
+              type="text"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              placeholder="Category name"
+              maxLength={80}
+              required
+            />
+          </div>
 
-      {feedback ? (
-        <p
-          className={[
-            "rounded-lg border px-3 py-2 text-sm",
-            feedback.tone === "success"
-              ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-              : "border-red-200 bg-red-50 text-red-700",
-          ].join(" ")}
-        >
-          {feedback.message}
-        </p>
-      ) : null}
+          <div className="space-y-1.5">
+            <Label htmlFor="category-icon">Icon (optional)</Label>
+            <Input
+              id="category-icon"
+              type="text"
+              value={icon}
+              onChange={(event) => setIcon(event.target.value)}
+              placeholder="icon-name"
+              maxLength={80}
+            />
+          </div>
+
+          <Button type="submit" disabled={creating} className="self-end">
+            {creating ? "Creating..." : "Create"}
+          </Button>
+        </form>
+      </Card>
+
+      <section className="grid gap-3 sm:grid-cols-3">
+        <Card>
+          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+            Active
+          </p>
+          <p className="mt-1 text-2xl font-semibold text-[#111a2d]">
+            {counts.active}
+          </p>
+        </Card>
+        <Card>
+          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+            Pending deletion
+          </p>
+          <p className="mt-1 text-2xl font-semibold text-[#111a2d]">
+            {counts.pending}
+          </p>
+        </Card>
+        <Card>
+          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+            Deleted
+          </p>
+          <p className="mt-1 text-2xl font-semibold text-[#111a2d]">
+            {counts.deleted}
+          </p>
+        </Card>
+      </section>
 
       {categories.length === 0 ? (
-        <p className="text-sm text-[#4a5262]">No category records found.</p>
+        <Card>
+          <CardTitle>No categories found</CardTitle>
+          <CardDescription className="mt-1">
+            Create your first category to classify apps and control deletion
+            lifecycle.
+          </CardDescription>
+        </Card>
       ) : (
-        <section className="overflow-x-auto rounded-xl border border-black/15 bg-white">
-          <table className="min-w-full text-left text-sm">
-            <thead className="border-b border-black/10 bg-[#f6f7fb] text-xs uppercase tracking-wide text-[#4a5262]">
-              <tr>
-                <th className="px-3 py-2">Name</th>
-                <th className="px-3 py-2">Icon</th>
-                <th className="px-3 py-2">Active apps</th>
-                <th className="px-3 py-2">Status</th>
-                <th className="px-3 py-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {categories.map((category) => {
-                const status = resolveCategoryStatus(category);
-                const isBusy = Boolean(pendingRowAction[category.id]);
-                const canSchedule = canScheduleCategoryDeletion(category);
-                const scheduledAt = formatDeletionDate(
-                  category.scheduledDeletionAt,
-                );
+        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {categories.map((category) => {
+            const status = resolveCategoryStatus(category);
+            const isBusy = Boolean(pendingRowAction[category.id]);
+            const canSchedule = canScheduleCategoryDeletion(category);
+            const scheduledAt = formatDeletionDate(
+              category.scheduledDeletionAt,
+            );
 
-                return (
-                  <tr
-                    key={category.id}
-                    className="border-b border-black/10 align-top last:border-0"
-                  >
-                    <td className="px-3 py-2 font-medium text-[#111722]">
-                      {category.name}
-                    </td>
-                    <td className="px-3 py-2 text-[#364055]">
-                      {category.icon ?? "-"}
-                    </td>
-                    <td className="px-3 py-2 text-[#364055]">
-                      {category._count.apps}
-                    </td>
-                    <td className="px-3 py-2">
-                      <span
-                        className={[
-                          "inline-flex rounded-full border px-2 py-1 text-xs font-semibold",
-                          STATUS_CLASSNAMES[status.tone],
-                        ].join(" ")}
-                      >
-                        {status.label}
-                      </span>
-                      {scheduledAt ? (
-                        <p className="mt-1 text-xs text-[#4a5262]">
-                          Deletes on {scheduledAt}
-                        </p>
-                      ) : null}
-                    </td>
-                    <td className="px-3 py-2">
-                      {category.scheduledDeletionAt ? (
-                        <button
-                          type="button"
-                          className="rounded-md border border-black/20 bg-white px-3 py-1.5 text-xs font-medium text-[#111722] disabled:opacity-60"
-                          disabled={isBusy}
-                          onClick={() =>
-                            void runRowAction({
-                              category,
-                              method: "POST",
-                              endpoint: `/api/admin/categories/${category.id}/restore`,
-                              successMessage: (nextCategory) =>
-                                `Restored category \"${nextCategory.name}\".`,
-                              failureFallback: "Failed to restore category.",
-                            })
-                          }
-                        >
-                          {isBusy ? "Restoring..." : "Restore"}
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          className="rounded-md border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-medium text-red-700 disabled:opacity-60"
-                          disabled={!canSchedule || isBusy}
-                          onClick={() =>
-                            void runRowAction({
-                              category,
-                              method: "DELETE",
-                              endpoint: `/api/admin/categories/${category.id}`,
-                              successMessage: (nextCategory) => {
-                                const formatted = formatDeletionDate(
-                                  nextCategory.scheduledDeletionAt,
-                                );
-                                return formatted
-                                  ? `Scheduled deletion for \"${nextCategory.name}\" on ${formatted}.`
-                                  : `Scheduled deletion for \"${nextCategory.name}\".`;
-                              },
-                              failureFallback:
-                                "Failed to schedule category deletion.",
-                            })
-                          }
-                        >
-                          {isBusy ? "Scheduling..." : "Schedule delete"}
-                        </button>
-                      )}
-                      {!canSchedule && !category.scheduledDeletionAt ? (
-                        <p className="mt-1 text-xs text-[#4a5262]">
-                          Remove active apps before scheduling deletion.
-                        </p>
-                      ) : null}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+            return (
+              <Card key={category.id} className="space-y-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <CardTitle>{category.name}</CardTitle>
+                    <CardDescription className="mt-1">
+                      {category.icon
+                        ? `Icon: ${category.icon}`
+                        : "No icon configured"}
+                    </CardDescription>
+                  </div>
+                  <Badge tone={STATUS_BADGE_TONE[status.tone]}>
+                    {status.label}
+                  </Badge>
+                </div>
+
+                <div className="grid gap-1 text-xs text-[#5a647d]">
+                  <p>Active apps: {category._count.apps}</p>
+                  {scheduledAt ? <p>Deletes on: {scheduledAt}</p> : null}
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  {category.scheduledDeletionAt ? (
+                    <Button
+                      tone="secondary"
+                      size="sm"
+                      disabled={isBusy}
+                      onClick={() =>
+                        setConfirmAction({
+                          categoryId: category.id,
+                          action: "restore",
+                        })
+                      }
+                    >
+                      {isBusy ? "Restoring..." : "Restore"}
+                    </Button>
+                  ) : (
+                    <Button
+                      tone="danger"
+                      size="sm"
+                      disabled={!canSchedule || isBusy}
+                      onClick={() =>
+                        setConfirmAction({
+                          categoryId: category.id,
+                          action: "schedule",
+                        })
+                      }
+                    >
+                      {isBusy ? "Scheduling..." : "Schedule delete"}
+                    </Button>
+                  )}
+                </div>
+
+                {!canSchedule && !category.scheduledDeletionAt ? (
+                  <p className="text-xs text-[#4a5262]">
+                    Remove active apps before scheduling deletion.
+                  </p>
+                ) : null}
+              </Card>
+            );
+          })}
         </section>
       )}
+
+      <ConfirmDialog
+        open={Boolean(confirmAction && confirmCategory)}
+        title={
+          confirmAction?.action === "restore"
+            ? "Restore category"
+            : "Schedule category deletion"
+        }
+        description={
+          confirmAction?.action === "restore"
+            ? `Restore \"${confirmCategory?.name ?? "this category"}\" and make it active again?`
+            : `Schedule deletion for \"${confirmCategory?.name ?? "this category"}\" after the 30-day grace period?`
+        }
+        confirmLabel={
+          confirmAction?.action === "restore" ? "Restore" : "Schedule"
+        }
+        confirmTone={confirmAction?.action === "restore" ? "primary" : "danger"}
+        busy={Boolean(confirmCategory && pendingRowAction[confirmCategory.id])}
+        onCancel={() => setConfirmAction(null)}
+        onConfirm={() => void onConfirmAction()}
+      />
     </section>
   );
 }

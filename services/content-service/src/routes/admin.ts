@@ -22,7 +22,7 @@ import {
   testimonialCreateSchema,
   testimonialUpdateSchema,
 } from "@elsesourav/validation";
-import { Router } from "express";
+import { Router, type Request } from "express";
 import { z } from "zod";
 import { getRequestId, sendFailure, sendSuccess } from "../lib/http";
 
@@ -72,6 +72,11 @@ async function generateUniqueBlogTagSlug(
     candidate = `${base}-${suffix}`;
     suffix += 1;
   }
+}
+
+function resolveAdminActorUserId(req: Request): string | null {
+  const userId = req.header("x-user-id")?.trim();
+  return userId && userId.length > 0 ? userId : null;
 }
 
 export const adminContentRouter = Router();
@@ -721,7 +726,16 @@ adminContentRouter.post("/blog/posts", async (req, res) => {
       );
     }
 
-    const userId = req.header("x-user-id") ?? null;
+    const userId = resolveAdminActorUserId(req);
+    if (!userId) {
+      return sendFailure(
+        res,
+        requestId,
+        "UNAUTHORIZED",
+        "Admin user context is required to create blog posts.",
+        401,
+      );
+    }
 
     const post = await prisma.blogPost.create({
       data: {
@@ -733,7 +747,7 @@ adminContentRouter.post("/blog/posts", async (req, res) => {
         publishAt: parsed.data.publishAt,
         publishedAt:
           parsed.data.status === BlogPostStatus.PUBLISHED ? new Date() : null,
-        authorId: parsed.data.authorId ?? userId,
+        authorId: userId,
         createdBy: userId,
         updatedBy: userId,
         tags: {
@@ -814,7 +828,16 @@ adminContentRouter.put("/blog/posts/:id", async (req, res) => {
       );
     }
 
-    const userId = req.header("x-user-id") ?? null;
+    const userId = resolveAdminActorUserId(req);
+    if (!userId) {
+      return sendFailure(
+        res,
+        requestId,
+        "UNAUTHORIZED",
+        "Admin user context is required to update blog posts.",
+        401,
+      );
+    }
 
     const post = await prisma.blogPost.update({
       where: { id: parsedId.data.id },
@@ -832,7 +855,6 @@ adminContentRouter.put("/blog/posts/:id", async (req, res) => {
             : parsed.data.status === BlogPostStatus.DRAFT
               ? null
               : undefined,
-        authorId: parsed.data.authorId,
         updatedBy: userId,
       },
     });
@@ -897,7 +919,16 @@ adminContentRouter.post("/blog/posts/:id/publish", async (req, res) => {
       );
     }
 
-    const userId = req.header("x-user-id") ?? null;
+    const userId = resolveAdminActorUserId(req);
+    if (!userId) {
+      return sendFailure(
+        res,
+        requestId,
+        "UNAUTHORIZED",
+        "Admin user context is required to publish blog posts.",
+        401,
+      );
+    }
 
     const post = await prisma.blogPost.update({
       where: { id: parsedId.data.id },
@@ -905,6 +936,7 @@ adminContentRouter.post("/blog/posts/:id/publish", async (req, res) => {
         status: BlogPostStatus.PUBLISHED,
         publishAt: new Date(),
         publishedAt: new Date(),
+        authorId: userId,
         updatedBy: userId,
       },
     });
@@ -937,7 +969,16 @@ adminContentRouter.delete("/blog/posts/:id", async (req, res) => {
       );
     }
 
-    const userId = req.header("x-user-id") ?? null;
+    const userId = resolveAdminActorUserId(req);
+    if (!userId) {
+      return sendFailure(
+        res,
+        requestId,
+        "UNAUTHORIZED",
+        "Admin user context is required to archive blog posts.",
+        401,
+      );
+    }
 
     const post = await prisma.blogPost.update({
       where: { id: parsedId.data.id },

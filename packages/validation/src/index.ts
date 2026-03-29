@@ -1,6 +1,13 @@
 import { z } from "zod";
 
 export const appStatusSchema = z.enum(["DRAFT", "PUBLISHED"]);
+export const linkPlatformSchema = z.enum([
+  "CHROME",
+  "ANDROID",
+  "GITHUB",
+  "WEBSITE",
+  "OTHER",
+]);
 
 export const credentialsSchema = z.object({
   email: z.string().email(),
@@ -98,8 +105,28 @@ export const publicAppsQuerySchema = z.object({
 
 export const downloadEventSchema = z.object({
   appId: z.string().cuid(),
-  platform: z.enum(["CHROME", "ANDROID", "GITHUB", "WEBSITE", "OTHER"]),
+  platform: linkPlatformSchema,
 });
+
+const appLinkBaseSchema = z.object({
+  platform: linkPlatformSchema,
+  downloadUrl: z.string().url(),
+  sourceCodeUrl: z.string().url().nullable().optional(),
+});
+
+export const appLinkCreateSchema = appLinkBaseSchema;
+
+export const appLinkUpdateSchema = appLinkBaseSchema
+  .partial()
+  .refine(
+    (value) =>
+      value.platform !== undefined ||
+      value.downloadUrl !== undefined ||
+      value.sourceCodeUrl !== undefined,
+    {
+      message: "At least one link field must be provided.",
+    },
+  );
 
 export const libraryMutationSchema = z.object({
   appId: z.string().cuid(),
@@ -370,7 +397,6 @@ export const blogPostCreateSchema = z.object({
   contentMarkdown: z.string().min(20),
   status: blogPostStatusSchema.default("DRAFT"),
   publishAt: z.coerce.date().optional(),
-  authorId: z.string().cuid().optional(),
   tagIds: z.array(z.string().cuid()).max(25).default([]),
 });
 
@@ -442,6 +468,11 @@ export const themeConfigCreateSchema = z.object({
   accentColor: hexColorSchema,
   backgroundColor: hexColorSchema,
   foregroundColor: hexColorSchema,
+  darkPrimaryColor: hexColorSchema,
+  darkSecondaryColor: hexColorSchema,
+  darkAccentColor: hexColorSchema,
+  darkBackgroundColor: hexColorSchema,
+  darkForegroundColor: hexColorSchema,
   fontSans: z.string().min(2).max(120),
   fontHeading: z.string().min(2).max(120),
   headingScale: z.coerce.number().min(0.8).max(1.6).default(1),

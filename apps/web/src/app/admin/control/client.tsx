@@ -1,5 +1,9 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { enqueueNotification } from "@/store/slices/notificationsSlice";
 import {
@@ -11,7 +15,10 @@ import { FormEvent, useState } from "react";
 
 type ApiResult = {
   status: number;
+  ok: boolean;
   body: string;
+  receivedAt: string;
+  networkError?: boolean;
 };
 
 type ControlFormProps = {
@@ -104,6 +111,99 @@ const controlForms: readonly ControlFormProps[] = [
   },
 ] as const;
 
+export function normalizeJsonInput(raw: string):
+  | {
+      ok: true;
+      value: string;
+    }
+  | {
+      ok: false;
+      error: string;
+    } {
+  try {
+    const parsed = JSON.parse(raw);
+    return {
+      ok: true,
+      value: JSON.stringify(parsed, null, 2),
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : "Invalid JSON payload.",
+    };
+  }
+}
+
+export function prettyResponseBody(body: string): string {
+  const trimmed = body.trim();
+  if (!trimmed) {
+    return "";
+  }
+
+  try {
+    return JSON.stringify(JSON.parse(trimmed), null, 2);
+  } catch {
+    return body;
+  }
+}
+
+export function toneForStatus(
+  status: number,
+): "success" | "warning" | "danger" | "neutral" {
+  if (status >= 200 && status < 300) {
+    return "success";
+  }
+
+  if (status >= 300 && status < 400) {
+    return "warning";
+  }
+
+  if (status >= 400) {
+    return "danger";
+  }
+
+  return "neutral";
+}
+
+export async function submitControlRequest({
+  endpoint,
+  method,
+  payload,
+  fetchImpl = fetch,
+  now = () => new Date().toISOString(),
+}: {
+  endpoint: string;
+  method: "POST" | "PATCH";
+  payload: string;
+  fetchImpl?: typeof fetch;
+  now?: () => string;
+}): Promise<ApiResult> {
+  try {
+    const response = await fetchImpl(endpoint, {
+      method,
+      headers: {
+        "content-type": "application/json",
+      },
+      body: payload,
+    });
+
+    return {
+      status: response.status,
+      ok: response.ok,
+      body: prettyResponseBody(await response.text()),
+      receivedAt: now(),
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      ok: false,
+      body: error instanceof Error ? error.message : "Unknown error",
+      receivedAt: now(),
+      networkError: true,
+    };
+  }
+}
+
 function ControlForm({
   title,
   endpoint,
@@ -113,76 +213,138 @@ function ControlForm({
   const dispatch = useAppDispatch();
   const [payload, setPayload] = useState(defaultPayload);
   const [result, setResult] = useState<ApiResult | null>(null);
+  const [payloadError, setPayloadError] = useState<string | null>(null);
   const pendingKey = `admin-control:${method}:${endpoint}`;
   const pending = useAppSelector((state) => selectIsPending(state, pendingKey));
 
-  async function onSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    dispatch(startPending(pendingKey));
-
-    try {
-      const response = await fetch(endpoint, {
-        method,
-        headers: {
-          "content-type": "application/json",
-        },
-        body: payload,
-      });
-
-      const body = await response.text();
-      setResult({
-        status: response.status,
-        body,
-      });
-
-      dispatch(
-        enqueueNotification({
-          tone: response.ok ? "success" : "error",
-          message: response.ok
-            ? `${title} request succeeded (${response.status}).`
-            : `${title} request failed (${response.status}).`,
-        }),
-      );
-    } catch (error) {
-      setResult({
-        status: 500,
-        body: error instanceof Error ? error.message : "Unknown error",
-      });
-
+  function onFormatJson() {
+    const normalized = normalizeJsonInput(payload);
+    if (!normalized.ok) {
+      setPayloadError(`Invalid JSON: ${normalized.error}`);
       dispatch(
         enqueueNotification({
           tone: "error",
-          message: `${title} request failed before reaching the service.`,
+          message: `${title}: invalid JSON payload.`,
         }),
       );
-    } finally {
-      dispatch(stopPending(pendingKey));
+      return;
     }
+
+    setPayload(normalized.value);
+    setPayloadError(null);
+  }
+
+  function onResetPayload() {
+    setPayload(defaultPayload);
+    setPayloadError(null);
+    setResult(null);
+  }
+
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const normalized = normalizeJsonInput(payload);
+    if (!normalized.ok) {
+      setPayloadError(`Invalid JSON: ${normalized.error}`);
+      dispatch(
+        enqueueNotification({
+          tone: "error",
+          message: `${title}: request aborted due to invalid JSON.`,
+        }),
+      );
+      return;
+    }
+
+    setPayload(normalized.value);
+    setPayloadError(null);
+    dispatch(startPending(pendingKey));
+
+    const submission = await submitControlRequest({
+      endpoint,
+      method,
+      payload: normalized.value,
+    });
+    setResult(submission);
+
+    dispatch(
+      enqueueNotification({
+        tone: submission.ok ? "success" : "error",
+        message: submission.ok
+          ? `${title} request succeeded (${submission.status}).`
+          : submission.networkError
+            ? `${title} request failed before reaching the service.`
+            : `${title} request failed (${submission.status}).`,
+      }),
+    );
+
+    dispatch(stopPending(pendingKey));
   }
 
   return (
-    <article className="rounded-2xl border border-black/15 bg-white p-4 shadow-[0_14px_30px_-24px_rgba(20,23,31,0.65)]">
-      <h2 className="text-base font-semibold text-[#131924]">{title}</h2>
+    <Card className="space-y-3 shadow-[0_14px_30px_-24px_rgba(20,23,31,0.65)]">
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <div>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription className="mt-1 break-all">
+            {endpoint}
+          </CardDescription>
+        </div>
+        <Badge tone="info">{method}</Badge>
+      </div>
+
       <form className="mt-3 space-y-3" onSubmit={onSubmit}>
-        <textarea
-          className="min-h-44 w-full rounded-xl border border-black/20 bg-white px-3 py-2 font-mono text-xs text-[#14171f]"
+        <Textarea
+          className="min-h-56 font-mono text-xs"
           value={payload}
           onChange={(event) => setPayload(event.target.value)}
         />
-        <button
-          type="submit"
-          className="rounded-full bg-[#14171f] px-4 py-2 text-xs font-medium text-white disabled:opacity-60"
-          disabled={pending}
-        >
-          {pending ? "Submitting..." : `${method} ${endpoint}`}
-        </button>
+
+        {payloadError ? (
+          <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
+            {payloadError}
+          </p>
+        ) : null}
+
+        <div className="flex flex-wrap items-center gap-2">
+          <Button type="submit" disabled={pending}>
+            {pending ? "Submitting..." : `${method} request`}
+          </Button>
+          <Button
+            type="button"
+            tone="secondary"
+            onClick={onFormatJson}
+            disabled={pending}
+          >
+            Format JSON
+          </Button>
+          <Button
+            type="button"
+            tone="secondary"
+            onClick={onResetPayload}
+            disabled={pending}
+          >
+            Reset payload
+          </Button>
+        </div>
       </form>
+
       {result ? (
-        <pre className="mt-3 overflow-auto rounded-xl border border-black/20 bg-[#f5f7fb] p-3 text-xs text-[#252c39]">
-          {`status: ${result.status}\n${result.body}`}
-        </pre>
+        <div className="space-y-2 rounded-xl border border-black/15 bg-[#f5f7fb] p-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <Badge tone={toneForStatus(result.status)}>
+              {result.ok ? "Success" : "Failed"} ({result.status})
+            </Badge>
+            <span className="text-[11px] text-[#5d6780]">
+              {new Date(result.receivedAt).toLocaleString()}
+            </span>
+          </div>
+
+          <pre className="max-h-64 overflow-auto rounded-lg border border-black/10 bg-white p-3 text-xs text-[#252c39]">
+            {result.body || "(empty body)"}
+          </pre>
+        </div>
       ) : null}
-    </article>
+    </Card>
   );
 }
 

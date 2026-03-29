@@ -76,6 +76,11 @@ export type ThemeConfigDto = {
   accentColor: string;
   backgroundColor: string;
   foregroundColor: string;
+  darkPrimaryColor: string;
+  darkSecondaryColor: string;
+  darkAccentColor: string;
+  darkBackgroundColor: string;
+  darkForegroundColor: string;
   fontSans: string;
   fontHeading: string;
   headingScale: string;

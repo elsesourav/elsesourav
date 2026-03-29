@@ -43,6 +43,11 @@ export type ThemeConfigMinAggregateOutputType = {
   accentColor: string | null
   backgroundColor: string | null
   foregroundColor: string | null
+  darkPrimaryColor: string | null
+  darkSecondaryColor: string | null
+  darkAccentColor: string | null
+  darkBackgroundColor: string | null
+  darkForegroundColor: string | null
   fontSans: string | null
   fontHeading: string | null
   headingScale: runtime.Decimal | null
@@ -61,6 +66,11 @@ export type ThemeConfigMaxAggregateOutputType = {
   accentColor: string | null
   backgroundColor: string | null
   foregroundColor: string | null
+  darkPrimaryColor: string | null
+  darkSecondaryColor: string | null
+  darkAccentColor: string | null
+  darkBackgroundColor: string | null
+  darkForegroundColor: string | null
   fontSans: string | null
   fontHeading: string | null
   headingScale: runtime.Decimal | null
@@ -79,6 +89,11 @@ export type ThemeConfigCountAggregateOutputType = {
   accentColor: number
   backgroundColor: number
   foregroundColor: number
+  darkPrimaryColor: number
+  darkSecondaryColor: number
+  darkAccentColor: number
+  darkBackgroundColor: number
+  darkForegroundColor: number
   fontSans: number
   fontHeading: number
   headingScale: number
@@ -107,6 +122,11 @@ export type ThemeConfigMinAggregateInputType = {
   accentColor?: true
   backgroundColor?: true
   foregroundColor?: true
+  darkPrimaryColor?: true
+  darkSecondaryColor?: true
+  darkAccentColor?: true
+  darkBackgroundColor?: true
+  darkForegroundColor?: true
   fontSans?: true
   fontHeading?: true
   headingScale?: true
@@ -125,6 +145,11 @@ export type ThemeConfigMaxAggregateInputType = {
   accentColor?: true
   backgroundColor?: true
   foregroundColor?: true
+  darkPrimaryColor?: true
+  darkSecondaryColor?: true
+  darkAccentColor?: true
+  darkBackgroundColor?: true
+  darkForegroundColor?: true
   fontSans?: true
   fontHeading?: true
   headingScale?: true
@@ -143,6 +168,11 @@ export type ThemeConfigCountAggregateInputType = {
   accentColor?: true
   backgroundColor?: true
   foregroundColor?: true
+  darkPrimaryColor?: true
+  darkSecondaryColor?: true
+  darkAccentColor?: true
+  darkBackgroundColor?: true
+  darkForegroundColor?: true
   fontSans?: true
   fontHeading?: true
   headingScale?: true
@@ -248,6 +278,11 @@ export type ThemeConfigGroupByOutputType = {
   accentColor: string
   backgroundColor: string
   foregroundColor: string
+  darkPrimaryColor: string
+  darkSecondaryColor: string
+  darkAccentColor: string
+  darkBackgroundColor: string
+  darkForegroundColor: string
   fontSans: string
   fontHeading: string
   headingScale: runtime.Decimal
@@ -289,6 +324,11 @@ export type ThemeConfigWhereInput = {
   accentColor?: Prisma.StringFilter<"ThemeConfig"> | string
   backgroundColor?: Prisma.StringFilter<"ThemeConfig"> | string
   foregroundColor?: Prisma.StringFilter<"ThemeConfig"> | string
+  darkPrimaryColor?: Prisma.StringFilter<"ThemeConfig"> | string
+  darkSecondaryColor?: Prisma.StringFilter<"ThemeConfig"> | string
+  darkAccentColor?: Prisma.StringFilter<"ThemeConfig"> | string
+  darkBackgroundColor?: Prisma.StringFilter<"ThemeConfig"> | string
+  darkForegroundColor?: Prisma.StringFilter<"ThemeConfig"> | string
   fontSans?: Prisma.StringFilter<"ThemeConfig"> | string
   fontHeading?: Prisma.StringFilter<"ThemeConfig"> | string
   headingScale?: Prisma.DecimalFilter<"ThemeConfig"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -307,6 +347,11 @@ export type ThemeConfigOrderByWithRelationInput = {
   accentColor?: Prisma.SortOrder
   backgroundColor?: Prisma.SortOrder
   foregroundColor?: Prisma.SortOrder
+  darkPrimaryColor?: Prisma.SortOrder
+  darkSecondaryColor?: Prisma.SortOrder
+  darkAccentColor?: Prisma.SortOrder
+  darkBackgroundColor?: Prisma.SortOrder
+  darkForegroundColor?: Prisma.SortOrder
   fontSans?: Prisma.SortOrder
   fontHeading?: Prisma.SortOrder
   headingScale?: Prisma.SortOrder
@@ -328,6 +373,11 @@ export type ThemeConfigWhereUniqueInput = Prisma.AtLeast<{
   accentColor?: Prisma.StringFilter<"ThemeConfig"> | string
   backgroundColor?: Prisma.StringFilter<"ThemeConfig"> | string
   foregroundColor?: Prisma.StringFilter<"ThemeConfig"> | string
+  darkPrimaryColor?: Prisma.StringFilter<"ThemeConfig"> | string
+  darkSecondaryColor?: Prisma.StringFilter<"ThemeConfig"> | string
+  darkAccentColor?: Prisma.StringFilter<"ThemeConfig"> | string
+  darkBackgroundColor?: Prisma.StringFilter<"ThemeConfig"> | string
+  darkForegroundColor?: Prisma.StringFilter<"ThemeConfig"> | string
   fontSans?: Prisma.StringFilter<"ThemeConfig"> | string
   fontHeading?: Prisma.StringFilter<"ThemeConfig"> | string
   headingScale?: Prisma.DecimalFilter<"ThemeConfig"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -346,6 +396,11 @@ export type ThemeConfigOrderByWithAggregationInput = {
   accentColor?: Prisma.SortOrder
   backgroundColor?: Prisma.SortOrder
   foregroundColor?: Prisma.SortOrder
+  darkPrimaryColor?: Prisma.SortOrder
+  darkSecondaryColor?: Prisma.SortOrder
+  darkAccentColor?: Prisma.SortOrder
+  darkBackgroundColor?: Prisma.SortOrder
+  darkForegroundColor?: Prisma.SortOrder
   fontSans?: Prisma.SortOrder
   fontHeading?: Prisma.SortOrder
   headingScale?: Prisma.SortOrder
@@ -372,6 +427,11 @@ export type ThemeConfigScalarWhereWithAggregatesInput = {
   accentColor?: Prisma.StringWithAggregatesFilter<"ThemeConfig"> | string
   backgroundColor?: Prisma.StringWithAggregatesFilter<"ThemeConfig"> | string
   foregroundColor?: Prisma.StringWithAggregatesFilter<"ThemeConfig"> | string
+  darkPrimaryColor?: Prisma.StringWithAggregatesFilter<"ThemeConfig"> | string
+  darkSecondaryColor?: Prisma.StringWithAggregatesFilter<"ThemeConfig"> | string
+  darkAccentColor?: Prisma.StringWithAggregatesFilter<"ThemeConfig"> | string
+  darkBackgroundColor?: Prisma.StringWithAggregatesFilter<"ThemeConfig"> | string
+  darkForegroundColor?: Prisma.StringWithAggregatesFilter<"ThemeConfig"> | string
   fontSans?: Prisma.StringWithAggregatesFilter<"ThemeConfig"> | string
   fontHeading?: Prisma.StringWithAggregatesFilter<"ThemeConfig"> | string
   headingScale?: Prisma.DecimalWithAggregatesFilter<"ThemeConfig"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -390,6 +450,11 @@ export type ThemeConfigCreateInput = {
   accentColor: string
   backgroundColor: string
   foregroundColor: string
+  darkPrimaryColor?: string
+  darkSecondaryColor?: string
+  darkAccentColor?: string
+  darkBackgroundColor?: string
+  darkForegroundColor?: string
   fontSans: string
   fontHeading: string
   headingScale?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -408,6 +473,11 @@ export type ThemeConfigUncheckedCreateInput = {
   accentColor: string
   backgroundColor: string
   foregroundColor: string
+  darkPrimaryColor?: string
+  darkSecondaryColor?: string
+  darkAccentColor?: string
+  darkBackgroundColor?: string
+  darkForegroundColor?: string
   fontSans: string
   fontHeading: string
   headingScale?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -426,6 +496,11 @@ export type ThemeConfigUpdateInput = {
   accentColor?: Prisma.StringFieldUpdateOperationsInput | string
   backgroundColor?: Prisma.StringFieldUpdateOperationsInput | string
   foregroundColor?: Prisma.StringFieldUpdateOperationsInput | string
+  darkPrimaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  darkSecondaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  darkAccentColor?: Prisma.StringFieldUpdateOperationsInput | string
+  darkBackgroundColor?: Prisma.StringFieldUpdateOperationsInput | string
+  darkForegroundColor?: Prisma.StringFieldUpdateOperationsInput | string
   fontSans?: Prisma.StringFieldUpdateOperationsInput | string
   fontHeading?: Prisma.StringFieldUpdateOperationsInput | string
   headingScale?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -444,6 +519,11 @@ export type ThemeConfigUncheckedUpdateInput = {
   accentColor?: Prisma.StringFieldUpdateOperationsInput | string
   backgroundColor?: Prisma.StringFieldUpdateOperationsInput | string
   foregroundColor?: Prisma.StringFieldUpdateOperationsInput | string
+  darkPrimaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  darkSecondaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  darkAccentColor?: Prisma.StringFieldUpdateOperationsInput | string
+  darkBackgroundColor?: Prisma.StringFieldUpdateOperationsInput | string
+  darkForegroundColor?: Prisma.StringFieldUpdateOperationsInput | string
   fontSans?: Prisma.StringFieldUpdateOperationsInput | string
   fontHeading?: Prisma.StringFieldUpdateOperationsInput | string
   headingScale?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -462,6 +542,11 @@ export type ThemeConfigCreateManyInput = {
   accentColor: string
   backgroundColor: string
   foregroundColor: string
+  darkPrimaryColor?: string
+  darkSecondaryColor?: string
+  darkAccentColor?: string
+  darkBackgroundColor?: string
+  darkForegroundColor?: string
   fontSans: string
   fontHeading: string
   headingScale?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -480,6 +565,11 @@ export type ThemeConfigUpdateManyMutationInput = {
   accentColor?: Prisma.StringFieldUpdateOperationsInput | string
   backgroundColor?: Prisma.StringFieldUpdateOperationsInput | string
   foregroundColor?: Prisma.StringFieldUpdateOperationsInput | string
+  darkPrimaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  darkSecondaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  darkAccentColor?: Prisma.StringFieldUpdateOperationsInput | string
+  darkBackgroundColor?: Prisma.StringFieldUpdateOperationsInput | string
+  darkForegroundColor?: Prisma.StringFieldUpdateOperationsInput | string
   fontSans?: Prisma.StringFieldUpdateOperationsInput | string
   fontHeading?: Prisma.StringFieldUpdateOperationsInput | string
   headingScale?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -498,6 +588,11 @@ export type ThemeConfigUncheckedUpdateManyInput = {
   accentColor?: Prisma.StringFieldUpdateOperationsInput | string
   backgroundColor?: Prisma.StringFieldUpdateOperationsInput | string
   foregroundColor?: Prisma.StringFieldUpdateOperationsInput | string
+  darkPrimaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  darkSecondaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  darkAccentColor?: Prisma.StringFieldUpdateOperationsInput | string
+  darkBackgroundColor?: Prisma.StringFieldUpdateOperationsInput | string
+  darkForegroundColor?: Prisma.StringFieldUpdateOperationsInput | string
   fontSans?: Prisma.StringFieldUpdateOperationsInput | string
   fontHeading?: Prisma.StringFieldUpdateOperationsInput | string
   headingScale?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -516,6 +611,11 @@ export type ThemeConfigCountOrderByAggregateInput = {
   accentColor?: Prisma.SortOrder
   backgroundColor?: Prisma.SortOrder
   foregroundColor?: Prisma.SortOrder
+  darkPrimaryColor?: Prisma.SortOrder
+  darkSecondaryColor?: Prisma.SortOrder
+  darkAccentColor?: Prisma.SortOrder
+  darkBackgroundColor?: Prisma.SortOrder
+  darkForegroundColor?: Prisma.SortOrder
   fontSans?: Prisma.SortOrder
   fontHeading?: Prisma.SortOrder
   headingScale?: Prisma.SortOrder
@@ -538,6 +638,11 @@ export type ThemeConfigMaxOrderByAggregateInput = {
   accentColor?: Prisma.SortOrder
   backgroundColor?: Prisma.SortOrder
   foregroundColor?: Prisma.SortOrder
+  darkPrimaryColor?: Prisma.SortOrder
+  darkSecondaryColor?: Prisma.SortOrder
+  darkAccentColor?: Prisma.SortOrder
+  darkBackgroundColor?: Prisma.SortOrder
+  darkForegroundColor?: Prisma.SortOrder
   fontSans?: Prisma.SortOrder
   fontHeading?: Prisma.SortOrder
   headingScale?: Prisma.SortOrder
@@ -556,6 +661,11 @@ export type ThemeConfigMinOrderByAggregateInput = {
   accentColor?: Prisma.SortOrder
   backgroundColor?: Prisma.SortOrder
   foregroundColor?: Prisma.SortOrder
+  darkPrimaryColor?: Prisma.SortOrder
+  darkSecondaryColor?: Prisma.SortOrder
+  darkAccentColor?: Prisma.SortOrder
+  darkBackgroundColor?: Prisma.SortOrder
+  darkForegroundColor?: Prisma.SortOrder
   fontSans?: Prisma.SortOrder
   fontHeading?: Prisma.SortOrder
   headingScale?: Prisma.SortOrder
@@ -580,6 +690,11 @@ export type ThemeConfigSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   accentColor?: boolean
   backgroundColor?: boolean
   foregroundColor?: boolean
+  darkPrimaryColor?: boolean
+  darkSecondaryColor?: boolean
+  darkAccentColor?: boolean
+  darkBackgroundColor?: boolean
+  darkForegroundColor?: boolean
   fontSans?: boolean
   fontHeading?: boolean
   headingScale?: boolean
@@ -598,6 +713,11 @@ export type ThemeConfigSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   accentColor?: boolean
   backgroundColor?: boolean
   foregroundColor?: boolean
+  darkPrimaryColor?: boolean
+  darkSecondaryColor?: boolean
+  darkAccentColor?: boolean
+  darkBackgroundColor?: boolean
+  darkForegroundColor?: boolean
   fontSans?: boolean
   fontHeading?: boolean
   headingScale?: boolean
@@ -616,6 +736,11 @@ export type ThemeConfigSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   accentColor?: boolean
   backgroundColor?: boolean
   foregroundColor?: boolean
+  darkPrimaryColor?: boolean
+  darkSecondaryColor?: boolean
+  darkAccentColor?: boolean
+  darkBackgroundColor?: boolean
+  darkForegroundColor?: boolean
   fontSans?: boolean
   fontHeading?: boolean
   headingScale?: boolean
@@ -634,6 +759,11 @@ export type ThemeConfigSelectScalar = {
   accentColor?: boolean
   backgroundColor?: boolean
   foregroundColor?: boolean
+  darkPrimaryColor?: boolean
+  darkSecondaryColor?: boolean
+  darkAccentColor?: boolean
+  darkBackgroundColor?: boolean
+  darkForegroundColor?: boolean
   fontSans?: boolean
   fontHeading?: boolean
   headingScale?: boolean
@@ -643,7 +773,7 @@ export type ThemeConfigSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ThemeConfigOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "isActive" | "primaryColor" | "secondaryColor" | "accentColor" | "backgroundColor" | "foregroundColor" | "fontSans" | "fontHeading" | "headingScale" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["themeConfig"]>
+export type ThemeConfigOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "isActive" | "primaryColor" | "secondaryColor" | "accentColor" | "backgroundColor" | "foregroundColor" | "darkPrimaryColor" | "darkSecondaryColor" | "darkAccentColor" | "darkBackgroundColor" | "darkForegroundColor" | "fontSans" | "fontHeading" | "headingScale" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["themeConfig"]>
 
 export type $ThemeConfigPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ThemeConfig"
@@ -657,6 +787,11 @@ export type $ThemeConfigPayload<ExtArgs extends runtime.Types.Extensions.Interna
     accentColor: string
     backgroundColor: string
     foregroundColor: string
+    darkPrimaryColor: string
+    darkSecondaryColor: string
+    darkAccentColor: string
+    darkBackgroundColor: string
+    darkForegroundColor: string
     fontSans: string
     fontHeading: string
     headingScale: runtime.Decimal
@@ -1095,6 +1230,11 @@ export interface ThemeConfigFieldRefs {
   readonly accentColor: Prisma.FieldRef<"ThemeConfig", 'String'>
   readonly backgroundColor: Prisma.FieldRef<"ThemeConfig", 'String'>
   readonly foregroundColor: Prisma.FieldRef<"ThemeConfig", 'String'>
+  readonly darkPrimaryColor: Prisma.FieldRef<"ThemeConfig", 'String'>
+  readonly darkSecondaryColor: Prisma.FieldRef<"ThemeConfig", 'String'>
+  readonly darkAccentColor: Prisma.FieldRef<"ThemeConfig", 'String'>
+  readonly darkBackgroundColor: Prisma.FieldRef<"ThemeConfig", 'String'>
+  readonly darkForegroundColor: Prisma.FieldRef<"ThemeConfig", 'String'>
   readonly fontSans: Prisma.FieldRef<"ThemeConfig", 'String'>
   readonly fontHeading: Prisma.FieldRef<"ThemeConfig", 'String'>
   readonly headingScale: Prisma.FieldRef<"ThemeConfig", 'Decimal'>

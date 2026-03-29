@@ -1,11 +1,16 @@
 type ThemeMode = "system" | "light" | "dark";
 
 type CustomThemeInput = {
-  primaryColor: string;
-  secondaryColor: string;
-  accentColor: string;
-  backgroundColor: string;
-  foregroundColor: string;
+  lightPrimaryColor: string;
+  lightSecondaryColor: string;
+  lightAccentColor: string;
+  lightBackgroundColor: string;
+  lightForegroundColor: string;
+  darkPrimaryColor: string;
+  darkSecondaryColor: string;
+  darkAccentColor: string;
+  darkBackgroundColor: string;
+  darkForegroundColor: string;
 };
 
 export type CustomThemeFieldKey = keyof CustomThemeInput;
@@ -17,34 +22,64 @@ export const customThemeFieldMeta: Array<{
   note: string;
 }> = [
   {
-    key: "primaryColor",
-    label: "Primary color",
+    key: "lightPrimaryColor",
+    label: "Light primary color",
     placeholder: "#1f2937",
-    note: "Main headings and prominent text",
+    note: "Main headings and prominent text for light mode",
   },
   {
-    key: "secondaryColor",
-    label: "Secondary color",
+    key: "lightSecondaryColor",
+    label: "Light secondary color",
     placeholder: "#111827",
-    note: "Borders and secondary surfaces",
+    note: "Borders and secondary surfaces for light mode",
   },
   {
-    key: "accentColor",
-    label: "Accent color",
+    key: "lightAccentColor",
+    label: "Light accent color",
     placeholder: "#f59e0b",
-    note: "Call-to-action highlights",
+    note: "Call-to-action highlights for light mode",
   },
   {
-    key: "backgroundColor",
-    label: "Background color",
+    key: "lightBackgroundColor",
+    label: "Light background color",
     placeholder: "#ffffff",
-    note: "Main background layer",
+    note: "Main background layer for light mode",
   },
   {
-    key: "foregroundColor",
-    label: "Foreground color",
+    key: "lightForegroundColor",
+    label: "Light foreground color",
     placeholder: "#171717",
-    note: "Body text color",
+    note: "Body text color for light mode",
+  },
+  {
+    key: "darkPrimaryColor",
+    label: "Dark primary color",
+    placeholder: "#e2e8f0",
+    note: "Main headings and prominent text for dark mode",
+  },
+  {
+    key: "darkSecondaryColor",
+    label: "Dark secondary color",
+    placeholder: "#334155",
+    note: "Borders and secondary surfaces for dark mode",
+  },
+  {
+    key: "darkAccentColor",
+    label: "Dark accent color",
+    placeholder: "#38bdf8",
+    note: "Call-to-action highlights for dark mode",
+  },
+  {
+    key: "darkBackgroundColor",
+    label: "Dark background color",
+    placeholder: "#0b1220",
+    note: "Main background layer for dark mode",
+  },
+  {
+    key: "darkForegroundColor",
+    label: "Dark foreground color",
+    placeholder: "#f8fafc",
+    note: "Body text color for dark mode",
   },
 ];
 
@@ -59,11 +94,16 @@ export const themeControlPresets: Array<{
     label: "Clean Slate",
     description: "Neutral light palette",
     colors: {
-      primaryColor: "#1f2937",
-      secondaryColor: "#111827",
-      accentColor: "#0ea5e9",
-      backgroundColor: "#f8fafc",
-      foregroundColor: "#111827",
+      lightPrimaryColor: "#1f2937",
+      lightSecondaryColor: "#111827",
+      lightAccentColor: "#0ea5e9",
+      lightBackgroundColor: "#f8fafc",
+      lightForegroundColor: "#111827",
+      darkPrimaryColor: "#e2e8f0",
+      darkSecondaryColor: "#334155",
+      darkAccentColor: "#38bdf8",
+      darkBackgroundColor: "#0b1220",
+      darkForegroundColor: "#f8fafc",
     },
   },
   {
@@ -71,11 +111,16 @@ export const themeControlPresets: Array<{
     label: "Earthy",
     description: "Warm editorial tones",
     colors: {
-      primaryColor: "#3f2e1f",
-      secondaryColor: "#2f241c",
-      accentColor: "#d97706",
-      backgroundColor: "#fff8ec",
-      foregroundColor: "#2b2118",
+      lightPrimaryColor: "#3f2e1f",
+      lightSecondaryColor: "#2f241c",
+      lightAccentColor: "#d97706",
+      lightBackgroundColor: "#fff8ec",
+      lightForegroundColor: "#2b2118",
+      darkPrimaryColor: "#f5e7d2",
+      darkSecondaryColor: "#7c6345",
+      darkAccentColor: "#f59e0b",
+      darkBackgroundColor: "#20160d",
+      darkForegroundColor: "#fef3e2",
     },
   },
   {
@@ -83,11 +128,16 @@ export const themeControlPresets: Array<{
     label: "Neo Dark",
     description: "High-contrast dark workspace",
     colors: {
-      primaryColor: "#e5e7eb",
-      secondaryColor: "#374151",
-      accentColor: "#22d3ee",
-      backgroundColor: "#0b1220",
-      foregroundColor: "#f8fafc",
+      lightPrimaryColor: "#1e293b",
+      lightSecondaryColor: "#334155",
+      lightAccentColor: "#0284c7",
+      lightBackgroundColor: "#e2e8f0",
+      lightForegroundColor: "#0f172a",
+      darkPrimaryColor: "#e5e7eb",
+      darkSecondaryColor: "#64748b",
+      darkAccentColor: "#22d3ee",
+      darkBackgroundColor: "#0b1220",
+      darkForegroundColor: "#f8fafc",
     },
   },
 ];
@@ -96,25 +146,40 @@ const HEX_COLOR_REGEX = /^#(?:[0-9a-fA-F]{3}){1,2}$/;
 
 const previewFallbackByMode: Record<ThemeMode, CustomThemeInput> = {
   system: {
-    primaryColor: "#1f2937",
-    secondaryColor: "#111827",
-    accentColor: "#f59e0b",
-    backgroundColor: "#ffffff",
-    foregroundColor: "#171717",
+    lightPrimaryColor: "#1f2937",
+    lightSecondaryColor: "#111827",
+    lightAccentColor: "#f59e0b",
+    lightBackgroundColor: "#ffffff",
+    lightForegroundColor: "#171717",
+    darkPrimaryColor: "#e2e8f0",
+    darkSecondaryColor: "#334155",
+    darkAccentColor: "#38bdf8",
+    darkBackgroundColor: "#0f172a",
+    darkForegroundColor: "#e2e8f0",
   },
   light: {
-    primaryColor: "#1f2937",
-    secondaryColor: "#111827",
-    accentColor: "#f59e0b",
-    backgroundColor: "#ffffff",
-    foregroundColor: "#171717",
+    lightPrimaryColor: "#1f2937",
+    lightSecondaryColor: "#111827",
+    lightAccentColor: "#f59e0b",
+    lightBackgroundColor: "#ffffff",
+    lightForegroundColor: "#171717",
+    darkPrimaryColor: "#e2e8f0",
+    darkSecondaryColor: "#334155",
+    darkAccentColor: "#38bdf8",
+    darkBackgroundColor: "#0f172a",
+    darkForegroundColor: "#e2e8f0",
   },
   dark: {
-    primaryColor: "#f8fafc",
-    secondaryColor: "#64748b",
-    accentColor: "#22d3ee",
-    backgroundColor: "#0f172a",
-    foregroundColor: "#e2e8f0",
+    lightPrimaryColor: "#1f2937",
+    lightSecondaryColor: "#111827",
+    lightAccentColor: "#f59e0b",
+    lightBackgroundColor: "#ffffff",
+    lightForegroundColor: "#171717",
+    darkPrimaryColor: "#f8fafc",
+    darkSecondaryColor: "#64748b",
+    darkAccentColor: "#22d3ee",
+    darkBackgroundColor: "#0f172a",
+    darkForegroundColor: "#e2e8f0",
   },
 };
 
@@ -185,12 +250,20 @@ export function ThemeControls({
   onClearTheme,
   onSaveSection,
 }: ThemeControlsProps) {
-  const previewPalette: CustomThemeInput = {
-    primaryColor: resolveColor(customTheme, "primaryColor", themeMode),
-    secondaryColor: resolveColor(customTheme, "secondaryColor", themeMode),
-    accentColor: resolveColor(customTheme, "accentColor", themeMode),
-    backgroundColor: resolveColor(customTheme, "backgroundColor", themeMode),
-    foregroundColor: resolveColor(customTheme, "foregroundColor", themeMode),
+  const previewLightPalette = {
+    primaryColor: resolveColor(customTheme, "lightPrimaryColor", themeMode),
+    secondaryColor: resolveColor(customTheme, "lightSecondaryColor", themeMode),
+    accentColor: resolveColor(customTheme, "lightAccentColor", themeMode),
+    backgroundColor: resolveColor(customTheme, "lightBackgroundColor", themeMode),
+    foregroundColor: resolveColor(customTheme, "lightForegroundColor", themeMode),
+  };
+
+  const previewDarkPalette = {
+    primaryColor: resolveColor(customTheme, "darkPrimaryColor", themeMode),
+    secondaryColor: resolveColor(customTheme, "darkSecondaryColor", themeMode),
+    accentColor: resolveColor(customTheme, "darkAccentColor", themeMode),
+    backgroundColor: resolveColor(customTheme, "darkBackgroundColor", themeMode),
+    foregroundColor: resolveColor(customTheme, "darkForegroundColor", themeMode),
   };
 
   const sectionStatusClassName =
@@ -340,34 +413,76 @@ export function ThemeControls({
           Live Preview
         </p>
 
-        <div
-          className="mt-2 rounded-xl border p-4"
-          style={{
-            backgroundColor: previewPalette.backgroundColor,
-            borderColor: previewPalette.secondaryColor,
-            color: previewPalette.foregroundColor,
-          }}
-        >
-          <p
-            className="text-sm font-semibold"
-            style={{ color: previewPalette.primaryColor }}
-          >
-            Theme Preview Card
-          </p>
-          <p className="mt-1 text-sm">
-            Your selected colors are applied here so you can validate contrast
-            and visual tone.
-          </p>
-          <button
-            type="button"
-            className="mt-3 rounded-full px-3 py-1.5 text-xs font-medium"
+        <div className="mt-2 grid gap-3 sm:grid-cols-2">
+          <div
+            className="rounded-xl border p-4"
             style={{
-              backgroundColor: previewPalette.accentColor,
-              color: previewPalette.backgroundColor,
+              backgroundColor: previewLightPalette.backgroundColor,
+              borderColor: previewLightPalette.secondaryColor,
+              color: previewLightPalette.foregroundColor,
             }}
           >
-            Accent Action
-          </button>
+            <p
+              className="text-xs uppercase tracking-wide"
+              style={{ color: previewLightPalette.secondaryColor }}
+            >
+              Light
+            </p>
+            <p
+              className="mt-1 text-sm font-semibold"
+              style={{ color: previewLightPalette.primaryColor }}
+            >
+              Theme Preview Card
+            </p>
+            <p className="mt-1 text-sm">
+              Light palette preview for default bright surfaces.
+            </p>
+            <button
+              type="button"
+              className="mt-3 rounded-full px-3 py-1.5 text-xs font-medium"
+              style={{
+                backgroundColor: previewLightPalette.accentColor,
+                color: previewLightPalette.backgroundColor,
+              }}
+            >
+              Accent Action
+            </button>
+          </div>
+
+          <div
+            className="rounded-xl border p-4"
+            style={{
+              backgroundColor: previewDarkPalette.backgroundColor,
+              borderColor: previewDarkPalette.secondaryColor,
+              color: previewDarkPalette.foregroundColor,
+            }}
+          >
+            <p
+              className="text-xs uppercase tracking-wide"
+              style={{ color: previewDarkPalette.secondaryColor }}
+            >
+              Dark
+            </p>
+            <p
+              className="mt-1 text-sm font-semibold"
+              style={{ color: previewDarkPalette.primaryColor }}
+            >
+              Theme Preview Card
+            </p>
+            <p className="mt-1 text-sm">
+              Dark palette preview for low-light viewing.
+            </p>
+            <button
+              type="button"
+              className="mt-3 rounded-full px-3 py-1.5 text-xs font-medium"
+              style={{
+                backgroundColor: previewDarkPalette.accentColor,
+                color: previewDarkPalette.backgroundColor,
+              }}
+            >
+              Accent Action
+            </button>
+          </div>
         </div>
       </div>
     </section>

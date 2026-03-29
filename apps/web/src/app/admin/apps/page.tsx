@@ -1,83 +1,94 @@
-import { PageHeader, PageShell } from "@/components/ui/page";
+import { PageHeader } from "@/components/ui/page";
 import { requireAdminContext } from "@/lib/page-access";
 import { fetchServiceData } from "@/lib/service-client";
-import {
-  formatDateTime,
-  formatPrice,
-  type AdminAppListItem,
+import type {
+  AdminAppListItem,
+  AdminAppTag,
+  AdminCategory,
 } from "@/lib/view-models";
-import Link from "next/link";
+
+import { AdminAppsClient } from "./client";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminAppsPage() {
   const user = await requireAdminContext();
-  const apps = await fetchServiceData<AdminAppListItem[]>({
-    service: "catalog",
-    path: "/v1/admin/catalog/apps",
-    user,
-  }).catch(() => []);
+  const [apps, categories, tags] = await Promise.all([
+    fetchServiceData<AdminAppListItem[]>({
+      service: "catalog",
+      path: "/v1/admin/catalog/apps",
+      user,
+    }).catch(() => []),
+    fetchServiceData<AdminCategory[]>({
+      service: "catalog",
+      path: "/v1/admin/catalog/categories",
+      user,
+    }).catch(() => []),
+    fetchServiceData<AdminAppTag[]>({
+      service: "catalog",
+      path: "/v1/admin/catalog/tags",
+      user,
+    }).catch(() => []),
+  ]);
+
+  const paidApps = apps.filter((app) => app.isPaid).length;
+  const publishedApps = apps.filter((app) =>
+    app.status.toUpperCase().includes("PUBLISH"),
+  ).length;
 
   return (
-    <PageShell width="wide" className="gap-6">
+    <div className="space-y-4 p-4 sm:p-5 lg:p-6">
       <PageHeader
-        eyebrow="Admin Data"
+        eyebrow="Catalog"
         title="Apps"
-        description="Minimal view of database-backed app records."
+        description="Operational view of catalog app records, status, pricing, and engagement totals."
       />
 
-      <Link href="/admin" className="text-sm font-medium underline">
-        Back to admin
-      </Link>
+      <section className="grid gap-3 sm:grid-cols-3">
+        <article className="rounded-2xl border border-black/10 bg-white p-4">
+          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+            Total apps
+          </p>
+          <p className="mt-1 text-3xl font-semibold text-[#111a2d]">
+            {apps.length.toLocaleString()}
+          </p>
+        </article>
+        <article className="rounded-2xl border border-black/10 bg-white p-4">
+          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+            Published
+          </p>
+          <p className="mt-1 text-3xl font-semibold text-[#111a2d]">
+            {publishedApps.toLocaleString()}
+          </p>
+        </article>
+        <article className="rounded-2xl border border-black/10 bg-white p-4">
+          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+            Paid apps
+          </p>
+          <p className="mt-1 text-3xl font-semibold text-[#111a2d]">
+            {paidApps.toLocaleString()}
+          </p>
+        </article>
+      </section>
 
-      {apps.length === 0 ? (
-        <p className="text-sm text-[#4a5262]">No app records found.</p>
-      ) : (
-        <section className="overflow-x-auto rounded-xl border border-black/15 bg-white">
-          <table className="min-w-full text-left text-sm">
-            <thead className="border-b border-black/10 bg-[#f6f7fb] text-xs uppercase tracking-wide text-[#4a5262]">
-              <tr>
-                <th className="px-3 py-2">App</th>
-                <th className="px-3 py-2">Category</th>
-                <th className="px-3 py-2">Status</th>
-                <th className="px-3 py-2">Price</th>
-                <th className="px-3 py-2">Feedback</th>
-                <th className="px-3 py-2">Downloads</th>
-                <th className="px-3 py-2">Updated</th>
-              </tr>
-            </thead>
-            <tbody>
-              {apps.map((app) => (
-                <tr
-                  key={app.id}
-                  className="border-b border-black/10 last:border-0"
-                >
-                  <td className="px-3 py-2">
-                    <p className="font-medium text-[#111722]">{app.title}</p>
-                    <p className="text-xs text-[#4a5262]">/{app.slug}</p>
-                  </td>
-                  <td className="px-3 py-2 text-[#364055]">
-                    {app.category.name}
-                  </td>
-                  <td className="px-3 py-2 text-[#364055]">{app.status}</td>
-                  <td className="px-3 py-2 text-[#364055]">
-                    {app.isPaid ? formatPrice(app.price) : "Free"}
-                  </td>
-                  <td className="px-3 py-2 text-[#364055]">
-                    {app._count.feedbacks}
-                  </td>
-                  <td className="px-3 py-2 text-[#364055]">
-                    {app._count.downloadEvents}
-                  </td>
-                  <td className="px-3 py-2 text-[#364055]">
-                    {formatDateTime(app.updatedAt)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </section>
-      )}
-    </PageShell>
+      <AdminAppsClient
+        initialApps={apps}
+        initialTags={tags.map((tag) => ({
+          id: tag.id,
+          name: tag.name,
+          slug: tag.slug,
+          _count: tag._count,
+        }))}
+        categoryOptions={categories
+          .filter(
+            (item) =>
+              item.deletedAt === null && item.scheduledDeletionAt === null,
+          )
+          .map((item) => ({
+            id: item.id,
+            name: item.name,
+          }))}
+      />
+    </div>
   );
 }

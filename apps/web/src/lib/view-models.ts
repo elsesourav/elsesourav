@@ -73,19 +73,32 @@ export type UserStats = {
 
 export type AppRole = "ADMIN" | "USER";
 
+export type AdminAppTag = {
+  id: string;
+  name: string;
+  slug: string;
+  _count?: {
+    appLinks: number;
+  };
+};
+
 export type AdminAppListItem = {
   id: string;
   title: string;
   slug: string;
+  shortDescription: string;
+  fullDescription: string;
   version: string;
   status: string;
   isPaid: boolean;
+  isFeatured: boolean;
   price: PriceValue;
   updatedAt: string;
   category: {
     id: string;
     name: string;
   };
+  tags: AdminAppTag[];
   _count: {
     feedbacks: number;
     downloadEvents: number;
@@ -162,10 +175,13 @@ export type AdminSectionItem = {
 export type AdminBanner = {
   id: string;
   title: string;
+  imageUrl: string;
+  linkUrl: string | null;
   placement: string;
   isActive: boolean;
   startsAt: string | null;
   endsAt: string | null;
+  createdAt: string;
   updatedAt: string;
 };
 
@@ -173,6 +189,10 @@ export type AdminContentPage = {
   id: string;
   slug: string;
   title: string;
+  summary: string | null;
+  body: string;
+  seoTitle: string | null;
+  seoDescription: string | null;
   status: string;
   publishAt: string | null;
   publishedAt: string | null;
@@ -185,6 +205,35 @@ export type AdminContentPage = {
   }>;
 };
 
+export type AdminBlogTag = {
+  id: string;
+  name: string;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+  _count?: {
+    posts: number;
+  };
+};
+
+export type AdminBlogPost = {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string | null;
+  contentMarkdown: string;
+  status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  publishAt: string | null;
+  publishedAt: string | null;
+  authorId: string | null;
+  createdAt: string;
+  updatedAt: string;
+  tags: AdminBlogTag[];
+  _count?: {
+    comments: number;
+  };
+};
+
 export type AdminThemeConfig = {
   id: string;
   name: string;
@@ -192,6 +241,16 @@ export type AdminThemeConfig = {
   primaryColor: string;
   secondaryColor: string;
   accentColor: string;
+  backgroundColor: string;
+  foregroundColor: string;
+  darkPrimaryColor: string;
+  darkSecondaryColor: string;
+  darkAccentColor: string;
+  darkBackgroundColor: string;
+  darkForegroundColor: string;
+  fontSans: string;
+  fontHeading: string;
+  headingScale: string;
   updatedAt: string;
 };
 

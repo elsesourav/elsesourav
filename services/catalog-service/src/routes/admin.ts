@@ -1,5 +1,7 @@
 import { AppStatus, Prisma, prisma } from "@elsesourav/db";
 import {
+  appLinkCreateSchema,
+  appLinkUpdateSchema,
   appTagAssignmentSchema,
   appTagCreateSchema,
   appTagUpdateSchema,
@@ -21,6 +23,11 @@ import { getRequestId, sendFailure, sendSuccess } from "../lib/http";
 
 const idParamSchema = z.object({
   id: z.string().cuid(),
+});
+
+const appLinkIdParamSchema = z.object({
+  id: z.string().cuid(),
+  linkId: z.string().cuid(),
 });
 
 const sliderListQuerySchema = z.object({
@@ -1015,6 +1022,291 @@ adminCatalogRouter.put("/apps/:id/tags", async (req, res) => {
       requestId,
       "INTERNAL_ERROR",
       "Failed to update app tags.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.get("/apps/:id/links", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedId = idParamSchema.safeParse(req.params);
+    if (!parsedId.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid app id.",
+        400,
+      );
+    }
+
+    const app = await prisma.app.findFirst({
+      where: {
+        id: parsedId.data.id,
+        deletedAt: null,
+      },
+      select: { id: true },
+    });
+
+    if (!app) {
+      return sendFailure(res, requestId, "NOT_FOUND", "App not found.", 404);
+    }
+
+    const links = await prisma.appLink.findMany({
+      where: {
+        appId: parsedId.data.id,
+      },
+      orderBy: [{ platform: "asc" }],
+    });
+
+    return sendSuccess(res, requestId, links);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to fetch release links.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.post("/apps/:id/links", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedId = idParamSchema.safeParse(req.params);
+    if (!parsedId.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid app id.",
+        400,
+      );
+    }
+
+    const parsedBody = appLinkCreateSchema.safeParse(req.body);
+    if (!parsedBody.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid release link payload.",
+        400,
+        parsedBody.error.flatten(),
+      );
+    }
+
+    const app = await prisma.app.findFirst({
+      where: {
+        id: parsedId.data.id,
+        deletedAt: null,
+      },
+      select: { id: true },
+    });
+
+    if (!app) {
+      return sendFailure(res, requestId, "NOT_FOUND", "App not found.", 404);
+    }
+
+    const existingLink = await prisma.appLink.findUnique({
+      where: {
+        appId_platform: {
+          appId: parsedId.data.id,
+          platform: parsedBody.data.platform,
+        },
+      },
+      select: { id: true },
+    });
+
+    const link = existingLink
+      ? await prisma.appLink.update({
+          where: { id: existingLink.id },
+          data: {
+            downloadUrl: parsedBody.data.downloadUrl,
+            sourceCodeUrl: parsedBody.data.sourceCodeUrl ?? null,
+          },
+        })
+      : await prisma.appLink.create({
+          data: {
+            appId: parsedId.data.id,
+            platform: parsedBody.data.platform,
+            downloadUrl: parsedBody.data.downloadUrl,
+            sourceCodeUrl: parsedBody.data.sourceCodeUrl ?? null,
+          },
+        });
+
+    return sendSuccess(res, requestId, link, existingLink ? 200 : 201);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to save release link.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.patch("/apps/:id/links/:linkId", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedParams = appLinkIdParamSchema.safeParse(req.params);
+    if (!parsedParams.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid link id.",
+        400,
+      );
+    }
+
+    const parsedBody = appLinkUpdateSchema.safeParse(req.body);
+    if (!parsedBody.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid release link payload.",
+        400,
+        parsedBody.error.flatten(),
+      );
+    }
+
+    const existingLink = await prisma.appLink.findFirst({
+      where: {
+        id: parsedParams.data.linkId,
+        appId: parsedParams.data.id,
+      },
+      select: {
+        id: true,
+        platform: true,
+      },
+    });
+
+    if (!existingLink) {
+      return sendFailure(
+        res,
+        requestId,
+        "NOT_FOUND",
+        "Release link not found.",
+        404,
+      );
+    }
+
+    if (
+      parsedBody.data.platform &&
+      parsedBody.data.platform !== existingLink.platform
+    ) {
+      const duplicatePlatformLink = await prisma.appLink.findUnique({
+        where: {
+          appId_platform: {
+            appId: parsedParams.data.id,
+            platform: parsedBody.data.platform,
+          },
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (
+        duplicatePlatformLink &&
+        duplicatePlatformLink.id !== existingLink.id
+      ) {
+        return sendFailure(
+          res,
+          requestId,
+          "CONFLICT",
+          "A release link for this platform already exists.",
+          409,
+        );
+      }
+    }
+
+    const link = await prisma.appLink.update({
+      where: {
+        id: existingLink.id,
+      },
+      data: {
+        platform: parsedBody.data.platform,
+        downloadUrl: parsedBody.data.downloadUrl,
+        sourceCodeUrl:
+          parsedBody.data.sourceCodeUrl === undefined
+            ? undefined
+            : parsedBody.data.sourceCodeUrl,
+      },
+    });
+
+    return sendSuccess(res, requestId, link);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to update release link.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.delete("/apps/:id/links/:linkId", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedParams = appLinkIdParamSchema.safeParse(req.params);
+    if (!parsedParams.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid link id.",
+        400,
+      );
+    }
+
+    const existingLink = await prisma.appLink.findFirst({
+      where: {
+        id: parsedParams.data.linkId,
+        appId: parsedParams.data.id,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!existingLink) {
+      return sendFailure(
+        res,
+        requestId,
+        "NOT_FOUND",
+        "Release link not found.",
+        404,
+      );
+    }
+
+    await prisma.appLink.delete({
+      where: {
+        id: existingLink.id,
+      },
+    });
+
+    return sendSuccess(res, requestId, { deleted: true });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to delete release link.",
       500,
       error instanceof Error ? error.message : "Unknown error",
     );

@@ -1,8 +1,9 @@
-import { PageHeader, PageShell } from "@/components/ui/page";
+import { PageHeader } from "@/components/ui/page";
 import { requireAdminContext } from "@/lib/page-access";
 import { fetchServiceData } from "@/lib/service-client";
-import { formatDateTime, type AdminContentPage } from "@/lib/view-models";
-import Link from "next/link";
+import type { AdminContentPage } from "@/lib/view-models";
+
+import { AdminContentPagesClient } from "./client";
 
 export const dynamic = "force-dynamic";
 
@@ -14,63 +15,38 @@ export default async function AdminContentPagesPage() {
     user,
   }).catch(() => []);
 
+  const publishedCount = pages.filter(
+    (page) => page.publishedAt !== null,
+  ).length;
+
   return (
-    <PageShell width="wide" className="gap-6">
+    <div className="space-y-4 p-4 sm:p-5 lg:p-6">
       <PageHeader
-        eyebrow="Admin Data"
-        title="Content Pages"
-        description="CMS pages and latest revision information."
+        eyebrow="Presentation"
+        title="Content pages"
+        description="Create and edit CMS records with publication status and SEO controls."
       />
 
-      <Link href="/admin" className="text-sm font-medium underline">
-        Back to admin
-      </Link>
+      <section className="grid gap-3 sm:grid-cols-2">
+        <article className="rounded-2xl border border-black/10 bg-white p-4">
+          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+            Total pages
+          </p>
+          <p className="mt-1 text-3xl font-semibold text-[#111a2d]">
+            {pages.length.toLocaleString()}
+          </p>
+        </article>
+        <article className="rounded-2xl border border-black/10 bg-white p-4">
+          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+            Published
+          </p>
+          <p className="mt-1 text-3xl font-semibold text-[#111a2d]">
+            {publishedCount.toLocaleString()}
+          </p>
+        </article>
+      </section>
 
-      {pages.length === 0 ? (
-        <p className="text-sm text-[#4a5262]">No content page records found.</p>
-      ) : (
-        <section className="overflow-x-auto rounded-xl border border-black/15 bg-white">
-          <table className="min-w-full text-left text-sm">
-            <thead className="border-b border-black/10 bg-[#f6f7fb] text-xs uppercase tracking-wide text-[#4a5262]">
-              <tr>
-                <th className="px-3 py-2">Title</th>
-                <th className="px-3 py-2">Slug</th>
-                <th className="px-3 py-2">Status</th>
-                <th className="px-3 py-2">Latest Version</th>
-                <th className="px-3 py-2">Published</th>
-                <th className="px-3 py-2">Updated</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pages.map((page) => {
-                const latestVersion = page.versions[0]?.version ?? "-";
-
-                return (
-                  <tr
-                    key={page.id}
-                    className="border-b border-black/10 last:border-0"
-                  >
-                    <td className="px-3 py-2 font-medium text-[#111722]">
-                      {page.title}
-                    </td>
-                    <td className="px-3 py-2 text-[#364055]">/{page.slug}</td>
-                    <td className="px-3 py-2 text-[#364055]">{page.status}</td>
-                    <td className="px-3 py-2 text-[#364055]">
-                      {latestVersion}
-                    </td>
-                    <td className="px-3 py-2 text-[#364055]">
-                      {formatDateTime(page.publishedAt)}
-                    </td>
-                    <td className="px-3 py-2 text-[#364055]">
-                      {formatDateTime(page.updatedAt)}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </section>
-      )}
-    </PageShell>
+      <AdminContentPagesClient initialPages={pages} />
+    </div>
   );
 }

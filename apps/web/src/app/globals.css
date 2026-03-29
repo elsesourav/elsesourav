@@ -1,14 +1,62 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f4f6fb;
-  --foreground: #0f1420;
-  --brand-primary: #1a2232;
-  --brand-secondary: #1f5ed4;
-  --brand-accent: #f59e0b;
+  --theme-light-primary: #1a2232;
+  --theme-light-secondary: #1f5ed4;
+  --theme-light-accent: #f59e0b;
+  --theme-light-background: #f4f6fb;
+  --theme-light-foreground: #0f1420;
+  --theme-dark-primary: #e2e8f0;
+  --theme-dark-secondary: #93c5fd;
+  --theme-dark-accent: #38bdf8;
+  --theme-dark-background: #0b1220;
+  --theme-dark-foreground: #e2e8f0;
+  --background: var(--theme-light-background);
+  --foreground: var(--theme-light-foreground);
+  --brand-primary: var(--theme-light-primary);
+  --brand-secondary: var(--theme-light-secondary);
+  --brand-accent: var(--theme-light-accent);
   --brand-font-sans: "Inter";
   --brand-font-heading: "Manrope";
   --brand-heading-scale: 1.05;
+}
+
+html[data-theme-mode="light"] {
+  color-scheme: light;
+  --background: var(--theme-light-background);
+  --foreground: var(--theme-light-foreground);
+  --brand-primary: var(--theme-light-primary);
+  --brand-secondary: var(--theme-light-secondary);
+  --brand-accent: var(--theme-light-accent);
+}
+
+html[data-theme-mode="dark"] {
+  color-scheme: dark;
+  --background: var(--theme-dark-background);
+  --foreground: var(--theme-dark-foreground);
+  --brand-primary: var(--theme-dark-primary);
+  --brand-secondary: var(--theme-dark-secondary);
+  --brand-accent: var(--theme-dark-accent);
+}
+
+html[data-theme-mode="system"] {
+  color-scheme: light;
+  --background: var(--theme-light-background);
+  --foreground: var(--theme-light-foreground);
+  --brand-primary: var(--theme-light-primary);
+  --brand-secondary: var(--theme-light-secondary);
+  --brand-accent: var(--theme-light-accent);
+}
+
+@media (prefers-color-scheme: dark) {
+  html[data-theme-mode="system"] {
+    color-scheme: dark;
+    --background: var(--theme-dark-background);
+    --foreground: var(--theme-dark-foreground);
+    --brand-primary: var(--theme-dark-primary);
+    --brand-secondary: var(--theme-dark-secondary);
+    --brand-accent: var(--theme-dark-accent);
+  }
 }
 
 @theme inline {
@@ -23,12 +71,12 @@ body {
   background:
     radial-gradient(
       900px 400px at 12% -10%,
-      color-mix(in srgb, var(--brand-accent) 16%, white 84%),
+      color-mix(in srgb, var(--brand-accent) 18%, var(--background) 82%),
       transparent 65%
     ),
     radial-gradient(
       1000px 420px at 88% -20%,
-      color-mix(in srgb, var(--brand-secondary) 11%, white 89%),
+      color-mix(in srgb, var(--brand-secondary) 18%, var(--background) 82%),
       transparent 62%
     ),
     var(--background);
@@ -43,15 +91,20 @@ a {
 }
 
 a:hover {
-  color: color-mix(in srgb, var(--brand-secondary) 85%, black 15%);
+  color: color-mix(in srgb, var(--brand-secondary) 78%, var(--foreground) 22%);
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--brand-secondary) 20%, white 80%);
+  background: color-mix(
+    in srgb,
+    var(--brand-accent) 24%,
+    var(--background) 76%
+  );
 }
 
 :focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--brand-secondary) 72%, black 28%);
+  outline: 2px solid
+    color-mix(in srgb, var(--brand-secondary) 74%, var(--foreground) 26%);
   outline-offset: 2px;
 }
 

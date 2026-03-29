@@ -1,0 +1,742 @@
+"use client";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Modal } from "@/components/ui/modal";
+import { formatDateTime, type AdminBanner } from "@/lib/view-models";
+import { useAppDispatch } from "@/store/hooks";
+import { enqueueNotification } from "@/store/slices/notificationsSlice";
+import type { ApiResponse } from "@elsesourav/types";
+import Image from "next/image";
+import { useMemo, useState } from "react";
+
+type BannerPlacement = "HOME_HERO" | "LATEST" | "UPCOMING";
+
+type BannerFormState = {
+  title: string;
+  imageUrl: string;
+  linkUrl: string;
+  placement: BannerPlacement;
+  startsAt: string;
+  endsAt: string;
+  isActive: boolean;
+};
+
+const bannerPlacementOptions: BannerPlacement[] = [
+  "HOME_HERO",
+  "LATEST",
+  "UPCOMING",
+];
+
+function toSortedBanners(items: AdminBanner[]) {
+  return [...items].sort(
+    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+  );
+}
+
+function parseApiMessage(payload: unknown): string | null {
+  if (!payload || typeof payload !== "object") {
+    return null;
+  }
+
+  const candidate = payload as {
+    ok?: boolean;
+    error?: {
+      message?: string;
+    };
+  };
+
+  if (candidate.ok === false && candidate.error?.message) {
+    return candidate.error.message;
+  }
+
+  return null;
+}
+
+function isApiSuccess<T>(
+  payload: unknown,
+): payload is Extract<ApiResponse<T>, { ok: true }> {
+  if (!payload || typeof payload !== "object") {
+    return false;
+  }
+
+  const candidate = payload as {
+    ok?: boolean;
+    data?: T;
+  };
+
+  return candidate.ok === true && "data" in candidate;
+}
+
+function toDateTimeLocal(value: string | null): string {
+  if (!value) {
+    return "";
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0, 16);
+}
+
+function toIsoOrUndefined(value: string): string | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return undefined;
+  }
+
+  return date.toISOString();
+}
+
+function createEmptyBannerForm(): BannerFormState {
+  return {
+    title: "",
+    imageUrl: "",
+    linkUrl: "",
+    placement: "HOME_HERO",
+    startsAt: "",
+    endsAt: "",
+    isActive: true,
+  };
+}
+
+function createBannerFormFromItem(item: AdminBanner): BannerFormState {
+  return {
+    title: item.title,
+    imageUrl: item.imageUrl,
+    linkUrl: item.linkUrl ?? "",
+    placement: item.placement as BannerPlacement,
+    startsAt: toDateTimeLocal(item.startsAt),
+    endsAt: toDateTimeLocal(item.endsAt),
+    isActive: item.isActive,
+  };
+}
+
+function validateBannerForm(form: BannerFormState): string | null {
+  if (form.title.trim().length < 3) {
+    return "Banner title must contain at least 3 characters.";
+  }
+
+  try {
+    new URL(form.imageUrl.trim());
+  } catch {
+    return "Please provide a valid image URL.";
+  }
+
+  if (form.linkUrl.trim()) {
+    try {
+      new URL(form.linkUrl.trim());
+    } catch {
+      return "Banner link URL must be a valid URL.";
+    }
+  }
+
+  if (form.startsAt && form.endsAt) {
+    const startsAt = new Date(form.startsAt);
+    const endsAt = new Date(form.endsAt);
+    if (endsAt <= startsAt) {
+      return "End time must be after start time.";
+    }
+  }
+
+  return null;
+}
+
+function BannerVisualPreview({
+  title,
+  imageUrl,
+  placement,
+  linkUrl,
+}: {
+  title: string;
+  imageUrl: string;
+  placement: BannerPlacement;
+  linkUrl: string;
+}) {
+  return (
+    <article className="relative overflow-hidden rounded-xl border border-black/10 bg-[#0f172a]">
+      {imageUrl ? (
+        <Image
+          src={imageUrl}
+          alt={title || "Banner preview"}
+          width={1280}
+          height={512}
+          className="h-44 w-full object-cover"
+          unoptimized
+        />
+      ) : (
+        <div className="h-44 w-full bg-[linear-gradient(120deg,#1f5ed4,#0f172a)]" />
+      )}
+
+      <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/75 via-black/35 to-transparent" />
+
+      <div className="absolute inset-x-0 bottom-0 space-y-1 p-3 text-white">
+        <span className="inline-flex rounded-full border border-white/30 bg-white/20 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide">
+          {placement.replace("_", " ")}
+        </span>
+        <p className="line-clamp-1 text-sm font-semibold">
+          {title.trim() || "Banner title preview"}
+        </p>
+        <p className="line-clamp-1 text-xs text-blue-100">
+          {linkUrl.trim() || "No link URL"}
+        </p>
+      </div>
+    </article>
+  );
+}
+
+function BannerCard({
+  item,
+  onEdit,
+  onDisable,
+  disabling,
+}: {
+  item: AdminBanner;
+  onEdit: () => void;
+  onDisable: () => void;
+  disabling: boolean;
+}) {
+  return (
+    <Card className="overflow-hidden p-0">
+      <BannerVisualPreview
+        title={item.title}
+        imageUrl={item.imageUrl}
+        placement={item.placement as BannerPlacement}
+        linkUrl={item.linkUrl ?? ""}
+      />
+      <div className="space-y-3 p-4">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <CardTitle>{item.title}</CardTitle>
+            <CardDescription className="mt-1 line-clamp-1">
+              {item.linkUrl ?? "No banner link"}
+            </CardDescription>
+          </div>
+          <Badge tone={item.isActive ? "success" : "neutral"}>
+            {item.isActive ? "Active" : "Disabled"}
+          </Badge>
+        </div>
+
+        <div className="grid gap-1 text-xs text-[#59637b]">
+          <p>Starts: {formatDateTime(item.startsAt)}</p>
+          <p>Ends: {formatDateTime(item.endsAt)}</p>
+          <p>Updated: {formatDateTime(item.updatedAt)}</p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <Button tone="secondary" size="sm" onClick={onEdit}>
+            Edit banner
+          </Button>
+          <Button
+            tone="danger"
+            size="sm"
+            onClick={onDisable}
+            disabled={disabling || !item.isActive}
+          >
+            {disabling ? "Disabling..." : "Disable"}
+          </Button>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+export function AdminBannersClient({
+  initialBanners,
+}: {
+  initialBanners: AdminBanner[];
+}) {
+  const dispatch = useAppDispatch();
+  const [banners, setBanners] = useState(() => toSortedBanners(initialBanners));
+  const [createForm, setCreateForm] = useState<BannerFormState>(() =>
+    createEmptyBannerForm(),
+  );
+  const [createError, setCreateError] = useState<string | null>(null);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [creating, setCreating] = useState(false);
+
+  const [editingBannerId, setEditingBannerId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<BannerFormState | null>(null);
+  const [editError, setEditError] = useState<string | null>(null);
+  const [savingEdit, setSavingEdit] = useState(false);
+
+  const [disablingBannerId, setDisablingBannerId] = useState<string | null>(
+    null,
+  );
+  const [confirmDisableId, setConfirmDisableId] = useState<string | null>(null);
+
+  const activeCount = useMemo(
+    () => banners.filter((item) => item.isActive).length,
+    [banners],
+  );
+
+  const editingBanner =
+    editingBannerId !== null
+      ? (banners.find((item) => item.id === editingBannerId) ?? null)
+      : null;
+
+  async function onCreateBanner(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const validationError = validateBannerForm(createForm);
+    if (validationError) {
+      setCreateError(validationError);
+      return;
+    }
+
+    setCreateError(null);
+    setCreating(true);
+
+    try {
+      const response = await fetch("/api/admin/store/banners", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          title: createForm.title.trim(),
+          imageUrl: createForm.imageUrl.trim(),
+          linkUrl: createForm.linkUrl.trim() || null,
+          placement: createForm.placement,
+          startsAt: toIsoOrUndefined(createForm.startsAt),
+          endsAt: toIsoOrUndefined(createForm.endsAt),
+          isActive: createForm.isActive,
+        }),
+      });
+
+      const payload = await response.json().catch(() => null);
+      if (!response.ok || !isApiSuccess<AdminBanner>(payload)) {
+        setCreateError(
+          parseApiMessage(payload) ?? "Failed to create banner. Please retry.",
+        );
+        return;
+      }
+
+      setBanners((previous) => toSortedBanners([payload.data, ...previous]));
+      setCreateForm(createEmptyBannerForm());
+      setCreateOpen(false);
+      dispatch(
+        enqueueNotification({
+          tone: "success",
+          message: `Banner \"${payload.data.title}\" created successfully.`,
+        }),
+      );
+    } catch (error) {
+      setCreateError(
+        error instanceof Error ? error.message : "Failed to create banner.",
+      );
+    } finally {
+      setCreating(false);
+    }
+  }
+
+  async function onSaveBannerEdits(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!editingBannerId || !editForm) {
+      return;
+    }
+
+    const validationError = validateBannerForm(editForm);
+    if (validationError) {
+      setEditError(validationError);
+      return;
+    }
+
+    setEditError(null);
+    setSavingEdit(true);
+
+    try {
+      const response = await fetch(
+        `/api/admin/store/banners/${editingBannerId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            title: editForm.title.trim(),
+            imageUrl: editForm.imageUrl.trim(),
+            linkUrl: editForm.linkUrl.trim() || null,
+            placement: editForm.placement,
+            startsAt: toIsoOrUndefined(editForm.startsAt),
+            endsAt: toIsoOrUndefined(editForm.endsAt),
+            isActive: editForm.isActive,
+          }),
+        },
+      );
+
+      const payload = await response.json().catch(() => null);
+      if (!response.ok || !isApiSuccess<AdminBanner>(payload)) {
+        setEditError(
+          parseApiMessage(payload) ?? "Failed to update banner. Please retry.",
+        );
+        return;
+      }
+
+      setBanners((previous) =>
+        toSortedBanners(
+          previous.map((item) =>
+            item.id === editingBannerId ? payload.data : item,
+          ),
+        ),
+      );
+      setEditingBannerId(null);
+      setEditForm(null);
+      dispatch(
+        enqueueNotification({
+          tone: "success",
+          message: `Banner \"${payload.data.title}\" updated successfully.`,
+        }),
+      );
+    } catch (error) {
+      setEditError(
+        error instanceof Error ? error.message : "Failed to update banner.",
+      );
+    } finally {
+      setSavingEdit(false);
+    }
+  }
+
+  async function onConfirmDisableBanner() {
+    if (!confirmDisableId) {
+      return;
+    }
+
+    setDisablingBannerId(confirmDisableId);
+
+    try {
+      const response = await fetch(
+        `/api/admin/store/banners/${confirmDisableId}`,
+        {
+          method: "DELETE",
+        },
+      );
+      const payload = await response.json().catch(() => null);
+
+      if (!response.ok || !isApiSuccess<AdminBanner>(payload)) {
+        dispatch(
+          enqueueNotification({
+            tone: "error",
+            message:
+              parseApiMessage(payload) ?? "Failed to disable banner. Retry.",
+          }),
+        );
+        return;
+      }
+
+      setBanners((previous) =>
+        toSortedBanners(
+          previous.map((item) =>
+            item.id === confirmDisableId ? payload.data : item,
+          ),
+        ),
+      );
+
+      dispatch(
+        enqueueNotification({
+          tone: "success",
+          message: `Banner \"${payload.data.title}\" is now disabled.`,
+        }),
+      );
+    } catch (error) {
+      dispatch(
+        enqueueNotification({
+          tone: "error",
+          message:
+            error instanceof Error
+              ? error.message
+              : "Failed to disable banner.",
+        }),
+      );
+    } finally {
+      setDisablingBannerId(null);
+      setConfirmDisableId(null);
+    }
+  }
+
+  return (
+    <section className="space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm text-[#49536a]">
+          {banners.length.toLocaleString()} banners,{" "}
+          {activeCount.toLocaleString()} active.
+        </p>
+        <Button tone="primary" onClick={() => setCreateOpen(true)}>
+          Add banner
+        </Button>
+      </div>
+
+      {banners.length === 0 ? (
+        <Card>
+          <CardTitle>No banners yet</CardTitle>
+          <CardDescription className="mt-1">
+            Create your first banner to control campaign visibility.
+          </CardDescription>
+        </Card>
+      ) : (
+        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {banners.map((item) => (
+            <BannerCard
+              key={item.id}
+              item={item}
+              disabling={disablingBannerId === item.id}
+              onEdit={() => {
+                setEditingBannerId(item.id);
+                setEditForm(createBannerFormFromItem(item));
+                setEditError(null);
+              }}
+              onDisable={() => setConfirmDisableId(item.id)}
+            />
+          ))}
+        </section>
+      )}
+
+      <Modal
+        open={createOpen}
+        onClose={() => {
+          if (creating) {
+            return;
+          }
+
+          setCreateOpen(false);
+          setCreateError(null);
+        }}
+        title="Create banner"
+        description="Use storefront-like visuals and schedule windows for campaigns."
+        width="xl"
+      >
+        <form className="space-y-4" onSubmit={onCreateBanner}>
+          <BannerEditorFields form={createForm} onChange={setCreateForm} />
+
+          <BannerVisualPreview
+            title={createForm.title}
+            imageUrl={createForm.imageUrl}
+            placement={createForm.placement}
+            linkUrl={createForm.linkUrl}
+          />
+
+          {createError ? (
+            <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+              {createError}
+            </p>
+          ) : null}
+
+          <div className="flex items-center justify-end gap-2">
+            <Button
+              tone="secondary"
+              onClick={() => {
+                setCreateOpen(false);
+                setCreateError(null);
+              }}
+              disabled={creating}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" disabled={creating}>
+              {creating ? "Creating..." : "Create banner"}
+            </Button>
+          </div>
+        </form>
+      </Modal>
+
+      <Modal
+        open={Boolean(editingBannerId && editForm)}
+        onClose={() => {
+          if (savingEdit) {
+            return;
+          }
+
+          setEditingBannerId(null);
+          setEditForm(null);
+          setEditError(null);
+        }}
+        title={editingBanner ? `Edit ${editingBanner.title}` : "Edit banner"}
+        description="Update banner details and preview storefront appearance before saving."
+        width="xl"
+      >
+        {editForm ? (
+          <form className="space-y-4" onSubmit={onSaveBannerEdits}>
+            <BannerEditorFields form={editForm} onChange={setEditForm} />
+
+            <BannerVisualPreview
+              title={editForm.title}
+              imageUrl={editForm.imageUrl}
+              placement={editForm.placement}
+              linkUrl={editForm.linkUrl}
+            />
+
+            {editError ? (
+              <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                {editError}
+              </p>
+            ) : null}
+
+            <div className="flex items-center justify-end gap-2">
+              <Button
+                tone="secondary"
+                onClick={() => {
+                  setEditingBannerId(null);
+                  setEditForm(null);
+                  setEditError(null);
+                }}
+                disabled={savingEdit}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={savingEdit}>
+                {savingEdit ? "Saving..." : "Save changes"}
+              </Button>
+            </div>
+          </form>
+        ) : null}
+      </Modal>
+
+      <ConfirmDialog
+        open={Boolean(confirmDisableId)}
+        title="Disable banner"
+        description="This action keeps the banner record but makes it inactive in storefront rotation."
+        confirmLabel="Disable banner"
+        busy={Boolean(disablingBannerId)}
+        onCancel={() => setConfirmDisableId(null)}
+        onConfirm={() => void onConfirmDisableBanner()}
+      />
+    </section>
+  );
+}
+
+function BannerEditorFields({
+  form,
+  onChange,
+}: {
+  form: BannerFormState;
+  onChange: (nextState: BannerFormState) => void;
+}) {
+  return (
+    <div className="grid gap-4 lg:grid-cols-2">
+      <div className="space-y-1.5">
+        <Label htmlFor="banner-title">Title</Label>
+        <Input
+          id="banner-title"
+          value={form.title}
+          onChange={(event) =>
+            onChange({
+              ...form,
+              title: event.target.value,
+            })
+          }
+          maxLength={120}
+          required
+        />
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="banner-placement">Placement</Label>
+        <select
+          id="banner-placement"
+          className="w-full rounded-lg border border-black/20 bg-white px-3 py-2 text-sm text-[#14171f]"
+          value={form.placement}
+          onChange={(event) =>
+            onChange({
+              ...form,
+              placement: event.target.value as BannerPlacement,
+            })
+          }
+        >
+          {bannerPlacementOptions.map((placement) => (
+            <option key={placement} value={placement}>
+              {placement.replace("_", " ")}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="space-y-1.5 lg:col-span-2">
+        <Label htmlFor="banner-image-url">Image URL</Label>
+        <Input
+          id="banner-image-url"
+          value={form.imageUrl}
+          onChange={(event) =>
+            onChange({
+              ...form,
+              imageUrl: event.target.value,
+            })
+          }
+          placeholder="https://..."
+          required
+        />
+      </div>
+
+      <div className="space-y-1.5 lg:col-span-2">
+        <Label htmlFor="banner-link-url">Link URL</Label>
+        <Input
+          id="banner-link-url"
+          value={form.linkUrl}
+          onChange={(event) =>
+            onChange({
+              ...form,
+              linkUrl: event.target.value,
+            })
+          }
+          placeholder="https://..."
+        />
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="banner-starts-at">Starts At</Label>
+        <Input
+          id="banner-starts-at"
+          type="datetime-local"
+          value={form.startsAt}
+          onChange={(event) =>
+            onChange({
+              ...form,
+              startsAt: event.target.value,
+            })
+          }
+        />
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="banner-ends-at">Ends At</Label>
+        <Input
+          id="banner-ends-at"
+          type="datetime-local"
+          value={form.endsAt}
+          onChange={(event) =>
+            onChange({
+              ...form,
+              endsAt: event.target.value,
+            })
+          }
+        />
+      </div>
+
+      <label className="inline-flex items-center gap-2 rounded-lg border border-black/10 bg-[#f8fbff] px-3 py-2 text-sm text-[#1a2439] lg:col-span-2">
+        <input
+          type="checkbox"
+          checked={form.isActive}
+          onChange={(event) =>
+            onChange({
+              ...form,
+              isActive: event.target.checked,
+            })
+          }
+          className="h-4 w-4"
+        />
+        Active in storefront
+      </label>
+    </div>
+  );
+}

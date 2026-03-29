@@ -96,11 +96,20 @@ function fromCustomTheme(
   theme: Record<string, string> | null,
 ): CustomThemeInput {
   return {
-    primaryColor: theme?.primaryColor ?? "",
-    secondaryColor: theme?.secondaryColor ?? "",
-    accentColor: theme?.accentColor ?? "",
-    backgroundColor: theme?.backgroundColor ?? "",
-    foregroundColor: theme?.foregroundColor ?? "",
+    lightPrimaryColor:
+      theme?.lightPrimaryColor ?? theme?.primaryColor ?? "",
+    lightSecondaryColor:
+      theme?.lightSecondaryColor ?? theme?.secondaryColor ?? "",
+    lightAccentColor: theme?.lightAccentColor ?? theme?.accentColor ?? "",
+    lightBackgroundColor:
+      theme?.lightBackgroundColor ?? theme?.backgroundColor ?? "",
+    lightForegroundColor:
+      theme?.lightForegroundColor ?? theme?.foregroundColor ?? "",
+    darkPrimaryColor: theme?.darkPrimaryColor ?? "",
+    darkSecondaryColor: theme?.darkSecondaryColor ?? "",
+    darkAccentColor: theme?.darkAccentColor ?? "",
+    darkBackgroundColor: theme?.darkBackgroundColor ?? "",
+    darkForegroundColor: theme?.darkForegroundColor ?? "",
   };
 }
 
@@ -398,11 +407,16 @@ export function SettingsForm({
     setFormData((previous) => ({
       ...previous,
       customTheme: {
-        primaryColor: "",
-        secondaryColor: "",
-        accentColor: "",
-        backgroundColor: "",
-        foregroundColor: "",
+        lightPrimaryColor: "",
+        lightSecondaryColor: "",
+        lightAccentColor: "",
+        lightBackgroundColor: "",
+        lightForegroundColor: "",
+        darkPrimaryColor: "",
+        darkSecondaryColor: "",
+        darkAccentColor: "",
+        darkBackgroundColor: "",
+        darkForegroundColor: "",
       },
     }));
   }

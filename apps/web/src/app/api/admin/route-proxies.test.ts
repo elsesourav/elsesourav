@@ -1,3 +1,11 @@
+import {
+  DELETE as deleteAppLinkById,
+  PATCH as patchAppLinkById,
+} from "@/app/api/admin/apps/[id]/links/[linkId]/route";
+import {
+  GET as getAppLinks,
+  POST as postAppLinks,
+} from "@/app/api/admin/apps/[id]/links/route";
 import { GET as getAppsStats } from "@/app/api/admin/apps/stats/route";
 import { POST as postCategoryRestoreById } from "@/app/api/admin/categories/[id]/restore/route";
 import {
@@ -44,6 +52,115 @@ describe("admin route proxies", () => {
       method: "GET",
       path: "/v1/admin/catalog/stats",
     });
+    expect(response).toBe(expectedResponse);
+  });
+
+  it("proxies app links GET to catalog service", async () => {
+    const expectedResponse = createOkResponse();
+    proxyAdminRouteWithParamsMock.mockResolvedValueOnce(expectedResponse);
+
+    const request = new Request("http://localhost/api/admin/apps/app_1/links");
+    const params = Promise.resolve({ id: "app_1" });
+    const response = await getAppLinks(request, { params });
+
+    const [calledRequest, calledParams, calledOptions] =
+      proxyAdminRouteWithParamsMock.mock.calls[0];
+
+    expect(calledRequest).toBe(request);
+    expect(calledParams).toBe(params);
+    expect(calledOptions.service).toBe("catalog");
+    expect(calledOptions.method).toBe("GET");
+    expect(calledOptions.path({ id: "app_123" }, request)).toBe(
+      "/v1/admin/catalog/apps/app_123/links",
+    );
+    expect(response).toBe(expectedResponse);
+  });
+
+  it("proxies app links POST to catalog service", async () => {
+    const expectedResponse = createOkResponse();
+    proxyAdminRouteWithParamsMock.mockResolvedValueOnce(expectedResponse);
+
+    const request = new Request("http://localhost/api/admin/apps/app_1/links", {
+      method: "POST",
+      body: JSON.stringify({
+        platform: "CHROME",
+        downloadUrl: "https://example.com",
+      }),
+      headers: {
+        "content-type": "application/json",
+      },
+    });
+    const params = Promise.resolve({ id: "app_1" });
+    const response = await postAppLinks(request, { params });
+
+    const [calledRequest, calledParams, calledOptions] =
+      proxyAdminRouteWithParamsMock.mock.calls[0];
+
+    expect(calledRequest).toBe(request);
+    expect(calledParams).toBe(params);
+    expect(calledOptions.service).toBe("catalog");
+    expect(calledOptions.method).toBe("POST");
+    expect(calledOptions.path({ id: "app_123" }, request)).toBe(
+      "/v1/admin/catalog/apps/app_123/links",
+    );
+    expect(response).toBe(expectedResponse);
+  });
+
+  it("proxies app link PATCH by id to catalog service", async () => {
+    const expectedResponse = createOkResponse();
+    proxyAdminRouteWithParamsMock.mockResolvedValueOnce(expectedResponse);
+
+    const request = new Request(
+      "http://localhost/api/admin/apps/app_1/links/link_1",
+      {
+        method: "PATCH",
+        body: JSON.stringify({
+          downloadUrl: "https://example.com/new",
+        }),
+        headers: {
+          "content-type": "application/json",
+        },
+      },
+    );
+    const params = Promise.resolve({ id: "app_1", linkId: "link_1" });
+    const response = await patchAppLinkById(request, { params });
+
+    const [calledRequest, calledParams, calledOptions] =
+      proxyAdminRouteWithParamsMock.mock.calls[0];
+
+    expect(calledRequest).toBe(request);
+    expect(calledParams).toBe(params);
+    expect(calledOptions.service).toBe("catalog");
+    expect(calledOptions.method).toBe("PATCH");
+    expect(
+      calledOptions.path({ id: "app_123", linkId: "link_456" }, request),
+    ).toBe("/v1/admin/catalog/apps/app_123/links/link_456");
+    expect(response).toBe(expectedResponse);
+  });
+
+  it("proxies app link DELETE by id to catalog service", async () => {
+    const expectedResponse = createOkResponse();
+    proxyAdminRouteWithParamsMock.mockResolvedValueOnce(expectedResponse);
+
+    const request = new Request(
+      "http://localhost/api/admin/apps/app_1/links/link_1",
+      {
+        method: "DELETE",
+      },
+    );
+    const params = Promise.resolve({ id: "app_1", linkId: "link_1" });
+    const response = await deleteAppLinkById(request, { params });
+
+    const [calledRequest, calledParams, calledOptions] =
+      proxyAdminRouteWithParamsMock.mock.calls[0];
+
+    expect(calledRequest).toBe(request);
+    expect(calledParams).toBe(params);
+    expect(calledOptions.service).toBe("catalog");
+    expect(calledOptions.method).toBe("DELETE");
+    expect(
+      calledOptions.path({ id: "app_123", linkId: "link_456" }, request),
+    ).toBe("/v1/admin/catalog/apps/app_123/links/link_456");
     expect(response).toBe(expectedResponse);
   });
 
