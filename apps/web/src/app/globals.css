@@ -19,6 +19,10 @@
   --brand-font-sans: "Inter";
   --brand-font-heading: "Manrope";
   --brand-heading-scale: 1.05;
+  --motion-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --motion-ease-emphasis: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-duration-fast: 180ms;
+  --motion-duration-medium: 300ms;
 }
 
 html[data-theme-mode="light"] {
@@ -119,4 +123,150 @@ h6 {
     var(--brand-font-heading), var(--brand-font-sans), "Segoe UI", Helvetica,
     Arial, sans-serif;
   letter-spacing: -0.02em;
+}
+
+.ui-text-primary {
+  color: var(--foreground);
+}
+
+.ui-text-heading {
+  color: color-mix(in srgb, var(--brand-primary) 86%, var(--foreground) 14%);
+}
+
+.ui-text-muted {
+  color: color-mix(in srgb, var(--foreground) 66%, var(--background) 34%);
+}
+
+.ui-border {
+  border-color: color-mix(in srgb, var(--foreground) 14%, transparent);
+}
+
+.ui-border-strong {
+  border-color: color-mix(in srgb, var(--foreground) 22%, transparent);
+}
+
+.ui-surface {
+  background: color-mix(in srgb, var(--background) 92%, white 8%);
+}
+
+.ui-surface-soft {
+  background: color-mix(in srgb, var(--background) 96%, var(--foreground) 4%);
+}
+
+.ui-card {
+  border-color: color-mix(in srgb, var(--foreground) 12%, transparent);
+  background: color-mix(in srgb, var(--background) 91%, white 9%);
+  box-shadow: 0 14px 30px -24px rgba(20, 23, 31, 0.65);
+}
+
+.ui-input {
+  border-color: color-mix(in srgb, var(--foreground) 20%, transparent);
+  background: color-mix(in srgb, var(--background) 94%, white 6%);
+  color: var(--foreground);
+}
+
+.ui-input::placeholder {
+  color: color-mix(in srgb, var(--foreground) 56%, var(--background) 44%);
+}
+
+.ui-input:focus-visible {
+  border-color: var(--brand-secondary);
+  outline: none;
+  box-shadow: 0 0 0 2px
+    color-mix(in srgb, var(--brand-secondary) 24%, transparent);
+}
+
+.ui-btn-base {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid transparent;
+  transform: translateY(0) scale(1);
+  box-shadow: 0 1px 0 rgba(17, 24, 39, 0.08);
+  transition:
+    transform var(--motion-duration-fast) var(--motion-ease-emphasis),
+    box-shadow var(--motion-duration-fast) var(--motion-ease-standard),
+    background-color var(--motion-duration-fast) var(--motion-ease-standard),
+    color var(--motion-duration-fast) var(--motion-ease-standard),
+    border-color var(--motion-duration-fast) var(--motion-ease-standard);
+}
+
+.ui-btn-base:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 26px -20px rgba(20, 23, 31, 0.6);
+}
+
+.ui-btn-base:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px -8px rgba(20, 23, 31, 0.5);
+}
+
+.ui-btn-primary {
+  border-color: color-mix(in srgb, var(--brand-primary) 70%, black 30%);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--brand-primary) 84%, black 16%),
+    color-mix(in srgb, var(--brand-secondary) 62%, var(--brand-primary) 38%)
+  );
+  color: white;
+}
+
+.ui-btn-primary:hover {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--brand-primary) 76%, black 24%),
+    color-mix(in srgb, var(--brand-secondary) 70%, var(--brand-primary) 30%)
+  );
+}
+
+.ui-btn-secondary {
+  border-color: color-mix(in srgb, var(--foreground) 22%, transparent);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--background) 94%, white 6%),
+    color-mix(in srgb, var(--background) 88%, white 12%)
+  );
+  color: var(--foreground);
+}
+
+.ui-btn-secondary:hover {
+  background: color-mix(
+    in srgb,
+    var(--background) 84%,
+    var(--brand-secondary) 16%
+  );
+}
+
+.ui-btn-ghost {
+  background: transparent;
+  color: var(--brand-secondary);
+}
+
+.ui-btn-ghost:hover {
+  background: color-mix(
+    in srgb,
+    var(--background) 82%,
+    var(--brand-secondary) 18%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-btn-base {
+    transition: none;
+    transform: none;
+    box-shadow: 0 1px 0 rgba(17, 24, 39, 0.08);
+  }
+
+  .ui-btn-base:hover,
+  .ui-btn-base:active {
+    transform: none;
+    box-shadow: 0 1px 0 rgba(17, 24, 39, 0.08);
+  }
+}
+
+.ui-label {
+  color: color-mix(in srgb, var(--foreground) 62%, var(--background) 38%);
+}
+
+.ui-skeleton {
+  background: color-mix(in srgb, var(--foreground) 12%, transparent);
 }

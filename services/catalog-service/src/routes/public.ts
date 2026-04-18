@@ -134,7 +134,18 @@ publicCatalogRouter.get("/sliders", async (req, res) => {
             title: true,
             slug: true,
             shortDescription: true,
+            iconUrl: true,
+            developerName: true,
+            version: true,
+            isPaid: true,
             isFeatured: true,
+            price: true,
+            category: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
             media: {
               orderBy: { sortOrder: "asc" },
               take: 1,
@@ -145,12 +156,41 @@ publicCatalogRouter.get("/sliders", async (req, res) => {
                 type: true,
               },
             },
+            tagLinks: {
+              select: {
+                tag: {
+                  select: {
+                    id: true,
+                    name: true,
+                    slug: true,
+                  },
+                },
+              },
+            },
+            aggregateStat: {
+              select: {
+                viewCount: true,
+                downloadCount: true,
+                averageRating: true,
+              },
+            },
           },
         },
       },
     });
 
-    return sendSuccess(res, requestId, sliders);
+    const normalizedSliders = sliders.map((slider) => ({
+      ...slider,
+      app: slider.app
+        ? {
+            ...slider.app,
+            tags: slider.app.tagLinks.map((entry) => entry.tag),
+            aggregateStat: slider.app.aggregateStat,
+          }
+        : null,
+    }));
+
+    return sendSuccess(res, requestId, normalizedSliders);
   } catch (error) {
     return sendFailure(
       res,
@@ -272,6 +312,8 @@ publicCatalogRouter.get("/apps", async (req, res) => {
               title: true,
               slug: true,
               shortDescription: true,
+              iconUrl: true,
+              developerName: true,
               version: true,
               isPaid: true,
               isFeatured: true,
@@ -293,6 +335,12 @@ publicCatalogRouter.get("/apps", async (req, res) => {
                   url: true,
                   alt: true,
                   type: true,
+                  mimeType: true,
+                  width: true,
+                  height: true,
+                  durationSec: true,
+                  thumbnailUrl: true,
+                  isAnimated: true,
                 },
               },
               tagLinks: {
@@ -388,6 +436,8 @@ publicCatalogRouter.get("/apps", async (req, res) => {
         title: true,
         slug: true,
         shortDescription: true,
+        iconUrl: true,
+        developerName: true,
         version: true,
         isPaid: true,
         isFeatured: true,
@@ -409,6 +459,12 @@ publicCatalogRouter.get("/apps", async (req, res) => {
             url: true,
             alt: true,
             type: true,
+            mimeType: true,
+            width: true,
+            height: true,
+            durationSec: true,
+            thumbnailUrl: true,
+            isAnimated: true,
           },
         },
         tagLinks: {
@@ -441,6 +497,7 @@ publicCatalogRouter.get("/apps", async (req, res) => {
     const normalizedItems = pageItems.map((item) => ({
       ...item,
       tags: item.tagLinks.map((entry) => entry.tag),
+      aggregateStat: item.aggregateStat,
     }));
 
     return sendSuccess(res, requestId, {
@@ -490,6 +547,15 @@ publicCatalogRouter.get("/apps/:slug", async (req, res) => {
         slug: true,
         shortDescription: true,
         fullDescription: true,
+        releaseNotes: true,
+        iconUrl: true,
+        featureGraphicUrl: true,
+        promoVideoUrl: true,
+        supportEmail: true,
+        supportWebsiteUrl: true,
+        privacyPolicyUrl: true,
+        containsAds: true,
+        developerName: true,
         version: true,
         isPaid: true,
         isFeatured: true,
@@ -509,6 +575,12 @@ publicCatalogRouter.get("/apps/:slug", async (req, res) => {
             url: true,
             alt: true,
             type: true,
+            mimeType: true,
+            width: true,
+            height: true,
+            durationSec: true,
+            thumbnailUrl: true,
+            isAnimated: true,
           },
         },
         links: {
@@ -552,6 +624,7 @@ publicCatalogRouter.get("/apps/:slug", async (req, res) => {
     return sendSuccess(res, requestId, {
       ...app,
       tags: app.tagLinks.map((entry) => entry.tag),
+      aggregateStat: app.aggregateStat,
     });
   } catch (error) {
     return sendFailure(

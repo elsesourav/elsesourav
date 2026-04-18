@@ -9,11 +9,11 @@ export default function LoginPage() {
 
       <LoginForm />
 
-      <p className="text-center text-sm text-[#3f4757]">
+      <p className="ui-text-muted text-center text-sm">
         New here?{" "}
         <Link
           href="/register"
-          className="text-[#1f5ed4] underline decoration-black/20 underline-offset-2"
+          className="text-(--brand-secondary) underline decoration-black/20 underline-offset-2"
         >
           Create an account
         </Link>

@@ -96,8 +96,16 @@ function resolveCustomThemeColor(
 }
 
 function resolveThemeMode(value: string | null | undefined): ThemeMode {
-  if (value === "light" || value === "dark") {
-    return value;
+  if (value === "system") {
+    return "system";
+  }
+
+  if (value === "light") {
+    return "light";
+  }
+
+  if (value === "dark") {
+    return "dark";
   }
 
   return "system";

@@ -1,4 +1,5 @@
 export type PriceValue = number | string;
+export type MetadataRecord = Record<string, unknown>;
 
 export type PublicCategory = {
   id: string;
@@ -10,12 +11,37 @@ export type PublicApp = {
   slug: string;
   title: string;
   shortDescription: string;
+  iconUrl?: string | null;
+  developerName?: string | null;
   isPaid: boolean;
   price: PriceValue;
   category: {
     id: string;
     name: string;
   };
+  tags?: Array<{
+    id: string;
+    name: string;
+    slug: string;
+  }>;
+  aggregateStat?: {
+    viewCount: number;
+    downloadCount: number;
+    averageRating: PriceValue;
+  } | null;
+  media?: Array<{
+    id: string;
+    url: string;
+    alt: string | null;
+    type: "IMAGE" | "VIDEO";
+    mimeType?: string | null;
+    width?: number | null;
+    height?: number | null;
+    durationSec?: number | null;
+    thumbnailUrl?: string | null;
+    fileSizeBytes?: string | number | null;
+    isAnimated?: boolean;
+  }>;
 };
 
 export type AppDetail = {
@@ -24,6 +50,16 @@ export type AppDetail = {
   slug: string;
   shortDescription: string;
   fullDescription: string;
+  releaseNotes?: string | null;
+  metadata?: MetadataRecord | null;
+  iconUrl?: string | null;
+  featureGraphicUrl?: string | null;
+  promoVideoUrl?: string | null;
+  supportEmail?: string | null;
+  supportWebsiteUrl?: string | null;
+  privacyPolicyUrl?: string | null;
+  containsAds?: boolean;
+  developerName?: string | null;
   version: string;
   isPaid: boolean;
   price: PriceValue;
@@ -31,6 +67,34 @@ export type AppDetail = {
     id: string;
     name: string;
   };
+  tags: Array<{
+    id: string;
+    name: string;
+    slug: string;
+  }>;
+  aggregateStat?: {
+    viewCount: number;
+    downloadCount: number;
+    libraryCount: number;
+    feedbackCount: number;
+    averageRating: PriceValue;
+    lastViewedAt: string | null;
+    lastDownloadedAt: string | null;
+    updatedAt: string;
+  } | null;
+  media: Array<{
+    id: string;
+    url: string;
+    alt: string | null;
+    type: "IMAGE" | "VIDEO";
+    mimeType?: string | null;
+    width?: number | null;
+    height?: number | null;
+    durationSec?: number | null;
+    thumbnailUrl?: string | null;
+    fileSizeBytes?: string | number | null;
+    isAnimated?: boolean;
+  }>;
   links: Array<{
     id: string;
     platform: string;
@@ -88,6 +152,16 @@ export type AdminAppListItem = {
   slug: string;
   shortDescription: string;
   fullDescription: string;
+  releaseNotes?: string | null;
+  metadata?: MetadataRecord | null;
+  iconUrl?: string | null;
+  featureGraphicUrl?: string | null;
+  promoVideoUrl?: string | null;
+  supportEmail?: string | null;
+  supportWebsiteUrl?: string | null;
+  privacyPolicyUrl?: string | null;
+  containsAds?: boolean;
+  developerName?: string | null;
   version: string;
   status: string;
   isPaid: boolean;
@@ -185,6 +259,106 @@ export type AdminBanner = {
   updatedAt: string;
 };
 
+export type AdminSlider = {
+  id: string;
+  title: string;
+  description: string | null;
+  type: "HERO" | "FEATURED" | "PROMO";
+  imageUrl: string | null;
+  linkUrl: string | null;
+  appId: string | null;
+  orderIndex: number;
+  startsAt: string | null;
+  endsAt: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  app?: {
+    id: string;
+    title: string;
+    slug: string;
+    status: string;
+  } | null;
+};
+
+export type CustomFieldEntity =
+  | "APP"
+  | "CATEGORY"
+  | "CONTENT_PAGE"
+  | "BLOG_POST"
+  | "HELP_ARTICLE"
+  | "PROFILE_PAGE"
+  | "TESTIMONIAL"
+  | "THEME_CONFIG"
+  | "STORE_BANNER"
+  | "STORE_SECTION_ITEM"
+  | "HOME_SLIDER"
+  | "APP_TAG"
+  | "BLOG_TAG"
+  | "HELP_CATEGORY"
+  | "APP_MEDIA"
+  | "APP_LINK"
+  | "USER";
+
+export type CustomFieldType =
+  | "TEXT"
+  | "LONG_TEXT"
+  | "NUMBER"
+  | "BOOLEAN"
+  | "DATE"
+  | "URL"
+  | "JSON"
+  | "SELECT"
+  | "MULTISELECT";
+
+export type AdminCustomFieldDefinition = {
+  id: string;
+  entity: CustomFieldEntity;
+  key: string;
+  label: string;
+  description: string | null;
+  fieldType: CustomFieldType;
+  isRequired: boolean;
+  isActive: boolean;
+  isFilterable: boolean;
+  options: unknown;
+  defaultValue: unknown;
+  createdAt: string;
+  updatedAt: string;
+  _count?: {
+    values: number;
+  };
+};
+
+export type AdminCustomFieldValue = {
+  id: string;
+  definitionId: string;
+  entityId: string;
+  value: unknown;
+  createdAt: string;
+  updatedAt: string;
+  definition: {
+    id: string;
+    entity: CustomFieldEntity;
+    key: string;
+    label: string;
+    fieldType: CustomFieldType;
+  };
+};
+
+export type PublicContentPageListItem = {
+  id: string;
+  slug: string;
+  title: string;
+  summary: string | null;
+  body: string;
+  status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  publishAt: string | null;
+  publishedAt: string | null;
+  updatedAt: string;
+  metadata?: MetadataRecord | null;
+};
+
 export type AdminContentPage = {
   id: string;
   slug: string;
@@ -193,6 +367,7 @@ export type AdminContentPage = {
   body: string;
   seoTitle: string | null;
   seoDescription: string | null;
+  metadata?: MetadataRecord | null;
   status: string;
   publishAt: string | null;
   publishedAt: string | null;
@@ -222,6 +397,7 @@ export type AdminBlogPost = {
   title: string;
   excerpt: string | null;
   contentMarkdown: string;
+  metadata?: MetadataRecord | null;
   status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   publishAt: string | null;
   publishedAt: string | null;
@@ -336,5 +512,12 @@ export function formatDateTime(value: string | null | undefined): string {
     return value;
   }
 
-  return date.toLocaleString();
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  const hour = String(date.getUTCHours()).padStart(2, "0");
+  const minute = String(date.getUTCMinutes()).padStart(2, "0");
+  const second = String(date.getUTCSeconds()).padStart(2, "0");
+
+  return `${year}-${month}-${day} ${hour}:${minute}:${second} UTC`;
 }

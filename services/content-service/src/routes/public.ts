@@ -21,6 +21,16 @@ const contentQuerySchema = z.object({
     .transform((value) => value === "true"),
 });
 
+const contentPagesQuerySchema = z.object({
+  search: z.string().trim().max(120).optional(),
+  cursor: z.string().cuid().optional(),
+  limit: z.coerce.number().int().min(1).max(30).default(12),
+  preview: z
+    .enum(["true", "false"])
+    .optional()
+    .transform((value) => value === "true"),
+});
+
 const profileQuerySchema = z.object({
   slug: z.string().trim().min(2).max(100).optional(),
 });
@@ -34,6 +44,10 @@ const blogListQuerySchema = z.object({
     .enum(["true", "false"])
     .optional()
     .transform((value) => value === "true"),
+});
+
+const relatedBlogPostsQuerySchema = z.object({
+  limit: z.coerce.number().int().min(1).max(12).default(4),
 });
 
 const helpArticlesQuerySchema = z.object({
@@ -53,6 +67,17 @@ const testimonialsQuerySchema = z.object({
     .optional()
     .transform((value) => value === "true"),
   limit: z.coerce.number().int().min(1).max(40).default(12),
+});
+
+const helpSearchQuerySchema = z.object({
+  q: z.string().trim().min(2).max(120),
+  limit: z.coerce.number().int().min(1).max(30).default(12),
+});
+
+const supportOverviewQuerySchema = z.object({
+  categoryLimit: z.coerce.number().int().min(1).max(12).default(6),
+  featuredHelpLimit: z.coerce.number().int().min(1).max(12).default(5),
+  latestBlogLimit: z.coerce.number().int().min(1).max(12).default(4),
 });
 
 export const publicContentRouter = Router();
@@ -329,6 +354,141 @@ publicContentRouter.get("/blog/posts/:slug", async (req, res) => {
       requestId,
       "INTERNAL_ERROR",
       "Failed to fetch blog post.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+publicContentRouter.get("/blog/posts/:slug/related", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedSlug = contentSlugSchema.safeParse(req.params);
+    if (!parsedSlug.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid slug.",
+        400,
+      );
+    }
+
+    const parsedQuery = relatedBlogPostsQuerySchema.safeParse(req.query);
+    if (!parsedQuery.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid related posts query.",
+        400,
+        parsedQuery.error.flatten(),
+      );
+    }
+
+    const post = await prisma.blogPost.findUnique({
+      where: { slug: parsedSlug.data.slug },
+      select: {
+        id: true,
+        tags: {
+          select: {
+            tagId: true,
+          },
+        },
+      },
+    });
+
+    if (!post) {
+      return sendFailure(
+        res,
+        requestId,
+        "NOT_FOUND",
+        "Blog post not found.",
+        404,
+      );
+    }
+
+    const now = new Date();
+    const tagIds = post.tags.map((item) => item.tagId);
+
+    const related = await prisma.blogPost.findMany({
+      where: {
+        id: { not: post.id },
+        status: BlogPostStatus.PUBLISHED,
+        AND: [{ OR: [{ publishAt: null }, { publishAt: { lte: now } }] }],
+        ...(tagIds.length > 0
+          ? {
+              tags: {
+                some: {
+                  tagId: {
+                    in: tagIds,
+                  },
+                },
+              },
+            }
+          : {}),
+      },
+      orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
+      take: parsedQuery.data.limit,
+      include: {
+        tags: {
+          include: {
+            tag: true,
+          },
+        },
+        _count: {
+          select: {
+            comments: true,
+          },
+        },
+      },
+    });
+
+    const existingIds = new Set(related.map((item) => item.id));
+
+    if (related.length < parsedQuery.data.limit) {
+      const remainder = parsedQuery.data.limit - related.length;
+
+      const fallback = await prisma.blogPost.findMany({
+        where: {
+          id: {
+            notIn: [post.id, ...existingIds],
+          },
+          status: BlogPostStatus.PUBLISHED,
+          AND: [{ OR: [{ publishAt: null }, { publishAt: { lte: now } }] }],
+        },
+        orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
+        take: remainder,
+        include: {
+          tags: {
+            include: {
+              tag: true,
+            },
+          },
+          _count: {
+            select: {
+              comments: true,
+            },
+          },
+        },
+      });
+
+      related.push(...fallback);
+    }
+
+    return sendSuccess(res, requestId, {
+      items: related.map((item) => ({
+        ...item,
+        tags: item.tags.map((tagLink) => tagLink.tag),
+      })),
+    });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to fetch related blog posts.",
       500,
       error instanceof Error ? error.message : "Unknown error",
     );
@@ -627,6 +787,195 @@ publicContentRouter.get("/help/articles/:slug", async (req, res) => {
   }
 });
 
+publicContentRouter.get("/help/search", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsed = helpSearchQuerySchema.safeParse(req.query);
+    if (!parsed.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid help search query.",
+        400,
+        parsed.error.flatten(),
+      );
+    }
+
+    const now = new Date();
+
+    const items = await prisma.helpArticle.findMany({
+      where: {
+        status: HelpArticleStatus.PUBLISHED,
+        AND: [{ OR: [{ publishAt: null }, { publishAt: { lte: now } }] }],
+        OR: [
+          {
+            title: {
+              contains: parsed.data.q,
+              mode: "insensitive",
+            },
+          },
+          {
+            summary: {
+              contains: parsed.data.q,
+              mode: "insensitive",
+            },
+          },
+          {
+            contentMarkdown: {
+              contains: parsed.data.q,
+              mode: "insensitive",
+            },
+          },
+        ],
+      },
+      orderBy: [
+        { isFeatured: "desc" },
+        { viewCount: "desc" },
+        { publishedAt: "desc" },
+      ],
+      take: parsed.data.limit,
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+      },
+    });
+
+    const categoryCounts = new Map<
+      string,
+      { id: string; slug: string; name: string; count: number }
+    >();
+
+    for (const item of items) {
+      if (!item.category) {
+        continue;
+      }
+
+      const previous = categoryCounts.get(item.category.id);
+      categoryCounts.set(item.category.id, {
+        id: item.category.id,
+        slug: item.category.slug,
+        name: item.category.name,
+        count: (previous?.count ?? 0) + 1,
+      });
+    }
+
+    return sendSuccess(res, requestId, {
+      query: parsed.data.q,
+      items,
+      categories: Array.from(categoryCounts.values()).sort(
+        (a, b) => b.count - a.count,
+      ),
+    });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to search help articles.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+publicContentRouter.get("/support/overview", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsed = supportOverviewQuerySchema.safeParse(req.query);
+    if (!parsed.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid support overview query.",
+        400,
+        parsed.error.flatten(),
+      );
+    }
+
+    const now = new Date();
+
+    const [categories, featuredHelp, latestBlog] = await Promise.all([
+      prisma.helpCategory.findMany({
+        where: { isActive: true },
+        orderBy: [{ orderIndex: "asc" }, { name: "asc" }],
+        take: parsed.data.categoryLimit,
+        include: {
+          _count: {
+            select: {
+              articles: true,
+            },
+          },
+        },
+      }),
+      prisma.helpArticle.findMany({
+        where: {
+          status: HelpArticleStatus.PUBLISHED,
+          isFeatured: true,
+          AND: [{ OR: [{ publishAt: null }, { publishAt: { lte: now } }] }],
+        },
+        orderBy: [{ viewCount: "desc" }, { publishedAt: "desc" }],
+        take: parsed.data.featuredHelpLimit,
+        include: {
+          category: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+            },
+          },
+        },
+      }),
+      prisma.blogPost.findMany({
+        where: {
+          status: BlogPostStatus.PUBLISHED,
+          AND: [{ OR: [{ publishAt: null }, { publishAt: { lte: now } }] }],
+        },
+        orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
+        take: parsed.data.latestBlogLimit,
+        include: {
+          tags: {
+            include: {
+              tag: true,
+            },
+          },
+          _count: {
+            select: {
+              comments: true,
+            },
+          },
+        },
+      }),
+    ]);
+
+    return sendSuccess(res, requestId, {
+      categories,
+      featuredHelp,
+      latestBlog: latestBlog.map((item) => ({
+        ...item,
+        tags: item.tags.map((tagLink) => tagLink.tag),
+      })),
+    });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to fetch support overview.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
 publicContentRouter.get("/testimonials", async (req, res) => {
   const requestId = getRequestId(res);
 
@@ -659,6 +1008,100 @@ publicContentRouter.get("/testimonials", async (req, res) => {
       requestId,
       "INTERNAL_ERROR",
       "Failed to fetch testimonials.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+publicContentRouter.get("/pages", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsed = contentPagesQuerySchema.safeParse(req.query);
+    if (!parsed.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid content pages query.",
+        400,
+        parsed.error.flatten(),
+      );
+    }
+
+    const now = new Date();
+    const isPreview =
+      parsed.data.preview && req.header("x-user-role") === "ADMIN";
+
+    const where: Prisma.ContentPageWhereInput = {};
+
+    if (!isPreview) {
+      where.status = ContentStatus.PUBLISHED;
+      where.AND = [{ OR: [{ publishAt: null }, { publishAt: { lte: now } }] }];
+    }
+
+    if (parsed.data.search) {
+      where.OR = [
+        {
+          title: {
+            contains: parsed.data.search,
+            mode: "insensitive",
+          },
+        },
+        {
+          summary: {
+            contains: parsed.data.search,
+            mode: "insensitive",
+          },
+        },
+      ];
+    }
+
+    const items = await prisma.contentPage.findMany({
+      where,
+      orderBy: [{ publishedAt: "desc" }, { updatedAt: "desc" }, { id: "desc" }],
+      take: parsed.data.limit + 1,
+      ...(parsed.data.cursor
+        ? {
+            cursor: { id: parsed.data.cursor },
+            skip: 1,
+          }
+        : {}),
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        summary: true,
+        body: true,
+        status: true,
+        publishAt: true,
+        publishedAt: true,
+        updatedAt: true,
+        metadata: true,
+      },
+    });
+
+    const hasMore = items.length > parsed.data.limit;
+    const pageItems = hasMore ? items.slice(0, parsed.data.limit) : items;
+    const nextCursor = hasMore
+      ? (pageItems[pageItems.length - 1]?.id ?? null)
+      : null;
+
+    return sendSuccess(res, requestId, {
+      items: pageItems,
+      pagination: {
+        limit: parsed.data.limit,
+        nextCursor,
+        hasMore,
+      },
+    });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to fetch content pages.",
       500,
       error instanceof Error ? error.message : "Unknown error",
     );

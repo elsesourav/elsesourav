@@ -1,49 +1,123 @@
-import { LinkCard, PageHeader, PageShell } from "@/components/ui/page";
+import {
+  DiscoveryRail,
+  HeroShowcase,
+  MixedHighlights,
+  SupportCtaPanel,
+  type HomeBanner,
+  type HomeSlider,
+  type SupportOverviewPayload,
+} from "@/components/home";
+import { PageHeader, PageShell } from "@/components/ui/page";
+import { cn } from "@/lib/cn";
+import { fetchServiceData } from "@/lib/service-client";
+import type { PublicApp } from "@/lib/view-models";
+import { Plus_Jakarta_Sans, Sora } from "next/font/google";
 
-const quickLinks = [
-  { href: "/apps", title: "Browse apps" },
-  { href: "/feedback", title: "Recent feedback" },
-  { href: "/library", title: "Your library" },
-  { href: "/history", title: "Download history" },
-  { href: "/settings", title: "Account settings" },
-  { href: "/about", title: "About" },
-  { href: "/admin", title: "Open admin" },
-  { href: "/login", title: "Login" },
-  { href: "/register", title: "Create account" },
-] as const;
+const headingFont = Sora({
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
+});
 
-const apiLinks = [
-  { href: "/api/health", title: "Health API" },
-  { href: "/api/apps", title: "Catalog API" },
-  { href: "/api/store/banners", title: "Banners API" },
-  { href: "/api/auth/signin", title: "Auth sign-in" },
-] as const;
+const bodyFont = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const [
+    sliders,
+    banners,
+    featuredApps,
+    latestApps,
+    popularApps,
+    supportOverview,
+  ] = await Promise.all([
+    fetchServiceData<HomeSlider[]>({
+      service: "catalog",
+      path: "/v1/catalog/sliders?type=HERO",
+    }).catch(() => []),
+    fetchServiceData<HomeBanner[]>({
+      service: "catalog",
+      path: "/v1/catalog/banners",
+    }).catch(() => []),
+    fetchServiceData<{ items: PublicApp[] }>({
+      service: "catalog",
+      path: "/v1/catalog/apps?featured=true&sort=latest&limit=8",
+    })
+      .then((payload) => payload.items)
+      .catch(() => []),
+    fetchServiceData<{ items: PublicApp[] }>({
+      service: "catalog",
+      path: "/v1/catalog/apps?sort=latest&limit=8",
+    })
+      .then((payload) => payload.items)
+      .catch(() => []),
+    fetchServiceData<{ items: PublicApp[] }>({
+      service: "catalog",
+      path: "/v1/catalog/apps?sort=popular&limit=8",
+    })
+      .then((payload) => payload.items)
+      .catch(() => []),
+    fetchServiceData<SupportOverviewPayload>({
+      service: "content",
+      path: "/v1/content/support/overview?categoryLimit=6&featuredHelpLimit=4&latestBlogLimit=4",
+    }).catch(() => null),
+  ]);
+
+  const heroSlider = sliders[0] ?? null;
+  const heroBanner =
+    banners.find((banner) => banner.placement === "HOME_HERO") ??
+    banners[0] ??
+    null;
+
   return (
-    <PageShell center className="gap-10 py-14">
-      <PageHeader
-        eyebrow="ElseSourav Platform"
-        title="Minimal microservice app store"
-        description="Web BFF plus dedicated auth, catalog, user, content, and theme services using shared contracts."
+    <PageShell width="wide" className={cn(bodyFont.className, "gap-10 py-10")}>
+      <HeroShowcase
+        heroSlider={heroSlider}
+        heroBanner={heroBanner}
+        featuredApps={featuredApps}
+        latestApps={latestApps}
+        displayClassName={headingFont.className}
       />
 
-      <section className="grid gap-3 sm:grid-cols-2">
-        {quickLinks.map((item) => (
-          <LinkCard key={item.href} href={item.href} title={item.title} />
-        ))}
-      </section>
+      <PageHeader
+        eyebrow="Homepage Experience"
+        title="A modular light-first storefront"
+        description="The homepage now blends app discovery, support docs, and blog highlights in reusable sections with accessible motion and contrast-safe controls."
+      />
 
-      <section className="grid gap-3 sm:grid-cols-2">
-        {apiLinks.map((item) => (
-          <LinkCard
-            key={item.href}
-            href={item.href}
-            title={item.title}
-            description={item.href}
-          />
-        ))}
-      </section>
+      <MixedHighlights
+        supportOverview={supportOverview}
+        featuredApps={featuredApps}
+        displayClassName={headingFont.className}
+      />
+
+      <DiscoveryRail
+        title="Featured releases"
+        subtitle="Curated premium and free picks from the marketplace."
+        apps={featuredApps}
+        href="/apps?featured=true"
+      />
+
+      <DiscoveryRail
+        title="Latest updates"
+        subtitle="Fresh drops and recent improvements from active apps."
+        apps={latestApps}
+        href="/apps?sort=latest"
+        compact
+      />
+
+      <DiscoveryRail
+        title="Popular choices"
+        subtitle="What users are opening and installing the most right now."
+        apps={popularApps}
+        href="/apps?sort=popular"
+        compact
+      />
+
+      <SupportCtaPanel displayClassName={headingFont.className} />
     </PageShell>
   );
 }

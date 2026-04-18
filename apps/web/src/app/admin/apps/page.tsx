@@ -45,27 +45,27 @@ export default async function AdminAppsPage() {
       />
 
       <section className="grid gap-3 sm:grid-cols-3">
-        <article className="rounded-2xl border border-black/10 bg-white p-4">
-          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+        <article className="ui-card rounded-2xl border p-4">
+          <p className="ui-text-muted text-xs uppercase tracking-wide">
             Total apps
           </p>
-          <p className="mt-1 text-3xl font-semibold text-[#111a2d]">
+          <p className="ui-text-heading mt-1 text-3xl font-semibold">
             {apps.length.toLocaleString()}
           </p>
         </article>
-        <article className="rounded-2xl border border-black/10 bg-white p-4">
-          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+        <article className="ui-card rounded-2xl border p-4">
+          <p className="ui-text-muted text-xs uppercase tracking-wide">
             Published
           </p>
-          <p className="mt-1 text-3xl font-semibold text-[#111a2d]">
+          <p className="ui-text-heading mt-1 text-3xl font-semibold">
             {publishedApps.toLocaleString()}
           </p>
         </article>
-        <article className="rounded-2xl border border-black/10 bg-white p-4">
-          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+        <article className="ui-card rounded-2xl border p-4">
+          <p className="ui-text-muted text-xs uppercase tracking-wide">
             Paid apps
           </p>
-          <p className="mt-1 text-3xl font-semibold text-[#111a2d]">
+          <p className="ui-text-heading mt-1 text-3xl font-semibold">
             {paidApps.toLocaleString()}
           </p>
         </article>

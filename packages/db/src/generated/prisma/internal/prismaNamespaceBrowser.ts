@@ -78,6 +78,8 @@ export const ModelName = {
   UserLibrary: 'UserLibrary',
   UserSettings: 'UserSettings',
   ActivityLog: 'ActivityLog',
+  CustomFieldDefinition: 'CustomFieldDefinition',
+  CustomFieldValue: 'CustomFieldValue',
   AppChangelog: 'AppChangelog',
   BlogPostVersion: 'BlogPostVersion',
   HelpArticleVersion: 'HelpArticleVersion',
@@ -143,12 +145,22 @@ export const AppScalarFieldEnum = {
   slug: 'slug',
   shortDescription: 'shortDescription',
   fullDescription: 'fullDescription',
+  releaseNotes: 'releaseNotes',
   version: 'version',
   status: 'status',
   publishedAt: 'publishedAt',
   isPaid: 'isPaid',
   isFeatured: 'isFeatured',
   price: 'price',
+  iconUrl: 'iconUrl',
+  featureGraphicUrl: 'featureGraphicUrl',
+  promoVideoUrl: 'promoVideoUrl',
+  supportEmail: 'supportEmail',
+  supportWebsiteUrl: 'supportWebsiteUrl',
+  privacyPolicyUrl: 'privacyPolicyUrl',
+  containsAds: 'containsAds',
+  developerName: 'developerName',
+  metadata: 'metadata',
   categoryId: 'categoryId',
   createdById: 'createdById',
   updatedById: 'updatedById',
@@ -289,6 +301,7 @@ export const ContentPageScalarFieldEnum = {
   body: 'body',
   seoTitle: 'seoTitle',
   seoDescription: 'seoDescription',
+  metadata: 'metadata',
   status: 'status',
   publishAt: 'publishAt',
   publishedAt: 'publishedAt',
@@ -310,6 +323,7 @@ export const ContentPageVersionScalarFieldEnum = {
   body: 'body',
   seoTitle: 'seoTitle',
   seoDescription: 'seoDescription',
+  metadata: 'metadata',
   status: 'status',
   createdBy: 'createdBy',
   createdAt: 'createdAt'
@@ -363,6 +377,7 @@ export const BlogPostScalarFieldEnum = {
   title: 'title',
   excerpt: 'excerpt',
   contentMarkdown: 'contentMarkdown',
+  metadata: 'metadata',
   status: 'status',
   publishAt: 'publishAt',
   publishedAt: 'publishedAt',
@@ -490,8 +505,16 @@ export const AppMediaScalarFieldEnum = {
   type: 'type',
   url: 'url',
   alt: 'alt',
+  mimeType: 'mimeType',
+  width: 'width',
+  height: 'height',
+  durationSec: 'durationSec',
+  thumbnailUrl: 'thumbnailUrl',
+  fileSizeBytes: 'fileSizeBytes',
+  isAnimated: 'isAnimated',
   sortOrder: 'sortOrder',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type AppMediaScalarFieldEnum = (typeof AppMediaScalarFieldEnum)[keyof typeof AppMediaScalarFieldEnum]
@@ -548,6 +571,37 @@ export const ActivityLogScalarFieldEnum = {
 export type ActivityLogScalarFieldEnum = (typeof ActivityLogScalarFieldEnum)[keyof typeof ActivityLogScalarFieldEnum]
 
 
+export const CustomFieldDefinitionScalarFieldEnum = {
+  id: 'id',
+  entity: 'entity',
+  key: 'key',
+  label: 'label',
+  description: 'description',
+  fieldType: 'fieldType',
+  isRequired: 'isRequired',
+  isActive: 'isActive',
+  isFilterable: 'isFilterable',
+  options: 'options',
+  defaultValue: 'defaultValue',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CustomFieldDefinitionScalarFieldEnum = (typeof CustomFieldDefinitionScalarFieldEnum)[keyof typeof CustomFieldDefinitionScalarFieldEnum]
+
+
+export const CustomFieldValueScalarFieldEnum = {
+  id: 'id',
+  definitionId: 'definitionId',
+  entityId: 'entityId',
+  value: 'value',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CustomFieldValueScalarFieldEnum = (typeof CustomFieldValueScalarFieldEnum)[keyof typeof CustomFieldValueScalarFieldEnum]
+
+
 export const AppChangelogScalarFieldEnum = {
   id: 'id',
   appId: 'appId',
@@ -567,6 +621,7 @@ export const BlogPostVersionScalarFieldEnum = {
   title: 'title',
   excerpt: 'excerpt',
   contentMarkdown: 'contentMarkdown',
+  metadata: 'metadata',
   createdBy: 'createdBy',
   createdAt: 'createdAt'
 } as const
@@ -706,6 +761,13 @@ export const NullableJsonNullValueInput = {
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {

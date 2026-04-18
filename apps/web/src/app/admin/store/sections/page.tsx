@@ -26,7 +26,7 @@ export default async function AdminStoreSectionsPage() {
   const [result, apps] = await Promise.all([
     fetchServiceData<PaginatedResult<AdminSectionItem>>({
       service: "catalog",
-      path: "/v1/admin/catalog/sections/items?page=1&pageSize=100",
+      path: "/v1/admin/catalog/sections/items?page=1&pageSize=48",
       user,
     }).catch(() => emptySectionResult),
     fetchServiceData<AdminAppListItem[]>({
@@ -52,27 +52,27 @@ export default async function AdminStoreSectionsPage() {
       />
 
       <section className="grid gap-3 sm:grid-cols-3">
-        <article className="rounded-2xl border border-black/10 bg-white p-4">
-          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+        <article className="ui-card rounded-2xl border p-4">
+          <p className="ui-text-muted text-xs uppercase tracking-wide">
             Total items
           </p>
-          <p className="mt-1 text-3xl font-semibold text-[#111a2d]">
+          <p className="ui-text-heading mt-1 text-3xl font-semibold">
             {result.items.length.toLocaleString()}
           </p>
         </article>
-        <article className="rounded-2xl border border-black/10 bg-white p-4">
-          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+        <article className="ui-card rounded-2xl border p-4">
+          <p className="ui-text-muted text-xs uppercase tracking-wide">
             Featured
           </p>
-          <p className="mt-1 text-3xl font-semibold text-[#111a2d]">
+          <p className="ui-text-heading mt-1 text-3xl font-semibold">
             {featuredCount.toLocaleString()}
           </p>
         </article>
-        <article className="rounded-2xl border border-black/10 bg-white p-4">
-          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+        <article className="ui-card rounded-2xl border p-4">
+          <p className="ui-text-muted text-xs uppercase tracking-wide">
             Upcoming
           </p>
-          <p className="mt-1 text-3xl font-semibold text-[#111a2d]">
+          <p className="ui-text-heading mt-1 text-3xl font-semibold">
             {upcomingCount.toLocaleString()}
           </p>
         </article>

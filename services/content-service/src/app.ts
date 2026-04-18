@@ -1,4 +1,5 @@
 import express from "express";
+import { registerSwaggerDocs } from "../../shared/swagger";
 import { attachRequestId } from "./lib/http";
 import { requireAdminRole, requireInternalToken } from "./lib/internal-auth";
 import { adminContentRouter } from "./routes/admin";
@@ -10,6 +11,26 @@ export function createApp() {
 
   app.use(express.json({ limit: "2mb" }));
   app.use(attachRequestId);
+
+  registerSwaggerDocs(app, {
+    title: "ElseSourav Content Service API",
+    serviceName: "content-service",
+    description:
+      "CMS pages, blog, help center, testimonials, and content administration.",
+    mounts: [
+      { basePath: "", router: healthRouter, tag: "health" },
+      {
+        basePath: "/v1/content",
+        router: publicContentRouter,
+        tag: "content-public",
+      },
+      {
+        basePath: "/v1/admin/content",
+        router: adminContentRouter,
+        tag: "content-admin",
+      },
+    ],
+  });
 
   app.use(healthRouter);
 

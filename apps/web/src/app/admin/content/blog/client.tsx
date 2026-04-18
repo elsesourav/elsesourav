@@ -7,7 +7,9 @@ import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Modal } from "@/components/ui/modal";
+import { RichMarkdownEditor } from "@/components/ui/rich-markdown-editor";
 import { Textarea } from "@/components/ui/textarea";
+import { parseMetadataInput, stringifyMetadata } from "@/lib/metadata";
 import {
   formatDateTime,
   type AdminBlogPost,
@@ -16,15 +18,7 @@ import {
 import { useAppDispatch } from "@/store/hooks";
 import { enqueueNotification } from "@/store/slices/notificationsSlice";
 import type { ApiResponse } from "@elsesourav/types";
-import {
-  useMemo,
-  useRef,
-  useState,
-  type FormEvent,
-  type ReactNode,
-} from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { useMemo, useState, type FormEvent } from "react";
 
 type BlogStatus = AdminBlogPost["status"];
 
@@ -33,6 +27,7 @@ type BlogPostFormState = {
   title: string;
   excerpt: string;
   contentMarkdown: string;
+  metadata: string;
   status: BlogStatus;
   publishAt: string;
   tagIds: string[];
@@ -135,6 +130,7 @@ function createEmptyPostForm(): BlogPostFormState {
     title: "",
     excerpt: "",
     contentMarkdown: "",
+    metadata: "",
     status: "DRAFT",
     publishAt: "",
     tagIds: [],
@@ -147,6 +143,7 @@ function createPostFormFromItem(item: AdminBlogPost): BlogPostFormState {
     title: item.title,
     excerpt: item.excerpt ?? "",
     contentMarkdown: item.contentMarkdown,
+    metadata: stringifyMetadata(item.metadata),
     status: item.status,
     publishAt: toDateTimeLocal(item.publishAt),
     tagIds: item.tags.map((tag) => tag.id),
@@ -168,6 +165,11 @@ function validatePostForm(form: BlogPostFormState): string | null {
 
   if (form.contentMarkdown.trim().length < 20) {
     return "Content must contain at least 20 characters.";
+  }
+
+  const metadataResult = parseMetadataInput(form.metadata);
+  if (metadataResult.error) {
+    return metadataResult.error;
   }
 
   if (!blogStatusOptions.includes(form.status)) {
@@ -202,341 +204,6 @@ function mergeBlogPostPatch(
     tags: patch.tags ?? previous.tags,
     _count: patch._count ?? previous._count,
   };
-}
-
-type MarkdownTransformResult = {
-  value: string;
-  selectionStart: number;
-  selectionEnd: number;
-};
-
-function wrapSelection(
-  value: string,
-  selectionStart: number,
-  selectionEnd: number,
-  prefix: string,
-  suffix: string,
-  placeholder: string,
-): MarkdownTransformResult {
-  const before = value.slice(0, selectionStart);
-  const selected = value.slice(selectionStart, selectionEnd);
-  const content = selected.length > 0 ? selected : placeholder;
-  const after = value.slice(selectionEnd);
-
-  const nextValue = `${before}${prefix}${content}${suffix}${after}`;
-  const nextSelectionStart = before.length + prefix.length;
-  const nextSelectionEnd = nextSelectionStart + content.length;
-
-  return {
-    value: nextValue,
-    selectionStart: nextSelectionStart,
-    selectionEnd: nextSelectionEnd,
-  };
-}
-
-function prefixSelectedLines(
-  value: string,
-  selectionStart: number,
-  selectionEnd: number,
-  linePrefix: string,
-  placeholder: string,
-): MarkdownTransformResult {
-  const before = value.slice(0, selectionStart);
-  const selected = value.slice(selectionStart, selectionEnd);
-  const content = selected.length > 0 ? selected : placeholder;
-
-  const prefixed = content
-    .split("\n")
-    .map((line) => `${linePrefix}${line}`)
-    .join("\n");
-
-  const after = value.slice(selectionEnd);
-  const nextValue = `${before}${prefixed}${after}`;
-
-  return {
-    value: nextValue,
-    selectionStart: before.length,
-    selectionEnd: before.length + prefixed.length,
-  };
-}
-
-function numberSelectedLines(
-  value: string,
-  selectionStart: number,
-  selectionEnd: number,
-  placeholder: string,
-): MarkdownTransformResult {
-  const before = value.slice(0, selectionStart);
-  const selected = value.slice(selectionStart, selectionEnd);
-  const content = selected.length > 0 ? selected : placeholder;
-
-  const numbered = content
-    .split("\n")
-    .map((line, index) => `${index + 1}. ${line}`)
-    .join("\n");
-
-  const after = value.slice(selectionEnd);
-  const nextValue = `${before}${numbered}${after}`;
-
-  return {
-    value: nextValue,
-    selectionStart: before.length,
-    selectionEnd: before.length + numbered.length,
-  };
-}
-
-function MarkdownEditor({
-  value,
-  onChange,
-  id,
-}: {
-  value: string;
-  onChange: (nextValue: string) => void;
-  id: string;
-}) {
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-
-  function applyTransform(
-    transform: (
-      source: string,
-      selectionStart: number,
-      selectionEnd: number,
-    ) => MarkdownTransformResult,
-  ) {
-    const textarea = textareaRef.current;
-
-    if (!textarea) {
-      return;
-    }
-
-    const result = transform(
-      textarea.value,
-      textarea.selectionStart,
-      textarea.selectionEnd,
-    );
-
-    onChange(result.value);
-
-    window.requestAnimationFrame(() => {
-      textarea.focus();
-      textarea.setSelectionRange(result.selectionStart, result.selectionEnd);
-    });
-  }
-
-  const editorButtonClassName =
-    "rounded-lg border border-black/15 bg-white px-2.5 py-1.5 text-xs font-medium text-[#132034] transition hover:bg-[#f5f8ff]";
-
-  return (
-    <div className="space-y-3">
-      <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          className={editorButtonClassName}
-          onClick={() =>
-            applyTransform((source, start, end) =>
-              wrapSelection(source, start, end, "## ", "", "Section title"),
-            )
-          }
-        >
-          Heading
-        </button>
-        <button
-          type="button"
-          className={editorButtonClassName}
-          onClick={() =>
-            applyTransform((source, start, end) =>
-              wrapSelection(source, start, end, "**", "**", "bold"),
-            )
-          }
-        >
-          Bold
-        </button>
-        <button
-          type="button"
-          className={editorButtonClassName}
-          onClick={() =>
-            applyTransform((source, start, end) =>
-              wrapSelection(source, start, end, "_", "_", "emphasis"),
-            )
-          }
-        >
-          Italic
-        </button>
-        <button
-          type="button"
-          className={editorButtonClassName}
-          onClick={() =>
-            applyTransform((source, start, end) =>
-              wrapSelection(source, start, end, "`", "`", "inline code"),
-            )
-          }
-        >
-          Code
-        </button>
-        <button
-          type="button"
-          className={editorButtonClassName}
-          onClick={() =>
-            applyTransform((source, start, end) =>
-              wrapSelection(
-                source,
-                start,
-                end,
-                "[",
-                "](https://example.com)",
-                "link text",
-              ),
-            )
-          }
-        >
-          Link
-        </button>
-        <button
-          type="button"
-          className={editorButtonClassName}
-          onClick={() =>
-            applyTransform((source, start, end) =>
-              prefixSelectedLines(source, start, end, "> ", "Quoted text"),
-            )
-          }
-        >
-          Quote
-        </button>
-        <button
-          type="button"
-          className={editorButtonClassName}
-          onClick={() =>
-            applyTransform((source, start, end) =>
-              prefixSelectedLines(source, start, end, "- ", "List item"),
-            )
-          }
-        >
-          Bullet List
-        </button>
-        <button
-          type="button"
-          className={editorButtonClassName}
-          onClick={() =>
-            applyTransform((source, start, end) =>
-              numberSelectedLines(source, start, end, "List item"),
-            )
-          }
-        >
-          Numbered List
-        </button>
-        <button
-          type="button"
-          className={editorButtonClassName}
-          onClick={() =>
-            applyTransform((source, start, end) =>
-              wrapSelection(
-                source,
-                start,
-                end,
-                "```\n",
-                "\n```",
-                "const value = 42;",
-              ),
-            )
-          }
-        >
-          Code Block
-        </button>
-      </div>
-
-      <div className="grid gap-3 xl:grid-cols-2">
-        <div className="space-y-1.5">
-          <Label htmlFor={id}>Markdown</Label>
-          <Textarea
-            ref={textareaRef}
-            id={id}
-            value={value}
-            onChange={(event) => onChange(event.target.value)}
-            rows={18}
-            className="font-mono text-[13px]"
-            placeholder="Write your post content in markdown..."
-          />
-        </div>
-
-        <article className="rounded-xl border border-black/10 bg-[#fbfcff] p-4">
-          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[#5a647d]">
-            Live preview
-          </p>
-          <div className="mt-3 space-y-3 text-sm leading-7 text-[#172133]">
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              components={{
-                h1: ({ children }) => (
-                  <h1 className="text-3xl font-semibold text-[#101a2b]">
-                    {children}
-                  </h1>
-                ),
-                h2: ({ children }) => (
-                  <h2 className="text-2xl font-semibold text-[#101a2b]">
-                    {children}
-                  </h2>
-                ),
-                h3: ({ children }) => (
-                  <h3 className="text-xl font-semibold text-[#101a2b]">
-                    {children}
-                  </h3>
-                ),
-                p: ({ children }) => (
-                  <p className="text-sm text-[#1f2a3c]">{children}</p>
-                ),
-                a: ({ href, children }) => (
-                  <a
-                    href={href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-[#1f5ed4] underline"
-                  >
-                    {children}
-                  </a>
-                ),
-                ul: ({ children }) => (
-                  <ul className="list-disc space-y-1 pl-6">{children}</ul>
-                ),
-                ol: ({ children }) => (
-                  <ol className="list-decimal space-y-1 pl-6">{children}</ol>
-                ),
-                blockquote: ({ children }) => (
-                  <blockquote className="border-l-4 border-[#1f5ed4]/35 bg-[#f2f6ff] px-3 py-2 text-[#24324a]">
-                    {children}
-                  </blockquote>
-                ),
-                code: ({
-                  inline,
-                  children,
-                }: {
-                  inline?: boolean;
-                  children?: ReactNode;
-                }) => {
-                  if (!inline) {
-                    return (
-                      <code className="block overflow-auto rounded-lg bg-[#0f172a] px-3 py-2 font-mono text-xs text-slate-100">
-                        {children}
-                      </code>
-                    );
-                  }
-
-                  return (
-                    <code className="rounded bg-[#edf2ff] px-1.5 py-0.5 font-mono text-xs text-[#203152]">
-                      {children}
-                    </code>
-                  );
-                },
-              }}
-            >
-              {value.trim().length > 0
-                ? value
-                : "_Start writing on the left to preview your post._"}
-            </ReactMarkdown>
-          </div>
-        </article>
-      </div>
-    </div>
-  );
 }
 
 function BlogPostCard({
@@ -758,10 +425,24 @@ function BlogPostEditorFields({
       </div>
 
       <div className="xl:col-span-2">
-        <MarkdownEditor
+        <RichMarkdownEditor
           id="blog-markdown"
           value={form.contentMarkdown}
           onChange={(nextValue) => updateField("contentMarkdown", nextValue)}
+          rows={18}
+          placeholder="Write your post content in markdown..."
+        />
+      </div>
+
+      <div className="space-y-1.5 xl:col-span-2">
+        <Label htmlFor="blog-metadata">Metadata JSON</Label>
+        <Textarea
+          id="blog-metadata"
+          value={form.metadata}
+          onChange={(event) => updateField("metadata", event.target.value)}
+          rows={5}
+          className="font-mono text-xs"
+          placeholder='{"readingTimeMinutes":8,"series":"engineering"}'
         />
       </div>
     </div>
@@ -949,6 +630,13 @@ export function AdminContentBlogClient({
     setCreateError(null);
     setCreating(true);
 
+    const metadataResult = parseMetadataInput(createForm.metadata);
+    if (metadataResult.error) {
+      setCreateError(metadataResult.error);
+      setCreating(false);
+      return;
+    }
+
     try {
       const response = await fetch("/api/admin/content/blog/posts", {
         method: "POST",
@@ -960,6 +648,7 @@ export function AdminContentBlogClient({
           title: createForm.title.trim(),
           excerpt: createForm.excerpt.trim() || undefined,
           contentMarkdown: createForm.contentMarkdown.trim(),
+          metadata: metadataResult.data,
           status: createForm.status,
           publishAt: toIsoOrUndefined(createForm.publishAt),
           tagIds: createForm.tagIds,
@@ -1014,6 +703,13 @@ export function AdminContentBlogClient({
     setEditError(null);
     setSavingEdit(true);
 
+    const metadataResult = parseMetadataInput(editForm.metadata);
+    if (metadataResult.error) {
+      setEditError(metadataResult.error);
+      setSavingEdit(false);
+      return;
+    }
+
     try {
       const response = await fetch(
         `/api/admin/content/blog/posts/${editingPostId}`,
@@ -1027,6 +723,7 @@ export function AdminContentBlogClient({
             title: editForm.title.trim(),
             excerpt: editForm.excerpt.trim() || undefined,
             contentMarkdown: editForm.contentMarkdown.trim(),
+            metadata: metadataResult.data,
             status: editForm.status,
             publishAt: toIsoOrUndefined(editForm.publishAt),
             tagIds: editForm.tagIds,

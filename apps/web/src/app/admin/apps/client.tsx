@@ -7,7 +7,9 @@ import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Modal } from "@/components/ui/modal";
+import { RichMarkdownEditor } from "@/components/ui/rich-markdown-editor";
 import { Textarea } from "@/components/ui/textarea";
+import { parseMetadataInput, stringifyMetadata } from "@/lib/metadata";
 import {
   formatDateTime,
   formatPrice,
@@ -16,6 +18,7 @@ import {
 import { useAppDispatch } from "@/store/hooks";
 import { enqueueNotification } from "@/store/slices/notificationsSlice";
 import type { ApiResponse } from "@elsesourav/types";
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import {
   removeLinkById,
@@ -47,11 +50,21 @@ type AppFormState = {
   title: string;
   shortDescription: string;
   fullDescription: string;
+  releaseNotes: string;
+  metadata: string;
   version: string;
   status: AppStatus;
   isPaid: boolean;
   isFeatured: boolean;
+  containsAds: boolean;
   price: string;
+  iconUrl: string;
+  featureGraphicUrl: string;
+  promoVideoUrl: string;
+  supportEmail: string;
+  supportWebsiteUrl: string;
+  privacyPolicyUrl: string;
+  developerName: string;
   categoryId: string;
 };
 
@@ -61,16 +74,45 @@ type AppMutationResponse = {
   slug: string;
   shortDescription: string;
   fullDescription: string;
+  releaseNotes?: string | null;
+  metadata?: Record<string, unknown> | null;
   version: string;
   status: string;
   isPaid: boolean;
   isFeatured: boolean;
+  containsAds?: boolean;
   price: number | string;
+  iconUrl?: string | null;
+  featureGraphicUrl?: string | null;
+  promoVideoUrl?: string | null;
+  supportEmail?: string | null;
+  supportWebsiteUrl?: string | null;
+  privacyPolicyUrl?: string | null;
+  developerName?: string | null;
   updatedAt: string;
   category: {
     id: string;
     name: string;
   };
+};
+
+type MediaType = "IMAGE" | "VIDEO";
+
+type AdminAppMedia = {
+  id: string;
+  appId: string;
+  type: MediaType;
+  url: string;
+  alt: string | null;
+  mimeType?: string | null;
+  width?: number | null;
+  height?: number | null;
+  durationSec?: number | null;
+  thumbnailUrl?: string | null;
+  fileSizeBytes?: string | number | null;
+  isAnimated?: boolean;
+  sortOrder: number;
+  createdAt: string;
 };
 
 type AppTagMutationResponse = {
@@ -140,11 +182,21 @@ function createEmptyForm(categoryOptions: AppCategoryOption[]): AppFormState {
     title: "",
     shortDescription: "",
     fullDescription: "",
+    releaseNotes: "",
+    metadata: "",
     version: "1.0.0",
     status: "DRAFT",
     isPaid: false,
     isFeatured: false,
+    containsAds: false,
     price: "0",
+    iconUrl: "",
+    featureGraphicUrl: "",
+    promoVideoUrl: "",
+    supportEmail: "",
+    supportWebsiteUrl: "",
+    privacyPolicyUrl: "",
+    developerName: "",
     categoryId: categoryOptions[0]?.id ?? "",
   };
 }
@@ -154,11 +206,21 @@ function createFormFromItem(item: AdminAppListItem): AppFormState {
     title: item.title,
     shortDescription: item.shortDescription,
     fullDescription: item.fullDescription,
+    releaseNotes: item.releaseNotes ?? "",
+    metadata: stringifyMetadata(item.metadata),
     version: item.version,
     status: item.status as AppStatus,
     isPaid: item.isPaid,
     isFeatured: item.isFeatured,
+    containsAds: item.containsAds ?? false,
     price: String(item.price),
+    iconUrl: item.iconUrl ?? "",
+    featureGraphicUrl: item.featureGraphicUrl ?? "",
+    promoVideoUrl: item.promoVideoUrl ?? "",
+    supportEmail: item.supportEmail ?? "",
+    supportWebsiteUrl: item.supportWebsiteUrl ?? "",
+    privacyPolicyUrl: item.privacyPolicyUrl ?? "",
+    developerName: item.developerName ?? "",
     categoryId: item.category.id,
   };
 }
@@ -173,11 +235,21 @@ function normalizeMutationItem(
     slug: item.slug,
     shortDescription: item.shortDescription,
     fullDescription: item.fullDescription,
+    releaseNotes: item.releaseNotes ?? null,
+    metadata: item.metadata ?? null,
     version: item.version,
     status: item.status,
     isPaid: item.isPaid,
     isFeatured: item.isFeatured,
+    containsAds: item.containsAds ?? false,
     price: item.price,
+    iconUrl: item.iconUrl ?? null,
+    featureGraphicUrl: item.featureGraphicUrl ?? null,
+    promoVideoUrl: item.promoVideoUrl ?? null,
+    supportEmail: item.supportEmail ?? null,
+    supportWebsiteUrl: item.supportWebsiteUrl ?? null,
+    privacyPolicyUrl: item.privacyPolicyUrl ?? null,
+    developerName: item.developerName ?? null,
     updatedAt: item.updatedAt,
     category: item.category,
     tags: previous?.tags ?? [],
@@ -199,6 +271,39 @@ function validateForm(form: AppFormState): string | null {
 
   if (form.fullDescription.trim().length < 20) {
     return "Full description must contain at least 20 characters.";
+  }
+
+  const metadataResult = parseMetadataInput(form.metadata);
+  if (metadataResult.error) {
+    return metadataResult.error;
+  }
+
+  const optionalUrlKeys: Array<keyof AppFormState> = [
+    "iconUrl",
+    "featureGraphicUrl",
+    "promoVideoUrl",
+    "supportWebsiteUrl",
+    "privacyPolicyUrl",
+  ];
+
+  for (const key of optionalUrlKeys) {
+    const value = String(form[key] ?? "").trim();
+    if (!value) {
+      continue;
+    }
+
+    try {
+      new URL(value);
+    } catch {
+      return `Please provide a valid URL for ${key}.`;
+    }
+  }
+
+  if (form.supportEmail.trim().length > 0) {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(form.supportEmail.trim())) {
+      return "Support email must be a valid email address.";
+    }
   }
 
   if (form.version.trim().length < 1 || form.version.trim().length > 20) {
@@ -248,6 +353,7 @@ function AppCard({
   onEdit,
   onManageTags,
   onManageLinks,
+  onManageMedia,
   onDelete,
   deleting,
 }: {
@@ -255,6 +361,7 @@ function AppCard({
   onEdit: () => void;
   onManageTags: () => void;
   onManageLinks: () => void;
+  onManageMedia: () => void;
   onDelete: () => void;
   deleting: boolean;
 }) {
@@ -271,6 +378,10 @@ function AppCard({
       <p className="line-clamp-3 text-sm text-[#4f5970]">
         {app.shortDescription}
       </p>
+
+      {app.developerName ? (
+        <p className="text-xs text-[#5a647d]">Developer: {app.developerName}</p>
+      ) : null}
 
       <div className="flex flex-wrap items-center gap-1.5">
         {app.tags.length === 0 ? (
@@ -289,6 +400,7 @@ function AppCard({
         <p>Version: {app.version}</p>
         <p>Price: {app.isPaid ? formatPrice(app.price) : "Free"}</p>
         <p>Featured: {app.isFeatured ? "Yes" : "No"}</p>
+        <p>Contains ads: {app.containsAds ? "Yes" : "No"}</p>
         <p>Feedback: {app._count.feedbacks}</p>
         <p>Downloads: {app._count.downloadEvents}</p>
         <p>Updated: {formatDateTime(app.updatedAt)}</p>
@@ -303,6 +415,9 @@ function AppCard({
         </Button>
         <Button tone="ghost" size="sm" onClick={onManageLinks}>
           Release links
+        </Button>
+        <Button tone="ghost" size="sm" onClick={onManageMedia}>
+          Media gallery
         </Button>
         <Button tone="danger" size="sm" disabled={deleting} onClick={onDelete}>
           {deleting ? "Deleting..." : "Delete app"}
@@ -408,15 +523,124 @@ function AppEditorFields({
 
       <div className="space-y-1.5 lg:col-span-2">
         <Label htmlFor="app-full-description">Full description</Label>
-        <Textarea
+        <RichMarkdownEditor
           id="app-full-description"
           value={form.fullDescription}
-          onChange={(event) =>
-            updateField("fullDescription", event.target.value)
-          }
+          onChange={(nextValue) => updateField("fullDescription", nextValue)}
+          rows={10}
+          placeholder="Write a rich app description"
+        />
+      </div>
+
+      <div className="space-y-1.5 lg:col-span-2">
+        <Label htmlFor="app-release-notes">Release notes (optional)</Label>
+        <RichMarkdownEditor
+          id="app-release-notes"
+          value={form.releaseNotes}
+          onChange={(nextValue) => updateField("releaseNotes", nextValue)}
           rows={8}
-          maxLength={5000}
-          required
+          placeholder="What's new in this release"
+        />
+      </div>
+
+      <div className="space-y-1.5 lg:col-span-2">
+        <Label htmlFor="app-metadata">Metadata JSON (optional)</Label>
+        <Textarea
+          id="app-metadata"
+          value={form.metadata}
+          onChange={(event) => updateField("metadata", event.target.value)}
+          rows={6}
+          className="font-mono text-xs"
+          placeholder='{"releaseChannel":"stable","supportedLocales":["en","es"]}'
+        />
+        <p className="text-xs text-[#62708d]">
+          Store custom attributes for future filters, experiments, and feature
+          flags.
+        </p>
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="app-developer-name">Developer name (optional)</Label>
+        <Input
+          id="app-developer-name"
+          value={form.developerName}
+          onChange={(event) => updateField("developerName", event.target.value)}
+          maxLength={120}
+          placeholder="Studio or developer display name"
+        />
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="app-support-email">Support email (optional)</Label>
+        <Input
+          id="app-support-email"
+          type="email"
+          value={form.supportEmail}
+          onChange={(event) => updateField("supportEmail", event.target.value)}
+          maxLength={180}
+          placeholder="support@example.com"
+        />
+      </div>
+
+      <div className="space-y-1.5 lg:col-span-2">
+        <Label htmlFor="app-icon-url">Icon URL (optional)</Label>
+        <Input
+          id="app-icon-url"
+          value={form.iconUrl}
+          onChange={(event) => updateField("iconUrl", event.target.value)}
+          placeholder="https://..."
+        />
+      </div>
+
+      <div className="space-y-1.5 lg:col-span-2">
+        <Label htmlFor="app-feature-graphic-url">
+          Feature graphic URL (optional)
+        </Label>
+        <Input
+          id="app-feature-graphic-url"
+          value={form.featureGraphicUrl}
+          onChange={(event) =>
+            updateField("featureGraphicUrl", event.target.value)
+          }
+          placeholder="https://..."
+        />
+      </div>
+
+      <div className="space-y-1.5 lg:col-span-2">
+        <Label htmlFor="app-promo-video-url">Promo video URL (optional)</Label>
+        <Input
+          id="app-promo-video-url"
+          value={form.promoVideoUrl}
+          onChange={(event) => updateField("promoVideoUrl", event.target.value)}
+          placeholder="https://youtube.com/..."
+        />
+      </div>
+
+      <div className="space-y-1.5 lg:col-span-2">
+        <Label htmlFor="app-support-website-url">
+          Support website URL (optional)
+        </Label>
+        <Input
+          id="app-support-website-url"
+          value={form.supportWebsiteUrl}
+          onChange={(event) =>
+            updateField("supportWebsiteUrl", event.target.value)
+          }
+          placeholder="https://..."
+        />
+      </div>
+
+      <div className="space-y-1.5 lg:col-span-2">
+        <Label htmlFor="app-privacy-policy-url">
+          Privacy policy URL (optional)
+        </Label>
+        <Input
+          id="app-privacy-policy-url"
+          value={form.privacyPolicyUrl}
+          onChange={(event) =>
+            updateField("privacyPolicyUrl", event.target.value)
+          }
+          placeholder="https://..."
         />
       </div>
 
@@ -448,6 +672,16 @@ function AppEditorFields({
           className="h-4 w-4"
         />
         Featured placement
+      </label>
+
+      <label className="inline-flex items-center gap-2 rounded-lg border border-black/10 bg-[#f8fbff] px-3 py-2 text-sm text-[#1a2439]">
+        <input
+          type="checkbox"
+          checked={form.containsAds}
+          onChange={(event) => updateField("containsAds", event.target.checked)}
+          className="h-4 w-4"
+        />
+        Contains ads
       </label>
 
       <div className="space-y-1.5 lg:col-span-2">
@@ -543,6 +777,43 @@ export function AdminAppsClient({
   );
   const [deletingLinkId, setDeletingLinkId] = useState<string | null>(null);
 
+  const [mediaModalAppId, setMediaModalAppId] = useState<string | null>(null);
+  const [appMediaByAppId, setAppMediaByAppId] = useState<
+    Record<string, AdminAppMedia[]>
+  >({});
+  const [loadingMedia, setLoadingMedia] = useState(false);
+  const [mediaError, setMediaError] = useState<string | null>(null);
+  const [newMediaType, setNewMediaType] = useState<MediaType>("IMAGE");
+  const [newMediaUrl, setNewMediaUrl] = useState("");
+  const [newMediaAlt, setNewMediaAlt] = useState("");
+  const [newMediaMimeType, setNewMediaMimeType] = useState("");
+  const [newMediaWidth, setNewMediaWidth] = useState("");
+  const [newMediaHeight, setNewMediaHeight] = useState("");
+  const [newMediaDurationSec, setNewMediaDurationSec] = useState("");
+  const [newMediaThumbnailUrl, setNewMediaThumbnailUrl] = useState("");
+  const [newMediaFileSizeBytes, setNewMediaFileSizeBytes] = useState("");
+  const [newMediaIsAnimated, setNewMediaIsAnimated] = useState(false);
+  const [newMediaSortOrder, setNewMediaSortOrder] = useState("0");
+  const [uploadingMedia, setUploadingMedia] = useState(false);
+  const [creatingMedia, setCreatingMedia] = useState(false);
+  const [editingMediaId, setEditingMediaId] = useState<string | null>(null);
+  const [editMediaType, setEditMediaType] = useState<MediaType>("IMAGE");
+  const [editMediaUrl, setEditMediaUrl] = useState("");
+  const [editMediaAlt, setEditMediaAlt] = useState("");
+  const [editMediaMimeType, setEditMediaMimeType] = useState("");
+  const [editMediaWidth, setEditMediaWidth] = useState("");
+  const [editMediaHeight, setEditMediaHeight] = useState("");
+  const [editMediaDurationSec, setEditMediaDurationSec] = useState("");
+  const [editMediaThumbnailUrl, setEditMediaThumbnailUrl] = useState("");
+  const [editMediaFileSizeBytes, setEditMediaFileSizeBytes] = useState("");
+  const [editMediaIsAnimated, setEditMediaIsAnimated] = useState(false);
+  const [editMediaSortOrder, setEditMediaSortOrder] = useState("0");
+  const [savingMediaId, setSavingMediaId] = useState<string | null>(null);
+  const [deletingMediaId, setDeletingMediaId] = useState<string | null>(null);
+  const [reorderingMedia, setReorderingMedia] = useState(false);
+  const [draggingMediaId, setDraggingMediaId] = useState<string | null>(null);
+  const [dragOverMediaId, setDragOverMediaId] = useState<string | null>(null);
+
   const filteredApps = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     if (!normalizedQuery) {
@@ -590,6 +861,14 @@ export function AdminAppsClient({
       ? (activeLinks.find((link) => link.id === confirmDeleteLinkId) ?? null)
       : null;
 
+  const mediaModalApp =
+    mediaModalAppId !== null
+      ? (apps.find((item) => item.id === mediaModalAppId) ?? null)
+      : null;
+
+  const activeMedia =
+    mediaModalAppId !== null ? (appMediaByAppId[mediaModalAppId] ?? []) : [];
+
   function openTagAssignment(app: AdminAppListItem) {
     setTaggingAppId(app.id);
     setSelectedTagIds(app.tags.map((tag) => tag.id));
@@ -607,6 +886,620 @@ export function AdminAppsClient({
     setLinkError(null);
   }
 
+  function resetMediaForm() {
+    setNewMediaType("IMAGE");
+    setNewMediaUrl("");
+    setNewMediaAlt("");
+    setNewMediaMimeType("");
+    setNewMediaWidth("");
+    setNewMediaHeight("");
+    setNewMediaDurationSec("");
+    setNewMediaThumbnailUrl("");
+    setNewMediaFileSizeBytes("");
+    setNewMediaIsAnimated(false);
+    setNewMediaSortOrder("0");
+    setEditingMediaId(null);
+    setEditMediaType("IMAGE");
+    setEditMediaUrl("");
+    setEditMediaAlt("");
+    setEditMediaMimeType("");
+    setEditMediaWidth("");
+    setEditMediaHeight("");
+    setEditMediaDurationSec("");
+    setEditMediaThumbnailUrl("");
+    setEditMediaFileSizeBytes("");
+    setEditMediaIsAnimated(false);
+    setEditMediaSortOrder("0");
+    setDraggingMediaId(null);
+    setDragOverMediaId(null);
+    setMediaError(null);
+  }
+
+  function toSortedMedia(items: AdminAppMedia[]): AdminAppMedia[] {
+    return [...items].sort((a, b) => {
+      if (a.sortOrder !== b.sortOrder) {
+        return a.sortOrder - b.sortOrder;
+      }
+
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    });
+  }
+
+  async function fetchMediaForApp(appId: string) {
+    setLoadingMedia(true);
+    setMediaError(null);
+
+    try {
+      const response = await fetch(`/api/admin/apps/${appId}/media`);
+      const payload = await response.json().catch(() => null);
+
+      if (!response.ok || !isApiSuccess<AdminAppMedia[]>(payload)) {
+        setMediaError(parseApiMessage(payload) ?? "Failed to load app media.");
+        return;
+      }
+
+      setAppMediaByAppId((previous) => ({
+        ...previous,
+        [appId]: toSortedMedia(payload.data),
+      }));
+    } catch (error) {
+      setMediaError(
+        error instanceof Error ? error.message : "Failed to load app media.",
+      );
+    } finally {
+      setLoadingMedia(false);
+    }
+  }
+
+  function openMediaManager(app: AdminAppListItem) {
+    setMediaModalAppId(app.id);
+    resetMediaForm();
+
+    if (!appMediaByAppId[app.id]) {
+      void fetchMediaForApp(app.id);
+    }
+  }
+
+  async function onUploadMediaFile(file: File) {
+    if (!mediaModalAppId) {
+      return;
+    }
+
+    setUploadingMedia(true);
+    setMediaError(null);
+
+    try {
+      const signatureResponse = await fetch("/api/upload/cloudinary/sign", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          folder: `apps/${mediaModalAppId}/media`,
+        }),
+      });
+
+      const signaturePayload = await signatureResponse.json().catch(() => null);
+      if (
+        !signatureResponse.ok ||
+        !isApiSuccess<{
+          cloudName: string;
+          apiKey: string;
+          folder: string;
+          timestamp: number;
+          signature: string;
+        }>(signaturePayload)
+      ) {
+        setMediaError(
+          parseApiMessage(signaturePayload) ?? "Failed to initialize upload.",
+        );
+        return;
+      }
+
+      const signData = signaturePayload.data;
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("api_key", signData.apiKey);
+      formData.append("timestamp", String(signData.timestamp));
+      formData.append("signature", signData.signature);
+      formData.append("folder", signData.folder);
+
+      const uploadResponse = await fetch(
+        `https://api.cloudinary.com/v1_1/${signData.cloudName}/auto/upload`,
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
+
+      const uploadPayload = (await uploadResponse.json().catch(() => null)) as {
+        secure_url?: string;
+        resource_type?: string;
+        format?: string;
+        bytes?: number;
+        width?: number;
+        height?: number;
+        duration?: number;
+      } | null;
+
+      if (!uploadResponse.ok || !uploadPayload?.secure_url) {
+        setMediaError("Upload failed. Please retry with a valid file.");
+        return;
+      }
+
+      setNewMediaUrl(uploadPayload.secure_url);
+      setNewMediaType(
+        uploadPayload.resource_type === "video" ? "VIDEO" : "IMAGE",
+      );
+      const normalizedFormat = uploadPayload.format
+        ? `${uploadPayload.resource_type ?? "image"}/${uploadPayload.format}`
+        : "";
+      setNewMediaMimeType(normalizedFormat);
+      setNewMediaWidth(
+        uploadPayload.width !== undefined ? String(uploadPayload.width) : "",
+      );
+      setNewMediaHeight(
+        uploadPayload.height !== undefined ? String(uploadPayload.height) : "",
+      );
+      setNewMediaDurationSec(
+        uploadPayload.duration !== undefined
+          ? String(Math.round(uploadPayload.duration))
+          : "",
+      );
+      setNewMediaFileSizeBytes(
+        uploadPayload.bytes !== undefined ? String(uploadPayload.bytes) : "",
+      );
+      setNewMediaIsAnimated(
+        (uploadPayload.resource_type ?? "").toLowerCase() === "image" &&
+          (uploadPayload.format ?? "").toLowerCase() === "gif",
+      );
+
+      dispatch(
+        enqueueNotification({
+          tone: "success",
+          message: "File uploaded. Review details and click Add media.",
+        }),
+      );
+    } catch (error) {
+      setMediaError(error instanceof Error ? error.message : "Upload failed.");
+    } finally {
+      setUploadingMedia(false);
+    }
+  }
+
+  async function onCreateMedia(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!mediaModalAppId) {
+      return;
+    }
+
+    const normalizedUrl = newMediaUrl.trim();
+    if (!normalizedUrl) {
+      setMediaError("Media URL is required.");
+      return;
+    }
+
+    try {
+      new URL(normalizedUrl);
+    } catch {
+      setMediaError("Please provide a valid media URL.");
+      return;
+    }
+
+    const parsedSortOrder = Number(newMediaSortOrder);
+    if (!Number.isInteger(parsedSortOrder) || parsedSortOrder < 0) {
+      setMediaError("Sort order must be a whole number >= 0.");
+      return;
+    }
+
+    const parsedWidth = newMediaWidth ? Number(newMediaWidth) : undefined;
+    const parsedHeight = newMediaHeight ? Number(newMediaHeight) : undefined;
+    const parsedDuration = newMediaDurationSec
+      ? Number(newMediaDurationSec)
+      : undefined;
+    const parsedFileSizeBytes = newMediaFileSizeBytes.trim() || undefined;
+
+    if (
+      parsedWidth !== undefined &&
+      (!Number.isInteger(parsedWidth) || parsedWidth < 1)
+    ) {
+      setMediaError("Width must be a whole number >= 1.");
+      return;
+    }
+
+    if (
+      parsedHeight !== undefined &&
+      (!Number.isInteger(parsedHeight) || parsedHeight < 1)
+    ) {
+      setMediaError("Height must be a whole number >= 1.");
+      return;
+    }
+
+    if (
+      parsedDuration !== undefined &&
+      (!Number.isInteger(parsedDuration) || parsedDuration < 0)
+    ) {
+      setMediaError("Duration must be a whole number >= 0.");
+      return;
+    }
+
+    if (parsedFileSizeBytes && !/^\d+$/.test(parsedFileSizeBytes)) {
+      setMediaError("File size must be a positive integer in bytes.");
+      return;
+    }
+
+    if (newMediaThumbnailUrl.trim()) {
+      try {
+        new URL(newMediaThumbnailUrl.trim());
+      } catch {
+        setMediaError("Thumbnail URL must be valid.");
+        return;
+      }
+    }
+
+    setCreatingMedia(true);
+    setMediaError(null);
+
+    try {
+      const response = await fetch(`/api/admin/apps/${mediaModalAppId}/media`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          type: newMediaType,
+          url: normalizedUrl,
+          alt: newMediaAlt.trim() || null,
+          mimeType: newMediaMimeType.trim() || null,
+          width: Number.isFinite(parsedWidth) ? parsedWidth : null,
+          height: Number.isFinite(parsedHeight) ? parsedHeight : null,
+          durationSec: Number.isFinite(parsedDuration) ? parsedDuration : null,
+          thumbnailUrl: newMediaThumbnailUrl.trim() || null,
+          fileSizeBytes: parsedFileSizeBytes ?? null,
+          isAnimated: newMediaIsAnimated,
+          sortOrder: parsedSortOrder,
+        }),
+      });
+
+      const payload = await response.json().catch(() => null);
+      if (!response.ok || !isApiSuccess<AdminAppMedia>(payload)) {
+        setMediaError(
+          parseApiMessage(payload) ?? "Failed to create app media.",
+        );
+        return;
+      }
+
+      setAppMediaByAppId((previous) => {
+        const current = previous[mediaModalAppId] ?? [];
+
+        return {
+          ...previous,
+          [mediaModalAppId]: toSortedMedia([...current, payload.data]),
+        };
+      });
+
+      resetMediaForm();
+      dispatch(
+        enqueueNotification({
+          tone: "success",
+          message: "App media item added.",
+        }),
+      );
+    } catch (error) {
+      setMediaError(
+        error instanceof Error ? error.message : "Failed to create app media.",
+      );
+    } finally {
+      setCreatingMedia(false);
+    }
+  }
+
+  async function onDeleteMedia(mediaId: string) {
+    if (!mediaModalAppId) {
+      return;
+    }
+
+    setDeletingMediaId(mediaId);
+    setMediaError(null);
+
+    try {
+      const response = await fetch(
+        `/api/admin/apps/${mediaModalAppId}/media/${mediaId}`,
+        {
+          method: "DELETE",
+        },
+      );
+
+      const payload = await response.json().catch(() => null);
+      if (!response.ok || !isApiSuccess<{ deleted: boolean }>(payload)) {
+        setMediaError(
+          parseApiMessage(payload) ?? "Failed to delete app media.",
+        );
+        return;
+      }
+
+      setAppMediaByAppId((previous) => {
+        const current = previous[mediaModalAppId] ?? [];
+        return {
+          ...previous,
+          [mediaModalAppId]: current.filter((item) => item.id !== mediaId),
+        };
+      });
+
+      dispatch(
+        enqueueNotification({
+          tone: "success",
+          message: "Media removed.",
+        }),
+      );
+    } catch (error) {
+      setMediaError(
+        error instanceof Error ? error.message : "Failed to delete app media.",
+      );
+    } finally {
+      setDeletingMediaId(null);
+    }
+  }
+
+  function startMediaEdit(item: AdminAppMedia) {
+    setEditingMediaId(item.id);
+    setEditMediaType(item.type);
+    setEditMediaUrl(item.url);
+    setEditMediaAlt(item.alt ?? "");
+    setEditMediaMimeType(item.mimeType ?? "");
+    setEditMediaWidth(
+      item.width !== null && item.width !== undefined ? String(item.width) : "",
+    );
+    setEditMediaHeight(
+      item.height !== null && item.height !== undefined
+        ? String(item.height)
+        : "",
+    );
+    setEditMediaDurationSec(
+      item.durationSec !== null && item.durationSec !== undefined
+        ? String(item.durationSec)
+        : "",
+    );
+    setEditMediaThumbnailUrl(item.thumbnailUrl ?? "");
+    setEditMediaFileSizeBytes(
+      item.fileSizeBytes !== null && item.fileSizeBytes !== undefined
+        ? String(item.fileSizeBytes)
+        : "",
+    );
+    setEditMediaIsAnimated(Boolean(item.isAnimated));
+    setEditMediaSortOrder(String(item.sortOrder));
+    setMediaError(null);
+  }
+
+  async function onSaveMediaEdit(mediaId: string) {
+    if (!mediaModalAppId) {
+      return;
+    }
+
+    const normalizedUrl = editMediaUrl.trim();
+    if (!normalizedUrl) {
+      setMediaError("Media URL is required.");
+      return;
+    }
+
+    try {
+      new URL(normalizedUrl);
+    } catch {
+      setMediaError("Please provide a valid media URL.");
+      return;
+    }
+
+    const parsedSortOrder = Number(editMediaSortOrder);
+    const parsedWidth = editMediaWidth ? Number(editMediaWidth) : undefined;
+    const parsedHeight = editMediaHeight ? Number(editMediaHeight) : undefined;
+    const parsedDuration = editMediaDurationSec
+      ? Number(editMediaDurationSec)
+      : undefined;
+    const parsedFileSizeBytes = editMediaFileSizeBytes.trim() || undefined;
+
+    if (
+      parsedWidth !== undefined &&
+      (!Number.isInteger(parsedWidth) || parsedWidth < 1)
+    ) {
+      setMediaError("Width must be a whole number >= 1.");
+      return;
+    }
+
+    if (
+      parsedHeight !== undefined &&
+      (!Number.isInteger(parsedHeight) || parsedHeight < 1)
+    ) {
+      setMediaError("Height must be a whole number >= 1.");
+      return;
+    }
+
+    if (
+      parsedDuration !== undefined &&
+      (!Number.isInteger(parsedDuration) || parsedDuration < 0)
+    ) {
+      setMediaError("Duration must be a whole number >= 0.");
+      return;
+    }
+
+    if (parsedFileSizeBytes && !/^\d+$/.test(parsedFileSizeBytes)) {
+      setMediaError("File size must be a positive integer in bytes.");
+      return;
+    }
+
+    if (editMediaThumbnailUrl.trim()) {
+      try {
+        new URL(editMediaThumbnailUrl.trim());
+      } catch {
+        setMediaError("Thumbnail URL must be valid.");
+        return;
+      }
+    }
+
+    if (!Number.isInteger(parsedSortOrder) || parsedSortOrder < 0) {
+      setMediaError("Sort order must be a whole number >= 0.");
+      return;
+    }
+
+    setSavingMediaId(mediaId);
+    setMediaError(null);
+
+    try {
+      const response = await fetch(
+        `/api/admin/apps/${mediaModalAppId}/media/${mediaId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            type: editMediaType,
+            url: normalizedUrl,
+            alt: editMediaAlt.trim() || null,
+            mimeType: editMediaMimeType.trim() || null,
+            width: Number.isFinite(parsedWidth) ? parsedWidth : null,
+            height: Number.isFinite(parsedHeight) ? parsedHeight : null,
+            durationSec: Number.isFinite(parsedDuration)
+              ? parsedDuration
+              : null,
+            thumbnailUrl: editMediaThumbnailUrl.trim() || null,
+            fileSizeBytes: parsedFileSizeBytes ?? null,
+            isAnimated: editMediaIsAnimated,
+            sortOrder: parsedSortOrder,
+          }),
+        },
+      );
+
+      const payload = await response.json().catch(() => null);
+      if (!response.ok || !isApiSuccess<AdminAppMedia>(payload)) {
+        setMediaError(
+          parseApiMessage(payload) ?? "Failed to update app media.",
+        );
+        return;
+      }
+
+      setAppMediaByAppId((previous) => {
+        const current = previous[mediaModalAppId] ?? [];
+        return {
+          ...previous,
+          [mediaModalAppId]: toSortedMedia(
+            current.map((item) => (item.id === mediaId ? payload.data : item)),
+          ),
+        };
+      });
+
+      setEditingMediaId(null);
+      dispatch(
+        enqueueNotification({
+          tone: "success",
+          message: "Media updated.",
+        }),
+      );
+    } catch (error) {
+      setMediaError(
+        error instanceof Error ? error.message : "Failed to update app media.",
+      );
+    } finally {
+      setSavingMediaId(null);
+    }
+  }
+
+  async function persistMediaOrder(nextItems: AdminAppMedia[]) {
+    if (!mediaModalAppId) {
+      return;
+    }
+
+    setReorderingMedia(true);
+    setMediaError(null);
+
+    const normalized = nextItems.map((item, index) => ({
+      ...item,
+      sortOrder: index * 10,
+    }));
+
+    try {
+      const responses = await Promise.all(
+        normalized.map((item) =>
+          fetch(`/api/admin/apps/${mediaModalAppId}/media/${item.id}`, {
+            method: "PATCH",
+            headers: {
+              "content-type": "application/json",
+            },
+            body: JSON.stringify({ sortOrder: item.sortOrder }),
+          }),
+        ),
+      );
+
+      const payloads = await Promise.all(
+        responses.map((response) => response.json().catch(() => null)),
+      );
+
+      const failedPayload = responses.find((response) => !response.ok);
+      if (failedPayload) {
+        const failedIndex = responses.findIndex((response) => !response.ok);
+        setMediaError(
+          parseApiMessage(payloads[failedIndex]) ?? "Failed to reorder media.",
+        );
+        await fetchMediaForApp(mediaModalAppId);
+        return;
+      }
+
+      setAppMediaByAppId((previous) => ({
+        ...previous,
+        [mediaModalAppId]: normalized,
+      }));
+
+      dispatch(
+        enqueueNotification({
+          tone: "success",
+          message: "Media order updated.",
+        }),
+      );
+    } catch (error) {
+      setMediaError(
+        error instanceof Error ? error.message : "Failed to reorder media.",
+      );
+      await fetchMediaForApp(mediaModalAppId);
+    } finally {
+      setReorderingMedia(false);
+      setDraggingMediaId(null);
+      setDragOverMediaId(null);
+    }
+  }
+
+  async function onDropMedia(targetMediaId: string) {
+    if (
+      !mediaModalAppId ||
+      !draggingMediaId ||
+      draggingMediaId === targetMediaId
+    ) {
+      setDraggingMediaId(null);
+      setDragOverMediaId(null);
+      return;
+    }
+
+    const items = appMediaByAppId[mediaModalAppId] ?? [];
+    const fromIndex = items.findIndex((item) => item.id === draggingMediaId);
+    const toIndex = items.findIndex((item) => item.id === targetMediaId);
+
+    if (fromIndex < 0 || toIndex < 0) {
+      setDraggingMediaId(null);
+      setDragOverMediaId(null);
+      return;
+    }
+
+    const reordered = [...items];
+    const [moved] = reordered.splice(fromIndex, 1);
+    reordered.splice(toIndex, 0, moved);
+
+    setAppMediaByAppId((previous) => ({
+      ...previous,
+      [mediaModalAppId]: reordered,
+    }));
+
+    await persistMediaOrder(reordered);
+  }
+
   async function onCreateApp(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -619,6 +1512,13 @@ export function AdminAppsClient({
     setCreateError(null);
     setCreating(true);
 
+    const metadataResult = parseMetadataInput(createForm.metadata);
+    if (metadataResult.error) {
+      setCreateError(metadataResult.error);
+      setCreating(false);
+      return;
+    }
+
     try {
       const response = await fetch("/api/admin/apps", {
         method: "POST",
@@ -629,11 +1529,21 @@ export function AdminAppsClient({
           title: createForm.title.trim(),
           shortDescription: createForm.shortDescription.trim(),
           fullDescription: createForm.fullDescription.trim(),
+          releaseNotes: createForm.releaseNotes.trim() || undefined,
           version: createForm.version.trim(),
           status: createForm.status,
           isPaid: createForm.isPaid,
           isFeatured: createForm.isFeatured,
+          containsAds: createForm.containsAds,
           price: Number(createForm.price),
+          iconUrl: createForm.iconUrl.trim() || undefined,
+          featureGraphicUrl: createForm.featureGraphicUrl.trim() || undefined,
+          promoVideoUrl: createForm.promoVideoUrl.trim() || undefined,
+          supportEmail: createForm.supportEmail.trim() || undefined,
+          supportWebsiteUrl: createForm.supportWebsiteUrl.trim() || undefined,
+          privacyPolicyUrl: createForm.privacyPolicyUrl.trim() || undefined,
+          developerName: createForm.developerName.trim() || undefined,
+          metadata: metadataResult.data,
           categoryId: createForm.categoryId,
         }),
       });
@@ -680,6 +1590,13 @@ export function AdminAppsClient({
     setEditError(null);
     setSavingEdit(true);
 
+    const metadataResult = parseMetadataInput(editForm.metadata);
+    if (metadataResult.error) {
+      setEditError(metadataResult.error);
+      setSavingEdit(false);
+      return;
+    }
+
     try {
       const response = await fetch(`/api/admin/apps/${editingAppId}`, {
         method: "PUT",
@@ -690,11 +1607,21 @@ export function AdminAppsClient({
           title: editForm.title.trim(),
           shortDescription: editForm.shortDescription.trim(),
           fullDescription: editForm.fullDescription.trim(),
+          releaseNotes: editForm.releaseNotes.trim() || undefined,
           version: editForm.version.trim(),
           status: editForm.status,
           isPaid: editForm.isPaid,
           isFeatured: editForm.isFeatured,
+          containsAds: editForm.containsAds,
           price: Number(editForm.price),
+          iconUrl: editForm.iconUrl.trim() || undefined,
+          featureGraphicUrl: editForm.featureGraphicUrl.trim() || undefined,
+          promoVideoUrl: editForm.promoVideoUrl.trim() || undefined,
+          supportEmail: editForm.supportEmail.trim() || undefined,
+          supportWebsiteUrl: editForm.supportWebsiteUrl.trim() || undefined,
+          privacyPolicyUrl: editForm.privacyPolicyUrl.trim() || undefined,
+          developerName: editForm.developerName.trim() || undefined,
+          metadata: metadataResult.data,
           categoryId: editForm.categoryId,
         }),
       });
@@ -1315,6 +2242,7 @@ export function AdminAppsClient({
               }}
               onManageTags={() => openTagAssignment(item)}
               onManageLinks={() => openLinkManager(item)}
+              onManageMedia={() => openMediaManager(item)}
               onDelete={() => setConfirmDeleteId(item.id)}
             />
           ))}
@@ -1719,6 +2647,420 @@ export function AdminAppsClient({
               })}
             </section>
           )}
+        </div>
+      </Modal>
+
+      <Modal
+        open={Boolean(mediaModalApp)}
+        onClose={() => {
+          if (
+            creatingMedia ||
+            uploadingMedia ||
+            Boolean(deletingMediaId) ||
+            Boolean(savingMediaId) ||
+            reorderingMedia
+          ) {
+            return;
+          }
+
+          setMediaModalAppId(null);
+          resetMediaForm();
+        }}
+        title={
+          mediaModalApp
+            ? `Media gallery for ${mediaModalApp.title}`
+            : "Media gallery"
+        }
+        description="Upload screenshots and clips, or add hosted media URLs for storefront presentation."
+        width="xl"
+      >
+        <div className="space-y-4">
+          <form
+            className="grid gap-3 rounded-xl border border-black/10 bg-[#fbfcff] p-3 md:grid-cols-2"
+            onSubmit={onCreateMedia}
+          >
+            <div className="grid gap-3 md:col-span-2 md:grid-cols-[0.9fr_1.6fr_1.1fr_0.7fr_auto]">
+              <select
+                value={newMediaType}
+                onChange={(event) =>
+                  setNewMediaType(event.target.value as MediaType)
+                }
+                className="rounded-lg border border-black/20 bg-white px-3 py-2 text-sm text-[#14171f]"
+              >
+                <option value="IMAGE">IMAGE</option>
+                <option value="VIDEO">VIDEO</option>
+              </select>
+
+              <Input
+                value={newMediaUrl}
+                onChange={(event) => setNewMediaUrl(event.target.value)}
+                placeholder="https://..."
+                required
+              />
+
+              <Input
+                value={newMediaAlt}
+                onChange={(event) => setNewMediaAlt(event.target.value)}
+                placeholder="Alt text (optional)"
+                maxLength={180}
+              />
+
+              <Input
+                value={newMediaSortOrder}
+                onChange={(event) => setNewMediaSortOrder(event.target.value)}
+                type="number"
+                min="0"
+                step="1"
+                placeholder="Sort"
+              />
+
+              <Button
+                type="submit"
+                disabled={creatingMedia || !mediaModalAppId}
+              >
+                {creatingMedia ? "Adding..." : "Add media"}
+              </Button>
+            </div>
+
+            <Input
+              value={newMediaMimeType}
+              onChange={(event) => setNewMediaMimeType(event.target.value)}
+              placeholder="MIME type (optional, e.g. image/gif)"
+              maxLength={120}
+            />
+
+            <Input
+              value={newMediaThumbnailUrl}
+              onChange={(event) => setNewMediaThumbnailUrl(event.target.value)}
+              placeholder="Thumbnail URL (optional)"
+            />
+
+            <Input
+              value={newMediaWidth}
+              onChange={(event) => setNewMediaWidth(event.target.value)}
+              type="number"
+              min="1"
+              step="1"
+              placeholder="Width"
+            />
+
+            <Input
+              value={newMediaHeight}
+              onChange={(event) => setNewMediaHeight(event.target.value)}
+              type="number"
+              min="1"
+              step="1"
+              placeholder="Height"
+            />
+
+            <Input
+              value={newMediaDurationSec}
+              onChange={(event) => setNewMediaDurationSec(event.target.value)}
+              type="number"
+              min="0"
+              step="1"
+              placeholder="Duration (sec)"
+            />
+
+            <Input
+              value={newMediaFileSizeBytes}
+              onChange={(event) => setNewMediaFileSizeBytes(event.target.value)}
+              placeholder="File size bytes"
+            />
+
+            <label className="inline-flex items-center gap-2 rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-[#1a2439]">
+              <input
+                type="checkbox"
+                checked={newMediaIsAnimated}
+                onChange={(event) =>
+                  setNewMediaIsAnimated(event.target.checked)
+                }
+                className="h-4 w-4"
+              />
+              Animated (GIF/WebP)
+            </label>
+          </form>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-black/15 bg-white px-3 py-2 text-sm font-medium text-[#182236] hover:bg-[#f7f8fb]">
+              <input
+                type="file"
+                accept="image/*,video/*"
+                className="sr-only"
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  if (file) {
+                    void onUploadMediaFile(file);
+                  }
+
+                  event.target.value = "";
+                }}
+                disabled={uploadingMedia || !mediaModalAppId}
+              />
+              {uploadingMedia ? "Uploading..." : "Upload image or clip"}
+            </label>
+
+            <p className="text-xs text-[#5a647d]">
+              Upload fills URL/type automatically. Then click Add media.
+            </p>
+          </div>
+
+          {mediaError ? (
+            <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+              {mediaError}
+            </p>
+          ) : null}
+
+          {loadingMedia ? (
+            <p className="rounded-lg border border-black/10 bg-[#f8f9fc] px-3 py-2 text-sm text-[#5a647d]">
+              Loading media...
+            </p>
+          ) : activeMedia.length === 0 ? (
+            <Card>
+              <CardTitle>No media yet</CardTitle>
+              <CardDescription className="mt-1">
+                Add screenshots and clips to improve app storefront quality.
+              </CardDescription>
+            </Card>
+          ) : (
+            <section className="grid gap-3 md:grid-cols-2">
+              {activeMedia.map((item) => (
+                <Card
+                  key={item.id}
+                  className={`space-y-3 ${dragOverMediaId === item.id ? "ring-2 ring-[#1f5ed4]/35" : ""}`}
+                  draggable={!reorderingMedia}
+                  onDragStart={(event) => {
+                    event.dataTransfer.effectAllowed = "move";
+                    setDraggingMediaId(item.id);
+                  }}
+                  onDragOver={(event) => {
+                    event.preventDefault();
+                    if (draggingMediaId && draggingMediaId !== item.id) {
+                      setDragOverMediaId(item.id);
+                    }
+                  }}
+                  onDragLeave={() => {
+                    if (dragOverMediaId === item.id) {
+                      setDragOverMediaId(null);
+                    }
+                  }}
+                  onDrop={(event) => {
+                    event.preventDefault();
+                    void onDropMedia(item.id);
+                  }}
+                  onDragEnd={() => {
+                    setDraggingMediaId(null);
+                    setDragOverMediaId(null);
+                  }}
+                >
+                  {editingMediaId === item.id ? (
+                    <div className="space-y-3">
+                      <div className="grid gap-2 md:grid-cols-2">
+                        <select
+                          value={editMediaType}
+                          onChange={(event) =>
+                            setEditMediaType(event.target.value as MediaType)
+                          }
+                          className="rounded-lg border border-black/20 bg-white px-3 py-2 text-sm text-[#14171f]"
+                        >
+                          <option value="IMAGE">IMAGE</option>
+                          <option value="VIDEO">VIDEO</option>
+                        </select>
+                        <Input
+                          value={editMediaSortOrder}
+                          onChange={(event) =>
+                            setEditMediaSortOrder(event.target.value)
+                          }
+                          type="number"
+                          min="0"
+                          step="1"
+                          placeholder="Sort"
+                        />
+                      </div>
+
+                      <Input
+                        value={editMediaUrl}
+                        onChange={(event) =>
+                          setEditMediaUrl(event.target.value)
+                        }
+                        placeholder="https://..."
+                      />
+
+                      <Input
+                        value={editMediaAlt}
+                        onChange={(event) =>
+                          setEditMediaAlt(event.target.value)
+                        }
+                        placeholder="Alt text (optional)"
+                        maxLength={180}
+                      />
+
+                      <div className="grid gap-2 md:grid-cols-2">
+                        <Input
+                          value={editMediaMimeType}
+                          onChange={(event) =>
+                            setEditMediaMimeType(event.target.value)
+                          }
+                          placeholder="MIME type"
+                          maxLength={120}
+                        />
+                        <Input
+                          value={editMediaThumbnailUrl}
+                          onChange={(event) =>
+                            setEditMediaThumbnailUrl(event.target.value)
+                          }
+                          placeholder="Thumbnail URL"
+                        />
+                      </div>
+
+                      <div className="grid gap-2 md:grid-cols-3">
+                        <Input
+                          value={editMediaWidth}
+                          onChange={(event) =>
+                            setEditMediaWidth(event.target.value)
+                          }
+                          type="number"
+                          min="1"
+                          step="1"
+                          placeholder="Width"
+                        />
+                        <Input
+                          value={editMediaHeight}
+                          onChange={(event) =>
+                            setEditMediaHeight(event.target.value)
+                          }
+                          type="number"
+                          min="1"
+                          step="1"
+                          placeholder="Height"
+                        />
+                        <Input
+                          value={editMediaDurationSec}
+                          onChange={(event) =>
+                            setEditMediaDurationSec(event.target.value)
+                          }
+                          type="number"
+                          min="0"
+                          step="1"
+                          placeholder="Duration (sec)"
+                        />
+                      </div>
+
+                      <div className="grid gap-2 md:grid-cols-2">
+                        <Input
+                          value={editMediaFileSizeBytes}
+                          onChange={(event) =>
+                            setEditMediaFileSizeBytes(event.target.value)
+                          }
+                          placeholder="File size bytes"
+                        />
+                        <label className="inline-flex items-center gap-2 rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-[#1a2439]">
+                          <input
+                            type="checkbox"
+                            checked={editMediaIsAnimated}
+                            onChange={(event) =>
+                              setEditMediaIsAnimated(event.target.checked)
+                            }
+                            className="h-4 w-4"
+                          />
+                          Animated (GIF/WebP)
+                        </label>
+                      </div>
+
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          tone="secondary"
+                          size="sm"
+                          onClick={() => setEditingMediaId(null)}
+                          disabled={savingMediaId === item.id}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={() => void onSaveMediaEdit(item.id)}
+                          disabled={savingMediaId === item.id}
+                        >
+                          {savingMediaId === item.id ? "Saving..." : "Save"}
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      {item.type === "VIDEO" ? (
+                        <video
+                          controls
+                          preload="metadata"
+                          src={item.url}
+                          className="h-48 w-full rounded-lg border border-black/10 bg-black object-contain"
+                        />
+                      ) : (
+                        <Image
+                          src={item.url}
+                          alt={item.alt ?? "App media"}
+                          width={720}
+                          height={420}
+                          className="h-48 w-full rounded-lg border border-black/10 bg-[#f8fafc] object-cover"
+                          unoptimized
+                        />
+                      )}
+
+                      <div className="space-y-1">
+                        <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[#51607a]">
+                          {item.type} · Sort {item.sortOrder}
+                        </p>
+                        <p className="line-clamp-1 text-xs text-[#5a647d]">
+                          {item.alt ?? "No alt text"}
+                        </p>
+                        <p className="line-clamp-1 text-xs text-[#5a647d]">
+                          {item.url}
+                        </p>
+                        <p className="line-clamp-1 text-xs text-[#5a647d]">
+                          MIME: {item.mimeType ?? "-"}
+                        </p>
+                        <p className="line-clamp-1 text-xs text-[#5a647d]">
+                          Size: {item.width ?? "?"}x{item.height ?? "?"} ·
+                          Duration: {item.durationSec ?? 0}s · Animated:{" "}
+                          {item.isAnimated ? "Yes" : "No"}
+                        </p>
+                        <p className="text-[11px] text-[#66718b]">
+                          Drag card to reorder media
+                        </p>
+                      </div>
+
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          tone="secondary"
+                          size="sm"
+                          onClick={() => startMediaEdit(item)}
+                          disabled={Boolean(savingMediaId) || reorderingMedia}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          tone="danger"
+                          size="sm"
+                          onClick={() => void onDeleteMedia(item.id)}
+                          disabled={
+                            deletingMediaId === item.id || reorderingMedia
+                          }
+                        >
+                          {deletingMediaId === item.id
+                            ? "Deleting..."
+                            : "Delete"}
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </Card>
+              ))}
+            </section>
+          )}
+          {reorderingMedia ? (
+            <p className="rounded-lg border border-black/10 bg-[#f8f9fc] px-3 py-2 text-sm text-[#5a647d]">
+              Saving media order...
+            </p>
+          ) : null}
         </div>
       </Modal>
 

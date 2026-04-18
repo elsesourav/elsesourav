@@ -795,7 +795,7 @@ function ThemeEditorFields({
       </div>
 
       <div className="space-y-1.5 lg:col-span-2">
-        <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#5a647d]">
+        <p className="text-xs font-semibold uppercase tracking-widest text-[#5a647d]">
           Light palette
         </p>
       </div>
@@ -832,7 +832,7 @@ function ThemeEditorFields({
       />
 
       <div className="space-y-1.5 lg:col-span-2">
-        <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#5a647d]">
+        <p className="text-xs font-semibold uppercase tracking-widest text-[#5a647d]">
           Dark palette
         </p>
       </div>

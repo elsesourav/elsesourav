@@ -66,6 +66,7 @@ export type ContentPageCountAggregateOutputType = {
   body: number
   seoTitle: number
   seoDescription: number
+  metadata: number
   status: number
   publishAt: number
   publishedAt: number
@@ -119,6 +120,7 @@ export type ContentPageCountAggregateInputType = {
   body?: true
   seoTitle?: true
   seoDescription?: true
+  metadata?: true
   status?: true
   publishAt?: true
   publishedAt?: true
@@ -209,6 +211,7 @@ export type ContentPageGroupByOutputType = {
   body: string
   seoTitle: string | null
   seoDescription: string | null
+  metadata: runtime.JsonValue | null
   status: $Enums.ContentStatus
   publishAt: Date | null
   publishedAt: Date | null
@@ -247,6 +250,7 @@ export type ContentPageWhereInput = {
   body?: Prisma.StringFilter<"ContentPage"> | string
   seoTitle?: Prisma.StringNullableFilter<"ContentPage"> | string | null
   seoDescription?: Prisma.StringNullableFilter<"ContentPage"> | string | null
+  metadata?: Prisma.JsonNullableFilter<"ContentPage">
   status?: Prisma.EnumContentStatusFilter<"ContentPage"> | $Enums.ContentStatus
   publishAt?: Prisma.DateTimeNullableFilter<"ContentPage"> | Date | string | null
   publishedAt?: Prisma.DateTimeNullableFilter<"ContentPage"> | Date | string | null
@@ -265,6 +269,7 @@ export type ContentPageOrderByWithRelationInput = {
   body?: Prisma.SortOrder
   seoTitle?: Prisma.SortOrderInput | Prisma.SortOrder
   seoDescription?: Prisma.SortOrderInput | Prisma.SortOrder
+  metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   publishAt?: Prisma.SortOrderInput | Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -286,6 +291,7 @@ export type ContentPageWhereUniqueInput = Prisma.AtLeast<{
   body?: Prisma.StringFilter<"ContentPage"> | string
   seoTitle?: Prisma.StringNullableFilter<"ContentPage"> | string | null
   seoDescription?: Prisma.StringNullableFilter<"ContentPage"> | string | null
+  metadata?: Prisma.JsonNullableFilter<"ContentPage">
   status?: Prisma.EnumContentStatusFilter<"ContentPage"> | $Enums.ContentStatus
   publishAt?: Prisma.DateTimeNullableFilter<"ContentPage"> | Date | string | null
   publishedAt?: Prisma.DateTimeNullableFilter<"ContentPage"> | Date | string | null
@@ -304,6 +310,7 @@ export type ContentPageOrderByWithAggregationInput = {
   body?: Prisma.SortOrder
   seoTitle?: Prisma.SortOrderInput | Prisma.SortOrder
   seoDescription?: Prisma.SortOrderInput | Prisma.SortOrder
+  metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   publishAt?: Prisma.SortOrderInput | Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -327,6 +334,7 @@ export type ContentPageScalarWhereWithAggregatesInput = {
   body?: Prisma.StringWithAggregatesFilter<"ContentPage"> | string
   seoTitle?: Prisma.StringNullableWithAggregatesFilter<"ContentPage"> | string | null
   seoDescription?: Prisma.StringNullableWithAggregatesFilter<"ContentPage"> | string | null
+  metadata?: Prisma.JsonNullableWithAggregatesFilter<"ContentPage">
   status?: Prisma.EnumContentStatusWithAggregatesFilter<"ContentPage"> | $Enums.ContentStatus
   publishAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ContentPage"> | Date | string | null
   publishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ContentPage"> | Date | string | null
@@ -344,6 +352,7 @@ export type ContentPageCreateInput = {
   body: string
   seoTitle?: string | null
   seoDescription?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.ContentStatus
   publishAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -362,6 +371,7 @@ export type ContentPageUncheckedCreateInput = {
   body: string
   seoTitle?: string | null
   seoDescription?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.ContentStatus
   publishAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -380,6 +390,7 @@ export type ContentPageUpdateInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -398,6 +409,7 @@ export type ContentPageUncheckedUpdateInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -416,6 +428,7 @@ export type ContentPageCreateManyInput = {
   body: string
   seoTitle?: string | null
   seoDescription?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.ContentStatus
   publishAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -433,6 +446,7 @@ export type ContentPageUpdateManyMutationInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -450,6 +464,7 @@ export type ContentPageUncheckedUpdateManyInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -467,6 +482,7 @@ export type ContentPageCountOrderByAggregateInput = {
   body?: Prisma.SortOrder
   seoTitle?: Prisma.SortOrder
   seoDescription?: Prisma.SortOrder
+  metadata?: Prisma.SortOrder
   status?: Prisma.SortOrder
   publishAt?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
@@ -541,6 +557,7 @@ export type ContentPageCreateWithoutVersionsInput = {
   body: string
   seoTitle?: string | null
   seoDescription?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.ContentStatus
   publishAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -558,6 +575,7 @@ export type ContentPageUncheckedCreateWithoutVersionsInput = {
   body: string
   seoTitle?: string | null
   seoDescription?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.ContentStatus
   publishAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -591,6 +609,7 @@ export type ContentPageUpdateWithoutVersionsInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -608,6 +627,7 @@ export type ContentPageUncheckedUpdateWithoutVersionsInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -656,6 +676,7 @@ export type ContentPageSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   body?: boolean
   seoTitle?: boolean
   seoDescription?: boolean
+  metadata?: boolean
   status?: boolean
   publishAt?: boolean
   publishedAt?: boolean
@@ -675,6 +696,7 @@ export type ContentPageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   body?: boolean
   seoTitle?: boolean
   seoDescription?: boolean
+  metadata?: boolean
   status?: boolean
   publishAt?: boolean
   publishedAt?: boolean
@@ -692,6 +714,7 @@ export type ContentPageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   body?: boolean
   seoTitle?: boolean
   seoDescription?: boolean
+  metadata?: boolean
   status?: boolean
   publishAt?: boolean
   publishedAt?: boolean
@@ -709,6 +732,7 @@ export type ContentPageSelectScalar = {
   body?: boolean
   seoTitle?: boolean
   seoDescription?: boolean
+  metadata?: boolean
   status?: boolean
   publishAt?: boolean
   publishedAt?: boolean
@@ -718,7 +742,7 @@ export type ContentPageSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ContentPageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "summary" | "body" | "seoTitle" | "seoDescription" | "status" | "publishAt" | "publishedAt" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["contentPage"]>
+export type ContentPageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "summary" | "body" | "seoTitle" | "seoDescription" | "metadata" | "status" | "publishAt" | "publishedAt" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["contentPage"]>
 export type ContentPageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   versions?: boolean | Prisma.ContentPage$versionsArgs<ExtArgs>
   _count?: boolean | Prisma.ContentPageCountOutputTypeDefaultArgs<ExtArgs>
@@ -739,6 +763,7 @@ export type $ContentPagePayload<ExtArgs extends runtime.Types.Extensions.Interna
     body: string
     seoTitle: string | null
     seoDescription: string | null
+    metadata: runtime.JsonValue | null
     status: $Enums.ContentStatus
     publishAt: Date | null
     publishedAt: Date | null
@@ -1177,6 +1202,7 @@ export interface ContentPageFieldRefs {
   readonly body: Prisma.FieldRef<"ContentPage", 'String'>
   readonly seoTitle: Prisma.FieldRef<"ContentPage", 'String'>
   readonly seoDescription: Prisma.FieldRef<"ContentPage", 'String'>
+  readonly metadata: Prisma.FieldRef<"ContentPage", 'Json'>
   readonly status: Prisma.FieldRef<"ContentPage", 'ContentStatus'>
   readonly publishAt: Prisma.FieldRef<"ContentPage", 'DateTime'>
   readonly publishedAt: Prisma.FieldRef<"ContentPage", 'DateTime'>

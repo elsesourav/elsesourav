@@ -347,26 +347,26 @@ export function AdminCategoriesClient({
 
       <section className="grid gap-3 sm:grid-cols-3">
         <Card>
-          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+          <p className="ui-text-muted text-xs uppercase tracking-wide">
             Active
           </p>
-          <p className="mt-1 text-2xl font-semibold text-[#111a2d]">
+          <p className="ui-text-heading mt-1 text-2xl font-semibold">
             {counts.active}
           </p>
         </Card>
         <Card>
-          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+          <p className="ui-text-muted text-xs uppercase tracking-wide">
             Pending deletion
           </p>
-          <p className="mt-1 text-2xl font-semibold text-[#111a2d]">
+          <p className="ui-text-heading mt-1 text-2xl font-semibold">
             {counts.pending}
           </p>
         </Card>
         <Card>
-          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+          <p className="ui-text-muted text-xs uppercase tracking-wide">
             Deleted
           </p>
-          <p className="mt-1 text-2xl font-semibold text-[#111a2d]">
+          <p className="ui-text-heading mt-1 text-2xl font-semibold">
             {counts.deleted}
           </p>
         </Card>
@@ -406,7 +406,7 @@ export function AdminCategoriesClient({
                   </Badge>
                 </div>
 
-                <div className="grid gap-1 text-xs text-[#5a647d]">
+                <div className="ui-text-muted grid gap-1 text-xs">
                   <p>Active apps: {category._count.apps}</p>
                   {scheduledAt ? <p>Deletes on: {scheduledAt}</p> : null}
                 </div>
@@ -444,7 +444,7 @@ export function AdminCategoriesClient({
                 </div>
 
                 {!canSchedule && !category.scheduledDeletionAt ? (
-                  <p className="text-xs text-[#4a5262]">
+                  <p className="ui-text-muted text-xs">
                     Remove active apps before scheduling deletion.
                   </p>
                 ) : null}

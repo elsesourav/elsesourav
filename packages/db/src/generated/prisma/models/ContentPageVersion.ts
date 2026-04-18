@@ -71,6 +71,7 @@ export type ContentPageVersionCountAggregateOutputType = {
   body: number
   seoTitle: number
   seoDescription: number
+  metadata: number
   status: number
   createdBy: number
   createdAt: number
@@ -123,6 +124,7 @@ export type ContentPageVersionCountAggregateInputType = {
   body?: true
   seoTitle?: true
   seoDescription?: true
+  metadata?: true
   status?: true
   createdBy?: true
   createdAt?: true
@@ -224,6 +226,7 @@ export type ContentPageVersionGroupByOutputType = {
   body: string
   seoTitle: string | null
   seoDescription: string | null
+  metadata: runtime.JsonValue | null
   status: $Enums.ContentStatus
   createdBy: string | null
   createdAt: Date
@@ -261,6 +264,7 @@ export type ContentPageVersionWhereInput = {
   body?: Prisma.StringFilter<"ContentPageVersion"> | string
   seoTitle?: Prisma.StringNullableFilter<"ContentPageVersion"> | string | null
   seoDescription?: Prisma.StringNullableFilter<"ContentPageVersion"> | string | null
+  metadata?: Prisma.JsonNullableFilter<"ContentPageVersion">
   status?: Prisma.EnumContentStatusFilter<"ContentPageVersion"> | $Enums.ContentStatus
   createdBy?: Prisma.StringNullableFilter<"ContentPageVersion"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ContentPageVersion"> | Date | string
@@ -276,6 +280,7 @@ export type ContentPageVersionOrderByWithRelationInput = {
   body?: Prisma.SortOrder
   seoTitle?: Prisma.SortOrderInput | Prisma.SortOrder
   seoDescription?: Prisma.SortOrderInput | Prisma.SortOrder
+  metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -295,6 +300,7 @@ export type ContentPageVersionWhereUniqueInput = Prisma.AtLeast<{
   body?: Prisma.StringFilter<"ContentPageVersion"> | string
   seoTitle?: Prisma.StringNullableFilter<"ContentPageVersion"> | string | null
   seoDescription?: Prisma.StringNullableFilter<"ContentPageVersion"> | string | null
+  metadata?: Prisma.JsonNullableFilter<"ContentPageVersion">
   status?: Prisma.EnumContentStatusFilter<"ContentPageVersion"> | $Enums.ContentStatus
   createdBy?: Prisma.StringNullableFilter<"ContentPageVersion"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ContentPageVersion"> | Date | string
@@ -310,6 +316,7 @@ export type ContentPageVersionOrderByWithAggregationInput = {
   body?: Prisma.SortOrder
   seoTitle?: Prisma.SortOrderInput | Prisma.SortOrder
   seoDescription?: Prisma.SortOrderInput | Prisma.SortOrder
+  metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -332,6 +339,7 @@ export type ContentPageVersionScalarWhereWithAggregatesInput = {
   body?: Prisma.StringWithAggregatesFilter<"ContentPageVersion"> | string
   seoTitle?: Prisma.StringNullableWithAggregatesFilter<"ContentPageVersion"> | string | null
   seoDescription?: Prisma.StringNullableWithAggregatesFilter<"ContentPageVersion"> | string | null
+  metadata?: Prisma.JsonNullableWithAggregatesFilter<"ContentPageVersion">
   status?: Prisma.EnumContentStatusWithAggregatesFilter<"ContentPageVersion"> | $Enums.ContentStatus
   createdBy?: Prisma.StringNullableWithAggregatesFilter<"ContentPageVersion"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ContentPageVersion"> | Date | string
@@ -345,6 +353,7 @@ export type ContentPageVersionCreateInput = {
   body: string
   seoTitle?: string | null
   seoDescription?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.ContentStatus
   createdBy?: string | null
   createdAt?: Date | string
@@ -360,6 +369,7 @@ export type ContentPageVersionUncheckedCreateInput = {
   body: string
   seoTitle?: string | null
   seoDescription?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.ContentStatus
   createdBy?: string | null
   createdAt?: Date | string
@@ -373,6 +383,7 @@ export type ContentPageVersionUpdateInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -388,6 +399,7 @@ export type ContentPageVersionUncheckedUpdateInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -402,6 +414,7 @@ export type ContentPageVersionCreateManyInput = {
   body: string
   seoTitle?: string | null
   seoDescription?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.ContentStatus
   createdBy?: string | null
   createdAt?: Date | string
@@ -415,6 +428,7 @@ export type ContentPageVersionUpdateManyMutationInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -429,6 +443,7 @@ export type ContentPageVersionUncheckedUpdateManyInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -458,6 +473,7 @@ export type ContentPageVersionCountOrderByAggregateInput = {
   body?: Prisma.SortOrder
   seoTitle?: Prisma.SortOrder
   seoDescription?: Prisma.SortOrder
+  metadata?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -549,6 +565,7 @@ export type ContentPageVersionCreateWithoutPageInput = {
   body: string
   seoTitle?: string | null
   seoDescription?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.ContentStatus
   createdBy?: string | null
   createdAt?: Date | string
@@ -562,6 +579,7 @@ export type ContentPageVersionUncheckedCreateWithoutPageInput = {
   body: string
   seoTitle?: string | null
   seoDescription?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.ContentStatus
   createdBy?: string | null
   createdAt?: Date | string
@@ -605,6 +623,7 @@ export type ContentPageVersionScalarWhereInput = {
   body?: Prisma.StringFilter<"ContentPageVersion"> | string
   seoTitle?: Prisma.StringNullableFilter<"ContentPageVersion"> | string | null
   seoDescription?: Prisma.StringNullableFilter<"ContentPageVersion"> | string | null
+  metadata?: Prisma.JsonNullableFilter<"ContentPageVersion">
   status?: Prisma.EnumContentStatusFilter<"ContentPageVersion"> | $Enums.ContentStatus
   createdBy?: Prisma.StringNullableFilter<"ContentPageVersion"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ContentPageVersion"> | Date | string
@@ -618,6 +637,7 @@ export type ContentPageVersionCreateManyPageInput = {
   body: string
   seoTitle?: string | null
   seoDescription?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.ContentStatus
   createdBy?: string | null
   createdAt?: Date | string
@@ -631,6 +651,7 @@ export type ContentPageVersionUpdateWithoutPageInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -644,6 +665,7 @@ export type ContentPageVersionUncheckedUpdateWithoutPageInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -657,6 +679,7 @@ export type ContentPageVersionUncheckedUpdateManyWithoutPageInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -673,6 +696,7 @@ export type ContentPageVersionSelect<ExtArgs extends runtime.Types.Extensions.In
   body?: boolean
   seoTitle?: boolean
   seoDescription?: boolean
+  metadata?: boolean
   status?: boolean
   createdBy?: boolean
   createdAt?: boolean
@@ -688,6 +712,7 @@ export type ContentPageVersionSelectCreateManyAndReturn<ExtArgs extends runtime.
   body?: boolean
   seoTitle?: boolean
   seoDescription?: boolean
+  metadata?: boolean
   status?: boolean
   createdBy?: boolean
   createdAt?: boolean
@@ -703,6 +728,7 @@ export type ContentPageVersionSelectUpdateManyAndReturn<ExtArgs extends runtime.
   body?: boolean
   seoTitle?: boolean
   seoDescription?: boolean
+  metadata?: boolean
   status?: boolean
   createdBy?: boolean
   createdAt?: boolean
@@ -718,12 +744,13 @@ export type ContentPageVersionSelectScalar = {
   body?: boolean
   seoTitle?: boolean
   seoDescription?: boolean
+  metadata?: boolean
   status?: boolean
   createdBy?: boolean
   createdAt?: boolean
 }
 
-export type ContentPageVersionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "pageId" | "version" | "title" | "summary" | "body" | "seoTitle" | "seoDescription" | "status" | "createdBy" | "createdAt", ExtArgs["result"]["contentPageVersion"]>
+export type ContentPageVersionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "pageId" | "version" | "title" | "summary" | "body" | "seoTitle" | "seoDescription" | "metadata" | "status" | "createdBy" | "createdAt", ExtArgs["result"]["contentPageVersion"]>
 export type ContentPageVersionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   page?: boolean | Prisma.ContentPageDefaultArgs<ExtArgs>
 }
@@ -748,6 +775,7 @@ export type $ContentPageVersionPayload<ExtArgs extends runtime.Types.Extensions.
     body: string
     seoTitle: string | null
     seoDescription: string | null
+    metadata: runtime.JsonValue | null
     status: $Enums.ContentStatus
     createdBy: string | null
     createdAt: Date
@@ -1183,6 +1211,7 @@ export interface ContentPageVersionFieldRefs {
   readonly body: Prisma.FieldRef<"ContentPageVersion", 'String'>
   readonly seoTitle: Prisma.FieldRef<"ContentPageVersion", 'String'>
   readonly seoDescription: Prisma.FieldRef<"ContentPageVersion", 'String'>
+  readonly metadata: Prisma.FieldRef<"ContentPageVersion", 'Json'>
   readonly status: Prisma.FieldRef<"ContentPageVersion", 'ContentStatus'>
   readonly createdBy: Prisma.FieldRef<"ContentPageVersion", 'String'>
   readonly createdAt: Prisma.FieldRef<"ContentPageVersion", 'DateTime'>

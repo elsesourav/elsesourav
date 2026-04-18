@@ -10,47 +10,52 @@ const quickRoutes = [
   {
     href: "/admin/apps",
     title: "Apps",
-    summary: "Review app states, pricing, and engagement counts.",
+    summary: "Manage catalog app records.",
   },
   {
     href: "/admin/categories",
     title: "Categories",
-    summary: "Create categories and manage delayed deletion lifecycle.",
+    summary: "Organize and maintain taxonomy.",
   },
   {
     href: "/admin/users",
     title: "Users",
-    summary: "Inspect role distribution and account activity signals.",
+    summary: "Review roles and account status.",
   },
   {
     href: "/admin/feedback",
     title: "Feedback",
-    summary: "Moderate user submissions and monitor quality trends.",
+    summary: "Moderate incoming submissions.",
   },
   {
     href: "/admin/store/sections",
     title: "Store sections",
-    summary: "Curate latest/upcoming/featured release windows.",
+    summary: "Control storefront rail sections.",
   },
   {
     href: "/admin/store/banners",
     title: "Store banners",
-    summary: "Control campaign placement and schedule windows.",
+    summary: "Schedule and place banners.",
   },
   {
     href: "/admin/content/pages",
-    title: "Content pages",
-    summary: "Manage dynamic CMS content and publish revisions.",
+    title: "Pages",
+    summary: "Edit static content pages.",
   },
   {
     href: "/admin/content/blog",
-    title: "Blog posts",
-    summary: "Draft, preview, and publish editorial posts.",
+    title: "Blog",
+    summary: "Publish editorial updates.",
   },
   {
     href: "/admin/theme/configs",
     title: "Theme configs",
-    summary: "Tune visual presets and currently active palette.",
+    summary: "Manage visual brand presets.",
+  },
+  {
+    href: "/admin/control",
+    title: "API docs",
+    summary: "Open service references.",
   },
 ] as const;
 
@@ -69,11 +74,12 @@ function toneForStatus(status: string): string {
     return "border-rose-200 bg-rose-50 text-rose-700";
   }
 
-  return "border-black/15 bg-[#f6f8fc] text-[#3f4757]";
+  return "ui-border ui-surface-soft ui-text-muted";
 }
 
 export default async function AdminPage() {
   const user = await requireAdminContext();
+  const displayName = user.email?.split("@")[0] ?? "Admin";
 
   const [catalogStats, authStats, userStats] = await Promise.all([
     fetchServiceData<CatalogStats>({
@@ -101,128 +107,92 @@ export default async function AdminPage() {
     })),
   ]);
 
-  const activityTotal =
-    catalogStats.appsCount + authStats.usersCount + userStats.feedbackCount;
-
   const topCards = [
     {
       label: "Catalog apps",
       value: catalogStats.appsCount,
-      accent: "from-[#1f5ed4]/20 to-[#1f5ed4]/0",
-      detail: "Visible app entities in catalog-service.",
+      detail: "Current app entities",
     },
     {
       label: "Total users",
       value: authStats.usersCount,
-      accent: "from-emerald-400/20 to-emerald-400/0",
-      detail: "Accounts available for platform access.",
+      detail: "Registered accounts",
     },
     {
       label: "Feedback entries",
       value: userStats.feedbackCount,
-      accent: "from-orange-400/20 to-orange-400/0",
-      detail: "Messages waiting for moderation context.",
-    },
-    {
-      label: "Categories",
-      value: catalogStats.categoriesCount,
-      accent: "from-violet-400/20 to-violet-400/0",
-      detail: "Categories currently available for assignment.",
+      detail: "Moderation queue size",
     },
   ] as const;
 
   return (
-    <div className="space-y-5 p-4 sm:p-5 lg:p-6">
+    <div className="space-y-5 p-2 sm:p-3 lg:p-4">
       <PageHeader
-        eyebrow="Command Deck"
-        title="Platform control center"
-        description="Centralized overview for catalog, users, feedback, and content operations."
+        eyebrow="Admin"
+        title="Control center"
+        description="Clean operational view for apps, users, content, and support flows."
       />
 
-      <section className="grid gap-3 sm:grid-cols-[1.25fr_1fr]">
-        <article className="rounded-2xl border border-black/10 bg-[linear-gradient(140deg,#18284a,#1f5ed4)] p-4 text-white shadow-[0_16px_34px_-24px_rgba(20,23,31,0.9)]">
-          <p className="text-xs uppercase tracking-[0.12em] text-blue-100">
-            Operations summary
+      <section className="grid gap-3 lg:grid-cols-[1.35fr_1fr]">
+        <article className="rounded-2xl border ui-border bg-[linear-gradient(140deg,color-mix(in_srgb,var(--brand-primary)_86%,black_14%),color-mix(in_srgb,var(--brand-secondary)_88%,black_12%))] p-4 text-white shadow-[0_16px_34px_-24px_rgba(20,23,31,0.9)]">
+          <p className="text-xs uppercase tracking-[0.14em] text-blue-100">
+            Welcome
           </p>
           <h2 className="mt-2 text-2xl font-semibold tracking-tight">
-            {activityTotal.toLocaleString()} tracked entities
+            Hello, {displayName}
           </h2>
           <p className="mt-2 text-sm text-blue-100">
-            Combined app, user, and feedback totals for a quick system pulse.
+            Use the sidebar to move between sections and keep operations tidy.
           </p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            <Link
-              href="/admin/control"
-              className="rounded-full border border-white/35 bg-white/15 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/25"
-            >
-              Open microservice controls
-            </Link>
-            <Link
-              href="/admin/categories"
-              className="rounded-full border border-white/35 bg-white/15 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/25"
-            >
-              Manage categories
-            </Link>
-          </div>
         </article>
 
-        <article className="rounded-2xl border border-black/10 bg-[#f8fbff] p-4">
-          <p className="text-xs uppercase tracking-[0.12em] text-[#5b6781]">
-            Operator context
+        <article className="ui-card rounded-2xl border p-4">
+          <p className="ui-text-muted text-xs uppercase tracking-[0.12em]">
+            Account
           </p>
-          <p className="mt-2 text-sm font-medium text-[#1a2235]">User ID</p>
-          <p className="truncate text-xs text-[#5b6781]">{user.id}</p>
-          <p className="mt-3 text-sm font-medium text-[#1a2235]">Role</p>
-          <p className="text-xs text-[#5b6781]">{user.role}</p>
-          <p className="mt-3 text-sm font-medium text-[#1a2235]">Email</p>
-          <p className="truncate text-xs text-[#5b6781]">
+          <p className="ui-text-heading mt-2 text-sm font-medium">Email</p>
+          <p className="ui-text-muted truncate text-xs">
             {user.email ?? "Unknown"}
           </p>
+          <p className="ui-text-heading mt-3 text-sm font-medium">Role</p>
+          <p className="ui-text-muted text-xs">{user.role}</p>
         </article>
       </section>
 
-      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="grid gap-3 sm:grid-cols-3">
         {topCards.map((card) => (
           <article
             key={card.label}
-            className="relative flex min-h-44 flex-col overflow-hidden rounded-2xl border border-black/10 bg-white p-4"
+            className="ui-card relative flex min-h-32 flex-col overflow-hidden rounded-2xl border p-4"
           >
-            <div
-              className={`pointer-events-none absolute inset-x-0 top-0 h-14 bg-linear-to-b ${card.accent}`}
-            />
-            <p className="relative text-xs uppercase tracking-[0.11em] text-[#56617a]">
+            <p className="ui-text-muted relative text-xs uppercase tracking-[0.11em]">
               {card.label}
             </p>
-            <p className="relative mt-2 text-3xl font-semibold text-[#0f1524]">
+            <p className="ui-text-heading relative mt-2 text-3xl font-semibold">
               {card.value.toLocaleString()}
             </p>
-            <p className="relative mt-2 text-xs text-[#5a647d]">
-              {card.detail}
-            </p>
+            <p className="ui-text-muted relative mt-2 text-xs">{card.detail}</p>
           </article>
         ))}
       </section>
 
-      <section className="grid gap-3 lg:grid-cols-[1.2fr_1fr]">
-        <article className="rounded-2xl border border-black/10 bg-white p-4">
-          <h2 className="text-lg font-semibold text-[#151c2d]">Recent apps</h2>
-          <p className="mt-1 text-xs text-[#5a647d]">
-            Latest entities created in the catalog service.
-          </p>
+      <section className="grid gap-3 lg:grid-cols-[1.25fr_1fr]">
+        <article className="ui-card rounded-2xl border p-4">
+          <h2 className="ui-text-heading text-lg font-semibold">Recent apps</h2>
           <div className="mt-3 grid gap-2">
             {catalogStats.recentApps.length === 0 ? (
-              <p className="rounded-xl border border-black/10 bg-[#f8f9fc] px-3 py-2 text-sm text-[#5a647d]">
+              <p className="ui-surface-soft ui-border rounded-xl border px-3 py-2 text-sm ui-text-muted">
                 No recent apps available.
               </p>
             ) : null}
             {catalogStats.recentApps.map((app) => (
               <article
                 key={app.id}
-                className="flex items-start justify-between gap-3 rounded-xl border border-black/10 bg-[#fbfcff] px-3 py-2"
+                className="ui-border flex items-start justify-between gap-3 rounded-xl border bg-[color-mix(in_srgb,var(--background)_95%,white_5%)] px-3 py-2"
               >
                 <div>
-                  <p className="font-semibold text-[#141c2d]">{app.title}</p>
-                  <p className="text-xs text-[#5b6680]">/{app.slug}</p>
+                  <p className="ui-text-heading font-semibold">{app.title}</p>
+                  <p className="ui-text-muted text-xs">/{app.slug}</p>
                 </div>
                 <span
                   className={`rounded-full border px-2 py-1 text-[11px] font-semibold ${toneForStatus(app.status)}`}
@@ -234,37 +204,25 @@ export default async function AdminPage() {
           </div>
         </article>
 
-        <article className="rounded-2xl border border-black/10 bg-white p-4">
-          <h2 className="text-lg font-semibold text-[#151c2d]">Quick routes</h2>
-          <p className="mt-1 text-xs text-[#5a647d]">
-            Jump straight to operational screens.
-          </p>
+        <article className="ui-card rounded-2xl border p-4">
+          <h2 className="ui-text-heading text-lg font-semibold">
+            Quick routes
+          </h2>
           <div className="mt-3 grid gap-2">
             {quickRoutes.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="block rounded-xl border border-black/10 bg-[#fcfdff] px-3 py-2.5 hover:border-black/20 hover:bg-white"
+                className="ui-border block rounded-xl border bg-[color-mix(in_srgb,var(--background)_95%,white_5%)] px-3 py-2.5 hover:ui-border-strong hover:bg-[color-mix(in_srgb,var(--background)_86%,var(--brand-secondary)_14%)]"
               >
-                <p className="text-sm font-semibold text-[#172032]">
+                <p className="ui-text-heading text-sm font-semibold">
                   {item.title}
                 </p>
-                <p className="text-xs text-[#5a647d]">{item.summary}</p>
+                <p className="ui-text-muted text-xs">{item.summary}</p>
               </Link>
             ))}
           </div>
         </article>
-      </section>
-
-      <section className="rounded-2xl border border-black/10 bg-[#f7f9ff] p-4">
-        <h2 className="text-sm font-semibold uppercase tracking-widest text-[#1f5ed4]">
-          Operational notes
-        </h2>
-        <p className="mt-2 text-sm text-[#44506a]">
-          Category deletions are delayed with a restore window. If a category
-          has active apps, schedule delete is blocked until those apps are
-          removed.
-        </p>
       </section>
     </div>
   );

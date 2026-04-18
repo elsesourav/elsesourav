@@ -4,10 +4,7 @@ import type { HTMLAttributes } from "react";
 export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn(
-        "rounded-2xl border border-black/10 bg-white p-4",
-        className,
-      )}
+      className={cn("ui-card rounded-2xl border p-4", className)}
       {...props}
     />
   );
@@ -19,7 +16,7 @@ export function CardTitle({
 }: HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h3
-      className={cn("text-base font-semibold text-[#141c2d]", className)}
+      className={cn("ui-text-heading text-base font-semibold", className)}
       {...props}
     />
   );
@@ -29,5 +26,5 @@ export function CardDescription({
   className,
   ...props
 }: HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn("text-sm text-[#4f5970]", className)} {...props} />;
+  return <p className={cn("ui-text-muted text-sm", className)} {...props} />;
 }

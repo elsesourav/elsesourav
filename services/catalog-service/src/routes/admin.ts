@@ -2,6 +2,8 @@ import { AppStatus, Prisma, prisma } from "@elsesourav/db";
 import {
   appLinkCreateSchema,
   appLinkUpdateSchema,
+  appMediaCreateSchema,
+  appMediaUpdateSchema,
   appTagAssignmentSchema,
   appTagCreateSchema,
   appTagUpdateSchema,
@@ -9,6 +11,12 @@ import {
   bannerUpdateSchema,
   categorySchema,
   createAppSchema,
+  customFieldDefinitionCreateSchema,
+  customFieldDefinitionUpdateSchema,
+  customFieldEntitySchema,
+  customFieldValuesQuerySchema,
+  customFieldValueUpdateSchema,
+  customFieldValueUpsertSchema,
   homeSliderCreateSchema,
   homeSliderUpdateSchema,
   sectionItemCreateSchema,
@@ -28,6 +36,23 @@ const idParamSchema = z.object({
 const appLinkIdParamSchema = z.object({
   id: z.string().cuid(),
   linkId: z.string().cuid(),
+});
+
+const appMediaIdParamSchema = z.object({
+  id: z.string().cuid(),
+  mediaId: z.string().cuid(),
+});
+
+const customFieldDefinitionQuerySchema = z.object({
+  entity: customFieldEntitySchema.optional(),
+  includeInactive: z
+    .enum(["true", "false"])
+    .optional()
+    .transform((value) => value === "true"),
+});
+
+const customFieldValueIdParamSchema = z.object({
+  id: z.string().cuid(),
 });
 
 const sliderListQuerySchema = z.object({
@@ -137,6 +162,38 @@ async function generateUniqueTagSlug(
   }
 }
 
+function normalizeMediaResponse<T extends { fileSizeBytes?: bigint | null }>(
+  media: T,
+): Omit<T, "fileSizeBytes"> & { fileSizeBytes: string | null } {
+  return {
+    ...media,
+    fileSizeBytes:
+      media.fileSizeBytes !== undefined && media.fileSizeBytes !== null
+        ? media.fileSizeBytes.toString()
+        : null,
+  };
+}
+
+function toNullablePrismaJson(
+  value: unknown,
+): Prisma.InputJsonValue | Prisma.NullableJsonNullValueInput {
+  if (value === null) {
+    return Prisma.JsonNull;
+  }
+
+  return value as Prisma.InputJsonValue;
+}
+
+function toRequiredPrismaJson(
+  value: unknown,
+): Prisma.InputJsonValue | Prisma.JsonNullValueInput {
+  if (value === null) {
+    return Prisma.JsonNull;
+  }
+
+  return value as Prisma.InputJsonValue;
+}
+
 adminCatalogRouter.get("/apps", async (_req, res) => {
   const requestId = getRequestId(res);
 
@@ -236,6 +293,7 @@ adminCatalogRouter.post("/apps", async (req, res) => {
         slug,
         shortDescription: parsed.data.shortDescription,
         fullDescription: parsed.data.fullDescription,
+        releaseNotes: parsed.data.releaseNotes,
         version: parsed.data.version,
         status: parsed.data.status,
         publishedAt:
@@ -243,6 +301,15 @@ adminCatalogRouter.post("/apps", async (req, res) => {
         isPaid: parsed.data.isPaid,
         isFeatured: parsed.data.isFeatured,
         price: parsed.data.isPaid ? parsed.data.price : 0,
+        iconUrl: parsed.data.iconUrl,
+        featureGraphicUrl: parsed.data.featureGraphicUrl,
+        promoVideoUrl: parsed.data.promoVideoUrl,
+        supportEmail: parsed.data.supportEmail,
+        supportWebsiteUrl: parsed.data.supportWebsiteUrl,
+        privacyPolicyUrl: parsed.data.privacyPolicyUrl,
+        containsAds: parsed.data.containsAds,
+        developerName: parsed.data.developerName,
+        metadata: parsed.data.metadata as Prisma.InputJsonValue | undefined,
         categoryId: parsed.data.categoryId,
         createdById: userId ?? "system-admin",
         updatedById: userId,
@@ -333,6 +400,7 @@ adminCatalogRouter.put("/apps/:id", async (req, res) => {
       where: { id: parsedId.data.id },
       data: {
         ...parsed.data,
+        metadata: parsed.data.metadata as Prisma.InputJsonValue | undefined,
         price: parsed.data.isPaid === false ? 0 : parsed.data.price,
         publishedAt:
           parsed.data.status === AppStatus.PUBLISHED &&
@@ -1307,6 +1375,872 @@ adminCatalogRouter.delete("/apps/:id/links/:linkId", async (req, res) => {
       requestId,
       "INTERNAL_ERROR",
       "Failed to delete release link.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.get("/apps/:id/media", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedId = idParamSchema.safeParse(req.params);
+    if (!parsedId.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid app id.",
+        400,
+      );
+    }
+
+    const app = await prisma.app.findFirst({
+      where: {
+        id: parsedId.data.id,
+        deletedAt: null,
+      },
+      select: { id: true },
+    });
+
+    if (!app) {
+      return sendFailure(res, requestId, "NOT_FOUND", "App not found.", 404);
+    }
+
+    const media = await prisma.appMedia.findMany({
+      where: {
+        appId: parsedId.data.id,
+      },
+      orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
+      select: {
+        id: true,
+        appId: true,
+        type: true,
+        url: true,
+        alt: true,
+        mimeType: true,
+        width: true,
+        height: true,
+        durationSec: true,
+        thumbnailUrl: true,
+        fileSizeBytes: true,
+        isAnimated: true,
+        sortOrder: true,
+        createdAt: true,
+      },
+    });
+
+    return sendSuccess(
+      res,
+      requestId,
+      media.map((entry) => normalizeMediaResponse(entry)),
+    );
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to fetch app media.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.post("/apps/:id/media", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedId = idParamSchema.safeParse(req.params);
+    if (!parsedId.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid app id.",
+        400,
+      );
+    }
+
+    const parsedBody = appMediaCreateSchema.safeParse(req.body);
+    if (!parsedBody.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid app media payload.",
+        400,
+        parsedBody.error.flatten(),
+      );
+    }
+
+    const app = await prisma.app.findFirst({
+      where: {
+        id: parsedId.data.id,
+        deletedAt: null,
+      },
+      select: { id: true },
+    });
+
+    if (!app) {
+      return sendFailure(res, requestId, "NOT_FOUND", "App not found.", 404);
+    }
+
+    const media = await prisma.appMedia.create({
+      data: {
+        appId: parsedId.data.id,
+        type: parsedBody.data.type,
+        url: parsedBody.data.url,
+        alt: parsedBody.data.alt ?? null,
+        mimeType: parsedBody.data.mimeType ?? null,
+        width: parsedBody.data.width ?? null,
+        height: parsedBody.data.height ?? null,
+        durationSec: parsedBody.data.durationSec ?? null,
+        thumbnailUrl: parsedBody.data.thumbnailUrl ?? null,
+        fileSizeBytes: parsedBody.data.fileSizeBytes
+          ? BigInt(parsedBody.data.fileSizeBytes)
+          : null,
+        isAnimated: parsedBody.data.isAnimated ?? false,
+        sortOrder: parsedBody.data.sortOrder,
+      },
+    });
+
+    return sendSuccess(res, requestId, normalizeMediaResponse(media), 201);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to save app media.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.patch("/apps/:id/media/:mediaId", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedParams = appMediaIdParamSchema.safeParse(req.params);
+    if (!parsedParams.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid media id.",
+        400,
+      );
+    }
+
+    const parsedBody = appMediaUpdateSchema.safeParse(req.body);
+    if (!parsedBody.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid app media payload.",
+        400,
+        parsedBody.error.flatten(),
+      );
+    }
+
+    const existing = await prisma.appMedia.findFirst({
+      where: {
+        id: parsedParams.data.mediaId,
+        appId: parsedParams.data.id,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!existing) {
+      return sendFailure(res, requestId, "NOT_FOUND", "Media not found.", 404);
+    }
+
+    const media = await prisma.appMedia.update({
+      where: {
+        id: existing.id,
+      },
+      data: {
+        type: parsedBody.data.type,
+        url: parsedBody.data.url,
+        alt:
+          parsedBody.data.alt === undefined
+            ? undefined
+            : (parsedBody.data.alt ?? null),
+        mimeType:
+          parsedBody.data.mimeType === undefined
+            ? undefined
+            : (parsedBody.data.mimeType ?? null),
+        width:
+          parsedBody.data.width === undefined
+            ? undefined
+            : (parsedBody.data.width ?? null),
+        height:
+          parsedBody.data.height === undefined
+            ? undefined
+            : (parsedBody.data.height ?? null),
+        durationSec:
+          parsedBody.data.durationSec === undefined
+            ? undefined
+            : (parsedBody.data.durationSec ?? null),
+        thumbnailUrl:
+          parsedBody.data.thumbnailUrl === undefined
+            ? undefined
+            : (parsedBody.data.thumbnailUrl ?? null),
+        fileSizeBytes:
+          parsedBody.data.fileSizeBytes === undefined
+            ? undefined
+            : parsedBody.data.fileSizeBytes
+              ? BigInt(parsedBody.data.fileSizeBytes)
+              : null,
+        isAnimated: parsedBody.data.isAnimated,
+        sortOrder: parsedBody.data.sortOrder,
+      },
+    });
+
+    return sendSuccess(res, requestId, normalizeMediaResponse(media));
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to update app media.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.delete("/apps/:id/media/:mediaId", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedParams = appMediaIdParamSchema.safeParse(req.params);
+    if (!parsedParams.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid media id.",
+        400,
+      );
+    }
+
+    const existing = await prisma.appMedia.findFirst({
+      where: {
+        id: parsedParams.data.mediaId,
+        appId: parsedParams.data.id,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!existing) {
+      return sendFailure(res, requestId, "NOT_FOUND", "Media not found.", 404);
+    }
+
+    await prisma.appMedia.delete({
+      where: {
+        id: existing.id,
+      },
+    });
+
+    return sendSuccess(res, requestId, { deleted: true });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to delete app media.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.get("/custom-fields", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsed = customFieldDefinitionQuerySchema.safeParse(req.query);
+    if (!parsed.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid custom fields query.",
+        400,
+        parsed.error.flatten(),
+      );
+    }
+
+    const where: Prisma.CustomFieldDefinitionWhereInput = {};
+
+    if (parsed.data.entity) {
+      where.entity = parsed.data.entity;
+    }
+
+    if (!parsed.data.includeInactive) {
+      where.isActive = true;
+    }
+
+    const definitions = await prisma.customFieldDefinition.findMany({
+      where,
+      orderBy: [{ entity: "asc" }, { key: "asc" }],
+      include: {
+        _count: {
+          select: {
+            values: true,
+          },
+        },
+      },
+    });
+
+    return sendSuccess(res, requestId, definitions);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to fetch custom fields.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.post("/custom-fields", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsed = customFieldDefinitionCreateSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid custom field definition payload.",
+        400,
+        parsed.error.flatten(),
+      );
+    }
+
+    const existing = await prisma.customFieldDefinition.findUnique({
+      where: {
+        entity_key: {
+          entity: parsed.data.entity,
+          key: parsed.data.key,
+        },
+      },
+      select: { id: true },
+    });
+
+    if (existing) {
+      return sendFailure(
+        res,
+        requestId,
+        "CONFLICT",
+        "A custom field with this key already exists for the selected entity.",
+        409,
+      );
+    }
+
+    const definition = await prisma.customFieldDefinition.create({
+      data: {
+        entity: parsed.data.entity,
+        key: parsed.data.key,
+        label: parsed.data.label,
+        description: parsed.data.description || null,
+        fieldType: parsed.data.fieldType,
+        isRequired: parsed.data.isRequired,
+        isActive: parsed.data.isActive,
+        isFilterable: parsed.data.isFilterable,
+        options:
+          parsed.data.options === undefined
+            ? undefined
+            : toNullablePrismaJson(parsed.data.options),
+        defaultValue:
+          parsed.data.defaultValue === undefined
+            ? undefined
+            : toNullablePrismaJson(parsed.data.defaultValue),
+      },
+      include: {
+        _count: {
+          select: {
+            values: true,
+          },
+        },
+      },
+    });
+
+    return sendSuccess(res, requestId, definition, 201);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to create custom field definition.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.get("/custom-fields/values", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsed = customFieldValuesQuerySchema.safeParse(req.query);
+    if (!parsed.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid custom field values query.",
+        400,
+        parsed.error.flatten(),
+      );
+    }
+
+    const where: Prisma.CustomFieldValueWhereInput = {};
+
+    if (parsed.data.definitionId) {
+      where.definitionId = parsed.data.definitionId;
+    }
+
+    if (parsed.data.entityId) {
+      where.entityId = parsed.data.entityId;
+    }
+
+    if (parsed.data.entity) {
+      where.definition = {
+        entity: parsed.data.entity,
+      };
+    }
+
+    const values = await prisma.customFieldValue.findMany({
+      where,
+      take: parsed.data.limit,
+      orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
+      include: {
+        definition: {
+          select: {
+            id: true,
+            entity: true,
+            key: true,
+            label: true,
+            fieldType: true,
+          },
+        },
+      },
+    });
+
+    return sendSuccess(res, requestId, values);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to fetch custom field values.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.post("/custom-fields/values", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsed = customFieldValueUpsertSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid custom field value payload.",
+        400,
+        parsed.error.flatten(),
+      );
+    }
+
+    const definition = await prisma.customFieldDefinition.findUnique({
+      where: { id: parsed.data.definitionId },
+      select: { id: true },
+    });
+
+    if (!definition) {
+      return sendFailure(
+        res,
+        requestId,
+        "NOT_FOUND",
+        "Custom field definition not found.",
+        404,
+      );
+    }
+
+    const existing = await prisma.customFieldValue.findUnique({
+      where: {
+        definitionId_entityId: {
+          definitionId: parsed.data.definitionId,
+          entityId: parsed.data.entityId,
+        },
+      },
+      select: { id: true },
+    });
+
+    const value = existing
+      ? await prisma.customFieldValue.update({
+          where: {
+            id: existing.id,
+          },
+          data: {
+            value: toRequiredPrismaJson(parsed.data.value),
+          },
+          include: {
+            definition: {
+              select: {
+                id: true,
+                entity: true,
+                key: true,
+                label: true,
+                fieldType: true,
+              },
+            },
+          },
+        })
+      : await prisma.customFieldValue.create({
+          data: {
+            definitionId: parsed.data.definitionId,
+            entityId: parsed.data.entityId,
+            value: toRequiredPrismaJson(parsed.data.value),
+          },
+          include: {
+            definition: {
+              select: {
+                id: true,
+                entity: true,
+                key: true,
+                label: true,
+                fieldType: true,
+              },
+            },
+          },
+        });
+
+    return sendSuccess(res, requestId, value, existing ? 200 : 201);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to save custom field value.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.patch("/custom-fields/values/:id", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedId = customFieldValueIdParamSchema.safeParse(req.params);
+    if (!parsedId.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid custom field value id.",
+        400,
+      );
+    }
+
+    const parsedBody = customFieldValueUpdateSchema.safeParse(req.body);
+    if (!parsedBody.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid custom field value payload.",
+        400,
+        parsedBody.error.flatten(),
+      );
+    }
+
+    const existing = await prisma.customFieldValue.findUnique({
+      where: {
+        id: parsedId.data.id,
+      },
+      select: { id: true },
+    });
+
+    if (!existing) {
+      return sendFailure(
+        res,
+        requestId,
+        "NOT_FOUND",
+        "Custom field value not found.",
+        404,
+      );
+    }
+
+    const value = await prisma.customFieldValue.update({
+      where: {
+        id: existing.id,
+      },
+      data: {
+        value: toRequiredPrismaJson(parsedBody.data.value),
+      },
+      include: {
+        definition: {
+          select: {
+            id: true,
+            entity: true,
+            key: true,
+            label: true,
+            fieldType: true,
+          },
+        },
+      },
+    });
+
+    return sendSuccess(res, requestId, value);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to update custom field value.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.delete("/custom-fields/values/:id", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedId = customFieldValueIdParamSchema.safeParse(req.params);
+    if (!parsedId.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid custom field value id.",
+        400,
+      );
+    }
+
+    const existing = await prisma.customFieldValue.findUnique({
+      where: {
+        id: parsedId.data.id,
+      },
+      select: { id: true },
+    });
+
+    if (!existing) {
+      return sendFailure(
+        res,
+        requestId,
+        "NOT_FOUND",
+        "Custom field value not found.",
+        404,
+      );
+    }
+
+    await prisma.customFieldValue.delete({
+      where: {
+        id: existing.id,
+      },
+    });
+
+    return sendSuccess(res, requestId, { deleted: true });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to delete custom field value.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.patch("/custom-fields/:id", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedId = idParamSchema.safeParse(req.params);
+    if (!parsedId.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid custom field definition id.",
+        400,
+      );
+    }
+
+    const parsedBody = customFieldDefinitionUpdateSchema.safeParse(req.body);
+    if (!parsedBody.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid custom field definition payload.",
+        400,
+        parsedBody.error.flatten(),
+      );
+    }
+
+    const existing = await prisma.customFieldDefinition.findUnique({
+      where: {
+        id: parsedId.data.id,
+      },
+      select: {
+        id: true,
+        entity: true,
+        key: true,
+      },
+    });
+
+    if (!existing) {
+      return sendFailure(
+        res,
+        requestId,
+        "NOT_FOUND",
+        "Custom field definition not found.",
+        404,
+      );
+    }
+
+    const nextEntity = parsedBody.data.entity ?? existing.entity;
+    const nextKey = parsedBody.data.key ?? existing.key;
+
+    if (nextEntity !== existing.entity || nextKey !== existing.key) {
+      const duplicate = await prisma.customFieldDefinition.findUnique({
+        where: {
+          entity_key: {
+            entity: nextEntity,
+            key: nextKey,
+          },
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (duplicate && duplicate.id !== existing.id) {
+        return sendFailure(
+          res,
+          requestId,
+          "CONFLICT",
+          "A custom field with this key already exists for the selected entity.",
+          409,
+        );
+      }
+    }
+
+    const definition = await prisma.customFieldDefinition.update({
+      where: {
+        id: existing.id,
+      },
+      data: {
+        entity: parsedBody.data.entity,
+        key: parsedBody.data.key,
+        label: parsedBody.data.label,
+        description:
+          parsedBody.data.description === undefined
+            ? undefined
+            : parsedBody.data.description || null,
+        fieldType: parsedBody.data.fieldType,
+        isRequired: parsedBody.data.isRequired,
+        isActive: parsedBody.data.isActive,
+        isFilterable: parsedBody.data.isFilterable,
+        options:
+          parsedBody.data.options === undefined
+            ? undefined
+            : toNullablePrismaJson(parsedBody.data.options),
+        defaultValue:
+          parsedBody.data.defaultValue === undefined
+            ? undefined
+            : toNullablePrismaJson(parsedBody.data.defaultValue),
+      },
+      include: {
+        _count: {
+          select: {
+            values: true,
+          },
+        },
+      },
+    });
+
+    return sendSuccess(res, requestId, definition);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to update custom field definition.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminCatalogRouter.delete("/custom-fields/:id", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedId = idParamSchema.safeParse(req.params);
+    if (!parsedId.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid custom field definition id.",
+        400,
+      );
+    }
+
+    const existing = await prisma.customFieldDefinition.findUnique({
+      where: {
+        id: parsedId.data.id,
+      },
+      select: { id: true },
+    });
+
+    if (!existing) {
+      return sendFailure(
+        res,
+        requestId,
+        "NOT_FOUND",
+        "Custom field definition not found.",
+        404,
+      );
+    }
+
+    await prisma.customFieldDefinition.delete({
+      where: {
+        id: existing.id,
+      },
+    });
+
+    return sendSuccess(res, requestId, { deleted: true });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to delete custom field definition.",
       500,
       error instanceof Error ? error.message : "Unknown error",
     );

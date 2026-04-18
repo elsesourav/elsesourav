@@ -8,6 +8,10 @@ import {
   feedbackModerationSchema,
   libraryMutationSchema,
   recentlyViewedQuerySchema,
+  supportTicketCreateSchema,
+  supportTicketListQuerySchema,
+  supportTicketReplyCreateSchema,
+  supportTicketUpdateSchema,
   userDeletionScheduleSchema,
   userSettingsUpdateSchema,
 } from "@elsesourav/validation";
@@ -30,6 +34,23 @@ const feedbackListQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(50).optional().default(10),
 });
 
+const supportTicketIdParamSchema = z.object({
+  id: z.string().cuid(),
+});
+
+const adminSupportTicketListQuerySchema = z.object({
+  status: z
+    .enum(["OPEN", "IN_PROGRESS", "WAITING_FOR_USER", "RESOLVED", "CLOSED"])
+    .optional(),
+  priority: z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"]).optional(),
+  appId: z.string().cuid().optional(),
+  assignedToId: z.string().cuid().optional(),
+  search: z.string().trim().max(120).optional(),
+  limit: z.coerce.number().int().min(1).max(100).default(20),
+  userId: z.string().cuid().optional(),
+  includeClosed: z.coerce.boolean().default(true),
+});
+
 const appStatsListQuerySchema = z.object({
   sort: z.enum(["views", "downloads", "rating"]).default("views"),
   limit: z.coerce.number().int().min(1).max(50).default(10),
@@ -50,6 +71,41 @@ type UserDeletionSchedulePayload = {
   minimumDelayDays: number;
   maximumDelayDays: number;
   defaultDelayDays: number;
+};
+
+type SupportTicketSummaryRow = {
+  id: string;
+  userId: string | null;
+  appId: string | null;
+  subject: string;
+  description: string;
+  status: string;
+  priority: string;
+  category: string | null;
+  channel: string;
+  sourceUrl: string | null;
+  assignedToId: string | null;
+  firstResponseAt: Date | null;
+  resolvedAt: Date | null;
+  closedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+  appTitle: string | null;
+  appSlug: string | null;
+  messageCount: number;
+};
+
+type SupportTicketMessageRow = {
+  id: string;
+  ticketId: string;
+  authorUserId: string | null;
+  authorType: string;
+  body: string;
+  isInternal: boolean;
+  attachments: Prisma.JsonValue | null;
+  createdAt: Date;
+  authorName: string | null;
+  authorEmail: string | null;
 };
 
 const userDeletionDelayDays = {
@@ -119,6 +175,76 @@ function toDeletionSchedulePayload(user: {
     maximumDelayDays: userDeletionDelayDays.maximum,
     defaultDelayDays: userDeletionDelayDays.default,
   };
+}
+
+async function getSupportTicketById(
+  ticketId: string,
+  options?: {
+    userId?: string;
+  },
+): Promise<SupportTicketSummaryRow | null> {
+  const whereClauses: Prisma.Sql[] = [Prisma.sql`t.id = ${ticketId}`];
+
+  if (options?.userId) {
+    whereClauses.push(Prisma.sql`t.user_id = ${options.userId}`);
+  }
+
+  const rows = await prisma.$queryRaw<SupportTicketSummaryRow[]>(Prisma.sql`
+    SELECT
+      t.id,
+      t.user_id AS "userId",
+      t.app_id AS "appId",
+      t.subject,
+      t.description,
+      t.status::text AS "status",
+      t.priority::text AS "priority",
+      t.category,
+      t.channel::text AS "channel",
+      t.source_url AS "sourceUrl",
+      t.assigned_to AS "assignedToId",
+      t.first_response_at AS "firstResponseAt",
+      t.resolved_at AS "resolvedAt",
+      t.closed_at AS "closedAt",
+      t.created_at AS "createdAt",
+      t.updated_at AS "updatedAt",
+      a.title AS "appTitle",
+      a.slug AS "appSlug",
+      (
+        SELECT COUNT(*)::int
+        FROM support_ticket_messages m
+        WHERE m.ticket_id = t.id
+      ) AS "messageCount"
+    FROM support_tickets t
+    LEFT JOIN apps a ON a.id = t.app_id
+    WHERE ${Prisma.join(whereClauses, " AND ")}
+    LIMIT 1
+  `);
+
+  return rows[0] ?? null;
+}
+
+async function getSupportTicketMessages(
+  ticketId: string,
+  includeInternal: boolean,
+): Promise<SupportTicketMessageRow[]> {
+  return prisma.$queryRaw<SupportTicketMessageRow[]>(Prisma.sql`
+    SELECT
+      m.id,
+      m.ticket_id AS "ticketId",
+      m.author_user_id AS "authorUserId",
+      m.author_type AS "authorType",
+      m.body,
+      m.is_internal AS "isInternal",
+      m.attachments,
+      m.created_at AS "createdAt",
+      u.name AS "authorName",
+      u.email AS "authorEmail"
+    FROM support_ticket_messages m
+    LEFT JOIN users u ON u.id = m.author_user_id
+    WHERE m.ticket_id = ${ticketId}
+      ${includeInternal ? Prisma.empty : Prisma.sql`AND m.is_internal = FALSE`}
+    ORDER BY m.created_at ASC
+  `);
 }
 
 async function recomputeAggregateStatsForApp(appId: string, date: Date) {
@@ -1059,6 +1185,743 @@ userRouter.post("/feedback", async (req, res) => {
       requestId,
       "INTERNAL_ERROR",
       "Failed to submit feedback.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+userRouter.post("/support/tickets", async (req, res) => {
+  const requestId = getRequestId(res);
+  const userId = requireUserId(req, res);
+  if (!userId) {
+    return;
+  }
+
+  try {
+    const parsed = supportTicketCreateSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid support ticket payload.",
+        400,
+        parsed.error.flatten(),
+      );
+    }
+
+    if (parsed.data.appId) {
+      const app = await prisma.app.findFirst({
+        where: {
+          id: parsed.data.appId,
+          deletedAt: null,
+          status: AppStatus.PUBLISHED,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (!app) {
+        return sendFailure(res, requestId, "NOT_FOUND", "App not found.", 404);
+      }
+    }
+
+    const metadataJson = parsed.data.metadata
+      ? JSON.stringify(parsed.data.metadata)
+      : null;
+
+    const inserted = await prisma.$queryRaw<{ id: string }[]>(Prisma.sql`
+      INSERT INTO support_tickets (
+        user_id,
+        app_id,
+        subject,
+        description,
+        priority,
+        category,
+        channel,
+        source_url,
+        metadata
+      )
+      VALUES (
+        ${userId},
+        ${parsed.data.appId ?? null},
+        ${parsed.data.subject},
+        ${parsed.data.description},
+        ${parsed.data.priority}::"SupportTicketPriority",
+        ${parsed.data.category ?? null},
+        ${parsed.data.channel}::"SupportTicketChannel",
+        ${parsed.data.sourceUrl ?? null},
+        ${metadataJson}::jsonb
+      )
+      RETURNING id
+    `);
+
+    const ticketId = inserted[0]?.id;
+    if (!ticketId) {
+      return sendFailure(
+        res,
+        requestId,
+        "INTERNAL_ERROR",
+        "Failed to create support ticket.",
+        500,
+      );
+    }
+
+    const ticket = await getSupportTicketById(ticketId, { userId });
+    if (!ticket) {
+      return sendFailure(
+        res,
+        requestId,
+        "INTERNAL_ERROR",
+        "Failed to fetch created support ticket.",
+        500,
+      );
+    }
+
+    return sendSuccess(
+      res,
+      requestId,
+      {
+        ticket,
+        messages: [],
+      },
+      201,
+    );
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to create support ticket.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+userRouter.get("/support/tickets", async (req, res) => {
+  const requestId = getRequestId(res);
+  const userId = requireUserId(req, res);
+  if (!userId) {
+    return;
+  }
+
+  try {
+    const parsed = supportTicketListQuerySchema.safeParse(req.query);
+    if (!parsed.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid support ticket query.",
+        400,
+        parsed.error.flatten(),
+      );
+    }
+
+    const whereClauses: Prisma.Sql[] = [Prisma.sql`t.user_id = ${userId}`];
+
+    if (parsed.data.status) {
+      whereClauses.push(Prisma.sql`t.status::text = ${parsed.data.status}`);
+    }
+
+    if (parsed.data.priority) {
+      whereClauses.push(Prisma.sql`t.priority::text = ${parsed.data.priority}`);
+    }
+
+    if (parsed.data.appId) {
+      whereClauses.push(Prisma.sql`t.app_id = ${parsed.data.appId}`);
+    }
+
+    if (parsed.data.search) {
+      const searchTerm = `%${parsed.data.search}%`;
+      whereClauses.push(
+        Prisma.sql`(t.subject ILIKE ${searchTerm} OR t.description ILIKE ${searchTerm})`,
+      );
+    }
+
+    const tickets = await prisma.$queryRaw<
+      SupportTicketSummaryRow[]
+    >(Prisma.sql`
+      SELECT
+        t.id,
+        t.user_id AS "userId",
+        t.app_id AS "appId",
+        t.subject,
+        t.description,
+        t.status::text AS "status",
+        t.priority::text AS "priority",
+        t.category,
+        t.channel::text AS "channel",
+        t.source_url AS "sourceUrl",
+        t.assigned_to AS "assignedToId",
+        t.first_response_at AS "firstResponseAt",
+        t.resolved_at AS "resolvedAt",
+        t.closed_at AS "closedAt",
+        t.created_at AS "createdAt",
+        t.updated_at AS "updatedAt",
+        a.title AS "appTitle",
+        a.slug AS "appSlug",
+        (
+          SELECT COUNT(*)::int
+          FROM support_ticket_messages m
+          WHERE m.ticket_id = t.id
+            AND m.is_internal = FALSE
+        ) AS "messageCount"
+      FROM support_tickets t
+      LEFT JOIN apps a ON a.id = t.app_id
+      WHERE ${Prisma.join(whereClauses, " AND ")}
+      ORDER BY t.updated_at DESC
+      LIMIT ${parsed.data.limit}
+    `);
+
+    return sendSuccess(res, requestId, tickets);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to fetch support tickets.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+userRouter.get("/support/tickets/:id", async (req, res) => {
+  const requestId = getRequestId(res);
+  const userId = requireUserId(req, res);
+  if (!userId) {
+    return;
+  }
+
+  try {
+    const parsedParam = supportTicketIdParamSchema.safeParse(req.params);
+    if (!parsedParam.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid support ticket id.",
+        400,
+      );
+    }
+
+    const ticket = await getSupportTicketById(parsedParam.data.id, { userId });
+    if (!ticket) {
+      return sendFailure(
+        res,
+        requestId,
+        "NOT_FOUND",
+        "Support ticket not found.",
+        404,
+      );
+    }
+
+    const messages = await getSupportTicketMessages(ticket.id, false);
+
+    return sendSuccess(res, requestId, {
+      ticket,
+      messages,
+    });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to fetch support ticket.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+userRouter.post("/support/tickets/:id/replies", async (req, res) => {
+  const requestId = getRequestId(res);
+  const userId = requireUserId(req, res);
+  if (!userId) {
+    return;
+  }
+
+  try {
+    const parsedParam = supportTicketIdParamSchema.safeParse(req.params);
+    if (!parsedParam.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid support ticket id.",
+        400,
+      );
+    }
+
+    const parsedBody = supportTicketReplyCreateSchema.safeParse(req.body);
+    if (!parsedBody.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid support reply payload.",
+        400,
+        parsedBody.error.flatten(),
+      );
+    }
+
+    const ticket = await getSupportTicketById(parsedParam.data.id, { userId });
+    if (!ticket) {
+      return sendFailure(
+        res,
+        requestId,
+        "NOT_FOUND",
+        "Support ticket not found.",
+        404,
+      );
+    }
+
+    const attachmentsJson = parsedBody.data.attachments
+      ? JSON.stringify(parsedBody.data.attachments)
+      : null;
+
+    await prisma.$transaction([
+      prisma.$executeRaw(Prisma.sql`
+        INSERT INTO support_ticket_messages (
+          ticket_id,
+          author_user_id,
+          author_type,
+          body,
+          is_internal,
+          attachments
+        )
+        VALUES (
+          ${ticket.id},
+          ${userId},
+          'USER',
+          ${parsedBody.data.body},
+          FALSE,
+          ${attachmentsJson}::jsonb
+        )
+      `),
+      prisma.$executeRaw(Prisma.sql`
+        UPDATE support_tickets
+        SET
+          status = CASE
+            WHEN status = 'WAITING_FOR_USER'::"SupportTicketStatus"
+              THEN 'IN_PROGRESS'::"SupportTicketStatus"
+            ELSE status
+          END,
+          updated_at = NOW()
+        WHERE id = ${ticket.id}
+      `),
+    ]);
+
+    const updatedTicket = await getSupportTicketById(ticket.id, { userId });
+    if (!updatedTicket) {
+      return sendFailure(
+        res,
+        requestId,
+        "INTERNAL_ERROR",
+        "Failed to fetch updated support ticket.",
+        500,
+      );
+    }
+
+    const messages = await getSupportTicketMessages(ticket.id, false);
+
+    return sendSuccess(res, requestId, {
+      ticket: updatedTicket,
+      messages,
+    });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to submit support reply.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminUserRouter.get("/support/tickets", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsed = adminSupportTicketListQuerySchema.safeParse(req.query);
+    if (!parsed.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid admin support ticket query.",
+        400,
+        parsed.error.flatten(),
+      );
+    }
+
+    const whereClauses: Prisma.Sql[] = [];
+
+    if (parsed.data.status) {
+      whereClauses.push(Prisma.sql`t.status::text = ${parsed.data.status}`);
+    }
+
+    if (!parsed.data.includeClosed) {
+      whereClauses.push(Prisma.sql`t.status::text <> 'CLOSED'`);
+    }
+
+    if (parsed.data.priority) {
+      whereClauses.push(Prisma.sql`t.priority::text = ${parsed.data.priority}`);
+    }
+
+    if (parsed.data.appId) {
+      whereClauses.push(Prisma.sql`t.app_id = ${parsed.data.appId}`);
+    }
+
+    if (parsed.data.assignedToId) {
+      whereClauses.push(
+        Prisma.sql`t.assigned_to = ${parsed.data.assignedToId}`,
+      );
+    }
+
+    if (parsed.data.userId) {
+      whereClauses.push(Prisma.sql`t.user_id = ${parsed.data.userId}`);
+    }
+
+    if (parsed.data.search) {
+      const searchTerm = `%${parsed.data.search}%`;
+      whereClauses.push(
+        Prisma.sql`(t.subject ILIKE ${searchTerm} OR t.description ILIKE ${searchTerm})`,
+      );
+    }
+
+    const tickets = await prisma.$queryRaw<
+      SupportTicketSummaryRow[]
+    >(Prisma.sql`
+      SELECT
+        t.id,
+        t.user_id AS "userId",
+        t.app_id AS "appId",
+        t.subject,
+        t.description,
+        t.status::text AS "status",
+        t.priority::text AS "priority",
+        t.category,
+        t.channel::text AS "channel",
+        t.source_url AS "sourceUrl",
+        t.assigned_to AS "assignedToId",
+        t.first_response_at AS "firstResponseAt",
+        t.resolved_at AS "resolvedAt",
+        t.closed_at AS "closedAt",
+        t.created_at AS "createdAt",
+        t.updated_at AS "updatedAt",
+        a.title AS "appTitle",
+        a.slug AS "appSlug",
+        (
+          SELECT COUNT(*)::int
+          FROM support_ticket_messages m
+          WHERE m.ticket_id = t.id
+        ) AS "messageCount"
+      FROM support_tickets t
+      LEFT JOIN apps a ON a.id = t.app_id
+      ${
+        whereClauses.length > 0
+          ? Prisma.sql`WHERE ${Prisma.join(whereClauses, " AND ")}`
+          : Prisma.empty
+      }
+      ORDER BY t.updated_at DESC
+      LIMIT ${parsed.data.limit}
+    `);
+
+    return sendSuccess(res, requestId, tickets);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to fetch admin support tickets.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminUserRouter.get("/support/tickets/:id", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedParam = supportTicketIdParamSchema.safeParse(req.params);
+    if (!parsedParam.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid support ticket id.",
+        400,
+      );
+    }
+
+    const ticket = await getSupportTicketById(parsedParam.data.id);
+    if (!ticket) {
+      return sendFailure(
+        res,
+        requestId,
+        "NOT_FOUND",
+        "Support ticket not found.",
+        404,
+      );
+    }
+
+    const messages = await getSupportTicketMessages(ticket.id, true);
+
+    return sendSuccess(res, requestId, {
+      ticket,
+      messages,
+    });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to fetch support ticket.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminUserRouter.patch("/support/tickets/:id", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedParam = supportTicketIdParamSchema.safeParse(req.params);
+    if (!parsedParam.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid support ticket id.",
+        400,
+      );
+    }
+
+    const parsedBody = supportTicketUpdateSchema.safeParse(req.body);
+    if (!parsedBody.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid support ticket update payload.",
+        400,
+        parsedBody.error.flatten(),
+      );
+    }
+
+    if (parsedBody.data.assignedToId) {
+      const assignee = await prisma.user.findUnique({
+        where: { id: parsedBody.data.assignedToId },
+        select: { id: true },
+      });
+
+      if (!assignee) {
+        return sendFailure(
+          res,
+          requestId,
+          "NOT_FOUND",
+          "Assignee user not found.",
+          404,
+        );
+      }
+    }
+
+    const setClauses: Prisma.Sql[] = [];
+
+    if (parsedBody.data.status !== undefined) {
+      setClauses.push(
+        Prisma.sql`status = ${parsedBody.data.status}::"SupportTicketStatus"`,
+      );
+
+      if (parsedBody.data.status === "IN_PROGRESS") {
+        setClauses.push(
+          Prisma.sql`first_response_at = COALESCE(first_response_at, NOW())`,
+        );
+      }
+
+      if (parsedBody.data.status === "RESOLVED") {
+        setClauses.push(Prisma.sql`resolved_at = COALESCE(resolved_at, NOW())`);
+      }
+
+      if (parsedBody.data.status === "CLOSED") {
+        setClauses.push(Prisma.sql`closed_at = COALESCE(closed_at, NOW())`);
+      }
+
+      if (
+        parsedBody.data.status === "OPEN" ||
+        parsedBody.data.status === "IN_PROGRESS" ||
+        parsedBody.data.status === "WAITING_FOR_USER"
+      ) {
+        setClauses.push(Prisma.sql`closed_at = NULL`);
+      }
+    }
+
+    if (parsedBody.data.priority !== undefined) {
+      setClauses.push(
+        Prisma.sql`priority = ${parsedBody.data.priority}::"SupportTicketPriority"`,
+      );
+    }
+
+    if (parsedBody.data.category !== undefined) {
+      setClauses.push(Prisma.sql`category = ${parsedBody.data.category}`);
+    }
+
+    if (parsedBody.data.assignedToId !== undefined) {
+      setClauses.push(
+        Prisma.sql`assigned_to = ${parsedBody.data.assignedToId}`,
+      );
+    }
+
+    if (parsedBody.data.sourceUrl !== undefined) {
+      setClauses.push(Prisma.sql`source_url = ${parsedBody.data.sourceUrl}`);
+    }
+
+    if (parsedBody.data.metadata !== undefined) {
+      setClauses.push(
+        Prisma.sql`metadata = ${JSON.stringify(parsedBody.data.metadata)}::jsonb`,
+      );
+    }
+
+    setClauses.push(Prisma.sql`updated_at = NOW()`);
+
+    const updated = await prisma.$queryRaw<{ id: string }[]>(Prisma.sql`
+      UPDATE support_tickets
+      SET ${Prisma.join(setClauses, ", ")}
+      WHERE id = ${parsedParam.data.id}
+      RETURNING id
+    `);
+
+    if (updated.length === 0) {
+      return sendFailure(
+        res,
+        requestId,
+        "NOT_FOUND",
+        "Support ticket not found.",
+        404,
+      );
+    }
+
+    const ticket = await getSupportTicketById(parsedParam.data.id);
+    const messages = await getSupportTicketMessages(parsedParam.data.id, true);
+
+    return sendSuccess(res, requestId, {
+      ticket,
+      messages,
+    });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to update support ticket.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminUserRouter.post("/support/tickets/:id/replies", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedParam = supportTicketIdParamSchema.safeParse(req.params);
+    if (!parsedParam.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid support ticket id.",
+        400,
+      );
+    }
+
+    const parsedBody = supportTicketReplyCreateSchema.safeParse(req.body);
+    if (!parsedBody.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid support reply payload.",
+        400,
+        parsedBody.error.flatten(),
+      );
+    }
+
+    const ticket = await getSupportTicketById(parsedParam.data.id);
+    if (!ticket) {
+      return sendFailure(
+        res,
+        requestId,
+        "NOT_FOUND",
+        "Support ticket not found.",
+        404,
+      );
+    }
+
+    const moderatorId = req.header("x-user-id") ?? null;
+    const attachmentsJson = parsedBody.data.attachments
+      ? JSON.stringify(parsedBody.data.attachments)
+      : null;
+
+    await prisma.$transaction([
+      prisma.$executeRaw(Prisma.sql`
+        INSERT INTO support_ticket_messages (
+          ticket_id,
+          author_user_id,
+          author_type,
+          body,
+          is_internal,
+          attachments
+        )
+        VALUES (
+          ${ticket.id},
+          ${moderatorId},
+          'AGENT',
+          ${parsedBody.data.body},
+          ${parsedBody.data.isInternal ?? false},
+          ${attachmentsJson}::jsonb
+        )
+      `),
+      prisma.$executeRaw(
+        parsedBody.data.isInternal
+          ? Prisma.sql`
+              UPDATE support_tickets
+              SET updated_at = NOW()
+              WHERE id = ${ticket.id}
+            `
+          : Prisma.sql`
+              UPDATE support_tickets
+              SET
+                first_response_at = COALESCE(first_response_at, NOW()),
+                status = 'WAITING_FOR_USER'::"SupportTicketStatus",
+                updated_at = NOW()
+              WHERE id = ${ticket.id}
+            `,
+      ),
+    ]);
+
+    const updatedTicket = await getSupportTicketById(ticket.id);
+    const messages = await getSupportTicketMessages(ticket.id, true);
+
+    return sendSuccess(res, requestId, {
+      ticket: updatedTicket,
+      messages,
+    });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to submit support reply.",
       500,
       error instanceof Error ? error.message : "Unknown error",
     );

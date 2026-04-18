@@ -187,34 +187,32 @@ export function AdminUsersClient({
     <section className="space-y-4">
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
-          <p className="text-xs uppercase tracking-wide text-[#55607a]">
-            Users
-          </p>
-          <p className="mt-1 text-2xl font-semibold text-[#111a2d]">
+          <p className="ui-text-muted text-xs uppercase tracking-wide">Users</p>
+          <p className="ui-text-heading mt-1 text-2xl font-semibold">
             {stats.total.toLocaleString()}
           </p>
         </Card>
         <Card>
-          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+          <p className="ui-text-muted text-xs uppercase tracking-wide">
             Admins
           </p>
-          <p className="mt-1 text-2xl font-semibold text-[#111a2d]">
+          <p className="ui-text-heading mt-1 text-2xl font-semibold">
             {stats.admins.toLocaleString()}
           </p>
         </Card>
         <Card>
-          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+          <p className="ui-text-muted text-xs uppercase tracking-wide">
             Standard users
           </p>
-          <p className="mt-1 text-2xl font-semibold text-[#111a2d]">
+          <p className="ui-text-heading mt-1 text-2xl font-semibold">
             {stats.standardUsers.toLocaleString()}
           </p>
         </Card>
         <Card>
-          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+          <p className="ui-text-muted text-xs uppercase tracking-wide">
             Library items
           </p>
-          <p className="mt-1 text-2xl font-semibold text-[#111a2d]">
+          <p className="ui-text-heading mt-1 text-2xl font-semibold">
             {stats.libraries.toLocaleString()}
           </p>
         </Card>
@@ -225,7 +223,7 @@ export function AdminUsersClient({
           <div className="space-y-1.5">
             <label
               htmlFor="user-search"
-              className="text-xs font-semibold uppercase tracking-wide text-[#55607a]"
+              className="ui-label text-xs font-semibold uppercase tracking-wide"
             >
               Search
             </label>
@@ -240,7 +238,7 @@ export function AdminUsersClient({
           <div className="space-y-1.5">
             <label
               htmlFor="role-filter"
-              className="text-xs font-semibold uppercase tracking-wide text-[#55607a]"
+              className="ui-label text-xs font-semibold uppercase tracking-wide"
             >
               Role filter
             </label>
@@ -248,7 +246,7 @@ export function AdminUsersClient({
               id="role-filter"
               value={filter}
               onChange={(event) => setFilter(event.target.value as RoleFilter)}
-              className="min-w-45 rounded-lg border border-black/20 bg-white px-3 py-2 text-sm text-[#14171f]"
+              className="ui-input min-w-45 rounded-lg border px-3 py-2 text-sm"
             >
               <option value="all">All</option>
               <option value="admin">Admins only</option>
@@ -289,7 +287,7 @@ export function AdminUsersClient({
                   </Badge>
                 </div>
 
-                <div className="grid gap-1 text-xs text-[#5a647d]">
+                <div className="ui-text-muted grid gap-1 text-xs">
                   <p>Library items: {item._count.libraries}</p>
                   <p>Feedback entries: {item._count.feedbacks}</p>
                   <p>Payments: {item._count.payments}</p>
@@ -317,7 +315,7 @@ export function AdminUsersClient({
                 </div>
 
                 {isSelfDemotion ? (
-                  <p className="text-xs text-[#5b6580]">
+                  <p className="ui-text-muted text-xs">
                     You cannot demote your own admin role.
                   </p>
                 ) : null}

@@ -40,12 +40,21 @@ export type AppMinAggregateOutputType = {
   slug: string | null
   shortDescription: string | null
   fullDescription: string | null
+  releaseNotes: string | null
   version: string | null
   status: $Enums.AppStatus | null
   publishedAt: Date | null
   isPaid: boolean | null
   isFeatured: boolean | null
   price: runtime.Decimal | null
+  iconUrl: string | null
+  featureGraphicUrl: string | null
+  promoVideoUrl: string | null
+  supportEmail: string | null
+  supportWebsiteUrl: string | null
+  privacyPolicyUrl: string | null
+  containsAds: boolean | null
+  developerName: string | null
   categoryId: string | null
   createdById: string | null
   updatedById: string | null
@@ -60,12 +69,21 @@ export type AppMaxAggregateOutputType = {
   slug: string | null
   shortDescription: string | null
   fullDescription: string | null
+  releaseNotes: string | null
   version: string | null
   status: $Enums.AppStatus | null
   publishedAt: Date | null
   isPaid: boolean | null
   isFeatured: boolean | null
   price: runtime.Decimal | null
+  iconUrl: string | null
+  featureGraphicUrl: string | null
+  promoVideoUrl: string | null
+  supportEmail: string | null
+  supportWebsiteUrl: string | null
+  privacyPolicyUrl: string | null
+  containsAds: boolean | null
+  developerName: string | null
   categoryId: string | null
   createdById: string | null
   updatedById: string | null
@@ -80,12 +98,22 @@ export type AppCountAggregateOutputType = {
   slug: number
   shortDescription: number
   fullDescription: number
+  releaseNotes: number
   version: number
   status: number
   publishedAt: number
   isPaid: number
   isFeatured: number
   price: number
+  iconUrl: number
+  featureGraphicUrl: number
+  promoVideoUrl: number
+  supportEmail: number
+  supportWebsiteUrl: number
+  privacyPolicyUrl: number
+  containsAds: number
+  developerName: number
+  metadata: number
   categoryId: number
   createdById: number
   updatedById: number
@@ -110,12 +138,21 @@ export type AppMinAggregateInputType = {
   slug?: true
   shortDescription?: true
   fullDescription?: true
+  releaseNotes?: true
   version?: true
   status?: true
   publishedAt?: true
   isPaid?: true
   isFeatured?: true
   price?: true
+  iconUrl?: true
+  featureGraphicUrl?: true
+  promoVideoUrl?: true
+  supportEmail?: true
+  supportWebsiteUrl?: true
+  privacyPolicyUrl?: true
+  containsAds?: true
+  developerName?: true
   categoryId?: true
   createdById?: true
   updatedById?: true
@@ -130,12 +167,21 @@ export type AppMaxAggregateInputType = {
   slug?: true
   shortDescription?: true
   fullDescription?: true
+  releaseNotes?: true
   version?: true
   status?: true
   publishedAt?: true
   isPaid?: true
   isFeatured?: true
   price?: true
+  iconUrl?: true
+  featureGraphicUrl?: true
+  promoVideoUrl?: true
+  supportEmail?: true
+  supportWebsiteUrl?: true
+  privacyPolicyUrl?: true
+  containsAds?: true
+  developerName?: true
   categoryId?: true
   createdById?: true
   updatedById?: true
@@ -150,12 +196,22 @@ export type AppCountAggregateInputType = {
   slug?: true
   shortDescription?: true
   fullDescription?: true
+  releaseNotes?: true
   version?: true
   status?: true
   publishedAt?: true
   isPaid?: true
   isFeatured?: true
   price?: true
+  iconUrl?: true
+  featureGraphicUrl?: true
+  promoVideoUrl?: true
+  supportEmail?: true
+  supportWebsiteUrl?: true
+  privacyPolicyUrl?: true
+  containsAds?: true
+  developerName?: true
+  metadata?: true
   categoryId?: true
   createdById?: true
   updatedById?: true
@@ -257,12 +313,22 @@ export type AppGroupByOutputType = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes: string | null
   version: string
   status: $Enums.AppStatus
   publishedAt: Date | null
   isPaid: boolean
   isFeatured: boolean
   price: runtime.Decimal
+  iconUrl: string | null
+  featureGraphicUrl: string | null
+  promoVideoUrl: string | null
+  supportEmail: string | null
+  supportWebsiteUrl: string | null
+  privacyPolicyUrl: string | null
+  containsAds: boolean
+  developerName: string | null
+  metadata: runtime.JsonValue | null
   categoryId: string
   createdById: string
   updatedById: string | null
@@ -300,12 +366,22 @@ export type AppWhereInput = {
   slug?: Prisma.StringFilter<"App"> | string
   shortDescription?: Prisma.StringFilter<"App"> | string
   fullDescription?: Prisma.StringFilter<"App"> | string
+  releaseNotes?: Prisma.StringNullableFilter<"App"> | string | null
   version?: Prisma.StringFilter<"App"> | string
   status?: Prisma.EnumAppStatusFilter<"App"> | $Enums.AppStatus
   publishedAt?: Prisma.DateTimeNullableFilter<"App"> | Date | string | null
   isPaid?: Prisma.BoolFilter<"App"> | boolean
   isFeatured?: Prisma.BoolFilter<"App"> | boolean
   price?: Prisma.DecimalFilter<"App"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.StringNullableFilter<"App"> | string | null
+  featureGraphicUrl?: Prisma.StringNullableFilter<"App"> | string | null
+  promoVideoUrl?: Prisma.StringNullableFilter<"App"> | string | null
+  supportEmail?: Prisma.StringNullableFilter<"App"> | string | null
+  supportWebsiteUrl?: Prisma.StringNullableFilter<"App"> | string | null
+  privacyPolicyUrl?: Prisma.StringNullableFilter<"App"> | string | null
+  containsAds?: Prisma.BoolFilter<"App"> | boolean
+  developerName?: Prisma.StringNullableFilter<"App"> | string | null
+  metadata?: Prisma.JsonNullableFilter<"App">
   categoryId?: Prisma.StringFilter<"App"> | string
   createdById?: Prisma.StringFilter<"App"> | string
   updatedById?: Prisma.StringNullableFilter<"App"> | string | null
@@ -337,12 +413,22 @@ export type AppOrderByWithRelationInput = {
   slug?: Prisma.SortOrder
   shortDescription?: Prisma.SortOrder
   fullDescription?: Prisma.SortOrder
+  releaseNotes?: Prisma.SortOrderInput | Prisma.SortOrder
   version?: Prisma.SortOrder
   status?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   isPaid?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  iconUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  featureGraphicUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  promoVideoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  supportEmail?: Prisma.SortOrderInput | Prisma.SortOrder
+  supportWebsiteUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  privacyPolicyUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  containsAds?: Prisma.SortOrder
+  developerName?: Prisma.SortOrderInput | Prisma.SortOrder
+  metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   updatedById?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -377,12 +463,22 @@ export type AppWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"App"> | string
   shortDescription?: Prisma.StringFilter<"App"> | string
   fullDescription?: Prisma.StringFilter<"App"> | string
+  releaseNotes?: Prisma.StringNullableFilter<"App"> | string | null
   version?: Prisma.StringFilter<"App"> | string
   status?: Prisma.EnumAppStatusFilter<"App"> | $Enums.AppStatus
   publishedAt?: Prisma.DateTimeNullableFilter<"App"> | Date | string | null
   isPaid?: Prisma.BoolFilter<"App"> | boolean
   isFeatured?: Prisma.BoolFilter<"App"> | boolean
   price?: Prisma.DecimalFilter<"App"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.StringNullableFilter<"App"> | string | null
+  featureGraphicUrl?: Prisma.StringNullableFilter<"App"> | string | null
+  promoVideoUrl?: Prisma.StringNullableFilter<"App"> | string | null
+  supportEmail?: Prisma.StringNullableFilter<"App"> | string | null
+  supportWebsiteUrl?: Prisma.StringNullableFilter<"App"> | string | null
+  privacyPolicyUrl?: Prisma.StringNullableFilter<"App"> | string | null
+  containsAds?: Prisma.BoolFilter<"App"> | boolean
+  developerName?: Prisma.StringNullableFilter<"App"> | string | null
+  metadata?: Prisma.JsonNullableFilter<"App">
   categoryId?: Prisma.StringFilter<"App"> | string
   createdById?: Prisma.StringFilter<"App"> | string
   updatedById?: Prisma.StringNullableFilter<"App"> | string | null
@@ -414,12 +510,22 @@ export type AppOrderByWithAggregationInput = {
   slug?: Prisma.SortOrder
   shortDescription?: Prisma.SortOrder
   fullDescription?: Prisma.SortOrder
+  releaseNotes?: Prisma.SortOrderInput | Prisma.SortOrder
   version?: Prisma.SortOrder
   status?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   isPaid?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  iconUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  featureGraphicUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  promoVideoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  supportEmail?: Prisma.SortOrderInput | Prisma.SortOrder
+  supportWebsiteUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  privacyPolicyUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  containsAds?: Prisma.SortOrder
+  developerName?: Prisma.SortOrderInput | Prisma.SortOrder
+  metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   updatedById?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -442,12 +548,22 @@ export type AppScalarWhereWithAggregatesInput = {
   slug?: Prisma.StringWithAggregatesFilter<"App"> | string
   shortDescription?: Prisma.StringWithAggregatesFilter<"App"> | string
   fullDescription?: Prisma.StringWithAggregatesFilter<"App"> | string
+  releaseNotes?: Prisma.StringNullableWithAggregatesFilter<"App"> | string | null
   version?: Prisma.StringWithAggregatesFilter<"App"> | string
   status?: Prisma.EnumAppStatusWithAggregatesFilter<"App"> | $Enums.AppStatus
   publishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"App"> | Date | string | null
   isPaid?: Prisma.BoolWithAggregatesFilter<"App"> | boolean
   isFeatured?: Prisma.BoolWithAggregatesFilter<"App"> | boolean
   price?: Prisma.DecimalWithAggregatesFilter<"App"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.StringNullableWithAggregatesFilter<"App"> | string | null
+  featureGraphicUrl?: Prisma.StringNullableWithAggregatesFilter<"App"> | string | null
+  promoVideoUrl?: Prisma.StringNullableWithAggregatesFilter<"App"> | string | null
+  supportEmail?: Prisma.StringNullableWithAggregatesFilter<"App"> | string | null
+  supportWebsiteUrl?: Prisma.StringNullableWithAggregatesFilter<"App"> | string | null
+  privacyPolicyUrl?: Prisma.StringNullableWithAggregatesFilter<"App"> | string | null
+  containsAds?: Prisma.BoolWithAggregatesFilter<"App"> | boolean
+  developerName?: Prisma.StringNullableWithAggregatesFilter<"App"> | string | null
+  metadata?: Prisma.JsonNullableWithAggregatesFilter<"App">
   categoryId?: Prisma.StringWithAggregatesFilter<"App"> | string
   createdById?: Prisma.StringWithAggregatesFilter<"App"> | string
   updatedById?: Prisma.StringNullableWithAggregatesFilter<"App"> | string | null
@@ -462,12 +578,22 @@ export type AppCreateInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -496,12 +622,22 @@ export type AppUncheckedCreateInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId: string
   createdById: string
   updatedById?: string | null
@@ -530,12 +666,22 @@ export type AppUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -564,12 +710,22 @@ export type AppUncheckedUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -598,12 +754,22 @@ export type AppCreateManyInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId: string
   createdById: string
   updatedById?: string | null
@@ -618,12 +784,22 @@ export type AppUpdateManyMutationInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -635,12 +811,22 @@ export type AppUncheckedUpdateManyInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -665,12 +851,22 @@ export type AppCountOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   shortDescription?: Prisma.SortOrder
   fullDescription?: Prisma.SortOrder
+  releaseNotes?: Prisma.SortOrder
   version?: Prisma.SortOrder
   status?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   isPaid?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  iconUrl?: Prisma.SortOrder
+  featureGraphicUrl?: Prisma.SortOrder
+  promoVideoUrl?: Prisma.SortOrder
+  supportEmail?: Prisma.SortOrder
+  supportWebsiteUrl?: Prisma.SortOrder
+  privacyPolicyUrl?: Prisma.SortOrder
+  containsAds?: Prisma.SortOrder
+  developerName?: Prisma.SortOrder
+  metadata?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   updatedById?: Prisma.SortOrder
@@ -689,12 +885,21 @@ export type AppMaxOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   shortDescription?: Prisma.SortOrder
   fullDescription?: Prisma.SortOrder
+  releaseNotes?: Prisma.SortOrder
   version?: Prisma.SortOrder
   status?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   isPaid?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  iconUrl?: Prisma.SortOrder
+  featureGraphicUrl?: Prisma.SortOrder
+  promoVideoUrl?: Prisma.SortOrder
+  supportEmail?: Prisma.SortOrder
+  supportWebsiteUrl?: Prisma.SortOrder
+  privacyPolicyUrl?: Prisma.SortOrder
+  containsAds?: Prisma.SortOrder
+  developerName?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   updatedById?: Prisma.SortOrder
@@ -709,12 +914,21 @@ export type AppMinOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   shortDescription?: Prisma.SortOrder
   fullDescription?: Prisma.SortOrder
+  releaseNotes?: Prisma.SortOrder
   version?: Prisma.SortOrder
   status?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   isPaid?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  iconUrl?: Prisma.SortOrder
+  featureGraphicUrl?: Prisma.SortOrder
+  promoVideoUrl?: Prisma.SortOrder
+  supportEmail?: Prisma.SortOrder
+  supportWebsiteUrl?: Prisma.SortOrder
+  privacyPolicyUrl?: Prisma.SortOrder
+  containsAds?: Prisma.SortOrder
+  developerName?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   updatedById?: Prisma.SortOrder
@@ -1083,12 +1297,22 @@ export type AppCreateWithoutCreatedByInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1116,12 +1340,22 @@ export type AppUncheckedCreateWithoutCreatedByInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId: string
   updatedById?: string | null
   createdAt?: Date | string
@@ -1159,12 +1393,22 @@ export type AppCreateWithoutUpdatedByInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1192,12 +1436,22 @@ export type AppUncheckedCreateWithoutUpdatedByInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId: string
   createdById: string
   createdAt?: Date | string
@@ -1254,12 +1508,22 @@ export type AppScalarWhereInput = {
   slug?: Prisma.StringFilter<"App"> | string
   shortDescription?: Prisma.StringFilter<"App"> | string
   fullDescription?: Prisma.StringFilter<"App"> | string
+  releaseNotes?: Prisma.StringNullableFilter<"App"> | string | null
   version?: Prisma.StringFilter<"App"> | string
   status?: Prisma.EnumAppStatusFilter<"App"> | $Enums.AppStatus
   publishedAt?: Prisma.DateTimeNullableFilter<"App"> | Date | string | null
   isPaid?: Prisma.BoolFilter<"App"> | boolean
   isFeatured?: Prisma.BoolFilter<"App"> | boolean
   price?: Prisma.DecimalFilter<"App"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.StringNullableFilter<"App"> | string | null
+  featureGraphicUrl?: Prisma.StringNullableFilter<"App"> | string | null
+  promoVideoUrl?: Prisma.StringNullableFilter<"App"> | string | null
+  supportEmail?: Prisma.StringNullableFilter<"App"> | string | null
+  supportWebsiteUrl?: Prisma.StringNullableFilter<"App"> | string | null
+  privacyPolicyUrl?: Prisma.StringNullableFilter<"App"> | string | null
+  containsAds?: Prisma.BoolFilter<"App"> | boolean
+  developerName?: Prisma.StringNullableFilter<"App"> | string | null
+  metadata?: Prisma.JsonNullableFilter<"App">
   categoryId?: Prisma.StringFilter<"App"> | string
   createdById?: Prisma.StringFilter<"App"> | string
   updatedById?: Prisma.StringNullableFilter<"App"> | string | null
@@ -1290,12 +1554,22 @@ export type AppCreateWithoutCategoryInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1323,12 +1597,22 @@ export type AppUncheckedCreateWithoutCategoryInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById: string
   updatedById?: string | null
   createdAt?: Date | string
@@ -1382,12 +1666,22 @@ export type AppCreateWithoutTagLinksInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1415,12 +1709,22 @@ export type AppUncheckedCreateWithoutTagLinksInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId: string
   createdById: string
   updatedById?: string | null
@@ -1464,12 +1768,22 @@ export type AppUpdateWithoutTagLinksInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1497,12 +1811,22 @@ export type AppUncheckedUpdateWithoutTagLinksInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1530,12 +1854,22 @@ export type AppCreateWithoutSlidersInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1563,12 +1897,22 @@ export type AppUncheckedCreateWithoutSlidersInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId: string
   createdById: string
   updatedById?: string | null
@@ -1612,12 +1956,22 @@ export type AppUpdateWithoutSlidersInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1645,12 +1999,22 @@ export type AppUncheckedUpdateWithoutSlidersInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1678,12 +2042,22 @@ export type AppCreateWithoutViewEventsInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1711,12 +2085,22 @@ export type AppUncheckedCreateWithoutViewEventsInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId: string
   createdById: string
   updatedById?: string | null
@@ -1760,12 +2144,22 @@ export type AppUpdateWithoutViewEventsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1793,12 +2187,22 @@ export type AppUncheckedUpdateWithoutViewEventsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1826,12 +2230,22 @@ export type AppCreateWithoutDailyStatsInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1859,12 +2273,22 @@ export type AppUncheckedCreateWithoutDailyStatsInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId: string
   createdById: string
   updatedById?: string | null
@@ -1908,12 +2332,22 @@ export type AppUpdateWithoutDailyStatsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1941,12 +2375,22 @@ export type AppUncheckedUpdateWithoutDailyStatsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1974,12 +2418,22 @@ export type AppCreateWithoutAggregateStatInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2007,12 +2461,22 @@ export type AppUncheckedCreateWithoutAggregateStatInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId: string
   createdById: string
   updatedById?: string | null
@@ -2056,12 +2520,22 @@ export type AppUpdateWithoutAggregateStatInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2089,12 +2563,22 @@ export type AppUncheckedUpdateWithoutAggregateStatInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2122,12 +2606,22 @@ export type AppCreateWithoutSectionItemsInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2155,12 +2649,22 @@ export type AppUncheckedCreateWithoutSectionItemsInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId: string
   createdById: string
   updatedById?: string | null
@@ -2204,12 +2708,22 @@ export type AppUpdateWithoutSectionItemsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2237,12 +2751,22 @@ export type AppUncheckedUpdateWithoutSectionItemsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2270,12 +2794,22 @@ export type AppCreateWithoutMediaInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2303,12 +2837,22 @@ export type AppUncheckedCreateWithoutMediaInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId: string
   createdById: string
   updatedById?: string | null
@@ -2352,12 +2896,22 @@ export type AppUpdateWithoutMediaInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2385,12 +2939,22 @@ export type AppUncheckedUpdateWithoutMediaInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2418,12 +2982,22 @@ export type AppCreateWithoutLinksInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2451,12 +3025,22 @@ export type AppUncheckedCreateWithoutLinksInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId: string
   createdById: string
   updatedById?: string | null
@@ -2500,12 +3084,22 @@ export type AppUpdateWithoutLinksInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2533,12 +3127,22 @@ export type AppUncheckedUpdateWithoutLinksInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2566,12 +3170,22 @@ export type AppCreateWithoutLibrariesInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2599,12 +3213,22 @@ export type AppUncheckedCreateWithoutLibrariesInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId: string
   createdById: string
   updatedById?: string | null
@@ -2648,12 +3272,22 @@ export type AppUpdateWithoutLibrariesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2681,12 +3315,22 @@ export type AppUncheckedUpdateWithoutLibrariesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2714,12 +3358,22 @@ export type AppCreateWithoutChangelogsInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2747,12 +3401,22 @@ export type AppUncheckedCreateWithoutChangelogsInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId: string
   createdById: string
   updatedById?: string | null
@@ -2796,12 +3460,22 @@ export type AppUpdateWithoutChangelogsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2829,12 +3503,22 @@ export type AppUncheckedUpdateWithoutChangelogsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2862,12 +3546,22 @@ export type AppCreateWithoutDescriptionVersionsInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2895,12 +3589,22 @@ export type AppUncheckedCreateWithoutDescriptionVersionsInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId: string
   createdById: string
   updatedById?: string | null
@@ -2944,12 +3648,22 @@ export type AppUpdateWithoutDescriptionVersionsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2977,12 +3691,22 @@ export type AppUncheckedUpdateWithoutDescriptionVersionsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3010,12 +3734,22 @@ export type AppCreateWithoutFeedbacksInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -3043,12 +3777,22 @@ export type AppUncheckedCreateWithoutFeedbacksInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId: string
   createdById: string
   updatedById?: string | null
@@ -3092,12 +3836,22 @@ export type AppUpdateWithoutFeedbacksInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3125,12 +3879,22 @@ export type AppUncheckedUpdateWithoutFeedbacksInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3158,12 +3922,22 @@ export type AppCreateWithoutDownloadEventsInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -3191,12 +3965,22 @@ export type AppUncheckedCreateWithoutDownloadEventsInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId: string
   createdById: string
   updatedById?: string | null
@@ -3240,12 +4024,22 @@ export type AppUpdateWithoutDownloadEventsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3273,12 +4067,22 @@ export type AppUncheckedUpdateWithoutDownloadEventsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3306,12 +4110,22 @@ export type AppCreateWithoutPaymentsInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -3339,12 +4153,22 @@ export type AppUncheckedCreateWithoutPaymentsInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId: string
   createdById: string
   updatedById?: string | null
@@ -3388,12 +4212,22 @@ export type AppUpdateWithoutPaymentsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3421,12 +4255,22 @@ export type AppUncheckedUpdateWithoutPaymentsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3454,12 +4298,22 @@ export type AppCreateManyCreatedByInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId: string
   updatedById?: string | null
   createdAt?: Date | string
@@ -3473,12 +4327,22 @@ export type AppCreateManyUpdatedByInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId: string
   createdById: string
   createdAt?: Date | string
@@ -3492,12 +4356,22 @@ export type AppUpdateWithoutCreatedByInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3525,12 +4399,22 @@ export type AppUncheckedUpdateWithoutCreatedByInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3558,12 +4442,22 @@ export type AppUncheckedUpdateManyWithoutCreatedByInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3577,12 +4471,22 @@ export type AppUpdateWithoutUpdatedByInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3610,12 +4514,22 @@ export type AppUncheckedUpdateWithoutUpdatedByInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3643,12 +4557,22 @@ export type AppUncheckedUpdateManyWithoutUpdatedByInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3662,12 +4586,22 @@ export type AppCreateManyCategoryInput = {
   slug: string
   shortDescription: string
   fullDescription: string
+  releaseNotes?: string | null
   version: string
   status?: $Enums.AppStatus
   publishedAt?: Date | string | null
   isPaid?: boolean
   isFeatured?: boolean
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById: string
   updatedById?: string | null
   createdAt?: Date | string
@@ -3681,12 +4615,22 @@ export type AppUpdateWithoutCategoryInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3714,12 +4658,22 @@ export type AppUncheckedUpdateWithoutCategoryInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3747,12 +4701,22 @@ export type AppUncheckedUpdateManyWithoutCategoryInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3905,12 +4869,22 @@ export type AppSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   slug?: boolean
   shortDescription?: boolean
   fullDescription?: boolean
+  releaseNotes?: boolean
   version?: boolean
   status?: boolean
   publishedAt?: boolean
   isPaid?: boolean
   isFeatured?: boolean
   price?: boolean
+  iconUrl?: boolean
+  featureGraphicUrl?: boolean
+  promoVideoUrl?: boolean
+  supportEmail?: boolean
+  supportWebsiteUrl?: boolean
+  privacyPolicyUrl?: boolean
+  containsAds?: boolean
+  developerName?: boolean
+  metadata?: boolean
   categoryId?: boolean
   createdById?: boolean
   updatedById?: boolean
@@ -3943,12 +4917,22 @@ export type AppSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extension
   slug?: boolean
   shortDescription?: boolean
   fullDescription?: boolean
+  releaseNotes?: boolean
   version?: boolean
   status?: boolean
   publishedAt?: boolean
   isPaid?: boolean
   isFeatured?: boolean
   price?: boolean
+  iconUrl?: boolean
+  featureGraphicUrl?: boolean
+  promoVideoUrl?: boolean
+  supportEmail?: boolean
+  supportWebsiteUrl?: boolean
+  privacyPolicyUrl?: boolean
+  containsAds?: boolean
+  developerName?: boolean
+  metadata?: boolean
   categoryId?: boolean
   createdById?: boolean
   updatedById?: boolean
@@ -3966,12 +4950,22 @@ export type AppSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extension
   slug?: boolean
   shortDescription?: boolean
   fullDescription?: boolean
+  releaseNotes?: boolean
   version?: boolean
   status?: boolean
   publishedAt?: boolean
   isPaid?: boolean
   isFeatured?: boolean
   price?: boolean
+  iconUrl?: boolean
+  featureGraphicUrl?: boolean
+  promoVideoUrl?: boolean
+  supportEmail?: boolean
+  supportWebsiteUrl?: boolean
+  privacyPolicyUrl?: boolean
+  containsAds?: boolean
+  developerName?: boolean
+  metadata?: boolean
   categoryId?: boolean
   createdById?: boolean
   updatedById?: boolean
@@ -3989,12 +4983,22 @@ export type AppSelectScalar = {
   slug?: boolean
   shortDescription?: boolean
   fullDescription?: boolean
+  releaseNotes?: boolean
   version?: boolean
   status?: boolean
   publishedAt?: boolean
   isPaid?: boolean
   isFeatured?: boolean
   price?: boolean
+  iconUrl?: boolean
+  featureGraphicUrl?: boolean
+  promoVideoUrl?: boolean
+  supportEmail?: boolean
+  supportWebsiteUrl?: boolean
+  privacyPolicyUrl?: boolean
+  containsAds?: boolean
+  developerName?: boolean
+  metadata?: boolean
   categoryId?: boolean
   createdById?: boolean
   updatedById?: boolean
@@ -4003,7 +5007,7 @@ export type AppSelectScalar = {
   deletedAt?: boolean
 }
 
-export type AppOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "shortDescription" | "fullDescription" | "version" | "status" | "publishedAt" | "isPaid" | "isFeatured" | "price" | "categoryId" | "createdById" | "updatedById" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["app"]>
+export type AppOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "shortDescription" | "fullDescription" | "releaseNotes" | "version" | "status" | "publishedAt" | "isPaid" | "isFeatured" | "price" | "iconUrl" | "featureGraphicUrl" | "promoVideoUrl" | "supportEmail" | "supportWebsiteUrl" | "privacyPolicyUrl" | "containsAds" | "developerName" | "metadata" | "categoryId" | "createdById" | "updatedById" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["app"]>
 export type AppInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -4062,12 +5066,22 @@ export type $AppPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     slug: string
     shortDescription: string
     fullDescription: string
+    releaseNotes: string | null
     version: string
     status: $Enums.AppStatus
     publishedAt: Date | null
     isPaid: boolean
     isFeatured: boolean
     price: runtime.Decimal
+    iconUrl: string | null
+    featureGraphicUrl: string | null
+    promoVideoUrl: string | null
+    supportEmail: string | null
+    supportWebsiteUrl: string | null
+    privacyPolicyUrl: string | null
+    containsAds: boolean
+    developerName: string | null
+    metadata: runtime.JsonValue | null
     categoryId: string
     createdById: string
     updatedById: string | null
@@ -4519,12 +5533,22 @@ export interface AppFieldRefs {
   readonly slug: Prisma.FieldRef<"App", 'String'>
   readonly shortDescription: Prisma.FieldRef<"App", 'String'>
   readonly fullDescription: Prisma.FieldRef<"App", 'String'>
+  readonly releaseNotes: Prisma.FieldRef<"App", 'String'>
   readonly version: Prisma.FieldRef<"App", 'String'>
   readonly status: Prisma.FieldRef<"App", 'AppStatus'>
   readonly publishedAt: Prisma.FieldRef<"App", 'DateTime'>
   readonly isPaid: Prisma.FieldRef<"App", 'Boolean'>
   readonly isFeatured: Prisma.FieldRef<"App", 'Boolean'>
   readonly price: Prisma.FieldRef<"App", 'Decimal'>
+  readonly iconUrl: Prisma.FieldRef<"App", 'String'>
+  readonly featureGraphicUrl: Prisma.FieldRef<"App", 'String'>
+  readonly promoVideoUrl: Prisma.FieldRef<"App", 'String'>
+  readonly supportEmail: Prisma.FieldRef<"App", 'String'>
+  readonly supportWebsiteUrl: Prisma.FieldRef<"App", 'String'>
+  readonly privacyPolicyUrl: Prisma.FieldRef<"App", 'String'>
+  readonly containsAds: Prisma.FieldRef<"App", 'Boolean'>
+  readonly developerName: Prisma.FieldRef<"App", 'String'>
+  readonly metadata: Prisma.FieldRef<"App", 'Json'>
   readonly categoryId: Prisma.FieldRef<"App", 'String'>
   readonly createdById: Prisma.FieldRef<"App", 'String'>
   readonly updatedById: Prisma.FieldRef<"App", 'String'>

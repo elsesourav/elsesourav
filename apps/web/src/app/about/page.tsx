@@ -1,3 +1,4 @@
+import { MarkdownContent } from "@/components/ui/markdown-content";
 import { PageHeader, PageShell } from "@/components/ui/page";
 import type { ApiResponse, ContentPageDto } from "@elsesourav/types";
 
@@ -5,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 function AboutFallback({ message }: { message: string }) {
   return (
-    <PageShell>
+    <PageShell className="gap-6">
       <PageHeader
         eyebrow="Dynamic Content"
         title="About"
@@ -35,13 +36,19 @@ export default async function AboutPage() {
   }
 
   return (
-    <PageShell>
-      <PageHeader eyebrow="Dynamic Content" title={payload.data.title} />
+    <PageShell className="gap-6">
+      <PageHeader
+        eyebrow="Dynamic Content"
+        title={payload.data.title}
+        description="Live content served from the content service."
+      />
       {payload.data.summary ? (
-        <p className="mt-3 text-[#3f4757]">{payload.data.summary}</p>
+        <article className="ui-card rounded-xl border p-4">
+          <MarkdownContent markdown={payload.data.summary} />
+        </article>
       ) : null}
-      <article className="rounded-xl border border-black/10 bg-white p-5 leading-7 text-[#1f2633] shadow-[0_14px_30px_-24px_rgba(20,23,31,0.65)]">
-        {payload.data.body}
+      <article className="ui-card rounded-xl border p-5 leading-7 ui-text-primary shadow-[0_14px_30px_-24px_rgba(20,23,31,0.65)]">
+        <MarkdownContent markdown={payload.data.body} />
       </article>
     </PageShell>
   );

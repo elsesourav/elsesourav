@@ -6,7 +6,9 @@ import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Modal } from "@/components/ui/modal";
+import { RichMarkdownEditor } from "@/components/ui/rich-markdown-editor";
 import { Textarea } from "@/components/ui/textarea";
+import { parseMetadataInput, stringifyMetadata } from "@/lib/metadata";
 import { formatDateTime, type AdminContentPage } from "@/lib/view-models";
 import { useAppDispatch } from "@/store/hooks";
 import { enqueueNotification } from "@/store/slices/notificationsSlice";
@@ -20,6 +22,7 @@ type ContentPageFormState = {
   title: string;
   summary: string;
   body: string;
+  metadata: string;
   seoTitle: string;
   seoDescription: string;
   status: ContentStatus;
@@ -116,6 +119,7 @@ function createEmptyForm(): ContentPageFormState {
     title: "",
     summary: "",
     body: "",
+    metadata: "",
     seoTitle: "",
     seoDescription: "",
     status: "DRAFT",
@@ -129,6 +133,7 @@ function createFormFromItem(item: AdminContentPage): ContentPageFormState {
     title: item.title,
     summary: item.summary ?? "",
     body: item.body,
+    metadata: stringifyMetadata(item.metadata),
     seoTitle: item.seoTitle ?? "",
     seoDescription: item.seoDescription ?? "",
     status: item.status as ContentStatus,
@@ -151,6 +156,11 @@ function validateForm(form: ContentPageFormState): string | null {
 
   if (form.summary.trim().length > 400) {
     return "Summary cannot exceed 400 characters.";
+  }
+
+  const metadataResult = parseMetadataInput(form.metadata);
+  if (metadataResult.error) {
+    return metadataResult.error;
   }
 
   if (form.seoTitle.trim().length > 180) {
@@ -203,11 +213,11 @@ function ContentPageCard({
         <Badge tone={statusTone[typedStatus]}>{item.status}</Badge>
       </div>
 
-      <p className="line-clamp-3 text-sm text-[#4f5970]">
+      <p className="ui-text-muted line-clamp-3 text-sm">
         {(item.summary ?? item.body).trim() || "No summary yet."}
       </p>
 
-      <div className="grid gap-1 text-xs text-[#5a647d]">
+      <div className="ui-text-muted grid gap-1 text-xs">
         <p>Latest version: {latestVersion}</p>
         <p>Publish at: {formatDateTime(item.publishAt)}</p>
         <p>Published at: {formatDateTime(item.publishedAt)}</p>
@@ -262,7 +272,7 @@ function ContentEditorFields({
           onChange={(event) =>
             updateField("status", event.target.value as ContentStatus)
           }
-          className="w-full rounded-lg border border-black/20 bg-white px-3 py-2 text-sm text-[#14171f]"
+          className="ui-input w-full rounded-lg border px-3 py-2 text-sm"
         >
           {contentStatusOptions.map((status) => (
             <option key={status} value={status}>
@@ -296,12 +306,24 @@ function ContentEditorFields({
 
       <div className="space-y-1.5 lg:col-span-2">
         <Label htmlFor="content-body">Body</Label>
-        <Textarea
+        <RichMarkdownEditor
           id="content-body"
           value={form.body}
-          onChange={(event) => updateField("body", event.target.value)}
-          rows={10}
-          required
+          onChange={(nextValue) => updateField("body", nextValue)}
+          rows={14}
+          placeholder="Write page content using markdown..."
+        />
+      </div>
+
+      <div className="space-y-1.5 lg:col-span-2">
+        <Label htmlFor="content-metadata">Metadata JSON</Label>
+        <Textarea
+          id="content-metadata"
+          value={form.metadata}
+          onChange={(event) => updateField("metadata", event.target.value)}
+          rows={5}
+          className="font-mono text-xs"
+          placeholder='{"layout":"story","audience":"public"}'
         />
       </div>
 
@@ -387,6 +409,13 @@ export function AdminContentPagesClient({
     setCreateError(null);
     setCreating(true);
 
+    const metadataResult = parseMetadataInput(createForm.metadata);
+    if (metadataResult.error) {
+      setCreateError(metadataResult.error);
+      setCreating(false);
+      return;
+    }
+
     try {
       const response = await fetch("/api/admin/content/pages", {
         method: "POST",
@@ -398,6 +427,7 @@ export function AdminContentPagesClient({
           title: createForm.title.trim(),
           summary: createForm.summary.trim() || undefined,
           body: createForm.body.trim(),
+          metadata: metadataResult.data,
           seoTitle: createForm.seoTitle.trim() || undefined,
           seoDescription: createForm.seoDescription.trim() || undefined,
           status: createForm.status,
@@ -449,6 +479,13 @@ export function AdminContentPagesClient({
     setEditError(null);
     setSavingEdit(true);
 
+    const metadataResult = parseMetadataInput(editForm.metadata);
+    if (metadataResult.error) {
+      setEditError(metadataResult.error);
+      setSavingEdit(false);
+      return;
+    }
+
     try {
       const response = await fetch(
         `/api/admin/content/pages/${editingPageId}`,
@@ -462,6 +499,7 @@ export function AdminContentPagesClient({
             title: editForm.title.trim(),
             summary: editForm.summary.trim() || undefined,
             body: editForm.body.trim(),
+            metadata: metadataResult.data,
             seoTitle: editForm.seoTitle.trim() || undefined,
             seoDescription: editForm.seoDescription.trim() || undefined,
             status: editForm.status,
@@ -507,7 +545,7 @@ export function AdminContentPagesClient({
   return (
     <section className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-[#49536a]">
+        <p className="ui-text-muted text-sm">
           {pages.length.toLocaleString()} pages: {stats.published} published,{" "}
           {stats.scheduled} scheduled, {stats.draft} drafts.
         </p>

@@ -4,7 +4,7 @@ import type { HTMLAttributes } from "react";
 type BadgeTone = "neutral" | "success" | "warning" | "danger" | "info";
 
 const toneClassName: Record<BadgeTone, string> = {
-  neutral: "border-black/15 bg-[#f6f8fc] text-[#3f4757]",
+  neutral: "ui-border ui-surface-soft ui-text-muted",
   success: "border-emerald-200 bg-emerald-50 text-emerald-700",
   warning: "border-amber-200 bg-amber-50 text-amber-700",
   danger: "border-rose-200 bg-rose-50 text-rose-700",

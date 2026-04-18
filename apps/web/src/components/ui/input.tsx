@@ -1,18 +1,81 @@
 import { cn } from "@/lib/cn";
+import TextField, { type TextFieldProps } from "@mui/material/TextField";
 import type { InputHTMLAttributes } from "react";
 
-export function Input({
-  className,
-  ...props
-}: InputHTMLAttributes<HTMLInputElement>) {
+type InputProps = InputHTMLAttributes<HTMLInputElement> & {
+  fullWidth?: boolean;
+  sx?: TextFieldProps["sx"];
+};
+
+export function Input({ className, fullWidth, sx, ...props }: InputProps) {
+  const {
+    type,
+    name,
+    id,
+    value,
+    defaultValue,
+    placeholder,
+    onChange,
+    onBlur,
+    onFocus,
+    autoComplete,
+    autoFocus,
+    disabled,
+    required,
+    readOnly,
+    min,
+    max,
+    minLength,
+    maxLength,
+    step,
+    pattern,
+    inputMode,
+    ...nativeInputProps
+  } = props;
+
   return (
-    <input
-      className={cn(
-        "w-full rounded-lg border border-black/20 bg-white px-3 py-2 text-sm text-[#14171f] placeholder:text-[#6f788c]",
-        "focus-visible:border-[#1f5ed4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1f5ed4]/20",
-        className,
-      )}
-      {...props}
+    <TextField
+      fullWidth={fullWidth ?? true}
+      size="small"
+      variant="outlined"
+      type={type}
+      id={id}
+      name={name}
+      value={value}
+      defaultValue={defaultValue}
+      placeholder={placeholder}
+      onChange={onChange}
+      onBlur={onBlur}
+      onFocus={onFocus}
+      autoComplete={autoComplete}
+      autoFocus={autoFocus}
+      disabled={disabled}
+      required={required}
+      slotProps={{
+        htmlInput: {
+          readOnly,
+          min,
+          max,
+          minLength,
+          maxLength,
+          step,
+          pattern,
+          inputMode,
+          ...nativeInputProps,
+        },
+      }}
+      className={cn("ui-input", className)}
+      sx={{
+        "& .MuiOutlinedInput-root": {
+          borderRadius: "12px",
+          backgroundColor:
+            "color-mix(in srgb, var(--background) 94%, white 6%)",
+        },
+        "& .MuiInputBase-input": {
+          fontSize: "0.92rem",
+        },
+        ...sx,
+      }}
     />
   );
 }

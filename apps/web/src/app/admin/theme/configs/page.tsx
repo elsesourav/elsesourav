@@ -26,19 +26,19 @@ export default async function AdminThemeConfigsPage() {
       />
 
       <section className="grid gap-3 sm:grid-cols-2">
-        <article className="rounded-2xl border border-black/10 bg-white p-4">
-          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+        <article className="ui-card rounded-2xl border p-4">
+          <p className="ui-text-muted text-xs uppercase tracking-wide">
             Configs
           </p>
-          <p className="mt-1 text-3xl font-semibold text-[#111a2d]">
+          <p className="ui-text-heading mt-1 text-3xl font-semibold">
             {configs.length.toLocaleString()}
           </p>
         </article>
-        <article className="rounded-2xl border border-black/10 bg-white p-4">
-          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+        <article className="ui-card rounded-2xl border p-4">
+          <p className="ui-text-muted text-xs uppercase tracking-wide">
             Active
           </p>
-          <p className="mt-1 text-3xl font-semibold text-[#111a2d]">
+          <p className="ui-text-heading mt-1 text-3xl font-semibold">
             {activeCount.toLocaleString()}
           </p>
         </article>

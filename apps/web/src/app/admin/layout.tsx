@@ -1,8 +1,14 @@
 import { SignOutButton } from "@/app/admin/sign-out-button";
+import { ThemeModeControl } from "@/app/admin/theme-mode-control";
 import { requireAdminContext } from "@/lib/page-access";
+import { fetchServiceData } from "@/lib/service-client";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { AdminNav } from "./nav";
+
+type UserThemeSettingsResponse = {
+  themeMode: "system" | "light" | "dark";
+};
 
 export default async function AdminLayout({
   children,
@@ -10,47 +16,43 @@ export default async function AdminLayout({
   children: ReactNode;
 }) {
   const admin = await requireAdminContext();
+  const settings = await fetchServiceData<UserThemeSettingsResponse>({
+    service: "user",
+    path: "/v1/user/settings",
+    user: admin,
+  }).catch(() => ({ themeMode: "system" as const }));
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(900px_380px_at_15%_-12%,rgba(31,94,212,0.16),transparent_68%),radial-gradient(900px_340px_at_85%_-10%,rgba(245,158,11,0.16),transparent_64%),#eef3fb] text-[#121927]">
-      <header className="sticky top-0 z-40 border-b border-black/10 bg-white/80 backdrop-blur">
-        <div className="mx-auto flex w-full max-w-300 items-center justify-between gap-3 px-4 py-3 sm:px-6">
-          <div className="min-w-0">
+    <div className="min-h-screen bg-[radial-gradient(900px_420px_at_8%_-10%,color-mix(in_srgb,var(--brand-secondary)_20%,transparent),transparent_62%),radial-gradient(760px_340px_at_92%_-8%,color-mix(in_srgb,var(--brand-accent)_18%,transparent),transparent_64%),var(--background)] ui-text-primary">
+      <div className="mx-auto flex w-full max-w-[1400px] gap-4 p-3 sm:gap-5 sm:p-4 lg:h-screen lg:gap-6 lg:p-6">
+        <aside className="ui-card flex w-full max-w-74 flex-col rounded-3xl border p-3 sm:p-4 lg:h-full lg:max-w-78">
+          <div className="border-b ui-border pb-3">
             <Link
               href="/admin"
-              className="inline-flex items-center rounded-full border border-black/10 bg-[#f7f9ff] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#1f5ed4]"
+              className="inline-flex items-center rounded-full border ui-border bg-[color-mix(in_srgb,var(--background)_84%,var(--brand-secondary)_16%)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[color-mix(in_srgb,var(--brand-secondary)_88%,var(--foreground)_12%)]"
             >
-              Admin Workspace
+              ElseSourav Admin
             </Link>
-            <p className="mt-1 truncate text-sm font-semibold text-[#1b2438]">
-              Signed in as {admin.email ?? "admin"}
+            <p className="ui-text-heading mt-2 truncate text-sm font-semibold">
+              {admin.email ?? "admin@example.com"}
             </p>
+            <p className="ui-text-muted text-xs">{admin.role} account</p>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="hidden rounded-full border border-emerald-300 bg-emerald-50 px-2 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-700 sm:inline-block">
-              {admin.role}
-            </span>
+
+          <div className="mt-3 min-h-0 flex-1 overflow-auto pr-1">
+            <AdminNav />
+          </div>
+
+          <div className="mt-3 space-y-3 border-t ui-border pt-3">
+            <ThemeModeControl initialMode={settings.themeMode} />
             <SignOutButton />
           </div>
-        </div>
-      </header>
-
-      <div className="mx-auto grid w-full max-w-300 gap-4 px-4 py-5 sm:px-6 lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-6 lg:py-6">
-        <aside className="lg:sticky lg:top-19.5 lg:h-[calc(100vh-110px)] lg:overflow-auto lg:pr-1">
-          <AdminNav />
         </aside>
 
-        <section className="min-w-0 rounded-3xl border border-black/10 bg-white/60 p-3 shadow-[0_20px_40px_-36px_rgba(20,23,31,0.75)] sm:p-4">
+        <main className="ui-card min-h-[70vh] min-w-0 flex-1 rounded-3xl border p-3 sm:p-4 lg:h-full lg:overflow-auto lg:p-5">
           {children}
-        </section>
+        </main>
       </div>
-
-      <footer className="border-t border-black/10 bg-white/70">
-        <div className="mx-auto flex w-full max-w-300 flex-col justify-between gap-1 px-4 py-3 text-xs text-[#586177] sm:flex-row sm:items-center sm:px-6">
-          <p>ElseSourav Admin Console</p>
-          <p>Focused operations for catalog, users, content, and theme.</p>
-        </div>
-      </footer>
     </div>
   );
 }

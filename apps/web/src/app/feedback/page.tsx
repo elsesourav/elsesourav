@@ -20,24 +20,21 @@ export default async function FeedbackPage() {
       />
 
       {feedback.length === 0 ? (
-        <p className="text-sm text-[#4a5262]">No feedback published yet.</p>
+        <p className="ui-text-muted text-sm">No feedback published yet.</p>
       ) : (
         <section className="grid gap-3">
           {feedback.map((item) => (
-            <article
-              key={item.id}
-              className="rounded-xl border border-black/15 bg-white p-4"
-            >
+            <article key={item.id} className="ui-card rounded-xl border p-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-sm font-semibold text-[#111722]">
+                <p className="ui-text-heading text-sm font-semibold">
                   {item.app.title}
                 </p>
-                <p className="text-xs text-[#4a5262]">
+                <p className="ui-text-muted text-xs">
                   {item.rating}/5 · {formatDateTime(item.createdAt)}
                 </p>
               </div>
-              <p className="mt-2 text-sm text-[#3f4757]">{item.message}</p>
-              <p className="mt-2 text-xs text-[#4a5262]">
+              <p className="ui-text-muted mt-2 text-sm">{item.message}</p>
+              <p className="ui-text-muted mt-2 text-xs">
                 by {item.user.name ?? "Anonymous"}
               </p>
               <Link

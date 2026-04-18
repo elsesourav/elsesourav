@@ -153,6 +153,16 @@ export type UserSettings = Prisma.UserSettingsModel
  */
 export type ActivityLog = Prisma.ActivityLogModel
 /**
+ * Model CustomFieldDefinition
+ * 
+ */
+export type CustomFieldDefinition = Prisma.CustomFieldDefinitionModel
+/**
+ * Model CustomFieldValue
+ * 
+ */
+export type CustomFieldValue = Prisma.CustomFieldValueModel
+/**
  * Model AppChangelog
  * 
  */

@@ -107,3 +107,41 @@ export const HelpArticleStatus = {
 } as const
 
 export type HelpArticleStatus = (typeof HelpArticleStatus)[keyof typeof HelpArticleStatus]
+
+
+export const CustomFieldEntity = {
+  APP: 'APP',
+  CATEGORY: 'CATEGORY',
+  CONTENT_PAGE: 'CONTENT_PAGE',
+  BLOG_POST: 'BLOG_POST',
+  HELP_ARTICLE: 'HELP_ARTICLE',
+  PROFILE_PAGE: 'PROFILE_PAGE',
+  TESTIMONIAL: 'TESTIMONIAL',
+  THEME_CONFIG: 'THEME_CONFIG',
+  STORE_BANNER: 'STORE_BANNER',
+  STORE_SECTION_ITEM: 'STORE_SECTION_ITEM',
+  HOME_SLIDER: 'HOME_SLIDER',
+  APP_TAG: 'APP_TAG',
+  BLOG_TAG: 'BLOG_TAG',
+  HELP_CATEGORY: 'HELP_CATEGORY',
+  APP_MEDIA: 'APP_MEDIA',
+  APP_LINK: 'APP_LINK',
+  USER: 'USER'
+} as const
+
+export type CustomFieldEntity = (typeof CustomFieldEntity)[keyof typeof CustomFieldEntity]
+
+
+export const CustomFieldType = {
+  TEXT: 'TEXT',
+  LONG_TEXT: 'LONG_TEXT',
+  NUMBER: 'NUMBER',
+  BOOLEAN: 'BOOLEAN',
+  DATE: 'DATE',
+  URL: 'URL',
+  JSON: 'JSON',
+  SELECT: 'SELECT',
+  MULTISELECT: 'MULTISELECT'
+} as const
+
+export type CustomFieldType = (typeof CustomFieldType)[keyof typeof CustomFieldType]

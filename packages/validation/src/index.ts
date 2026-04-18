@@ -1,5 +1,11 @@
 import { z } from "zod";
 
+const metadataSchema = z
+  .record(z.string(), z.unknown())
+  .refine((value) => JSON.stringify(value).length <= 20000, {
+    message: "Metadata payload is too large.",
+  });
+
 export const appStatusSchema = z.enum(["DRAFT", "PUBLISHED"]);
 export const linkPlatformSchema = z.enum([
   "CHROME",
@@ -8,6 +14,8 @@ export const linkPlatformSchema = z.enum([
   "WEBSITE",
   "OTHER",
 ]);
+
+export const mediaTypeSchema = z.enum(["IMAGE", "VIDEO"]);
 
 export const credentialsSchema = z.object({
   email: z.string().email(),
@@ -18,15 +26,132 @@ export const registerSchema = credentialsSchema.extend({
   name: z.string().min(2).max(120),
 });
 
+export const forgotPasswordSchema = z.object({
+  email: z.string().email(),
+});
+
+export const resendVerificationSchema = z.object({
+  email: z.string().email(),
+});
+
+export const verifyEmailSchema = z.object({
+  token: z.string().trim().min(12).max(255),
+});
+
+export const resetPasswordSchema = z.object({
+  token: z.string().trim().min(12).max(255),
+  password: z.string().min(8).max(128),
+});
+
+export const customFieldEntitySchema = z.enum([
+  "APP",
+  "CATEGORY",
+  "CONTENT_PAGE",
+  "BLOG_POST",
+  "HELP_ARTICLE",
+  "PROFILE_PAGE",
+  "TESTIMONIAL",
+  "THEME_CONFIG",
+  "STORE_BANNER",
+  "STORE_SECTION_ITEM",
+  "HOME_SLIDER",
+  "APP_TAG",
+  "BLOG_TAG",
+  "HELP_CATEGORY",
+  "APP_MEDIA",
+  "APP_LINK",
+  "USER",
+]);
+
+export const customFieldTypeSchema = z.enum([
+  "TEXT",
+  "LONG_TEXT",
+  "NUMBER",
+  "BOOLEAN",
+  "DATE",
+  "URL",
+  "JSON",
+  "SELECT",
+  "MULTISELECT",
+]);
+
+const customFieldDefinitionBaseSchema = z.object({
+  entity: customFieldEntitySchema,
+  key: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .min(2)
+    .max(80)
+    .regex(/^[a-z0-9][a-z0-9_.-]{1,79}$/),
+  label: z.string().trim().min(2).max(120),
+  description: z.string().trim().max(400).optional(),
+  fieldType: customFieldTypeSchema.default("TEXT"),
+  isRequired: z.coerce.boolean().default(false),
+  isActive: z.coerce.boolean().default(true),
+  isFilterable: z.coerce.boolean().default(false),
+  options: z.unknown().optional(),
+  defaultValue: z.unknown().optional(),
+});
+
+export const customFieldDefinitionCreateSchema =
+  customFieldDefinitionBaseSchema;
+
+export const customFieldDefinitionUpdateSchema = customFieldDefinitionBaseSchema
+  .partial()
+  .refine(
+    (value) =>
+      value.entity !== undefined ||
+      value.key !== undefined ||
+      value.label !== undefined ||
+      value.description !== undefined ||
+      value.fieldType !== undefined ||
+      value.isRequired !== undefined ||
+      value.isActive !== undefined ||
+      value.isFilterable !== undefined ||
+      value.options !== undefined ||
+      value.defaultValue !== undefined,
+    {
+      message: "At least one custom field definition field must be provided.",
+    },
+  );
+
+export const customFieldValuesQuerySchema = z.object({
+  definitionId: z.string().cuid().optional(),
+  entity: customFieldEntitySchema.optional(),
+  entityId: z.string().trim().min(2).max(120).optional(),
+  limit: z.coerce.number().int().min(1).max(200).default(100),
+});
+
+export const customFieldValueUpsertSchema = z.object({
+  definitionId: z.string().cuid(),
+  entityId: z.string().trim().min(2).max(120),
+  value: z.unknown(),
+});
+
+export const customFieldValueUpdateSchema = z.object({
+  value: z.unknown(),
+});
+
 const createAppBaseSchema = z.object({
   title: z.string().min(3).max(120),
   shortDescription: z.string().min(10).max(300),
   fullDescription: z.string().min(20).max(5000),
+  releaseNotes: z.string().max(8000).optional(),
   version: z.string().min(1).max(20).default("1.0.0"),
   status: appStatusSchema.default("DRAFT"),
   isPaid: z.coerce.boolean().default(false),
   isFeatured: z.coerce.boolean().default(false),
   price: z.coerce.number().min(0).max(999999).default(0),
+  iconUrl: z.string().url().optional(),
+  featureGraphicUrl: z.string().url().optional(),
+  promoVideoUrl: z.string().url().optional(),
+  supportEmail: z.string().email().optional(),
+  supportWebsiteUrl: z.string().url().optional(),
+  privacyPolicyUrl: z.string().url().optional(),
+  containsAds: z.coerce.boolean().default(false),
+  developerName: z.string().max(120).optional(),
+  metadata: metadataSchema.optional(),
   categoryId: z.string().cuid(),
 });
 
@@ -115,6 +240,42 @@ const appLinkBaseSchema = z.object({
 });
 
 export const appLinkCreateSchema = appLinkBaseSchema;
+
+const appMediaBaseSchema = z.object({
+  type: mediaTypeSchema,
+  url: z.string().url(),
+  alt: z.string().trim().max(180).nullish(),
+  mimeType: z.string().trim().max(120).nullish(),
+  width: z.coerce.number().int().min(1).max(12000).nullish(),
+  height: z.coerce.number().int().min(1).max(12000).nullish(),
+  durationSec: z.coerce.number().int().min(0).max(86400).nullish(),
+  thumbnailUrl: z.string().url().nullish(),
+  fileSizeBytes: z.string().trim().regex(/^\d+$/).nullish(),
+  isAnimated: z.coerce.boolean().optional(),
+  sortOrder: z.coerce.number().int().min(0).default(0),
+});
+
+export const appMediaCreateSchema = appMediaBaseSchema;
+
+export const appMediaUpdateSchema = appMediaBaseSchema
+  .partial()
+  .refine(
+    (value) =>
+      value.type !== undefined ||
+      value.url !== undefined ||
+      value.alt !== undefined ||
+      value.mimeType !== undefined ||
+      value.width !== undefined ||
+      value.height !== undefined ||
+      value.durationSec !== undefined ||
+      value.thumbnailUrl !== undefined ||
+      value.fileSizeBytes !== undefined ||
+      value.isAnimated !== undefined ||
+      value.sortOrder !== undefined,
+    {
+      message: "At least one media field must be provided.",
+    },
+  );
 
 export const appLinkUpdateSchema = appLinkBaseSchema
   .partial()
@@ -256,6 +417,7 @@ export const contentPageCreateSchema = z.object({
   body: z.string().min(10),
   seoTitle: z.string().max(180).optional(),
   seoDescription: z.string().max(300).optional(),
+  metadata: metadataSchema.optional(),
   status: contentStatusSchema.default("DRAFT"),
   publishAt: z.coerce.date().optional(),
 });
@@ -359,6 +521,76 @@ export const userDeletionScheduleSchema = z.object({
   delayDays: z.coerce.number().int().min(7).max(30).default(14),
 });
 
+export const supportTicketStatusSchema = z.enum([
+  "OPEN",
+  "IN_PROGRESS",
+  "WAITING_FOR_USER",
+  "RESOLVED",
+  "CLOSED",
+]);
+
+export const supportTicketPrioritySchema = z.enum([
+  "LOW",
+  "MEDIUM",
+  "HIGH",
+  "URGENT",
+]);
+
+export const supportTicketChannelSchema = z.enum([
+  "WEB",
+  "EMAIL",
+  "CHAT",
+  "API",
+]);
+
+export const supportTicketCreateSchema = z.object({
+  appId: z.string().cuid().optional(),
+  subject: z.string().trim().min(4).max(200),
+  description: z.string().trim().min(10).max(12000),
+  priority: supportTicketPrioritySchema.default("MEDIUM"),
+  category: z.string().trim().min(2).max(80).optional(),
+  channel: supportTicketChannelSchema.default("WEB"),
+  sourceUrl: z.string().url().optional(),
+  metadata: metadataSchema.optional(),
+});
+
+export const supportTicketUpdateSchema = z
+  .object({
+    status: supportTicketStatusSchema.optional(),
+    priority: supportTicketPrioritySchema.optional(),
+    category: z.string().trim().min(2).max(80).optional(),
+    assignedToId: z.string().cuid().nullable().optional(),
+    sourceUrl: z.string().url().nullable().optional(),
+    metadata: metadataSchema.optional(),
+  })
+  .refine(
+    (value) =>
+      value.status !== undefined ||
+      value.priority !== undefined ||
+      value.category !== undefined ||
+      value.assignedToId !== undefined ||
+      value.sourceUrl !== undefined ||
+      value.metadata !== undefined,
+    {
+      message: "At least one support ticket update field must be provided.",
+    },
+  );
+
+export const supportTicketReplyCreateSchema = z.object({
+  body: z.string().trim().min(2).max(12000),
+  isInternal: z.coerce.boolean().optional(),
+  attachments: z.array(z.string().url()).max(10).optional(),
+});
+
+export const supportTicketListQuerySchema = z.object({
+  status: supportTicketStatusSchema.optional(),
+  priority: supportTicketPrioritySchema.optional(),
+  appId: z.string().cuid().optional(),
+  assignedToId: z.string().cuid().optional(),
+  search: z.string().trim().max(120).optional(),
+  limit: z.coerce.number().int().min(1).max(100).default(20),
+});
+
 export const profilePageCreateSchema = z.object({
   slug: slugSchema.default("main"),
   fullName: z.string().min(2).max(120),
@@ -395,6 +627,7 @@ export const blogPostCreateSchema = z.object({
   title: z.string().min(3).max(180),
   excerpt: z.string().max(500).optional(),
   contentMarkdown: z.string().min(20),
+  metadata: metadataSchema.optional(),
   status: blogPostStatusSchema.default("DRAFT"),
   publishAt: z.coerce.date().optional(),
   tagIds: z.array(z.string().cuid()).max(25).default([]),
@@ -483,16 +716,40 @@ export const themeConfigUpdateSchema = themeConfigCreateSchema.partial();
 
 export type CredentialsInput = z.infer<typeof credentialsSchema>;
 export type RegisterInput = z.infer<typeof registerSchema>;
+export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
+export type ResendVerificationInput = z.infer<typeof resendVerificationSchema>;
+export type VerifyEmailInput = z.infer<typeof verifyEmailSchema>;
+export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 export type CreateAppInput = z.infer<typeof createAppSchema>;
 export type UpdateAppInput = z.infer<typeof updateAppSchema>;
+export type CustomFieldEntityInput = z.infer<typeof customFieldEntitySchema>;
+export type CustomFieldTypeInput = z.infer<typeof customFieldTypeSchema>;
+export type CustomFieldDefinitionCreateInput = z.infer<
+  typeof customFieldDefinitionCreateSchema
+>;
+export type CustomFieldDefinitionUpdateInput = z.infer<
+  typeof customFieldDefinitionUpdateSchema
+>;
+export type CustomFieldValuesQueryInput = z.infer<
+  typeof customFieldValuesQuerySchema
+>;
+export type CustomFieldValueUpsertInput = z.infer<
+  typeof customFieldValueUpsertSchema
+>;
+export type CustomFieldValueUpdateInput = z.infer<
+  typeof customFieldValueUpdateSchema
+>;
 export type PublicAppsQuery = z.infer<typeof publicAppsQuerySchema>;
 export type DownloadEventInput = z.infer<typeof downloadEventSchema>;
 export type LibraryMutationInput = z.infer<typeof libraryMutationSchema>;
 export type FeedbackCreateInput = z.infer<typeof feedbackCreateSchema>;
 export type FeedbackModerationInput = z.infer<typeof feedbackModerationSchema>;
 export type CloudinarySignInput = z.infer<typeof cloudinarySignSchema>;
+export type MediaTypeInput = z.infer<typeof mediaTypeSchema>;
 export type StoreSectionTypeInput = z.infer<typeof storeSectionTypeSchema>;
 export type BannerPlacementInput = z.infer<typeof bannerPlacementSchema>;
+export type AppMediaCreateInput = z.infer<typeof appMediaCreateSchema>;
+export type AppMediaUpdateInput = z.infer<typeof appMediaUpdateSchema>;
 export type SectionItemCreateInput = z.infer<typeof sectionItemCreateSchema>;
 export type SectionItemUpdateInput = z.infer<typeof sectionItemUpdateSchema>;
 export type SectionItemsQueryInput = z.infer<typeof sectionItemsQuerySchema>;
@@ -515,6 +772,27 @@ export type UserThemeModeInput = z.infer<typeof userThemeModeSchema>;
 export type UserSettingsUpdateInput = z.infer<typeof userSettingsUpdateSchema>;
 export type UserDeletionScheduleInput = z.infer<
   typeof userDeletionScheduleSchema
+>;
+export type SupportTicketStatusInput = z.infer<
+  typeof supportTicketStatusSchema
+>;
+export type SupportTicketPriorityInput = z.infer<
+  typeof supportTicketPrioritySchema
+>;
+export type SupportTicketChannelInput = z.infer<
+  typeof supportTicketChannelSchema
+>;
+export type SupportTicketCreateInput = z.infer<
+  typeof supportTicketCreateSchema
+>;
+export type SupportTicketUpdateInput = z.infer<
+  typeof supportTicketUpdateSchema
+>;
+export type SupportTicketReplyCreateInput = z.infer<
+  typeof supportTicketReplyCreateSchema
+>;
+export type SupportTicketListQueryInput = z.infer<
+  typeof supportTicketListQuerySchema
 >;
 export type ProfilePageCreateInput = z.infer<typeof profilePageCreateSchema>;
 export type ProfilePageUpdateInput = z.infer<typeof profilePageUpdateSchema>;

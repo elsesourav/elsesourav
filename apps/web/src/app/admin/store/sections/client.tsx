@@ -209,7 +209,7 @@ function SectionItemCard({
         </Badge>
       </div>
 
-      <div className="grid gap-1 text-xs text-[#5a647d]">
+      <div className="ui-text-muted grid gap-1 text-xs">
         <p>Order index: {item.orderIndex}</p>
         <p>Release at: {formatDateTime(item.releaseAt)}</p>
         <p>Starts at: {formatDateTime(item.startsAt)}</p>
@@ -253,7 +253,7 @@ function SectionEditorFields({
             })
           }
           disabled={lockIdentity}
-          className="w-full rounded-lg border border-black/20 bg-white px-3 py-2 text-sm text-[#14171f]"
+          className="ui-input w-full rounded-lg border px-3 py-2 text-sm"
         >
           {appOptions.length === 0 ? (
             <option value="">No apps available</option>
@@ -278,7 +278,7 @@ function SectionEditorFields({
             })
           }
           disabled={lockIdentity}
-          className="w-full rounded-lg border border-black/20 bg-white px-3 py-2 text-sm text-[#14171f]"
+          className="ui-input w-full rounded-lg border px-3 py-2 text-sm"
         >
           {sectionTypeOptions.map((sectionType) => (
             <option key={sectionType} value={sectionType}>
@@ -351,7 +351,7 @@ function SectionEditorFields({
       </div>
 
       {lockIdentity ? (
-        <p className="text-xs text-[#5b6580] lg:col-span-2">
+        <p className="ui-text-muted text-xs lg:col-span-2">
           App and section type are fixed during update. Create another item to
           move this app to a different section.
         </p>
@@ -588,7 +588,7 @@ export function AdminSectionItemsClient({
   return (
     <section className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-[#49536a]">
+        <p className="ui-text-muted text-sm">
           {items.length.toLocaleString()} items: {counts.featured} featured,{" "}
           {counts.latest} latest, {counts.upcoming} upcoming.
         </p>

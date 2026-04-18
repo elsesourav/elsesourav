@@ -76,30 +76,87 @@ enum HelpArticleStatus {
   ARCHIVED
 }
 
+enum SupportTicketStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_FOR_USER
+  RESOLVED
+  CLOSED
+}
+
+enum SupportTicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum SupportTicketChannel {
+  WEB
+  EMAIL
+  CHAT
+  API
+}
+
+enum CustomFieldEntity {
+  APP
+  CATEGORY
+  CONTENT_PAGE
+  BLOG_POST
+  HELP_ARTICLE
+  PROFILE_PAGE
+  TESTIMONIAL
+  THEME_CONFIG
+  STORE_BANNER
+  STORE_SECTION_ITEM
+  HOME_SLIDER
+  APP_TAG
+  BLOG_TAG
+  HELP_CATEGORY
+  APP_MEDIA
+  APP_LINK
+  USER
+}
+
+enum CustomFieldType {
+  TEXT
+  LONG_TEXT
+  NUMBER
+  BOOLEAN
+  DATE
+  URL
+  JSON
+  SELECT
+  MULTISELECT
+}
+
 model User {
-  id                  String          @id @default(cuid())
+  id                  String                 @id @default(cuid())
   name                String?
-  email               String          @unique
-  emailVerified       DateTime?       @map("email_verified")
+  email               String                 @unique
+  emailVerified       DateTime?              @map("email_verified")
   image               String?
-  passwordHash        String?         @map("password_hash")
-  role                Role            @default(USER)
-  createdAt           DateTime        @default(now()) @map("created_at")
-  updatedAt           DateTime        @updatedAt @map("updated_at")
-  deletedAt           DateTime?       @map("deleted_at")
-  scheduledDeletionAt DateTime?       @map("scheduled_deletion_at")
+  passwordHash        String?                @map("password_hash")
+  role                Role                   @default(USER)
+  createdAt           DateTime               @default(now()) @map("created_at")
+  updatedAt           DateTime               @updatedAt @map("updated_at")
+  deletedAt           DateTime?              @map("deleted_at")
+  scheduledDeletionAt DateTime?              @map("scheduled_deletion_at")
   accounts            Account[]
   sessions            Session[]
-  createdApps         App[]           @relation("AppCreatedBy")
-  updatedApps         App[]           @relation("AppUpdatedBy")
+  createdApps         App[]                  @relation("AppCreatedBy")
+  updatedApps         App[]                  @relation("AppUpdatedBy")
   libraries           UserLibrary[]
   feedbacks           Feedback[]
-  moderatedFeedback   Feedback[]      @relation("FeedbackModeratedBy")
+  moderatedFeedback   Feedback[]             @relation("FeedbackModeratedBy")
   downloadEvents      DownloadEvent[]
   payments            Payment[]
   appViewEvents       AppViewEvent[]
-  blogPosts           BlogPost[]      @relation("BlogPostAuthor")
+  blogPosts           BlogPost[]             @relation("BlogPostAuthor")
   blogComments        BlogComment[]
+  supportTickets      SupportTicket[]        @relation("SupportTicketRequester")
+  assignedTickets     SupportTicket[]        @relation("SupportTicketAssignee")
+  supportMessages     SupportTicketMessage[] @relation("SupportTicketMessageAuthor")
   settings            UserSettings?
   activityLogs        ActivityLog[]
 
@@ -130,12 +187,22 @@ model App {
   slug                String                  @unique
   shortDescription    String                  @map("short_description")
   fullDescription     String                  @map("full_description")
+  releaseNotes        String?                 @map("release_notes") @db.Text
   version             String
   status              AppStatus               @default(DRAFT)
   publishedAt         DateTime?               @map("published_at")
   isPaid              Boolean                 @default(false) @map("is_paid")
   isFeatured          Boolean                 @default(false) @map("is_featured")
   price               Decimal                 @default(0) @db.Decimal(10, 2)
+  iconUrl             String?                 @map("icon_url")
+  featureGraphicUrl   String?                 @map("feature_graphic_url")
+  promoVideoUrl       String?                 @map("promo_video_url")
+  supportEmail        String?                 @map("support_email")
+  supportWebsiteUrl   String?                 @map("support_website_url")
+  privacyPolicyUrl    String?                 @map("privacy_policy_url")
+  containsAds         Boolean                 @default(false) @map("contains_ads")
+  developerName       String?                 @map("developer_name")
+  metadata            Json?
   categoryId          String                  @map("category_id")
   createdById         String                  @map("created_by")
   updatedById         String?                 @map("updated_by")
@@ -159,6 +226,7 @@ model App {
   sliders             HomeSlider[]            @relation("SliderApp")
   changelogs          AppChangelog[]
   descriptionVersions AppDescriptionVersion[]
+  supportTickets      SupportTicket[]
 
   @@index([categoryId])
   @@index([status, createdAt])
@@ -313,6 +381,7 @@ model ContentPage {
   body           String               @db.Text
   seoTitle       String?              @map("seo_title")
   seoDescription String?              @map("seo_description")
+  metadata       Json?
   status         ContentStatus        @default(DRAFT)
   publishAt      DateTime?            @map("publish_at")
   publishedAt    DateTime?            @map("published_at")
@@ -336,6 +405,7 @@ model ContentPageVersion {
   body           String        @db.Text
   seoTitle       String?       @map("seo_title")
   seoDescription String?       @map("seo_description")
+  metadata       Json?
   status         ContentStatus @default(DRAFT)
   createdBy      String?       @map("created_by")
   createdAt      DateTime      @default(now()) @map("created_at")
@@ -391,6 +461,7 @@ model BlogPost {
   title           String
   excerpt         String?
   contentMarkdown String            @map("content_markdown") @db.Text
+  metadata        Json?
   status          BlogPostStatus    @default(DRAFT)
   publishAt       DateTime?         @map("publish_at")
   publishedAt     DateTime?         @map("published_at")
@@ -528,14 +599,22 @@ model ThemeConfig {
 }
 
 model AppMedia {
-  id        String    @id @default(cuid())
-  appId     String    @map("app_id")
-  type      MediaType
-  url       String
-  alt       String?
-  sortOrder Int       @default(0) @map("sort_order")
-  createdAt DateTime  @default(now()) @map("created_at")
-  app       App       @relation(fields: [appId], references: [id], onDelete: Cascade)
+  id            String    @id @default(cuid())
+  appId         String    @map("app_id")
+  type          MediaType
+  url           String
+  alt           String?
+  mimeType      String?   @map("mime_type")
+  width         Int?
+  height        Int?
+  durationSec   Int?      @map("duration_sec")
+  thumbnailUrl  String?   @map("thumbnail_url")
+  fileSizeBytes BigInt?   @map("file_size_bytes")
+  isAnimated    Boolean   @default(false) @map("is_animated")
+  sortOrder     Int       @default(0) @map("sort_order")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  app           App       @relation(fields: [appId], references: [id], onDelete: Cascade)
 
   @@index([appId])
   @@index([appId, sortOrder])
@@ -602,6 +681,42 @@ model ActivityLog {
   @@map("activity_logs")
 }
 
+model CustomFieldDefinition {
+  id           String             @id @default(cuid())
+  entity       CustomFieldEntity
+  key          String
+  label        String
+  description  String?
+  fieldType    CustomFieldType    @default(TEXT) @map("field_type")
+  isRequired   Boolean            @default(false) @map("is_required")
+  isActive     Boolean            @default(true) @map("is_active")
+  isFilterable Boolean            @default(false) @map("is_filterable")
+  options      Json?
+  defaultValue Json?              @map("default_value")
+  createdAt    DateTime           @default(now()) @map("created_at")
+  updatedAt    DateTime           @updatedAt @map("updated_at")
+  values       CustomFieldValue[]
+
+  @@unique([entity, key])
+  @@index([entity, isActive])
+  @@map("custom_field_definitions")
+}
+
+model CustomFieldValue {
+  id           String                @id @default(cuid())
+  definitionId String                @map("definition_id")
+  entityId     String                @map("entity_id")
+  value        Json
+  createdAt    DateTime              @default(now()) @map("created_at")
+  updatedAt    DateTime              @updatedAt @map("updated_at")
+  definition   CustomFieldDefinition @relation(fields: [definitionId], references: [id], onDelete: Cascade)
+
+  @@unique([definitionId, entityId])
+  @@index([entityId])
+  @@index([definitionId, updatedAt])
+  @@map("custom_field_values")
+}
+
 model AppChangelog {
   id              String    @id @default(cuid())
   appId           String    @map("app_id")
@@ -623,6 +738,7 @@ model BlogPostVersion {
   title           String
   excerpt         String?
   contentMarkdown String   @map("content_markdown") @db.Text
+  metadata        Json?
   createdBy       String?  @map("created_by")
   createdAt       DateTime @default(now()) @map("created_at")
   post            BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
@@ -644,6 +760,53 @@ model HelpArticleVersion {
   @@index([articleId])
   @@index([articleId, createdAt])
   @@map("help_article_versions")
+}
+
+model SupportTicket {
+  id              String                 @id @default(cuid())
+  userId          String?                @map("user_id")
+  appId           String?                @map("app_id")
+  subject         String
+  description     String                 @db.Text
+  status          SupportTicketStatus    @default(OPEN)
+  priority        SupportTicketPriority  @default(MEDIUM)
+  category        String?
+  channel         SupportTicketChannel   @default(WEB)
+  sourceUrl       String?                @map("source_url")
+  assignedToId    String?                @map("assigned_to")
+  firstResponseAt DateTime?              @map("first_response_at")
+  resolvedAt      DateTime?              @map("resolved_at")
+  closedAt        DateTime?              @map("closed_at")
+  metadata        Json?
+  createdAt       DateTime               @default(now()) @map("created_at")
+  updatedAt       DateTime               @updatedAt @map("updated_at")
+  requester       User?                  @relation("SupportTicketRequester", fields: [userId], references: [id], onDelete: SetNull)
+  app             App?                   @relation(fields: [appId], references: [id], onDelete: SetNull)
+  assignee        User?                  @relation("SupportTicketAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  messages        SupportTicketMessage[]
+
+  @@index([userId, createdAt])
+  @@index([appId, createdAt])
+  @@index([status, priority, updatedAt])
+  @@index([assignedToId, status])
+  @@map("support_tickets")
+}
+
+model SupportTicketMessage {
+  id           String        @id @default(cuid())
+  ticketId     String        @map("ticket_id")
+  authorUserId String?       @map("author_user_id")
+  authorType   String        @default("USER") @map("author_type")
+  body         String        @db.Text
+  isInternal   Boolean       @default(false) @map("is_internal")
+  attachments  Json?
+  createdAt    DateTime      @default(now()) @map("created_at")
+  ticket       SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  authorUser   User?         @relation("SupportTicketMessageAuthor", fields: [authorUserId], references: [id], onDelete: SetNull)
+
+  @@index([ticketId, createdAt])
+  @@index([authorUserId, createdAt])
+  @@map("support_ticket_messages")
 }
 
 model AppDescriptionVersion {

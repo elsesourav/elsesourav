@@ -209,34 +209,34 @@ export function AdminFeedbackClient({
     <section className="space-y-4">
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
-          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+          <p className="ui-text-muted text-xs uppercase tracking-wide">
             Entries
           </p>
-          <p className="mt-1 text-2xl font-semibold text-[#111a2d]">
+          <p className="ui-text-heading mt-1 text-2xl font-semibold">
             {stats.total.toLocaleString()}
           </p>
         </Card>
         <Card>
-          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+          <p className="ui-text-muted text-xs uppercase tracking-wide">
             Visible
           </p>
-          <p className="mt-1 text-2xl font-semibold text-[#111a2d]">
+          <p className="ui-text-heading mt-1 text-2xl font-semibold">
             {stats.visible.toLocaleString()}
           </p>
         </Card>
         <Card>
-          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+          <p className="ui-text-muted text-xs uppercase tracking-wide">
             Hidden
           </p>
-          <p className="mt-1 text-2xl font-semibold text-[#111a2d]">
+          <p className="ui-text-heading mt-1 text-2xl font-semibold">
             {stats.hidden.toLocaleString()}
           </p>
         </Card>
         <Card>
-          <p className="text-xs uppercase tracking-wide text-[#55607a]">
+          <p className="ui-text-muted text-xs uppercase tracking-wide">
             Avg rating
           </p>
-          <p className="mt-1 text-2xl font-semibold text-[#111a2d]">
+          <p className="ui-text-heading mt-1 text-2xl font-semibold">
             {stats.averageRating}
           </p>
         </Card>
@@ -247,7 +247,7 @@ export function AdminFeedbackClient({
           <div className="space-y-1.5">
             <label
               htmlFor="feedback-search"
-              className="text-xs font-semibold uppercase tracking-wide text-[#55607a]"
+              className="ui-label text-xs font-semibold uppercase tracking-wide"
             >
               Search
             </label>
@@ -262,7 +262,7 @@ export function AdminFeedbackClient({
           <div className="space-y-1.5">
             <label
               htmlFor="feedback-filter"
-              className="text-xs font-semibold uppercase tracking-wide text-[#55607a]"
+              className="ui-label text-xs font-semibold uppercase tracking-wide"
             >
               Visibility
             </label>
@@ -272,7 +272,7 @@ export function AdminFeedbackClient({
               onChange={(event) =>
                 setFilter(event.target.value as FeedbackVisibilityFilter)
               }
-              className="min-w-45 rounded-lg border border-black/20 bg-white px-3 py-2 text-sm text-[#14171f]"
+              className="ui-input min-w-45 rounded-lg border px-3 py-2 text-sm"
             >
               <option value="all">All</option>
               <option value="visible">Visible only</option>
@@ -309,7 +309,7 @@ export function AdminFeedbackClient({
                   </Badge>
                 </div>
 
-                <div className="grid gap-1 text-xs text-[#5a647d]">
+                <div className="ui-text-muted grid gap-1 text-xs">
                   <p>
                     Rating: {item.rating}/5 ({ratingStars(item.rating)})
                   </p>
@@ -317,7 +317,7 @@ export function AdminFeedbackClient({
                   <p>App slug: /{item.app.slug}</p>
                 </div>
 
-                <p className="line-clamp-4 rounded-lg border border-black/10 bg-[#f8f9fc] px-3 py-2 text-sm text-[#364055]">
+                <p className="ui-surface-soft ui-border ui-text-muted line-clamp-4 rounded-lg border px-3 py-2 text-sm">
                   {item.message}
                 </p>
 

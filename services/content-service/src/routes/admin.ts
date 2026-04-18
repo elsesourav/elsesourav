@@ -79,6 +79,12 @@ function resolveAdminActorUserId(req: Request): string | null {
   return userId && userId.length > 0 ? userId : null;
 }
 
+function toPrismaJson(
+  value: Record<string, unknown> | undefined,
+): Prisma.InputJsonValue | undefined {
+  return value as Prisma.InputJsonValue | undefined;
+}
+
 export const adminContentRouter = Router();
 
 adminContentRouter.get("/pages", async (_req, res) => {
@@ -134,6 +140,7 @@ adminContentRouter.post("/pages", async (req, res) => {
         body: parsed.data.body,
         seoTitle: parsed.data.seoTitle,
         seoDescription: parsed.data.seoDescription,
+        metadata: toPrismaJson(parsed.data.metadata),
         status: parsed.data.status,
         publishAt: parsed.data.publishAt,
         createdBy: userId,
@@ -148,6 +155,7 @@ adminContentRouter.post("/pages", async (req, res) => {
             body: parsed.data.body,
             seoTitle: parsed.data.seoTitle,
             seoDescription: parsed.data.seoDescription,
+            metadata: toPrismaJson(parsed.data.metadata),
             status: parsed.data.status,
             createdBy: userId,
           },
@@ -231,6 +239,7 @@ adminContentRouter.put("/pages/:id", async (req, res) => {
         body: parsed.data.body,
         seoTitle: parsed.data.seoTitle,
         seoDescription: parsed.data.seoDescription,
+        metadata: toPrismaJson(parsed.data.metadata),
         status: parsed.data.status,
         publishAt: parsed.data.publishAt,
         updatedBy: userId,
@@ -242,6 +251,7 @@ adminContentRouter.put("/pages/:id", async (req, res) => {
             body: parsed.data.body ?? "",
             seoTitle: parsed.data.seoTitle,
             seoDescription: parsed.data.seoDescription,
+            metadata: toPrismaJson(parsed.data.metadata),
             status: parsed.data.status ?? ContentStatus.DRAFT,
             createdBy: userId,
           },
@@ -743,6 +753,7 @@ adminContentRouter.post("/blog/posts", async (req, res) => {
         title: parsed.data.title,
         excerpt: parsed.data.excerpt,
         contentMarkdown: parsed.data.contentMarkdown,
+        metadata: toPrismaJson(parsed.data.metadata),
         status: parsed.data.status,
         publishAt: parsed.data.publishAt,
         publishedAt:
@@ -846,6 +857,7 @@ adminContentRouter.put("/blog/posts/:id", async (req, res) => {
         title: parsed.data.title,
         excerpt: parsed.data.excerpt,
         contentMarkdown: parsed.data.contentMarkdown,
+        metadata: toPrismaJson(parsed.data.metadata),
         status: parsed.data.status,
         publishAt: parsed.data.publishAt,
         publishedAt:

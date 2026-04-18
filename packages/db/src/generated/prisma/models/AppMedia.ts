@@ -27,10 +27,18 @@ export type AggregateAppMedia = {
 }
 
 export type AppMediaAvgAggregateOutputType = {
+  width: number | null
+  height: number | null
+  durationSec: number | null
+  fileSizeBytes: number | null
   sortOrder: number | null
 }
 
 export type AppMediaSumAggregateOutputType = {
+  width: number | null
+  height: number | null
+  durationSec: number | null
+  fileSizeBytes: bigint | null
   sortOrder: number | null
 }
 
@@ -40,8 +48,16 @@ export type AppMediaMinAggregateOutputType = {
   type: $Enums.MediaType | null
   url: string | null
   alt: string | null
+  mimeType: string | null
+  width: number | null
+  height: number | null
+  durationSec: number | null
+  thumbnailUrl: string | null
+  fileSizeBytes: bigint | null
+  isAnimated: boolean | null
   sortOrder: number | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type AppMediaMaxAggregateOutputType = {
@@ -50,8 +66,16 @@ export type AppMediaMaxAggregateOutputType = {
   type: $Enums.MediaType | null
   url: string | null
   alt: string | null
+  mimeType: string | null
+  width: number | null
+  height: number | null
+  durationSec: number | null
+  thumbnailUrl: string | null
+  fileSizeBytes: bigint | null
+  isAnimated: boolean | null
   sortOrder: number | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type AppMediaCountAggregateOutputType = {
@@ -60,17 +84,33 @@ export type AppMediaCountAggregateOutputType = {
   type: number
   url: number
   alt: number
+  mimeType: number
+  width: number
+  height: number
+  durationSec: number
+  thumbnailUrl: number
+  fileSizeBytes: number
+  isAnimated: number
   sortOrder: number
   createdAt: number
+  updatedAt: number
   _all: number
 }
 
 
 export type AppMediaAvgAggregateInputType = {
+  width?: true
+  height?: true
+  durationSec?: true
+  fileSizeBytes?: true
   sortOrder?: true
 }
 
 export type AppMediaSumAggregateInputType = {
+  width?: true
+  height?: true
+  durationSec?: true
+  fileSizeBytes?: true
   sortOrder?: true
 }
 
@@ -80,8 +120,16 @@ export type AppMediaMinAggregateInputType = {
   type?: true
   url?: true
   alt?: true
+  mimeType?: true
+  width?: true
+  height?: true
+  durationSec?: true
+  thumbnailUrl?: true
+  fileSizeBytes?: true
+  isAnimated?: true
   sortOrder?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type AppMediaMaxAggregateInputType = {
@@ -90,8 +138,16 @@ export type AppMediaMaxAggregateInputType = {
   type?: true
   url?: true
   alt?: true
+  mimeType?: true
+  width?: true
+  height?: true
+  durationSec?: true
+  thumbnailUrl?: true
+  fileSizeBytes?: true
+  isAnimated?: true
   sortOrder?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type AppMediaCountAggregateInputType = {
@@ -100,8 +156,16 @@ export type AppMediaCountAggregateInputType = {
   type?: true
   url?: true
   alt?: true
+  mimeType?: true
+  width?: true
+  height?: true
+  durationSec?: true
+  thumbnailUrl?: true
+  fileSizeBytes?: true
+  isAnimated?: true
   sortOrder?: true
   createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -197,8 +261,16 @@ export type AppMediaGroupByOutputType = {
   type: $Enums.MediaType
   url: string
   alt: string | null
+  mimeType: string | null
+  width: number | null
+  height: number | null
+  durationSec: number | null
+  thumbnailUrl: string | null
+  fileSizeBytes: bigint | null
+  isAnimated: boolean
   sortOrder: number
   createdAt: Date
+  updatedAt: Date
   _count: AppMediaCountAggregateOutputType | null
   _avg: AppMediaAvgAggregateOutputType | null
   _sum: AppMediaSumAggregateOutputType | null
@@ -230,8 +302,16 @@ export type AppMediaWhereInput = {
   type?: Prisma.EnumMediaTypeFilter<"AppMedia"> | $Enums.MediaType
   url?: Prisma.StringFilter<"AppMedia"> | string
   alt?: Prisma.StringNullableFilter<"AppMedia"> | string | null
+  mimeType?: Prisma.StringNullableFilter<"AppMedia"> | string | null
+  width?: Prisma.IntNullableFilter<"AppMedia"> | number | null
+  height?: Prisma.IntNullableFilter<"AppMedia"> | number | null
+  durationSec?: Prisma.IntNullableFilter<"AppMedia"> | number | null
+  thumbnailUrl?: Prisma.StringNullableFilter<"AppMedia"> | string | null
+  fileSizeBytes?: Prisma.BigIntNullableFilter<"AppMedia"> | bigint | number | null
+  isAnimated?: Prisma.BoolFilter<"AppMedia"> | boolean
   sortOrder?: Prisma.IntFilter<"AppMedia"> | number
   createdAt?: Prisma.DateTimeFilter<"AppMedia"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"AppMedia"> | Date | string
   app?: Prisma.XOR<Prisma.AppScalarRelationFilter, Prisma.AppWhereInput>
 }
 
@@ -241,8 +321,16 @@ export type AppMediaOrderByWithRelationInput = {
   type?: Prisma.SortOrder
   url?: Prisma.SortOrder
   alt?: Prisma.SortOrderInput | Prisma.SortOrder
+  mimeType?: Prisma.SortOrderInput | Prisma.SortOrder
+  width?: Prisma.SortOrderInput | Prisma.SortOrder
+  height?: Prisma.SortOrderInput | Prisma.SortOrder
+  durationSec?: Prisma.SortOrderInput | Prisma.SortOrder
+  thumbnailUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  fileSizeBytes?: Prisma.SortOrderInput | Prisma.SortOrder
+  isAnimated?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   app?: Prisma.AppOrderByWithRelationInput
 }
 
@@ -255,8 +343,16 @@ export type AppMediaWhereUniqueInput = Prisma.AtLeast<{
   type?: Prisma.EnumMediaTypeFilter<"AppMedia"> | $Enums.MediaType
   url?: Prisma.StringFilter<"AppMedia"> | string
   alt?: Prisma.StringNullableFilter<"AppMedia"> | string | null
+  mimeType?: Prisma.StringNullableFilter<"AppMedia"> | string | null
+  width?: Prisma.IntNullableFilter<"AppMedia"> | number | null
+  height?: Prisma.IntNullableFilter<"AppMedia"> | number | null
+  durationSec?: Prisma.IntNullableFilter<"AppMedia"> | number | null
+  thumbnailUrl?: Prisma.StringNullableFilter<"AppMedia"> | string | null
+  fileSizeBytes?: Prisma.BigIntNullableFilter<"AppMedia"> | bigint | number | null
+  isAnimated?: Prisma.BoolFilter<"AppMedia"> | boolean
   sortOrder?: Prisma.IntFilter<"AppMedia"> | number
   createdAt?: Prisma.DateTimeFilter<"AppMedia"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"AppMedia"> | Date | string
   app?: Prisma.XOR<Prisma.AppScalarRelationFilter, Prisma.AppWhereInput>
 }, "id">
 
@@ -266,8 +362,16 @@ export type AppMediaOrderByWithAggregationInput = {
   type?: Prisma.SortOrder
   url?: Prisma.SortOrder
   alt?: Prisma.SortOrderInput | Prisma.SortOrder
+  mimeType?: Prisma.SortOrderInput | Prisma.SortOrder
+  width?: Prisma.SortOrderInput | Prisma.SortOrder
+  height?: Prisma.SortOrderInput | Prisma.SortOrder
+  durationSec?: Prisma.SortOrderInput | Prisma.SortOrder
+  thumbnailUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  fileSizeBytes?: Prisma.SortOrderInput | Prisma.SortOrder
+  isAnimated?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.AppMediaCountOrderByAggregateInput
   _avg?: Prisma.AppMediaAvgOrderByAggregateInput
   _max?: Prisma.AppMediaMaxOrderByAggregateInput
@@ -284,8 +388,16 @@ export type AppMediaScalarWhereWithAggregatesInput = {
   type?: Prisma.EnumMediaTypeWithAggregatesFilter<"AppMedia"> | $Enums.MediaType
   url?: Prisma.StringWithAggregatesFilter<"AppMedia"> | string
   alt?: Prisma.StringNullableWithAggregatesFilter<"AppMedia"> | string | null
+  mimeType?: Prisma.StringNullableWithAggregatesFilter<"AppMedia"> | string | null
+  width?: Prisma.IntNullableWithAggregatesFilter<"AppMedia"> | number | null
+  height?: Prisma.IntNullableWithAggregatesFilter<"AppMedia"> | number | null
+  durationSec?: Prisma.IntNullableWithAggregatesFilter<"AppMedia"> | number | null
+  thumbnailUrl?: Prisma.StringNullableWithAggregatesFilter<"AppMedia"> | string | null
+  fileSizeBytes?: Prisma.BigIntNullableWithAggregatesFilter<"AppMedia"> | bigint | number | null
+  isAnimated?: Prisma.BoolWithAggregatesFilter<"AppMedia"> | boolean
   sortOrder?: Prisma.IntWithAggregatesFilter<"AppMedia"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"AppMedia"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"AppMedia"> | Date | string
 }
 
 export type AppMediaCreateInput = {
@@ -293,8 +405,16 @@ export type AppMediaCreateInput = {
   type: $Enums.MediaType
   url: string
   alt?: string | null
+  mimeType?: string | null
+  width?: number | null
+  height?: number | null
+  durationSec?: number | null
+  thumbnailUrl?: string | null
+  fileSizeBytes?: bigint | number | null
+  isAnimated?: boolean
   sortOrder?: number
   createdAt?: Date | string
+  updatedAt?: Date | string
   app: Prisma.AppCreateNestedOneWithoutMediaInput
 }
 
@@ -304,8 +424,16 @@ export type AppMediaUncheckedCreateInput = {
   type: $Enums.MediaType
   url: string
   alt?: string | null
+  mimeType?: string | null
+  width?: number | null
+  height?: number | null
+  durationSec?: number | null
+  thumbnailUrl?: string | null
+  fileSizeBytes?: bigint | number | null
+  isAnimated?: boolean
   sortOrder?: number
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type AppMediaUpdateInput = {
@@ -313,8 +441,16 @@ export type AppMediaUpdateInput = {
   type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
   url?: Prisma.StringFieldUpdateOperationsInput | string
   alt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  width?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  durationSec?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileSizeBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  isAnimated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   app?: Prisma.AppUpdateOneRequiredWithoutMediaNestedInput
 }
 
@@ -324,8 +460,16 @@ export type AppMediaUncheckedUpdateInput = {
   type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
   url?: Prisma.StringFieldUpdateOperationsInput | string
   alt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  width?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  durationSec?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileSizeBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  isAnimated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AppMediaCreateManyInput = {
@@ -334,8 +478,16 @@ export type AppMediaCreateManyInput = {
   type: $Enums.MediaType
   url: string
   alt?: string | null
+  mimeType?: string | null
+  width?: number | null
+  height?: number | null
+  durationSec?: number | null
+  thumbnailUrl?: string | null
+  fileSizeBytes?: bigint | number | null
+  isAnimated?: boolean
   sortOrder?: number
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type AppMediaUpdateManyMutationInput = {
@@ -343,8 +495,16 @@ export type AppMediaUpdateManyMutationInput = {
   type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
   url?: Prisma.StringFieldUpdateOperationsInput | string
   alt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  width?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  durationSec?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileSizeBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  isAnimated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AppMediaUncheckedUpdateManyInput = {
@@ -353,8 +513,16 @@ export type AppMediaUncheckedUpdateManyInput = {
   type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
   url?: Prisma.StringFieldUpdateOperationsInput | string
   alt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  width?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  durationSec?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileSizeBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  isAnimated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AppMediaListRelationFilter = {
@@ -373,11 +541,23 @@ export type AppMediaCountOrderByAggregateInput = {
   type?: Prisma.SortOrder
   url?: Prisma.SortOrder
   alt?: Prisma.SortOrder
+  mimeType?: Prisma.SortOrder
+  width?: Prisma.SortOrder
+  height?: Prisma.SortOrder
+  durationSec?: Prisma.SortOrder
+  thumbnailUrl?: Prisma.SortOrder
+  fileSizeBytes?: Prisma.SortOrder
+  isAnimated?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type AppMediaAvgOrderByAggregateInput = {
+  width?: Prisma.SortOrder
+  height?: Prisma.SortOrder
+  durationSec?: Prisma.SortOrder
+  fileSizeBytes?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
 }
 
@@ -387,8 +567,16 @@ export type AppMediaMaxOrderByAggregateInput = {
   type?: Prisma.SortOrder
   url?: Prisma.SortOrder
   alt?: Prisma.SortOrder
+  mimeType?: Prisma.SortOrder
+  width?: Prisma.SortOrder
+  height?: Prisma.SortOrder
+  durationSec?: Prisma.SortOrder
+  thumbnailUrl?: Prisma.SortOrder
+  fileSizeBytes?: Prisma.SortOrder
+  isAnimated?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type AppMediaMinOrderByAggregateInput = {
@@ -397,11 +585,23 @@ export type AppMediaMinOrderByAggregateInput = {
   type?: Prisma.SortOrder
   url?: Prisma.SortOrder
   alt?: Prisma.SortOrder
+  mimeType?: Prisma.SortOrder
+  width?: Prisma.SortOrder
+  height?: Prisma.SortOrder
+  durationSec?: Prisma.SortOrder
+  thumbnailUrl?: Prisma.SortOrder
+  fileSizeBytes?: Prisma.SortOrder
+  isAnimated?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type AppMediaSumOrderByAggregateInput = {
+  width?: Prisma.SortOrder
+  height?: Prisma.SortOrder
+  durationSec?: Prisma.SortOrder
+  fileSizeBytes?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
 }
 
@@ -451,13 +651,37 @@ export type EnumMediaTypeFieldUpdateOperationsInput = {
   set?: $Enums.MediaType
 }
 
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type NullableBigIntFieldUpdateOperationsInput = {
+  set?: bigint | number | null
+  increment?: bigint | number
+  decrement?: bigint | number
+  multiply?: bigint | number
+  divide?: bigint | number
+}
+
 export type AppMediaCreateWithoutAppInput = {
   id?: string
   type: $Enums.MediaType
   url: string
   alt?: string | null
+  mimeType?: string | null
+  width?: number | null
+  height?: number | null
+  durationSec?: number | null
+  thumbnailUrl?: string | null
+  fileSizeBytes?: bigint | number | null
+  isAnimated?: boolean
   sortOrder?: number
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type AppMediaUncheckedCreateWithoutAppInput = {
@@ -465,8 +689,16 @@ export type AppMediaUncheckedCreateWithoutAppInput = {
   type: $Enums.MediaType
   url: string
   alt?: string | null
+  mimeType?: string | null
+  width?: number | null
+  height?: number | null
+  durationSec?: number | null
+  thumbnailUrl?: string | null
+  fileSizeBytes?: bigint | number | null
+  isAnimated?: boolean
   sortOrder?: number
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type AppMediaCreateOrConnectWithoutAppInput = {
@@ -504,8 +736,16 @@ export type AppMediaScalarWhereInput = {
   type?: Prisma.EnumMediaTypeFilter<"AppMedia"> | $Enums.MediaType
   url?: Prisma.StringFilter<"AppMedia"> | string
   alt?: Prisma.StringNullableFilter<"AppMedia"> | string | null
+  mimeType?: Prisma.StringNullableFilter<"AppMedia"> | string | null
+  width?: Prisma.IntNullableFilter<"AppMedia"> | number | null
+  height?: Prisma.IntNullableFilter<"AppMedia"> | number | null
+  durationSec?: Prisma.IntNullableFilter<"AppMedia"> | number | null
+  thumbnailUrl?: Prisma.StringNullableFilter<"AppMedia"> | string | null
+  fileSizeBytes?: Prisma.BigIntNullableFilter<"AppMedia"> | bigint | number | null
+  isAnimated?: Prisma.BoolFilter<"AppMedia"> | boolean
   sortOrder?: Prisma.IntFilter<"AppMedia"> | number
   createdAt?: Prisma.DateTimeFilter<"AppMedia"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"AppMedia"> | Date | string
 }
 
 export type AppMediaCreateManyAppInput = {
@@ -513,8 +753,16 @@ export type AppMediaCreateManyAppInput = {
   type: $Enums.MediaType
   url: string
   alt?: string | null
+  mimeType?: string | null
+  width?: number | null
+  height?: number | null
+  durationSec?: number | null
+  thumbnailUrl?: string | null
+  fileSizeBytes?: bigint | number | null
+  isAnimated?: boolean
   sortOrder?: number
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type AppMediaUpdateWithoutAppInput = {
@@ -522,8 +770,16 @@ export type AppMediaUpdateWithoutAppInput = {
   type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
   url?: Prisma.StringFieldUpdateOperationsInput | string
   alt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  width?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  durationSec?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileSizeBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  isAnimated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AppMediaUncheckedUpdateWithoutAppInput = {
@@ -531,8 +787,16 @@ export type AppMediaUncheckedUpdateWithoutAppInput = {
   type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
   url?: Prisma.StringFieldUpdateOperationsInput | string
   alt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  width?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  durationSec?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileSizeBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  isAnimated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AppMediaUncheckedUpdateManyWithoutAppInput = {
@@ -540,8 +804,16 @@ export type AppMediaUncheckedUpdateManyWithoutAppInput = {
   type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
   url?: Prisma.StringFieldUpdateOperationsInput | string
   alt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  width?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  durationSec?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileSizeBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  isAnimated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -552,8 +824,16 @@ export type AppMediaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   type?: boolean
   url?: boolean
   alt?: boolean
+  mimeType?: boolean
+  width?: boolean
+  height?: boolean
+  durationSec?: boolean
+  thumbnailUrl?: boolean
+  fileSizeBytes?: boolean
+  isAnimated?: boolean
   sortOrder?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   app?: boolean | Prisma.AppDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["appMedia"]>
 
@@ -563,8 +843,16 @@ export type AppMediaSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   type?: boolean
   url?: boolean
   alt?: boolean
+  mimeType?: boolean
+  width?: boolean
+  height?: boolean
+  durationSec?: boolean
+  thumbnailUrl?: boolean
+  fileSizeBytes?: boolean
+  isAnimated?: boolean
   sortOrder?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   app?: boolean | Prisma.AppDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["appMedia"]>
 
@@ -574,8 +862,16 @@ export type AppMediaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   type?: boolean
   url?: boolean
   alt?: boolean
+  mimeType?: boolean
+  width?: boolean
+  height?: boolean
+  durationSec?: boolean
+  thumbnailUrl?: boolean
+  fileSizeBytes?: boolean
+  isAnimated?: boolean
   sortOrder?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   app?: boolean | Prisma.AppDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["appMedia"]>
 
@@ -585,11 +881,19 @@ export type AppMediaSelectScalar = {
   type?: boolean
   url?: boolean
   alt?: boolean
+  mimeType?: boolean
+  width?: boolean
+  height?: boolean
+  durationSec?: boolean
+  thumbnailUrl?: boolean
+  fileSizeBytes?: boolean
+  isAnimated?: boolean
   sortOrder?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type AppMediaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "appId" | "type" | "url" | "alt" | "sortOrder" | "createdAt", ExtArgs["result"]["appMedia"]>
+export type AppMediaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "appId" | "type" | "url" | "alt" | "mimeType" | "width" | "height" | "durationSec" | "thumbnailUrl" | "fileSizeBytes" | "isAnimated" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["appMedia"]>
 export type AppMediaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   app?: boolean | Prisma.AppDefaultArgs<ExtArgs>
 }
@@ -611,8 +915,16 @@ export type $AppMediaPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     type: $Enums.MediaType
     url: string
     alt: string | null
+    mimeType: string | null
+    width: number | null
+    height: number | null
+    durationSec: number | null
+    thumbnailUrl: string | null
+    fileSizeBytes: bigint | null
+    isAnimated: boolean
     sortOrder: number
     createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["appMedia"]>
   composites: {}
 }
@@ -1042,8 +1354,16 @@ export interface AppMediaFieldRefs {
   readonly type: Prisma.FieldRef<"AppMedia", 'MediaType'>
   readonly url: Prisma.FieldRef<"AppMedia", 'String'>
   readonly alt: Prisma.FieldRef<"AppMedia", 'String'>
+  readonly mimeType: Prisma.FieldRef<"AppMedia", 'String'>
+  readonly width: Prisma.FieldRef<"AppMedia", 'Int'>
+  readonly height: Prisma.FieldRef<"AppMedia", 'Int'>
+  readonly durationSec: Prisma.FieldRef<"AppMedia", 'Int'>
+  readonly thumbnailUrl: Prisma.FieldRef<"AppMedia", 'String'>
+  readonly fileSizeBytes: Prisma.FieldRef<"AppMedia", 'BigInt'>
+  readonly isAnimated: Prisma.FieldRef<"AppMedia", 'Boolean'>
   readonly sortOrder: Prisma.FieldRef<"AppMedia", 'Int'>
   readonly createdAt: Prisma.FieldRef<"AppMedia", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"AppMedia", 'DateTime'>
 }
     
 

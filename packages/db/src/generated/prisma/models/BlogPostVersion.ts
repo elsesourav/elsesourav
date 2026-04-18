@@ -50,6 +50,7 @@ export type BlogPostVersionCountAggregateOutputType = {
   title: number
   excerpt: number
   contentMarkdown: number
+  metadata: number
   createdBy: number
   createdAt: number
   _all: number
@@ -82,6 +83,7 @@ export type BlogPostVersionCountAggregateInputType = {
   title?: true
   excerpt?: true
   contentMarkdown?: true
+  metadata?: true
   createdBy?: true
   createdAt?: true
   _all?: true
@@ -165,6 +167,7 @@ export type BlogPostVersionGroupByOutputType = {
   title: string
   excerpt: string | null
   contentMarkdown: string
+  metadata: runtime.JsonValue | null
   createdBy: string | null
   createdAt: Date
   _count: BlogPostVersionCountAggregateOutputType | null
@@ -196,6 +199,7 @@ export type BlogPostVersionWhereInput = {
   title?: Prisma.StringFilter<"BlogPostVersion"> | string
   excerpt?: Prisma.StringNullableFilter<"BlogPostVersion"> | string | null
   contentMarkdown?: Prisma.StringFilter<"BlogPostVersion"> | string
+  metadata?: Prisma.JsonNullableFilter<"BlogPostVersion">
   createdBy?: Prisma.StringNullableFilter<"BlogPostVersion"> | string | null
   createdAt?: Prisma.DateTimeFilter<"BlogPostVersion"> | Date | string
   post?: Prisma.XOR<Prisma.BlogPostScalarRelationFilter, Prisma.BlogPostWhereInput>
@@ -207,6 +211,7 @@ export type BlogPostVersionOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   excerpt?: Prisma.SortOrderInput | Prisma.SortOrder
   contentMarkdown?: Prisma.SortOrder
+  metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   post?: Prisma.BlogPostOrderByWithRelationInput
@@ -221,6 +226,7 @@ export type BlogPostVersionWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"BlogPostVersion"> | string
   excerpt?: Prisma.StringNullableFilter<"BlogPostVersion"> | string | null
   contentMarkdown?: Prisma.StringFilter<"BlogPostVersion"> | string
+  metadata?: Prisma.JsonNullableFilter<"BlogPostVersion">
   createdBy?: Prisma.StringNullableFilter<"BlogPostVersion"> | string | null
   createdAt?: Prisma.DateTimeFilter<"BlogPostVersion"> | Date | string
   post?: Prisma.XOR<Prisma.BlogPostScalarRelationFilter, Prisma.BlogPostWhereInput>
@@ -232,6 +238,7 @@ export type BlogPostVersionOrderByWithAggregationInput = {
   title?: Prisma.SortOrder
   excerpt?: Prisma.SortOrderInput | Prisma.SortOrder
   contentMarkdown?: Prisma.SortOrder
+  metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.BlogPostVersionCountOrderByAggregateInput
@@ -248,6 +255,7 @@ export type BlogPostVersionScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"BlogPostVersion"> | string
   excerpt?: Prisma.StringNullableWithAggregatesFilter<"BlogPostVersion"> | string | null
   contentMarkdown?: Prisma.StringWithAggregatesFilter<"BlogPostVersion"> | string
+  metadata?: Prisma.JsonNullableWithAggregatesFilter<"BlogPostVersion">
   createdBy?: Prisma.StringNullableWithAggregatesFilter<"BlogPostVersion"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"BlogPostVersion"> | Date | string
 }
@@ -257,6 +265,7 @@ export type BlogPostVersionCreateInput = {
   title: string
   excerpt?: string | null
   contentMarkdown: string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: string | null
   createdAt?: Date | string
   post: Prisma.BlogPostCreateNestedOneWithoutVersionsInput
@@ -268,6 +277,7 @@ export type BlogPostVersionUncheckedCreateInput = {
   title: string
   excerpt?: string | null
   contentMarkdown: string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: string | null
   createdAt?: Date | string
 }
@@ -277,6 +287,7 @@ export type BlogPostVersionUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   post?: Prisma.BlogPostUpdateOneRequiredWithoutVersionsNestedInput
@@ -288,6 +299,7 @@ export type BlogPostVersionUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -298,6 +310,7 @@ export type BlogPostVersionCreateManyInput = {
   title: string
   excerpt?: string | null
   contentMarkdown: string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: string | null
   createdAt?: Date | string
 }
@@ -307,6 +320,7 @@ export type BlogPostVersionUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -317,6 +331,7 @@ export type BlogPostVersionUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -337,6 +352,7 @@ export type BlogPostVersionCountOrderByAggregateInput = {
   title?: Prisma.SortOrder
   excerpt?: Prisma.SortOrder
   contentMarkdown?: Prisma.SortOrder
+  metadata?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -408,6 +424,7 @@ export type BlogPostVersionCreateWithoutPostInput = {
   title: string
   excerpt?: string | null
   contentMarkdown: string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: string | null
   createdAt?: Date | string
 }
@@ -417,6 +434,7 @@ export type BlogPostVersionUncheckedCreateWithoutPostInput = {
   title: string
   excerpt?: string | null
   contentMarkdown: string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: string | null
   createdAt?: Date | string
 }
@@ -456,6 +474,7 @@ export type BlogPostVersionScalarWhereInput = {
   title?: Prisma.StringFilter<"BlogPostVersion"> | string
   excerpt?: Prisma.StringNullableFilter<"BlogPostVersion"> | string | null
   contentMarkdown?: Prisma.StringFilter<"BlogPostVersion"> | string
+  metadata?: Prisma.JsonNullableFilter<"BlogPostVersion">
   createdBy?: Prisma.StringNullableFilter<"BlogPostVersion"> | string | null
   createdAt?: Prisma.DateTimeFilter<"BlogPostVersion"> | Date | string
 }
@@ -465,6 +484,7 @@ export type BlogPostVersionCreateManyPostInput = {
   title: string
   excerpt?: string | null
   contentMarkdown: string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: string | null
   createdAt?: Date | string
 }
@@ -474,6 +494,7 @@ export type BlogPostVersionUpdateWithoutPostInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -483,6 +504,7 @@ export type BlogPostVersionUncheckedUpdateWithoutPostInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -492,6 +514,7 @@ export type BlogPostVersionUncheckedUpdateManyWithoutPostInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -504,6 +527,7 @@ export type BlogPostVersionSelect<ExtArgs extends runtime.Types.Extensions.Inter
   title?: boolean
   excerpt?: boolean
   contentMarkdown?: boolean
+  metadata?: boolean
   createdBy?: boolean
   createdAt?: boolean
   post?: boolean | Prisma.BlogPostDefaultArgs<ExtArgs>
@@ -515,6 +539,7 @@ export type BlogPostVersionSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   title?: boolean
   excerpt?: boolean
   contentMarkdown?: boolean
+  metadata?: boolean
   createdBy?: boolean
   createdAt?: boolean
   post?: boolean | Prisma.BlogPostDefaultArgs<ExtArgs>
@@ -526,6 +551,7 @@ export type BlogPostVersionSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   title?: boolean
   excerpt?: boolean
   contentMarkdown?: boolean
+  metadata?: boolean
   createdBy?: boolean
   createdAt?: boolean
   post?: boolean | Prisma.BlogPostDefaultArgs<ExtArgs>
@@ -537,11 +563,12 @@ export type BlogPostVersionSelectScalar = {
   title?: boolean
   excerpt?: boolean
   contentMarkdown?: boolean
+  metadata?: boolean
   createdBy?: boolean
   createdAt?: boolean
 }
 
-export type BlogPostVersionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "postId" | "title" | "excerpt" | "contentMarkdown" | "createdBy" | "createdAt", ExtArgs["result"]["blogPostVersion"]>
+export type BlogPostVersionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "postId" | "title" | "excerpt" | "contentMarkdown" | "metadata" | "createdBy" | "createdAt", ExtArgs["result"]["blogPostVersion"]>
 export type BlogPostVersionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   post?: boolean | Prisma.BlogPostDefaultArgs<ExtArgs>
 }
@@ -563,6 +590,7 @@ export type $BlogPostVersionPayload<ExtArgs extends runtime.Types.Extensions.Int
     title: string
     excerpt: string | null
     contentMarkdown: string
+    metadata: runtime.JsonValue | null
     createdBy: string | null
     createdAt: Date
   }, ExtArgs["result"]["blogPostVersion"]>
@@ -994,6 +1022,7 @@ export interface BlogPostVersionFieldRefs {
   readonly title: Prisma.FieldRef<"BlogPostVersion", 'String'>
   readonly excerpt: Prisma.FieldRef<"BlogPostVersion", 'String'>
   readonly contentMarkdown: Prisma.FieldRef<"BlogPostVersion", 'String'>
+  readonly metadata: Prisma.FieldRef<"BlogPostVersion", 'Json'>
   readonly createdBy: Prisma.FieldRef<"BlogPostVersion", 'String'>
   readonly createdAt: Prisma.FieldRef<"BlogPostVersion", 'DateTime'>
 }

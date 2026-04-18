@@ -1,9 +1,17 @@
 import { getServerEnv } from "@elsesourav/config";
 import { Role, prisma } from "@elsesourav/db";
-import { credentialsSchema, registerSchema } from "@elsesourav/validation";
+import {
+  credentialsSchema,
+  forgotPasswordSchema,
+  registerSchema,
+  resendVerificationSchema,
+  resetPasswordSchema,
+  verifyEmailSchema,
+} from "@elsesourav/validation";
 import bcrypt from "bcryptjs";
 import { type Request, Router } from "express";
 import jwt from "jsonwebtoken";
+import { randomBytes } from "node:crypto";
 import { z } from "zod";
 import { getRequestId, sendFailure, sendSuccess } from "../lib/http";
 
@@ -26,6 +34,10 @@ const oauthGithubUpsertSchema = z.object({
   image: z.string().url().optional().nullable(),
 });
 
+const PASSWORD_RESET_IDENTIFIER_PREFIX = "reset:";
+const EMAIL_VERIFY_IDENTIFIER_PREFIX = "verify:";
+const TOKEN_EXPIRY_HOURS = 24;
+
 function hasInternalToken(req: Request): boolean {
   return (
     !!env.INTERNAL_SERVICE_TOKEN &&
@@ -39,6 +51,52 @@ function hasInternalAdminAccess(req: Request): boolean {
     req.header("x-internal-token") === env.INTERNAL_SERVICE_TOKEN &&
     req.header("x-user-role") === Role.ADMIN
   );
+}
+
+function normalizeEmail(value: string): string {
+  return value.trim().toLowerCase();
+}
+
+function buildTokenExpiry(hours: number): Date {
+  return new Date(Date.now() + hours * 60 * 60 * 1000);
+}
+
+function isProduction(): boolean {
+  return env.NODE_ENV === "production";
+}
+
+function generateOneTimeToken(): string {
+  return randomBytes(32).toString("hex");
+}
+
+async function createOneTimeToken(identifier: string): Promise<string> {
+  const token = generateOneTimeToken();
+
+  await prisma.$transaction([
+    prisma.verificationToken.deleteMany({
+      where: {
+        identifier,
+      },
+    }),
+    prisma.verificationToken.create({
+      data: {
+        identifier,
+        token,
+        expires: buildTokenExpiry(TOKEN_EXPIRY_HOURS),
+      },
+    }),
+  ]);
+
+  return token;
+}
+
+function getTokenEmail(identifier: string, prefix: string): string | null {
+  if (!identifier.startsWith(prefix)) {
+    return null;
+  }
+
+  const email = identifier.slice(prefix.length).trim().toLowerCase();
+  return email.length > 0 ? email : null;
 }
 
 authRouter.post("/register", async (req, res) => {
@@ -175,6 +233,330 @@ authRouter.post("/oauth/github/upsert", async (req, res) => {
       requestId,
       "INTERNAL_ERROR",
       "Failed to sync OAuth user.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+authRouter.post("/forgot-password", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsed = forgotPasswordSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid forgot-password payload.",
+        400,
+        parsed.error.flatten(),
+      );
+    }
+
+    const normalizedEmail = normalizeEmail(parsed.data.email);
+
+    const user = await prisma.user.findFirst({
+      where: {
+        email: {
+          equals: normalizedEmail,
+          mode: "insensitive",
+        },
+        deletedAt: null,
+      },
+      select: {
+        email: true,
+      },
+    });
+
+    let tokenPreview: string | undefined;
+
+    if (user) {
+      const token = await createOneTimeToken(
+        `${PASSWORD_RESET_IDENTIFIER_PREFIX}${normalizeEmail(user.email)}`,
+      );
+
+      if (!isProduction()) {
+        tokenPreview = token;
+      }
+    }
+
+    return sendSuccess(res, requestId, {
+      message: "If your account exists, a reset link has been sent.",
+      tokenPreview,
+    });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to process forgot-password request.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+authRouter.post("/resend-verification", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsed = resendVerificationSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid resend-verification payload.",
+        400,
+        parsed.error.flatten(),
+      );
+    }
+
+    const normalizedEmail = normalizeEmail(parsed.data.email);
+
+    const user = await prisma.user.findFirst({
+      where: {
+        email: {
+          equals: normalizedEmail,
+          mode: "insensitive",
+        },
+        deletedAt: null,
+      },
+      select: {
+        email: true,
+        emailVerified: true,
+      },
+    });
+
+    let tokenPreview: string | undefined;
+
+    if (user && !user.emailVerified) {
+      const token = await createOneTimeToken(
+        `${EMAIL_VERIFY_IDENTIFIER_PREFIX}${normalizeEmail(user.email)}`,
+      );
+
+      if (!isProduction()) {
+        tokenPreview = token;
+      }
+    }
+
+    return sendSuccess(res, requestId, {
+      message: "If your account exists, a verification email has been sent.",
+      tokenPreview,
+    });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to resend verification email.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+authRouter.post("/verify-email", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsed = verifyEmailSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid verify-email payload.",
+        400,
+        parsed.error.flatten(),
+      );
+    }
+
+    const verificationToken = await prisma.verificationToken.findUnique({
+      where: {
+        token: parsed.data.token,
+      },
+    });
+
+    if (!verificationToken || verificationToken.expires <= new Date()) {
+      return sendFailure(
+        res,
+        requestId,
+        "INVALID_TOKEN",
+        "Verification token is invalid or expired.",
+        400,
+      );
+    }
+
+    const email = getTokenEmail(
+      verificationToken.identifier,
+      EMAIL_VERIFY_IDENTIFIER_PREFIX,
+    );
+
+    if (!email) {
+      return sendFailure(
+        res,
+        requestId,
+        "INVALID_TOKEN",
+        "Verification token is invalid.",
+        400,
+      );
+    }
+
+    const user = await prisma.user.findFirst({
+      where: {
+        email: {
+          equals: email,
+          mode: "insensitive",
+        },
+        deletedAt: null,
+      },
+      select: {
+        id: true,
+        emailVerified: true,
+      },
+    });
+
+    if (!user) {
+      return sendFailure(
+        res,
+        requestId,
+        "NOT_FOUND",
+        "User account not found.",
+        404,
+      );
+    }
+
+    await prisma.$transaction([
+      prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          emailVerified: user.emailVerified ?? new Date(),
+        },
+      }),
+      prisma.verificationToken.delete({
+        where: {
+          token: verificationToken.token,
+        },
+      }),
+    ]);
+
+    return sendSuccess(res, requestId, {
+      message: "Email verified successfully.",
+    });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to verify email.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+authRouter.post("/reset-password", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsed = resetPasswordSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid reset-password payload.",
+        400,
+        parsed.error.flatten(),
+      );
+    }
+
+    const verificationToken = await prisma.verificationToken.findUnique({
+      where: {
+        token: parsed.data.token,
+      },
+    });
+
+    if (!verificationToken || verificationToken.expires <= new Date()) {
+      return sendFailure(
+        res,
+        requestId,
+        "INVALID_TOKEN",
+        "Reset token is invalid or expired.",
+        400,
+      );
+    }
+
+    const email = getTokenEmail(
+      verificationToken.identifier,
+      PASSWORD_RESET_IDENTIFIER_PREFIX,
+    );
+
+    if (!email) {
+      return sendFailure(
+        res,
+        requestId,
+        "INVALID_TOKEN",
+        "Reset token is invalid.",
+        400,
+      );
+    }
+
+    const user = await prisma.user.findFirst({
+      where: {
+        email: {
+          equals: email,
+          mode: "insensitive",
+        },
+        deletedAt: null,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!user) {
+      return sendFailure(
+        res,
+        requestId,
+        "NOT_FOUND",
+        "User account not found.",
+        404,
+      );
+    }
+
+    const passwordHash = await bcrypt.hash(parsed.data.password, 12);
+
+    await prisma.$transaction([
+      prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          passwordHash,
+        },
+      }),
+      prisma.verificationToken.deleteMany({
+        where: {
+          identifier: verificationToken.identifier,
+        },
+      }),
+    ]);
+
+    return sendSuccess(res, requestId, {
+      message: "Password reset successful.",
+    });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to reset password.",
       500,
       error instanceof Error ? error.message : "Unknown error",
     );

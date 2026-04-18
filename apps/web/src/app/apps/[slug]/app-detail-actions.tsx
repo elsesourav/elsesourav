@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { selectIsAppSaved, toggleAppSaved } from "@/store/slices/librarySlice";
 import { enqueueNotification } from "@/store/slices/notificationsSlice";
@@ -38,13 +39,14 @@ export function AppDetailActions({
 
   return (
     <section className="rounded-xl border border-black/10 bg-white p-4 shadow-[0_14px_30px_-24px_rgba(20,23,31,0.65)]">
-      <button
+      <Button
         type="button"
         onClick={onToggleQuickSave}
-        className="rounded-full border border-black/20 bg-white px-4 py-2 text-sm font-medium text-[#14171f] transition hover:bg-[#f7f8fb]"
+        tone="secondary"
+        className="rounded-full"
       >
         {isSaved ? "Remove from quick library" : "Save to quick library"}
-      </button>
+      </Button>
       <p className="mt-2 text-xs text-[#4a5262]">
         This action updates client UX state only. Server app details remain API
         sourced.

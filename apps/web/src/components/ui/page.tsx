@@ -1,13 +1,21 @@
-import Link from "next/link";
+"use client";
+
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Container from "@mui/material/Container";
+import Link from "@mui/material/Link";
+import Typography from "@mui/material/Typography";
+import NextLink from "next/link";
 import type { ReactNode } from "react";
 
 type Align = "left" | "center";
 type PageShellWidth = "narrow" | "content" | "wide";
 
-const shellWidthClass: Record<PageShellWidth, string> = {
-  narrow: "max-w-md",
-  content: "max-w-4xl",
-  wide: "max-w-5xl",
+const shellWidthClass: Record<PageShellWidth, "sm" | "lg" | "xl"> = {
+  narrow: "sm",
+  content: "lg",
+  wide: "xl",
 };
 
 function cn(...values: Array<string | false | undefined>) {
@@ -26,16 +34,22 @@ export function PageShell({
   className?: string;
 }) {
   return (
-    <main
-      className={cn(
-        "mx-auto flex w-full flex-col gap-8 px-6 py-12 text-[#14171f] sm:px-10",
-        shellWidthClass[width],
-        center && "min-h-screen justify-center",
-        className,
-      )}
+    <Container
+      component="main"
+      maxWidth={shellWidthClass[width]}
+      className={cn("ui-text-primary", className)}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 4,
+        py: { xs: 8, sm: 10 },
+        px: { xs: 3, sm: 5 },
+        minHeight: center ? "100dvh" : undefined,
+        justifyContent: center ? "center" : undefined,
+      }}
     >
       {children}
-    </main>
+    </Container>
   );
 }
 
@@ -53,31 +67,45 @@ export function PageHeader({
   actions?: ReactNode;
 }) {
   const textAlign = align === "center" ? "text-center" : "text-left";
+  const leftAlignedWithActions = Boolean(actions) && align === "left";
 
   return (
-    <header
+    <Box
+      component="header"
       className={cn(
         "space-y-2",
-        Boolean(actions) &&
-          align === "left" &&
-          "flex items-start justify-between gap-4",
+        leftAlignedWithActions && "flex items-start justify-between gap-4",
       )}
     >
-      <div className={textAlign}>
+      <Box className={textAlign}>
         {eyebrow ? (
-          <p className="text-xs uppercase tracking-[0.2em] text-[#4a5262]">
+          <Typography
+            variant="caption"
+            className="ui-text-muted"
+            sx={{ letterSpacing: "0.18em", textTransform: "uppercase" }}
+          >
             {eyebrow}
-          </p>
+          </Typography>
         ) : null}
-        <h1 className="text-3xl font-semibold tracking-tight text-[#0e1118] sm:text-4xl">
+        <Typography
+          variant="h3"
+          className="ui-text-heading"
+          sx={{ fontWeight: 600, letterSpacing: "-0.03em" }}
+        >
           {title}
-        </h1>
+        </Typography>
         {description ? (
-          <p className="mt-2 max-w-2xl text-sm text-[#3f4757]">{description}</p>
+          <Typography
+            variant="body2"
+            className="ui-text-muted"
+            sx={{ marginTop: 1, maxWidth: "42rem" }}
+          >
+            {description}
+          </Typography>
         ) : null}
-      </div>
-      {actions ? <div>{actions}</div> : null}
-    </header>
+      </Box>
+      {actions ? <Box>{actions}</Box> : null}
+    </Box>
   );
 }
 
@@ -94,16 +122,44 @@ export function LinkCard({
 }) {
   return (
     <Link
+      component={NextLink}
       href={href}
-      className={cn(
-        "block rounded-xl border border-black/10 bg-white p-4 shadow-[0_14px_30px_-24px_rgba(20,23,31,0.65)] transition hover:border-black/20 hover:bg-[#fcfcfe]",
-        className,
-      )}
+      underline="none"
+      color="inherit"
+      className={cn("ui-card block", className)}
     >
-      <p className="text-sm font-semibold text-[#121722]">{title}</p>
-      {description ? (
-        <p className="mt-1 text-xs text-[#495160]">{description}</p>
-      ) : null}
+      <Card
+        variant="outlined"
+        sx={{
+          borderRadius: 3,
+          transition: "all 180ms ease",
+          "&:hover": {
+            borderColor:
+              "color-mix(in srgb, var(--foreground) 22%, transparent)",
+            backgroundColor:
+              "color-mix(in srgb, var(--background) 84%, var(--brand-secondary) 16%)",
+          },
+        }}
+      >
+        <CardContent sx={{ p: 2 }}>
+          <Typography
+            className="ui-text-heading"
+            variant="subtitle2"
+            sx={{ fontWeight: 600 }}
+          >
+            {title}
+          </Typography>
+          {description ? (
+            <Typography
+              className="ui-text-muted"
+              variant="caption"
+              sx={{ marginTop: 0.75, display: "block" }}
+            >
+              {description}
+            </Typography>
+          ) : null}
+        </CardContent>
+      </Card>
     </Link>
   );
 }
@@ -116,9 +172,23 @@ export function StatCard({
   value: string | number;
 }) {
   return (
-    <article className="rounded-xl border border-black/10 bg-white p-4 shadow-[0_14px_30px_-24px_rgba(20,23,31,0.65)]">
-      <p className="text-xs uppercase tracking-wide text-[#4a5262]">{label}</p>
-      <p className="mt-1 text-2xl font-semibold text-[#0f131d]">{value}</p>
-    </article>
+    <Card variant="outlined" className="ui-card" sx={{ borderRadius: 3 }}>
+      <CardContent sx={{ p: 2 }}>
+        <Typography
+          className="ui-text-muted"
+          variant="caption"
+          sx={{ textTransform: "uppercase", letterSpacing: "0.08em" }}
+        >
+          {label}
+        </Typography>
+        <Typography
+          className="ui-text-heading"
+          variant="h5"
+          sx={{ marginTop: 0.5, fontWeight: 600 }}
+        >
+          {value}
+        </Typography>
+      </CardContent>
+    </Card>
   );
 }

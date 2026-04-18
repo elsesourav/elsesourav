@@ -411,6 +411,8 @@ export const ModelName = {
   UserLibrary: 'UserLibrary',
   UserSettings: 'UserSettings',
   ActivityLog: 'ActivityLog',
+  CustomFieldDefinition: 'CustomFieldDefinition',
+  CustomFieldValue: 'CustomFieldValue',
   AppChangelog: 'AppChangelog',
   BlogPostVersion: 'BlogPostVersion',
   HelpArticleVersion: 'HelpArticleVersion',
@@ -437,7 +439,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "category" | "app" | "appTag" | "appTagOnApp" | "homeSlider" | "appViewEvent" | "appDailyStat" | "appAggregateStat" | "storeSectionItem" | "storeBanner" | "contentPage" | "contentPageVersion" | "profilePage" | "blogTag" | "blogPost" | "blogPostTag" | "blogComment" | "helpCategory" | "helpArticle" | "testimonial" | "themeConfig" | "appMedia" | "appLink" | "userLibrary" | "userSettings" | "activityLog" | "appChangelog" | "blogPostVersion" | "helpArticleVersion" | "appDescriptionVersion" | "guestSession" | "feedback" | "downloadEvent" | "payment" | "account" | "session" | "verificationToken"
+    modelProps: "user" | "category" | "app" | "appTag" | "appTagOnApp" | "homeSlider" | "appViewEvent" | "appDailyStat" | "appAggregateStat" | "storeSectionItem" | "storeBanner" | "contentPage" | "contentPageVersion" | "profilePage" | "blogTag" | "blogPost" | "blogPostTag" | "blogComment" | "helpCategory" | "helpArticle" | "testimonial" | "themeConfig" | "appMedia" | "appLink" | "userLibrary" | "userSettings" | "activityLog" | "customFieldDefinition" | "customFieldValue" | "appChangelog" | "blogPostVersion" | "helpArticleVersion" | "appDescriptionVersion" | "guestSession" | "feedback" | "downloadEvent" | "payment" | "account" | "session" | "verificationToken"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2439,6 +2441,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CustomFieldDefinition: {
+      payload: Prisma.$CustomFieldDefinitionPayload<ExtArgs>
+      fields: Prisma.CustomFieldDefinitionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CustomFieldDefinitionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomFieldDefinitionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CustomFieldDefinitionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomFieldDefinitionPayload>
+        }
+        findFirst: {
+          args: Prisma.CustomFieldDefinitionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomFieldDefinitionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CustomFieldDefinitionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomFieldDefinitionPayload>
+        }
+        findMany: {
+          args: Prisma.CustomFieldDefinitionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomFieldDefinitionPayload>[]
+        }
+        create: {
+          args: Prisma.CustomFieldDefinitionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomFieldDefinitionPayload>
+        }
+        createMany: {
+          args: Prisma.CustomFieldDefinitionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CustomFieldDefinitionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomFieldDefinitionPayload>[]
+        }
+        delete: {
+          args: Prisma.CustomFieldDefinitionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomFieldDefinitionPayload>
+        }
+        update: {
+          args: Prisma.CustomFieldDefinitionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomFieldDefinitionPayload>
+        }
+        deleteMany: {
+          args: Prisma.CustomFieldDefinitionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CustomFieldDefinitionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CustomFieldDefinitionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomFieldDefinitionPayload>[]
+        }
+        upsert: {
+          args: Prisma.CustomFieldDefinitionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomFieldDefinitionPayload>
+        }
+        aggregate: {
+          args: Prisma.CustomFieldDefinitionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCustomFieldDefinition>
+        }
+        groupBy: {
+          args: Prisma.CustomFieldDefinitionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CustomFieldDefinitionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CustomFieldDefinitionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CustomFieldDefinitionCountAggregateOutputType> | number
+        }
+      }
+    }
+    CustomFieldValue: {
+      payload: Prisma.$CustomFieldValuePayload<ExtArgs>
+      fields: Prisma.CustomFieldValueFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CustomFieldValueFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomFieldValuePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CustomFieldValueFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomFieldValuePayload>
+        }
+        findFirst: {
+          args: Prisma.CustomFieldValueFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomFieldValuePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CustomFieldValueFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomFieldValuePayload>
+        }
+        findMany: {
+          args: Prisma.CustomFieldValueFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomFieldValuePayload>[]
+        }
+        create: {
+          args: Prisma.CustomFieldValueCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomFieldValuePayload>
+        }
+        createMany: {
+          args: Prisma.CustomFieldValueCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CustomFieldValueCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomFieldValuePayload>[]
+        }
+        delete: {
+          args: Prisma.CustomFieldValueDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomFieldValuePayload>
+        }
+        update: {
+          args: Prisma.CustomFieldValueUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomFieldValuePayload>
+        }
+        deleteMany: {
+          args: Prisma.CustomFieldValueDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CustomFieldValueUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CustomFieldValueUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomFieldValuePayload>[]
+        }
+        upsert: {
+          args: Prisma.CustomFieldValueUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomFieldValuePayload>
+        }
+        aggregate: {
+          args: Prisma.CustomFieldValueAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCustomFieldValue>
+        }
+        groupBy: {
+          args: Prisma.CustomFieldValueGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CustomFieldValueGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CustomFieldValueCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CustomFieldValueCountAggregateOutputType> | number
+        }
+      }
+    }
     AppChangelog: {
       payload: Prisma.$AppChangelogPayload<ExtArgs>
       fields: Prisma.AppChangelogFieldRefs
@@ -3328,12 +3478,22 @@ export const AppScalarFieldEnum = {
   slug: 'slug',
   shortDescription: 'shortDescription',
   fullDescription: 'fullDescription',
+  releaseNotes: 'releaseNotes',
   version: 'version',
   status: 'status',
   publishedAt: 'publishedAt',
   isPaid: 'isPaid',
   isFeatured: 'isFeatured',
   price: 'price',
+  iconUrl: 'iconUrl',
+  featureGraphicUrl: 'featureGraphicUrl',
+  promoVideoUrl: 'promoVideoUrl',
+  supportEmail: 'supportEmail',
+  supportWebsiteUrl: 'supportWebsiteUrl',
+  privacyPolicyUrl: 'privacyPolicyUrl',
+  containsAds: 'containsAds',
+  developerName: 'developerName',
+  metadata: 'metadata',
   categoryId: 'categoryId',
   createdById: 'createdById',
   updatedById: 'updatedById',
@@ -3474,6 +3634,7 @@ export const ContentPageScalarFieldEnum = {
   body: 'body',
   seoTitle: 'seoTitle',
   seoDescription: 'seoDescription',
+  metadata: 'metadata',
   status: 'status',
   publishAt: 'publishAt',
   publishedAt: 'publishedAt',
@@ -3495,6 +3656,7 @@ export const ContentPageVersionScalarFieldEnum = {
   body: 'body',
   seoTitle: 'seoTitle',
   seoDescription: 'seoDescription',
+  metadata: 'metadata',
   status: 'status',
   createdBy: 'createdBy',
   createdAt: 'createdAt'
@@ -3548,6 +3710,7 @@ export const BlogPostScalarFieldEnum = {
   title: 'title',
   excerpt: 'excerpt',
   contentMarkdown: 'contentMarkdown',
+  metadata: 'metadata',
   status: 'status',
   publishAt: 'publishAt',
   publishedAt: 'publishedAt',
@@ -3675,8 +3838,16 @@ export const AppMediaScalarFieldEnum = {
   type: 'type',
   url: 'url',
   alt: 'alt',
+  mimeType: 'mimeType',
+  width: 'width',
+  height: 'height',
+  durationSec: 'durationSec',
+  thumbnailUrl: 'thumbnailUrl',
+  fileSizeBytes: 'fileSizeBytes',
+  isAnimated: 'isAnimated',
   sortOrder: 'sortOrder',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type AppMediaScalarFieldEnum = (typeof AppMediaScalarFieldEnum)[keyof typeof AppMediaScalarFieldEnum]
@@ -3733,6 +3904,37 @@ export const ActivityLogScalarFieldEnum = {
 export type ActivityLogScalarFieldEnum = (typeof ActivityLogScalarFieldEnum)[keyof typeof ActivityLogScalarFieldEnum]
 
 
+export const CustomFieldDefinitionScalarFieldEnum = {
+  id: 'id',
+  entity: 'entity',
+  key: 'key',
+  label: 'label',
+  description: 'description',
+  fieldType: 'fieldType',
+  isRequired: 'isRequired',
+  isActive: 'isActive',
+  isFilterable: 'isFilterable',
+  options: 'options',
+  defaultValue: 'defaultValue',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CustomFieldDefinitionScalarFieldEnum = (typeof CustomFieldDefinitionScalarFieldEnum)[keyof typeof CustomFieldDefinitionScalarFieldEnum]
+
+
+export const CustomFieldValueScalarFieldEnum = {
+  id: 'id',
+  definitionId: 'definitionId',
+  entityId: 'entityId',
+  value: 'value',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CustomFieldValueScalarFieldEnum = (typeof CustomFieldValueScalarFieldEnum)[keyof typeof CustomFieldValueScalarFieldEnum]
+
+
 export const AppChangelogScalarFieldEnum = {
   id: 'id',
   appId: 'appId',
@@ -3752,6 +3954,7 @@ export const BlogPostVersionScalarFieldEnum = {
   title: 'title',
   excerpt: 'excerpt',
   contentMarkdown: 'contentMarkdown',
+  metadata: 'metadata',
   createdBy: 'createdBy',
   createdAt: 'createdAt'
 } as const
@@ -3893,6 +4096,13 @@ export const NullableJsonNullValueInput = {
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
 export const QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -4002,6 +4212,20 @@ export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMo
 
 
 /**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
  * Reference to a field of type 'SliderType'
  */
 export type EnumSliderTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SliderType'>
@@ -4072,20 +4296,6 @@ export type ListEnumContentStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
- * Reference to a field of type 'Json'
- */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-/**
- * Reference to a field of type 'QueryMode'
- */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-/**
  * Reference to a field of type 'BlogPostStatus'
  */
 export type EnumBlogPostStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BlogPostStatus'>
@@ -4128,6 +4338,20 @@ export type ListEnumMediaTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
 
 
 /**
+ * Reference to a field of type 'BigInt'
+ */
+export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
+    
+
+
+/**
+ * Reference to a field of type 'BigInt[]'
+ */
+export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
+    
+
+
+/**
  * Reference to a field of type 'LinkPlatform'
  */
 export type EnumLinkPlatformFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LinkPlatform'>
@@ -4138,6 +4362,34 @@ export type EnumLinkPlatformFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
  * Reference to a field of type 'LinkPlatform[]'
  */
 export type ListEnumLinkPlatformFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LinkPlatform[]'>
+    
+
+
+/**
+ * Reference to a field of type 'CustomFieldEntity'
+ */
+export type EnumCustomFieldEntityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomFieldEntity'>
+    
+
+
+/**
+ * Reference to a field of type 'CustomFieldEntity[]'
+ */
+export type ListEnumCustomFieldEntityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomFieldEntity[]'>
+    
+
+
+/**
+ * Reference to a field of type 'CustomFieldType'
+ */
+export type EnumCustomFieldTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomFieldType'>
+    
+
+
+/**
+ * Reference to a field of type 'CustomFieldType[]'
+ */
+export type ListEnumCustomFieldTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomFieldType[]'>
     
 
 
@@ -4290,6 +4542,8 @@ export type GlobalOmitConfig = {
   userLibrary?: Prisma.UserLibraryOmit
   userSettings?: Prisma.UserSettingsOmit
   activityLog?: Prisma.ActivityLogOmit
+  customFieldDefinition?: Prisma.CustomFieldDefinitionOmit
+  customFieldValue?: Prisma.CustomFieldValueOmit
   appChangelog?: Prisma.AppChangelogOmit
   blogPostVersion?: Prisma.BlogPostVersionOmit
   helpArticleVersion?: Prisma.HelpArticleVersionOmit

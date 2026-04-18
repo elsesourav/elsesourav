@@ -1,4 +1,6 @@
 import { auth } from "@/auth";
+import { PublicSiteShell } from "@/components/layout/public-site-shell";
+import { MuiEmotionCacheProvider } from "@/components/providers/mui-emotion-cache-provider";
 import { fetchServiceData } from "@/lib/service-client";
 import {
   buildThemeVariables,
@@ -20,10 +22,36 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
+
 export const metadata: Metadata = {
-  title: "ElseSourav Developer Platform",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "ElseSourav Apps",
+    template: "%s | ElseSourav Apps",
+  },
+  icons: {
+    icon: [{ url: "/img/icon.png" }],
+    shortcut: [{ url: "/img/icon.png" }],
+    apple: [{ url: "/img/icon.png" }],
+  },
   description:
-    "Developer portfolio, mini app store, and admin control platform.",
+    "Discover curated apps, reviews, changelogs, and developer resources on the ElseSourav platform.",
+  applicationName: "ElseSourav Apps",
+  openGraph: {
+    type: "website",
+    siteName: "ElseSourav Apps",
+    title: "ElseSourav Apps",
+    description:
+      "Discover curated apps, reviews, changelogs, and developer resources on the ElseSourav platform.",
+    url: siteUrl,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ElseSourav Apps",
+    description:
+      "Discover curated apps, reviews, changelogs, and developer resources on the ElseSourav platform.",
+  },
 };
 
 type UserThemeSettingsResponse = {
@@ -31,9 +59,17 @@ type UserThemeSettingsResponse = {
   customTheme: Record<string, string> | null;
 };
 
+type ShellSessionUser = {
+  id: string;
+  role: "ADMIN" | "USER";
+  name: string | null;
+  email: string | null;
+};
+
 async function getThemeRuntimeData(): Promise<{
   activeTheme: ThemeConfigDto | null;
   settings: ThemeSettingsPayload | null;
+  sessionUser: ShellSessionUser | null;
 }> {
   const [activeTheme, session] = await Promise.all([
     fetchServiceData<ThemeConfigDto>({
@@ -43,10 +79,20 @@ async function getThemeRuntimeData(): Promise<{
     auth(),
   ]);
 
+  const sessionUser: ShellSessionUser | null = session?.user?.id
+    ? {
+        id: session.user.id,
+        role: session.user.role,
+        name: session.user.name ?? null,
+        email: session.user.email ?? null,
+      }
+    : null;
+
   if (!session?.user?.id) {
     return {
       activeTheme,
       settings: null,
+      sessionUser,
     };
   }
 
@@ -67,6 +113,7 @@ async function getThemeRuntimeData(): Promise<{
   return {
     activeTheme,
     settings,
+    sessionUser,
   };
 }
 
@@ -75,7 +122,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { activeTheme, settings } = await getThemeRuntimeData();
+  const { activeTheme, settings, sessionUser } = await getThemeRuntimeData();
   const themeRuntime = buildThemeVariables({
     activeTheme,
     settings,
@@ -90,7 +137,13 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AppProviders>{children}</AppProviders>
+        <MuiEmotionCacheProvider>
+          <AppProviders>
+            <PublicSiteShell sessionUser={sessionUser}>
+              {children}
+            </PublicSiteShell>
+          </AppProviders>
+        </MuiEmotionCacheProvider>
       </body>
     </html>
   );

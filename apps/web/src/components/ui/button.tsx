@@ -1,46 +1,86 @@
 import { cn } from "@/lib/cn";
-import type { ButtonHTMLAttributes } from "react";
+import MuiButton, {
+  type ButtonProps as MuiButtonProps,
+} from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import type { ReactNode } from "react";
 
 type ButtonTone = "primary" | "secondary" | "danger" | "ghost";
 type ButtonSize = "sm" | "md" | "lg";
 
-const toneClassName: Record<ButtonTone, string> = {
-  primary:
-    "border-transparent bg-[#14171f] text-white hover:bg-[#0f1219] disabled:bg-[#495067]",
-  secondary:
-    "border-black/20 bg-white text-[#14171f] hover:bg-[#f6f8fc] disabled:text-[#7a8195]",
-  danger:
-    "border-red-300 bg-red-50 text-red-700 hover:bg-red-100 disabled:text-red-300",
-  ghost:
-    "border-transparent bg-transparent text-[#1f5ed4] hover:bg-[#edf3ff] disabled:text-[#8ba5d9]",
+const sizeByTone: Record<ButtonSize, MuiButtonProps["size"]> = {
+  sm: "small",
+  md: "medium",
+  lg: "large",
 };
 
-const sizeClassName: Record<ButtonSize, string> = {
-  sm: "px-3 py-1.5 text-xs",
-  md: "px-4 py-2 text-sm",
-  lg: "px-5 py-2.5 text-sm",
+const toneStyle: Record<ButtonTone, MuiButtonProps> = {
+  primary: {
+    variant: "contained",
+    color: "primary",
+  },
+  secondary: {
+    variant: "outlined",
+    color: "inherit",
+  },
+  danger: {
+    variant: "contained",
+    color: "error",
+  },
+  ghost: {
+    variant: "text",
+    color: "primary",
+  },
+};
+
+type ButtonProps = Omit<MuiButtonProps, "variant" | "color" | "size"> & {
+  tone?: ButtonTone;
+  size?: ButtonSize;
+  loading?: boolean;
+  children?: ReactNode;
 };
 
 export function Button({
   tone = "primary",
   size = "md",
+  loading = false,
   className,
   type = "button",
+  children,
   ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & {
-  tone?: ButtonTone;
-  size?: ButtonSize;
-}) {
+}: ButtonProps) {
+  const toneProps = toneStyle[tone];
+
   return (
-    <button
+    <MuiButton
       type={type}
-      className={cn(
-        "inline-flex items-center justify-center gap-1 rounded-lg border font-medium transition disabled:cursor-not-allowed",
-        toneClassName[tone],
-        sizeClassName[size],
-        className,
-      )}
+      variant={toneProps.variant}
+      color={toneProps.color}
+      size={sizeByTone[size]}
+      disabled={loading || props.disabled}
+      className={cn("ui-btn-base font-medium", className)}
+      sx={{
+        borderRadius: 999,
+        boxShadow: "none",
+        ...(tone === "primary"
+          ? {
+              background:
+                "linear-gradient(135deg, color-mix(in srgb, var(--brand-primary) 84%, black 16%), color-mix(in srgb, var(--brand-secondary) 62%, var(--brand-primary) 38%))",
+              borderColor:
+                "color-mix(in srgb, var(--brand-primary) 70%, black 30%)",
+            }
+          : {}),
+      }}
       {...props}
-    />
+    >
+      {loading ? (
+        <>
+          <CircularProgress size={16} color="inherit" />
+          Processing...
+        </>
+      ) : (
+        children
+      )}
+    </MuiButton>
   );
 }
