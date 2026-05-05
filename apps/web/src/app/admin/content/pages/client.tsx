@@ -3,10 +3,10 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+import { GithubMarkdownEditor } from "@/components/ui/github-markdown-editor";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Modal } from "@/components/ui/modal";
-import { RichMarkdownEditor } from "@/components/ui/rich-markdown-editor";
 import { Textarea } from "@/components/ui/textarea";
 import { parseMetadataInput, stringifyMetadata } from "@/lib/metadata";
 import { formatDateTime, type AdminContentPage } from "@/lib/view-models";
@@ -306,12 +306,12 @@ function ContentEditorFields({
 
       <div className="space-y-1.5 lg:col-span-2">
         <Label htmlFor="content-body">Body</Label>
-        <RichMarkdownEditor
+        <GithubMarkdownEditor
           id="content-body"
           value={form.body}
           onChange={(nextValue) => updateField("body", nextValue)}
-          rows={14}
           placeholder="Write page content using markdown..."
+          height={360}
         />
       </div>
 

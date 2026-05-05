@@ -1,10 +1,7 @@
 "use client";
 
-import { Card, CardDescription, CardTitle } from "@/components/ui/card";
-import CircularProgress from "@mui/material/CircularProgress";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import { useState } from "react";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 type ThemeMode = "system" | "light" | "dark";
 
@@ -24,12 +21,25 @@ export function ThemeModeControl({ initialMode }: ThemeModeControlProps) {
   const [pending, setPending] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
 
-  const handleModeChange = async (
-    _event: React.MouseEvent<HTMLElement>,
-    nextMode: ThemeMode | null,
-  ) => {
-    if (!nextMode || nextMode === mode || pending) {
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted || !theme) {
+      return;
+    }
+
+    if (theme === "system" || theme === "light" || theme === "dark") {
+      setMode(theme);
+    }
+  }, [mounted, theme]);
+
+  const applyModeChange = async (nextMode: ThemeMode) => {
+    if (nextMode === mode || pending) {
       return;
     }
 
@@ -39,9 +49,7 @@ export function ThemeModeControl({ initialMode }: ThemeModeControlProps) {
     setStatus(null);
     setError(null);
 
-    if (typeof document !== "undefined") {
-      document.documentElement.dataset.themeMode = nextMode;
-    }
+    setTheme(nextMode);
 
     try {
       const response = await fetch("/api/user/settings", {
@@ -63,9 +71,7 @@ export function ThemeModeControl({ initialMode }: ThemeModeControlProps) {
       setStatus("Theme updated");
     } catch (requestError) {
       setMode(previous);
-      if (typeof document !== "undefined") {
-        document.documentElement.dataset.themeMode = previous;
-      }
+      setTheme(previous);
       setError(
         requestError instanceof Error
           ? requestError.message
@@ -77,39 +83,52 @@ export function ThemeModeControl({ initialMode }: ThemeModeControlProps) {
   };
 
   return (
-    <Card className="rounded-2xl border p-3">
-      <CardTitle className="text-sm">Theme</CardTitle>
-      <CardDescription className="mt-1 text-xs">
+    <section>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[color-mix(in_srgb,var(--foreground)_45%,transparent)]">
+        Theme
+      </p>
+      <p className="mt-1 text-xs text-[color-mix(in_srgb,var(--foreground)_55%,transparent)]">
         Follow system or force light/dark mode.
-      </CardDescription>
+      </p>
 
-      <div className="mt-3">
-        <ToggleButtonGroup
-          value={mode}
-          exclusive
-          fullWidth
-          size="small"
-          onChange={handleModeChange}
-          aria-label="Theme mode"
-          disabled={pending}
-        >
-          <ToggleButton value="system" aria-label="System theme">
-            System
-          </ToggleButton>
-          <ToggleButton value="light" aria-label="Light theme">
-            Light
-          </ToggleButton>
-          <ToggleButton value="dark" aria-label="Dark theme">
-            Dark
-          </ToggleButton>
-        </ToggleButtonGroup>
+      <div className="mt-3 grid grid-cols-3 rounded-full bg-[color-mix(in_srgb,var(--background)_88%,var(--foreground)_12%)] p-1 shadow-sm">
+        {(
+          [
+            ["system", "System"],
+            ["light", "Light"],
+            ["dark", "Dark"],
+          ] as const
+        ).map(([value, label]) => {
+          const active = (mounted ? mode : initialMode) === value;
+
+          return (
+            <button
+              key={value}
+              type="button"
+              onClick={() => applyModeChange(value)}
+              disabled={pending}
+              className={[
+                "rounded-full px-3 py-1.5 text-xs font-semibold transition",
+                active
+                  ? "bg-[color-mix(in_srgb,var(--foreground)_85%,transparent)] text-[var(--background)]"
+                  : "text-[color-mix(in_srgb,var(--foreground)_55%,transparent)] hover:bg-[color-mix(in_srgb,var(--background)_82%,var(--foreground)_18%)]",
+              ].join(" ")}
+            >
+              {label}
+            </button>
+          );
+        })}
       </div>
 
-      <div className="mt-2 flex min-h-5 items-center gap-2 text-xs">
-        {pending ? <CircularProgress size={12} /> : null}
+      <div className="mt-2 min-h-5 text-xs">
+        {pending ? (
+          <p className="text-[color-mix(in_srgb,var(--foreground)_45%,transparent)]">
+            Saving...
+          </p>
+        ) : null}
         {error ? <p className="text-rose-600">{error}</p> : null}
         {!error && status ? <p className="text-emerald-600">{status}</p> : null}
       </div>
-    </Card>
+    </section>
   );
 }

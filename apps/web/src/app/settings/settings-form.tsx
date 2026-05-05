@@ -4,6 +4,7 @@ import {
   formatDateTime,
   type UserDeletionScheduleView,
 } from "@/lib/view-models";
+import { useTheme } from "next-themes";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
   ACCOUNT_DELETION_CONFIRMATION_PHRASE,
@@ -232,6 +233,7 @@ export function SettingsForm({
     marketingEmails: initialSettings.marketingEmails,
     customTheme: fromCustomTheme(initialSettings.customTheme),
   });
+  const { setTheme } = useTheme();
   const [savedData, setSavedData] = useState<SettingsFormData>({
     themeMode: initialSettings.themeMode,
     emailNotifications: initialSettings.emailNotifications,
@@ -378,6 +380,7 @@ export function SettingsForm({
       message: null,
       tone: null,
     });
+    setTheme(themeMode);
     setFormData((previous) => ({
       ...previous,
       themeMode,

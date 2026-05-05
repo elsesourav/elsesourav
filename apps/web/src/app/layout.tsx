@@ -1,3 +1,4 @@
+import "@/app/globals.css";
 import { auth } from "@/auth";
 import { PublicSiteShell } from "@/components/layout/public-site-shell";
 import { MuiEmotionCacheProvider } from "@/components/providers/mui-emotion-cache-provider";
@@ -9,7 +10,6 @@ import {
 import type { ThemeConfigDto } from "@elsesourav/types";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
 import { AppProviders } from "./providers";
 
 const geistSans = Geist({
@@ -132,13 +132,15 @@ export default async function RootLayout({
     <html
       lang="en"
       data-theme-mode={themeRuntime.mode}
+      data-color-mode={themeRuntime.mode === "dark" ? "dark" : "light"}
+      suppressHydrationWarning
       style={themeRuntime.variables}
     >
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <MuiEmotionCacheProvider>
-          <AppProviders>
+          <AppProviders initialThemeMode={themeRuntime.mode}>
             <PublicSiteShell sessionUser={sessionUser}>
               {children}
             </PublicSiteShell>

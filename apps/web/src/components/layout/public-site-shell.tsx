@@ -1,13 +1,6 @@
 "use client";
 
 import { LandingGlassHeader } from "@/components/layout/landing-glass-header";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import Link from "@mui/material/Link";
-import Paper from "@mui/material/Paper";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
 import { signOut as clientSignOut } from "next-auth/react";
 import NextLink from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -17,8 +10,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 const primaryNav = [
   { href: "/", label: "Home" },
   { href: "/apps", label: "Apps" },
-  { href: "/content", label: "Pages" },
-  { href: "/blog", label: "Blog" },
+  { href: "/blog", label: "Blogs" },
   { href: "/help", label: "Help" },
   { href: "/about", label: "About" },
   { href: "/support", label: "Support" },
@@ -83,9 +75,16 @@ export function PublicSiteShell({
   const router = useRouter();
   const spacePressedRef = useRef(false);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [resolvedPathname, setResolvedPathname] = useState("");
   const accountHref = sessionUser?.role === "ADMIN" ? "/admin" : "/settings";
   const accountLabel =
     sessionUser?.role === "ADMIN" ? "Admin panel" : "My account";
+
+  useEffect(() => {
+    if (pathname) {
+      setResolvedPathname(pathname);
+    }
+  }, [pathname]);
 
   useEffect(() => {
     setIsNavigating(false);
@@ -158,7 +157,7 @@ export function PublicSiteShell({
     };
   }, [router]);
 
-  if (hidePublicChrome(pathname)) {
+  if (resolvedPathname && hidePublicChrome(resolvedPathname)) {
     return <>{children}</>;
   }
 
@@ -185,228 +184,96 @@ export function PublicSiteShell({
         onSignOut={beginSignOut}
       />
 
-      <Box component="main" id="main-content">
-        {children}
-      </Box>
+      <main id="main-content">{children}</main>
 
-      <Box
-        component="footer"
-        sx={{
-          mt: 9,
-          borderTop: "1px solid color-mix(in srgb, black 12%, transparent)",
-          background:
-            "linear-gradient(180deg, color-mix(in srgb, var(--background) 88%, white 12%), color-mix(in srgb, var(--background) 96%, white 4%))",
-        }}
-      >
-        <Container maxWidth="xl" sx={{ py: 8 }}>
-          <Paper
-            elevation={0}
-            sx={{
-              position: "relative",
-              overflow: "hidden",
-              borderRadius: 5,
-              border: "1px solid color-mix(in srgb, black 10%, transparent)",
-              background:
-                "linear-gradient(130deg, #0f1d40, #1f5ed4 52%, #8bb0f8)",
-              p: { xs: 3, sm: 4 },
-              color: "#fff",
-              boxShadow: "0 24px 54px -34px rgba(20,23,31,0.95)",
-            }}
-          >
-            <Box
-              sx={{
-                position: "absolute",
-                right: -40,
-                top: -40,
-                width: 160,
-                height: 160,
-                borderRadius: "999px",
-                backgroundColor: "rgba(255,255,255,0.15)",
-                filter: "blur(24px)",
-              }}
-            />
-            <Typography
-              variant="caption"
-              sx={{
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.72)",
-              }}
-            >
+      <footer className="mt-9 border-t border-black/12 bg-[linear-gradient(180deg,color-mix(in_srgb,var(--background)_88%,white_12%),color-mix(in_srgb,var(--background)_96%,white_4%))]">
+        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <section className="relative overflow-hidden rounded-4xl border border-black/10 bg-[linear-gradient(130deg,#0f1d40,#1f5ed4_52%,#8bb0f8)] p-6 text-white shadow-[0_24px_54px_-34px_rgba(20,23,31,0.95)] sm:p-8">
+            <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/15 blur-2xl" />
+
+            <p className="text-[11px] uppercase tracking-[0.14em] text-white/70">
               Build faster
-            </Typography>
-            <Typography
-              variant="h4"
-              sx={{
-                mt: 1,
-                maxWidth: 760,
-                fontWeight: 600,
-                letterSpacing: "-0.02em",
-                fontSize: { xs: "1.6rem", sm: "2rem" },
-              }}
-            >
+            </p>
+            <h2 className="mt-1 max-w-190 text-[1.6rem] font-semibold tracking-[-0.02em] sm:text-[2rem]">
               App-store foundation for apps, support, help center, and blog.
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{ mt: 1.5, maxWidth: 760, color: "rgba(255,255,255,0.84)" }}
-            >
+            </h2>
+            <p className="mt-1.5 max-w-190 text-sm text-white/85">
               Production-ready storefront patterns with data-driven content and
               admin tooling built on microservices.
-            </Typography>
-            <Stack
-              direction="row"
-              spacing={1}
-              sx={{ mt: 2.5, flexWrap: "wrap" }}
-            >
-              <Button
-                component={NextLink}
+            </p>
+
+            <div className="mt-2.5 flex flex-wrap gap-2">
+              <NextLink
                 href="/apps"
                 onClick={(event) => markAnchorNavigation(event, "/apps")}
-                variant="outlined"
-                sx={{
-                  borderColor: "rgba(255,255,255,0.34)",
-                  color: "#fff",
-                }}
+                className="inline-flex items-center rounded-lg border border-white/35 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-white/10"
               >
                 Browse apps
-              </Button>
-              <Button
-                component={NextLink}
+              </NextLink>
+              <NextLink
                 href="/support"
                 onClick={(event) => markAnchorNavigation(event, "/support")}
-                variant="outlined"
-                sx={{
-                  borderColor: "rgba(255,255,255,0.34)",
-                  color: "#fff",
-                }}
+                className="inline-flex items-center rounded-lg border border-white/35 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-white/10"
               >
                 Open support
-              </Button>
-            </Stack>
-          </Paper>
+              </NextLink>
+            </div>
+          </section>
 
-          <Box
-            sx={{
-              mt: 6,
-              display: "grid",
-              gap: 4,
-              gridTemplateColumns: {
-                xs: "1fr",
-                sm: "1fr 1fr",
-                lg: "1.3fr 1fr 1fr 1fr",
-              },
-            }}
-          >
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
             <section>
-              <Typography
-                variant="subtitle1"
-                className="ui-text-heading"
-                sx={{ fontWeight: 600 }}
-              >
+              <h3 className="ui-text-heading text-base font-semibold">
                 ElseSourav Platform
-              </Typography>
-              <Typography
-                variant="body2"
-                className="ui-text-muted"
-                sx={{ mt: 1.25, maxWidth: 420 }}
-              >
+              </h3>
+              <p className="ui-text-muted mt-1.5 max-w-105 text-sm">
                 Curated app discovery, rich content publishing, and enterprise
                 support workflows in one composable platform.
-              </Typography>
-              <Stack
-                direction="row"
-                spacing={1}
-                sx={{ mt: 2, flexWrap: "wrap" }}
-              >
+              </p>
+              <div className="mt-2 flex flex-wrap gap-2">
                 {socialLinks.map((item) => (
-                  <Button
+                  <a
                     key={item.href}
-                    component="a"
                     href={item.href}
                     target="_blank"
                     rel="noreferrer"
-                    variant="outlined"
-                    size="small"
-                    sx={{
-                      borderRadius: 999,
-                      borderColor: "color-mix(in srgb, black 12%, transparent)",
-                      backgroundColor: "rgba(255,255,255,0.84)",
-                      color: "#1a2439",
-                    }}
+                    className="inline-flex items-center rounded-full border border-black/12 bg-white/85 px-3 py-1.5 text-xs font-medium text-[#1a2439] transition hover:bg-white"
                   >
                     {item.label}
-                  </Button>
+                  </a>
                 ))}
-              </Stack>
+              </div>
             </section>
 
             {footerColumns.map((column) => (
               <section key={column.title}>
-                <Typography
-                  variant="caption"
-                  className="ui-text-heading"
-                  sx={{
-                    textTransform: "uppercase",
-                    letterSpacing: "0.16em",
-                    fontWeight: 700,
-                  }}
-                >
+                <h4 className="ui-text-heading text-[11px] font-bold uppercase tracking-[0.16em]">
                   {column.title}
-                </Typography>
-                <Stack
-                  component="ul"
-                  spacing={1}
-                  sx={{ mt: 1.5, m: 0, p: 0, listStyle: "none" }}
-                >
+                </h4>
+                <ul className="mt-1.5 space-y-1">
                   {column.items.map((item) => (
                     <li key={item.href}>
-                      <Link
-                        component={NextLink}
+                      <NextLink
                         href={item.href}
-                        underline="none"
-                        className="ui-text-muted"
+                        className="ui-text-muted inline-flex items-center text-sm transition hover:text-[color-mix(in_srgb,var(--brand-secondary)_82%,var(--foreground)_18%)]"
                         onClick={(event) =>
                           markAnchorNavigation(event, item.href)
                         }
-                        sx={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          fontSize: "0.9rem",
-                          "&:hover": {
-                            color:
-                              "color-mix(in srgb, var(--brand-secondary) 82%, var(--foreground) 18%)",
-                          },
-                        }}
                       >
                         {item.label}
-                      </Link>
+                      </NextLink>
                     </li>
                   ))}
-                </Stack>
+                </ul>
               </section>
             ))}
-          </Box>
+          </div>
 
-          <Stack
-            direction={{ xs: "column", sm: "row" }}
-            spacing={1}
-            sx={{
-              mt: 5,
-              pt: 2,
-              borderTop: "1px solid color-mix(in srgb, black 10%, transparent)",
-              justifyContent: "space-between",
-            }}
-          >
-            <Typography variant="caption" sx={{ color: "#606a7e" }}>
-              © {year} ElseSourav. All rights reserved.
-            </Typography>
-            <Typography variant="caption" sx={{ color: "#606a7e" }}>
-              Built for modern app-store and content operations.
-            </Typography>
-          </Stack>
-        </Container>
-      </Box>
+          <div className="mt-5 flex flex-col justify-between gap-1 border-t border-black/10 pt-2 text-[11px] text-[#606a7e] sm:flex-row sm:items-center">
+            <p>© {year} ElseSourav. All rights reserved.</p>
+            <p>Built for modern app-store and content operations.</p>
+          </div>
+        </div>
+      </footer>
     </>
   );
 }

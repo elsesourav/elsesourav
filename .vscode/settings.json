@@ -7,5 +7,12 @@
     "printf": true,
     "command": true,
     "true": true
-  }
+  },
+  "cSpell.words": ["useanimations", "wmde"],
+
+  "github.copilot.chat.codeGeneration.instructions": [
+    { "file": ".copilot/instructions.md" },
+    { "text": "Use latest docs. Avoid deprecated APIs." }
+  ],
+  "prismaERDPreviewer.preferredTheme": "dark"
 }

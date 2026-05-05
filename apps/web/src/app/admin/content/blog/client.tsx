@@ -4,10 +4,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { GithubMarkdownEditor } from "@/components/ui/github-markdown-editor";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Modal } from "@/components/ui/modal";
-import { RichMarkdownEditor } from "@/components/ui/rich-markdown-editor";
 import { Textarea } from "@/components/ui/textarea";
 import { parseMetadataInput, stringifyMetadata } from "@/lib/metadata";
 import {
@@ -425,11 +425,10 @@ function BlogPostEditorFields({
       </div>
 
       <div className="xl:col-span-2">
-        <RichMarkdownEditor
+        <GithubMarkdownEditor
           id="blog-markdown"
           value={form.contentMarkdown}
           onChange={(nextValue) => updateField("contentMarkdown", nextValue)}
-          rows={18}
           placeholder="Write your post content in markdown..."
         />
       </div>

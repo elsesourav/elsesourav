@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "../components/ui/markdown-content.css";
 
 :root {
   --theme-light-primary: #1a2232;
@@ -24,6 +25,10 @@
   --motion-duration-fast: 180ms;
   --motion-duration-medium: 300ms;
 }
+
+/* * { */
+/* outline: solid 1px #f003; */
+/* } */
 
 html[data-theme-mode="light"] {
   color-scheme: light;
@@ -269,4 +274,160 @@ h6 {
 
 .ui-skeleton {
   background: color-mix(in srgb, var(--foreground) 12%, transparent);
+}
+
+@keyframes header-loading-sheen {
+  0% {
+    transform: translateX(-130%) skewX(-18deg);
+    opacity: 0;
+  }
+
+  18% {
+    opacity: 0.78;
+  }
+
+  100% {
+    transform: translateX(130%) skewX(-18deg);
+    opacity: 0;
+  }
+}
+
+@keyframes header-loading-pulse {
+  0%,
+  100% {
+    opacity: 0.18;
+  }
+
+  50% {
+    opacity: 0.34;
+  }
+}
+
+.header-loading-active {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.header-loading-active::before {
+  content: "";
+  position: absolute;
+  inset: -2px -40%;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    transparent 14%,
+    color-mix(in srgb, white 60%, var(--brand-secondary) 40%) 40%,
+    color-mix(in srgb, white 26%, var(--brand-accent) 74%) 58%,
+    transparent 86%
+  );
+  animation: header-loading-sheen 1.08s linear infinite;
+}
+
+.header-loading-active::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--brand-secondary) 22%, white 78%),
+    transparent
+  );
+  animation: header-loading-pulse 1.55s ease-in-out infinite;
+}
+
+.header-loading-active > * {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes header-nav-lock-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes header-nav-lock-glow {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.96);
+  }
+
+  50% {
+    opacity: 0.42;
+    transform: scale(1.03);
+  }
+}
+
+.header-nav-lock-active {
+  position: relative;
+  isolation: isolate;
+}
+
+.header-nav-lock-active::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: 0;
+  border-radius: 999px;
+  pointer-events: none;
+  background: conic-gradient(
+    from 0deg,
+    color-mix(in srgb, var(--brand-secondary) 72%, white 28%),
+    color-mix(in srgb, var(--brand-accent) 62%, white 38%),
+    color-mix(in srgb, var(--brand-secondary) 72%, white 28%)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1.5px;
+  animation: header-nav-lock-spin 1.3s linear infinite;
+}
+
+.header-nav-lock-active::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  z-index: 0;
+  border-radius: 999px;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 50%,
+    color-mix(in srgb, var(--brand-secondary) 34%, white 66%),
+    transparent 72%
+  );
+  filter: blur(0.7px);
+  animation: header-nav-lock-glow 1.15s ease-in-out infinite;
+}
+
+.header-nav-lock-active > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header-loading-active::before,
+  .header-loading-active::after {
+    animation: none;
+    opacity: 0.2;
+  }
+
+  .header-nav-lock-active::before,
+  .header-nav-lock-active::after {
+    animation: none;
+  }
 }

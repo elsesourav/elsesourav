@@ -1,4 +1,3 @@
-import { PageHeader } from "@/components/ui/page";
 import { requireAdminContext } from "@/lib/page-access";
 import { fetchServiceData } from "@/lib/service-client";
 import type { AuthStats, CatalogStats, UserStats } from "@/lib/view-models";
@@ -74,7 +73,7 @@ function toneForStatus(status: string): string {
     return "border-rose-200 bg-rose-50 text-rose-700";
   }
 
-  return "ui-border ui-surface-soft ui-text-muted";
+  return "border-[color-mix(in_srgb,var(--foreground)_12%,transparent)] bg-[color-mix(in_srgb,var(--background)_90%,var(--foreground)_10%)] text-[color-mix(in_srgb,var(--foreground)_55%,transparent)]";
 }
 
 export default async function AdminPage() {
@@ -126,103 +125,133 @@ export default async function AdminPage() {
   ] as const;
 
   return (
-    <div className="space-y-5 p-2 sm:p-3 lg:p-4">
-      <PageHeader
-        eyebrow="Admin"
-        title="Control center"
-        description="Clean operational view for apps, users, content, and support flows."
-      />
+    <div className="space-y-8 py-2 sm:py-4">
+      <header className="space-y-2">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color-mix(in_srgb,var(--foreground)_45%,transparent)]">
+          Admin
+        </p>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h1 className="text-3xl font-semibold text-[color-mix(in_srgb,var(--foreground)_90%,transparent)]">
+            Analytics
+          </h1>
+        </div>
+        <p className="max-w-2xl text-sm text-[color-mix(in_srgb,var(--foreground)_55%,transparent)]">
+          Monitor apps, users, content, and support flows in one place.
+        </p>
+      </header>
 
-      <section className="grid gap-3 lg:grid-cols-[1.35fr_1fr]">
-        <article className="rounded-2xl border ui-border bg-[linear-gradient(140deg,color-mix(in_srgb,var(--brand-primary)_86%,black_14%),color-mix(in_srgb,var(--brand-secondary)_88%,black_12%))] p-4 text-white shadow-[0_16px_34px_-24px_rgba(20,23,31,0.9)]">
-          <p className="text-xs uppercase tracking-[0.14em] text-blue-100">
-            Welcome
-          </p>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight">
-            Hello, {displayName}
-          </h2>
-          <p className="mt-2 text-sm text-blue-100">
-            Use the sidebar to move between sections and keep operations tidy.
-          </p>
-        </article>
-
-        <article className="ui-card rounded-2xl border p-4">
-          <p className="ui-text-muted text-xs uppercase tracking-[0.12em]">
-            Account
-          </p>
-          <p className="ui-text-heading mt-2 text-sm font-medium">Email</p>
-          <p className="ui-text-muted truncate text-xs">
-            {user.email ?? "Unknown"}
-          </p>
-          <p className="ui-text-heading mt-3 text-sm font-medium">Role</p>
-          <p className="ui-text-muted text-xs">{user.role}</p>
-        </article>
+      <section className="flex flex-wrap items-center gap-3">
+        <span className="rounded-full bg-[color-mix(in_srgb,var(--background)_94%,var(--foreground)_6%)] px-4 py-2 text-xs font-semibold text-[color-mix(in_srgb,var(--foreground)_65%,transparent)] shadow-sm">
+          Full statistics
+        </span>
+        <span className="rounded-full bg-[color-mix(in_srgb,var(--background)_90%,var(--foreground)_10%)] px-4 py-2 text-xs font-semibold text-[color-mix(in_srgb,var(--foreground)_45%,transparent)]">
+          Results summary
+        </span>
       </section>
 
-      <section className="grid gap-3 sm:grid-cols-3">
+      <section className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
+        <div className="rounded-3xl bg-[color-mix(in_srgb,var(--background)_96%,var(--foreground)_4%)] p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[color-mix(in_srgb,var(--foreground)_45%,transparent)]">
+            Team Payments
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold text-[color-mix(in_srgb,var(--foreground)_90%,transparent)]">
+            Hello, {displayName}
+          </h2>
+          <p className="mt-2 text-sm text-[color-mix(in_srgb,var(--foreground)_55%,transparent)]">
+            Use the sidebar to move between sections and keep operations tidy.
+          </p>
+        </div>
+        <div className="rounded-3xl bg-[color-mix(in_srgb,var(--background)_96%,var(--foreground)_4%)] p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[color-mix(in_srgb,var(--foreground)_45%,transparent)]">
+            Account Snapshot
+          </p>
+          <p className="mt-2 text-sm font-semibold text-[color-mix(in_srgb,var(--foreground)_90%,transparent)]">
+            Email
+          </p>
+          <p className="text-xs text-[color-mix(in_srgb,var(--foreground)_55%,transparent)]">
+            {user.email ?? "Unknown"}
+          </p>
+          <p className="mt-3 text-sm font-semibold text-[color-mix(in_srgb,var(--foreground)_90%,transparent)]">
+            Role
+          </p>
+          <p className="text-xs text-[color-mix(in_srgb,var(--foreground)_55%,transparent)]">
+            {user.role}
+          </p>
+        </div>
+      </section>
+
+      <section className="grid gap-4 sm:grid-cols-3">
         {topCards.map((card) => (
-          <article
+          <div
             key={card.label}
-            className="ui-card relative flex min-h-32 flex-col overflow-hidden rounded-2xl border p-4"
+            className="rounded-3xl bg-[color-mix(in_srgb,var(--background)_96%,var(--foreground)_4%)] p-5 shadow-sm"
           >
-            <p className="ui-text-muted relative text-xs uppercase tracking-[0.11em]">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[color-mix(in_srgb,var(--foreground)_45%,transparent)]">
               {card.label}
             </p>
-            <p className="ui-text-heading relative mt-2 text-3xl font-semibold">
+            <p className="mt-2 text-3xl font-semibold text-[color-mix(in_srgb,var(--foreground)_90%,transparent)]">
               {card.value.toLocaleString()}
             </p>
-            <p className="ui-text-muted relative mt-2 text-xs">{card.detail}</p>
-          </article>
+            <p className="mt-2 text-xs text-[color-mix(in_srgb,var(--foreground)_55%,transparent)]">
+              {card.detail}
+            </p>
+          </div>
         ))}
       </section>
 
-      <section className="grid gap-3 lg:grid-cols-[1.25fr_1fr]">
-        <article className="ui-card rounded-2xl border p-4">
-          <h2 className="ui-text-heading text-lg font-semibold">Recent apps</h2>
-          <div className="mt-3 grid gap-2">
-            {catalogStats.recentApps.length === 0 ? (
-              <p className="ui-surface-soft ui-border rounded-xl border px-3 py-2 text-sm ui-text-muted">
-                No recent apps available.
-              </p>
-            ) : null}
-            {catalogStats.recentApps.map((app) => (
-              <article
-                key={app.id}
-                className="ui-border flex items-start justify-between gap-3 rounded-xl border bg-[color-mix(in_srgb,var(--background)_95%,white_5%)] px-3 py-2"
-              >
-                <div>
-                  <p className="ui-text-heading font-semibold">{app.title}</p>
-                  <p className="ui-text-muted text-xs">/{app.slug}</p>
-                </div>
-                <span
-                  className={`rounded-full border px-2 py-1 text-[11px] font-semibold ${toneForStatus(app.status)}`}
-                >
-                  {app.status}
-                </span>
-              </article>
-            ))}
-          </div>
-        </article>
-
-        <article className="ui-card rounded-2xl border p-4">
-          <h2 className="ui-text-heading text-lg font-semibold">
-            Quick routes
-          </h2>
-          <div className="mt-3 grid gap-2">
-            {quickRoutes.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="ui-border block rounded-xl border bg-[color-mix(in_srgb,var(--background)_95%,white_5%)] px-3 py-2.5 hover:ui-border-strong hover:bg-[color-mix(in_srgb,var(--background)_86%,var(--brand-secondary)_14%)]"
-              >
-                <p className="ui-text-heading text-sm font-semibold">
-                  {item.title}
+      <section className="rounded-3xl bg-[color-mix(in_srgb,var(--background)_96%,var(--foreground)_4%)] p-5 shadow-sm">
+        <h2 className="text-lg font-semibold text-[color-mix(in_srgb,var(--foreground)_90%,transparent)]">
+          Recent apps
+        </h2>
+        <div className="mt-4 grid gap-3">
+          {catalogStats.recentApps.length === 0 ? (
+            <p className="rounded-xl border border-[color-mix(in_srgb,var(--foreground)_12%,transparent)] px-3 py-2 text-sm text-[color-mix(in_srgb,var(--foreground)_55%,transparent)]">
+              No recent apps available.
+            </p>
+          ) : null}
+          {catalogStats.recentApps.map((app) => (
+            <div
+              key={app.id}
+              className="flex items-start justify-between gap-3 rounded-2xl border border-[color-mix(in_srgb,var(--foreground)_12%,transparent)] px-3 py-2"
+            >
+              <div>
+                <p className="font-semibold text-[color-mix(in_srgb,var(--foreground)_90%,transparent)]">
+                  {app.title}
                 </p>
-                <p className="ui-text-muted text-xs">{item.summary}</p>
-              </Link>
-            ))}
-          </div>
-        </article>
+                <p className="text-xs text-[color-mix(in_srgb,var(--foreground)_55%,transparent)]">
+                  /{app.slug}
+                </p>
+              </div>
+              <span
+                className={`rounded-full border px-2 py-1 text-[11px] font-semibold ${toneForStatus(app.status)}`}
+              >
+                {app.status}
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="rounded-3xl bg-[color-mix(in_srgb,var(--background)_96%,var(--foreground)_4%)] p-5 shadow-sm">
+        <h2 className="text-lg font-semibold text-[color-mix(in_srgb,var(--foreground)_90%,transparent)]">
+          Quick routes
+        </h2>
+        <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {quickRoutes.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="rounded-2xl border border-[color-mix(in_srgb,var(--foreground)_12%,transparent)] px-3 py-2.5 text-sm transition hover:border-[color-mix(in_srgb,var(--foreground)_18%,transparent)] hover:bg-[color-mix(in_srgb,var(--background)_90%,var(--foreground)_10%)]"
+            >
+              <p className="font-semibold text-[color-mix(in_srgb,var(--foreground)_90%,transparent)]">
+                {item.title}
+              </p>
+              <p className="text-xs text-[color-mix(in_srgb,var(--foreground)_55%,transparent)]">
+                {item.summary}
+              </p>
+            </Link>
+          ))}
+        </div>
       </section>
     </div>
   );

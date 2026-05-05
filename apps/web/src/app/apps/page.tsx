@@ -1,3 +1,4 @@
+import type { HomeBanner } from "@/components/home";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +11,7 @@ import {
 } from "@/lib/view-models";
 import Image from "next/image";
 import Link from "next/link";
+import { AppsBannerSlider } from "@/app/apps/apps-banner-slider";
 
 type AppsPageSearchParams = {
   search?: string;
@@ -183,7 +185,7 @@ export default async function AppsPage({
     query.set("categoryId", categoryId);
   }
 
-  const [categories, appsResponse] = await Promise.all([
+  const [categories, appsResponse, banners] = await Promise.all([
     fetchServiceData<PublicCategory[]>({
       service: "catalog",
       path: "/v1/catalog/categories",
@@ -192,12 +194,43 @@ export default async function AppsPage({
       service: "catalog",
       path: `/v1/catalog/apps?${query.toString()}`,
     }),
+    fetchServiceData<HomeBanner[]>({
+      service: "catalog",
+      path: "/v1/catalog/banners",
+    }).catch(() => []),
   ]);
 
   const apps = appsResponse.items;
+  const fallbackBanners: HomeBanner[] = apps
+    .flatMap((app) => {
+      const imageUrl =
+        app.media?.find((media) => media.type === "IMAGE")?.url ??
+        app.iconUrl ??
+        null;
+
+      if (!imageUrl) {
+        return [];
+      }
+
+      return [
+        {
+          id: `apps-fallback-${app.id}`,
+          title: app.title,
+          imageUrl,
+          linkUrl: `/apps/${app.slug}`,
+          placement: "HOME_HERO" as const,
+        },
+      ];
+    })
+    .slice(0, 6);
+
+  const sliderBanners: HomeBanner[] =
+    banners.length > 0 ? banners : fallbackBanners;
 
   return (
     <PageShell width="wide" className="gap-8 py-10">
+      <AppsBannerSlider banners={sliderBanners} />
+
       <section className="grid gap-4 rounded-4xl border border-black/10 bg-[linear-gradient(135deg,#0d1b3f,#1f5ed4_55%,#8fb1f7)] p-6 text-white shadow-[0_24px_60px_-34px_rgba(20,23,31,0.95)] sm:p-8 lg:grid-cols-[1.4fr_0.8fr] lg:items-end">
         <div>
           <p className="text-xs uppercase tracking-[0.16em] text-white/70">

@@ -109,6 +109,37 @@ export const HelpArticleStatus = {
 export type HelpArticleStatus = (typeof HelpArticleStatus)[keyof typeof HelpArticleStatus]
 
 
+export const SupportTicketStatus = {
+  OPEN: 'OPEN',
+  IN_PROGRESS: 'IN_PROGRESS',
+  WAITING_FOR_USER: 'WAITING_FOR_USER',
+  RESOLVED: 'RESOLVED',
+  CLOSED: 'CLOSED'
+} as const
+
+export type SupportTicketStatus = (typeof SupportTicketStatus)[keyof typeof SupportTicketStatus]
+
+
+export const SupportTicketPriority = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
+} as const
+
+export type SupportTicketPriority = (typeof SupportTicketPriority)[keyof typeof SupportTicketPriority]
+
+
+export const SupportTicketChannel = {
+  WEB: 'WEB',
+  EMAIL: 'EMAIL',
+  CHAT: 'CHAT',
+  API: 'API'
+} as const
+
+export type SupportTicketChannel = (typeof SupportTicketChannel)[keyof typeof SupportTicketChannel]
+
+
 export const CustomFieldEntity = {
   APP: 'APP',
   CATEGORY: 'CATEGORY',

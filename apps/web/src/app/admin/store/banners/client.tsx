@@ -123,6 +123,38 @@ function createBannerFormFromItem(item: AdminBanner): BannerFormState {
   };
 }
 
+function normalizeBannerLinkUrl(value: string): string | null {
+  const trimmed = value.trim();
+
+  if (!trimmed) {
+    return null;
+  }
+
+  if (trimmed.startsWith("/")) {
+    return trimmed;
+  }
+
+  try {
+    const parsed = new URL(trimmed);
+    if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+      return parsed.toString();
+    }
+  } catch {
+    // Fallback below tries adding https:// when protocol is omitted.
+  }
+
+  if (/^[a-zA-Z][a-zA-Z\d+.-]*:/.test(trimmed)) {
+    return null;
+  }
+
+  try {
+    const parsedWithHttps = new URL(`https://${trimmed}`);
+    return parsedWithHttps.toString();
+  } catch {
+    return null;
+  }
+}
+
 function validateBannerForm(form: BannerFormState): string | null {
   if (form.title.trim().length < 3) {
     return "Banner title must contain at least 3 characters.";
@@ -134,12 +166,8 @@ function validateBannerForm(form: BannerFormState): string | null {
     return "Please provide a valid image URL.";
   }
 
-  if (form.linkUrl.trim()) {
-    try {
-      new URL(form.linkUrl.trim());
-    } catch {
-      return "Banner link URL must be a valid URL.";
-    }
+  if (form.linkUrl.trim() && !normalizeBannerLinkUrl(form.linkUrl)) {
+    return "Banner link URL must be a valid URL or internal path (for example /apps).";
   }
 
   if (form.startsAt && form.endsAt) {
@@ -307,7 +335,7 @@ export function AdminBannersClient({
         body: JSON.stringify({
           title: createForm.title.trim(),
           imageUrl: createForm.imageUrl.trim(),
-          linkUrl: createForm.linkUrl.trim() || null,
+          linkUrl: normalizeBannerLinkUrl(createForm.linkUrl),
           placement: createForm.placement,
           startsAt: toIsoOrUndefined(createForm.startsAt),
           endsAt: toIsoOrUndefined(createForm.endsAt),
@@ -368,7 +396,7 @@ export function AdminBannersClient({
           body: JSON.stringify({
             title: editForm.title.trim(),
             imageUrl: editForm.imageUrl.trim(),
-            linkUrl: editForm.linkUrl.trim() || null,
+            linkUrl: normalizeBannerLinkUrl(editForm.linkUrl),
             placement: editForm.placement,
             startsAt: toIsoOrUndefined(editForm.startsAt),
             endsAt: toIsoOrUndefined(editForm.endsAt),
@@ -689,8 +717,11 @@ function BannerEditorFields({
               linkUrl: event.target.value,
             })
           }
-          placeholder="https://..."
+          placeholder="https://example.com or /apps"
         />
+        <p className="text-xs text-[#59637b]">
+          Supports absolute URLs and internal paths that start with /.
+        </p>
       </div>
 
       <div className="space-y-1.5">

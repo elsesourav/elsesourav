@@ -242,6 +242,9 @@ export type UserWhereInput = {
   appViewEvents?: Prisma.AppViewEventListRelationFilter
   blogPosts?: Prisma.BlogPostListRelationFilter
   blogComments?: Prisma.BlogCommentListRelationFilter
+  supportTickets?: Prisma.SupportTicketListRelationFilter
+  assignedTickets?: Prisma.SupportTicketListRelationFilter
+  supportMessages?: Prisma.SupportTicketMessageListRelationFilter
   settings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
   activityLogs?: Prisma.ActivityLogListRelationFilter
 }
@@ -270,6 +273,9 @@ export type UserOrderByWithRelationInput = {
   appViewEvents?: Prisma.AppViewEventOrderByRelationAggregateInput
   blogPosts?: Prisma.BlogPostOrderByRelationAggregateInput
   blogComments?: Prisma.BlogCommentOrderByRelationAggregateInput
+  supportTickets?: Prisma.SupportTicketOrderByRelationAggregateInput
+  assignedTickets?: Prisma.SupportTicketOrderByRelationAggregateInput
+  supportMessages?: Prisma.SupportTicketMessageOrderByRelationAggregateInput
   settings?: Prisma.UserSettingsOrderByWithRelationInput
   activityLogs?: Prisma.ActivityLogOrderByRelationAggregateInput
 }
@@ -301,6 +307,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   appViewEvents?: Prisma.AppViewEventListRelationFilter
   blogPosts?: Prisma.BlogPostListRelationFilter
   blogComments?: Prisma.BlogCommentListRelationFilter
+  supportTickets?: Prisma.SupportTicketListRelationFilter
+  assignedTickets?: Prisma.SupportTicketListRelationFilter
+  supportMessages?: Prisma.SupportTicketMessageListRelationFilter
   settings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
   activityLogs?: Prisma.ActivityLogListRelationFilter
 }, "id" | "email">
@@ -363,6 +372,9 @@ export type UserCreateInput = {
   appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
@@ -391,6 +403,9 @@ export type UserUncheckedCreateInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
@@ -419,6 +434,9 @@ export type UserUpdateInput = {
   appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
@@ -447,6 +465,9 @@ export type UserUncheckedUpdateInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -687,6 +708,54 @@ export type UserUpdateOneWithoutActivityLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutActivityLogsInput, Prisma.UserUpdateWithoutActivityLogsInput>, Prisma.UserUncheckedUpdateWithoutActivityLogsInput>
 }
 
+export type UserCreateNestedOneWithoutSupportTicketsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSupportTicketsInput, Prisma.UserUncheckedCreateWithoutSupportTicketsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSupportTicketsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutAssignedTicketsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAssignedTicketsInput, Prisma.UserUncheckedCreateWithoutAssignedTicketsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAssignedTicketsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutSupportTicketsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSupportTicketsInput, Prisma.UserUncheckedCreateWithoutSupportTicketsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSupportTicketsInput
+  upsert?: Prisma.UserUpsertWithoutSupportTicketsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSupportTicketsInput, Prisma.UserUpdateWithoutSupportTicketsInput>, Prisma.UserUncheckedUpdateWithoutSupportTicketsInput>
+}
+
+export type UserUpdateOneWithoutAssignedTicketsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAssignedTicketsInput, Prisma.UserUncheckedCreateWithoutAssignedTicketsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAssignedTicketsInput
+  upsert?: Prisma.UserUpsertWithoutAssignedTicketsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAssignedTicketsInput, Prisma.UserUpdateWithoutAssignedTicketsInput>, Prisma.UserUncheckedUpdateWithoutAssignedTicketsInput>
+}
+
+export type UserCreateNestedOneWithoutSupportMessagesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSupportMessagesInput, Prisma.UserUncheckedCreateWithoutSupportMessagesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSupportMessagesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutSupportMessagesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSupportMessagesInput, Prisma.UserUncheckedCreateWithoutSupportMessagesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSupportMessagesInput
+  upsert?: Prisma.UserUpsertWithoutSupportMessagesInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSupportMessagesInput, Prisma.UserUpdateWithoutSupportMessagesInput>, Prisma.UserUncheckedUpdateWithoutSupportMessagesInput>
+}
+
 export type UserCreateNestedOneWithoutFeedbacksInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutFeedbacksInput, Prisma.UserUncheckedCreateWithoutFeedbacksInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutFeedbacksInput
@@ -798,6 +867,9 @@ export type UserCreateWithoutCreatedAppsInput = {
   appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
@@ -825,6 +897,9 @@ export type UserUncheckedCreateWithoutCreatedAppsInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
@@ -857,6 +932,9 @@ export type UserCreateWithoutUpdatedAppsInput = {
   appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
@@ -884,6 +962,9 @@ export type UserUncheckedCreateWithoutUpdatedAppsInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
@@ -927,6 +1008,9 @@ export type UserUpdateWithoutCreatedAppsInput = {
   appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
@@ -954,6 +1038,9 @@ export type UserUncheckedUpdateWithoutCreatedAppsInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -992,6 +1079,9 @@ export type UserUpdateWithoutUpdatedAppsInput = {
   appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
@@ -1019,6 +1109,9 @@ export type UserUncheckedUpdateWithoutUpdatedAppsInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -1046,6 +1139,9 @@ export type UserCreateWithoutAppViewEventsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
@@ -1073,6 +1169,9 @@ export type UserUncheckedCreateWithoutAppViewEventsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
@@ -1116,6 +1215,9 @@ export type UserUpdateWithoutAppViewEventsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
@@ -1143,6 +1245,9 @@ export type UserUncheckedUpdateWithoutAppViewEventsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -1170,6 +1275,9 @@ export type UserCreateWithoutBlogPostsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
   blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
@@ -1197,6 +1305,9 @@ export type UserUncheckedCreateWithoutBlogPostsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
   blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
@@ -1240,6 +1351,9 @@ export type UserUpdateWithoutBlogPostsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
   blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
@@ -1267,6 +1381,9 @@ export type UserUncheckedUpdateWithoutBlogPostsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
   blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -1294,6 +1411,9 @@ export type UserCreateWithoutBlogCommentsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
@@ -1321,6 +1441,9 @@ export type UserUncheckedCreateWithoutBlogCommentsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
@@ -1364,6 +1487,9 @@ export type UserUpdateWithoutBlogCommentsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
@@ -1391,6 +1517,9 @@ export type UserUncheckedUpdateWithoutBlogCommentsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -1418,6 +1547,9 @@ export type UserCreateWithoutLibrariesInput = {
   appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
@@ -1445,6 +1577,9 @@ export type UserUncheckedCreateWithoutLibrariesInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
@@ -1488,6 +1623,9 @@ export type UserUpdateWithoutLibrariesInput = {
   appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
@@ -1515,6 +1653,9 @@ export type UserUncheckedUpdateWithoutLibrariesInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -1543,6 +1684,9 @@ export type UserCreateWithoutSettingsInput = {
   appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
 
@@ -1570,6 +1714,9 @@ export type UserUncheckedCreateWithoutSettingsInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1613,6 +1760,9 @@ export type UserUpdateWithoutSettingsInput = {
   appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
 
@@ -1640,6 +1790,9 @@ export type UserUncheckedUpdateWithoutSettingsInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1667,6 +1820,9 @@ export type UserCreateWithoutActivityLogsInput = {
   appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
 
@@ -1694,6 +1850,9 @@ export type UserUncheckedCreateWithoutActivityLogsInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
@@ -1737,6 +1896,9 @@ export type UserUpdateWithoutActivityLogsInput = {
   appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
 
@@ -1764,7 +1926,418 @@ export type UserUncheckedUpdateWithoutActivityLogsInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSupportTicketsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  passwordHash?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  createdApps?: Prisma.AppCreateNestedManyWithoutCreatedByInput
+  updatedApps?: Prisma.AppCreateNestedManyWithoutUpdatedByInput
+  libraries?: Prisma.UserLibraryCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
+  moderatedFeedback?: Prisma.FeedbackCreateNestedManyWithoutModeratedByInput
+  downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  assignedTickets?: Prisma.SupportTicketCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSupportTicketsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  passwordHash?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  createdApps?: Prisma.AppUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedApps?: Prisma.AppUncheckedCreateNestedManyWithoutUpdatedByInput
+  libraries?: Prisma.UserLibraryUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
+  moderatedFeedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutModeratedByInput
+  downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  assignedTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSupportTicketsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSupportTicketsInput, Prisma.UserUncheckedCreateWithoutSupportTicketsInput>
+}
+
+export type UserCreateWithoutAssignedTicketsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  passwordHash?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  createdApps?: Prisma.AppCreateNestedManyWithoutCreatedByInput
+  updatedApps?: Prisma.AppCreateNestedManyWithoutUpdatedByInput
+  libraries?: Prisma.UserLibraryCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
+  moderatedFeedback?: Prisma.FeedbackCreateNestedManyWithoutModeratedByInput
+  downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutAssignedTicketsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  passwordHash?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  createdApps?: Prisma.AppUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedApps?: Prisma.AppUncheckedCreateNestedManyWithoutUpdatedByInput
+  libraries?: Prisma.UserLibraryUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
+  moderatedFeedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutModeratedByInput
+  downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutAssignedTicketsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAssignedTicketsInput, Prisma.UserUncheckedCreateWithoutAssignedTicketsInput>
+}
+
+export type UserUpsertWithoutSupportTicketsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSupportTicketsInput, Prisma.UserUncheckedUpdateWithoutSupportTicketsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSupportTicketsInput, Prisma.UserUncheckedCreateWithoutSupportTicketsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSupportTicketsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSupportTicketsInput, Prisma.UserUncheckedUpdateWithoutSupportTicketsInput>
+}
+
+export type UserUpdateWithoutSupportTicketsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  createdApps?: Prisma.AppUpdateManyWithoutCreatedByNestedInput
+  updatedApps?: Prisma.AppUpdateManyWithoutUpdatedByNestedInput
+  libraries?: Prisma.UserLibraryUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
+  moderatedFeedback?: Prisma.FeedbackUpdateManyWithoutModeratedByNestedInput
+  downloadEvents?: Prisma.DownloadEventUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  assignedTickets?: Prisma.SupportTicketUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSupportTicketsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  createdApps?: Prisma.AppUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedApps?: Prisma.AppUncheckedUpdateManyWithoutUpdatedByNestedInput
+  libraries?: Prisma.UserLibraryUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
+  moderatedFeedback?: Prisma.FeedbackUncheckedUpdateManyWithoutModeratedByNestedInput
+  downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  assignedTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutAssignedTicketsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAssignedTicketsInput, Prisma.UserUncheckedUpdateWithoutAssignedTicketsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAssignedTicketsInput, Prisma.UserUncheckedCreateWithoutAssignedTicketsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAssignedTicketsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAssignedTicketsInput, Prisma.UserUncheckedUpdateWithoutAssignedTicketsInput>
+}
+
+export type UserUpdateWithoutAssignedTicketsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  createdApps?: Prisma.AppUpdateManyWithoutCreatedByNestedInput
+  updatedApps?: Prisma.AppUpdateManyWithoutUpdatedByNestedInput
+  libraries?: Prisma.UserLibraryUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
+  moderatedFeedback?: Prisma.FeedbackUpdateManyWithoutModeratedByNestedInput
+  downloadEvents?: Prisma.DownloadEventUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAssignedTicketsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  createdApps?: Prisma.AppUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedApps?: Prisma.AppUncheckedUpdateManyWithoutUpdatedByNestedInput
+  libraries?: Prisma.UserLibraryUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
+  moderatedFeedback?: Prisma.FeedbackUncheckedUpdateManyWithoutModeratedByNestedInput
+  downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSupportMessagesInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  passwordHash?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  createdApps?: Prisma.AppCreateNestedManyWithoutCreatedByInput
+  updatedApps?: Prisma.AppCreateNestedManyWithoutUpdatedByInput
+  libraries?: Prisma.UserLibraryCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
+  moderatedFeedback?: Prisma.FeedbackCreateNestedManyWithoutModeratedByInput
+  downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketCreateNestedManyWithoutAssigneeInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSupportMessagesInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  passwordHash?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  scheduledDeletionAt?: Date | string | null
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  createdApps?: Prisma.AppUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedApps?: Prisma.AppUncheckedCreateNestedManyWithoutUpdatedByInput
+  libraries?: Prisma.UserLibraryUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
+  moderatedFeedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutModeratedByInput
+  downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
+  blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssigneeInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSupportMessagesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSupportMessagesInput, Prisma.UserUncheckedCreateWithoutSupportMessagesInput>
+}
+
+export type UserUpsertWithoutSupportMessagesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSupportMessagesInput, Prisma.UserUncheckedUpdateWithoutSupportMessagesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSupportMessagesInput, Prisma.UserUncheckedCreateWithoutSupportMessagesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSupportMessagesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSupportMessagesInput, Prisma.UserUncheckedUpdateWithoutSupportMessagesInput>
+}
+
+export type UserUpdateWithoutSupportMessagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  createdApps?: Prisma.AppUpdateManyWithoutCreatedByNestedInput
+  updatedApps?: Prisma.AppUpdateManyWithoutUpdatedByNestedInput
+  libraries?: Prisma.UserLibraryUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
+  moderatedFeedback?: Prisma.FeedbackUpdateManyWithoutModeratedByNestedInput
+  downloadEvents?: Prisma.DownloadEventUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUpdateManyWithoutAssigneeNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSupportMessagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledDeletionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  createdApps?: Prisma.AppUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedApps?: Prisma.AppUncheckedUpdateManyWithoutUpdatedByNestedInput
+  libraries?: Prisma.UserLibraryUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
+  moderatedFeedback?: Prisma.FeedbackUncheckedUpdateManyWithoutModeratedByNestedInput
+  downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
+  blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssigneeNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFeedbacksInput = {
@@ -1790,6 +2363,9 @@ export type UserCreateWithoutFeedbacksInput = {
   appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
@@ -1817,6 +2393,9 @@ export type UserUncheckedCreateWithoutFeedbacksInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
@@ -1849,6 +2428,9 @@ export type UserCreateWithoutModeratedFeedbackInput = {
   appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
@@ -1876,6 +2458,9 @@ export type UserUncheckedCreateWithoutModeratedFeedbackInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
@@ -1919,6 +2504,9 @@ export type UserUpdateWithoutFeedbacksInput = {
   appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
@@ -1946,6 +2534,9 @@ export type UserUncheckedUpdateWithoutFeedbacksInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -1984,6 +2575,9 @@ export type UserUpdateWithoutModeratedFeedbackInput = {
   appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
@@ -2011,6 +2605,9 @@ export type UserUncheckedUpdateWithoutModeratedFeedbackInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -2038,6 +2635,9 @@ export type UserCreateWithoutDownloadEventsInput = {
   appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
@@ -2065,6 +2665,9 @@ export type UserUncheckedCreateWithoutDownloadEventsInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
@@ -2108,6 +2711,9 @@ export type UserUpdateWithoutDownloadEventsInput = {
   appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
@@ -2135,6 +2741,9 @@ export type UserUncheckedUpdateWithoutDownloadEventsInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -2162,6 +2771,9 @@ export type UserCreateWithoutPaymentsInput = {
   appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
@@ -2189,6 +2801,9 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
@@ -2232,6 +2847,9 @@ export type UserUpdateWithoutPaymentsInput = {
   appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
@@ -2259,6 +2877,9 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -2286,6 +2907,9 @@ export type UserCreateWithoutAccountsInput = {
   appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
@@ -2313,6 +2937,9 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
@@ -2356,6 +2983,9 @@ export type UserUpdateWithoutAccountsInput = {
   appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
@@ -2383,6 +3013,9 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -2410,6 +3043,9 @@ export type UserCreateWithoutSessionsInput = {
   appViewEvents?: Prisma.AppViewEventCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
@@ -2437,6 +3073,9 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutUserInput
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
   blogComments?: Prisma.BlogCommentUncheckedCreateNestedManyWithoutUserInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  assignedTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssigneeInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutAuthorUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
@@ -2480,6 +3119,9 @@ export type UserUpdateWithoutSessionsInput = {
   appViewEvents?: Prisma.AppViewEventUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
@@ -2507,6 +3149,9 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   appViewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutUserNestedInput
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
   blogComments?: Prisma.BlogCommentUncheckedUpdateManyWithoutUserNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  assignedTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssigneeNestedInput
+  supportMessages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutAuthorUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -2529,6 +3174,9 @@ export type UserCountOutputType = {
   appViewEvents: number
   blogPosts: number
   blogComments: number
+  supportTickets: number
+  assignedTickets: number
+  supportMessages: number
   activityLogs: number
 }
 
@@ -2545,6 +3193,9 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   appViewEvents?: boolean | UserCountOutputTypeCountAppViewEventsArgs
   blogPosts?: boolean | UserCountOutputTypeCountBlogPostsArgs
   blogComments?: boolean | UserCountOutputTypeCountBlogCommentsArgs
+  supportTickets?: boolean | UserCountOutputTypeCountSupportTicketsArgs
+  assignedTickets?: boolean | UserCountOutputTypeCountAssignedTicketsArgs
+  supportMessages?: boolean | UserCountOutputTypeCountSupportMessagesArgs
   activityLogs?: boolean | UserCountOutputTypeCountActivityLogsArgs
 }
 
@@ -2645,6 +3296,27 @@ export type UserCountOutputTypeCountBlogCommentsArgs<ExtArgs extends runtime.Typ
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountSupportTicketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SupportTicketWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAssignedTicketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SupportTicketWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSupportMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SupportTicketMessageWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountActivityLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ActivityLogWhereInput
 }
@@ -2674,6 +3346,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   appViewEvents?: boolean | Prisma.User$appViewEventsArgs<ExtArgs>
   blogPosts?: boolean | Prisma.User$blogPostsArgs<ExtArgs>
   blogComments?: boolean | Prisma.User$blogCommentsArgs<ExtArgs>
+  supportTickets?: boolean | Prisma.User$supportTicketsArgs<ExtArgs>
+  assignedTickets?: boolean | Prisma.User$assignedTicketsArgs<ExtArgs>
+  supportMessages?: boolean | Prisma.User$supportMessagesArgs<ExtArgs>
   settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
   activityLogs?: boolean | Prisma.User$activityLogsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -2735,6 +3410,9 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   appViewEvents?: boolean | Prisma.User$appViewEventsArgs<ExtArgs>
   blogPosts?: boolean | Prisma.User$blogPostsArgs<ExtArgs>
   blogComments?: boolean | Prisma.User$blogCommentsArgs<ExtArgs>
+  supportTickets?: boolean | Prisma.User$supportTicketsArgs<ExtArgs>
+  assignedTickets?: boolean | Prisma.User$assignedTicketsArgs<ExtArgs>
+  supportMessages?: boolean | Prisma.User$supportMessagesArgs<ExtArgs>
   settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
   activityLogs?: boolean | Prisma.User$activityLogsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -2757,6 +3435,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     appViewEvents: Prisma.$AppViewEventPayload<ExtArgs>[]
     blogPosts: Prisma.$BlogPostPayload<ExtArgs>[]
     blogComments: Prisma.$BlogCommentPayload<ExtArgs>[]
+    supportTickets: Prisma.$SupportTicketPayload<ExtArgs>[]
+    assignedTickets: Prisma.$SupportTicketPayload<ExtArgs>[]
+    supportMessages: Prisma.$SupportTicketMessagePayload<ExtArgs>[]
     settings: Prisma.$UserSettingsPayload<ExtArgs> | null
     activityLogs: Prisma.$ActivityLogPayload<ExtArgs>[]
   }
@@ -3178,6 +3859,9 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   appViewEvents<T extends Prisma.User$appViewEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$appViewEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppViewEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   blogPosts<T extends Prisma.User$blogPostsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$blogPostsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BlogPostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   blogComments<T extends Prisma.User$blogCommentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$blogCommentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BlogCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  supportTickets<T extends Prisma.User$supportTicketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$supportTicketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupportTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  assignedTickets<T extends Prisma.User$assignedTicketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assignedTicketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupportTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  supportMessages<T extends Prisma.User$supportMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$supportMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupportTicketMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   settings<T extends Prisma.User$settingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$settingsArgs<ExtArgs>>): Prisma.Prisma__UserSettingsClient<runtime.Types.Result.GetResult<Prisma.$UserSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   activityLogs<T extends Prisma.User$activityLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$activityLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -3898,6 +4582,78 @@ export type User$blogCommentsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.BlogCommentScalarFieldEnum | Prisma.BlogCommentScalarFieldEnum[]
+}
+
+/**
+ * User.supportTickets
+ */
+export type User$supportTicketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SupportTicket
+   */
+  select?: Prisma.SupportTicketSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SupportTicket
+   */
+  omit?: Prisma.SupportTicketOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SupportTicketInclude<ExtArgs> | null
+  where?: Prisma.SupportTicketWhereInput
+  orderBy?: Prisma.SupportTicketOrderByWithRelationInput | Prisma.SupportTicketOrderByWithRelationInput[]
+  cursor?: Prisma.SupportTicketWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SupportTicketScalarFieldEnum | Prisma.SupportTicketScalarFieldEnum[]
+}
+
+/**
+ * User.assignedTickets
+ */
+export type User$assignedTicketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SupportTicket
+   */
+  select?: Prisma.SupportTicketSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SupportTicket
+   */
+  omit?: Prisma.SupportTicketOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SupportTicketInclude<ExtArgs> | null
+  where?: Prisma.SupportTicketWhereInput
+  orderBy?: Prisma.SupportTicketOrderByWithRelationInput | Prisma.SupportTicketOrderByWithRelationInput[]
+  cursor?: Prisma.SupportTicketWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SupportTicketScalarFieldEnum | Prisma.SupportTicketScalarFieldEnum[]
+}
+
+/**
+ * User.supportMessages
+ */
+export type User$supportMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SupportTicketMessage
+   */
+  select?: Prisma.SupportTicketMessageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SupportTicketMessage
+   */
+  omit?: Prisma.SupportTicketMessageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SupportTicketMessageInclude<ExtArgs> | null
+  where?: Prisma.SupportTicketMessageWhereInput
+  orderBy?: Prisma.SupportTicketMessageOrderByWithRelationInput | Prisma.SupportTicketMessageOrderByWithRelationInput[]
+  cursor?: Prisma.SupportTicketMessageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SupportTicketMessageScalarFieldEnum | Prisma.SupportTicketMessageScalarFieldEnum[]
 }
 
 /**

@@ -10,11 +10,13 @@ import { createAppStore, type AppStore } from "@/store/store";
 import CssBaseline from "@mui/material/CssBaseline";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import { ThemeProvider, alpha, createTheme } from "@mui/material/styles";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { useEffect, useMemo, useState } from "react";
 import { Provider } from "react-redux";
 
 type AppProvidersProps = {
   children: React.ReactNode;
+  initialThemeMode: "system" | "light" | "dark";
 };
 
 type MuiPaletteSnapshot = {
@@ -116,6 +118,16 @@ function resolveMuiModeFromDom(
   return "light";
 }
 
+function resolveInitialMuiMode(
+  initialMode: "system" | "light" | "dark",
+): "light" | "dark" {
+  if (initialMode === "dark") {
+    return "dark";
+  }
+
+  return "light";
+}
+
 function NotificationToast({ item }: { item: NotificationItem }) {
   const dispatch = useAppDispatch();
 
@@ -173,11 +185,16 @@ function NotificationViewport() {
   );
 }
 
-export function AppProviders({ children }: AppProvidersProps) {
+export function AppProviders({
+  children,
+  initialThemeMode,
+}: AppProvidersProps) {
   const [store] = useState<AppStore>(() => createAppStore());
-  const [mode, setMode] = useState<"light" | "dark">("light");
+  const [mode, setMode] = useState<"light" | "dark">(
+    resolveInitialMuiMode(initialThemeMode),
+  );
   const [muiPalette, setMuiPalette] = useState<MuiPaletteSnapshot>(
-    fallbackMuiPalette.light,
+    fallbackMuiPalette[resolveInitialMuiMode(initialThemeMode)],
   );
 
   useEffect(() => {
@@ -188,6 +205,7 @@ export function AppProviders({ children }: AppProvidersProps) {
 
     const refreshMuiTheme = () => {
       const resolvedMode = resolveMuiModeFromDom(root.dataset.themeMode);
+      root.dataset.colorMode = resolvedMode;
       setMode(resolvedMode);
       setMuiPalette(resolveMuiPaletteFromCss(resolvedMode));
     };
@@ -263,20 +281,27 @@ export function AppProviders({ children }: AppProvidersProps) {
   );
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline enableColorScheme />
-      <GlobalStyles
-        styles={{
-          a: {
-            color: "var(--brand-secondary)",
-            textUnderlineOffset: "2px",
-          },
-        }}
-      />
-      <Provider store={store}>
-        {children}
-        <NotificationViewport />
-      </Provider>
-    </ThemeProvider>
+    <NextThemesProvider
+      attribute="data-theme-mode"
+      defaultTheme={initialThemeMode}
+      enableSystem
+      disableTransitionOnChange
+    >
+      <ThemeProvider theme={theme}>
+        <CssBaseline enableColorScheme />
+        <GlobalStyles
+          styles={{
+            a: {
+              color: "var(--brand-secondary)",
+              textUnderlineOffset: "2px",
+            },
+          }}
+        />
+        <Provider store={store}>
+          {children}
+          <NotificationViewport />
+        </Provider>
+      </ThemeProvider>
+    </NextThemesProvider>
   );
 }

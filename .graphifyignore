@@ -1,0 +1,9 @@
+node_modules/
+.next/
+dist/
+out/
+build/
+coverage/
+*.log
+apps/web/public/svg/animated
+apps/web/public/img

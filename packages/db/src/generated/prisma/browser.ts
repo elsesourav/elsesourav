@@ -178,6 +178,16 @@ export type BlogPostVersion = Prisma.BlogPostVersionModel
  */
 export type HelpArticleVersion = Prisma.HelpArticleVersionModel
 /**
+ * Model SupportTicket
+ * 
+ */
+export type SupportTicket = Prisma.SupportTicketModel
+/**
+ * Model SupportTicketMessage
+ * 
+ */
+export type SupportTicketMessage = Prisma.SupportTicketMessageModel
+/**
  * Model AppDescriptionVersion
  * 
  */

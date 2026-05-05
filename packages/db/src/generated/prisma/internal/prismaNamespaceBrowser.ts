@@ -83,6 +83,8 @@ export const ModelName = {
   AppChangelog: 'AppChangelog',
   BlogPostVersion: 'BlogPostVersion',
   HelpArticleVersion: 'HelpArticleVersion',
+  SupportTicket: 'SupportTicket',
+  SupportTicketMessage: 'SupportTicketMessage',
   AppDescriptionVersion: 'AppDescriptionVersion',
   GuestSession: 'GuestSession',
   Feedback: 'Feedback',
@@ -639,6 +641,43 @@ export const HelpArticleVersionScalarFieldEnum = {
 } as const
 
 export type HelpArticleVersionScalarFieldEnum = (typeof HelpArticleVersionScalarFieldEnum)[keyof typeof HelpArticleVersionScalarFieldEnum]
+
+
+export const SupportTicketScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  appId: 'appId',
+  subject: 'subject',
+  description: 'description',
+  status: 'status',
+  priority: 'priority',
+  category: 'category',
+  channel: 'channel',
+  sourceUrl: 'sourceUrl',
+  assignedToId: 'assignedToId',
+  firstResponseAt: 'firstResponseAt',
+  resolvedAt: 'resolvedAt',
+  closedAt: 'closedAt',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SupportTicketScalarFieldEnum = (typeof SupportTicketScalarFieldEnum)[keyof typeof SupportTicketScalarFieldEnum]
+
+
+export const SupportTicketMessageScalarFieldEnum = {
+  id: 'id',
+  ticketId: 'ticketId',
+  authorUserId: 'authorUserId',
+  authorType: 'authorType',
+  body: 'body',
+  isInternal: 'isInternal',
+  attachments: 'attachments',
+  createdAt: 'createdAt'
+} as const
+
+export type SupportTicketMessageScalarFieldEnum = (typeof SupportTicketMessageScalarFieldEnum)[keyof typeof SupportTicketMessageScalarFieldEnum]
 
 
 export const AppDescriptionVersionScalarFieldEnum = {

@@ -321,6 +321,23 @@ export const bannerPlacementSchema = z.enum([
   "UPCOMING",
 ]);
 
+function isHttpUrl(value: string): boolean {
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+const bannerLinkUrlSchema = z.string().trim().refine(
+  (value) => value.startsWith("/") || isHttpUrl(value),
+  {
+    message:
+      "linkUrl must be a valid URL or an internal path that starts with '/'.",
+  },
+);
+
 const releaseWindowSchema = z
   .object({
     startsAt: z.coerce.date().optional(),
@@ -372,7 +389,7 @@ export const bannerCreateSchema = z
   .object({
     title: z.string().min(3).max(120),
     imageUrl: z.string().url(),
-    linkUrl: z.string().url().nullable().optional(),
+    linkUrl: bannerLinkUrlSchema.nullable().optional(),
     placement: bannerPlacementSchema.default("HOME_HERO"),
     isActive: z.coerce.boolean().default(true),
   })
@@ -382,7 +399,7 @@ export const bannerUpdateSchema = z
   .object({
     title: z.string().min(3).max(120).optional(),
     imageUrl: z.string().url().optional(),
-    linkUrl: z.string().url().nullable().optional(),
+    linkUrl: bannerLinkUrlSchema.nullable().optional(),
     placement: bannerPlacementSchema.optional(),
     startsAt: z.coerce.date().optional(),
     endsAt: z.coerce.date().optional(),

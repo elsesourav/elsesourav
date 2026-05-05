@@ -4,10 +4,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { GithubMarkdownEditor } from "@/components/ui/github-markdown-editor";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Modal } from "@/components/ui/modal";
-import { RichMarkdownEditor } from "@/components/ui/rich-markdown-editor";
 import { Textarea } from "@/components/ui/textarea";
 import { parseMetadataInput, stringifyMetadata } from "@/lib/metadata";
 import {
@@ -523,23 +523,23 @@ function AppEditorFields({
 
       <div className="space-y-1.5 lg:col-span-2">
         <Label htmlFor="app-full-description">Full description</Label>
-        <RichMarkdownEditor
+        <GithubMarkdownEditor
           id="app-full-description"
           value={form.fullDescription}
           onChange={(nextValue) => updateField("fullDescription", nextValue)}
-          rows={10}
           placeholder="Write a rich app description"
+          height={320}
         />
       </div>
 
       <div className="space-y-1.5 lg:col-span-2">
         <Label htmlFor="app-release-notes">Release notes (optional)</Label>
-        <RichMarkdownEditor
+        <GithubMarkdownEditor
           id="app-release-notes"
           value={form.releaseNotes}
           onChange={(nextValue) => updateField("releaseNotes", nextValue)}
-          rows={8}
           placeholder="What's new in this release"
+          height={260}
         />
       </div>
 

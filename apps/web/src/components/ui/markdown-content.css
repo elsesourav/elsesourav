@@ -1,0 +1,161 @@
+@import "@uiw/react-md-editor/markdown-editor.css";
+@import "@uiw/react-markdown-preview/markdown.css";
+
+.ui-markdown-surface {
+  --ui-markdown-list-indent: 1.5rem;
+  --ui-markdown-list-gap: 0.25rem;
+  --ui-markdown-block-gap: 1rem;
+  --ui-markdown-code-border: color-mix(
+    in srgb,
+    var(--foreground) 12%,
+    transparent
+  );
+  --ui-markdown-code-bg: color-mix(
+    in srgb,
+    var(--background) 90%,
+    var(--foreground) 10%
+  );
+  --ui-markdown-quote-border: color-mix(
+    in srgb,
+    var(--brand-secondary) 34%,
+    transparent
+  );
+  --ui-markdown-table-border: color-mix(
+    in srgb,
+    var(--foreground) 14%,
+    transparent
+  );
+  --ui-markdown-table-head-bg: color-mix(
+    in srgb,
+    var(--background) 86%,
+    var(--foreground) 14%
+  );
+}
+
+.ui-markdown-surface .wmde-markdown {
+  color: var(--foreground);
+}
+
+.ui-markdown-surface .wmde-markdown > :first-child {
+  margin-top: 0;
+}
+
+.ui-markdown-surface .wmde-markdown > :last-child {
+  margin-bottom: 0;
+}
+
+.ui-markdown-surface .wmde-markdown p,
+.ui-markdown-surface .wmde-markdown ul,
+.ui-markdown-surface .wmde-markdown ol,
+.ui-markdown-surface .wmde-markdown blockquote,
+.ui-markdown-surface .wmde-markdown pre,
+.ui-markdown-surface .wmde-markdown table {
+  margin-block: var(--ui-markdown-block-gap);
+}
+
+.ui-markdown-surface p.markdown-alert-title {
+  margin-top: 0 !important;
+}
+
+.ui-markdown-surface .wmde-markdown ul {
+  list-style: disc outside;
+  padding-left: var(--ui-markdown-list-indent);
+}
+
+.ui-markdown-surface .wmde-markdown ol {
+  /* Render numeric markers as circular badges instead of default list markers */
+  list-style: none;
+  padding-left: calc(var(--ui-markdown-list-indent));
+  counter-reset: list;
+}
+
+.ui-markdown-surface .wmde-markdown li {
+  margin-block: var(--ui-markdown-list-gap);
+}
+
+/* Number badge for ordered lists */
+.ui-markdown-surface .wmde-markdown ol > li {
+  position: relative;
+  counter-increment: list;
+  padding-left: 0.6rem;
+}
+
+.ui-markdown-surface .wmde-markdown ol > li::before {
+  content: counter(list);
+  position: absolute;
+  left: -1.6rem;
+  top: 0.15rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--foreground) 14%, transparent);
+  background: color-mix(
+    in srgb,
+    var(--brand-secondary) 12%,
+    var(--background) 88%
+  );
+  color: var(--foreground);
+  font-weight: 600;
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+/* Handle nested ordered lists: use smaller badges and adjusted offset */
+.ui-markdown-surface .wmde-markdown ol ol > li::before {
+  /* left: -3rem; */
+  width: 1.3rem;
+  height: 1.3rem;
+  font-size: 0.75rem;
+}
+
+.ui-markdown-surface .wmde-markdown li > p {
+  margin: 0;
+}
+
+.ui-markdown-surface .wmde-markdown a {
+  text-decoration-thickness: from-font;
+  text-underline-offset: 0.18em;
+}
+
+.ui-markdown-surface .wmde-markdown blockquote {
+  border-left: 4px solid var(--ui-markdown-quote-border);
+  color: color-mix(in srgb, var(--foreground) 82%, var(--background) 18%);
+  padding: 0.25rem 0 0.25rem 1rem;
+}
+
+.ui-markdown-surface .wmde-markdown code:not(pre code) {
+  border: 1px solid var(--ui-markdown-code-border);
+  background: var(--ui-markdown-code-bg);
+  border-radius: 0.5rem;
+  padding: 0.1rem 0.35rem;
+}
+
+.ui-markdown-surface .wmde-markdown pre {
+  border: 1px solid var(--ui-markdown-code-border);
+  background: var(--ui-markdown-code-bg);
+  border-radius: 1rem;
+  overflow-x: auto;
+}
+
+.ui-markdown-surface .wmde-markdown table {
+  border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
+}
+
+.ui-markdown-surface .wmde-markdown th,
+.ui-markdown-surface .wmde-markdown td {
+  border: 1px solid var(--ui-markdown-table-border);
+  padding: 0.625rem 0.75rem;
+}
+
+.ui-markdown-surface .wmde-markdown th {
+  background: var(--ui-markdown-table-head-bg);
+}
+
+.ui-markdown-surface .wmde-markdown hr {
+  border-color: color-mix(in srgb, var(--foreground) 14%, transparent);
+}
