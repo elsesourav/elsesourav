@@ -12,7 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/feedback",
     "/blog",
     "/help",
-    "/support",
+    "/help-support",
     "/contact",
     "/privacy",
     "/terms",

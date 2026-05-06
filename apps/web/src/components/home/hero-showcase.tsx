@@ -369,7 +369,7 @@ export function HeroShowcase({
                 </Button>
                 <Button
                   component={Link}
-                  href="/support"
+                  href="/help-support"
                   tone="secondary"
                   className={cn(styles.secondaryPrismButton)}
                   size="sm"

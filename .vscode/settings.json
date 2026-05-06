@@ -8,7 +8,7 @@
     "command": true,
     "true": true
   },
-  "cSpell.words": ["useanimations", "wmde"],
+  "cSpell.words": ["drei", "useanimations", "wmde"],
 
   "github.copilot.chat.codeGeneration.instructions": [
     { "file": ".copilot/instructions.md" },

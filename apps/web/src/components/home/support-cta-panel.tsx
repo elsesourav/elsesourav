@@ -69,7 +69,7 @@ export function SupportCtaPanel({
           <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap", gap: 1 }}>
             <Button
               component={Link}
-              href="/support"
+              href="/help-support"
               className={cn(styles.prismButton)}
               sx={{ px: 2.2, py: 1.1, borderRadius: 999 }}
             >
@@ -145,7 +145,7 @@ export function SupportCtaPanel({
           >
             <Paper
               component={Link}
-              href="/support?priority=HIGH"
+              href="/help-support?priority=HIGH"
               elevation={0}
               sx={{
                 borderRadius: 1.5,

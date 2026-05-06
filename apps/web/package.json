@@ -20,6 +20,8 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^9.0.0",
     "@mui/material": "^9.0.0",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
     "@reduxjs/toolkit": "^2.11.2",
     "@tiptap/extension-color": "^3.22.3",
     "@tiptap/extension-file-handler": "^3.22.3",
@@ -43,6 +45,7 @@
     "@uiw/react-md-editor": "^4.1.0",
     "cloudinary": "^2.7.0",
     "embla-carousel-react": "^8.6.0",
+    "maath": "^0.10.8",
     "next": "16.1.6",
     "next-auth": "^5.0.0-beta.25",
     "next-themes": "^0.4.6",
@@ -54,6 +57,7 @@
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1",
     "tailwind-merge": "^3.5.0",
+    "three": "^0.184.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {

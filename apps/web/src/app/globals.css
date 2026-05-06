@@ -37,6 +37,7 @@ html[data-theme-mode="light"] {
   --brand-primary: var(--theme-light-primary);
   --brand-secondary: var(--theme-light-secondary);
   --brand-accent: var(--theme-light-accent);
+  --accent: var(--theme-light-accent);
 }
 
 html[data-theme-mode="dark"] {
@@ -345,89 +346,10 @@ h6 {
   z-index: 1;
 }
 
-@keyframes header-nav-lock-spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes header-nav-lock-glow {
-  0%,
-  100% {
-    opacity: 0.2;
-    transform: scale(0.96);
-  }
-
-  50% {
-    opacity: 0.42;
-    transform: scale(1.03);
-  }
-}
-
-.header-nav-lock-active {
-  position: relative;
-  isolation: isolate;
-}
-
-.header-nav-lock-active::before {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  z-index: 0;
-  border-radius: 999px;
-  pointer-events: none;
-  background: conic-gradient(
-    from 0deg,
-    color-mix(in srgb, var(--brand-secondary) 72%, white 28%),
-    color-mix(in srgb, var(--brand-accent) 62%, white 38%),
-    color-mix(in srgb, var(--brand-secondary) 72%, white 28%)
-  );
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  padding: 1.5px;
-  animation: header-nav-lock-spin 1.3s linear infinite;
-}
-
-.header-nav-lock-active::after {
-  content: "";
-  position: absolute;
-  inset: -4px;
-  z-index: 0;
-  border-radius: 999px;
-  pointer-events: none;
-  background: radial-gradient(
-    circle at 50% 50%,
-    color-mix(in srgb, var(--brand-secondary) 34%, white 66%),
-    transparent 72%
-  );
-  filter: blur(0.7px);
-  animation: header-nav-lock-glow 1.15s ease-in-out infinite;
-}
-
-.header-nav-lock-active > * {
-  position: relative;
-  z-index: 1;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .header-loading-active::before,
   .header-loading-active::after {
     animation: none;
     opacity: 0.2;
-  }
-
-  .header-nav-lock-active::before,
-  .header-nav-lock-active::after {
-    animation: none;
   }
 }

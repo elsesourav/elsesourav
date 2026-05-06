@@ -110,7 +110,7 @@ export function ThemeModeControl({ initialMode }: ThemeModeControlProps) {
               className={[
                 "rounded-full px-3 py-1.5 text-xs font-semibold transition",
                 active
-                  ? "bg-[color-mix(in_srgb,var(--foreground)_85%,transparent)] text-[var(--background)]"
+                  ? "bg-[color-mix(in_srgb,var(--foreground)_85%,transparent)] text-background"
                   : "text-[color-mix(in_srgb,var(--foreground)_55%,transparent)] hover:bg-[color-mix(in_srgb,var(--background)_82%,var(--foreground)_18%)]",
               ].join(" ")}
             >

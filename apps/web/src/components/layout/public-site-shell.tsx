@@ -1,6 +1,6 @@
 "use client";
 
-import { LandingGlassHeader } from "@/components/layout/landing-glass-header";
+import { Header } from "@/components/layout/header";
 import { signOut as clientSignOut } from "next-auth/react";
 import NextLink from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -11,9 +11,8 @@ const primaryNav = [
   { href: "/", label: "Home" },
   { href: "/apps", label: "Apps" },
   { href: "/blog", label: "Blogs" },
-  { href: "/help", label: "Help" },
+  { href: "/help-support", label: "Support" },
   { href: "/about", label: "About" },
-  { href: "/support", label: "Support" },
 ] as const;
 
 const footerColumns = [
@@ -32,7 +31,7 @@ const footerColumns = [
     items: [
       { href: "/about", label: "About" },
       { href: "/contact", label: "Contact" },
-      { href: "/support", label: "Support" },
+      { href: "/help-support", label: "Help & Support" },
     ],
   },
   {
@@ -75,19 +74,14 @@ export function PublicSiteShell({
   const router = useRouter();
   const spacePressedRef = useRef(false);
   const [isNavigating, setIsNavigating] = useState(false);
-  const [resolvedPathname, setResolvedPathname] = useState("");
+  const resolvedPathname = pathname ?? "";
   const accountHref = sessionUser?.role === "ADMIN" ? "/admin" : "/settings";
   const accountLabel =
     sessionUser?.role === "ADMIN" ? "Admin panel" : "My account";
 
   useEffect(() => {
-    if (pathname) {
-      setResolvedPathname(pathname);
-    }
-  }, [pathname]);
-
-  useEffect(() => {
-    setIsNavigating(false);
+    const id = setTimeout(() => setIsNavigating(false), 0);
+    return () => clearTimeout(id);
   }, [pathname]);
 
   const beginSignOut = useCallback(() => {
@@ -172,7 +166,7 @@ export function PublicSiteShell({
         Skip to content
       </a>
 
-      <LandingGlassHeader
+      <Header
         pathname={pathname}
         navItems={primaryNav}
         sessionUser={sessionUser}
@@ -211,8 +205,10 @@ export function PublicSiteShell({
                 Browse apps
               </NextLink>
               <NextLink
-                href="/support"
-                onClick={(event) => markAnchorNavigation(event, "/support")}
+                href="/help-support"
+                onClick={(event) =>
+                  markAnchorNavigation(event, "/help-support")
+                }
                 className="inline-flex items-center rounded-lg border border-white/35 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-white/10"
               >
                 Open support

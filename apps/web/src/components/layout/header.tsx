@@ -1,22 +1,11 @@
 "use client";
 
-import AboutIcon from "@/components/icons/AboutIcon";
-import AppsIcon from "@/components/icons/AppsIcon";
-import BlogIcon from "@/components/icons/BlogIcon";
-import DashboardIcon from "@/components/icons/DashboardIcon";
-import HelpAndSupportIcon from "@/components/icons/HelpAndSupportIcon";
-import HomeIcon from "@/components/icons/HomeIcon";
-import FluidGlass from "../ui/fluid-glass";
+import Navigation, { type HeaderNavItem } from "@/components/layout/Navigation";
 import Image from "next/image";
 import NextLink from "next/link";
 import { useEffect, useState, type MouseEvent } from "react";
 import UseAnimations from "react-useanimations";
 import menu2 from "react-useanimations/lib/menu2";
-
-type HeaderNavItem = {
-  href: string;
-  label: string;
-};
 
 type SessionNavUser = {
   id: string;
@@ -25,7 +14,7 @@ type SessionNavUser = {
   email: string | null;
 };
 
-type LandingGlassHeaderProps = {
+type HeaderProps = {
   pathname: string;
   navItems: ReadonlyArray<HeaderNavItem>;
   sessionUser: SessionNavUser | null;
@@ -45,15 +34,6 @@ function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-function getDesktopNavLinkClass(active: boolean): string {
-  return [
-    "relative z-10 inline-flex flex-col items-center gap-1 rounded-full px-5 py-2 text-xs font-semibold transition duration-300 ease-out",
-    active
-      ? "bg-[color-mix(in_srgb,var(--background)_80%,var(--foreground)_20%)] text-foreground shadow-[0_12px_28px_-20px_color-mix(in_srgb,var(--foreground)_38%,transparent)]"
-      : "text-[color-mix(in_srgb,var(--foreground)_72%,var(--background)_28%)] hover:-translate-y-px hover:bg-[color-mix(in_srgb,var(--background)_84%,var(--foreground)_16%)]",
-  ].join(" ");
-}
-
 function getMobileNavLinkClass(active: boolean): string {
   return [
     "flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition",
@@ -63,34 +43,11 @@ function getMobileNavLinkClass(active: boolean): string {
   ].join(" ");
 }
 
-function NavItemIcon({ href, className }: { href: string; className: string }) {
-  switch (href) {
-    case "/":
-      return <HomeIcon className={className} />;
-    case "/apps":
-      return <AppsIcon className={className} />;
-    case "/blog":
-      return <BlogIcon className={className} />;
-    case "/help":
-      return <HelpAndSupportIcon className={className} />;
-    case "/about":
-      return <AboutIcon className={className} />;
-    case "/support":
-      return <DashboardIcon className={className} />;
-    default:
-      return <HelpAndSupportIcon className={className} />;
-  }
-}
-
 function getLoadingClass(isActive: boolean): string {
   return isActive ? "header-loading-active" : "";
 }
 
-function getNavLockClass(isActive: boolean): string {
-  return isActive ? "header-nav-lock-active" : "";
-}
-
-export function LandingGlassHeader({
+export function Header({
   pathname,
   navItems,
   sessionUser,
@@ -100,7 +57,7 @@ export function LandingGlassHeader({
   onAnchorNavigation,
   onNavigation,
   onSignOut,
-}: LandingGlassHeaderProps) {
+}: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [loadingTarget, setLoadingTarget] = useState<string | null>(null);
 
@@ -172,11 +129,11 @@ export function LandingGlassHeader({
   }, [isMobileMenuOpen]);
 
   return (
-    <header className="sticky top-0 z-40">
-      <div className="w-full backdrop-blur-2xl px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-40 bg-transparent overflow-hidden">
+      <div className="relative w-full px-4 sm:px-6 lg:px-8">
         <div className="px-2 py-2 sm:px-3 md:px-4 md:py-3">
           <div className="flex items-center justify-between gap-2 md:gap-4">
-            <div className="flex min-w-0 items-center gap-2">
+            <div className="flex min-w-0 z-20 items-center gap-2">
               <UseAnimations
                 animation={menu2}
                 reverse={isMobileMenuOpen}
@@ -222,58 +179,14 @@ export function LandingGlassHeader({
               </NextLink>
             </div>
 
-            <nav
-              aria-label="Landing primary"
-              className="relative hidden items-center overflow-hidden rounded-full border border-[color-mix(in_srgb,var(--foreground)_10%,transparent)] px-2 py-2 shadow-[0_18px_40px_-32px_color-mix(in_srgb,var(--foreground)_45%,transparent)] md:inline-flex"
-            >
-              <FluidGlass
-                mode="lens"
-                scale={0.3}
-                ior={1.05}
-                thickness={5}
-                transmission={1}
-                roughness={0}
-                chromaticAberration={0.01}
-                anisotropy={0.01}
-                className="pointer-events-none absolute inset-0 rounded-full"
-              />
-              <div className="relative z-10 flex items-center gap-1">
-                {navItems.map((item) => {
-                  const active = isActive(pathname, item.href);
+            <Navigation
+              pathname={pathname}
+              navItems={navItems}
+              onAnchorNavigation={handleAnchorNavigation}
+              isTargetLoading={isTargetLoading}
+            />
 
-                  return (
-                    <NextLink
-                      key={item.href}
-                      href={item.href}
-                      onClick={(event) => {
-                        handleAnchorNavigation(
-                          event,
-                          item.href,
-                          `desktop-nav-${item.href}`,
-                        );
-                      }}
-                      aria-current={active ? "page" : undefined}
-                      className={[
-                        getDesktopNavLinkClass(active),
-                        getNavLockClass(
-                          isTargetLoading(`desktop-nav-${item.href}`),
-                        ),
-                      ].join(" ")}
-                    >
-                      <span className="relative z-10 inline-flex flex-col items-center gap-1">
-                        <NavItemIcon
-                          href={item.href}
-                          className="h-5 w-5 text-current [&_path]:fill-current"
-                        />
-                        <span>{item.label}</span>
-                      </span>
-                    </NextLink>
-                  );
-                })}
-              </div>
-            </nav>
-
-            <div className="hidden items-center gap-2 md:flex">
+            <div className="hidden z-20 items-center gap-2 md:flex">
               {sessionUser ? (
                 <>
                   <button
@@ -418,10 +331,6 @@ export function LandingGlassHeader({
                       ].join(" ")}
                     >
                       <span className="relative z-10 inline-flex items-center gap-2">
-                        <NavItemIcon
-                          href={item.href}
-                          className="h-4 w-4 text-current [&_path]:fill-current"
-                        />
                         <span>{item.label}</span>
                       </span>
                     </NextLink>
@@ -436,6 +345,12 @@ export function LandingGlassHeader({
                       type="button"
                       onClick={() => {
                         setIsMobileMenuOpen(false);
+                        <Navigation
+                          pathname={pathname}
+                          navItems={navItems}
+                          onAnchorNavigation={handleAnchorNavigation}
+                          isTargetLoading={isTargetLoading}
+                        />;
                         handleNavigation(accountHref, "mobile-account");
                       }}
                       disabled={isNavigating}
