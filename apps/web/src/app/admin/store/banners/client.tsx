@@ -14,10 +14,11 @@ import type { ApiResponse } from "@elsesourav/types";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 
-type BannerPlacement = "HOME_HERO" | "LATEST" | "UPCOMING";
+type BannerPlacement = "NEW" | "COMING_SOON" | "SPECIAL_OFFER" | "EVENT";
 
 type BannerFormState = {
   title: string;
+  subtitle: string;
   imageUrl: string;
   linkUrl: string;
   placement: BannerPlacement;
@@ -27,10 +28,33 @@ type BannerFormState = {
 };
 
 const bannerPlacementOptions: BannerPlacement[] = [
-  "HOME_HERO",
-  "LATEST",
-  "UPCOMING",
+  "NEW",
+  "COMING_SOON",
+  "SPECIAL_OFFER",
+  "EVENT",
 ];
+
+const bannerPlacementLabels: Record<BannerPlacement, string> = {
+  NEW: "New",
+  COMING_SOON: "Coming Soon",
+  SPECIAL_OFFER: "Special Offer",
+  EVENT: "Event",
+};
+
+function getPlacementDateLabel(placement: BannerPlacement): {
+  startsLabel: string;
+  endsLabel: string;
+} {
+  switch (placement) {
+    case "NEW":
+    case "COMING_SOON":
+      return { startsLabel: "Launch date", endsLabel: "End date (optional)" };
+    case "SPECIAL_OFFER":
+    case "EVENT":
+    default:
+      return { startsLabel: "Starts", endsLabel: "Ends" };
+  }
+}
 
 function toSortedBanners(items: AdminBanner[]) {
   return [...items].sort(
@@ -102,9 +126,10 @@ function toIsoOrUndefined(value: string): string | undefined {
 function createEmptyBannerForm(): BannerFormState {
   return {
     title: "",
+    subtitle: "",
     imageUrl: "",
     linkUrl: "",
-    placement: "HOME_HERO",
+    placement: "NEW",
     startsAt: "",
     endsAt: "",
     isActive: true,
@@ -114,6 +139,7 @@ function createEmptyBannerForm(): BannerFormState {
 function createBannerFormFromItem(item: AdminBanner): BannerFormState {
   return {
     title: item.title,
+    subtitle: item.subtitle ?? "",
     imageUrl: item.imageUrl,
     linkUrl: item.linkUrl ?? "",
     placement: item.placement as BannerPlacement,
@@ -160,6 +186,27 @@ function validateBannerForm(form: BannerFormState): string | null {
     return "Banner title must contain at least 3 characters.";
   }
 
+  if (
+    (form.placement === "NEW" || form.placement === "COMING_SOON") &&
+    !form.startsAt
+  ) {
+    return "Launch date is required for New and Coming Soon banners.";
+  }
+
+  if (
+    (form.placement === "SPECIAL_OFFER" || form.placement === "EVENT") &&
+    !form.startsAt
+  ) {
+    return "Start date is required for Special Offer and Event banners.";
+  }
+
+  if (
+    (form.placement === "SPECIAL_OFFER" || form.placement === "EVENT") &&
+    !form.endsAt
+  ) {
+    return "End date is required for Special Offer and Event banners.";
+  }
+
   try {
     new URL(form.imageUrl.trim());
   } catch {
@@ -183,15 +230,26 @@ function validateBannerForm(form: BannerFormState): string | null {
 
 function BannerVisualPreview({
   title,
+  subtitle,
   imageUrl,
   placement,
   linkUrl,
+  startsAt,
+  endsAt,
 }: {
   title: string;
+  subtitle: string;
   imageUrl: string;
   placement: BannerPlacement;
   linkUrl: string;
+  startsAt: string;
+  endsAt: string;
 }) {
+  const placementLabel = bannerPlacementLabels[placement];
+  const dateLabels = getPlacementDateLabel(placement);
+  const startsLabel = startsAt ? formatDateTime(startsAt) : "No date";
+  const endsLabel = endsAt ? formatDateTime(endsAt) : "No end";
+
   return (
     <article className="relative overflow-hidden rounded-xl border border-black/10 bg-[#0f172a]">
       {imageUrl ? (
@@ -211,10 +269,19 @@ function BannerVisualPreview({
 
       <div className="absolute inset-x-0 bottom-0 space-y-1 p-3 text-white">
         <span className="inline-flex rounded-full border border-white/30 bg-white/20 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide">
-          {placement.replace("_", " ")}
+          {placementLabel}
         </span>
         <p className="line-clamp-1 text-sm font-semibold">
           {title.trim() || "Banner title preview"}
+        </p>
+        {subtitle.trim() ? (
+          <p className="line-clamp-1 text-xs text-white/85">{subtitle}</p>
+        ) : null}
+        <p className="text-[11px] text-white/70">
+          {dateLabels.startsLabel}: {startsLabel}
+          {placement === "SPECIAL_OFFER" || placement === "EVENT"
+            ? ` · ${dateLabels.endsLabel}: ${endsLabel}`
+            : ""}
         </p>
         <p className="line-clamp-1 text-xs text-blue-100">
           {linkUrl.trim() || "No link URL"}
@@ -239,16 +306,19 @@ function BannerCard({
     <Card className="overflow-hidden p-0">
       <BannerVisualPreview
         title={item.title}
+        subtitle={item.subtitle ?? ""}
         imageUrl={item.imageUrl}
         placement={item.placement as BannerPlacement}
         linkUrl={item.linkUrl ?? ""}
+        startsAt={item.startsAt ?? ""}
+        endsAt={item.endsAt ?? ""}
       />
       <div className="space-y-3 p-4">
         <div className="flex items-start justify-between gap-3">
           <div>
             <CardTitle>{item.title}</CardTitle>
             <CardDescription className="mt-1 line-clamp-1">
-              {item.linkUrl ?? "No banner link"}
+              {item.subtitle ?? item.linkUrl ?? "No banner link"}
             </CardDescription>
           </div>
           <Badge tone={item.isActive ? "success" : "neutral"}>
@@ -257,8 +327,17 @@ function BannerCard({
         </div>
 
         <div className="grid gap-1 text-xs text-[#59637b]">
-          <p>Starts: {formatDateTime(item.startsAt)}</p>
-          <p>Ends: {formatDateTime(item.endsAt)}</p>
+          <p>
+            {
+              getPlacementDateLabel(item.placement as BannerPlacement)
+                .startsLabel
+            }
+            : {formatDateTime(item.startsAt)}
+          </p>
+          <p>
+            {getPlacementDateLabel(item.placement as BannerPlacement).endsLabel}
+            : {formatDateTime(item.endsAt)}
+          </p>
           <p>Updated: {formatDateTime(item.updatedAt)}</p>
         </div>
 
@@ -334,6 +413,7 @@ export function AdminBannersClient({
         },
         body: JSON.stringify({
           title: createForm.title.trim(),
+          subtitle: createForm.subtitle.trim() || null,
           imageUrl: createForm.imageUrl.trim(),
           linkUrl: normalizeBannerLinkUrl(createForm.linkUrl),
           placement: createForm.placement,
@@ -395,6 +475,7 @@ export function AdminBannersClient({
           },
           body: JSON.stringify({
             title: editForm.title.trim(),
+            subtitle: editForm.subtitle.trim() || null,
             imageUrl: editForm.imageUrl.trim(),
             linkUrl: normalizeBannerLinkUrl(editForm.linkUrl),
             placement: editForm.placement,
@@ -550,9 +631,12 @@ export function AdminBannersClient({
 
           <BannerVisualPreview
             title={createForm.title}
+            subtitle={createForm.subtitle}
             imageUrl={createForm.imageUrl}
             placement={createForm.placement}
             linkUrl={createForm.linkUrl}
+            startsAt={createForm.startsAt}
+            endsAt={createForm.endsAt}
           />
 
           {createError ? (
@@ -600,9 +684,12 @@ export function AdminBannersClient({
 
             <BannerVisualPreview
               title={editForm.title}
+              subtitle={editForm.subtitle}
               imageUrl={editForm.imageUrl}
               placement={editForm.placement}
               linkUrl={editForm.linkUrl}
+              startsAt={editForm.startsAt}
+              endsAt={editForm.endsAt}
             />
 
             {editError ? (
@@ -670,6 +757,22 @@ function BannerEditorFields({
       </div>
 
       <div className="space-y-1.5">
+        <Label htmlFor="banner-subtitle">Subtitle</Label>
+        <Input
+          id="banner-subtitle"
+          value={form.subtitle}
+          onChange={(event) =>
+            onChange({
+              ...form,
+              subtitle: event.target.value,
+            })
+          }
+          maxLength={160}
+          placeholder="Short supporting line"
+        />
+      </div>
+
+      <div className="space-y-1.5">
         <Label htmlFor="banner-placement">Placement</Label>
         <select
           id="banner-placement"
@@ -684,7 +787,7 @@ function BannerEditorFields({
         >
           {bannerPlacementOptions.map((placement) => (
             <option key={placement} value={placement}>
-              {placement.replace("_", " ")}
+              {bannerPlacementLabels[placement]}
             </option>
           ))}
         </select>
@@ -725,7 +828,9 @@ function BannerEditorFields({
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="banner-starts-at">Starts At</Label>
+        <Label htmlFor="banner-starts-at">
+          {getPlacementDateLabel(form.placement).startsLabel}
+        </Label>
         <Input
           id="banner-starts-at"
           type="datetime-local"
@@ -740,7 +845,9 @@ function BannerEditorFields({
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="banner-ends-at">Ends At</Label>
+        <Label htmlFor="banner-ends-at">
+          {getPlacementDateLabel(form.placement).endsLabel}
+        </Label>
         <Input
           id="banner-ends-at"
           type="datetime-local"

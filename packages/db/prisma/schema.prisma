@@ -46,9 +46,10 @@ enum StoreSectionType {
 }
 
 enum BannerPlacement {
-  HOME_HERO
-  LATEST
-  UPCOMING
+  NEW
+  COMING_SOON
+  SPECIAL_OFFER
+  EVENT
 }
 
 enum ContentStatus {
@@ -358,9 +359,10 @@ model StoreSectionItem {
 model StoreBanner {
   id        String          @id @default(cuid())
   title     String
+  subtitle  String?         @map("subtitle")
   imageUrl  String          @map("image_url")
   linkUrl   String?         @map("link_url")
-  placement BannerPlacement @default(HOME_HERO)
+  placement BannerPlacement @default(NEW)
   startsAt  DateTime?       @map("starts_at")
   endsAt    DateTime?       @map("ends_at")
   isActive  Boolean         @default(true) @map("is_active")
@@ -579,11 +581,13 @@ model ThemeConfig {
   primaryColor        String   @map("primary_color")
   secondaryColor      String   @map("secondary_color")
   accentColor         String   @map("accent_color")
+  actionColor         String   @map("action_color")
   backgroundColor     String   @map("background_color")
   foregroundColor     String   @map("foreground_color")
   darkPrimaryColor    String   @default("#e2e8f0") @map("dark_primary_color")
   darkSecondaryColor  String   @default("#334155") @map("dark_secondary_color")
   darkAccentColor     String   @default("#38bdf8") @map("dark_accent_color")
+  darkActionColor     String   @default("#38bdf8") @map("dark_action_color")
   darkBackgroundColor String   @default("#0b1220") @map("dark_background_color")
   darkForegroundColor String   @default("#f8fafc") @map("dark_foreground_color")
   fontSans            String   @map("font_sans")

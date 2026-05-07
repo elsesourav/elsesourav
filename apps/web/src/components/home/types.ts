@@ -13,9 +13,12 @@ export type HomeSlider = {
 export type HomeBanner = {
   id: string;
   title: string;
+  subtitle: string | null;
   imageUrl: string;
   linkUrl: string | null;
-  placement: "HOME_HERO" | "LATEST" | "UPCOMING";
+  placement: "NEW" | "COMING_SOON" | "SPECIAL_OFFER" | "EVENT";
+  startsAt: string | null;
+  endsAt: string | null;
 };
 
 export type SupportOverviewCategory = {

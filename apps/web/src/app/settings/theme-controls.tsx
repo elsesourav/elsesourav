@@ -4,11 +4,13 @@ type CustomThemeInput = {
   lightPrimaryColor: string;
   lightSecondaryColor: string;
   lightAccentColor: string;
+  lightActionColor: string;
   lightBackgroundColor: string;
   lightForegroundColor: string;
   darkPrimaryColor: string;
   darkSecondaryColor: string;
   darkAccentColor: string;
+  darkActionColor: string;
   darkBackgroundColor: string;
   darkForegroundColor: string;
 };
@@ -38,6 +40,12 @@ export const customThemeFieldMeta: Array<{
     label: "Light accent color",
     placeholder: "#f59e0b",
     note: "Call-to-action highlights for light mode",
+  },
+  {
+    key: "lightActionColor",
+    label: "Light action color",
+    placeholder: "#f59e0b",
+    note: "Primary buttons and emphasis actions for light mode",
   },
   {
     key: "lightBackgroundColor",
@@ -70,6 +78,12 @@ export const customThemeFieldMeta: Array<{
     note: "Call-to-action highlights for dark mode",
   },
   {
+    key: "darkActionColor",
+    label: "Dark action color",
+    placeholder: "#38bdf8",
+    note: "Primary buttons and emphasis actions for dark mode",
+  },
+  {
     key: "darkBackgroundColor",
     label: "Dark background color",
     placeholder: "#0b1220",
@@ -97,11 +111,13 @@ export const themeControlPresets: Array<{
       lightPrimaryColor: "#1f2937",
       lightSecondaryColor: "#111827",
       lightAccentColor: "#0ea5e9",
+      lightActionColor: "#0ea5e9",
       lightBackgroundColor: "#f8fafc",
       lightForegroundColor: "#111827",
       darkPrimaryColor: "#e2e8f0",
       darkSecondaryColor: "#334155",
       darkAccentColor: "#38bdf8",
+      darkActionColor: "#38bdf8",
       darkBackgroundColor: "#0b1220",
       darkForegroundColor: "#f8fafc",
     },
@@ -114,11 +130,13 @@ export const themeControlPresets: Array<{
       lightPrimaryColor: "#3f2e1f",
       lightSecondaryColor: "#2f241c",
       lightAccentColor: "#d97706",
+      lightActionColor: "#f59e0b",
       lightBackgroundColor: "#fff8ec",
       lightForegroundColor: "#2b2118",
       darkPrimaryColor: "#f5e7d2",
       darkSecondaryColor: "#7c6345",
       darkAccentColor: "#f59e0b",
+      darkActionColor: "#f59e0b",
       darkBackgroundColor: "#20160d",
       darkForegroundColor: "#fef3e2",
     },
@@ -131,11 +149,13 @@ export const themeControlPresets: Array<{
       lightPrimaryColor: "#1e293b",
       lightSecondaryColor: "#334155",
       lightAccentColor: "#0284c7",
+      lightActionColor: "#22d3ee",
       lightBackgroundColor: "#e2e8f0",
       lightForegroundColor: "#0f172a",
       darkPrimaryColor: "#e5e7eb",
       darkSecondaryColor: "#64748b",
       darkAccentColor: "#22d3ee",
+      darkActionColor: "#22d3ee",
       darkBackgroundColor: "#0b1220",
       darkForegroundColor: "#f8fafc",
     },
@@ -149,11 +169,13 @@ const previewFallbackByMode: Record<ThemeMode, CustomThemeInput> = {
     lightPrimaryColor: "#1f2937",
     lightSecondaryColor: "#111827",
     lightAccentColor: "#f59e0b",
+    lightActionColor: "#f59e0b",
     lightBackgroundColor: "#ffffff",
     lightForegroundColor: "#171717",
     darkPrimaryColor: "#e2e8f0",
     darkSecondaryColor: "#334155",
     darkAccentColor: "#38bdf8",
+    darkActionColor: "#38bdf8",
     darkBackgroundColor: "#0f172a",
     darkForegroundColor: "#e2e8f0",
   },
@@ -161,11 +183,13 @@ const previewFallbackByMode: Record<ThemeMode, CustomThemeInput> = {
     lightPrimaryColor: "#1f2937",
     lightSecondaryColor: "#111827",
     lightAccentColor: "#f59e0b",
+    lightActionColor: "#f59e0b",
     lightBackgroundColor: "#ffffff",
     lightForegroundColor: "#171717",
     darkPrimaryColor: "#e2e8f0",
     darkSecondaryColor: "#334155",
     darkAccentColor: "#38bdf8",
+    darkActionColor: "#38bdf8",
     darkBackgroundColor: "#0f172a",
     darkForegroundColor: "#e2e8f0",
   },
@@ -173,11 +197,13 @@ const previewFallbackByMode: Record<ThemeMode, CustomThemeInput> = {
     lightPrimaryColor: "#1f2937",
     lightSecondaryColor: "#111827",
     lightAccentColor: "#f59e0b",
+    lightActionColor: "#f59e0b",
     lightBackgroundColor: "#ffffff",
     lightForegroundColor: "#171717",
     darkPrimaryColor: "#f8fafc",
     darkSecondaryColor: "#64748b",
     darkAccentColor: "#22d3ee",
+    darkActionColor: "#22d3ee",
     darkBackgroundColor: "#0f172a",
     darkForegroundColor: "#e2e8f0",
   },
@@ -254,6 +280,7 @@ export function ThemeControls({
     primaryColor: resolveColor(customTheme, "lightPrimaryColor", themeMode),
     secondaryColor: resolveColor(customTheme, "lightSecondaryColor", themeMode),
     accentColor: resolveColor(customTheme, "lightAccentColor", themeMode),
+    actionColor: resolveColor(customTheme, "lightActionColor", themeMode),
     backgroundColor: resolveColor(
       customTheme,
       "lightBackgroundColor",
@@ -270,6 +297,7 @@ export function ThemeControls({
     primaryColor: resolveColor(customTheme, "darkPrimaryColor", themeMode),
     secondaryColor: resolveColor(customTheme, "darkSecondaryColor", themeMode),
     accentColor: resolveColor(customTheme, "darkAccentColor", themeMode),
+    actionColor: resolveColor(customTheme, "darkActionColor", themeMode),
     backgroundColor: resolveColor(
       customTheme,
       "darkBackgroundColor",
@@ -457,11 +485,11 @@ export function ThemeControls({
               type="button"
               className="mt-3 rounded-full px-3 py-1.5 text-xs font-medium"
               style={{
-                backgroundColor: previewLightPalette.accentColor,
+                backgroundColor: previewLightPalette.actionColor,
                 color: previewLightPalette.backgroundColor,
               }}
             >
-              Accent Action
+              Action CTA
             </button>
           </div>
 
@@ -492,11 +520,11 @@ export function ThemeControls({
               type="button"
               className="mt-3 rounded-full px-3 py-1.5 text-xs font-medium"
               style={{
-                backgroundColor: previewDarkPalette.accentColor,
+                backgroundColor: previewDarkPalette.actionColor,
                 color: previewDarkPalette.backgroundColor,
               }}
             >
-              Accent Action
+              Action CTA
             </button>
           </div>
         </div>

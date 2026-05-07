@@ -68,9 +68,7 @@ export default async function Home() {
 
   const heroSlider = sliders[0] ?? null;
   const heroBanner =
-    banners.find((banner) => banner.placement === "HOME_HERO") ??
-    banners[0] ??
-    null;
+    banners.find((banner) => banner.placement === "NEW") ?? banners[0] ?? null;
 
   return (
     <PageShell width="wide" className={cn(bodyFont.className, "gap-10 py-10")}>

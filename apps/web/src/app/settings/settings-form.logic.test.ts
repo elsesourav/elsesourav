@@ -16,11 +16,13 @@ describe("settings form logic", () => {
       lightPrimaryColor: string;
       lightSecondaryColor: string;
       lightAccentColor: string;
+      lightActionColor: string;
       lightBackgroundColor: string;
       lightForegroundColor: string;
       darkPrimaryColor: string;
       darkSecondaryColor: string;
       darkAccentColor: string;
+      darkActionColor: string;
       darkBackgroundColor: string;
       darkForegroundColor: string;
     }> = {},
@@ -28,11 +30,13 @@ describe("settings form logic", () => {
     lightPrimaryColor: "",
     lightSecondaryColor: "",
     lightAccentColor: "",
+    lightActionColor: "",
     lightBackgroundColor: "",
     lightForegroundColor: "",
     darkPrimaryColor: "",
     darkSecondaryColor: "",
     darkAccentColor: "",
+    darkActionColor: "",
     darkBackgroundColor: "",
     darkForegroundColor: "",
     ...overrides,

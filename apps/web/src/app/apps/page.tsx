@@ -1,3 +1,4 @@
+import { AppsBannerSlider } from "@/app/apps/apps-banner-slider";
 import type { HomeBanner } from "@/components/home";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,7 +12,6 @@ import {
 } from "@/lib/view-models";
 import Image from "next/image";
 import Link from "next/link";
-import { AppsBannerSlider } from "@/app/apps/apps-banner-slider";
 
 type AppsPageSearchParams = {
   search?: string;
@@ -216,9 +216,12 @@ export default async function AppsPage({
         {
           id: `apps-fallback-${app.id}`,
           title: app.title,
+          subtitle: "Featured app",
           imageUrl,
           linkUrl: `/apps/${app.slug}`,
-          placement: "HOME_HERO" as const,
+          placement: "NEW" as const,
+          startsAt: null,
+          endsAt: null,
         },
       ];
     })

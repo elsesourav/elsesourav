@@ -18,7 +18,7 @@ export type ApiResponse<T> = ApiSuccess<T> | ApiFailure;
 
 export type StoreSectionType = "LATEST" | "UPCOMING" | "FEATURED";
 
-export type BannerPlacement = "HOME_HERO" | "LATEST" | "UPCOMING";
+export type BannerPlacement = "NEW" | "COMING_SOON" | "SPECIAL_OFFER" | "EVENT";
 
 export type ContentStatus = "DRAFT" | "SCHEDULED" | "PUBLISHED" | "ARCHIVED";
 
@@ -43,6 +43,7 @@ export type StoreSectionItemDto = {
 export type StoreBannerDto = {
   id: string;
   title: string;
+  subtitle: string | null;
   imageUrl: string;
   linkUrl: string | null;
   placement: BannerPlacement;
@@ -74,11 +75,13 @@ export type ThemeConfigDto = {
   primaryColor: string;
   secondaryColor: string;
   accentColor: string;
+  actionColor: string;
   backgroundColor: string;
   foregroundColor: string;
   darkPrimaryColor: string;
   darkSecondaryColor: string;
   darkAccentColor: string;
+  darkActionColor: string;
   darkBackgroundColor: string;
   darkForegroundColor: string;
   fontSans: string;

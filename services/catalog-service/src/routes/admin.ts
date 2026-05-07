@@ -2744,6 +2744,7 @@ adminCatalogRouter.post("/banners", async (req, res) => {
     const banner = await prisma.storeBanner.create({
       data: {
         title: parsed.data.title,
+        subtitle: parsed.data.subtitle ?? null,
         imageUrl: parsed.data.imageUrl,
         linkUrl: parsed.data.linkUrl ?? null,
         placement: parsed.data.placement,
@@ -2801,6 +2802,7 @@ adminCatalogRouter.patch("/banners/:id", async (req, res) => {
       where: { id: parsedId.data.id },
       data: {
         title: parsedBody.data.title,
+        subtitle: parsedBody.data.subtitle,
         imageUrl: parsedBody.data.imageUrl,
         linkUrl: parsedBody.data.linkUrl,
         placement: parsedBody.data.placement,

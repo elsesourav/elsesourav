@@ -249,6 +249,7 @@ export type AdminSectionItem = {
 export type AdminBanner = {
   id: string;
   title: string;
+  subtitle: string | null;
   imageUrl: string;
   linkUrl: string | null;
   placement: string;
@@ -417,11 +418,13 @@ export type AdminThemeConfig = {
   primaryColor: string;
   secondaryColor: string;
   accentColor: string;
+  actionColor: string;
   backgroundColor: string;
   foregroundColor: string;
   darkPrimaryColor: string;
   darkSecondaryColor: string;
   darkAccentColor: string;
+  darkActionColor: string;
   darkBackgroundColor: string;
   darkForegroundColor: string;
   fontSans: string;

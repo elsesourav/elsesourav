@@ -101,6 +101,7 @@ function fromCustomTheme(
     lightSecondaryColor:
       theme?.lightSecondaryColor ?? theme?.secondaryColor ?? "",
     lightAccentColor: theme?.lightAccentColor ?? theme?.accentColor ?? "",
+    lightActionColor: theme?.lightActionColor ?? theme?.actionColor ?? "",
     lightBackgroundColor:
       theme?.lightBackgroundColor ?? theme?.backgroundColor ?? "",
     lightForegroundColor:
@@ -108,6 +109,7 @@ function fromCustomTheme(
     darkPrimaryColor: theme?.darkPrimaryColor ?? "",
     darkSecondaryColor: theme?.darkSecondaryColor ?? "",
     darkAccentColor: theme?.darkAccentColor ?? "",
+    darkActionColor: theme?.darkActionColor ?? "",
     darkBackgroundColor: theme?.darkBackgroundColor ?? "",
     darkForegroundColor: theme?.darkForegroundColor ?? "",
   };

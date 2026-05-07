@@ -11,6 +11,7 @@ type ThemeColorField =
   | "primaryColor"
   | "secondaryColor"
   | "accentColor"
+  | "actionColor"
   | "backgroundColor"
   | "foregroundColor";
 
@@ -22,6 +23,7 @@ const fallbackLightPalette: ThemePalette = {
   primaryColor: "#1a2232",
   secondaryColor: "#1f5ed4",
   accentColor: "#f59e0b",
+  actionColor: "#f59e0b",
   backgroundColor: "#f4f6fb",
   foregroundColor: "#0f1420",
 };
@@ -30,6 +32,7 @@ const fallbackDarkPalette: ThemePalette = {
   primaryColor: "#e2e8f0",
   secondaryColor: "#93c5fd",
   accentColor: "#38bdf8",
+  actionColor: "#38bdf8",
   backgroundColor: "#0b1220",
   foregroundColor: "#e2e8f0",
 };
@@ -38,6 +41,7 @@ const lightOverrideKeys: Record<ThemeColorField, string> = {
   primaryColor: "lightPrimaryColor",
   secondaryColor: "lightSecondaryColor",
   accentColor: "lightAccentColor",
+  actionColor: "lightActionColor",
   backgroundColor: "lightBackgroundColor",
   foregroundColor: "lightForegroundColor",
 };
@@ -46,6 +50,7 @@ const darkOverrideKeys: Record<ThemeColorField, string> = {
   primaryColor: "darkPrimaryColor",
   secondaryColor: "darkSecondaryColor",
   accentColor: "darkAccentColor",
+  actionColor: "darkActionColor",
   backgroundColor: "darkBackgroundColor",
   foregroundColor: "darkForegroundColor",
 };
@@ -123,6 +128,10 @@ export function buildThemeVariables(options: {
     secondaryColor:
       activeTheme?.secondaryColor ?? fallbackLightPalette.secondaryColor,
     accentColor: activeTheme?.accentColor ?? fallbackLightPalette.accentColor,
+    actionColor:
+      activeTheme?.actionColor ??
+      activeTheme?.accentColor ??
+      fallbackLightPalette.actionColor,
     backgroundColor:
       activeTheme?.backgroundColor ?? fallbackLightPalette.backgroundColor,
     foregroundColor:
@@ -136,6 +145,10 @@ export function buildThemeVariables(options: {
       activeTheme?.darkSecondaryColor ?? fallbackDarkPalette.secondaryColor,
     accentColor:
       activeTheme?.darkAccentColor ?? fallbackDarkPalette.accentColor,
+    actionColor:
+      activeTheme?.darkActionColor ??
+      activeTheme?.darkAccentColor ??
+      fallbackDarkPalette.actionColor,
     backgroundColor:
       activeTheme?.darkBackgroundColor ?? fallbackDarkPalette.backgroundColor,
     foregroundColor:
@@ -154,6 +167,9 @@ export function buildThemeVariables(options: {
     accentColor:
       resolveCustomThemeColor(customTheme, "accentColor", "light") ??
       lightPalette.accentColor,
+    actionColor:
+      resolveCustomThemeColor(customTheme, "actionColor", "light") ??
+      lightPalette.actionColor,
     backgroundColor:
       resolveCustomThemeColor(customTheme, "backgroundColor", "light") ??
       lightPalette.backgroundColor,
@@ -172,6 +188,9 @@ export function buildThemeVariables(options: {
     accentColor:
       resolveCustomThemeColor(customTheme, "accentColor", "dark") ??
       darkPalette.accentColor,
+    actionColor:
+      resolveCustomThemeColor(customTheme, "actionColor", "dark") ??
+      darkPalette.actionColor,
     backgroundColor:
       resolveCustomThemeColor(customTheme, "backgroundColor", "dark") ??
       darkPalette.backgroundColor,
@@ -188,11 +207,13 @@ export function buildThemeVariables(options: {
       "--theme-light-primary": resolvedLight.primaryColor,
       "--theme-light-secondary": resolvedLight.secondaryColor,
       "--theme-light-accent": resolvedLight.accentColor,
+      "--theme-light-action": resolvedLight.actionColor,
       "--theme-light-background": resolvedLight.backgroundColor,
       "--theme-light-foreground": resolvedLight.foregroundColor,
       "--theme-dark-primary": resolvedDark.primaryColor,
       "--theme-dark-secondary": resolvedDark.secondaryColor,
       "--theme-dark-accent": resolvedDark.accentColor,
+      "--theme-dark-action": resolvedDark.actionColor,
       "--theme-dark-background": resolvedDark.backgroundColor,
       "--theme-dark-foreground": resolvedDark.foregroundColor,
       "--brand-font-sans": activeTheme?.fontSans ?? "Inter",

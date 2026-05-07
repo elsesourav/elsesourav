@@ -316,9 +316,10 @@ export const storeSectionTypeSchema = z.enum([
 ]);
 
 export const bannerPlacementSchema = z.enum([
-  "HOME_HERO",
-  "LATEST",
-  "UPCOMING",
+  "NEW",
+  "COMING_SOON",
+  "SPECIAL_OFFER",
+  "EVENT",
 ]);
 
 function isHttpUrl(value: string): boolean {
@@ -330,13 +331,13 @@ function isHttpUrl(value: string): boolean {
   }
 }
 
-const bannerLinkUrlSchema = z.string().trim().refine(
-  (value) => value.startsWith("/") || isHttpUrl(value),
-  {
+const bannerLinkUrlSchema = z
+  .string()
+  .trim()
+  .refine((value) => value.startsWith("/") || isHttpUrl(value), {
     message:
       "linkUrl must be a valid URL or an internal path that starts with '/'.",
-  },
-);
+  });
 
 const releaseWindowSchema = z
   .object({
@@ -388,16 +389,47 @@ export const sectionItemsQuerySchema = z.object({
 export const bannerCreateSchema = z
   .object({
     title: z.string().min(3).max(120),
+    subtitle: z.string().max(160).optional(),
     imageUrl: z.string().url(),
     linkUrl: bannerLinkUrlSchema.nullable().optional(),
-    placement: bannerPlacementSchema.default("HOME_HERO"),
+    placement: bannerPlacementSchema.default("NEW"),
     isActive: z.coerce.boolean().default(true),
   })
-  .and(releaseWindowSchema);
+  .and(releaseWindowSchema)
+  .superRefine((value, ctx) => {
+    const placement = value.placement;
+    const startsAt = value.startsAt;
+    const endsAt = value.endsAt;
+
+    if ((placement === "NEW" || placement === "COMING_SOON") && !startsAt) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["startsAt"],
+        message: "Launch date is required for New and Coming Soon banners.",
+      });
+    }
+
+    if ((placement === "SPECIAL_OFFER" || placement === "EVENT") && !startsAt) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["startsAt"],
+        message: "Start date is required for Special Offer and Event banners.",
+      });
+    }
+
+    if ((placement === "SPECIAL_OFFER" || placement === "EVENT") && !endsAt) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["endsAt"],
+        message: "End date is required for Special Offer and Event banners.",
+      });
+    }
+  });
 
 export const bannerUpdateSchema = z
   .object({
     title: z.string().min(3).max(120).optional(),
+    subtitle: z.string().max(160).optional(),
     imageUrl: z.string().url().optional(),
     linkUrl: bannerLinkUrlSchema.nullable().optional(),
     placement: bannerPlacementSchema.optional(),
@@ -716,11 +748,13 @@ export const themeConfigCreateSchema = z.object({
   primaryColor: hexColorSchema,
   secondaryColor: hexColorSchema,
   accentColor: hexColorSchema,
+  actionColor: hexColorSchema,
   backgroundColor: hexColorSchema,
   foregroundColor: hexColorSchema,
   darkPrimaryColor: hexColorSchema,
   darkSecondaryColor: hexColorSchema,
   darkAccentColor: hexColorSchema,
+  darkActionColor: hexColorSchema,
   darkBackgroundColor: hexColorSchema,
   darkForegroundColor: hexColorSchema,
   fontSans: z.string().min(2).max(120),

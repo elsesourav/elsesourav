@@ -18,11 +18,13 @@ type ThemeFormState = {
   primaryColor: string;
   secondaryColor: string;
   accentColor: string;
+  actionColor: string;
   backgroundColor: string;
   foregroundColor: string;
   darkPrimaryColor: string;
   darkSecondaryColor: string;
   darkAccentColor: string;
+  darkActionColor: string;
   darkBackgroundColor: string;
   darkForegroundColor: string;
   fontSans: string;
@@ -83,11 +85,13 @@ function createEmptyThemeForm(): ThemeFormState {
     primaryColor: "#1f2937",
     secondaryColor: "#0f172a",
     accentColor: "#f59e0b",
+    actionColor: "#f59e0b",
     backgroundColor: "#f8fafc",
     foregroundColor: "#111827",
     darkPrimaryColor: "#e2e8f0",
     darkSecondaryColor: "#334155",
     darkAccentColor: "#38bdf8",
+    darkActionColor: "#38bdf8",
     darkBackgroundColor: "#0b1220",
     darkForegroundColor: "#f8fafc",
     fontSans: "Inter",
@@ -103,11 +107,13 @@ function createThemeFormFromItem(item: AdminThemeConfig): ThemeFormState {
     primaryColor: item.primaryColor,
     secondaryColor: item.secondaryColor,
     accentColor: item.accentColor,
+    actionColor: item.actionColor,
     backgroundColor: item.backgroundColor,
     foregroundColor: item.foregroundColor,
     darkPrimaryColor: item.darkPrimaryColor,
     darkSecondaryColor: item.darkSecondaryColor,
     darkAccentColor: item.darkAccentColor,
+    darkActionColor: item.darkActionColor,
     darkBackgroundColor: item.darkBackgroundColor,
     darkForegroundColor: item.darkForegroundColor,
     fontSans: item.fontSans,
@@ -135,11 +141,13 @@ function validateThemeForm(form: ThemeFormState): string | null {
     form.primaryColor,
     form.secondaryColor,
     form.accentColor,
+    form.actionColor,
     form.backgroundColor,
     form.foregroundColor,
     form.darkPrimaryColor,
     form.darkSecondaryColor,
     form.darkAccentColor,
+    form.darkActionColor,
     form.darkBackgroundColor,
     form.darkForegroundColor,
   ];
@@ -169,11 +177,13 @@ function ThemePreview({
     | "primaryColor"
     | "secondaryColor"
     | "accentColor"
+    | "actionColor"
     | "backgroundColor"
     | "foregroundColor"
     | "darkPrimaryColor"
     | "darkSecondaryColor"
     | "darkAccentColor"
+    | "darkActionColor"
     | "darkBackgroundColor"
     | "darkForegroundColor"
     | "fontSans"
@@ -223,11 +233,11 @@ function ThemePreview({
           type="button"
           className="mt-3 rounded-full px-3 py-1.5 text-xs font-semibold"
           style={{
-            backgroundColor: normalizeHexColor(form.accentColor),
+            backgroundColor: normalizeHexColor(form.actionColor),
             color: normalizeHexColor(form.backgroundColor),
           }}
         >
-          Accent action
+          Action CTA
         </button>
       </article>
 
@@ -266,11 +276,11 @@ function ThemePreview({
           type="button"
           className="mt-3 rounded-full px-3 py-1.5 text-xs font-semibold"
           style={{
-            backgroundColor: normalizeHexColor(form.darkAccentColor),
+            backgroundColor: normalizeHexColor(form.darkActionColor),
             color: normalizeHexColor(form.darkBackgroundColor),
           }}
         >
-          Accent action
+          Action CTA
         </button>
       </article>
     </section>
@@ -310,6 +320,7 @@ function ThemeConfigCard({
           <ColorChip label="Primary" color={item.primaryColor} />
           <ColorChip label="Secondary" color={item.secondaryColor} />
           <ColorChip label="Accent" color={item.accentColor} />
+          <ColorChip label="Action" color={item.actionColor} />
           <ColorChip label="Background" color={item.backgroundColor} />
           <ColorChip label="Foreground" color={item.foregroundColor} />
         </div>
@@ -323,6 +334,7 @@ function ThemeConfigCard({
           <ColorChip label="Primary" color={item.darkPrimaryColor} />
           <ColorChip label="Secondary" color={item.darkSecondaryColor} />
           <ColorChip label="Accent" color={item.darkAccentColor} />
+          <ColorChip label="Action" color={item.darkActionColor} />
           <ColorChip label="Background" color={item.darkBackgroundColor} />
           <ColorChip label="Foreground" color={item.darkForegroundColor} />
         </div>
@@ -443,11 +455,13 @@ export function AdminThemeConfigsClient({
           primaryColor: normalizeHexColor(createForm.primaryColor),
           secondaryColor: normalizeHexColor(createForm.secondaryColor),
           accentColor: normalizeHexColor(createForm.accentColor),
+          actionColor: normalizeHexColor(createForm.actionColor),
           backgroundColor: normalizeHexColor(createForm.backgroundColor),
           foregroundColor: normalizeHexColor(createForm.foregroundColor),
           darkPrimaryColor: normalizeHexColor(createForm.darkPrimaryColor),
           darkSecondaryColor: normalizeHexColor(createForm.darkSecondaryColor),
           darkAccentColor: normalizeHexColor(createForm.darkAccentColor),
+          darkActionColor: normalizeHexColor(createForm.darkActionColor),
           darkBackgroundColor: normalizeHexColor(
             createForm.darkBackgroundColor,
           ),
@@ -527,11 +541,13 @@ export function AdminThemeConfigsClient({
             primaryColor: normalizeHexColor(editForm.primaryColor),
             secondaryColor: normalizeHexColor(editForm.secondaryColor),
             accentColor: normalizeHexColor(editForm.accentColor),
+            actionColor: normalizeHexColor(editForm.actionColor),
             backgroundColor: normalizeHexColor(editForm.backgroundColor),
             foregroundColor: normalizeHexColor(editForm.foregroundColor),
             darkPrimaryColor: normalizeHexColor(editForm.darkPrimaryColor),
             darkSecondaryColor: normalizeHexColor(editForm.darkSecondaryColor),
             darkAccentColor: normalizeHexColor(editForm.darkAccentColor),
+            darkActionColor: normalizeHexColor(editForm.darkActionColor),
             darkBackgroundColor: normalizeHexColor(
               editForm.darkBackgroundColor,
             ),
@@ -819,6 +835,12 @@ function ThemeEditorFields({
         onChange={(value) => updateField("accentColor", value)}
       />
       <ColorField
+        id="theme-action"
+        label="Action color"
+        value={form.actionColor}
+        onChange={(value) => updateField("actionColor", value)}
+      />
+      <ColorField
         id="theme-background"
         label="Background color"
         value={form.backgroundColor}
@@ -854,6 +876,12 @@ function ThemeEditorFields({
         label="Dark accent color"
         value={form.darkAccentColor}
         onChange={(value) => updateField("darkAccentColor", value)}
+      />
+      <ColorField
+        id="theme-dark-action"
+        label="Dark action color"
+        value={form.darkActionColor}
+        onChange={(value) => updateField("darkActionColor", value)}
       />
       <ColorField
         id="theme-dark-background"

@@ -2,21 +2,25 @@
 @import "../components/ui/markdown-content.css";
 
 :root {
-  --theme-light-primary: #1a2232;
-  --theme-light-secondary: #1f5ed4;
+  --theme-light-primary: #1f2937;
+  --theme-light-secondary: #111827;
   --theme-light-accent: #f59e0b;
-  --theme-light-background: #f4f6fb;
-  --theme-light-foreground: #0f1420;
+  --theme-light-action: #f59e0b;
+  --theme-light-background: #ffffff;
+  --theme-light-foreground: #171717;
   --theme-dark-primary: #e2e8f0;
-  --theme-dark-secondary: #93c5fd;
+  --theme-dark-secondary: #334155;
   --theme-dark-accent: #38bdf8;
+  --theme-dark-action: #38bdf8;
   --theme-dark-background: #0b1220;
-  --theme-dark-foreground: #e2e8f0;
+  --theme-dark-foreground: #f8fafc;
   --background: var(--theme-light-background);
   --foreground: var(--theme-light-foreground);
   --brand-primary: var(--theme-light-primary);
   --brand-secondary: var(--theme-light-secondary);
   --brand-accent: var(--theme-light-accent);
+  --accent: var(--theme-light-accent);
+  --action: var(--theme-light-action);
   --brand-font-sans: "Inter";
   --brand-font-heading: "Manrope";
   --brand-heading-scale: 1.05;
@@ -38,6 +42,7 @@ html[data-theme-mode="light"] {
   --brand-secondary: var(--theme-light-secondary);
   --brand-accent: var(--theme-light-accent);
   --accent: var(--theme-light-accent);
+  --action: var(--theme-light-action);
 }
 
 html[data-theme-mode="dark"] {
@@ -47,6 +52,8 @@ html[data-theme-mode="dark"] {
   --brand-primary: var(--theme-dark-primary);
   --brand-secondary: var(--theme-dark-secondary);
   --brand-accent: var(--theme-dark-accent);
+  --accent: var(--theme-dark-accent);
+  --action: var(--theme-dark-action);
 }
 
 html[data-theme-mode="system"] {
@@ -56,6 +63,8 @@ html[data-theme-mode="system"] {
   --brand-primary: var(--theme-light-primary);
   --brand-secondary: var(--theme-light-secondary);
   --brand-accent: var(--theme-light-accent);
+  --accent: var(--theme-light-accent);
+  --action: var(--theme-light-action);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -66,12 +75,18 @@ html[data-theme-mode="system"] {
     --brand-primary: var(--theme-dark-primary);
     --brand-secondary: var(--theme-dark-secondary);
     --brand-accent: var(--theme-dark-accent);
+    --accent: var(--theme-dark-accent);
+    --action: var(--theme-dark-action);
   }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--brand-primary);
+  --color-secondary: var(--brand-secondary);
+  --color-accent: var(--brand-accent);
+  --color-action: var(--action);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

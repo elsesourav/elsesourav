@@ -153,7 +153,7 @@ const Navigation = ({
                     ),
                   ].join(" ")}
                 >
-                  <span className="inline-flex items-center gap-2">
+                  <span className="inline-flex items-center gap-2 font-bold [text-shadow:0_0_0.5px_white,0_0_1px_white,0_0_1.5px_white]">
                     <NavItemIcon
                       href={item.href}
                       className="h-6 w-5 text-current [&_path]:fill-current"
