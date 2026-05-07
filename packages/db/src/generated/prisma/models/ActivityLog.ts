@@ -168,7 +168,7 @@ export type ActivityLogGroupByOutputType = {
   _max: ActivityLogMaxAggregateOutputType | null
 }
 
-type GetActivityLogGroupByPayload<T extends ActivityLogGroupByArgs> = Prisma.PrismaPromise<
+export type GetActivityLogGroupByPayload<T extends ActivityLogGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ActivityLogGroupByOutputType, T['by']> &
       {

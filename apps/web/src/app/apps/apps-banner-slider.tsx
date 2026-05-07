@@ -4,6 +4,21 @@ import { CardCarousel, type CarouselCard } from "@/components/CardCarousel";
 import type { HomeBanner } from "@/components/home";
 import { useMemo } from "react";
 
+function toPlacementLabel(placement: HomeBanner["placement"]): string {
+  switch (placement) {
+    case "NEW":
+      return "New";
+    case "COMING_SOON":
+      return "Coming Soon";
+    case "SPECIAL_OFFER":
+      return "Special Offer";
+    case "EVENT":
+      return "Event";
+    default:
+      return "Banner";
+  }
+}
+
 function toPlacementBadgeClass(placement: HomeBanner["placement"]): string {
   switch (placement) {
     case "NEW":
@@ -32,8 +47,8 @@ function formatBannerDate(value: string | null): string | null {
 }
 
 function buildMeta(banner: HomeBanner): string | undefined {
-  const starts = formatBannerDate(banner.startsAt);
-  const ends = formatBannerDate(banner.endsAt);
+  const starts = formatBannerDate(banner.appStartsAt);
+  const ends = formatBannerDate(banner.appEndsAt);
 
   switch (banner.placement) {
     case "NEW":
@@ -41,12 +56,27 @@ function buildMeta(banner: HomeBanner): string | undefined {
       return starts ? `Launches ${starts}` : undefined;
     case "SPECIAL_OFFER":
     case "EVENT":
-      if (starts && ends) return `${starts} - ${ends}`;
       if (starts) return `Starts ${starts}`;
+      if (ends) return `Ends ${ends}`;
       return undefined;
     default:
       return undefined;
   }
+}
+
+function buildDetails(banner: HomeBanner): string[] | undefined {
+  const details: string[] = [];
+  const starts = formatBannerDate(banner.appStartsAt);
+  const ends = formatBannerDate(banner.appEndsAt);
+
+  if (banner.placement === "NEW" || banner.placement === "COMING_SOON") {
+    if (starts) details.push(`Launch date: ${starts}`);
+  } else {
+    if (starts) details.push(`Start: ${starts}`);
+    if (ends) details.push(`End: ${ends}`);
+  }
+
+  return details.length > 0 ? details : undefined;
 }
 
 export function AppsBannerSlider({ banners }: { banners: HomeBanner[] }) {
@@ -57,11 +87,12 @@ export function AppsBannerSlider({ banners }: { banners: HomeBanner[] }) {
         .slice(0, 6)
         .map((banner) => ({
           id: banner.id,
-          category: banner.placement,
+          category: toPlacementLabel(banner.placement),
           categoryClassName: toPlacementBadgeClass(banner.placement),
           title: banner.title,
           subtitle: banner.subtitle ?? undefined,
           meta: buildMeta(banner),
+          details: buildDetails(banner),
           image: banner.imageUrl,
           href: banner.linkUrl?.trim() || "/apps",
         })),

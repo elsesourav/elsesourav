@@ -161,7 +161,7 @@ export type CustomFieldValueGroupByOutputType = {
   _max: CustomFieldValueMaxAggregateOutputType | null
 }
 
-type GetCustomFieldValueGroupByPayload<T extends CustomFieldValueGroupByArgs> = Prisma.PrismaPromise<
+export type GetCustomFieldValueGroupByPayload<T extends CustomFieldValueGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<CustomFieldValueGroupByOutputType, T['by']> &
       {

@@ -416,11 +416,13 @@ export function SettingsForm({
         lightAccentColor: "",
         lightBackgroundColor: "",
         lightForegroundColor: "",
+        lightActionColor: "",
         darkPrimaryColor: "",
         darkSecondaryColor: "",
         darkAccentColor: "",
         darkBackgroundColor: "",
         darkForegroundColor: "",
+        darkActionColor: "",
       },
     }));
   }

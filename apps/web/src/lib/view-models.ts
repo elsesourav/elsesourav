@@ -254,8 +254,10 @@ export type AdminBanner = {
   linkUrl: string | null;
   placement: string;
   isActive: boolean;
-  startsAt: string | null;
-  endsAt: string | null;
+  liveStartsAt: string | null;
+  liveEndsAt: string | null;
+  appStartsAt: string | null;
+  appEndsAt: string | null;
   createdAt: string;
   updatedAt: string;
 };

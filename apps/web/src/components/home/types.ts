@@ -17,8 +17,10 @@ export type HomeBanner = {
   imageUrl: string;
   linkUrl: string | null;
   placement: "NEW" | "COMING_SOON" | "SPECIAL_OFFER" | "EVENT";
-  startsAt: string | null;
-  endsAt: string | null;
+  liveStartsAt: string | null;
+  liveEndsAt: string | null;
+  appStartsAt: string | null;
+  appEndsAt: string | null;
 };
 
 export type SupportOverviewCategory = {

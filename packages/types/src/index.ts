@@ -47,8 +47,10 @@ export type StoreBannerDto = {
   imageUrl: string;
   linkUrl: string | null;
   placement: BannerPlacement;
-  startsAt: string | null;
-  endsAt: string | null;
+  liveStartsAt: string | null;
+  liveEndsAt: string | null;
+  appStartsAt: string | null;
+  appEndsAt: string | null;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;

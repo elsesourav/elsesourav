@@ -10,9 +10,9 @@
   },
   "dependencies": {
     "@elsesourav/config": "*",
-    "@upstash/redis": "^1.35.6"
+    "@upstash/redis": "^1.38.0"
   },
   "devDependencies": {
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   }
 }

@@ -175,7 +175,7 @@ export type BlogPostVersionGroupByOutputType = {
   _max: BlogPostVersionMaxAggregateOutputType | null
 }
 
-type GetBlogPostVersionGroupByPayload<T extends BlogPostVersionGroupByArgs> = Prisma.PrismaPromise<
+export type GetBlogPostVersionGroupByPayload<T extends BlogPostVersionGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<BlogPostVersionGroupByOutputType, T['by']> &
       {

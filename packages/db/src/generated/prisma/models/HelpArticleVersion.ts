@@ -165,7 +165,7 @@ export type HelpArticleVersionGroupByOutputType = {
   _max: HelpArticleVersionMaxAggregateOutputType | null
 }
 
-type GetHelpArticleVersionGroupByPayload<T extends HelpArticleVersionGroupByArgs> = Prisma.PrismaPromise<
+export type GetHelpArticleVersionGroupByPayload<T extends HelpArticleVersionGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<HelpArticleVersionGroupByOutputType, T['by']> &
       {

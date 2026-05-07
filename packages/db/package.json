@@ -15,13 +15,13 @@
     "typecheck": "npm run db:generate && tsc --noEmit"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.0.1",
-    "@prisma/client": "^7.0.1",
-    "bcryptjs": "^3.0.2"
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "bcryptjs": "^3.0.3"
   },
   "devDependencies": {
-    "prisma": "^7.0.1",
-    "tsx": "^4.20.0",
-    "typescript": "^5.9.3"
+    "prisma": "^7.8.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3"
   }
 }

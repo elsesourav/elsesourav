@@ -1,7 +1,7 @@
 {
   "/Users/sourav/Developer/WEB/elsesourav/packages/types/src/index.ts": {
-    "mtime": 1773765311.3719542,
-    "hash": "ddd6f1662d671246631585e9260136eb"
+    "mtime": 1778140859.3536072,
+    "hash": "bf0b8bb28c7d1375b04f32f117ad661c"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/cache/src/index.ts": {
     "mtime": 1773586616.5409968,
@@ -20,8 +20,8 @@
     "hash": "7e9cbace5ed217e61b3b9f7a11bcee0c"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/prisma/seed.ts": {
-    "mtime": 1776399567.3750513,
-    "hash": "ad6d1ece1770764faa0caecb85bf410a"
+    "mtime": 1778140859.915319,
+    "hash": "98f17fb0293b5ba7a8ce4edba3e2b358"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/prisma/migrations/20260315220911_ps_aux_grep_e_prisma_migrate_dev_prisma_migrate_npm_run_db_migrate_grep_v_grep/migration.sql": {
     "mtime": 1773612551.5781431,
@@ -50,6 +50,14 @@
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/prisma/migrations/20260316220313_add_category_deletion_lifecycle/migration.sql": {
     "mtime": 1773698593.290287,
     "hash": "e2dada576a759305ab021c28d330a091"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/packages/db/prisma/migrations/20260506090000_update_banner_placements_add_subtitle/migration.sql": {
+    "mtime": 1778089491.5993395,
+    "hash": "ee3853de7dc56ff2d58ae61bed9f27c9"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/packages/db/prisma/migrations/20260506113000_add_action_color_to_theme_config/migration.sql": {
+    "mtime": 1778140858.5745962,
+    "hash": "8736d0b5e6e3f0539e9669f78ca636fd"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/prisma/migrations/20260316001258_add_services_phase1_content_catalog_user_modules/migration.sql": {
     "mtime": 1773619978.4920034,
@@ -260,8 +268,8 @@
     "hash": "aeb7ca37d0880e3d1aa55d3beeb937ec"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/validation/src/index.ts": {
-    "mtime": 1776832851.434682,
-    "hash": "2103fd94c6cbaa519b5001d7c4ca1ee5"
+    "mtime": 1778140859.941912,
+    "hash": "346e22b3ea1bbf58115fe2353d8c087a"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/postcss.config.mjs": {
     "mtime": 1773584783.8345182,
@@ -320,8 +328,8 @@
     "hash": "48e33d2b7b9a6b33185ebe8b3c2f5731"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/page.tsx": {
-    "mtime": 1776409528.8776262,
-    "hash": "3415c6c1f997d135653cac47c1a6aa95"
+    "mtime": 1778089500.0096796,
+    "hash": "c1a0d9819cf447f29ed4479e6052b3a9"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/not-found.tsx": {
     "mtime": 1774841730.4825318,
@@ -336,16 +344,16 @@
     "hash": "2d4cc3c64bc5751a08ea4bdc282ef302"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/settings/theme-controls.tsx": {
-    "mtime": 1774810315.0067232,
-    "hash": "071af670b4f0a85ddccc41fa80aac6ff"
+    "mtime": 1778090989.581849,
+    "hash": "089f434ed9ee4d8191139df353bb0323"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/settings/settings-form.tsx": {
-    "mtime": 1777969608.8985062,
-    "hash": "44303ef77522ee5823b276fffb2a21b7"
+    "mtime": 1778090994.7317784,
+    "hash": "7fc29277bfdd2b745acfbdfbd3e439d1"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/settings/settings-form.logic.test.ts": {
-    "mtime": 1774810314.8926296,
-    "hash": "8b2d9e259a53326fe6a6eb9b890ecc97"
+    "mtime": 1778091004.8094435,
+    "hash": "804254c03932edb31fc9dee3182cebf8"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/settings/notification-controls.logic.test.ts": {
     "mtime": 1773694878.88171,
@@ -356,8 +364,8 @@
     "hash": "509a5b8dfc3c5ce5abfb3175ad5a00fc"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/settings/theme-controls.component.test.ts": {
-    "mtime": 1774810315.1118288,
-    "hash": "e66aee232aef96fe31677063f872a4da"
+    "mtime": 1778090999.0032265,
+    "hash": "8f9bbd92ef17d60b264bd36952d1268a"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/settings/deletion-controls.tsx": {
     "mtime": 1773694878.909557,
@@ -440,8 +448,8 @@
     "hash": "51ec2e000231e8d8039d3491776b5e03"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/admin/theme/configs/client.tsx": {
-    "mtime": 1774812482.9608414,
-    "hash": "edcc2fe04ff72dbbe19a3264a3445d27"
+    "mtime": 1778090973.681572,
+    "hash": "5ed994f34ce3b94071c67c4f1baea68d"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/admin/theme/configs/page.tsx": {
     "mtime": 1774841729.75458,
@@ -504,8 +512,8 @@
     "hash": "af8b66df1ed2aae794e5f66619e94ea3"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/admin/store/banners/client.tsx": {
-    "mtime": 1776832871.7869558,
-    "hash": "2126b5fe6ad0f90fd695dc4bef9b6471"
+    "mtime": 1778089498.6226125,
+    "hash": "eb24be56f69f114a5bc2484f3fddf5d9"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/admin/store/banners/page.tsx": {
     "mtime": 1773731594.4513197,
@@ -956,12 +964,12 @@
     "hash": "bfc9f9c7ef673955125a11a9eba16b2e"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/apps/apps-banner-slider.tsx": {
-    "mtime": 1776838165.3005426,
-    "hash": "6acf8940a1347c049636449c629dc396"
+    "mtime": 1778140097.1378272,
+    "hash": "e6f761997c2d9d0271c3b31c1238f9b0"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/apps/page.tsx": {
-    "mtime": 1776838247.9002228,
-    "hash": "30121a0d8221f41e5960503970db71aa"
+    "mtime": 1778089500.9263787,
+    "hash": "8bf9682e1884442a8004186495cf98d6"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/apps/[slug]/app-detail-actions.tsx": {
     "mtime": 1774815135.2475321,
@@ -1002,6 +1010,10 @@
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/utils/cx.ts": {
     "mtime": 1776836893.0934045,
     "hash": "23c6cbafe222e228c855a4375c5b7fe0"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/CardCarousel.tsx": {
+    "mtime": 1778140789.1725988,
+    "hash": "5489be317665810e42050d4e45a70583"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/ui/markdown-content.tsx": {
     "mtime": 1777995755.6290884,
@@ -1072,8 +1084,8 @@
     "hash": "1a28412d4dd12f8f8f08f8a38afd6ddd"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/home/types.ts": {
-    "mtime": 1776409529.4938035,
-    "hash": "d4f8fd25483480a450ea956950d6fa5c"
+    "mtime": 1778089494.6923118,
+    "hash": "101d20d0f6e670ed503a6d897a171067"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/home/discovery-rail.tsx": {
     "mtime": 1776435668.23547,
@@ -1088,7 +1100,7 @@
     "hash": "b2e8e269301946639fe28e6daaeec22d"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/layout/header.tsx": {
-    "mtime": 1778018241.7900996,
+    "mtime": 1778051935.386749,
     "hash": "295297fd79ac1e97526b505b675c4472"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/layout/public-site-shell.tsx": {
@@ -1096,8 +1108,8 @@
     "hash": "703a2ebdc4d5cd6fa5233a320bdd26eb"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/layout/Navigation.tsx": {
-    "mtime": 1778019842.959917,
-    "hash": "bfaccbda6d0e6968bb2ac901d19708f6"
+    "mtime": 1778053412.4793217,
+    "hash": "541c2fbcf52becc57a63ac45c5174d3a"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/providers/mui-emotion-cache-provider.tsx": {
     "mtime": 1776479735.5139809,
@@ -1172,8 +1184,8 @@
     "hash": "c9da20cf8816b78c394d45ace84722fe"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/lib/view-models.ts": {
-    "mtime": 1776409524.370198,
-    "hash": "7e13c31e47e79fce96e86e78f7899d97"
+    "mtime": 1778090907.6635096,
+    "hash": "b3ab07b051dcc8850752d5a1d430a4ac"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/lib/markdown.ts": {
     "mtime": 1776399570.506185,
@@ -1192,8 +1204,8 @@
     "hash": "a9fa5624197886cc37b806f54b69a339"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/lib/theme-runtime.ts": {
-    "mtime": 1776479735.3915155,
-    "hash": "b049443df6cedc6613d90f521b14e393"
+    "mtime": 1778090917.5337267,
+    "hash": "f52eedb01bed1a80be16b4cd90074087"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/lib/page-access.ts": {
     "mtime": 1773725744.402655,
@@ -1256,8 +1268,8 @@
     "hash": "8b7bd611f1835690ab5edadf698908f3"
   },
   "/Users/sourav/Developer/WEB/elsesourav/services/theme-service/src/routes/admin.ts": {
-    "mtime": 1773765313.3396804,
-    "hash": "53c27524227eca602a353a44c14ce69e"
+    "mtime": 1778090904.744554,
+    "hash": "70c3ec3ce968abb1c7a827eeb6892bd1"
   },
   "/Users/sourav/Developer/WEB/elsesourav/services/theme-service/src/routes/health.ts": {
     "mtime": 1773589488.4033754,
@@ -1292,8 +1304,8 @@
     "hash": "f499ccb9b9133e4ed607c59565866d8c"
   },
   "/Users/sourav/Developer/WEB/elsesourav/services/catalog-service/src/routes/admin.ts": {
-    "mtime": 1776399567.8903437,
-    "hash": "751b0dbf6734cf66a949f615c8e6033c"
+    "mtime": 1778089497.7756674,
+    "hash": "feb7dc0988fdd2e05d726c56c2e17092"
   },
   "/Users/sourav/Developer/WEB/elsesourav/services/catalog-service/src/routes/health.ts": {
     "mtime": 1773589488.1319876,

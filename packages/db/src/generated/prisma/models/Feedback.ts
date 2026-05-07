@@ -227,7 +227,7 @@ export type FeedbackGroupByOutputType = {
   _max: FeedbackMaxAggregateOutputType | null
 }
 
-type GetFeedbackGroupByPayload<T extends FeedbackGroupByArgs> = Prisma.PrismaPromise<
+export type GetFeedbackGroupByPayload<T extends FeedbackGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<FeedbackGroupByOutputType, T['by']> &
       {

@@ -322,6 +322,17 @@ export const bannerPlacementSchema = z.enum([
   "EVENT",
 ]);
 
+const bannerPlacementInputSchema = z.preprocess((value) => {
+  if (value === "HOME_HERO") return "NEW";
+  if (value === "LATEST") return "SPECIAL_OFFER";
+  if (value === "UPCOMING") return "COMING_SOON";
+  return value;
+}, bannerPlacementSchema);
+
+const bannerPlacementWithDefaultSchema = bannerPlacementInputSchema
+  .optional()
+  .transform((value) => value ?? "NEW");
+
 function isHttpUrl(value: string): boolean {
   try {
     const parsed = new URL(value);
@@ -351,6 +362,41 @@ const releaseWindowSchema = z
         path: ["endsAt"],
         message: "endsAt must be greater than startsAt.",
       });
+    }
+  });
+
+const bannerWindowSchema = z
+  .object({
+    liveStartsAt: z.coerce.date().optional(),
+    liveEndsAt: z.coerce.date().optional(),
+    appStartsAt: z.coerce.date().optional(),
+    appEndsAt: z.coerce.date().optional(),
+  })
+  .superRefine((value, ctx) => {
+    if (value.liveStartsAt && value.liveEndsAt) {
+      if (value.liveEndsAt <= value.liveStartsAt) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["liveEndsAt"],
+          message: "liveEndsAt must be greater than liveStartsAt.",
+        });
+      }
+    } else if (value.liveStartsAt || value.liveEndsAt) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["liveEndsAt"],
+        message: "Both liveStartsAt and liveEndsAt are required.",
+      });
+    }
+
+    if (value.appStartsAt && value.appEndsAt) {
+      if (value.appEndsAt <= value.appStartsAt) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["appEndsAt"],
+          message: "appEndsAt must be greater than appStartsAt.",
+        });
+      }
     }
   });
 
@@ -389,38 +435,54 @@ export const sectionItemsQuerySchema = z.object({
 export const bannerCreateSchema = z
   .object({
     title: z.string().min(3).max(120),
-    subtitle: z.string().max(160).optional(),
+    subtitle: z.string().max(160).nullable().optional(),
     imageUrl: z.string().url(),
     linkUrl: bannerLinkUrlSchema.nullable().optional(),
-    placement: bannerPlacementSchema.default("NEW"),
+    placement: bannerPlacementWithDefaultSchema,
     isActive: z.coerce.boolean().default(true),
   })
-  .and(releaseWindowSchema)
+  .and(bannerWindowSchema)
   .superRefine((value, ctx) => {
     const placement = value.placement;
-    const startsAt = value.startsAt;
-    const endsAt = value.endsAt;
+    const appStartsAt = value.appStartsAt;
+    const appEndsAt = value.appEndsAt;
+    const liveStartsAt = value.liveStartsAt;
+    const liveEndsAt = value.liveEndsAt;
 
-    if ((placement === "NEW" || placement === "COMING_SOON") && !startsAt) {
+    if (!liveStartsAt || !liveEndsAt) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        path: ["startsAt"],
+        path: ["liveStartsAt"],
+        message: "Visibility window is required for all banners.",
+      });
+    }
+
+    if ((placement === "NEW" || placement === "COMING_SOON") && !appStartsAt) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["appStartsAt"],
         message: "Launch date is required for New and Coming Soon banners.",
       });
     }
 
-    if ((placement === "SPECIAL_OFFER" || placement === "EVENT") && !startsAt) {
+    if (
+      (placement === "SPECIAL_OFFER" || placement === "EVENT") &&
+      !appStartsAt
+    ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        path: ["startsAt"],
+        path: ["appStartsAt"],
         message: "Start date is required for Special Offer and Event banners.",
       });
     }
 
-    if ((placement === "SPECIAL_OFFER" || placement === "EVENT") && !endsAt) {
+    if (
+      (placement === "SPECIAL_OFFER" || placement === "EVENT") &&
+      !appEndsAt
+    ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        path: ["endsAt"],
+        path: ["appEndsAt"],
         message: "End date is required for Special Offer and Event banners.",
       });
     }
@@ -429,21 +491,41 @@ export const bannerCreateSchema = z
 export const bannerUpdateSchema = z
   .object({
     title: z.string().min(3).max(120).optional(),
-    subtitle: z.string().max(160).optional(),
+    subtitle: z.string().max(160).nullable().optional(),
     imageUrl: z.string().url().optional(),
     linkUrl: bannerLinkUrlSchema.nullable().optional(),
-    placement: bannerPlacementSchema.optional(),
-    startsAt: z.coerce.date().optional(),
-    endsAt: z.coerce.date().optional(),
+    placement: bannerPlacementInputSchema.optional(),
+    liveStartsAt: z.coerce.date().optional(),
+    liveEndsAt: z.coerce.date().optional(),
+    appStartsAt: z.coerce.date().optional(),
+    appEndsAt: z.coerce.date().optional(),
     isActive: z.coerce.boolean().optional(),
   })
   .superRefine((value, ctx) => {
-    if (value.startsAt && value.endsAt && value.endsAt <= value.startsAt) {
+    if (value.liveStartsAt && value.liveEndsAt) {
+      if (value.liveEndsAt <= value.liveStartsAt) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["liveEndsAt"],
+          message: "liveEndsAt must be greater than liveStartsAt.",
+        });
+      }
+    } else if (value.liveStartsAt || value.liveEndsAt) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        path: ["endsAt"],
-        message: "endsAt must be greater than startsAt.",
+        path: ["liveEndsAt"],
+        message: "Both liveStartsAt and liveEndsAt are required.",
       });
+    }
+
+    if (value.appStartsAt && value.appEndsAt) {
+      if (value.appEndsAt <= value.appStartsAt) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["appEndsAt"],
+          message: "appEndsAt must be greater than appStartsAt.",
+        });
+      }
     }
   });
 
@@ -550,7 +632,10 @@ export const userThemeModeSchema = z.enum(["system", "light", "dark"]);
 export const userSettingsUpdateSchema = z
   .object({
     themeMode: userThemeModeSchema.optional(),
-    customTheme: z.record(z.string().max(200)).nullable().optional(),
+    customTheme: z
+      .record(z.string(), z.string().max(200))
+      .nullable()
+      .optional(),
     emailNotifications: z.coerce.boolean().optional(),
     marketingEmails: z.coerce.boolean().optional(),
   })

@@ -237,7 +237,7 @@ export type ContentPageVersionGroupByOutputType = {
   _max: ContentPageVersionMaxAggregateOutputType | null
 }
 
-type GetContentPageVersionGroupByPayload<T extends ContentPageVersionGroupByArgs> = Prisma.PrismaPromise<
+export type GetContentPageVersionGroupByPayload<T extends ContentPageVersionGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ContentPageVersionGroupByOutputType, T['by']> &
       {

@@ -22,8 +22,10 @@ type BannerFormState = {
   imageUrl: string;
   linkUrl: string;
   placement: BannerPlacement;
-  startsAt: string;
-  endsAt: string;
+  liveStartsAt: string;
+  liveEndsAt: string;
+  appStartsAt: string;
+  appEndsAt: string;
   isActive: boolean;
 };
 
@@ -54,6 +56,10 @@ function getPlacementDateLabel(placement: BannerPlacement): {
     default:
       return { startsLabel: "Starts", endsLabel: "Ends" };
   }
+}
+
+function getLiveDateLabel(): { startsLabel: string; endsLabel: string } {
+  return { startsLabel: "Visible from", endsLabel: "Visible until" };
 }
 
 function toSortedBanners(items: AdminBanner[]) {
@@ -130,8 +136,10 @@ function createEmptyBannerForm(): BannerFormState {
     imageUrl: "",
     linkUrl: "",
     placement: "NEW",
-    startsAt: "",
-    endsAt: "",
+    liveStartsAt: "",
+    liveEndsAt: "",
+    appStartsAt: "",
+    appEndsAt: "",
     isActive: true,
   };
 }
@@ -143,8 +151,10 @@ function createBannerFormFromItem(item: AdminBanner): BannerFormState {
     imageUrl: item.imageUrl,
     linkUrl: item.linkUrl ?? "",
     placement: item.placement as BannerPlacement,
-    startsAt: toDateTimeLocal(item.startsAt),
-    endsAt: toDateTimeLocal(item.endsAt),
+    liveStartsAt: toDateTimeLocal(item.liveStartsAt),
+    liveEndsAt: toDateTimeLocal(item.liveEndsAt),
+    appStartsAt: toDateTimeLocal(item.appStartsAt),
+    appEndsAt: toDateTimeLocal(item.appEndsAt),
     isActive: item.isActive,
   };
 }
@@ -186,23 +196,27 @@ function validateBannerForm(form: BannerFormState): string | null {
     return "Banner title must contain at least 3 characters.";
   }
 
+  if (!form.liveStartsAt || !form.liveEndsAt) {
+    return "Visibility window (visible from/until) is required for all banners.";
+  }
+
   if (
     (form.placement === "NEW" || form.placement === "COMING_SOON") &&
-    !form.startsAt
+    !form.appStartsAt
   ) {
     return "Launch date is required for New and Coming Soon banners.";
   }
 
   if (
     (form.placement === "SPECIAL_OFFER" || form.placement === "EVENT") &&
-    !form.startsAt
+    !form.appStartsAt
   ) {
     return "Start date is required for Special Offer and Event banners.";
   }
 
   if (
     (form.placement === "SPECIAL_OFFER" || form.placement === "EVENT") &&
-    !form.endsAt
+    !form.appEndsAt
   ) {
     return "End date is required for Special Offer and Event banners.";
   }
@@ -217,11 +231,19 @@ function validateBannerForm(form: BannerFormState): string | null {
     return "Banner link URL must be a valid URL or internal path (for example /apps).";
   }
 
-  if (form.startsAt && form.endsAt) {
-    const startsAt = new Date(form.startsAt);
-    const endsAt = new Date(form.endsAt);
-    if (endsAt <= startsAt) {
-      return "End time must be after start time.";
+  if (form.liveStartsAt && form.liveEndsAt) {
+    const liveStartsAt = new Date(form.liveStartsAt);
+    const liveEndsAt = new Date(form.liveEndsAt);
+    if (liveEndsAt <= liveStartsAt) {
+      return "Visible until must be after visible from.";
+    }
+  }
+
+  if (form.appStartsAt && form.appEndsAt) {
+    const appStartsAt = new Date(form.appStartsAt);
+    const appEndsAt = new Date(form.appEndsAt);
+    if (appEndsAt <= appStartsAt) {
+      return "App end date must be after app start date.";
     }
   }
 
@@ -234,21 +256,30 @@ function BannerVisualPreview({
   imageUrl,
   placement,
   linkUrl,
-  startsAt,
-  endsAt,
+  liveStartsAt,
+  liveEndsAt,
+  appStartsAt,
+  appEndsAt,
 }: {
   title: string;
   subtitle: string;
   imageUrl: string;
   placement: BannerPlacement;
   linkUrl: string;
-  startsAt: string;
-  endsAt: string;
+  liveStartsAt: string;
+  liveEndsAt: string;
+  appStartsAt: string;
+  appEndsAt: string;
 }) {
   const placementLabel = bannerPlacementLabels[placement];
   const dateLabels = getPlacementDateLabel(placement);
-  const startsLabel = startsAt ? formatDateTime(startsAt) : "No date";
-  const endsLabel = endsAt ? formatDateTime(endsAt) : "No end";
+  const liveLabels = getLiveDateLabel();
+  const liveStartsLabel = liveStartsAt
+    ? formatDateTime(liveStartsAt)
+    : "No date";
+  const liveEndsLabel = liveEndsAt ? formatDateTime(liveEndsAt) : "No date";
+  const appStartsLabel = appStartsAt ? formatDateTime(appStartsAt) : "No date";
+  const appEndsLabel = appEndsAt ? formatDateTime(appEndsAt) : "No date";
 
   return (
     <article className="relative overflow-hidden rounded-xl border border-black/10 bg-[#0f172a]">
@@ -278,9 +309,13 @@ function BannerVisualPreview({
           <p className="line-clamp-1 text-xs text-white/85">{subtitle}</p>
         ) : null}
         <p className="text-[11px] text-white/70">
-          {dateLabels.startsLabel}: {startsLabel}
+          {liveLabels.startsLabel}: {liveStartsLabel} · {liveLabels.endsLabel}:{" "}
+          {liveEndsLabel}
+        </p>
+        <p className="text-[11px] text-white/70">
+          {dateLabels.startsLabel}: {appStartsLabel}
           {placement === "SPECIAL_OFFER" || placement === "EVENT"
-            ? ` · ${dateLabels.endsLabel}: ${endsLabel}`
+            ? ` · ${dateLabels.endsLabel}: ${appEndsLabel}`
             : ""}
         </p>
         <p className="line-clamp-1 text-xs text-blue-100">
@@ -310,8 +345,10 @@ function BannerCard({
         imageUrl={item.imageUrl}
         placement={item.placement as BannerPlacement}
         linkUrl={item.linkUrl ?? ""}
-        startsAt={item.startsAt ?? ""}
-        endsAt={item.endsAt ?? ""}
+        liveStartsAt={item.liveStartsAt ?? ""}
+        liveEndsAt={item.liveEndsAt ?? ""}
+        appStartsAt={item.appStartsAt ?? ""}
+        appEndsAt={item.appEndsAt ?? ""}
       />
       <div className="space-y-3 p-4">
         <div className="flex items-start justify-between gap-3">
@@ -328,15 +365,22 @@ function BannerCard({
 
         <div className="grid gap-1 text-xs text-[#59637b]">
           <p>
+            {getLiveDateLabel().startsLabel}:{" "}
+            {formatDateTime(item.liveStartsAt)}
+          </p>
+          <p>
+            {getLiveDateLabel().endsLabel}: {formatDateTime(item.liveEndsAt)}
+          </p>
+          <p>
             {
               getPlacementDateLabel(item.placement as BannerPlacement)
                 .startsLabel
             }
-            : {formatDateTime(item.startsAt)}
+            : {formatDateTime(item.appStartsAt)}
           </p>
           <p>
             {getPlacementDateLabel(item.placement as BannerPlacement).endsLabel}
-            : {formatDateTime(item.endsAt)}
+            : {formatDateTime(item.appEndsAt)}
           </p>
           <p>Updated: {formatDateTime(item.updatedAt)}</p>
         </div>
@@ -417,8 +461,10 @@ export function AdminBannersClient({
           imageUrl: createForm.imageUrl.trim(),
           linkUrl: normalizeBannerLinkUrl(createForm.linkUrl),
           placement: createForm.placement,
-          startsAt: toIsoOrUndefined(createForm.startsAt),
-          endsAt: toIsoOrUndefined(createForm.endsAt),
+          liveStartsAt: toIsoOrUndefined(createForm.liveStartsAt),
+          liveEndsAt: toIsoOrUndefined(createForm.liveEndsAt),
+          appStartsAt: toIsoOrUndefined(createForm.appStartsAt),
+          appEndsAt: toIsoOrUndefined(createForm.appEndsAt),
           isActive: createForm.isActive,
         }),
       });
@@ -479,8 +525,10 @@ export function AdminBannersClient({
             imageUrl: editForm.imageUrl.trim(),
             linkUrl: normalizeBannerLinkUrl(editForm.linkUrl),
             placement: editForm.placement,
-            startsAt: toIsoOrUndefined(editForm.startsAt),
-            endsAt: toIsoOrUndefined(editForm.endsAt),
+            liveStartsAt: toIsoOrUndefined(editForm.liveStartsAt),
+            liveEndsAt: toIsoOrUndefined(editForm.liveEndsAt),
+            appStartsAt: toIsoOrUndefined(editForm.appStartsAt),
+            appEndsAt: toIsoOrUndefined(editForm.appEndsAt),
             isActive: editForm.isActive,
           }),
         },
@@ -635,8 +683,10 @@ export function AdminBannersClient({
             imageUrl={createForm.imageUrl}
             placement={createForm.placement}
             linkUrl={createForm.linkUrl}
-            startsAt={createForm.startsAt}
-            endsAt={createForm.endsAt}
+            liveStartsAt={createForm.liveStartsAt}
+            liveEndsAt={createForm.liveEndsAt}
+            appStartsAt={createForm.appStartsAt}
+            appEndsAt={createForm.appEndsAt}
           />
 
           {createError ? (
@@ -688,8 +738,10 @@ export function AdminBannersClient({
               imageUrl={editForm.imageUrl}
               placement={editForm.placement}
               linkUrl={editForm.linkUrl}
-              startsAt={editForm.startsAt}
-              endsAt={editForm.endsAt}
+              liveStartsAt={editForm.liveStartsAt}
+              liveEndsAt={editForm.liveEndsAt}
+              appStartsAt={editForm.appStartsAt}
+              appEndsAt={editForm.appEndsAt}
             />
 
             {editError ? (
@@ -828,34 +880,70 @@ function BannerEditorFields({
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="banner-starts-at">
-          {getPlacementDateLabel(form.placement).startsLabel}
+        <Label htmlFor="banner-live-starts-at">
+          {getLiveDateLabel().startsLabel}
         </Label>
         <Input
-          id="banner-starts-at"
+          id="banner-live-starts-at"
           type="datetime-local"
-          value={form.startsAt}
+          value={form.liveStartsAt}
           onChange={(event) =>
             onChange({
               ...form,
-              startsAt: event.target.value,
+              liveStartsAt: event.target.value,
+            })
+          }
+          required
+        />
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="banner-live-ends-at">
+          {getLiveDateLabel().endsLabel}
+        </Label>
+        <Input
+          id="banner-live-ends-at"
+          type="datetime-local"
+          value={form.liveEndsAt}
+          onChange={(event) =>
+            onChange({
+              ...form,
+              liveEndsAt: event.target.value,
+            })
+          }
+          required
+        />
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="banner-app-starts-at">
+          {getPlacementDateLabel(form.placement).startsLabel}
+        </Label>
+        <Input
+          id="banner-app-starts-at"
+          type="datetime-local"
+          value={form.appStartsAt}
+          onChange={(event) =>
+            onChange({
+              ...form,
+              appStartsAt: event.target.value,
             })
           }
         />
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="banner-ends-at">
+        <Label htmlFor="banner-app-ends-at">
           {getPlacementDateLabel(form.placement).endsLabel}
         </Label>
         <Input
-          id="banner-ends-at"
+          id="banner-app-ends-at"
           type="datetime-local"
-          value={form.endsAt}
+          value={form.appEndsAt}
           onChange={(event) =>
             onChange({
               ...form,
-              endsAt: event.target.value,
+              appEndsAt: event.target.value,
             })
           }
         />

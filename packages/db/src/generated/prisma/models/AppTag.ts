@@ -158,7 +158,7 @@ export type AppTagGroupByOutputType = {
   _max: AppTagMaxAggregateOutputType | null
 }
 
-type GetAppTagGroupByPayload<T extends AppTagGroupByArgs> = Prisma.PrismaPromise<
+export type GetAppTagGroupByPayload<T extends AppTagGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<AppTagGroupByOutputType, T['by']> &
       {

@@ -172,7 +172,7 @@ export type DownloadEventGroupByOutputType = {
   _max: DownloadEventMaxAggregateOutputType | null
 }
 
-type GetDownloadEventGroupByPayload<T extends DownloadEventGroupByArgs> = Prisma.PrismaPromise<
+export type GetDownloadEventGroupByPayload<T extends DownloadEventGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<DownloadEventGroupByOutputType, T['by']> &
       {

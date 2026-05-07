@@ -165,7 +165,7 @@ export type AppDescriptionVersionGroupByOutputType = {
   _max: AppDescriptionVersionMaxAggregateOutputType | null
 }
 
-type GetAppDescriptionVersionGroupByPayload<T extends AppDescriptionVersionGroupByArgs> = Prisma.PrismaPromise<
+export type GetAppDescriptionVersionGroupByPayload<T extends AppDescriptionVersionGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<AppDescriptionVersionGroupByOutputType, T['by']> &
       {

@@ -266,7 +266,7 @@ export type TestimonialGroupByOutputType = {
   _max: TestimonialMaxAggregateOutputType | null
 }
 
-type GetTestimonialGroupByPayload<T extends TestimonialGroupByArgs> = Prisma.PrismaPromise<
+export type GetTestimonialGroupByPayload<T extends TestimonialGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<TestimonialGroupByOutputType, T['by']> &
       {

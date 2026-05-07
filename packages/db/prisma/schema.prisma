@@ -357,21 +357,24 @@ model StoreSectionItem {
 }
 
 model StoreBanner {
-  id        String          @id @default(cuid())
-  title     String
-  subtitle  String?         @map("subtitle")
-  imageUrl  String          @map("image_url")
-  linkUrl   String?         @map("link_url")
-  placement BannerPlacement @default(NEW)
-  startsAt  DateTime?       @map("starts_at")
-  endsAt    DateTime?       @map("ends_at")
-  isActive  Boolean         @default(true) @map("is_active")
-  createdBy String?         @map("created_by")
-  updatedBy String?         @map("updated_by")
-  createdAt DateTime        @default(now()) @map("created_at")
-  updatedAt DateTime        @updatedAt @map("updated_at")
+  id           String          @id @default(cuid())
+  title        String
+  subtitle     String?         @map("subtitle")
+  imageUrl     String          @map("image_url")
+  linkUrl      String?         @map("link_url")
+  placement    BannerPlacement @default(NEW)
+  liveStartsAt DateTime?       @map("live_starts_at")
+  liveEndsAt   DateTime?       @map("live_ends_at")
+  appStartsAt  DateTime?       @map("starts_at")
+  appEndsAt    DateTime?       @map("ends_at")
+  isActive     Boolean         @default(true) @map("is_active")
+  createdBy    String?         @map("created_by")
+  updatedBy    String?         @map("updated_by")
+  createdAt    DateTime        @default(now()) @map("created_at")
+  updatedAt    DateTime        @updatedAt @map("updated_at")
 
-  @@index([placement, isActive, startsAt, endsAt])
+  @@index([placement, isActive, liveStartsAt, liveEndsAt])
+  @@index([placement, appStartsAt, appEndsAt])
   @@map("store_banners")
 }
 

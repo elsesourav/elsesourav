@@ -64,9 +64,10 @@ export type StoreSectionType = (typeof StoreSectionType)[keyof typeof StoreSecti
 
 
 export const BannerPlacement = {
-  HOME_HERO: 'HOME_HERO',
-  LATEST: 'LATEST',
-  UPCOMING: 'UPCOMING'
+  NEW: 'NEW',
+  COMING_SOON: 'COMING_SOON',
+  SPECIAL_OFFER: 'SPECIAL_OFFER',
+  EVENT: 'EVENT'
 } as const
 
 export type BannerPlacement = (typeof BannerPlacement)[keyof typeof BannerPlacement]

@@ -172,7 +172,7 @@ export type AppChangelogGroupByOutputType = {
   _max: AppChangelogMaxAggregateOutputType | null
 }
 
-type GetAppChangelogGroupByPayload<T extends AppChangelogGroupByArgs> = Prisma.PrismaPromise<
+export type GetAppChangelogGroupByPayload<T extends AppChangelogGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<AppChangelogGroupByOutputType, T['by']> &
       {

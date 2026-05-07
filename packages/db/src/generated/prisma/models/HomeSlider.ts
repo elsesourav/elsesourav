@@ -262,7 +262,7 @@ export type HomeSliderGroupByOutputType = {
   _max: HomeSliderMaxAggregateOutputType | null
 }
 
-type GetHomeSliderGroupByPayload<T extends HomeSliderGroupByArgs> = Prisma.PrismaPromise<
+export type GetHomeSliderGroupByPayload<T extends HomeSliderGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<HomeSliderGroupByOutputType, T['by']> &
       {

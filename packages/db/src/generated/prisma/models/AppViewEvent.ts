@@ -186,7 +186,7 @@ export type AppViewEventGroupByOutputType = {
   _max: AppViewEventMaxAggregateOutputType | null
 }
 
-type GetAppViewEventGroupByPayload<T extends AppViewEventGroupByArgs> = Prisma.PrismaPromise<
+export type GetAppViewEventGroupByPayload<T extends AppViewEventGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<AppViewEventGroupByOutputType, T['by']> &
       {

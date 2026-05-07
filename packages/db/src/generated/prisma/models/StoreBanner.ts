@@ -27,11 +27,14 @@ export type AggregateStoreBanner = {
 export type StoreBannerMinAggregateOutputType = {
   id: string | null
   title: string | null
+  subtitle: string | null
   imageUrl: string | null
   linkUrl: string | null
   placement: $Enums.BannerPlacement | null
-  startsAt: Date | null
-  endsAt: Date | null
+  liveStartsAt: Date | null
+  liveEndsAt: Date | null
+  appStartsAt: Date | null
+  appEndsAt: Date | null
   isActive: boolean | null
   createdBy: string | null
   updatedBy: string | null
@@ -42,11 +45,14 @@ export type StoreBannerMinAggregateOutputType = {
 export type StoreBannerMaxAggregateOutputType = {
   id: string | null
   title: string | null
+  subtitle: string | null
   imageUrl: string | null
   linkUrl: string | null
   placement: $Enums.BannerPlacement | null
-  startsAt: Date | null
-  endsAt: Date | null
+  liveStartsAt: Date | null
+  liveEndsAt: Date | null
+  appStartsAt: Date | null
+  appEndsAt: Date | null
   isActive: boolean | null
   createdBy: string | null
   updatedBy: string | null
@@ -57,11 +63,14 @@ export type StoreBannerMaxAggregateOutputType = {
 export type StoreBannerCountAggregateOutputType = {
   id: number
   title: number
+  subtitle: number
   imageUrl: number
   linkUrl: number
   placement: number
-  startsAt: number
-  endsAt: number
+  liveStartsAt: number
+  liveEndsAt: number
+  appStartsAt: number
+  appEndsAt: number
   isActive: number
   createdBy: number
   updatedBy: number
@@ -74,11 +83,14 @@ export type StoreBannerCountAggregateOutputType = {
 export type StoreBannerMinAggregateInputType = {
   id?: true
   title?: true
+  subtitle?: true
   imageUrl?: true
   linkUrl?: true
   placement?: true
-  startsAt?: true
-  endsAt?: true
+  liveStartsAt?: true
+  liveEndsAt?: true
+  appStartsAt?: true
+  appEndsAt?: true
   isActive?: true
   createdBy?: true
   updatedBy?: true
@@ -89,11 +101,14 @@ export type StoreBannerMinAggregateInputType = {
 export type StoreBannerMaxAggregateInputType = {
   id?: true
   title?: true
+  subtitle?: true
   imageUrl?: true
   linkUrl?: true
   placement?: true
-  startsAt?: true
-  endsAt?: true
+  liveStartsAt?: true
+  liveEndsAt?: true
+  appStartsAt?: true
+  appEndsAt?: true
   isActive?: true
   createdBy?: true
   updatedBy?: true
@@ -104,11 +119,14 @@ export type StoreBannerMaxAggregateInputType = {
 export type StoreBannerCountAggregateInputType = {
   id?: true
   title?: true
+  subtitle?: true
   imageUrl?: true
   linkUrl?: true
   placement?: true
-  startsAt?: true
-  endsAt?: true
+  liveStartsAt?: true
+  liveEndsAt?: true
+  appStartsAt?: true
+  appEndsAt?: true
   isActive?: true
   createdBy?: true
   updatedBy?: true
@@ -192,11 +210,14 @@ export type StoreBannerGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 export type StoreBannerGroupByOutputType = {
   id: string
   title: string
+  subtitle: string | null
   imageUrl: string
   linkUrl: string | null
   placement: $Enums.BannerPlacement
-  startsAt: Date | null
-  endsAt: Date | null
+  liveStartsAt: Date | null
+  liveEndsAt: Date | null
+  appStartsAt: Date | null
+  appEndsAt: Date | null
   isActive: boolean
   createdBy: string | null
   updatedBy: string | null
@@ -207,7 +228,7 @@ export type StoreBannerGroupByOutputType = {
   _max: StoreBannerMaxAggregateOutputType | null
 }
 
-type GetStoreBannerGroupByPayload<T extends StoreBannerGroupByArgs> = Prisma.PrismaPromise<
+export type GetStoreBannerGroupByPayload<T extends StoreBannerGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<StoreBannerGroupByOutputType, T['by']> &
       {
@@ -228,11 +249,14 @@ export type StoreBannerWhereInput = {
   NOT?: Prisma.StoreBannerWhereInput | Prisma.StoreBannerWhereInput[]
   id?: Prisma.StringFilter<"StoreBanner"> | string
   title?: Prisma.StringFilter<"StoreBanner"> | string
+  subtitle?: Prisma.StringNullableFilter<"StoreBanner"> | string | null
   imageUrl?: Prisma.StringFilter<"StoreBanner"> | string
   linkUrl?: Prisma.StringNullableFilter<"StoreBanner"> | string | null
   placement?: Prisma.EnumBannerPlacementFilter<"StoreBanner"> | $Enums.BannerPlacement
-  startsAt?: Prisma.DateTimeNullableFilter<"StoreBanner"> | Date | string | null
-  endsAt?: Prisma.DateTimeNullableFilter<"StoreBanner"> | Date | string | null
+  liveStartsAt?: Prisma.DateTimeNullableFilter<"StoreBanner"> | Date | string | null
+  liveEndsAt?: Prisma.DateTimeNullableFilter<"StoreBanner"> | Date | string | null
+  appStartsAt?: Prisma.DateTimeNullableFilter<"StoreBanner"> | Date | string | null
+  appEndsAt?: Prisma.DateTimeNullableFilter<"StoreBanner"> | Date | string | null
   isActive?: Prisma.BoolFilter<"StoreBanner"> | boolean
   createdBy?: Prisma.StringNullableFilter<"StoreBanner"> | string | null
   updatedBy?: Prisma.StringNullableFilter<"StoreBanner"> | string | null
@@ -243,11 +267,14 @@ export type StoreBannerWhereInput = {
 export type StoreBannerOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  subtitle?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   linkUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   placement?: Prisma.SortOrder
-  startsAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  endsAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  liveStartsAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  liveEndsAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  appStartsAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  appEndsAt?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -261,11 +288,14 @@ export type StoreBannerWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.StoreBannerWhereInput[]
   NOT?: Prisma.StoreBannerWhereInput | Prisma.StoreBannerWhereInput[]
   title?: Prisma.StringFilter<"StoreBanner"> | string
+  subtitle?: Prisma.StringNullableFilter<"StoreBanner"> | string | null
   imageUrl?: Prisma.StringFilter<"StoreBanner"> | string
   linkUrl?: Prisma.StringNullableFilter<"StoreBanner"> | string | null
   placement?: Prisma.EnumBannerPlacementFilter<"StoreBanner"> | $Enums.BannerPlacement
-  startsAt?: Prisma.DateTimeNullableFilter<"StoreBanner"> | Date | string | null
-  endsAt?: Prisma.DateTimeNullableFilter<"StoreBanner"> | Date | string | null
+  liveStartsAt?: Prisma.DateTimeNullableFilter<"StoreBanner"> | Date | string | null
+  liveEndsAt?: Prisma.DateTimeNullableFilter<"StoreBanner"> | Date | string | null
+  appStartsAt?: Prisma.DateTimeNullableFilter<"StoreBanner"> | Date | string | null
+  appEndsAt?: Prisma.DateTimeNullableFilter<"StoreBanner"> | Date | string | null
   isActive?: Prisma.BoolFilter<"StoreBanner"> | boolean
   createdBy?: Prisma.StringNullableFilter<"StoreBanner"> | string | null
   updatedBy?: Prisma.StringNullableFilter<"StoreBanner"> | string | null
@@ -276,11 +306,14 @@ export type StoreBannerWhereUniqueInput = Prisma.AtLeast<{
 export type StoreBannerOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  subtitle?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   linkUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   placement?: Prisma.SortOrder
-  startsAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  endsAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  liveStartsAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  liveEndsAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  appStartsAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  appEndsAt?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -297,11 +330,14 @@ export type StoreBannerScalarWhereWithAggregatesInput = {
   NOT?: Prisma.StoreBannerScalarWhereWithAggregatesInput | Prisma.StoreBannerScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"StoreBanner"> | string
   title?: Prisma.StringWithAggregatesFilter<"StoreBanner"> | string
+  subtitle?: Prisma.StringNullableWithAggregatesFilter<"StoreBanner"> | string | null
   imageUrl?: Prisma.StringWithAggregatesFilter<"StoreBanner"> | string
   linkUrl?: Prisma.StringNullableWithAggregatesFilter<"StoreBanner"> | string | null
   placement?: Prisma.EnumBannerPlacementWithAggregatesFilter<"StoreBanner"> | $Enums.BannerPlacement
-  startsAt?: Prisma.DateTimeNullableWithAggregatesFilter<"StoreBanner"> | Date | string | null
-  endsAt?: Prisma.DateTimeNullableWithAggregatesFilter<"StoreBanner"> | Date | string | null
+  liveStartsAt?: Prisma.DateTimeNullableWithAggregatesFilter<"StoreBanner"> | Date | string | null
+  liveEndsAt?: Prisma.DateTimeNullableWithAggregatesFilter<"StoreBanner"> | Date | string | null
+  appStartsAt?: Prisma.DateTimeNullableWithAggregatesFilter<"StoreBanner"> | Date | string | null
+  appEndsAt?: Prisma.DateTimeNullableWithAggregatesFilter<"StoreBanner"> | Date | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"StoreBanner"> | boolean
   createdBy?: Prisma.StringNullableWithAggregatesFilter<"StoreBanner"> | string | null
   updatedBy?: Prisma.StringNullableWithAggregatesFilter<"StoreBanner"> | string | null
@@ -312,11 +348,14 @@ export type StoreBannerScalarWhereWithAggregatesInput = {
 export type StoreBannerCreateInput = {
   id?: string
   title: string
+  subtitle?: string | null
   imageUrl: string
   linkUrl?: string | null
   placement?: $Enums.BannerPlacement
-  startsAt?: Date | string | null
-  endsAt?: Date | string | null
+  liveStartsAt?: Date | string | null
+  liveEndsAt?: Date | string | null
+  appStartsAt?: Date | string | null
+  appEndsAt?: Date | string | null
   isActive?: boolean
   createdBy?: string | null
   updatedBy?: string | null
@@ -327,11 +366,14 @@ export type StoreBannerCreateInput = {
 export type StoreBannerUncheckedCreateInput = {
   id?: string
   title: string
+  subtitle?: string | null
   imageUrl: string
   linkUrl?: string | null
   placement?: $Enums.BannerPlacement
-  startsAt?: Date | string | null
-  endsAt?: Date | string | null
+  liveStartsAt?: Date | string | null
+  liveEndsAt?: Date | string | null
+  appStartsAt?: Date | string | null
+  appEndsAt?: Date | string | null
   isActive?: boolean
   createdBy?: string | null
   updatedBy?: string | null
@@ -342,11 +384,14 @@ export type StoreBannerUncheckedCreateInput = {
 export type StoreBannerUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  subtitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   linkUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   placement?: Prisma.EnumBannerPlacementFieldUpdateOperationsInput | $Enums.BannerPlacement
-  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  liveStartsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  liveEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  appStartsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  appEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -357,11 +402,14 @@ export type StoreBannerUpdateInput = {
 export type StoreBannerUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  subtitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   linkUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   placement?: Prisma.EnumBannerPlacementFieldUpdateOperationsInput | $Enums.BannerPlacement
-  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  liveStartsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  liveEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  appStartsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  appEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -372,11 +420,14 @@ export type StoreBannerUncheckedUpdateInput = {
 export type StoreBannerCreateManyInput = {
   id?: string
   title: string
+  subtitle?: string | null
   imageUrl: string
   linkUrl?: string | null
   placement?: $Enums.BannerPlacement
-  startsAt?: Date | string | null
-  endsAt?: Date | string | null
+  liveStartsAt?: Date | string | null
+  liveEndsAt?: Date | string | null
+  appStartsAt?: Date | string | null
+  appEndsAt?: Date | string | null
   isActive?: boolean
   createdBy?: string | null
   updatedBy?: string | null
@@ -387,11 +438,14 @@ export type StoreBannerCreateManyInput = {
 export type StoreBannerUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  subtitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   linkUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   placement?: Prisma.EnumBannerPlacementFieldUpdateOperationsInput | $Enums.BannerPlacement
-  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  liveStartsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  liveEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  appStartsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  appEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -402,11 +456,14 @@ export type StoreBannerUpdateManyMutationInput = {
 export type StoreBannerUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  subtitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   linkUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   placement?: Prisma.EnumBannerPlacementFieldUpdateOperationsInput | $Enums.BannerPlacement
-  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  liveStartsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  liveEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  appStartsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  appEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -417,11 +474,14 @@ export type StoreBannerUncheckedUpdateManyInput = {
 export type StoreBannerCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  subtitle?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   linkUrl?: Prisma.SortOrder
   placement?: Prisma.SortOrder
-  startsAt?: Prisma.SortOrder
-  endsAt?: Prisma.SortOrder
+  liveStartsAt?: Prisma.SortOrder
+  liveEndsAt?: Prisma.SortOrder
+  appStartsAt?: Prisma.SortOrder
+  appEndsAt?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   updatedBy?: Prisma.SortOrder
@@ -432,11 +492,14 @@ export type StoreBannerCountOrderByAggregateInput = {
 export type StoreBannerMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  subtitle?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   linkUrl?: Prisma.SortOrder
   placement?: Prisma.SortOrder
-  startsAt?: Prisma.SortOrder
-  endsAt?: Prisma.SortOrder
+  liveStartsAt?: Prisma.SortOrder
+  liveEndsAt?: Prisma.SortOrder
+  appStartsAt?: Prisma.SortOrder
+  appEndsAt?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   updatedBy?: Prisma.SortOrder
@@ -447,11 +510,14 @@ export type StoreBannerMaxOrderByAggregateInput = {
 export type StoreBannerMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  subtitle?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   linkUrl?: Prisma.SortOrder
   placement?: Prisma.SortOrder
-  startsAt?: Prisma.SortOrder
-  endsAt?: Prisma.SortOrder
+  liveStartsAt?: Prisma.SortOrder
+  liveEndsAt?: Prisma.SortOrder
+  appStartsAt?: Prisma.SortOrder
+  appEndsAt?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   updatedBy?: Prisma.SortOrder
@@ -468,11 +534,14 @@ export type EnumBannerPlacementFieldUpdateOperationsInput = {
 export type StoreBannerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   title?: boolean
+  subtitle?: boolean
   imageUrl?: boolean
   linkUrl?: boolean
   placement?: boolean
-  startsAt?: boolean
-  endsAt?: boolean
+  liveStartsAt?: boolean
+  liveEndsAt?: boolean
+  appStartsAt?: boolean
+  appEndsAt?: boolean
   isActive?: boolean
   createdBy?: boolean
   updatedBy?: boolean
@@ -483,11 +552,14 @@ export type StoreBannerSelect<ExtArgs extends runtime.Types.Extensions.InternalA
 export type StoreBannerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   title?: boolean
+  subtitle?: boolean
   imageUrl?: boolean
   linkUrl?: boolean
   placement?: boolean
-  startsAt?: boolean
-  endsAt?: boolean
+  liveStartsAt?: boolean
+  liveEndsAt?: boolean
+  appStartsAt?: boolean
+  appEndsAt?: boolean
   isActive?: boolean
   createdBy?: boolean
   updatedBy?: boolean
@@ -498,11 +570,14 @@ export type StoreBannerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
 export type StoreBannerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   title?: boolean
+  subtitle?: boolean
   imageUrl?: boolean
   linkUrl?: boolean
   placement?: boolean
-  startsAt?: boolean
-  endsAt?: boolean
+  liveStartsAt?: boolean
+  liveEndsAt?: boolean
+  appStartsAt?: boolean
+  appEndsAt?: boolean
   isActive?: boolean
   createdBy?: boolean
   updatedBy?: boolean
@@ -513,11 +588,14 @@ export type StoreBannerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
 export type StoreBannerSelectScalar = {
   id?: boolean
   title?: boolean
+  subtitle?: boolean
   imageUrl?: boolean
   linkUrl?: boolean
   placement?: boolean
-  startsAt?: boolean
-  endsAt?: boolean
+  liveStartsAt?: boolean
+  liveEndsAt?: boolean
+  appStartsAt?: boolean
+  appEndsAt?: boolean
   isActive?: boolean
   createdBy?: boolean
   updatedBy?: boolean
@@ -525,7 +603,7 @@ export type StoreBannerSelectScalar = {
   updatedAt?: boolean
 }
 
-export type StoreBannerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "imageUrl" | "linkUrl" | "placement" | "startsAt" | "endsAt" | "isActive" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["storeBanner"]>
+export type StoreBannerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "subtitle" | "imageUrl" | "linkUrl" | "placement" | "liveStartsAt" | "liveEndsAt" | "appStartsAt" | "appEndsAt" | "isActive" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["storeBanner"]>
 
 export type $StoreBannerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "StoreBanner"
@@ -533,11 +611,14 @@ export type $StoreBannerPayload<ExtArgs extends runtime.Types.Extensions.Interna
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     title: string
+    subtitle: string | null
     imageUrl: string
     linkUrl: string | null
     placement: $Enums.BannerPlacement
-    startsAt: Date | null
-    endsAt: Date | null
+    liveStartsAt: Date | null
+    liveEndsAt: Date | null
+    appStartsAt: Date | null
+    appEndsAt: Date | null
     isActive: boolean
     createdBy: string | null
     updatedBy: string | null
@@ -968,11 +1049,14 @@ export interface Prisma__StoreBannerClient<T, Null = never, ExtArgs extends runt
 export interface StoreBannerFieldRefs {
   readonly id: Prisma.FieldRef<"StoreBanner", 'String'>
   readonly title: Prisma.FieldRef<"StoreBanner", 'String'>
+  readonly subtitle: Prisma.FieldRef<"StoreBanner", 'String'>
   readonly imageUrl: Prisma.FieldRef<"StoreBanner", 'String'>
   readonly linkUrl: Prisma.FieldRef<"StoreBanner", 'String'>
   readonly placement: Prisma.FieldRef<"StoreBanner", 'BannerPlacement'>
-  readonly startsAt: Prisma.FieldRef<"StoreBanner", 'DateTime'>
-  readonly endsAt: Prisma.FieldRef<"StoreBanner", 'DateTime'>
+  readonly liveStartsAt: Prisma.FieldRef<"StoreBanner", 'DateTime'>
+  readonly liveEndsAt: Prisma.FieldRef<"StoreBanner", 'DateTime'>
+  readonly appStartsAt: Prisma.FieldRef<"StoreBanner", 'DateTime'>
+  readonly appEndsAt: Prisma.FieldRef<"StoreBanner", 'DateTime'>
   readonly isActive: Prisma.FieldRef<"StoreBanner", 'Boolean'>
   readonly createdBy: Prisma.FieldRef<"StoreBanner", 'String'>
   readonly updatedBy: Prisma.FieldRef<"StoreBanner", 'String'>

@@ -114,13 +114,11 @@ publicCatalogRouter.get("/sliders", async (req, res) => {
 
     if (!parsed.data.includeInactive) {
       where.isActive = true;
+
+      // Apply time window constraints
       where.AND = [
-        {
-          OR: [{ startsAt: null }, { startsAt: { lte: now } }],
-        },
-        {
-          OR: [{ endsAt: null }, { endsAt: { gte: now } }],
-        },
+        { OR: [{ startsAt: null }, { startsAt: { lte: now } }] },
+        { OR: [{ endsAt: null }, { endsAt: { gte: now } }] },
       ];
     }
 
@@ -666,10 +664,10 @@ publicCatalogRouter.get("/banners", async (req, res) => {
       where.isActive = true;
       where.AND = [
         {
-          OR: [{ startsAt: null }, { startsAt: { lte: now } }],
+          OR: [{ liveStartsAt: null }, { liveStartsAt: { lte: now } }],
         },
         {
-          OR: [{ endsAt: null }, { endsAt: { gte: now } }],
+          OR: [{ liveEndsAt: null }, { liveEndsAt: { gte: now } }],
         },
       ];
     }

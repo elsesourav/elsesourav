@@ -175,7 +175,7 @@ export type SupportTicketMessageGroupByOutputType = {
   _max: SupportTicketMessageMaxAggregateOutputType | null
 }
 
-type GetSupportTicketMessageGroupByPayload<T extends SupportTicketMessageGroupByArgs> = Prisma.PrismaPromise<
+export type GetSupportTicketMessageGroupByPayload<T extends SupportTicketMessageGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<SupportTicketMessageGroupByOutputType, T['by']> &
       {

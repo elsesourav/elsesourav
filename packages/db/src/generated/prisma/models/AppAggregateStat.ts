@@ -236,7 +236,7 @@ export type AppAggregateStatGroupByOutputType = {
   _max: AppAggregateStatMaxAggregateOutputType | null
 }
 
-type GetAppAggregateStatGroupByPayload<T extends AppAggregateStatGroupByArgs> = Prisma.PrismaPromise<
+export type GetAppAggregateStatGroupByPayload<T extends AppAggregateStatGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<AppAggregateStatGroupByOutputType, T['by']> &
       {
