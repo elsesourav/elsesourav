@@ -19,6 +19,14 @@ enum AppStatus {
   PUBLISHED
 }
 
+enum AppType {
+  GAMING
+  SOCIAL_MEDIA_COMMUNICATION
+  PRODUCTIVITY_BUSINESS
+  LIFESTYLE
+  UTILITY_TOOL
+}
+
 enum MediaType {
   IMAGE
   VIDEO
@@ -171,6 +179,7 @@ model Category {
   id                  String    @id @default(cuid())
   name                String    @unique
   icon                String?
+  description         String?   @map("description")
   createdAt           DateTime  @default(now()) @map("created_at")
   updatedAt           DateTime  @updatedAt @map("updated_at")
   scheduledDeletionAt DateTime? @map("scheduled_deletion_at")
@@ -203,14 +212,16 @@ model App {
   privacyPolicyUrl    String?                 @map("privacy_policy_url")
   containsAds         Boolean                 @default(false) @map("contains_ads")
   developerName       String?                 @map("developer_name")
+  type                AppType                 @default(UTILITY_TOOL)
+  appCategory         String                  @default("") @map("app_category")
   metadata            Json?
-  categoryId          String                  @map("category_id")
+  categoryId          String?                 @map("category_id")
   createdById         String                  @map("created_by")
   updatedById         String?                 @map("updated_by")
   createdAt           DateTime                @default(now()) @map("created_at")
   updatedAt           DateTime                @updatedAt @map("updated_at")
   deletedAt           DateTime?               @map("deleted_at")
-  category            Category                @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  category            Category?               @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   createdBy           User                    @relation("AppCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
   updatedBy           User?                   @relation("AppUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
   media               AppMedia[]
@@ -229,6 +240,7 @@ model App {
   descriptionVersions AppDescriptionVersion[]
   supportTickets      SupportTicket[]
 
+  @@index([type])
   @@index([categoryId])
   @@index([status, createdAt])
   @@index([publishedAt])

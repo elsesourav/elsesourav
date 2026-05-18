@@ -11,6 +11,7 @@
     "db:deploy": "prisma migrate deploy --config prisma.config.ts",
     "db:studio": "prisma studio --config prisma.config.ts",
     "db:seed": "tsx prisma/seed.ts",
+    "db:fill": "tsx prisma/fill-missing-data.ts",
     "postinstall": "npm run db:generate",
     "typecheck": "npm run db:generate && tsc --noEmit"
   },

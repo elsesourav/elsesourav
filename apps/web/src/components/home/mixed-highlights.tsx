@@ -122,7 +122,7 @@ export function MixedHighlights({
                       <Typography
                         sx={{ mt: 0.35, fontSize: "0.75rem", color: "#5b6680" }}
                       >
-                        {app.category.name}
+                        {app.category?.name ?? app.appCategory ?? "App"}
                       </Typography>
                     </Box>
                     <Chip

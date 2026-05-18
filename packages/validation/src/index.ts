@@ -204,11 +204,21 @@ export const updateAppSchema = createAppBaseSchema
 export const categorySchema = z.object({
   name: z.string().min(2).max(80),
   icon: z.string().max(80).optional(),
+  description: z.string().trim().max(200).optional(),
 });
+
+export const appTypeSchema = z.enum([
+  "GAMING",
+  "SOCIAL_MEDIA_COMMUNICATION",
+  "PRODUCTIVITY_BUSINESS",
+  "LIFESTYLE",
+  "UTILITY_TOOL",
+]);
 
 export const publicAppsQuerySchema = z.object({
   search: z.string().trim().max(100).optional(),
   categoryId: z.string().cuid().optional(),
+  type: appTypeSchema.optional(),
   tag: z.string().trim().max(60).optional(),
   cursor: z.string().cuid().optional(),
   limit: z.coerce.number().int().min(1).max(48).default(12),

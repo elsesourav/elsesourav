@@ -64,7 +64,7 @@ export default async function AppDetailPage({
   return (
     <PageShell>
       <PageHeader
-        eyebrow={app.category.name}
+        eyebrow={app.category?.name ?? "App"}
         title={app.title}
         description={`Version ${app.version} · ${app.isPaid ? formatPrice(app.price) : "Free"}`}
       />
@@ -182,7 +182,7 @@ export default async function AppDetailPage({
       <AppDetailActions appId={app.id} slug={app.slug} title={app.title} />
 
       <section className="grid gap-3 rounded-xl border border-black/10 bg-white p-4 text-sm text-[#3f4757] sm:grid-cols-2">
-        <p>Developer: {app.developerName ?? "Unknown"}</p>
+        <p>Developer: {app.developerName}</p>
         <p>Contains ads: {app.containsAds ? "Yes" : "No"}</p>
         <p>Support email: {app.supportEmail ?? "-"}</p>
         <p>

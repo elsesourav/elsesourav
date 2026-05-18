@@ -538,6 +538,7 @@ adminCatalogRouter.post("/categories", async (req, res) => {
       data: {
         name: parsed.data.name,
         icon: parsed.data.icon,
+        description: parsed.data.description ?? null,
       },
       include: {
         _count: {
@@ -636,6 +637,7 @@ adminCatalogRouter.put("/categories/:id", async (req, res) => {
       data: {
         name: parsed.data.name,
         icon: parsed.data.icon,
+        description: parsed.data.description ?? null,
       },
       include: {
         _count: {

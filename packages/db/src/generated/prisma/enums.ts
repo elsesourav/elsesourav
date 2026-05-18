@@ -25,6 +25,17 @@ export const AppStatus = {
 export type AppStatus = (typeof AppStatus)[keyof typeof AppStatus]
 
 
+export const AppType = {
+  GAMING: 'GAMING',
+  SOCIAL_MEDIA_COMMUNICATION: 'SOCIAL_MEDIA_COMMUNICATION',
+  PRODUCTIVITY_BUSINESS: 'PRODUCTIVITY_BUSINESS',
+  LIFESTYLE: 'LIFESTYLE',
+  UTILITY_TOOL: 'UTILITY_TOOL'
+} as const
+
+export type AppType = (typeof AppType)[keyof typeof AppType]
+
+
 export const MediaType = {
   IMAGE: 'IMAGE',
   VIDEO: 'VIDEO'

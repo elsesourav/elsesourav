@@ -55,6 +55,8 @@ export type AppMinAggregateOutputType = {
   privacyPolicyUrl: string | null
   containsAds: boolean | null
   developerName: string | null
+  type: $Enums.AppType | null
+  appCategory: string | null
   categoryId: string | null
   createdById: string | null
   updatedById: string | null
@@ -84,6 +86,8 @@ export type AppMaxAggregateOutputType = {
   privacyPolicyUrl: string | null
   containsAds: boolean | null
   developerName: string | null
+  type: $Enums.AppType | null
+  appCategory: string | null
   categoryId: string | null
   createdById: string | null
   updatedById: string | null
@@ -113,6 +117,8 @@ export type AppCountAggregateOutputType = {
   privacyPolicyUrl: number
   containsAds: number
   developerName: number
+  type: number
+  appCategory: number
   metadata: number
   categoryId: number
   createdById: number
@@ -153,6 +159,8 @@ export type AppMinAggregateInputType = {
   privacyPolicyUrl?: true
   containsAds?: true
   developerName?: true
+  type?: true
+  appCategory?: true
   categoryId?: true
   createdById?: true
   updatedById?: true
@@ -182,6 +190,8 @@ export type AppMaxAggregateInputType = {
   privacyPolicyUrl?: true
   containsAds?: true
   developerName?: true
+  type?: true
+  appCategory?: true
   categoryId?: true
   createdById?: true
   updatedById?: true
@@ -211,6 +221,8 @@ export type AppCountAggregateInputType = {
   privacyPolicyUrl?: true
   containsAds?: true
   developerName?: true
+  type?: true
+  appCategory?: true
   metadata?: true
   categoryId?: true
   createdById?: true
@@ -328,8 +340,10 @@ export type AppGroupByOutputType = {
   privacyPolicyUrl: string | null
   containsAds: boolean
   developerName: string | null
+  type: $Enums.AppType
+  appCategory: string
   metadata: runtime.JsonValue | null
-  categoryId: string
+  categoryId: string | null
   createdById: string
   updatedById: string | null
   createdAt: Date
@@ -381,14 +395,16 @@ export type AppWhereInput = {
   privacyPolicyUrl?: Prisma.StringNullableFilter<"App"> | string | null
   containsAds?: Prisma.BoolFilter<"App"> | boolean
   developerName?: Prisma.StringNullableFilter<"App"> | string | null
+  type?: Prisma.EnumAppTypeFilter<"App"> | $Enums.AppType
+  appCategory?: Prisma.StringFilter<"App"> | string
   metadata?: Prisma.JsonNullableFilter<"App">
-  categoryId?: Prisma.StringFilter<"App"> | string
+  categoryId?: Prisma.StringNullableFilter<"App"> | string | null
   createdById?: Prisma.StringFilter<"App"> | string
   updatedById?: Prisma.StringNullableFilter<"App"> | string | null
   createdAt?: Prisma.DateTimeFilter<"App"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"App"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"App"> | Date | string | null
-  category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
+  category?: Prisma.XOR<Prisma.CategoryNullableScalarRelationFilter, Prisma.CategoryWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   updatedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   media?: Prisma.AppMediaListRelationFilter
@@ -429,8 +445,10 @@ export type AppOrderByWithRelationInput = {
   privacyPolicyUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   containsAds?: Prisma.SortOrder
   developerName?: Prisma.SortOrderInput | Prisma.SortOrder
+  type?: Prisma.SortOrder
+  appCategory?: Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
-  categoryId?: Prisma.SortOrder
+  categoryId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrder
   updatedById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -480,14 +498,16 @@ export type AppWhereUniqueInput = Prisma.AtLeast<{
   privacyPolicyUrl?: Prisma.StringNullableFilter<"App"> | string | null
   containsAds?: Prisma.BoolFilter<"App"> | boolean
   developerName?: Prisma.StringNullableFilter<"App"> | string | null
+  type?: Prisma.EnumAppTypeFilter<"App"> | $Enums.AppType
+  appCategory?: Prisma.StringFilter<"App"> | string
   metadata?: Prisma.JsonNullableFilter<"App">
-  categoryId?: Prisma.StringFilter<"App"> | string
+  categoryId?: Prisma.StringNullableFilter<"App"> | string | null
   createdById?: Prisma.StringFilter<"App"> | string
   updatedById?: Prisma.StringNullableFilter<"App"> | string | null
   createdAt?: Prisma.DateTimeFilter<"App"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"App"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"App"> | Date | string | null
-  category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
+  category?: Prisma.XOR<Prisma.CategoryNullableScalarRelationFilter, Prisma.CategoryWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   updatedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   media?: Prisma.AppMediaListRelationFilter
@@ -528,8 +548,10 @@ export type AppOrderByWithAggregationInput = {
   privacyPolicyUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   containsAds?: Prisma.SortOrder
   developerName?: Prisma.SortOrderInput | Prisma.SortOrder
+  type?: Prisma.SortOrder
+  appCategory?: Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
-  categoryId?: Prisma.SortOrder
+  categoryId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrder
   updatedById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -566,8 +588,10 @@ export type AppScalarWhereWithAggregatesInput = {
   privacyPolicyUrl?: Prisma.StringNullableWithAggregatesFilter<"App"> | string | null
   containsAds?: Prisma.BoolWithAggregatesFilter<"App"> | boolean
   developerName?: Prisma.StringNullableWithAggregatesFilter<"App"> | string | null
+  type?: Prisma.EnumAppTypeWithAggregatesFilter<"App"> | $Enums.AppType
+  appCategory?: Prisma.StringWithAggregatesFilter<"App"> | string
   metadata?: Prisma.JsonNullableWithAggregatesFilter<"App">
-  categoryId?: Prisma.StringWithAggregatesFilter<"App"> | string
+  categoryId?: Prisma.StringNullableWithAggregatesFilter<"App"> | string | null
   createdById?: Prisma.StringWithAggregatesFilter<"App"> | string
   updatedById?: Prisma.StringNullableWithAggregatesFilter<"App"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"App"> | Date | string
@@ -596,11 +620,13 @@ export type AppCreateInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  category?: Prisma.CategoryCreateNestedOneWithoutAppsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
   media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
@@ -641,8 +667,10 @@ export type AppUncheckedCreateInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId: string
+  categoryId?: string | null
   createdById: string
   updatedById?: string | null
   createdAt?: Date | string
@@ -686,11 +714,13 @@ export type AppUpdateInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutAppsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
   media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
@@ -731,8 +761,10 @@ export type AppUncheckedUpdateInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -776,8 +808,10 @@ export type AppCreateManyInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId: string
+  categoryId?: string | null
   createdById: string
   updatedById?: string | null
   createdAt?: Date | string
@@ -806,6 +840,8 @@ export type AppUpdateManyMutationInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -833,8 +869,10 @@ export type AppUncheckedUpdateManyInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -873,6 +911,8 @@ export type AppCountOrderByAggregateInput = {
   privacyPolicyUrl?: Prisma.SortOrder
   containsAds?: Prisma.SortOrder
   developerName?: Prisma.SortOrder
+  type?: Prisma.SortOrder
+  appCategory?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
@@ -907,6 +947,8 @@ export type AppMaxOrderByAggregateInput = {
   privacyPolicyUrl?: Prisma.SortOrder
   containsAds?: Prisma.SortOrder
   developerName?: Prisma.SortOrder
+  type?: Prisma.SortOrder
+  appCategory?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   updatedById?: Prisma.SortOrder
@@ -936,6 +978,8 @@ export type AppMinOrderByAggregateInput = {
   privacyPolicyUrl?: Prisma.SortOrder
   containsAds?: Prisma.SortOrder
   developerName?: Prisma.SortOrder
+  type?: Prisma.SortOrder
+  appCategory?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   updatedById?: Prisma.SortOrder
@@ -1098,6 +1142,10 @@ export type DecimalFieldUpdateOperationsInput = {
   decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
   multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
   divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
+export type EnumAppTypeFieldUpdateOperationsInput = {
+  set?: $Enums.AppType
 }
 
 export type AppCreateNestedOneWithoutTagLinksInput = {
@@ -1335,11 +1383,13 @@ export type AppCreateWithoutCreatedByInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  category?: Prisma.CategoryCreateNestedOneWithoutAppsInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
   media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
   links?: Prisma.AppLinkCreateNestedManyWithoutAppInput
@@ -1379,8 +1429,10 @@ export type AppUncheckedCreateWithoutCreatedByInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId: string
+  categoryId?: string | null
   updatedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1433,11 +1485,13 @@ export type AppCreateWithoutUpdatedByInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  category?: Prisma.CategoryCreateNestedOneWithoutAppsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
   media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
   links?: Prisma.AppLinkCreateNestedManyWithoutAppInput
@@ -1477,8 +1531,10 @@ export type AppUncheckedCreateWithoutUpdatedByInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId: string
+  categoryId?: string | null
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1550,8 +1606,10 @@ export type AppScalarWhereInput = {
   privacyPolicyUrl?: Prisma.StringNullableFilter<"App"> | string | null
   containsAds?: Prisma.BoolFilter<"App"> | boolean
   developerName?: Prisma.StringNullableFilter<"App"> | string | null
+  type?: Prisma.EnumAppTypeFilter<"App"> | $Enums.AppType
+  appCategory?: Prisma.StringFilter<"App"> | string
   metadata?: Prisma.JsonNullableFilter<"App">
-  categoryId?: Prisma.StringFilter<"App"> | string
+  categoryId?: Prisma.StringNullableFilter<"App"> | string | null
   createdById?: Prisma.StringFilter<"App"> | string
   updatedById?: Prisma.StringNullableFilter<"App"> | string | null
   createdAt?: Prisma.DateTimeFilter<"App"> | Date | string
@@ -1596,6 +1654,8 @@ export type AppCreateWithoutCategoryInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1640,6 +1700,8 @@ export type AppUncheckedCreateWithoutCategoryInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById: string
   updatedById?: string | null
@@ -1710,11 +1772,13 @@ export type AppCreateWithoutTagLinksInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  category?: Prisma.CategoryCreateNestedOneWithoutAppsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
   media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
@@ -1754,8 +1818,10 @@ export type AppUncheckedCreateWithoutTagLinksInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId: string
+  categoryId?: string | null
   createdById: string
   updatedById?: string | null
   createdAt?: Date | string
@@ -1814,11 +1880,13 @@ export type AppUpdateWithoutTagLinksInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutAppsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
   media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
@@ -1858,8 +1926,10 @@ export type AppUncheckedUpdateWithoutTagLinksInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1902,11 +1972,13 @@ export type AppCreateWithoutSlidersInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  category?: Prisma.CategoryCreateNestedOneWithoutAppsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
   media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
@@ -1946,8 +2018,10 @@ export type AppUncheckedCreateWithoutSlidersInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId: string
+  categoryId?: string | null
   createdById: string
   updatedById?: string | null
   createdAt?: Date | string
@@ -2006,11 +2080,13 @@ export type AppUpdateWithoutSlidersInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutAppsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
   media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
@@ -2050,8 +2126,10 @@ export type AppUncheckedUpdateWithoutSlidersInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2094,11 +2172,13 @@ export type AppCreateWithoutViewEventsInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  category?: Prisma.CategoryCreateNestedOneWithoutAppsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
   media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
@@ -2138,8 +2218,10 @@ export type AppUncheckedCreateWithoutViewEventsInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId: string
+  categoryId?: string | null
   createdById: string
   updatedById?: string | null
   createdAt?: Date | string
@@ -2198,11 +2280,13 @@ export type AppUpdateWithoutViewEventsInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutAppsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
   media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
@@ -2242,8 +2326,10 @@ export type AppUncheckedUpdateWithoutViewEventsInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2286,11 +2372,13 @@ export type AppCreateWithoutDailyStatsInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  category?: Prisma.CategoryCreateNestedOneWithoutAppsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
   media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
@@ -2330,8 +2418,10 @@ export type AppUncheckedCreateWithoutDailyStatsInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId: string
+  categoryId?: string | null
   createdById: string
   updatedById?: string | null
   createdAt?: Date | string
@@ -2390,11 +2480,13 @@ export type AppUpdateWithoutDailyStatsInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutAppsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
   media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
@@ -2434,8 +2526,10 @@ export type AppUncheckedUpdateWithoutDailyStatsInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2478,11 +2572,13 @@ export type AppCreateWithoutAggregateStatInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  category?: Prisma.CategoryCreateNestedOneWithoutAppsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
   media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
@@ -2522,8 +2618,10 @@ export type AppUncheckedCreateWithoutAggregateStatInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId: string
+  categoryId?: string | null
   createdById: string
   updatedById?: string | null
   createdAt?: Date | string
@@ -2582,11 +2680,13 @@ export type AppUpdateWithoutAggregateStatInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutAppsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
   media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
@@ -2626,8 +2726,10 @@ export type AppUncheckedUpdateWithoutAggregateStatInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2670,11 +2772,13 @@ export type AppCreateWithoutSectionItemsInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  category?: Prisma.CategoryCreateNestedOneWithoutAppsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
   media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
@@ -2714,8 +2818,10 @@ export type AppUncheckedCreateWithoutSectionItemsInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId: string
+  categoryId?: string | null
   createdById: string
   updatedById?: string | null
   createdAt?: Date | string
@@ -2774,11 +2880,13 @@ export type AppUpdateWithoutSectionItemsInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutAppsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
   media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
@@ -2818,8 +2926,10 @@ export type AppUncheckedUpdateWithoutSectionItemsInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2862,11 +2972,13 @@ export type AppCreateWithoutMediaInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  category?: Prisma.CategoryCreateNestedOneWithoutAppsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
   links?: Prisma.AppLinkCreateNestedManyWithoutAppInput
@@ -2906,8 +3018,10 @@ export type AppUncheckedCreateWithoutMediaInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId: string
+  categoryId?: string | null
   createdById: string
   updatedById?: string | null
   createdAt?: Date | string
@@ -2966,11 +3080,13 @@ export type AppUpdateWithoutMediaInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutAppsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
   links?: Prisma.AppLinkUpdateManyWithoutAppNestedInput
@@ -3010,8 +3126,10 @@ export type AppUncheckedUpdateWithoutMediaInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3054,11 +3172,13 @@ export type AppCreateWithoutLinksInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  category?: Prisma.CategoryCreateNestedOneWithoutAppsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
   media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
@@ -3098,8 +3218,10 @@ export type AppUncheckedCreateWithoutLinksInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId: string
+  categoryId?: string | null
   createdById: string
   updatedById?: string | null
   createdAt?: Date | string
@@ -3158,11 +3280,13 @@ export type AppUpdateWithoutLinksInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutAppsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
   media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
@@ -3202,8 +3326,10 @@ export type AppUncheckedUpdateWithoutLinksInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3246,11 +3372,13 @@ export type AppCreateWithoutLibrariesInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  category?: Prisma.CategoryCreateNestedOneWithoutAppsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
   media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
@@ -3290,8 +3418,10 @@ export type AppUncheckedCreateWithoutLibrariesInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId: string
+  categoryId?: string | null
   createdById: string
   updatedById?: string | null
   createdAt?: Date | string
@@ -3350,11 +3480,13 @@ export type AppUpdateWithoutLibrariesInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutAppsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
   media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
@@ -3394,8 +3526,10 @@ export type AppUncheckedUpdateWithoutLibrariesInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3438,11 +3572,13 @@ export type AppCreateWithoutChangelogsInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  category?: Prisma.CategoryCreateNestedOneWithoutAppsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
   media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
@@ -3482,8 +3618,10 @@ export type AppUncheckedCreateWithoutChangelogsInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId: string
+  categoryId?: string | null
   createdById: string
   updatedById?: string | null
   createdAt?: Date | string
@@ -3542,11 +3680,13 @@ export type AppUpdateWithoutChangelogsInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutAppsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
   media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
@@ -3586,8 +3726,10 @@ export type AppUncheckedUpdateWithoutChangelogsInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3630,11 +3772,13 @@ export type AppCreateWithoutSupportTicketsInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  category?: Prisma.CategoryCreateNestedOneWithoutAppsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
   media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
@@ -3674,8 +3818,10 @@ export type AppUncheckedCreateWithoutSupportTicketsInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId: string
+  categoryId?: string | null
   createdById: string
   updatedById?: string | null
   createdAt?: Date | string
@@ -3734,11 +3880,13 @@ export type AppUpdateWithoutSupportTicketsInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutAppsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
   media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
@@ -3778,8 +3926,10 @@ export type AppUncheckedUpdateWithoutSupportTicketsInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3822,11 +3972,13 @@ export type AppCreateWithoutDescriptionVersionsInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  category?: Prisma.CategoryCreateNestedOneWithoutAppsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
   media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
@@ -3866,8 +4018,10 @@ export type AppUncheckedCreateWithoutDescriptionVersionsInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId: string
+  categoryId?: string | null
   createdById: string
   updatedById?: string | null
   createdAt?: Date | string
@@ -3926,11 +4080,13 @@ export type AppUpdateWithoutDescriptionVersionsInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutAppsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
   media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
@@ -3970,8 +4126,10 @@ export type AppUncheckedUpdateWithoutDescriptionVersionsInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4014,11 +4172,13 @@ export type AppCreateWithoutFeedbacksInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  category?: Prisma.CategoryCreateNestedOneWithoutAppsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
   media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
@@ -4058,8 +4218,10 @@ export type AppUncheckedCreateWithoutFeedbacksInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId: string
+  categoryId?: string | null
   createdById: string
   updatedById?: string | null
   createdAt?: Date | string
@@ -4118,11 +4280,13 @@ export type AppUpdateWithoutFeedbacksInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutAppsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
   media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
@@ -4162,8 +4326,10 @@ export type AppUncheckedUpdateWithoutFeedbacksInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4206,11 +4372,13 @@ export type AppCreateWithoutDownloadEventsInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  category?: Prisma.CategoryCreateNestedOneWithoutAppsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
   media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
@@ -4250,8 +4418,10 @@ export type AppUncheckedCreateWithoutDownloadEventsInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId: string
+  categoryId?: string | null
   createdById: string
   updatedById?: string | null
   createdAt?: Date | string
@@ -4310,11 +4480,13 @@ export type AppUpdateWithoutDownloadEventsInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutAppsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
   media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
@@ -4354,8 +4526,10 @@ export type AppUncheckedUpdateWithoutDownloadEventsInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4398,11 +4572,13 @@ export type AppCreateWithoutPaymentsInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  category: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  category?: Prisma.CategoryCreateNestedOneWithoutAppsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
   media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
@@ -4442,8 +4618,10 @@ export type AppUncheckedCreateWithoutPaymentsInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId: string
+  categoryId?: string | null
   createdById: string
   updatedById?: string | null
   createdAt?: Date | string
@@ -4502,11 +4680,13 @@ export type AppUpdateWithoutPaymentsInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutAppsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
   media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
@@ -4546,8 +4726,10 @@ export type AppUncheckedUpdateWithoutPaymentsInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4590,8 +4772,10 @@ export type AppCreateManyCreatedByInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId: string
+  categoryId?: string | null
   updatedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4619,8 +4803,10 @@ export type AppCreateManyUpdatedByInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId: string
+  categoryId?: string | null
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4648,11 +4834,13 @@ export type AppUpdateWithoutCreatedByInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutAppsNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
   media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
   links?: Prisma.AppLinkUpdateManyWithoutAppNestedInput
@@ -4692,8 +4880,10 @@ export type AppUncheckedUpdateWithoutCreatedByInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4736,8 +4926,10 @@ export type AppUncheckedUpdateManyWithoutCreatedByInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4765,11 +4957,13 @@ export type AppUpdateWithoutUpdatedByInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  category?: Prisma.CategoryUpdateOneRequiredWithoutAppsNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutAppsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
   media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
   links?: Prisma.AppLinkUpdateManyWithoutAppNestedInput
@@ -4809,8 +5003,10 @@ export type AppUncheckedUpdateWithoutUpdatedByInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4853,8 +5049,10 @@ export type AppUncheckedUpdateManyWithoutUpdatedByInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4882,6 +5080,8 @@ export type AppCreateManyCategoryInput = {
   privacyPolicyUrl?: string | null
   containsAds?: boolean
   developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById: string
   updatedById?: string | null
@@ -4911,6 +5111,8 @@ export type AppUpdateWithoutCategoryInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4955,6 +5157,8 @@ export type AppUncheckedUpdateWithoutCategoryInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4999,6 +5203,8 @@ export type AppUncheckedUpdateManyWithoutCategoryInput = {
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
   developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5176,6 +5382,8 @@ export type AppSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   privacyPolicyUrl?: boolean
   containsAds?: boolean
   developerName?: boolean
+  type?: boolean
+  appCategory?: boolean
   metadata?: boolean
   categoryId?: boolean
   createdById?: boolean
@@ -5183,7 +5391,7 @@ export type AppSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
+  category?: boolean | Prisma.App$categoryArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.App$updatedByArgs<ExtArgs>
   media?: boolean | Prisma.App$mediaArgs<ExtArgs>
@@ -5225,6 +5433,8 @@ export type AppSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extension
   privacyPolicyUrl?: boolean
   containsAds?: boolean
   developerName?: boolean
+  type?: boolean
+  appCategory?: boolean
   metadata?: boolean
   categoryId?: boolean
   createdById?: boolean
@@ -5232,7 +5442,7 @@ export type AppSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extension
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
+  category?: boolean | Prisma.App$categoryArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.App$updatedByArgs<ExtArgs>
 }, ExtArgs["result"]["app"]>
@@ -5258,6 +5468,8 @@ export type AppSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extension
   privacyPolicyUrl?: boolean
   containsAds?: boolean
   developerName?: boolean
+  type?: boolean
+  appCategory?: boolean
   metadata?: boolean
   categoryId?: boolean
   createdById?: boolean
@@ -5265,7 +5477,7 @@ export type AppSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extension
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
+  category?: boolean | Prisma.App$categoryArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.App$updatedByArgs<ExtArgs>
 }, ExtArgs["result"]["app"]>
@@ -5291,6 +5503,8 @@ export type AppSelectScalar = {
   privacyPolicyUrl?: boolean
   containsAds?: boolean
   developerName?: boolean
+  type?: boolean
+  appCategory?: boolean
   metadata?: boolean
   categoryId?: boolean
   createdById?: boolean
@@ -5300,9 +5514,9 @@ export type AppSelectScalar = {
   deletedAt?: boolean
 }
 
-export type AppOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "shortDescription" | "fullDescription" | "releaseNotes" | "version" | "status" | "publishedAt" | "isPaid" | "isFeatured" | "price" | "iconUrl" | "featureGraphicUrl" | "promoVideoUrl" | "supportEmail" | "supportWebsiteUrl" | "privacyPolicyUrl" | "containsAds" | "developerName" | "metadata" | "categoryId" | "createdById" | "updatedById" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["app"]>
+export type AppOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "shortDescription" | "fullDescription" | "releaseNotes" | "version" | "status" | "publishedAt" | "isPaid" | "isFeatured" | "price" | "iconUrl" | "featureGraphicUrl" | "promoVideoUrl" | "supportEmail" | "supportWebsiteUrl" | "privacyPolicyUrl" | "containsAds" | "developerName" | "type" | "appCategory" | "metadata" | "categoryId" | "createdById" | "updatedById" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["app"]>
 export type AppInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
+  category?: boolean | Prisma.App$categoryArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.App$updatedByArgs<ExtArgs>
   media?: boolean | Prisma.App$mediaArgs<ExtArgs>
@@ -5323,12 +5537,12 @@ export type AppInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   _count?: boolean | Prisma.AppCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AppIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
+  category?: boolean | Prisma.App$categoryArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.App$updatedByArgs<ExtArgs>
 }
 export type AppIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
+  category?: boolean | Prisma.App$categoryArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.App$updatedByArgs<ExtArgs>
 }
@@ -5336,7 +5550,7 @@ export type AppIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type $AppPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "App"
   objects: {
-    category: Prisma.$CategoryPayload<ExtArgs>
+    category: Prisma.$CategoryPayload<ExtArgs> | null
     createdBy: Prisma.$UserPayload<ExtArgs>
     updatedBy: Prisma.$UserPayload<ExtArgs> | null
     media: Prisma.$AppMediaPayload<ExtArgs>[]
@@ -5376,8 +5590,10 @@ export type $AppPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     privacyPolicyUrl: string | null
     containsAds: boolean
     developerName: string | null
+    type: $Enums.AppType
+    appCategory: string
     metadata: runtime.JsonValue | null
-    categoryId: string
+    categoryId: string | null
     createdById: string
     updatedById: string | null
     createdAt: Date
@@ -5777,7 +5993,7 @@ readonly fields: AppFieldRefs;
  */
 export interface Prisma__AppClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  category<T extends Prisma.CategoryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CategoryDefaultArgs<ExtArgs>>): Prisma.Prisma__CategoryClient<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  category<T extends Prisma.App$categoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.App$categoryArgs<ExtArgs>>): Prisma.Prisma__CategoryClient<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   updatedBy<T extends Prisma.App$updatedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.App$updatedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   media<T extends Prisma.App$mediaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.App$mediaArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppMediaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -5844,6 +6060,8 @@ export interface AppFieldRefs {
   readonly privacyPolicyUrl: Prisma.FieldRef<"App", 'String'>
   readonly containsAds: Prisma.FieldRef<"App", 'Boolean'>
   readonly developerName: Prisma.FieldRef<"App", 'String'>
+  readonly type: Prisma.FieldRef<"App", 'AppType'>
+  readonly appCategory: Prisma.FieldRef<"App", 'String'>
   readonly metadata: Prisma.FieldRef<"App", 'Json'>
   readonly categoryId: Prisma.FieldRef<"App", 'String'>
   readonly createdById: Prisma.FieldRef<"App", 'String'>
@@ -6249,6 +6467,25 @@ export type AppDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Limit how many Apps to delete.
    */
   limit?: number
+}
+
+/**
+ * App.category
+ */
+export type App$categoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Category
+   */
+  select?: Prisma.CategorySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Category
+   */
+  omit?: Prisma.CategoryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CategoryInclude<ExtArgs> | null
+  where?: Prisma.CategoryWhereInput
 }
 
 /**

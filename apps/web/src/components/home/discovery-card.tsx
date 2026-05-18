@@ -115,7 +115,7 @@ export function DiscoveryCard({
                 color: "#667187",
               }}
             >
-              {app.category.name}
+              {app.category?.name ?? app.appCategory ?? "App"}
             </Typography>
             <Typography
               sx={{

@@ -182,39 +182,6 @@ export function PublicSiteShell({
 
       <footer className="mt-9 border-t border-black/12 bg-[linear-gradient(180deg,color-mix(in_srgb,var(--background)_88%,white_12%),color-mix(in_srgb,var(--background)_96%,white_4%))]">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <section className="relative overflow-hidden rounded-4xl border border-black/10 bg-[linear-gradient(130deg,#0f1d40,#1f5ed4_52%,#8bb0f8)] p-6 text-white shadow-[0_24px_54px_-34px_rgba(20,23,31,0.95)] sm:p-8">
-            <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/15 blur-2xl" />
-
-            <p className="text-[11px] uppercase tracking-[0.14em] text-white/70">
-              Build faster
-            </p>
-            <h2 className="mt-1 max-w-190 text-[1.6rem] font-semibold tracking-[-0.02em] sm:text-[2rem]">
-              App-store foundation for apps, support, help center, and blog.
-            </h2>
-            <p className="mt-1.5 max-w-190 text-sm text-white/85">
-              Production-ready storefront patterns with data-driven content and
-              admin tooling built on microservices.
-            </p>
-
-            <div className="mt-2.5 flex flex-wrap gap-2">
-              <NextLink
-                href="/apps"
-                onClick={(event) => markAnchorNavigation(event, "/apps")}
-                className="inline-flex items-center rounded-lg border border-white/35 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-white/10"
-              >
-                Browse apps
-              </NextLink>
-              <NextLink
-                href="/help-support"
-                onClick={(event) =>
-                  markAnchorNavigation(event, "/help-support")
-                }
-                className="inline-flex items-center rounded-lg border border-white/35 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-white/10"
-              >
-                Open support
-              </NextLink>
-            </div>
-          </section>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
             <section>

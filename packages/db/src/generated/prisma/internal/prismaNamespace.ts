@@ -3613,6 +3613,7 @@ export const CategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
   icon: 'icon',
+  description: 'description',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   scheduledDeletionAt: 'scheduledDeletionAt',
@@ -3643,6 +3644,8 @@ export const AppScalarFieldEnum = {
   privacyPolicyUrl: 'privacyPolicyUrl',
   containsAds: 'containsAds',
   developerName: 'developerName',
+  type: 'type',
+  appCategory: 'appCategory',
   metadata: 'metadata',
   categoryId: 'categoryId',
   createdById: 'createdById',
@@ -4400,6 +4403,20 @@ export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Decimal[]'
  */
 export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+/**
+ * Reference to a field of type 'AppType'
+ */
+export type EnumAppTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AppType'>
+    
+
+
+/**
+ * Reference to a field of type 'AppType[]'
+ */
+export type ListEnumAppTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AppType[]'>
     
 
 

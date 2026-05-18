@@ -275,7 +275,7 @@ export function CardCarousel({
       onPointerLeave={endDrag}
     >
       <div
-        className={`flex items-stretch will-change-transform transform-gpu transition-all duration-[750ms] ease-[cubic-bezier(0.7,0,0.2,1)] ${
+        className={`flex items-stretch will-change-transform transform-gpu transition-all duration-750 ease-[cubic-bezier(0.7,0,0.2,1)] ${
           animate ? "" : "transition-none"
         }`}
         style={{

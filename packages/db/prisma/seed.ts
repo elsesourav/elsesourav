@@ -99,6 +99,7 @@ type AppSeed = {
   containsAds: boolean;
   iconUrl: string;
   featureGraphicUrl: string;
+  cardLayout?: string;
   promoVideoUrl?: string;
   supportEmail: string;
   supportWebsiteUrl: string;
@@ -190,10 +191,27 @@ type PaymentSeed = {
 };
 
 const categorySeeds = [
-  { name: "Chrome Extensions", icon: "Puzzle" },
-  { name: "Android Apps", icon: "Smartphone" },
-  { name: "Developer Tools", icon: "Wrench" },
-  { name: "Scripts", icon: "Terminal" },
+  {
+    name: "Chrome Extensions",
+    icon: "Puzzle",
+    description:
+      "Browser add-ons for focus, accessibility, and workflow boosts.",
+  },
+  {
+    name: "Android Apps",
+    icon: "Smartphone",
+    description: "Mobile experiences for habits, travel, and daily utilities.",
+  },
+  {
+    name: "Developer Tools",
+    icon: "Wrench",
+    description: "Dashboards, observability, and tooling for modern teams.",
+  },
+  {
+    name: "Scripts",
+    icon: "Terminal",
+    description: "Automation scripts for releases, audits, and batch tasks.",
+  },
 ] as const;
 
 const appTagSeeds = [
@@ -756,6 +774,1152 @@ const appSeeds: AppSeed[] = [
         sectionType: StoreSectionType.UPCOMING,
         orderIndex: 3,
         releaseOffsetDays: 14,
+      },
+    ],
+  },
+  {
+    slug: "tab-focus-sprint",
+    title: "Tab Focus Sprint",
+    repo: "tab-focus-sprint",
+    categoryName: "Chrome Extensions",
+    shortDescription:
+      "Reduce tab fatigue with focus timers, grouped workspaces, and smart pinning.",
+    fullDescription: [
+      "### Project source",
+      "Based on [elsesourav/tab-focus-sprint](https://github.com/elsesourav/tab-focus-sprint).",
+      "",
+      "### What it does",
+      "Turn scattered tabs into focused work sprints with saved workspaces.",
+      "",
+      "### Highlights",
+      "- Smart pin for priority tabs.",
+      "- Focus timer overlays.",
+      "- One click workspace restore.",
+    ].join("\n"),
+    releaseNotes: [
+      "## v1.0.2",
+      "- Added workspace quick switcher.",
+      "- Reduced CPU usage on idle.",
+    ].join("\n"),
+    version: "1.0.2",
+    status: AppStatus.PUBLISHED,
+    publishedDaysAgo: 6,
+    isPaid: false,
+    price: 0,
+    isFeatured: false,
+    containsAds: false,
+    iconUrl:
+      "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80",
+    featureGraphicUrl:
+      "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&w=1400&q=80",
+    cardLayout: "horizontal",
+    supportEmail: "chrome@elsesourav.dev",
+    supportWebsiteUrl: "https://github.com/elsesourav/tab-focus-sprint",
+    privacyPolicyUrl: "https://elsesourav.dev/privacy",
+    developerName: "ElseSourav Labs",
+    tags: ["productivity", "automation"],
+    links: [
+      {
+        platform: LinkPlatform.CHROME,
+        downloadUrl:
+          "https://chromewebstore.google.com/detail/tab-focus-sprint-demo",
+      },
+      {
+        platform: LinkPlatform.GITHUB,
+        downloadUrl: "https://github.com/elsesourav/tab-focus-sprint",
+        sourceCodeUrl: "https://github.com/elsesourav/tab-focus-sprint",
+      },
+    ],
+    media: [
+      {
+        type: MediaType.IMAGE,
+        url: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1400&q=80",
+        alt: "Focused tab workspace",
+        mimeType: "image/jpeg",
+        width: 1400,
+        height: 934,
+        fileSizeBytes: 360100n,
+      },
+    ],
+    sections: [
+      {
+        sectionType: StoreSectionType.LATEST,
+        orderIndex: 5,
+        releaseOffsetDays: -2,
+      },
+    ],
+  },
+  {
+    slug: "link-clipper-pro",
+    title: "Link Clipper Pro",
+    repo: "link-clipper-pro",
+    categoryName: "Chrome Extensions",
+    shortDescription:
+      "Clip research links with tags, notes, and automatic reading lists.",
+    fullDescription: [
+      "### Project source",
+      "Based on [elsesourav/link-clipper-pro](https://github.com/elsesourav/link-clipper-pro).",
+      "",
+      "### Use case",
+      "Capture links, annotate them quickly, and sync curated lists.",
+      "",
+      "### Highlights",
+      "- Fast tag suggestions.",
+      "- Snippet capture from pages.",
+      "- Saved reading queues.",
+    ].join("\n"),
+    releaseNotes: [
+      "## v1.1.0",
+      "- Added quick clip keyboard shortcut.",
+      "- Added light/dark badge styles.",
+    ].join("\n"),
+    version: "1.1.0",
+    status: AppStatus.PUBLISHED,
+    publishedDaysAgo: 9,
+    isPaid: true,
+    price: 3.5,
+    isFeatured: false,
+    containsAds: false,
+    iconUrl:
+      "https://images.unsplash.com/photo-1557682224-5b8590cd9ec5?auto=format&fit=crop&w=400&q=80",
+    featureGraphicUrl:
+      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=80",
+    cardLayout: "square",
+    supportEmail: "chrome@elsesourav.dev",
+    supportWebsiteUrl: "https://github.com/elsesourav/link-clipper-pro",
+    privacyPolicyUrl: "https://elsesourav.dev/privacy",
+    developerName: "ElseSourav Labs",
+    tags: ["productivity", "learning"],
+    links: [
+      {
+        platform: LinkPlatform.CHROME,
+        downloadUrl:
+          "https://chromewebstore.google.com/detail/link-clipper-pro-demo",
+      },
+      {
+        platform: LinkPlatform.GITHUB,
+        downloadUrl: "https://github.com/elsesourav/link-clipper-pro",
+        sourceCodeUrl: "https://github.com/elsesourav/link-clipper-pro",
+      },
+    ],
+    media: [
+      {
+        type: MediaType.IMAGE,
+        url: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1400&q=80",
+        alt: "Link clipper library",
+        mimeType: "image/jpeg",
+        width: 1400,
+        height: 934,
+        fileSizeBytes: 350100n,
+      },
+    ],
+    sections: [
+      {
+        sectionType: StoreSectionType.FEATURED,
+        orderIndex: 5,
+        releaseOffsetDays: -4,
+      },
+    ],
+  },
+  {
+    slug: "color-contrast-scout",
+    title: "Color Contrast Scout",
+    repo: "color-contrast-scout",
+    categoryName: "Chrome Extensions",
+    shortDescription:
+      "Audit contrast ratios and accessibility hints directly in the browser.",
+    fullDescription: [
+      "### Project source",
+      "Based on [elsesourav/color-contrast-scout](https://github.com/elsesourav/color-contrast-scout).",
+      "",
+      "### Focus",
+      "Run instant accessibility checks on any page component.",
+      "",
+      "### Highlights",
+      "- WCAG AA/AAA checks.",
+      "- Palette snapshots.",
+      "- Exportable reports.",
+    ].join("\n"),
+    releaseNotes: [
+      "## v0.9.8",
+      "- Added PDF export for reports.",
+      "- Improved element picker accuracy.",
+    ].join("\n"),
+    version: "0.9.8",
+    status: AppStatus.PUBLISHED,
+    publishedDaysAgo: 11,
+    isPaid: false,
+    price: 0,
+    isFeatured: false,
+    containsAds: false,
+    iconUrl:
+      "https://images.unsplash.com/photo-1516110833967-5787e533b65f?auto=format&fit=crop&w=400&q=80",
+    featureGraphicUrl:
+      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80",
+    cardLayout: "vertical",
+    supportEmail: "chrome@elsesourav.dev",
+    supportWebsiteUrl: "https://github.com/elsesourav/color-contrast-scout",
+    privacyPolicyUrl: "https://elsesourav.dev/privacy",
+    developerName: "ElseSourav Labs",
+    tags: ["image-tools", "learning"],
+    links: [
+      {
+        platform: LinkPlatform.CHROME,
+        downloadUrl:
+          "https://chromewebstore.google.com/detail/color-contrast-scout-demo",
+      },
+      {
+        platform: LinkPlatform.GITHUB,
+        downloadUrl: "https://github.com/elsesourav/color-contrast-scout",
+        sourceCodeUrl: "https://github.com/elsesourav/color-contrast-scout",
+      },
+    ],
+    media: [
+      {
+        type: MediaType.IMAGE,
+        url: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1400&q=80",
+        alt: "Contrast inspector",
+        mimeType: "image/jpeg",
+        width: 1400,
+        height: 933,
+        fileSizeBytes: 342200n,
+      },
+    ],
+    sections: [
+      {
+        sectionType: StoreSectionType.UPCOMING,
+        orderIndex: 4,
+        releaseOffsetDays: 6,
+      },
+    ],
+  },
+  {
+    slug: "session-keeper",
+    title: "Session Keeper",
+    repo: "session-keeper",
+    categoryName: "Chrome Extensions",
+    shortDescription:
+      "Save and restore browser sessions with quick labels and analytics.",
+    fullDescription: [
+      "### Project source",
+      "Based on [elsesourav/session-keeper](https://github.com/elsesourav/session-keeper).",
+      "",
+      "### Core value",
+      "Restore focused sessions for different projects in seconds.",
+      "",
+      "### Highlights",
+      "- One click backups.",
+      "- Session analytics.",
+      "- Cloud sync ready.",
+    ].join("\n"),
+    releaseNotes: [
+      "## v1.3.5",
+      "- Added session merge warnings.",
+      "- Added quick search filter.",
+    ].join("\n"),
+    version: "1.3.5",
+    status: AppStatus.PUBLISHED,
+    publishedDaysAgo: 4,
+    isPaid: true,
+    price: 2.99,
+    isFeatured: true,
+    containsAds: false,
+    iconUrl:
+      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=400&q=80",
+    featureGraphicUrl:
+      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80",
+    cardLayout: "horizontal",
+    supportEmail: "chrome@elsesourav.dev",
+    supportWebsiteUrl: "https://github.com/elsesourav/session-keeper",
+    privacyPolicyUrl: "https://elsesourav.dev/privacy",
+    developerName: "ElseSourav Labs",
+    tags: ["analytics", "productivity"],
+    links: [
+      {
+        platform: LinkPlatform.CHROME,
+        downloadUrl:
+          "https://chromewebstore.google.com/detail/session-keeper-demo",
+      },
+      {
+        platform: LinkPlatform.GITHUB,
+        downloadUrl: "https://github.com/elsesourav/session-keeper",
+        sourceCodeUrl: "https://github.com/elsesourav/session-keeper",
+      },
+    ],
+    media: [
+      {
+        type: MediaType.IMAGE,
+        url: "https://images.unsplash.com/photo-1492724441997-5dc865305da7?auto=format&fit=crop&w=1400&q=80",
+        alt: "Session restore dashboard",
+        mimeType: "image/jpeg",
+        width: 1400,
+        height: 934,
+        fileSizeBytes: 365100n,
+      },
+    ],
+    sections: [
+      {
+        sectionType: StoreSectionType.FEATURED,
+        orderIndex: 6,
+        releaseOffsetDays: -2,
+      },
+    ],
+  },
+  {
+    slug: "habit-glide",
+    title: "Habit Glide",
+    repo: "habit-glide",
+    categoryName: "Android Apps",
+    shortDescription:
+      "Lightweight habit tracker with streak visuals and quiet reminders.",
+    fullDescription: [
+      "### Project source",
+      "Based on [elsesourav/habit-glide](https://github.com/elsesourav/habit-glide).",
+      "",
+      "### Focus",
+      "Keep daily habits on track with simple streaks and focus cards.",
+      "",
+      "### Highlights",
+      "- Daily focus cards.",
+      "- Minimal reminders.",
+      "- Weekly summaries.",
+    ].join("\n"),
+    releaseNotes: [
+      "## v1.0.0",
+      "- Added streak highlights.",
+      "- Improved sync recovery.",
+    ].join("\n"),
+    version: "1.0.0",
+    status: AppStatus.PUBLISHED,
+    publishedDaysAgo: 8,
+    isPaid: false,
+    price: 0,
+    isFeatured: false,
+    containsAds: false,
+    iconUrl:
+      "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&w=400&q=80",
+    featureGraphicUrl:
+      "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1400&q=80",
+    cardLayout: "square",
+    supportEmail: "mobile@elsesourav.dev",
+    supportWebsiteUrl: "https://github.com/elsesourav/habit-glide",
+    privacyPolicyUrl: "https://elsesourav.dev/privacy",
+    developerName: "ElseSourav Labs",
+    tags: ["productivity", "learning"],
+    links: [
+      {
+        platform: LinkPlatform.ANDROID,
+        downloadUrl:
+          "https://play.google.com/store/apps/details?id=com.elsesourav.habitglide.demo",
+      },
+      {
+        platform: LinkPlatform.GITHUB,
+        downloadUrl: "https://github.com/elsesourav/habit-glide",
+        sourceCodeUrl: "https://github.com/elsesourav/habit-glide",
+      },
+    ],
+    media: [
+      {
+        type: MediaType.IMAGE,
+        url: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1400&q=80",
+        alt: "Habit streak overview",
+        mimeType: "image/jpeg",
+        width: 1400,
+        height: 934,
+        fileSizeBytes: 351100n,
+      },
+    ],
+    sections: [
+      {
+        sectionType: StoreSectionType.LATEST,
+        orderIndex: 5,
+        releaseOffsetDays: -3,
+      },
+    ],
+  },
+  {
+    slug: "budget-tracks",
+    title: "Budget Tracks",
+    repo: "budget-tracks",
+    categoryName: "Android Apps",
+    shortDescription:
+      "Daily budget planning with smart categories and offline sync.",
+    fullDescription: [
+      "### Project source",
+      "Based on [elsesourav/budget-tracks](https://github.com/elsesourav/budget-tracks).",
+      "",
+      "### Focus",
+      "Track spending with lightweight categories and snapshot charts.",
+      "",
+      "### Highlights",
+      "- Offline first tracking.",
+      "- Smart category grouping.",
+      "- Weekly trends.",
+    ].join("\n"),
+    releaseNotes: [
+      "## v1.4.0",
+      "- Added budget alerts.",
+      "- Improved import flow.",
+    ].join("\n"),
+    version: "1.4.0",
+    status: AppStatus.PUBLISHED,
+    publishedDaysAgo: 10,
+    isPaid: true,
+    price: 1.99,
+    isFeatured: false,
+    containsAds: false,
+    iconUrl:
+      "https://images.unsplash.com/photo-1518544887878-0f2ac2a1a861?auto=format&fit=crop&w=400&q=80",
+    featureGraphicUrl:
+      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1400&q=80",
+    cardLayout: "horizontal",
+    supportEmail: "mobile@elsesourav.dev",
+    supportWebsiteUrl: "https://github.com/elsesourav/budget-tracks",
+    privacyPolicyUrl: "https://elsesourav.dev/privacy",
+    developerName: "ElseSourav Labs",
+    tags: ["analytics", "productivity"],
+    links: [
+      {
+        platform: LinkPlatform.ANDROID,
+        downloadUrl:
+          "https://play.google.com/store/apps/details?id=com.elsesourav.budgettracks.demo",
+      },
+      {
+        platform: LinkPlatform.GITHUB,
+        downloadUrl: "https://github.com/elsesourav/budget-tracks",
+        sourceCodeUrl: "https://github.com/elsesourav/budget-tracks",
+      },
+    ],
+    media: [
+      {
+        type: MediaType.IMAGE,
+        url: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1400&q=80",
+        alt: "Budget dashboard",
+        mimeType: "image/jpeg",
+        width: 1400,
+        height: 934,
+        fileSizeBytes: 358400n,
+      },
+    ],
+    sections: [
+      {
+        sectionType: StoreSectionType.FEATURED,
+        orderIndex: 5,
+        releaseOffsetDays: -5,
+      },
+    ],
+  },
+  {
+    slug: "sleep-signal",
+    title: "Sleep Signal",
+    repo: "sleep-signal",
+    categoryName: "Android Apps",
+    shortDescription:
+      "Sleep routine coaching with smart wind-down playlists and alarms.",
+    fullDescription: [
+      "### Project source",
+      "Based on [elsesourav/sleep-signal](https://github.com/elsesourav/sleep-signal).",
+      "",
+      "### Focus",
+      "Gentle sleep routines with analytics on bedtime consistency.",
+      "",
+      "### Highlights",
+      "- Wind-down routines.",
+      "- Sleep analytics.",
+      "- Gentle alarm presets.",
+    ].join("\n"),
+    releaseNotes: [
+      "## v0.8.9",
+      "- Added soft alarm fades.",
+      "- Updated routine reminders.",
+    ].join("\n"),
+    version: "0.8.9",
+    status: AppStatus.PUBLISHED,
+    publishedDaysAgo: 12,
+    isPaid: false,
+    price: 0,
+    isFeatured: false,
+    containsAds: false,
+    iconUrl:
+      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=400&q=80",
+    featureGraphicUrl:
+      "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1400&q=80",
+    cardLayout: "vertical",
+    supportEmail: "mobile@elsesourav.dev",
+    supportWebsiteUrl: "https://github.com/elsesourav/sleep-signal",
+    privacyPolicyUrl: "https://elsesourav.dev/privacy",
+    developerName: "ElseSourav Labs",
+    tags: ["learning", "analytics"],
+    links: [
+      {
+        platform: LinkPlatform.ANDROID,
+        downloadUrl:
+          "https://play.google.com/store/apps/details?id=com.elsesourav.sleepsignal.demo",
+      },
+      {
+        platform: LinkPlatform.GITHUB,
+        downloadUrl: "https://github.com/elsesourav/sleep-signal",
+        sourceCodeUrl: "https://github.com/elsesourav/sleep-signal",
+      },
+    ],
+    media: [
+      {
+        type: MediaType.IMAGE,
+        url: "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=1400&q=80",
+        alt: "Sleep routine dashboard",
+        mimeType: "image/jpeg",
+        width: 1400,
+        height: 934,
+        fileSizeBytes: 350600n,
+      },
+    ],
+    sections: [
+      {
+        sectionType: StoreSectionType.UPCOMING,
+        orderIndex: 4,
+        releaseOffsetDays: 12,
+      },
+    ],
+  },
+  {
+    slug: "recipe-snapbook",
+    title: "Recipe Snapbook",
+    repo: "recipe-snapbook",
+    categoryName: "Android Apps",
+    shortDescription:
+      "Capture recipes, scan ingredients, and build quick grocery lists.",
+    fullDescription: [
+      "### Project source",
+      "Based on [elsesourav/recipe-snapbook](https://github.com/elsesourav/recipe-snapbook).",
+      "",
+      "### Focus",
+      "Store recipes with image scans and easy meal planning.",
+      "",
+      "### Highlights",
+      "- OCR ingredient capture.",
+      "- Meal plan calendar.",
+      "- Grocery list sync.",
+    ].join("\n"),
+    releaseNotes: [
+      "## v1.2.1",
+      "- Added quick scan cropping.",
+      "- Improved pantry categories.",
+    ].join("\n"),
+    version: "1.2.1",
+    status: AppStatus.PUBLISHED,
+    publishedDaysAgo: 5,
+    isPaid: true,
+    price: 2.49,
+    isFeatured: true,
+    containsAds: false,
+    iconUrl:
+      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80",
+    featureGraphicUrl:
+      "https://images.unsplash.com/photo-1498575207490-0c0f2d7a5df1?auto=format&fit=crop&w=1400&q=80",
+    cardLayout: "horizontal",
+    supportEmail: "mobile@elsesourav.dev",
+    supportWebsiteUrl: "https://github.com/elsesourav/recipe-snapbook",
+    privacyPolicyUrl: "https://elsesourav.dev/privacy",
+    developerName: "ElseSourav Labs",
+    tags: ["learning", "productivity"],
+    links: [
+      {
+        platform: LinkPlatform.ANDROID,
+        downloadUrl:
+          "https://play.google.com/store/apps/details?id=com.elsesourav.recipesnapbook.demo",
+      },
+      {
+        platform: LinkPlatform.GITHUB,
+        downloadUrl: "https://github.com/elsesourav/recipe-snapbook",
+        sourceCodeUrl: "https://github.com/elsesourav/recipe-snapbook",
+      },
+    ],
+    media: [
+      {
+        type: MediaType.IMAGE,
+        url: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=1400&q=80",
+        alt: "Recipe organizer",
+        mimeType: "image/jpeg",
+        width: 1400,
+        height: 934,
+        fileSizeBytes: 359000n,
+      },
+    ],
+    sections: [
+      {
+        sectionType: StoreSectionType.LATEST,
+        orderIndex: 6,
+        releaseOffsetDays: -2,
+      },
+    ],
+  },
+  {
+    slug: "api-log-atlas",
+    title: "API Log Atlas",
+    repo: "api-log-atlas",
+    categoryName: "Developer Tools",
+    shortDescription:
+      "Trace API activity with searchable logs and alert-ready dashboards.",
+    fullDescription: [
+      "### Project source",
+      "Based on [elsesourav/api-log-atlas](https://github.com/elsesourav/api-log-atlas).",
+      "",
+      "### Focus",
+      "Inspect request flows and isolate error spikes quickly.",
+      "",
+      "### Highlights",
+      "- Queryable log filters.",
+      "- Incident trend charts.",
+      "- Exportable reports.",
+    ].join("\n"),
+    releaseNotes: [
+      "## v2.0.1",
+      "- Added anomaly alerts.",
+      "- Improved filter presets.",
+    ].join("\n"),
+    version: "2.0.1",
+    status: AppStatus.PUBLISHED,
+    publishedDaysAgo: 9,
+    isPaid: false,
+    price: 0,
+    isFeatured: true,
+    containsAds: false,
+    iconUrl:
+      "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&w=400&q=80",
+    featureGraphicUrl:
+      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80",
+    cardLayout: "horizontal",
+    supportEmail: "devtools@elsesourav.dev",
+    supportWebsiteUrl: "https://github.com/elsesourav/api-log-atlas",
+    privacyPolicyUrl: "https://elsesourav.dev/privacy",
+    developerName: "ElseSourav Labs",
+    tags: ["analytics", "automation"],
+    links: [
+      {
+        platform: LinkPlatform.GITHUB,
+        downloadUrl: "https://github.com/elsesourav/api-log-atlas",
+        sourceCodeUrl: "https://github.com/elsesourav/api-log-atlas",
+      },
+      {
+        platform: LinkPlatform.WEBSITE,
+        downloadUrl: "https://github.com/elsesourav/api-log-atlas",
+      },
+    ],
+    media: [
+      {
+        type: MediaType.IMAGE,
+        url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1400&q=80",
+        alt: "API log dashboards",
+        mimeType: "image/jpeg",
+        width: 1400,
+        height: 934,
+        fileSizeBytes: 360800n,
+      },
+    ],
+    sections: [
+      {
+        sectionType: StoreSectionType.FEATURED,
+        orderIndex: 6,
+        releaseOffsetDays: -3,
+      },
+    ],
+  },
+  {
+    slug: "schema-diff-radar",
+    title: "Schema Diff Radar",
+    repo: "schema-diff-radar",
+    categoryName: "Developer Tools",
+    shortDescription:
+      "Monitor schema changes with visual diffs and automated alerts.",
+    fullDescription: [
+      "### Project source",
+      "Based on [elsesourav/schema-diff-radar](https://github.com/elsesourav/schema-diff-radar).",
+      "",
+      "### Focus",
+      "Track schema evolution without surprises in production.",
+      "",
+      "### Highlights",
+      "- Visual diff reports.",
+      "- Migration readiness checks.",
+      "- Slack-ready summaries.",
+    ].join("\n"),
+    releaseNotes: [
+      "## v1.5.0",
+      "- Added diff severity labels.",
+      "- Added release summaries.",
+    ].join("\n"),
+    version: "1.5.0",
+    status: AppStatus.PUBLISHED,
+    publishedDaysAgo: 13,
+    isPaid: true,
+    price: 4.5,
+    isFeatured: false,
+    containsAds: false,
+    iconUrl:
+      "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=400&q=80",
+    featureGraphicUrl:
+      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=80",
+    cardLayout: "square",
+    supportEmail: "devtools@elsesourav.dev",
+    supportWebsiteUrl: "https://github.com/elsesourav/schema-diff-radar",
+    privacyPolicyUrl: "https://elsesourav.dev/privacy",
+    developerName: "ElseSourav Labs",
+    tags: ["analytics", "productivity"],
+    links: [
+      {
+        platform: LinkPlatform.GITHUB,
+        downloadUrl: "https://github.com/elsesourav/schema-diff-radar",
+        sourceCodeUrl: "https://github.com/elsesourav/schema-diff-radar",
+      },
+      {
+        platform: LinkPlatform.WEBSITE,
+        downloadUrl: "https://github.com/elsesourav/schema-diff-radar",
+      },
+    ],
+    media: [
+      {
+        type: MediaType.IMAGE,
+        url: "https://images.unsplash.com/photo-1551281044-8b34c5e5f2f8?auto=format&fit=crop&w=1400&q=80",
+        alt: "Schema diff timeline",
+        mimeType: "image/jpeg",
+        width: 1400,
+        height: 934,
+        fileSizeBytes: 352200n,
+      },
+    ],
+    sections: [
+      {
+        sectionType: StoreSectionType.LATEST,
+        orderIndex: 6,
+        releaseOffsetDays: -2,
+      },
+    ],
+  },
+  {
+    slug: "deploy-checklist",
+    title: "Deploy Checklist",
+    repo: "deploy-checklist",
+    categoryName: "Developer Tools",
+    shortDescription:
+      "Release checklist tooling with stage gates and audit logs.",
+    fullDescription: [
+      "### Project source",
+      "Based on [elsesourav/deploy-checklist](https://github.com/elsesourav/deploy-checklist).",
+      "",
+      "### Focus",
+      "Keep release steps consistent with signoffs and notes.",
+      "",
+      "### Highlights",
+      "- Stage gates for releases.",
+      "- Release history export.",
+      "- Checklist templates.",
+    ].join("\n"),
+    releaseNotes: [
+      "## v1.3.1",
+      "- Added stage approval reminders.",
+      "- Added release note exports.",
+    ].join("\n"),
+    version: "1.3.1",
+    status: AppStatus.PUBLISHED,
+    publishedDaysAgo: 7,
+    isPaid: false,
+    price: 0,
+    isFeatured: false,
+    containsAds: false,
+    iconUrl:
+      "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80",
+    featureGraphicUrl:
+      "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1400&q=80",
+    cardLayout: "vertical",
+    supportEmail: "devtools@elsesourav.dev",
+    supportWebsiteUrl: "https://github.com/elsesourav/deploy-checklist",
+    privacyPolicyUrl: "https://elsesourav.dev/privacy",
+    developerName: "ElseSourav Labs",
+    tags: ["automation", "productivity"],
+    links: [
+      {
+        platform: LinkPlatform.GITHUB,
+        downloadUrl: "https://github.com/elsesourav/deploy-checklist",
+        sourceCodeUrl: "https://github.com/elsesourav/deploy-checklist",
+      },
+      {
+        platform: LinkPlatform.WEBSITE,
+        downloadUrl: "https://github.com/elsesourav/deploy-checklist",
+      },
+    ],
+    media: [
+      {
+        type: MediaType.IMAGE,
+        url: "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1400&q=80",
+        alt: "Release checklist board",
+        mimeType: "image/jpeg",
+        width: 1400,
+        height: 934,
+        fileSizeBytes: 358100n,
+      },
+    ],
+    sections: [
+      {
+        sectionType: StoreSectionType.UPCOMING,
+        orderIndex: 5,
+        releaseOffsetDays: 9,
+      },
+    ],
+  },
+  {
+    slug: "perf-trace-kit",
+    title: "Perf Trace Kit",
+    repo: "perf-trace-kit",
+    categoryName: "Developer Tools",
+    shortDescription:
+      "Collect client traces and service spans with quick visual dashboards.",
+    fullDescription: [
+      "### Project source",
+      "Based on [elsesourav/perf-trace-kit](https://github.com/elsesourav/perf-trace-kit).",
+      "",
+      "### Focus",
+      "Monitor performance hot spots with detailed traces.",
+      "",
+      "### Highlights",
+      "- Trace waterfall views.",
+      "- Frontend marks and measures.",
+      "- Exportable traces.",
+    ].join("\n"),
+    releaseNotes: [
+      "## v2.2.0",
+      "- Added trace sampling.",
+      "- Added latency highlights.",
+    ].join("\n"),
+    version: "2.2.0",
+    status: AppStatus.PUBLISHED,
+    publishedDaysAgo: 15,
+    isPaid: true,
+    price: 5.0,
+    isFeatured: true,
+    containsAds: false,
+    iconUrl:
+      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=400&q=80",
+    featureGraphicUrl:
+      "https://images.unsplash.com/photo-1551281044-8b34c5e5f2f8?auto=format&fit=crop&w=1400&q=80",
+    cardLayout: "horizontal",
+    supportEmail: "devtools@elsesourav.dev",
+    supportWebsiteUrl: "https://github.com/elsesourav/perf-trace-kit",
+    privacyPolicyUrl: "https://elsesourav.dev/privacy",
+    developerName: "ElseSourav Labs",
+    tags: ["analytics", "automation"],
+    links: [
+      {
+        platform: LinkPlatform.GITHUB,
+        downloadUrl: "https://github.com/elsesourav/perf-trace-kit",
+        sourceCodeUrl: "https://github.com/elsesourav/perf-trace-kit",
+      },
+      {
+        platform: LinkPlatform.WEBSITE,
+        downloadUrl: "https://github.com/elsesourav/perf-trace-kit",
+      },
+    ],
+    media: [
+      {
+        type: MediaType.IMAGE,
+        url: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1400&q=80",
+        alt: "Performance trace kit",
+        mimeType: "image/jpeg",
+        width: 1400,
+        height: 934,
+        fileSizeBytes: 357800n,
+      },
+    ],
+    sections: [
+      {
+        sectionType: StoreSectionType.FEATURED,
+        orderIndex: 7,
+        releaseOffsetDays: -4,
+      },
+    ],
+  },
+  {
+    slug: "repo-audit-kit",
+    title: "Repo Audit Kit",
+    repo: "repo-audit-kit",
+    categoryName: "Scripts",
+    shortDescription:
+      "Automated repo audits for dependency risks and license compliance.",
+    fullDescription: [
+      "### Project source",
+      "Based on [elsesourav/repo-audit-kit](https://github.com/elsesourav/repo-audit-kit).",
+      "",
+      "### Focus",
+      "Run quick audits across large repos and export findings.",
+      "",
+      "### Highlights",
+      "- License risk scans.",
+      "- Dependency freshness checks.",
+      "- Export to markdown.",
+    ].join("\n"),
+    releaseNotes: [
+      "## v1.1.2",
+      "- Added risk summary output.",
+      "- Added repo scoring.",
+    ].join("\n"),
+    version: "1.1.2",
+    status: AppStatus.PUBLISHED,
+    publishedDaysAgo: 6,
+    isPaid: false,
+    price: 0,
+    isFeatured: false,
+    containsAds: false,
+    iconUrl:
+      "https://images.unsplash.com/photo-1555949963-aa79dcee981c?auto=format&fit=crop&w=400&q=80",
+    featureGraphicUrl:
+      "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?auto=format&fit=crop&w=1400&q=80",
+    cardLayout: "square",
+    supportEmail: "automation@elsesourav.dev",
+    supportWebsiteUrl: "https://github.com/elsesourav/repo-audit-kit",
+    privacyPolicyUrl: "https://elsesourav.dev/privacy",
+    developerName: "ElseSourav Labs",
+    tags: ["automation", "analytics"],
+    links: [
+      {
+        platform: LinkPlatform.GITHUB,
+        downloadUrl: "https://github.com/elsesourav/repo-audit-kit",
+        sourceCodeUrl: "https://github.com/elsesourav/repo-audit-kit",
+      },
+      {
+        platform: LinkPlatform.OTHER,
+        downloadUrl: "https://github.com/elsesourav/repo-audit-kit/releases",
+      },
+    ],
+    media: [
+      {
+        type: MediaType.IMAGE,
+        url: "https://images.unsplash.com/photo-1484417894907-623942c8ee29?auto=format&fit=crop&w=1400&q=80",
+        alt: "Repo audit overview",
+        mimeType: "image/jpeg",
+        width: 1400,
+        height: 933,
+        fileSizeBytes: 350500n,
+      },
+    ],
+    sections: [
+      {
+        sectionType: StoreSectionType.LATEST,
+        orderIndex: 7,
+        releaseOffsetDays: -2,
+      },
+    ],
+  },
+  {
+    slug: "batch-image-resize",
+    title: "Batch Image Resize",
+    repo: "batch-image-resize",
+    categoryName: "Scripts",
+    shortDescription:
+      "CLI toolkit for resizing, compressing, and tagging image batches.",
+    fullDescription: [
+      "### Project source",
+      "Based on [elsesourav/batch-image-resize](https://github.com/elsesourav/batch-image-resize).",
+      "",
+      "### Focus",
+      "Automate image processing for stores and marketing teams.",
+      "",
+      "### Highlights",
+      "- Preset export profiles.",
+      "- Parallel processing.",
+      "- Metadata tagging.",
+    ].join("\n"),
+    releaseNotes: [
+      "## v1.0.4",
+      "- Added AVIF export preset.",
+      "- Added progress summaries.",
+    ].join("\n"),
+    version: "1.0.4",
+    status: AppStatus.PUBLISHED,
+    publishedDaysAgo: 12,
+    isPaid: true,
+    price: 1.25,
+    isFeatured: false,
+    containsAds: false,
+    iconUrl:
+      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=80",
+    featureGraphicUrl:
+      "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1400&q=80",
+    cardLayout: "horizontal",
+    supportEmail: "automation@elsesourav.dev",
+    supportWebsiteUrl: "https://github.com/elsesourav/batch-image-resize",
+    privacyPolicyUrl: "https://elsesourav.dev/privacy",
+    developerName: "ElseSourav Labs",
+    tags: ["image-tools", "automation"],
+    links: [
+      {
+        platform: LinkPlatform.GITHUB,
+        downloadUrl: "https://github.com/elsesourav/batch-image-resize",
+        sourceCodeUrl: "https://github.com/elsesourav/batch-image-resize",
+      },
+      {
+        platform: LinkPlatform.OTHER,
+        downloadUrl:
+          "https://github.com/elsesourav/batch-image-resize/releases/latest",
+      },
+    ],
+    media: [
+      {
+        type: MediaType.IMAGE,
+        url: "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1400&q=80",
+        alt: "Batch image tools",
+        mimeType: "image/jpeg",
+        width: 1400,
+        height: 934,
+        fileSizeBytes: 356100n,
+      },
+    ],
+    sections: [
+      {
+        sectionType: StoreSectionType.UPCOMING,
+        orderIndex: 6,
+        releaseOffsetDays: 10,
+      },
+    ],
+  },
+  {
+    slug: "release-note-bot",
+    title: "Release Note Bot",
+    repo: "release-note-bot",
+    categoryName: "Scripts",
+    shortDescription:
+      "Generate release notes from commits with templates and tags.",
+    fullDescription: [
+      "### Project source",
+      "Based on [elsesourav/release-note-bot](https://github.com/elsesourav/release-note-bot).",
+      "",
+      "### Focus",
+      "Automate release note generation with consistent templates.",
+      "",
+      "### Highlights",
+      "- Commit tagging support.",
+      "- Template overrides.",
+      "- Multi repo support.",
+    ].join("\n"),
+    releaseNotes: [
+      "## v2.1.0",
+      "- Added changelog grouping.",
+      "- Added release summary output.",
+    ].join("\n"),
+    version: "2.1.0",
+    status: AppStatus.PUBLISHED,
+    publishedDaysAgo: 7,
+    isPaid: false,
+    price: 0,
+    isFeatured: true,
+    containsAds: false,
+    iconUrl:
+      "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=400&q=80",
+    featureGraphicUrl:
+      "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1400&q=80",
+    cardLayout: "square",
+    supportEmail: "automation@elsesourav.dev",
+    supportWebsiteUrl: "https://github.com/elsesourav/release-note-bot",
+    privacyPolicyUrl: "https://elsesourav.dev/privacy",
+    developerName: "ElseSourav Labs",
+    tags: ["automation", "productivity"],
+    links: [
+      {
+        platform: LinkPlatform.GITHUB,
+        downloadUrl: "https://github.com/elsesourav/release-note-bot",
+        sourceCodeUrl: "https://github.com/elsesourav/release-note-bot",
+      },
+      {
+        platform: LinkPlatform.OTHER,
+        downloadUrl: "https://github.com/elsesourav/release-note-bot/issues",
+      },
+    ],
+    media: [
+      {
+        type: MediaType.IMAGE,
+        url: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1400&q=80",
+        alt: "Release notes dashboard",
+        mimeType: "image/jpeg",
+        width: 1400,
+        height: 933,
+        fileSizeBytes: 348900n,
+      },
+    ],
+    sections: [
+      {
+        sectionType: StoreSectionType.FEATURED,
+        orderIndex: 7,
+        releaseOffsetDays: -3,
+      },
+    ],
+  },
+  {
+    slug: "cache-warm-scripts",
+    title: "Cache Warm Scripts",
+    repo: "cache-warm-scripts",
+    categoryName: "Scripts",
+    shortDescription:
+      "Warm up caches with scheduled hits and concurrency controls.",
+    fullDescription: [
+      "### Project source",
+      "Based on [elsesourav/cache-warm-scripts](https://github.com/elsesourav/cache-warm-scripts).",
+      "",
+      "### Focus",
+      "Warm endpoints before traffic spikes with controlled load.",
+      "",
+      "### Highlights",
+      "- Concurrency throttling.",
+      "- Targeted warm lists.",
+      "- Health checks.",
+    ].join("\n"),
+    releaseNotes: [
+      "## v1.0.6",
+      "- Added rate limit backoff.",
+      "- Added preset warm profiles.",
+    ].join("\n"),
+    version: "1.0.6",
+    status: AppStatus.PUBLISHED,
+    publishedDaysAgo: 5,
+    isPaid: true,
+    price: 1.75,
+    isFeatured: false,
+    containsAds: false,
+    iconUrl:
+      "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?auto=format&fit=crop&w=400&q=80",
+    featureGraphicUrl:
+      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80",
+    cardLayout: "vertical",
+    supportEmail: "automation@elsesourav.dev",
+    supportWebsiteUrl: "https://github.com/elsesourav/cache-warm-scripts",
+    privacyPolicyUrl: "https://elsesourav.dev/privacy",
+    developerName: "ElseSourav Labs",
+    tags: ["automation", "analytics"],
+    links: [
+      {
+        platform: LinkPlatform.GITHUB,
+        downloadUrl: "https://github.com/elsesourav/cache-warm-scripts",
+        sourceCodeUrl: "https://github.com/elsesourav/cache-warm-scripts",
+      },
+      {
+        platform: LinkPlatform.OTHER,
+        downloadUrl:
+          "https://github.com/elsesourav/cache-warm-scripts/releases/latest",
+      },
+    ],
+    media: [
+      {
+        type: MediaType.IMAGE,
+        url: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1400&q=80",
+        alt: "Cache warm metrics",
+        mimeType: "image/jpeg",
+        width: 1400,
+        height: 933,
+        fileSizeBytes: 352200n,
+      },
+    ],
+    sections: [
+      {
+        sectionType: StoreSectionType.LATEST,
+        orderIndex: 8,
+        releaseOffsetDays: -1,
       },
     ],
   },
@@ -1539,12 +2703,14 @@ async function main() {
       where: { name: categorySeed.name },
       update: {
         icon: categorySeed.icon,
+        description: categorySeed.description,
         deletedAt: null,
         scheduledDeletionAt: null,
       },
       create: {
         name: categorySeed.name,
         icon: categorySeed.icon,
+        description: categorySeed.description,
       },
       select: {
         id: true,
@@ -1590,6 +2756,7 @@ async function main() {
       platforms: appSeed.links.map((link) => link.platform),
       tagSlugs: appSeed.tags,
       hasPromoVideo: Boolean(appSeed.promoVideoUrl),
+      cardLayout: appSeed.cardLayout ?? undefined,
     };
 
     const app = await prisma.app.upsert({
@@ -2009,8 +3176,8 @@ async function main() {
       imageUrl: bannerSeed.imageUrl,
       linkUrl: bannerSeed.linkUrl,
       placement: bannerSeed.placement,
-      startsAt: daysFromNow(bannerSeed.startsOffsetDays),
-      endsAt: daysFromNow(bannerSeed.endsOffsetDays),
+      appStartsAt: daysFromNow(bannerSeed.startsOffsetDays),
+      appEndsAt: daysFromNow(bannerSeed.endsOffsetDays),
       isActive: true,
       createdBy: admin.id,
       updatedBy: admin.id,

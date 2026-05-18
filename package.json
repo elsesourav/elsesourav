@@ -34,5 +34,11 @@
     "@types/supertest": "^7.2.0",
     "concurrently": "^9.2.1",
     "supertest": "^7.2.2"
+  },
+  "overrides": {
+    "prisma": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/config": "^7.8.0"
   }
 }

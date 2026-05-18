@@ -368,3 +368,51 @@ h6 {
     opacity: 0.2;
   }
 }
+
+* > kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.125em 0.25em;
+  font-size: 0.85em;
+  font-weight: 500;
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--background) 88%, white 12%);
+  border: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+  border-radius: 4px;
+}
+
+/* Hide scrollbar for horizontal carousels */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Hide scrollbar for horizontal carousels */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Category app card — no transform, only border highlight on hover */
+.category-app-card {
+  transition: border-color 150ms ease;
+}
+
+.category-app-card:hover {
+  border-color: color-mix(in srgb, var(--brand-secondary) 32%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .category-app-card {
+    transition: none;
+  }
+}

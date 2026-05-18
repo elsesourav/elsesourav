@@ -221,7 +221,7 @@ function createFormFromItem(item: AdminAppListItem): AppFormState {
     supportWebsiteUrl: item.supportWebsiteUrl ?? "",
     privacyPolicyUrl: item.privacyPolicyUrl ?? "",
     developerName: item.developerName ?? "",
-    categoryId: item.category.id,
+    categoryId: item.category?.id ?? "",
   };
 }
 
@@ -396,7 +396,7 @@ function AppCard({
       </div>
 
       <div className="grid gap-1 text-xs text-[#5a647d]">
-        <p>Category: {app.category.name}</p>
+        <p>Category: {app.category?.name ?? "—"}</p>
         <p>Version: {app.version}</p>
         <p>Price: {app.isPaid ? formatPrice(app.price) : "Free"}</p>
         <p>Featured: {app.isFeatured ? "Yes" : "No"}</p>
@@ -821,7 +821,7 @@ export function AdminAppsClient({
     }
 
     return apps.filter((item) =>
-      [item.title, item.slug, item.category.name, item.status]
+      [item.title, item.slug, item.category?.name ?? "", item.status]
         .join(" ")
         .toLowerCase()
         .includes(normalizedQuery),

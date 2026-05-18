@@ -1,9 +1,17 @@
 export type PriceValue = number | string;
 export type MetadataRecord = Record<string, unknown>;
 
+export type AppType =
+  | "GAMING"
+  | "SOCIAL_MEDIA_COMMUNICATION"
+  | "PRODUCTIVITY_BUSINESS"
+  | "LIFESTYLE"
+  | "UTILITY_TOOL";
+
 export type PublicCategory = {
   id: string;
   name: string;
+  description?: string | null;
 };
 
 export type PublicApp = {
@@ -11,14 +19,16 @@ export type PublicApp = {
   slug: string;
   title: string;
   shortDescription: string;
-  iconUrl?: string | null;
-  developerName?: string | null;
+  iconUrl: string;
+  developerName: string;
   isPaid: boolean;
   price: PriceValue;
   category: {
     id: string;
     name: string;
-  };
+  } | null;
+  type?: AppType;
+  appCategory?: string;
   tags?: Array<{
     id: string;
     name: string;
@@ -52,21 +62,23 @@ export type AppDetail = {
   fullDescription: string;
   releaseNotes?: string | null;
   metadata?: MetadataRecord | null;
-  iconUrl?: string | null;
-  featureGraphicUrl?: string | null;
+  iconUrl: string;
+  featureGraphicUrl: string | null;
   promoVideoUrl?: string | null;
   supportEmail?: string | null;
   supportWebsiteUrl?: string | null;
   privacyPolicyUrl?: string | null;
   containsAds?: boolean;
-  developerName?: string | null;
+  developerName: string;
   version: string;
   isPaid: boolean;
   price: PriceValue;
   category: {
     id: string;
     name: string;
-  };
+  } | null;
+  type?: AppType;
+  appCategory?: string;
   tags: Array<{
     id: string;
     name: string;
@@ -171,7 +183,9 @@ export type AdminAppListItem = {
   category: {
     id: string;
     name: string;
-  };
+  } | null;
+  type?: AppType;
+  appCategory?: string;
   tags: AdminAppTag[];
   _count: {
     feedbacks: number;
