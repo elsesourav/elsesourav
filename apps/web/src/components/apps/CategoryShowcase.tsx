@@ -2,15 +2,14 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import CategoryAppCard, {
-  type CategoryAppCardData,
-} from "./CategoryAppCard";
+import AppGridCard, { type AppGridCardData } from "./AppGridCard";
+import { cn } from "@/lib/cn";
 
 /* ------------------------------------------------------------------ */
 /*  Public types                                                       */
 /* ------------------------------------------------------------------ */
 
-export type CategoryShowcaseApp = CategoryAppCardData;
+export type CategoryShowcaseApp = AppGridCardData;
 
 export type CategoryShowcaseData = {
   id?: string;
@@ -71,20 +70,25 @@ function ScrollArrow({
   direction,
   onClick,
   visible,
+  className,
 }: {
   direction: "left" | "right";
   onClick: () => void;
   visible: boolean;
+  className?: string;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
       aria-label={`Scroll ${direction}`}
-      className="absolute top-1/2 z-20 -translate-y-1/2 rounded-full border ui-border bg-[color-mix(in_srgb,var(--background)_92%,white_8%)] p-2 shadow-md transition-opacity duration-200"
+      className={cn(
+        "absolute top-1/2 z-20 cursor-pointer -translate-y-1/2 rounded-full border ui-border bg-[color-mix(in_srgb,var(--background)_92%,white_8%)] p-2 shadow-md transition-all duration-300",
+        className,
+      )}
       style={{
         [direction]: "-14px",
-        opacity: visible ? 1 : 0,
+        display: visible ? "flex" : "none",
         pointerEvents: visible ? "auto" : "none",
       }}
     >
@@ -164,10 +168,11 @@ export default function CategoryShowcase({
       </div>
 
       {/* Horizontal scroll row */}
-      <div className="relative">
+      <div className="relative group/ch">
         <ScrollArrow
           direction="left"
           onClick={() => scroll("left")}
+          className="opacity-40 group-hover/ch:opacity-100"
           visible={canScrollLeft}
         />
 
@@ -178,7 +183,7 @@ export default function CategoryShowcase({
         >
           {category.apps.map((app) => (
             <div key={app.id} style={{ scrollSnapAlign: "start" }}>
-              <CategoryAppCard app={app} />
+              <AppGridCard app={app} variant="carousel" />
             </div>
           ))}
         </div>
@@ -187,15 +192,8 @@ export default function CategoryShowcase({
           direction="right"
           onClick={() => scroll("right")}
           visible={canScrollRight}
+          className="opacity-40 group-hover/ch:opacity-100"
         />
-
-        {/* Left/right fade edges */}
-        {canScrollLeft && (
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-[var(--background)] to-transparent" />
-        )}
-        {canScrollRight && (
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-[var(--background)] to-transparent" />
-        )}
       </div>
     </section>
   );

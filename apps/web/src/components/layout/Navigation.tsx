@@ -6,7 +6,6 @@ import HelpAndSupportIcon from "@/components/icons/HelpAndSupportIcon";
 import HomeIcon from "@/components/icons/HomeIcon";
 import SearchIcon from "@/components/icons/SearchIcon";
 import SearchResultsPanel from "@/components/search/SearchResultsPanel";
-import GlassSurface from "@/components/ui/GlassSurface";
 import { registerShortcut } from "@/lib/shortcut";
 import { useDeviceInfo } from "@/lib/useDeviceInfo";
 import InputBase from "@mui/material/InputBase";
@@ -364,17 +363,20 @@ const Navigation = ({
     }
 
     syncResultsPosition();
-  }, [searchOpen, navWidth, syncResultsPosition]);
 
-  useEffect(() => {
-    if (!searchOpen) {
-      return;
+    const resizeObserver = new ResizeObserver(() => {
+      syncResultsPosition();
+    });
+
+    if (searchAreaRef.current) {
+      resizeObserver.observe(searchAreaRef.current);
     }
 
     window.addEventListener("resize", syncResultsPosition);
     window.addEventListener("scroll", syncResultsPosition, true);
 
     return () => {
+      resizeObserver.disconnect();
       window.removeEventListener("resize", syncResultsPosition);
       window.removeEventListener("scroll", syncResultsPosition, true);
     };
@@ -384,168 +386,164 @@ const Navigation = ({
     <>
       <nav
         aria-label="Primary navigation"
-        className="hidden md:flex rounded-full"
+        className="relative hidden md:flex rounded-full overflow-hidden p-1"
       >
+        <div
+          className="w-full h-full absolute top-0 left-0 bg-background/90"
+          style={{
+            filter: "blur(10px)",
+          }}
+        />
+
         <div className="relative">
-          <div className="pointer-events-none absolute inset-0 z-10 rounded-full shadow-[0_0_0_1000px_rgba(255,255,255,0.8)]" />
-          <GlassSurface
-            className="w-auto h-auto relative"
-            width="auto"
-            height="auto"
-            borderRadius={30}
-          >
-            <div className="relative flex h-12 items-center">
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute h-full top-0 inset-y-1 left-0 rounded-full bg-background/80 transition-[transform,width,opacity] duration-300 ease-out"
-                style={{
-                  width: indicatorStyle.width,
-                  transform: `translateX(${indicatorStyle.x}px)`,
-                  opacity: indicatorStyle.opacity,
+          <div className="pointer-events-none absolute inset-0 z-10 rounded-full shadow--[0_0_0_1000px_rgba(255,255,255,0.8)]" />
+          <div className="relative flex h-12 items-center">
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute h-full top-0 inset-y-1 left-0 rounded-full bg-blue-500/40 transition-[transform,width,opacity] duration-300 ease-out"
+              style={{
+                width: indicatorStyle.width,
+                transform: `translateX(${indicatorStyle.x}px)`,
+                opacity: indicatorStyle.opacity,
+              }}
+            />
+            <div
+              ref={navItemsRef}
+              className={`flex items-center gap-2 overflow-hidden transition-all duration-300 ease-out ${
+                searchOpen
+                  ? "max-w-0 opacity-0 -translate-x-4 pointer-events-none"
+                  : "max-w-180 opacity-100 translate-x-0"
+              }`}
+              style={{ width: searchOpen ? 0 : navWidth || undefined }}
+              onTransitionEnd={(event) => {
+                if (event.currentTarget !== event.target) {
+                  return;
+                }
+                if (!searchOpen) {
+                  setShowShortcutKeys(true);
+                }
+              }}
+            >
+              {navItems.map((item, index) => {
+                const active = isActive(pathname, item.href);
+                return (
+                  <NextLink
+                    key={item.href}
+                    href={item.href}
+                    onClick={(event) =>
+                      onAnchorNavigation(
+                        event,
+                        item.href,
+                        `desktop-nav-${item.href}`,
+                      )
+                    }
+                    ref={(node) => {
+                      itemRefs.current[index] = node;
+                    }}
+                    aria-current={active ? "page" : undefined}
+                    className={[
+                      getDesktopNavLinkClass(active),
+                      getLoadingClass(
+                        isTargetLoading(`desktop-nav-${item.href}`),
+                      ),
+                    ].join(" ")}
+                  >
+                    <span className="inline-flex items-center gap-2 font-bold">
+                      <NavItemIcon href={item.href} className="h-6 w-5" />
+                      <span>{item.label}</span>
+                    </span>
+                  </NextLink>
+                );
+              })}
+              <button
+                type="button"
+                onClick={() => {
+                  syncNavWidth();
+                  setSearchOpen(true);
                 }}
-              />
-              <div
-                ref={navItemsRef}
-                className={`flex items-center gap-2 overflow-hidden transition-all duration-300 ease-out ${
-                  searchOpen
-                    ? "max-w-0 opacity-0 -translate-x-4 pointer-events-none"
-                    : "max-w-180 opacity-100 translate-x-0"
-                }`}
-                style={{ width: searchOpen ? 0 : navWidth || undefined }}
-                onTransitionEnd={(event) => {
-                  if (event.currentTarget !== event.target) {
-                    return;
-                  }
-                  if (!searchOpen) {
-                    setShowShortcutKeys(true);
-                  }
-                }}
+                className={getDesktopNavLinkClass(false)}
               >
-                {navItems.map((item, index) => {
-                  const active = isActive(pathname, item.href);
-                  return (
-                    <NextLink
-                      key={item.href}
-                      href={item.href}
-                      onClick={(event) =>
-                        onAnchorNavigation(
-                          event,
-                          item.href,
-                          `desktop-nav-${item.href}`,
-                        )
-                      }
-                      ref={(node) => {
-                        itemRefs.current[index] = node;
-                      }}
-                      aria-current={active ? "page" : undefined}
-                      className={[
-                        getDesktopNavLinkClass(active),
-                        getLoadingClass(
-                          isTargetLoading(`desktop-nav-${item.href}`),
-                        ),
-                      ].join(" ")}
-                    >
-                      <span className="inline-flex items-center gap-2 font-bold [text-shadow:0_0_0.5px_white,0_0_1px_white,0_0_1.5px_white]">
-                        <NavItemIcon
-                          href={item.href}
-                          className="h-6 w-5 text-current [&_path]:fill-current"
-                        />
-                        <span>{item.label}</span>
-                      </span>
-                    </NextLink>
-                  );
-                })}
+                <span className="inline-flex items-center cursor-pointer gap-2 font-bold">
+                  <SearchIcon className="h-5 w-5" />
+                  {showShortcutKeys && shortcutKeyLabel}
+                </span>
+              </button>
+            </div>
+
+            <div
+              ref={searchAreaRef}
+              className={`relative flex min-w-0 items-center gap-2 overflow-hidden h-full transition-all duration-300 ease-out ${
+                searchOpen
+                  ? "w-180 opacity-100"
+                  : "w-0 opacity-0 pointer-events-none"
+              }`}
+              style={{ width: searchOpen ? navWidth || undefined : 0 }}
+            >
+              <div className="relative flex-1 min-w-0">
+                <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
+                <InputBase
+                  inputRef={searchInputRef}
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  placeholder="Search apps, banners, categories"
+                  className="h-10 w-full text-lg"
+                  sx={{
+                    width: "100%",
+                    color:
+                      "color-mix(in srgb, var(--foreground) 90%, var(--background) 10%)",
+                    fontWeight: 600,
+                    letterSpacing: "0.08em",
+                    "& .MuiInputBase-input": {
+                      height: "2.5rem",
+                      padding: "0 2.25rem 0 2.5rem",
+                    },
+                  }}
+                />
                 <button
                   type="button"
+                  aria-label="Clear search"
                   onClick={() => {
-                    syncNavWidth();
-                    setSearchOpen(true);
+                    setSearchQuery("");
                   }}
-                  className={getDesktopNavLinkClass(false)}
+                  className="absolute cursor-pointer right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-[color-mix(in_srgb,var(--foreground)_60%,var(--background)_40%)] hover:bg-[color-mix(in_srgb,var(--background)_92%,white_8%)]"
                 >
-                  <span className="inline-flex items-center cursor-pointer gap-2 font-bold [text-shadow:0_0_0.5px_white,0_0_1px_white,0_0_1.5px_white]">
-                    <SearchIcon className="h-5 w-5 text-current [&_path]:fill-current" />
-                    {showShortcutKeys && shortcutKeyLabel}
-                  </span>
+                  <CrossIcon className="h-4 w-4 [&_path]:fill-red-600" />
                 </button>
               </div>
-
-              <div
-                ref={searchAreaRef}
-                className={`relative flex min-w-0 items-center gap-2 overflow-hidden bg-background/90 rounded-3xl h-full transition-all duration-300 ease-out ${
-                  searchOpen
-                    ? "w-180 opacity-100"
-                    : "w-0 opacity-0 pointer-events-none"
-                }`}
-                style={{ width: searchOpen ? navWidth || undefined : 0 }}
-              >
-                <div className="relative flex-1 min-w-0">
-                  <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-current [&_path]:fill-current" />
-                  <InputBase
-                    inputRef={searchInputRef}
-                    value={searchQuery}
-                    onChange={(event) => setSearchQuery(event.target.value)}
-                    placeholder="Search apps, banners, categories"
-                    className="h-10 w-full"
-                    sx={{
-                      width: "100%",
-                      color:
-                        "color-mix(in srgb, var(--foreground) 90%, var(--background) 10%)",
-                      fontSize: "0.95rem",
-                      fontWeight: 600,
-                      letterSpacing: "0.08em",
-                      "& .MuiInputBase-input": {
-                        height: "2.5rem",
-                        padding: "0 2.25rem 0 2.5rem",
-                      },
-                    }}
-                  />
-                  <button
-                    type="button"
-                    aria-label="Clear search"
-                    onClick={() => {
-                      setSearchQuery("");
-                    }}
-                    className="absolute cursor-pointer right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-[color-mix(in_srgb,var(--foreground)_60%,var(--background)_40%)] hover:bg-[color-mix(in_srgb,var(--background)_92%,white_8%)]"
-                  >
-                    <CrossIcon className="h-4 w-4 [&_path]:fill-red-600" />
-                  </button>
-                </div>
-                <label className="inline-flex h-10 items-center gap-2 px-1 text-xs font-semibold uppercase tracking-[0.12em] text-foreground/80">
-                  <FilterIcon className="h-4 w-4 text-current [&_path]:fill-current" />
-                  <Select
-                    value={selectedCategory}
-                    onChange={(event: SelectChangeEvent) =>
-                      setSelectedCategory(event.target.value)
-                    }
-                    variant="standard"
-                    disableUnderline
-                    className="*:text-xs! font-semibold normal-case tracking-[0.12em]"
-                    sx={{
-                      color:
-                        "color-mix(in srgb, var(--foreground) 80%, var(--background) 20%)",
-                      "& .MuiSelect-select": {
-                        paddingRight: "1rem",
-                        paddingLeft: 0,
-                        minHeight: "auto",
-                      },
-                      "& .MuiSelect-icon": {
-                        color: "currentColor",
-                      },
-                    }}
-                  >
-                    <MenuItem value="ANY">Anything</MenuItem>
-                    {categories.map((category) => (
-                      <MenuItem key={category.id} value={category.id}>
-                        {category.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </label>
-                {/* Close button removed; search auto-closes on outside click or Escape */}
-              </div>
+              <label className="inline-flex h-10 items-center gap-2 px-1 text-xs font-semibold uppercase tracking-[0.12em] text-foreground/80">
+                <FilterIcon className="h-4 w-4" />
+                <Select
+                  value={selectedCategory}
+                  onChange={(event: SelectChangeEvent) =>
+                    setSelectedCategory(event.target.value)
+                  }
+                  variant="standard"
+                  disableUnderline
+                  className="*:text-xs! font-semibold normal-case tracking-[0.12em]"
+                  sx={{
+                    color:
+                      "color-mix(in srgb, var(--foreground) 80%, var(--background) 20%)",
+                    "& .MuiSelect-select": {
+                      paddingRight: "1rem",
+                      paddingLeft: 0,
+                      minHeight: "auto",
+                    },
+                    "& .MuiSelect-icon": {
+                      color: "currentColor",
+                    },
+                  }}
+                >
+                  <MenuItem value="ANY">Anything</MenuItem>
+                  {categories.map((category) => (
+                    <MenuItem key={category.id} value={category.id}>
+                      {category.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </label>
+              {/* Close button removed; search auto-closes on outside click or Escape */}
             </div>
-          </GlassSurface>
+          </div>
         </div>
       </nav>
 

@@ -40,9 +40,9 @@ const SearchResultsPanel = forwardRef<HTMLDivElement, SearchResultsPanelProps>(
         ref={ref}
         className="fixed z-50 rounded-2xl border border-[color-mix(in_srgb,var(--foreground)_12%,transparent)] bg-white p-3 shadow-[0_20px_40px_-30px_rgba(15,23,42,0.5)]"
         style={{
-          top: position.top,
-          left: position.left,
-          width: position.width,
+          top: Math.round(position.top),
+          left: Math.round(position.left),
+          width: Math.round(position.width),
         }}
       >
         {items.length === 0 ? (

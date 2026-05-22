@@ -16,12 +16,16 @@
     "hash": "189111758577739efe85b328d9bf716a"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/prisma.config.ts": {
-    "mtime": 1773613023.4653594,
-    "hash": "7e9cbace5ed217e61b3b9f7a11bcee0c"
+    "mtime": 1778607731.1904747,
+    "hash": "fbb72b0ca5e45a37cd4c04f25638cb3c"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/packages/db/prisma/fill-missing-data.ts": {
+    "mtime": 1779013349.830275,
+    "hash": "3191355d5077a58baa560276a0841077"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/prisma/seed.ts": {
-    "mtime": 1778140859.915319,
-    "hash": "98f17fb0293b5ba7a8ce4edba3e2b358"
+    "mtime": 1778707654.837663,
+    "hash": "042411673ab2999b7e9fe658de15e04c"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/prisma/update-banners.ts": {
     "mtime": 1778148889.2073033,
@@ -47,9 +51,17 @@
     "mtime": 1773638930.739703,
     "hash": "1ba6902129c133456cc1999c45d7c4cf"
   },
+  "/Users/sourav/Developer/WEB/elsesourav/packages/db/prisma/migrations/20260517102032_add_app_type_and_category/migration.sql": {
+    "mtime": 1779013232.6017582,
+    "hash": "b70fdc386f0108195e1f52f33980d6e0"
+  },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/prisma/migrations/20260329190605_cd_packages_db_and_and_npx_prisma_migrate_dev_config_prisma_config_ts_name_add_theme_dark_palette_tokens_create_only/migration.sql": {
     "mtime": 1774811165.0917902,
     "hash": "b44dd1032823f788196bf1b0daed6078"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/packages/db/prisma/migrations/20260513144433_add_category_description/migration.sql": {
+    "mtime": 1778683473.510614,
+    "hash": "88ec627f30cc2d5cb682df7988fd51ff"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/prisma/migrations/20260417121500_add_support_ticket_workflow_models/migration.sql": {
     "mtime": 1776409524.7956471,
@@ -84,212 +96,212 @@
     "hash": "64a5fc125fe1545181db0c33322c3763"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/browser.ts": {
-    "mtime": 1778163245.1243682,
+    "mtime": 1779013179.9469736,
     "hash": "ab7051b60b2b2ec3c6245ff1fb6c78c9"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/client.ts": {
-    "mtime": 1778163245.1244156,
+    "mtime": 1779013179.9460487,
     "hash": "80bdef785bd227f035045776a55e4ede"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models.ts": {
-    "mtime": 1778163245.124589,
+    "mtime": 1779013179.9461102,
     "hash": "4ccbcb95bc405d1e767b5e0f6f488680"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/commonInputTypes.ts": {
-    "mtime": 1778163245.1245353,
-    "hash": "845f502491b00cc28862b0f213373118"
+    "mtime": 1779013179.9466705,
+    "hash": "24a46abf86dafd1fab60826e576b4268"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/enums.ts": {
-    "mtime": 1778163245.124468,
-    "hash": "617be16f017d307af3260f70e9fb6a02"
+    "mtime": 1779013179.946362,
+    "hash": "16bf7717add4ad61523912429f743820"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/internal/class.ts": {
-    "mtime": 1778163245.1316907,
-    "hash": "b5b8a0f0e659e667f1af46c245a4f258"
+    "mtime": 1779013179.9551349,
+    "hash": "1d70c2cc4eba5c5f9bb62ecc678e9f8f"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/internal/prismaNamespace.ts": {
-    "mtime": 1778163245.1316369,
-    "hash": "982226f78ab9dd14fb08e4f90840bf13"
+    "mtime": 1779013179.955058,
+    "hash": "150d3dc55b3de7976733ab1c267ff58f"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/internal/prismaNamespaceBrowser.ts": {
-    "mtime": 1778163245.131594,
-    "hash": "72c5e07b6f3f0eff2146d4601b44232a"
+    "mtime": 1779013179.9552352,
+    "hash": "1f73d1870830616d8c48681353743288"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/Account.ts": {
-    "mtime": 1778163245.1314523,
+    "mtime": 1779013179.9549592,
     "hash": "b811c1f31403981642a58a5c2fabc08e"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/AppDescriptionVersion.ts": {
-    "mtime": 1778163245.1312695,
+    "mtime": 1779013179.954356,
     "hash": "2f3be2b399b858f5eb26ebfbf9562b78"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/Category.ts": {
-    "mtime": 1778163245.1317668,
-    "hash": "3c08f735fc3c95482cbbbb5f2e29ebd3"
+    "mtime": 1779013179.954987,
+    "hash": "fb9807c1cab6ce52ea0246a7d835eb74"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/Payment.ts": {
-    "mtime": 1778163245.131489,
+    "mtime": 1779013179.9549155,
     "hash": "d8f3623fd6f89a3b2cc166f759cab811"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/ProfilePage.ts": {
-    "mtime": 1778163245.130528,
+    "mtime": 1779013179.9535694,
     "hash": "7dad5aa48a98fb957853d25dad4d30b2"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/ThemeConfig.ts": {
-    "mtime": 1778163245.1307924,
+    "mtime": 1779013179.9539301,
     "hash": "15725f4e28dd4553004cce7174d29165"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/AppMedia.ts": {
-    "mtime": 1778163245.1308303,
+    "mtime": 1779013179.9539003,
     "hash": "90f82ebf9876c62c619611f0dac78054"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/HomeSlider.ts": {
-    "mtime": 1778163245.1301258,
+    "mtime": 1779013179.953303,
     "hash": "d8be14839dc3434327ef4971a75a08ba"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/SupportTicketMessage.ts": {
-    "mtime": 1778163245.131339,
+    "mtime": 1779013179.9551857,
     "hash": "cfa7ff55b8e3b4036e1a79e7fc5c5d63"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/App.ts": {
-    "mtime": 1778163245.1309173,
-    "hash": "3e275301e9bfdf54c6ef8ed29432a3c7"
+    "mtime": 1779013179.9536688,
+    "hash": "b1521df623281e3a36584bb48a8c5e77"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/CustomFieldValue.ts": {
-    "mtime": 1778163245.131049,
+    "mtime": 1779013179.9541419,
     "hash": "26e1bd70c0db20cae4d9ddbcb30bed43"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/Testimonial.ts": {
-    "mtime": 1778163245.1307592,
+    "mtime": 1779013179.9538682,
     "hash": "310ab38610eaf6154b2fbc92e91a2a65"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/BlogPostVersion.ts": {
-    "mtime": 1778163245.1311636,
+    "mtime": 1779013179.9542174,
     "hash": "3727011a5099d5512142aa18dc5114c8"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/ActivityLog.ts": {
-    "mtime": 1778163245.1309838,
+    "mtime": 1779013179.954081,
     "hash": "ab459e545b210df2e35c396d3d463013"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/AppLink.ts": {
-    "mtime": 1778163245.1318402,
+    "mtime": 1779013179.9539595,
     "hash": "41484f871c37b673787415596a546dbb"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/BlogTag.ts": {
-    "mtime": 1778163245.1304917,
+    "mtime": 1779013179.9536037,
     "hash": "a8a29f47c791e6f27376e8be54b4828d"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/AppAggregateStat.ts": {
-    "mtime": 1778163245.130324,
+    "mtime": 1779013179.953401,
     "hash": "76aeec26e5736c7abc217d56c24895d3"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/AppViewEvent.ts": {
-    "mtime": 1778163245.1301935,
+    "mtime": 1779013179.953324,
     "hash": "527f606799013f73a14d96a8a43e9e65"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/BlogComment.ts": {
-    "mtime": 1778163245.130644,
+    "mtime": 1779013179.9538085,
     "hash": "f3e674025f00ec3c2ecab9042785e461"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/HelpArticleVersion.ts": {
-    "mtime": 1778163245.1312008,
+    "mtime": 1779013179.9542515,
     "hash": "4fc669cd3c1a13cc610bdc2ec89db953"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/BlogPostTag.ts": {
-    "mtime": 1778163245.130597,
+    "mtime": 1779013179.9536996,
     "hash": "082767d8b2e4230b39c267ba450d98d5"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/GuestSession.ts": {
-    "mtime": 1778163245.131304,
+    "mtime": 1779013179.9543972,
     "hash": "83a97b2c7ad9e17036c9ecc4beb66b8c"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/DownloadEvent.ts": {
-    "mtime": 1778163245.1314094,
+    "mtime": 1779013179.9544556,
     "hash": "0f4be895c5661c77fc6ec1b9992329f0"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/ContentPageVersion.ts": {
-    "mtime": 1778163245.131727,
+    "mtime": 1779013179.9535036,
     "hash": "7f8e705ed0d7c0f6dea85c75a05150c8"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/Session.ts": {
-    "mtime": 1778163245.1315315,
+    "mtime": 1779013179.9550931,
     "hash": "a405e8af926c11cbf3727a9d93ebf8f5"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/UserLibrary.ts": {
-    "mtime": 1778163245.1309462,
+    "mtime": 1779013179.953998,
     "hash": "55d1eaf80de369b529d5203926486365"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/HelpArticle.ts": {
-    "mtime": 1778163245.1307178,
+    "mtime": 1779013179.9538372,
     "hash": "f974353cd9130bb74207503ff1e3df94"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/ContentPage.ts": {
-    "mtime": 1778163245.130414,
+    "mtime": 1779013179.95347,
     "hash": "024565dd75a0094f0c89df097e35a1ce"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/Feedback.ts": {
-    "mtime": 1778163245.1313794,
+    "mtime": 1779013179.9544306,
     "hash": "9c41cf44afaf6f436fee7f0cc0ceaf5a"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/StoreBanner.ts": {
-    "mtime": 1778163245.130367,
+    "mtime": 1779013179.9535353,
     "hash": "963d3dc64be1194bec95cc0c065fc757"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/AppTag.ts": {
-    "mtime": 1778163245.1304584,
+    "mtime": 1779013179.955362,
     "hash": "afaa06a51fb6408c4c8d766aceed1693"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/AppDailyStat.ts": {
-    "mtime": 1778163245.1302292,
+    "mtime": 1779013179.95338,
     "hash": "4592c362df2beb6ff9f40e6040786811"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/BlogPost.ts": {
-    "mtime": 1778163245.1305625,
+    "mtime": 1779013179.9543245,
     "hash": "ce17a303e2c05549e8b135c269320aab"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/SupportTicket.ts": {
-    "mtime": 1778163245.1312323,
+    "mtime": 1779013179.9542832,
     "hash": "edf3a1a3e0d388cd0757b27c4a769365"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/StoreSectionItem.ts": {
-    "mtime": 1778163245.1302867,
+    "mtime": 1779013179.9534364,
     "hash": "e90e2b9b03569f09bfb0cd8f6b1f9120"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/AppTagOnApp.ts": {
-    "mtime": 1778163245.1300855,
+    "mtime": 1779013179.9532578,
     "hash": "8e0538065782ad9624e73e01029bd2af"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/User.ts": {
-    "mtime": 1778163245.1300552,
+    "mtime": 1779013179.953101,
     "hash": "020fcbaa4ba8e9df38888fd74be9ffe7"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/CustomFieldDefinition.ts": {
-    "mtime": 1778163245.1310885,
+    "mtime": 1779013179.9541042,
     "hash": "13d44ffd99e21a35b61574f62d4363b0"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/UserSettings.ts": {
-    "mtime": 1778163245.1310115,
+    "mtime": 1779013179.9540424,
     "hash": "7cd1426e8caf0ac7fe090c613863b052"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/HelpCategory.ts": {
-    "mtime": 1778163245.130681,
+    "mtime": 1779013179.9537616,
     "hash": "19f257c03089244215150f24f39e421f"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/db/src/generated/prisma/models/AppChangelog.ts": {
-    "mtime": 1778163245.1311333,
+    "mtime": 1779013179.9541774,
     "hash": "6bbcfe0b105338aeb89d71865a2d0482"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/validation/src/index.ts": {
-    "mtime": 1778154716.2603414,
-    "hash": "cbfc461980f467f7a4357e7286ab449b"
+    "mtime": 1779014203.1193137,
+    "hash": "c2aff8e0649696837da1f388079dd2bd"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/postcss.config.mjs": {
     "mtime": 1773584783.8345182,
     "hash": "239f3ebf717465dc636818a1a619398d"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/next-env.d.ts": {
-    "mtime": 1778155379.0619226,
-    "hash": "2a74d3909800ca5467fa83b0ab4a4890"
+    "mtime": 1778958255.4930184,
+    "hash": "d0f8375ae1199dc7acd3977fc33b78b8"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/vitest.config.ts": {
     "mtime": 1773603022.1474125,
@@ -492,8 +504,8 @@
     "hash": "80c99e72311f5020c17bd44baa12ae5d"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/admin/apps/client.tsx": {
-    "mtime": 1777993064.677375,
-    "hash": "eebdc655de1a75c41992b0808e16b9a4"
+    "mtime": 1779079363.3081403,
+    "hash": "67ceef0d01f5b2311b1e415ddecda5ab"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/admin/apps/page.tsx": {
     "mtime": 1774841729.6379955,
@@ -638,6 +650,10 @@
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/api/auth/reset-password/route.ts": {
     "mtime": 1774815138.03188,
     "hash": "c0b9b27dc38135427814edfe03590c9f"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/api/category-previews/route.ts": {
+    "mtime": 1778664468.819474,
+    "hash": "0cba3cb0fbda2dc94e7def2e9194d931"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/api/health/route.ts": {
     "mtime": 1773586618.7425017,
@@ -923,6 +939,10 @@
     "mtime": 1773637567.1601865,
     "hash": "18ad9b58ba445eb8765b935c936d4e71"
   },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/api/search/route.ts": {
+    "mtime": 1778661633.9202344,
+    "hash": "f512108258b6b9cca374b031e9a21041"
+  },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/api/theme/active/route.ts": {
     "mtime": 1773588944.6342432,
     "hash": "603ff3b09152877a8559e395a1223bdb"
@@ -980,16 +1000,20 @@
     "hash": "c789c0fb68c7f3e2ef750bcdc16658ae"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/apps/page.tsx": {
-    "mtime": 1778154716.326336,
-    "hash": "433e8522b5e112bb1c0dcddcd7b41310"
+    "mtime": 1779083695.4069626,
+    "hash": "7ed8b92b116519c9e6dd2e4395058e66"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/apps/category/[categoryId]/page.tsx": {
+    "mtime": 1778991110.6840627,
+    "hash": "ad034e9f19d4d4cc226d1287a4738e72"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/apps/[slug]/app-detail-actions.tsx": {
     "mtime": 1774815135.2475321,
     "hash": "da29c2dd8447051d41c40775c6cee46c"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/apps/[slug]/page.tsx": {
-    "mtime": 1776409524.009432,
-    "hash": "57fbcd05636531dc3f52934c4ba2c8c3"
+    "mtime": 1779079377.3388772,
+    "hash": "c7b7b1e7bd3d7e512974d8615a23707d"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/login/login-form.tsx": {
     "mtime": 1776435658.0876634,
@@ -1024,8 +1048,8 @@
     "hash": "23c6cbafe222e228c855a4375c5b7fe0"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/CardCarousel.tsx": {
-    "mtime": 1778163188.2408004,
-    "hash": "37afc327b8750c2498b2bb395a2a3d67"
+    "mtime": 1778707709.0495548,
+    "hash": "096854a3c6879ab1ee2517cfa9acf758"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/ui/markdown-content.tsx": {
     "mtime": 1777995755.6290884,
@@ -1080,8 +1104,8 @@
     "hash": "2d3d87d7927e651b715d7538ab4505fc"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/home/mixed-highlights.tsx": {
-    "mtime": 1776435666.8520887,
-    "hash": "99e6ac60f46f33a1d4911c84e296b01a"
+    "mtime": 1779083628.167376,
+    "hash": "d9bea06a8b32cba46884f8fbe33d872c"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/home/support-cta-panel.tsx": {
     "mtime": 1778008768.1865034,
@@ -1092,8 +1116,8 @@
     "hash": "3abecacdcefd2d34f7d4c08778dd0fb1"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/home/discovery-card.tsx": {
-    "mtime": 1776435668.9914973,
-    "hash": "1a28412d4dd12f8f8f08f8a38afd6ddd"
+    "mtime": 1779083626.0659971,
+    "hash": "a918ca98e28bd48373705f12b8c2eead"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/home/types.ts": {
     "mtime": 1778146071.5660732,
@@ -1116,12 +1140,12 @@
     "hash": "295297fd79ac1e97526b505b675c4472"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/layout/public-site-shell.tsx": {
-    "mtime": 1778012164.8995633,
-    "hash": "703a2ebdc4d5cd6fa5233a320bdd26eb"
+    "mtime": 1779012215.8552628,
+    "hash": "b17bc19aba94095ebf3b5b05a02d88fd"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/layout/Navigation.tsx": {
-    "mtime": 1778053412.4793217,
-    "hash": "541c2fbcf52becc57a63ac45c5174d3a"
+    "mtime": 1778662664.535753,
+    "hash": "f9fcf43414679ef05d1c4698ce55126b"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/providers/mui-emotion-cache-provider.tsx": {
     "mtime": 1776479735.5139809,
@@ -1132,8 +1156,8 @@
     "hash": "a16116422d65c5b92f9cb2a5e1354441"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/help-support/help-support-articles.tsx": {
-    "mtime": 1778008766.93955,
-    "hash": "ffa8e2b3941021e043637483049fe520"
+    "mtime": 1778707711.4988866,
+    "hash": "9a1c018ec1a621bc9b70c963e0d2a051"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/help-support/help-support-paths.tsx": {
     "mtime": 1778008766.9395063,
@@ -1147,9 +1171,17 @@
     "mtime": 1778008766.3483987,
     "hash": "0f21128381e3ebf7fcde318fed9727b5"
   },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/search/SearchResultsPanel.tsx": {
+    "mtime": 1778661633.873871,
+    "hash": "cdc4b194c36537febe18d5a6fd71135c"
+  },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/icons/AppsIcon.tsx": {
     "mtime": 1778000811.5175343,
     "hash": "70e53d6208d249c212b066129bd1593c"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/icons/SearchIcon.tsx": {
+    "mtime": 1778657245.3837159,
+    "hash": "2b4d848a48af7cd65b2dd935990c70e5"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/icons/HomeIcon.tsx": {
     "mtime": 1778001594.6695333,
@@ -1163,9 +1195,17 @@
     "mtime": 1778000811.5017836,
     "hash": "2fe5e42054e317ef5d1274e23c002e3f"
   },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/icons/CrossIcon.tsx": {
+    "mtime": 1778655064.845624,
+    "hash": "f4556e9a223c2aced5d03aa055a98a83"
+  },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/icons/AboutIcon.tsx": {
     "mtime": 1778000811.5018404,
     "hash": "9d408ba7c76cbe79a6fca51a86d98671"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/icons/FilterIcon.tsx": {
+    "mtime": 1778653360.9979007,
+    "hash": "705b592540c595c86d2071a9a47a3dca"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/icons/HelpAndSupportIcon.tsx": {
     "mtime": 1778000811.8155344,
@@ -1175,9 +1215,25 @@
     "mtime": 1776836893.0925245,
     "hash": "ef0b766a506c9047674260d5cea2bcbc"
   },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/apps/AppCatalogCard.tsx": {
+    "mtime": 1779083624.026906,
+    "hash": "75c66ed723ee6f3429fcebda65b09698"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/apps/CategoryShowcase.tsx": {
+    "mtime": 1779083752.2876534,
+    "hash": "1335b89a2794cb272dde726bdb8c3687"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/components/apps/CategoryAppCard.tsx": {
+    "mtime": 1779011733.985232,
+    "hash": "a04c34a82a285f6676915eb30e3c1125"
+  },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/lib/slug.ts": {
     "mtime": 1773586618.561937,
     "hash": "f518e8f4409449b9054623fb0d23a262"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/lib/shortcut.ts": {
+    "mtime": 1778657110.5415547,
+    "hash": "31846b47b817de031bbc80f14c00d15a"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/lib/auth-guard.ts": {
     "mtime": 1773586618.5798428,
@@ -1191,13 +1247,17 @@
     "mtime": 1773586618.614421,
     "hash": "07a455096b1fe99bfd323fa56bbd53c0"
   },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/lib/useDeviceInfo.ts": {
+    "mtime": 1778654552.592287,
+    "hash": "d0d38feb9a50091787cd515d72a31faf"
+  },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/lib/cn.ts": {
     "mtime": 1773731593.89403,
     "hash": "c9da20cf8816b78c394d45ace84722fe"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/lib/view-models.ts": {
-    "mtime": 1778146066.361277,
-    "hash": "50a9b2a66ab277e4ca56bba9e7a6921a"
+    "mtime": 1779014668.3094704,
+    "hash": "2d356b6c698681df9120c6e8d3bc540d"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/lib/markdown.ts": {
     "mtime": 1776399570.506185,
@@ -1316,16 +1376,16 @@
     "hash": "f499ccb9b9133e4ed607c59565866d8c"
   },
   "/Users/sourav/Developer/WEB/elsesourav/services/catalog-service/src/routes/admin.ts": {
-    "mtime": 1778154716.1619623,
-    "hash": "2c88d33e9ddc42a5758449bfdfb8c0b9"
+    "mtime": 1778707659.2186153,
+    "hash": "4fb0eb75ea2e34957cbaeb39b90edb41"
   },
   "/Users/sourav/Developer/WEB/elsesourav/services/catalog-service/src/routes/health.ts": {
     "mtime": 1773589488.1319876,
     "hash": "194843069f4f6d52b232f41d1399b5e2"
   },
   "/Users/sourav/Developer/WEB/elsesourav/services/catalog-service/src/routes/public.ts": {
-    "mtime": 1778154858.7707193,
-    "hash": "ee53cc0a28c9828c94a3869f3fef8f02"
+    "mtime": 1779083658.2428226,
+    "hash": "4bdd87b2703c2990a2d8f70829ca7109"
   },
   "/Users/sourav/Developer/WEB/elsesourav/services/user-service/src/app.ts": {
     "mtime": 1774841729.500869,

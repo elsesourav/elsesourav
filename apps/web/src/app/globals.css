@@ -28,6 +28,8 @@
   --motion-ease-emphasis: cubic-bezier(0.22, 1, 0.36, 1);
   --motion-duration-fast: 180ms;
   --motion-duration-medium: 300ms;
+
+  --app-card-radius: 1rem;
 }
 
 /* * { */

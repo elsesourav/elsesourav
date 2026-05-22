@@ -108,7 +108,7 @@ export function AppsBannerSlider({ banners }: { banners: HomeBanner[] }) {
       <CardCarousel
         cards={cards}
         height={600}
-        activeWidth={740}
+        activeWidth={780}
         inactiveWidth={260}
         autoMoveMs={6200}
         actionLabel="Visit Now"

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export type CategoryAppCardData = {
+export type AppCarouselCardData = {
   id: string;
   title: string;
   slug: string;
@@ -15,6 +15,7 @@ export type CategoryAppCardData = {
   isPaid: boolean;
   price: number | string;
   layout: "horizontal" | "vertical" | "square";
+  appCategory?: string;
 };
 
 /* ------------------------------------------------------------------ */
@@ -34,10 +35,10 @@ function formatPrice(isPaid: boolean, value: number | string): string {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Component                                                          */
+/*  AppCarouselCard — compact horizontal-scroll card                   */
 /* ------------------------------------------------------------------ */
 
-export default function CategoryAppCard({ app }: { app: CategoryAppCardData }) {
+export default function AppCarouselCard({ app }: { app: AppCarouselCardData }) {
   const price = formatPrice(app.isPaid, app.price);
   const heroImage = app.featureGraphicUrl ?? app.iconUrl;
 
@@ -46,7 +47,7 @@ export default function CategoryAppCard({ app }: { app: CategoryAppCardData }) {
       href={`/apps/${app.slug}`}
       data-app-card
       aria-label={`View ${app.title}`}
-      className="category-app-card group relative flex flex-col overflow-hidden rounded-[22px] border ui-border"
+      className="app-carousel-card group relative flex flex-col overflow-hidden rounded-[22px] border ui-border"
       style={{
         minWidth: "clamp(280px, 48vw, 380px)",
         maxWidth: "380px",
@@ -58,7 +59,6 @@ export default function CategoryAppCard({ app }: { app: CategoryAppCardData }) {
         className="relative w-full overflow-hidden"
         style={{ aspectRatio: "16/10" }}
       >
-        {/* Background image */}
         <Image
           src={heroImage}
           alt={app.title}
@@ -68,7 +68,7 @@ export default function CategoryAppCard({ app }: { app: CategoryAppCardData }) {
           unoptimized
         />
 
-        {/* Scrim — stronger at bottom so text is always readable */}
+        {/* Scrim */}
         <div
           className="pointer-events-none absolute inset-0"
           style={{
@@ -117,11 +117,14 @@ export default function CategoryAppCard({ app }: { app: CategoryAppCardData }) {
           </p>
         </div>
 
-        {/* View button — only this changes on hover */}
-        <span className="flex-shrink-0 rounded-full bg-[color-mix(in_srgb,var(--brand-secondary)_10%,var(--background)_90%)] px-4 py-1.5 text-[11px] font-bold text-[color-mix(in_srgb,var(--brand-secondary)_80%,var(--foreground)_20%)] transition-colors duration-150 group-hover:bg-[color-mix(in_srgb,var(--brand-secondary)_22%,var(--background)_78%)] group-hover:text-[color-mix(in_srgb,var(--brand-secondary)_90%,var(--foreground)_10%)]">
+        {/* View button */}
+        <span className="shrink-0 rounded-full bg-[color-mix(in_srgb,var(--brand-secondary)_10%,var(--background)_90%)] px-4 py-1.5 text-[11px] font-bold text-[color-mix(in_srgb,var(--brand-secondary)_80%,var(--foreground)_20%)] transition-colors duration-150 group-hover:bg-[color-mix(in_srgb,var(--brand-secondary)_22%,var(--background)_78%)] group-hover:text-[color-mix(in_srgb,var(--brand-secondary)_90%,var(--foreground)_10%)]">
           View
         </span>
       </div>
     </Link>
   );
 }
+
+/* ── Backward-compat re-exports ── */
+export type { AppCarouselCardData as CategoryAppCardData };
