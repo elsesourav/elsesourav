@@ -103,13 +103,13 @@ export const SliderType = {
 export type SliderType = (typeof SliderType)[keyof typeof SliderType]
 
 
-export const BlogPostStatus = {
+export const PostStatus = {
   DRAFT: 'DRAFT',
   PUBLISHED: 'PUBLISHED',
   ARCHIVED: 'ARCHIVED'
 } as const
 
-export type BlogPostStatus = (typeof BlogPostStatus)[keyof typeof BlogPostStatus]
+export type PostStatus = (typeof PostStatus)[keyof typeof PostStatus]
 
 
 export const HelpArticleStatus = {
@@ -156,7 +156,7 @@ export const CustomFieldEntity = {
   APP: 'APP',
   CATEGORY: 'CATEGORY',
   CONTENT_PAGE: 'CONTENT_PAGE',
-  BLOG_POST: 'BLOG_POST',
+  POST: 'POST',
   HELP_ARTICLE: 'HELP_ARTICLE',
   PROFILE_PAGE: 'PROFILE_PAGE',
   TESTIMONIAL: 'TESTIMONIAL',
@@ -165,7 +165,7 @@ export const CustomFieldEntity = {
   STORE_SECTION_ITEM: 'STORE_SECTION_ITEM',
   HOME_SLIDER: 'HOME_SLIDER',
   APP_TAG: 'APP_TAG',
-  BLOG_TAG: 'BLOG_TAG',
+  POST_TAG: 'POST_TAG',
   HELP_CATEGORY: 'HELP_CATEGORY',
   APP_MEDIA: 'APP_MEDIA',
   APP_LINK: 'APP_LINK',

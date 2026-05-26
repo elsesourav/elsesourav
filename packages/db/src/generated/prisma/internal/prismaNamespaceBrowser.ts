@@ -65,12 +65,15 @@ export const ModelName = {
   ContentPage: 'ContentPage',
   ContentPageVersion: 'ContentPageVersion',
   ProfilePage: 'ProfilePage',
-  BlogTag: 'BlogTag',
-  BlogPost: 'BlogPost',
-  BlogPostTag: 'BlogPostTag',
-  BlogComment: 'BlogComment',
+  PostTag: 'PostTag',
+  Post: 'Post',
+  PostTagLink: 'PostTagLink',
+  PostComment: 'PostComment',
   HelpCategory: 'HelpCategory',
   HelpArticle: 'HelpArticle',
+  FAQ: 'FAQ',
+  HelpArticleFeedback: 'HelpArticleFeedback',
+  HelpArticleTag: 'HelpArticleTag',
   Testimonial: 'Testimonial',
   ThemeConfig: 'ThemeConfig',
   AppMedia: 'AppMedia',
@@ -81,7 +84,10 @@ export const ModelName = {
   CustomFieldDefinition: 'CustomFieldDefinition',
   CustomFieldValue: 'CustomFieldValue',
   AppChangelog: 'AppChangelog',
-  BlogPostVersion: 'BlogPostVersion',
+  PostVersion: 'PostVersion',
+  PostReaction: 'PostReaction',
+  CommentReaction: 'CommentReaction',
+  PostBookmark: 'PostBookmark',
   HelpArticleVersion: 'HelpArticleVersion',
   SupportTicket: 'SupportTicket',
   SupportTicketMessage: 'SupportTicketMessage',
@@ -368,23 +374,31 @@ export const ProfilePageScalarFieldEnum = {
 export type ProfilePageScalarFieldEnum = (typeof ProfilePageScalarFieldEnum)[keyof typeof ProfilePageScalarFieldEnum]
 
 
-export const BlogTagScalarFieldEnum = {
+export const PostTagScalarFieldEnum = {
   id: 'id',
   name: 'name',
   slug: 'slug',
+  description: 'description',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
-export type BlogTagScalarFieldEnum = (typeof BlogTagScalarFieldEnum)[keyof typeof BlogTagScalarFieldEnum]
+export type PostTagScalarFieldEnum = (typeof PostTagScalarFieldEnum)[keyof typeof PostTagScalarFieldEnum]
 
 
-export const BlogPostScalarFieldEnum = {
+export const PostScalarFieldEnum = {
   id: 'id',
   slug: 'slug',
   title: 'title',
   excerpt: 'excerpt',
   contentMarkdown: 'contentMarkdown',
+  contentHtml: 'contentHtml',
+  featuredImageUrl: 'featuredImageUrl',
+  readingTimeMinutes: 'readingTimeMinutes',
+  isFeatured: 'isFeatured',
+  viewCount: 'viewCount',
+  seoTitle: 'seoTitle',
+  seoDescription: 'seoDescription',
   metadata: 'metadata',
   status: 'status',
   publishAt: 'publishAt',
@@ -393,40 +407,44 @@ export const BlogPostScalarFieldEnum = {
   createdBy: 'createdBy',
   updatedBy: 'updatedBy',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
-export type BlogPostScalarFieldEnum = (typeof BlogPostScalarFieldEnum)[keyof typeof BlogPostScalarFieldEnum]
+export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
 
 
-export const BlogPostTagScalarFieldEnum = {
+export const PostTagLinkScalarFieldEnum = {
   id: 'id',
   postId: 'postId',
   tagId: 'tagId',
   createdAt: 'createdAt'
 } as const
 
-export type BlogPostTagScalarFieldEnum = (typeof BlogPostTagScalarFieldEnum)[keyof typeof BlogPostTagScalarFieldEnum]
+export type PostTagLinkScalarFieldEnum = (typeof PostTagLinkScalarFieldEnum)[keyof typeof PostTagLinkScalarFieldEnum]
 
 
-export const BlogCommentScalarFieldEnum = {
+export const PostCommentScalarFieldEnum = {
   id: 'id',
   postId: 'postId',
+  parentId: 'parentId',
   userId: 'userId',
   authorName: 'authorName',
   authorEmail: 'authorEmail',
   content: 'content',
   isGuest: 'isGuest',
   isApproved: 'isApproved',
+  likesCount: 'likesCount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
-export type BlogCommentScalarFieldEnum = (typeof BlogCommentScalarFieldEnum)[keyof typeof BlogCommentScalarFieldEnum]
+export type PostCommentScalarFieldEnum = (typeof PostCommentScalarFieldEnum)[keyof typeof PostCommentScalarFieldEnum]
 
 
 export const HelpCategoryScalarFieldEnum = {
   id: 'id',
+  parentId: 'parentId',
   name: 'name',
   slug: 'slug',
   description: 'description',
@@ -442,15 +460,23 @@ export type HelpCategoryScalarFieldEnum = (typeof HelpCategoryScalarFieldEnum)[k
 export const HelpArticleScalarFieldEnum = {
   id: 'id',
   categoryId: 'categoryId',
+  appId: 'appId',
   slug: 'slug',
   title: 'title',
   summary: 'summary',
   contentMarkdown: 'contentMarkdown',
+  contentMdx: 'contentMdx',
   status: 'status',
   isFeatured: 'isFeatured',
   publishAt: 'publishAt',
   publishedAt: 'publishedAt',
   viewCount: 'viewCount',
+  upvotes: 'upvotes',
+  downvotes: 'downvotes',
+  readingTimeMins: 'readingTimeMins',
+  relatedArticleIds: 'relatedArticleIds',
+  seoTitle: 'seoTitle',
+  seoDescription: 'seoDescription',
   createdBy: 'createdBy',
   updatedBy: 'updatedBy',
   createdAt: 'createdAt',
@@ -458,6 +484,43 @@ export const HelpArticleScalarFieldEnum = {
 } as const
 
 export type HelpArticleScalarFieldEnum = (typeof HelpArticleScalarFieldEnum)[keyof typeof HelpArticleScalarFieldEnum]
+
+
+export const FAQScalarFieldEnum = {
+  id: 'id',
+  question: 'question',
+  answerMdx: 'answerMdx',
+  categoryId: 'categoryId',
+  appId: 'appId',
+  orderIndex: 'orderIndex',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FAQScalarFieldEnum = (typeof FAQScalarFieldEnum)[keyof typeof FAQScalarFieldEnum]
+
+
+export const HelpArticleFeedbackScalarFieldEnum = {
+  id: 'id',
+  articleId: 'articleId',
+  userId: 'userId',
+  isHelpful: 'isHelpful',
+  comment: 'comment',
+  createdAt: 'createdAt'
+} as const
+
+export type HelpArticleFeedbackScalarFieldEnum = (typeof HelpArticleFeedbackScalarFieldEnum)[keyof typeof HelpArticleFeedbackScalarFieldEnum]
+
+
+export const HelpArticleTagScalarFieldEnum = {
+  id: 'id',
+  articleId: 'articleId',
+  name: 'name',
+  slug: 'slug',
+  createdAt: 'createdAt'
+} as const
+
+export type HelpArticleTagScalarFieldEnum = (typeof HelpArticleTagScalarFieldEnum)[keyof typeof HelpArticleTagScalarFieldEnum]
 
 
 export const TestimonialScalarFieldEnum = {
@@ -625,7 +688,7 @@ export const AppChangelogScalarFieldEnum = {
 export type AppChangelogScalarFieldEnum = (typeof AppChangelogScalarFieldEnum)[keyof typeof AppChangelogScalarFieldEnum]
 
 
-export const BlogPostVersionScalarFieldEnum = {
+export const PostVersionScalarFieldEnum = {
   id: 'id',
   postId: 'postId',
   title: 'title',
@@ -636,7 +699,41 @@ export const BlogPostVersionScalarFieldEnum = {
   createdAt: 'createdAt'
 } as const
 
-export type BlogPostVersionScalarFieldEnum = (typeof BlogPostVersionScalarFieldEnum)[keyof typeof BlogPostVersionScalarFieldEnum]
+export type PostVersionScalarFieldEnum = (typeof PostVersionScalarFieldEnum)[keyof typeof PostVersionScalarFieldEnum]
+
+
+export const PostReactionScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  userId: 'userId',
+  sessionId: 'sessionId',
+  type: 'type',
+  createdAt: 'createdAt'
+} as const
+
+export type PostReactionScalarFieldEnum = (typeof PostReactionScalarFieldEnum)[keyof typeof PostReactionScalarFieldEnum]
+
+
+export const CommentReactionScalarFieldEnum = {
+  id: 'id',
+  commentId: 'commentId',
+  userId: 'userId',
+  sessionId: 'sessionId',
+  type: 'type',
+  createdAt: 'createdAt'
+} as const
+
+export type CommentReactionScalarFieldEnum = (typeof CommentReactionScalarFieldEnum)[keyof typeof CommentReactionScalarFieldEnum]
+
+
+export const PostBookmarkScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  userId: 'userId',
+  createdAt: 'createdAt'
+} as const
+
+export type PostBookmarkScalarFieldEnum = (typeof PostBookmarkScalarFieldEnum)[keyof typeof PostBookmarkScalarFieldEnum]
 
 
 export const HelpArticleVersionScalarFieldEnum = {
@@ -667,6 +764,10 @@ export const SupportTicketScalarFieldEnum = {
   resolvedAt: 'resolvedAt',
   closedAt: 'closedAt',
   metadata: 'metadata',
+  messageCount: 'messageCount',
+  unreadAdminCount: 'unreadAdminCount',
+  lastMessageAt: 'lastMessageAt',
+  slaBreachAt: 'slaBreachAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

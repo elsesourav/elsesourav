@@ -307,7 +307,7 @@ function ThemeConfigCard({
             Updated {formatDateTime(item.updatedAt)}
           </CardDescription>
         </div>
-        <Badge tone={item.isActive ? "success" : "neutral"}>
+        <Badge variant={item.isActive ? "success" : "secondary"}>
           {item.isActive ? "Active" : "Inactive"}
         </Badge>
       </div>
@@ -347,11 +347,11 @@ function ThemeConfigCard({
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <Button tone="secondary" size="sm" onClick={onEdit}>
+        <Button variant="secondary" size="sm" onClick={onEdit}>
           Edit config
         </Button>
         <Button
-          tone="primary"
+          variant="default"
           size="sm"
           onClick={onActivate}
           disabled={item.isActive || activating}
@@ -645,7 +645,7 @@ export function AdminThemeConfigsClient({
           {configs.length.toLocaleString()} configs,{" "}
           {activeCount.toLocaleString()} active.
         </p>
-        <Button tone="primary" onClick={() => setCreateOpen(true)}>
+        <Button variant="default" onClick={() => setCreateOpen(true)}>
           Add theme config
         </Button>
       </div>
@@ -702,7 +702,7 @@ export function AdminThemeConfigsClient({
 
           <div className="flex items-center justify-end gap-2">
             <Button
-              tone="secondary"
+              variant="secondary"
               onClick={() => {
                 setCreateOpen(false);
                 setCreateError(null);
@@ -748,7 +748,7 @@ export function AdminThemeConfigsClient({
 
             <div className="flex items-center justify-end gap-2">
               <Button
-                tone="secondary"
+                variant="secondary"
                 onClick={() => {
                   setEditingConfigId(null);
                   setEditForm(null);

@@ -62,7 +62,7 @@ export default async function Home() {
       .catch(() => []),
     fetchServiceData<SupportOverviewPayload>({
       service: "content",
-      path: "/v1/content/support/overview?categoryLimit=6&featuredHelpLimit=4&latestBlogLimit=4",
+      path: "/v1/content/support/overview?categoryLimit=6&featuredHelpLimit=4&latestPostsLimit=4",
     }).catch(() => null),
   ]);
 
@@ -83,7 +83,7 @@ export default async function Home() {
       <PageHeader
         eyebrow="Homepage Experience"
         title="A modular light-first storefront"
-        description="The homepage now blends app discovery, support docs, and blog highlights in reusable sections with accessible motion and contrast-safe controls."
+        description="The homepage now blends app discovery, support docs, and post highlights in reusable sections with accessible motion and contrast-safe controls."
       />
 
       <MixedHighlights

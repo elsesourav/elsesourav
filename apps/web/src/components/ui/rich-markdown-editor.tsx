@@ -738,7 +738,7 @@ export function RichMarkdownEditor({
                 className={cn(
                   "rounded-lg px-2.5 py-1 text-xs font-medium transition",
                   view === option.key
-                    ? "bg-[color-mix(in_srgb,var(--brand-secondary)_20%,var(--background)_80%)] text-(--brand-primary)"
+                    ? "bg-[color-mix(in_srgb,var(--brand-secondary)_20%,var(--background)_80%)] text-primary"
                     : "ui-text-muted hover:bg-[color-mix(in_srgb,var(--background)_84%,var(--brand-secondary)_16%)]",
                 )}
               >

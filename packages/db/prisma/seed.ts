@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import {
   AppStatus,
   BannerPlacement,
-  BlogPostStatus,
+  PostStatus,
   ContentStatus,
   CustomFieldEntity,
   CustomFieldType,
@@ -121,12 +121,17 @@ type ContentPageSeed = {
   publishedDaysAgo: number;
 };
 
-type BlogPostSeed = {
+type PostSeed = {
   slug: string;
   title: string;
   excerpt: string;
   contentMarkdown: string;
   tagSlugs: string[];
+  status: PostStatus;
+  isFeatured: boolean;
+  featuredImageUrl?: string;
+  seoTitle?: string;
+  seoDescription?: string;
   publishedDaysAgo: number;
 };
 
@@ -140,7 +145,7 @@ type HelpArticleSeed = {
   publishedDaysAgo: number;
 };
 
-type BlogCommentSeed = {
+type PostCommentSeed = {
   postSlug: string;
   userKey?: string;
   authorName?: string;
@@ -148,6 +153,7 @@ type BlogCommentSeed = {
   content: string;
   isApproved: boolean;
   daysAgo: number;
+  replies?: Omit<PostCommentSeed, "postSlug" | "replies">[];
 };
 
 type LibrarySeed = {
@@ -2025,71 +2031,107 @@ const blogTagSeeds = [
   { name: "Product", slug: "product" },
 ] as const;
 
-const blogPostSeeds: BlogPostSeed[] = [
+const postSeeds: PostSeed[] = [
   {
-    slug: "shipping-es-orders-at-scale",
-    title: "Shipping ES Orders At Scale",
-    excerpt:
-      "How the es-orders repository informed resilient sequencing for stateful order pipelines.",
+    slug: "building-scalable-nextjs-architectures",
+    title: "Building Scalable Next.js Architectures in 2026",
+    excerpt: "Learn how to structure massive Next.js applications using Turbopack, App Router, and clean architecture principles.",
     contentMarkdown: [
-      "The [es-orders](https://github.com/elsesourav/es-orders) workstream shaped how we model retries and event safety.",
+      "In modern web development, Next.js has become the de-facto standard for building scalable React applications. This post explores architectural patterns that keep your codebase clean and maintainable.",
       "",
-      "### Key takeaways",
-      "- Keep delivery and payment concerns isolated.",
-      "- Preserve idempotency through explicit dedupe keys.",
-      "- Surface operational counters directly in admin views.",
-    ].join("\n"),
-    tagSlugs: ["engineering", "case-study"],
-    publishedDaysAgo: 14,
-  },
-  {
-    slug: "image-workflows-from-listing-images-only",
-    title: "Image Workflows From listing-images-only",
-    excerpt:
-      "Using repository driven experiments to reduce listing media cleanup time.",
-    contentMarkdown: [
-      "In [listing-images-only](https://github.com/elsesourav/listing-images-only), the main lesson was to optimize for curation throughput.",
+      "### Reusable Component Architecture",
+      "We divide components into distinct categories:",
+      "- **UI Components**: Dumb, stateless components (e.g., buttons, cards).",
+      "- **Layout Components**: Structure and grid management.",
+      "- **Feature Components**: Business logic and data fetching.",
       "",
-      "### Improvements shipped",
-      "- Faster duplicate filtering.",
-      "- Better naming conventions for exports.",
-      "- Leaner review handoff steps.",
-    ].join("\n"),
-    tagSlugs: ["product", "case-study"],
-    publishedDaysAgo: 11,
-  },
-  {
-    slug: "lessons-from-ext-self-update",
-    title: "Lessons From ext-self-update",
-    excerpt:
-      "Release automation guardrails that made extension updates less risky.",
-    contentMarkdown: [
-      "The [ext-self-update](https://github.com/elsesourav/ext-self-update) scripts improved release confidence with deterministic checks.",
+      "> [!TIP]",
+      "> Keep your UI components completely independent from your global state manager to ensure maximum reusability.",
       "",
-      "### Guardrails",
-      "- Verify release tags before promotion.",
-      "- Confirm artifact checksums match expected outputs.",
-      "- Fail fast with clear rollback paths.",
-    ].join("\n"),
-    tagSlugs: ["engineering", "release-notes"],
-    publishedDaysAgo: 9,
-  },
-  {
-    slug: "designing-es-utils-for-reuse",
-    title: "Designing es-utils For Reuse",
-    excerpt:
-      "A practical guide to utility boundaries in a multi-service codebase.",
-    contentMarkdown: [
-      "The [es-utils](https://github.com/elsesourav/es-utils) package was designed to cut repeated logic while keeping service code readable.",
+      "#### Folder Structure Example",
+      "```text",
+      "apps/web/src/",
+      "├── app/              # Next.js App Router",
+      "├── components/       # Reusable components",
+      "│   ├── ui/           # Basic UI building blocks",
+      "│   ├── layout/       # Structural components",
+      "│   └── features/     # Complex domain specific blocks",
+      "└── lib/              # Shared utilities",
+      "```",
       "",
-      "### Utility boundaries",
-      "- Keep helpers pure and side-effect free.",
-      "- Prefer explicit naming over implicit convenience wrappers.",
-      "- Publish migration notes for renamed utilities.",
+      "### API Integration and Data Fetching",
+      "Instead of fetching directly in components, abstract your API calls into a shared `services` directory.",
+      "",
+      "| Method | Usage | Pros |",
+      "|--------|-------|------|",
+      "| Server Actions | Form mutations | No API routes needed |",
+      "| React Cache | Data fetching | Automatic deduplication |",
+      "| SWR / React Query | Client-side polling | Great UX for dynamic data |",
+      "",
+      "By adopting these standards, your team will ship faster and break fewer things.",
     ].join("\n"),
     tagSlugs: ["engineering", "product"],
-    publishedDaysAgo: 6,
+    status: PostStatus.PUBLISHED,
+    isFeatured: true,
+    featuredImageUrl: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1400&q=80",
+    seoTitle: "Scalable Next.js Architecture Guide 2026",
+    seoDescription: "A comprehensive guide on structuring Next.js 16+ apps for scalability and maintainability.",
+    publishedDaysAgo: 5,
   },
+  {
+    slug: "database-schema-design-for-startups",
+    title: "Database Schema Design for Early-Stage Startups",
+    excerpt: "How to design Postgres schemas that scale gracefully without over-engineering on day one.",
+    contentMarkdown: [
+      "Designing a database schema for a new startup is a balancing act. You need something robust, but you can't waste weeks over-architecting.",
+      "",
+      "### Use UUIDs or CUIDs",
+      "Avoid sequential integers for primary keys. They expose your growth metrics and complicate database migrations and sharding.",
+      "```prisma",
+      "model User {",
+      "  id String @id @default(cuid())",
+      "  email String @unique",
+      "}",
+      "```",
+      "",
+      "### Soft Deletes",
+      "Never actually delete data. Always use a `deletedAt` timestamp.",
+      "- Preserves historical analytics.",
+      "- Allows easy recovery of user data.",
+      "- Complies better with certain audit requirements.",
+      "",
+      "> [!WARNING]",
+      "> Remember to update all your queries to include `where: { deletedAt: null }`!",
+      "",
+      "### JSONB for Flexibility",
+      "Postgres `JSONB` columns are perfect for user settings, temporary metadata, and third-party API payloads that might change schema frequently."
+    ].join("\n"),
+    tagSlugs: ["engineering", "case-study"],
+    status: PostStatus.PUBLISHED,
+    isFeatured: false,
+    featuredImageUrl: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?auto=format&fit=crop&w=1400&q=80",
+    seoTitle: "Database Schema Design Best Practices",
+    seoDescription: "Learn how to build scalable PostgreSQL database schemas using Prisma ORM.",
+    publishedDaysAgo: 12,
+  },
+  {
+    slug: "draft-upcoming-feature-announcement",
+    title: "Draft: Q3 Feature Roadmap",
+    excerpt: "A sneak peek at what we are building for the upcoming quarter.",
+    contentMarkdown: [
+      "We have exciting new features coming in Q3.",
+      "",
+      "- **Dark Mode 2.0**: Completely revamped dark theme with higher contrast ratios.",
+      "- **Mobile App Beta**: We are launching our Android and iOS apps.",
+      "- **Advanced Analytics**: Deeper insights into your usage.",
+      "",
+      "Stay tuned for the official release dates!"
+    ].join("\n"),
+    tagSlugs: ["release-notes", "product"],
+    status: PostStatus.DRAFT,
+    isFeatured: false,
+    publishedDaysAgo: -5,
+  }
 ];
 
 const helpCategorySeeds = [
@@ -2202,36 +2244,53 @@ const helpArticleSeeds: HelpArticleSeed[] = [
   },
 ];
 
-const blogCommentSeeds: BlogCommentSeed[] = [
+const postCommentSeeds: PostCommentSeed[] = [
   {
-    postSlug: "shipping-es-orders-at-scale",
+    postSlug: "building-scalable-nextjs-architectures",
     userKey: "viewer",
-    content: "Great write up. The retry boundaries are especially useful.",
-    isApproved: true,
-    daysAgo: 8,
-  },
-  {
-    postSlug: "image-workflows-from-listing-images-only",
-    userKey: "creator",
-    content: "The export naming convention solved our review bottleneck.",
-    isApproved: true,
-    daysAgo: 7,
-  },
-  {
-    postSlug: "lessons-from-ext-self-update",
-    authorName: "Guest QA Engineer",
-    authorEmail: "guest.qa@example.com",
-    content: "Would love a follow up on rollback strategy templates.",
-    isApproved: false,
-    daysAgo: 5,
-  },
-  {
-    postSlug: "designing-es-utils-for-reuse",
-    userKey: "reviewer",
-    content: "The naming guidance for helpers is spot on.",
+    content: "This is exactly what our team needed. The breakdown of UI vs Layout components makes so much sense. Are you planning a follow-up on state management?",
     isApproved: true,
     daysAgo: 4,
+    replies: [
+      {
+        userKey: "admin",
+        content: "Yes! We are planning a deep dive into Zustand and Context API next month.",
+        isApproved: true,
+        daysAgo: 3,
+      },
+      {
+        authorName: "Jane Doe",
+        authorEmail: "jane@example.com",
+        content: "Looking forward to it. We currently use Redux but it feels too heavy.",
+        isApproved: true,
+        daysAgo: 2,
+      }
+    ]
   },
+  {
+    postSlug: "database-schema-design-for-startups",
+    authorName: "Guest Dev",
+    authorEmail: "dev@startup.io",
+    content: "I completely agree with the Soft Deletes point. We learned that the hard way after an accidental DROP TABLE. Do you have advice on handling unique constraints with soft deletes?",
+    isApproved: true,
+    daysAgo: 10,
+    replies: [
+      {
+        userKey: "creator",
+        content: "Great question! Usually, we use a partial unique index in Postgres: `CREATE UNIQUE INDEX idx_email ON users (email) WHERE deleted_at IS NULL;`",
+        isApproved: true,
+        daysAgo: 9,
+      }
+    ]
+  },
+  {
+    postSlug: "building-scalable-nextjs-architectures",
+    authorName: "Spammer",
+    authorEmail: "spam@spam.com",
+    content: "Buy cheap shoes at http://spam.com",
+    isApproved: false,
+    daysAgo: 1,
+  }
 ];
 
 const librarySeeds: LibrarySeed[] = [
@@ -3399,7 +3458,7 @@ async function main() {
 
   const blogTagsBySlug = new Map<string, { id: string }>();
   for (const blogTagSeed of blogTagSeeds) {
-    const tag = await prisma.blogTag.upsert({
+    const tag = await prisma.postTag.upsert({
       where: { slug: blogTagSeed.slug },
       update: {
         name: blogTagSeed.name,
@@ -3416,9 +3475,9 @@ async function main() {
     blogTagsBySlug.set(blogTagSeed.slug, tag);
   }
 
-  const blogPostsBySlug = new Map<string, { id: string }>();
-  for (const blogPostSeed of blogPostSeeds) {
-    const tagLinks = blogPostSeed.tagSlugs.map((tagSlug) => {
+  const postSeedsBySlug = new Map<string, { id: string }>();
+  for (const postSeed of postSeeds) {
+    const tagLinks = postSeed.tagSlugs.map((tagSlug) => {
       const tag = requireEntity(
         blogTagsBySlug.get(tagSlug),
         `blog tag ${tagSlug}`,
@@ -3426,32 +3485,36 @@ async function main() {
       return { tagId: tag.id };
     });
 
-    const publishAt = daysFromNow(-blogPostSeed.publishedDaysAgo);
+    const publishAt = daysFromNow(-postSeed.publishedDaysAgo);
     const readingTimeMinutes = Math.max(
       1,
       Math.ceil(
-        blogPostSeed.contentMarkdown.split(/\s+/).filter(Boolean).length / 220,
+        postSeed.contentMarkdown.split(/\s+/).filter(Boolean).length / 220,
       ),
     );
     const postMetadata = {
       source: "seed",
-      tagSlugs: blogPostSeed.tagSlugs,
+      tagSlugs: postSeed.tagSlugs,
       readingTimeMinutes,
       editorialState: "ready",
     };
 
-    const post = await prisma.blogPost.upsert({
+    const post = await prisma.post.upsert({
       where: {
-        slug: blogPostSeed.slug,
+        slug: postSeed.slug,
       },
       update: {
-        title: blogPostSeed.title,
-        excerpt: blogPostSeed.excerpt,
-        contentMarkdown: blogPostSeed.contentMarkdown,
+        title: postSeed.title,
+        excerpt: postSeed.excerpt,
+        contentMarkdown: postSeed.contentMarkdown,
+        featuredImageUrl: postSeed.featuredImageUrl,
+        seoTitle: postSeed.seoTitle,
+        seoDescription: postSeed.seoDescription,
+        isFeatured: postSeed.isFeatured,
         metadata: postMetadata,
-        status: BlogPostStatus.PUBLISHED,
+        status: postSeed.status,
         publishAt,
-        publishedAt: publishAt,
+        publishedAt: postSeed.status === PostStatus.PUBLISHED ? publishAt : null,
         authorId: admin.id,
         updatedBy: admin.id,
         tags: {
@@ -3460,14 +3523,18 @@ async function main() {
         },
       },
       create: {
-        slug: blogPostSeed.slug,
-        title: blogPostSeed.title,
-        excerpt: blogPostSeed.excerpt,
-        contentMarkdown: blogPostSeed.contentMarkdown,
+        slug: postSeed.slug,
+        title: postSeed.title,
+        excerpt: postSeed.excerpt,
+        contentMarkdown: postSeed.contentMarkdown,
+        featuredImageUrl: postSeed.featuredImageUrl,
+        seoTitle: postSeed.seoTitle,
+        seoDescription: postSeed.seoDescription,
+        isFeatured: postSeed.isFeatured,
         metadata: postMetadata,
-        status: BlogPostStatus.PUBLISHED,
+        status: postSeed.status,
         publishAt,
-        publishedAt: publishAt,
+        publishedAt: postSeed.status === PostStatus.PUBLISHED ? publishAt : null,
         authorId: admin.id,
         createdBy: admin.id,
         updatedBy: admin.id,
@@ -3480,12 +3547,12 @@ async function main() {
       },
     });
 
-    blogPostsBySlug.set(blogPostSeed.slug, post);
+    postSeedsBySlug.set(postSeed.slug, post);
 
-    const existingVersion = await prisma.blogPostVersion.findFirst({
+    const existingVersion = await prisma.postVersion.findFirst({
       where: {
         postId: post.id,
-        title: blogPostSeed.title,
+        title: postSeed.title,
       },
       select: {
         id: true,
@@ -3493,22 +3560,22 @@ async function main() {
     });
 
     if (existingVersion) {
-      await prisma.blogPostVersion.update({
+      await prisma.postVersion.update({
         where: { id: existingVersion.id },
         data: {
-          excerpt: blogPostSeed.excerpt,
-          contentMarkdown: blogPostSeed.contentMarkdown,
+          excerpt: postSeed.excerpt,
+          contentMarkdown: postSeed.contentMarkdown,
           metadata: postMetadata,
           createdBy: admin.id,
         },
       });
     } else {
-      await prisma.blogPostVersion.create({
+      await prisma.postVersion.create({
         data: {
           postId: post.id,
-          title: blogPostSeed.title,
-          excerpt: blogPostSeed.excerpt,
-          contentMarkdown: blogPostSeed.contentMarkdown,
+          title: postSeed.title,
+          excerpt: postSeed.excerpt,
+          contentMarkdown: postSeed.contentMarkdown,
           metadata: postMetadata,
           createdBy: admin.id,
         },
@@ -3562,7 +3629,7 @@ async function main() {
       options: undefined,
     },
     {
-      entity: CustomFieldEntity.BLOG_POST,
+      entity: CustomFieldEntity.POST,
       key: "readingLevel",
       label: "Reading Level",
       description: "Editorial complexity label for article targeting.",
@@ -3574,7 +3641,7 @@ async function main() {
       },
     },
     {
-      entity: CustomFieldEntity.BLOG_POST,
+      entity: CustomFieldEntity.POST,
       key: "heroStyle",
       label: "Hero Style",
       description: "Visual treatment for blog header presentation.",
@@ -3673,20 +3740,20 @@ async function main() {
       value: true,
     },
     {
-      entity: CustomFieldEntity.BLOG_POST,
+      entity: CustomFieldEntity.POST,
       fieldKey: "readingLevel",
       entityId: requireEntity(
-        blogPostsBySlug.get("shipping-es-orders-at-scale"),
-        "blog post shipping-es-orders-at-scale",
+        postSeedsBySlug.get("building-scalable-nextjs-architectures"),
+        "post building-scalable-nextjs-architectures",
       ).id,
       value: "advanced",
     },
     {
-      entity: CustomFieldEntity.BLOG_POST,
+      entity: CustomFieldEntity.POST,
       fieldKey: "heroStyle",
       entityId: requireEntity(
-        blogPostsBySlug.get("designing-es-utils-for-reuse"),
-        "blog post designing-es-utils-for-reuse",
+        postSeedsBySlug.get("database-schema-design-for-startups"),
+        "post database-schema-design-for-startups",
       ).id,
       value: "minimal-grid",
     },
@@ -3718,26 +3785,17 @@ async function main() {
     });
   }
 
-  for (const commentSeed of blogCommentSeeds) {
-    const post = requireEntity(
-      blogPostsBySlug.get(commentSeed.postSlug),
-      `blog post ${commentSeed.postSlug}`,
-    );
+  async function seedComment(commentSeed: any, postId: string, parentId?: string) {
     const user = commentSeed.userKey
-      ? requireEntity(
-          usersByKey.get(commentSeed.userKey),
-          `user ${commentSeed.userKey}`,
-        )
+      ? requireEntity(usersByKey.get(commentSeed.userKey), `user ${commentSeed.userKey}`)
       : null;
 
-    const existingComment = await prisma.blogComment.findFirst({
+    const existingComment = await prisma.postComment.findFirst({
       where: {
-        postId: post.id,
+        postId: postId,
         content: commentSeed.content,
       },
-      select: {
-        id: true,
-      },
+      select: { id: true },
     });
 
     const commentData = {
@@ -3748,21 +3806,34 @@ async function main() {
       isGuest: user === null,
       isApproved: commentSeed.isApproved,
       createdAt: daysFromNow(-commentSeed.daysAgo),
+      parentId: parentId ?? null,
     };
 
+    let comment;
     if (existingComment) {
-      await prisma.blogComment.update({
+      comment = await prisma.postComment.update({
         where: { id: existingComment.id },
         data: commentData,
       });
     } else {
-      await prisma.blogComment.create({
-        data: {
-          postId: post.id,
-          ...commentData,
-        },
+      comment = await prisma.postComment.create({
+        data: { postId: postId, ...commentData },
       });
     }
+
+    if (commentSeed.replies) {
+      for (const reply of commentSeed.replies) {
+        await seedComment(reply, postId, comment.id);
+      }
+    }
+  }
+
+  for (const commentSeed of postCommentSeeds) {
+    const post = requireEntity(
+      postSeedsBySlug.get(commentSeed.postSlug),
+      `post ${commentSeed.postSlug}`,
+    );
+    await seedComment(commentSeed, post.id);
   }
 
   const helpCategoriesBySlug = new Map<string, { id: string }>();
@@ -4319,8 +4390,8 @@ async function main() {
       action: "seed.content.sync",
       entity: "blog_post",
       entityId: requireEntity(
-        blogPostsBySlug.get("shipping-es-orders-at-scale"),
-        "blog post shipping-es-orders-at-scale",
+        postSeedsBySlug.get("building-scalable-nextjs-architectures"),
+        "blog post building-scalable-nextjs-architectures",
       ).id,
     },
     {
@@ -4419,7 +4490,7 @@ async function main() {
     bannerCount,
     sliderCount,
     contentPagesCount,
-    blogPostsCount,
+    postsCount,
     helpArticlesCount,
     feedbackCount,
     testimonialsCount,
@@ -4438,7 +4509,7 @@ async function main() {
     prisma.storeBanner.count(),
     prisma.homeSlider.count(),
     prisma.contentPage.count(),
-    prisma.blogPost.count(),
+    prisma.post.count(),
     prisma.helpArticle.count(),
     prisma.feedback.count(),
     prisma.testimonial.count(),
@@ -4460,7 +4531,7 @@ async function main() {
     bannerCount,
     sliderCount,
     contentPagesCount,
-    blogPostsCount,
+    postsCount,
     helpArticlesCount,
     feedbackCount,
     testimonialsCount,

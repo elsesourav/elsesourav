@@ -38,9 +38,9 @@ const contentStatusOptions: ContentStatus[] = [
 
 const statusTone: Record<
   ContentStatus,
-  "neutral" | "info" | "success" | "warning"
+  "secondary" | "info" | "success" | "warning"
 > = {
-  DRAFT: "neutral",
+  DRAFT: "secondary",
   SCHEDULED: "warning",
   PUBLISHED: "success",
   ARCHIVED: "info",
@@ -210,7 +210,7 @@ function ContentPageCard({
           <CardTitle>{item.title}</CardTitle>
           <CardDescription className="mt-1">/{item.slug}</CardDescription>
         </div>
-        <Badge tone={statusTone[typedStatus]}>{item.status}</Badge>
+        <Badge variant={statusTone[typedStatus]}>{item.status}</Badge>
       </div>
 
       <p className="ui-text-muted line-clamp-3 text-sm">
@@ -225,7 +225,7 @@ function ContentPageCard({
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <Button tone="secondary" size="sm" onClick={onEdit}>
+        <Button variant="secondary" size="sm" onClick={onEdit}>
           Edit page
         </Button>
       </div>
@@ -549,7 +549,7 @@ export function AdminContentPagesClient({
           {pages.length.toLocaleString()} pages: {stats.published} published,{" "}
           {stats.scheduled} scheduled, {stats.draft} drafts.
         </p>
-        <Button tone="primary" onClick={() => setCreateOpen(true)}>
+        <Button variant="default" onClick={() => setCreateOpen(true)}>
           Add content page
         </Button>
       </div>
@@ -602,7 +602,7 @@ export function AdminContentPagesClient({
 
           <div className="flex items-center justify-end gap-2">
             <Button
-              tone="secondary"
+              variant="secondary"
               onClick={() => {
                 setCreateOpen(false);
                 setCreateError(null);
@@ -645,7 +645,7 @@ export function AdminContentPagesClient({
 
             <div className="flex items-center justify-end gap-2">
               <Button
-                tone="secondary"
+                variant="secondary"
                 onClick={() => {
                   setEditingPageId(null);
                   setEditForm(null);

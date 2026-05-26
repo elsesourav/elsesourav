@@ -47,7 +47,7 @@ export type SupportOverviewHelpArticle = {
   } | null;
 };
 
-export type SupportOverviewBlogPost = {
+export type SupportOverviewPost = {
   id: string;
   slug: string;
   title: string;
@@ -66,5 +66,5 @@ export type SupportOverviewBlogPost = {
 export type SupportOverviewPayload = {
   categories: SupportOverviewCategory[];
   featuredHelp: SupportOverviewHelpArticle[];
-  latestBlog: SupportOverviewBlogPost[];
+  latestPosts: SupportOverviewPost[];
 };

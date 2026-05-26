@@ -302,7 +302,7 @@ export type CustomFieldEntity =
   | "APP"
   | "CATEGORY"
   | "CONTENT_PAGE"
-  | "BLOG_POST"
+  | "POST"
   | "HELP_ARTICLE"
   | "PROFILE_PAGE"
   | "TESTIMONIAL"
@@ -311,7 +311,7 @@ export type CustomFieldEntity =
   | "STORE_SECTION_ITEM"
   | "HOME_SLIDER"
   | "APP_TAG"
-  | "BLOG_TAG"
+  | "POST_TAG"
   | "HELP_CATEGORY"
   | "APP_MEDIA"
   | "APP_LINK"
@@ -397,7 +397,7 @@ export type AdminContentPage = {
   }>;
 };
 
-export type AdminBlogTag = {
+export type AdminPostTag = {
   id: string;
   name: string;
   slug: string;
@@ -408,12 +408,18 @@ export type AdminBlogTag = {
   };
 };
 
-export type AdminBlogPost = {
+export type AdminPost = {
   id: string;
   slug: string;
   title: string;
   excerpt: string | null;
   contentMarkdown: string;
+  featuredImageUrl: string | null;
+  readingTimeMinutes: number;
+  isFeatured: boolean;
+  viewCount: number;
+  seoTitle: string | null;
+  seoDescription: string | null;
   metadata?: MetadataRecord | null;
   status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   publishAt: string | null;
@@ -421,7 +427,7 @@ export type AdminBlogPost = {
   authorId: string | null;
   createdAt: string;
   updatedAt: string;
-  tags: AdminBlogTag[];
+  tags: AdminPostTag[];
   _count?: {
     comments: number;
   };

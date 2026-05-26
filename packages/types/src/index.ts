@@ -24,7 +24,10 @@ export type ContentStatus = "DRAFT" | "SCHEDULED" | "PUBLISHED" | "ARCHIVED";
 
 export type SliderType = "HERO" | "FEATURED" | "PROMO";
 
-export type BlogPostStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
+export type PostStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
+
+/** @deprecated Use PostStatus instead */
+export type BlogPostStatus = PostStatus;
 
 export type HelpArticleStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
 
@@ -169,7 +172,7 @@ export type ProfilePageDto = {
   updatedAt: string;
 };
 
-export type BlogTagDto = {
+export type PostTagDto = {
   id: string;
   name: string;
   slug: string;
@@ -177,7 +180,10 @@ export type BlogTagDto = {
   updatedAt: string;
 };
 
-export type BlogCommentDto = {
+/** @deprecated Use PostTagDto instead */
+export type BlogTagDto = PostTagDto;
+
+export type PostCommentDto = {
   id: string;
   postId: string;
   userId: string | null;
@@ -189,19 +195,31 @@ export type BlogCommentDto = {
   updatedAt: string;
 };
 
-export type BlogPostDto = {
+/** @deprecated Use PostCommentDto instead */
+export type BlogCommentDto = PostCommentDto;
+
+export type PostDto = {
   id: string;
   slug: string;
   title: string;
   excerpt: string | null;
   contentMarkdown: string;
-  status: BlogPostStatus;
+  featuredImageUrl: string | null;
+  readingTimeMinutes: number;
+  isFeatured: boolean;
+  viewCount: number;
+  seoTitle: string | null;
+  seoDescription: string | null;
+  status: PostStatus;
   publishAt: string | null;
   publishedAt: string | null;
   authorId: string | null;
   createdAt: string;
   updatedAt: string;
 };
+
+/** @deprecated Use PostDto instead */
+export type BlogPostDto = PostDto;
 
 export type HelpCategoryDto = {
   id: string;

@@ -1,22 +1,24 @@
 import {
-  BlogPostStatus,
+  PostStatus,
   ContentStatus,
   HelpArticleStatus,
   Prisma,
   prisma,
 } from "@elsesourav/db";
 import {
-  blogCommentModerationSchema,
-  blogPostCreateSchema,
-  blogPostUpdateSchema,
-  blogTagCreateSchema,
-  blogTagUpdateSchema,
+  postCommentModerationSchema,
+  postCreateSchema,
+  postUpdateSchema,
+  postTagCreateSchema,
+  postTagUpdateSchema,
   contentPageCreateSchema,
   contentPageUpdateSchema,
   helpArticleCreateSchema,
   helpArticleUpdateSchema,
   helpCategoryCreateSchema,
   helpCategoryUpdateSchema,
+  faqCreateSchema,
+  faqUpdateSchema,
   profilePageCreateSchema,
   profilePageUpdateSchema,
   testimonialCreateSchema,
@@ -51,7 +53,7 @@ function toSlug(value: string): string {
     .slice(0, 90);
 }
 
-async function generateUniqueBlogTagSlug(
+async function generateUniquePostTagSlug(
   seed: string,
   excludeId?: string,
 ): Promise<string> {
@@ -60,7 +62,7 @@ async function generateUniqueBlogTagSlug(
   let suffix = 2;
 
   while (true) {
-    const existing = await prisma.blogTag.findUnique({
+    const existing = await prisma.postTag.findUnique({
       where: { slug: candidate },
       select: { id: true },
     });
@@ -491,11 +493,11 @@ adminContentRouter.patch("/profile", async (req, res) => {
   }
 });
 
-adminContentRouter.get("/blog/tags", async (_req, res) => {
+adminContentRouter.get("/posts/tags", async (_req, res) => {
   const requestId = getRequestId(res);
 
   try {
-    const tags = await prisma.blogTag.findMany({
+    const tags = await prisma.postTag.findMany({
       orderBy: [{ name: "asc" }],
       include: {
         _count: {
@@ -519,11 +521,11 @@ adminContentRouter.get("/blog/tags", async (_req, res) => {
   }
 });
 
-adminContentRouter.post("/blog/tags", async (req, res) => {
+adminContentRouter.post("/posts/tags", async (req, res) => {
   const requestId = getRequestId(res);
 
   try {
-    const parsed = blogTagCreateSchema.safeParse(req.body);
+    const parsed = postTagCreateSchema.safeParse(req.body);
     if (!parsed.success) {
       return sendFailure(
         res,
@@ -535,11 +537,11 @@ adminContentRouter.post("/blog/tags", async (req, res) => {
       );
     }
 
-    const slug = await generateUniqueBlogTagSlug(
+    const slug = await generateUniquePostTagSlug(
       parsed.data.slug ?? parsed.data.name,
     );
 
-    const tag = await prisma.blogTag.create({
+    const tag = await prisma.postTag.create({
       data: {
         name: parsed.data.name,
         slug,
@@ -559,7 +561,7 @@ adminContentRouter.post("/blog/tags", async (req, res) => {
   }
 });
 
-adminContentRouter.patch("/blog/tags/:id", async (req, res) => {
+adminContentRouter.patch("/posts/tags/:id", async (req, res) => {
   const requestId = getRequestId(res);
 
   try {
@@ -574,7 +576,7 @@ adminContentRouter.patch("/blog/tags/:id", async (req, res) => {
       );
     }
 
-    const parsed = blogTagUpdateSchema.safeParse(req.body);
+    const parsed = postTagUpdateSchema.safeParse(req.body);
     if (!parsed.success) {
       return sendFailure(
         res,
@@ -588,13 +590,13 @@ adminContentRouter.patch("/blog/tags/:id", async (req, res) => {
 
     const nextSlug =
       parsed.data.slug || parsed.data.name
-        ? await generateUniqueBlogTagSlug(
+        ? await generateUniquePostTagSlug(
             parsed.data.slug ?? parsed.data.name ?? "tag",
             parsedId.data.id,
           )
         : undefined;
 
-    const tag = await prisma.blogTag.update({
+    const tag = await prisma.postTag.update({
       where: { id: parsedId.data.id },
       data: {
         name: parsed.data.name,
@@ -615,7 +617,7 @@ adminContentRouter.patch("/blog/tags/:id", async (req, res) => {
   }
 });
 
-adminContentRouter.delete("/blog/tags/:id", async (req, res) => {
+adminContentRouter.delete("/posts/tags/:id", async (req, res) => {
   const requestId = getRequestId(res);
 
   try {
@@ -630,7 +632,7 @@ adminContentRouter.delete("/blog/tags/:id", async (req, res) => {
       );
     }
 
-    await prisma.blogTag.delete({
+    await prisma.postTag.delete({
       where: { id: parsedId.data.id },
     });
 
@@ -647,7 +649,7 @@ adminContentRouter.delete("/blog/tags/:id", async (req, res) => {
   }
 });
 
-adminContentRouter.get("/blog/posts", async (req, res) => {
+adminContentRouter.get("/posts", async (req, res) => {
   const requestId = getRequestId(res);
 
   try {
@@ -663,11 +665,11 @@ adminContentRouter.get("/blog/posts", async (req, res) => {
       );
     }
 
-    const where: Prisma.BlogPostWhereInput = parsed.data.status
-      ? { status: parsed.data.status as BlogPostStatus }
+    const where: Prisma.PostWhereInput = parsed.data.status
+      ? { status: parsed.data.status as PostStatus }
       : {};
 
-    const items = await prisma.blogPost.findMany({
+    const items = await prisma.post.findMany({
       where,
       orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
       take: parsed.data.limit + 1,
@@ -720,11 +722,11 @@ adminContentRouter.get("/blog/posts", async (req, res) => {
   }
 });
 
-adminContentRouter.post("/blog/posts", async (req, res) => {
+adminContentRouter.post("/posts", async (req, res) => {
   const requestId = getRequestId(res);
 
   try {
-    const parsed = blogPostCreateSchema.safeParse(req.body);
+    const parsed = postCreateSchema.safeParse(req.body);
     if (!parsed.success) {
       return sendFailure(
         res,
@@ -747,7 +749,7 @@ adminContentRouter.post("/blog/posts", async (req, res) => {
       );
     }
 
-    const post = await prisma.blogPost.create({
+    const post = await prisma.post.create({
       data: {
         slug: parsed.data.slug,
         title: parsed.data.title,
@@ -757,7 +759,7 @@ adminContentRouter.post("/blog/posts", async (req, res) => {
         status: parsed.data.status,
         publishAt: parsed.data.publishAt,
         publishedAt:
-          parsed.data.status === BlogPostStatus.PUBLISHED ? new Date() : null,
+          parsed.data.status === PostStatus.PUBLISHED ? new Date() : null,
         authorId: userId,
         createdBy: userId,
         updatedBy: userId,
@@ -797,7 +799,7 @@ adminContentRouter.post("/blog/posts", async (req, res) => {
   }
 });
 
-adminContentRouter.put("/blog/posts/:id", async (req, res) => {
+adminContentRouter.put("/posts/:id", async (req, res) => {
   const requestId = getRequestId(res);
 
   try {
@@ -812,7 +814,7 @@ adminContentRouter.put("/blog/posts/:id", async (req, res) => {
       );
     }
 
-    const parsed = blogPostUpdateSchema.safeParse(req.body);
+    const parsed = postUpdateSchema.safeParse(req.body);
     if (!parsed.success) {
       return sendFailure(
         res,
@@ -824,7 +826,7 @@ adminContentRouter.put("/blog/posts/:id", async (req, res) => {
       );
     }
 
-    const existing = await prisma.blogPost.findUnique({
+    const existing = await prisma.post.findUnique({
       where: { id: parsedId.data.id },
       select: { id: true, status: true },
     });
@@ -850,7 +852,7 @@ adminContentRouter.put("/blog/posts/:id", async (req, res) => {
       );
     }
 
-    const post = await prisma.blogPost.update({
+    const post = await prisma.post.update({
       where: { id: parsedId.data.id },
       data: {
         slug: parsed.data.slug,
@@ -861,10 +863,10 @@ adminContentRouter.put("/blog/posts/:id", async (req, res) => {
         status: parsed.data.status,
         publishAt: parsed.data.publishAt,
         publishedAt:
-          parsed.data.status === BlogPostStatus.PUBLISHED &&
-          existing.status !== BlogPostStatus.PUBLISHED
+          parsed.data.status === PostStatus.PUBLISHED &&
+          existing.status !== PostStatus.PUBLISHED
             ? new Date()
-            : parsed.data.status === BlogPostStatus.DRAFT
+            : parsed.data.status === PostStatus.DRAFT
               ? null
               : undefined,
         updatedBy: userId,
@@ -875,12 +877,12 @@ adminContentRouter.put("/blog/posts/:id", async (req, res) => {
 
     if (tagIds) {
       await prisma.$transaction(async (tx) => {
-        await tx.blogPostTag.deleteMany({
+        await tx.postTagLink.deleteMany({
           where: { postId: parsedId.data.id },
         });
 
         if (tagIds.length > 0) {
-          await tx.blogPostTag.createMany({
+          await tx.postTagLink.createMany({
             data: tagIds.map((tagId) => ({
               postId: parsedId.data.id,
               tagId,
@@ -891,7 +893,7 @@ adminContentRouter.put("/blog/posts/:id", async (req, res) => {
       });
     }
 
-    const hydrated = await prisma.blogPost.findUnique({
+    const hydrated = await prisma.post.findUnique({
       where: { id: parsedId.data.id },
       include: {
         tags: {
@@ -916,7 +918,7 @@ adminContentRouter.put("/blog/posts/:id", async (req, res) => {
   }
 });
 
-adminContentRouter.post("/blog/posts/:id/publish", async (req, res) => {
+adminContentRouter.post("/posts/:id/publish", async (req, res) => {
   const requestId = getRequestId(res);
 
   try {
@@ -942,10 +944,10 @@ adminContentRouter.post("/blog/posts/:id/publish", async (req, res) => {
       );
     }
 
-    const post = await prisma.blogPost.update({
+    const post = await prisma.post.update({
       where: { id: parsedId.data.id },
       data: {
-        status: BlogPostStatus.PUBLISHED,
+        status: PostStatus.PUBLISHED,
         publishAt: new Date(),
         publishedAt: new Date(),
         authorId: userId,
@@ -966,7 +968,7 @@ adminContentRouter.post("/blog/posts/:id/publish", async (req, res) => {
   }
 });
 
-adminContentRouter.delete("/blog/posts/:id", async (req, res) => {
+adminContentRouter.delete("/posts/:id", async (req, res) => {
   const requestId = getRequestId(res);
 
   try {
@@ -992,10 +994,10 @@ adminContentRouter.delete("/blog/posts/:id", async (req, res) => {
       );
     }
 
-    const post = await prisma.blogPost.update({
+    const post = await prisma.post.update({
       where: { id: parsedId.data.id },
       data: {
-        status: BlogPostStatus.ARCHIVED,
+        status: PostStatus.ARCHIVED,
         updatedBy: userId,
       },
     });
@@ -1013,7 +1015,7 @@ adminContentRouter.delete("/blog/posts/:id", async (req, res) => {
   }
 });
 
-adminContentRouter.patch("/blog/comments/:id", async (req, res) => {
+adminContentRouter.patch("/posts/comments/:id", async (req, res) => {
   const requestId = getRequestId(res);
 
   try {
@@ -1028,7 +1030,7 @@ adminContentRouter.patch("/blog/comments/:id", async (req, res) => {
       );
     }
 
-    const parsed = blogCommentModerationSchema.safeParse(req.body);
+    const parsed = postCommentModerationSchema.safeParse(req.body);
     if (!parsed.success) {
       return sendFailure(
         res,
@@ -1040,7 +1042,7 @@ adminContentRouter.patch("/blog/comments/:id", async (req, res) => {
       );
     }
 
-    const comment = await prisma.blogComment.update({
+    const comment = await prisma.postComment.update({
       where: { id: parsedId.data.id },
       data: {
         isApproved: parsed.data.isApproved,
@@ -1289,10 +1291,14 @@ adminContentRouter.post("/help/articles", async (req, res) => {
     const article = await prisma.helpArticle.create({
       data: {
         categoryId: parsed.data.categoryId,
+        appId: parsed.data.appId,
         slug: parsed.data.slug,
         title: parsed.data.title,
         summary: parsed.data.summary,
         contentMarkdown: parsed.data.contentMarkdown,
+        contentMdx: parsed.data.contentMdx,
+        seoTitle: parsed.data.seoTitle,
+        seoDescription: parsed.data.seoDescription,
         status: parsed.data.status,
         isFeatured: parsed.data.isFeatured,
         publishAt: parsed.data.publishAt,
@@ -1366,10 +1372,14 @@ adminContentRouter.put("/help/articles/:id", async (req, res) => {
       where: { id: parsedId.data.id },
       data: {
         categoryId: parsed.data.categoryId,
+        appId: parsed.data.appId,
         slug: parsed.data.slug,
         title: parsed.data.title,
         summary: parsed.data.summary,
         contentMarkdown: parsed.data.contentMarkdown,
+        contentMdx: parsed.data.contentMdx,
+        seoTitle: parsed.data.seoTitle,
+        seoDescription: parsed.data.seoDescription,
         status: parsed.data.status,
         isFeatured: parsed.data.isFeatured,
         publishAt: parsed.data.publishAt,

@@ -1,24 +1,31 @@
 "use client";
 
-import type { SvgIconComponent } from "@mui/icons-material";
-import ApiRoundedIcon from "@mui/icons-material/ApiRounded";
-import AppsRoundedIcon from "@mui/icons-material/AppsRounded";
-import ArticleRoundedIcon from "@mui/icons-material/ArticleRounded";
-import CampaignRoundedIcon from "@mui/icons-material/CampaignRounded";
-import CategoryRoundedIcon from "@mui/icons-material/CategoryRounded";
-import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
-import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
-import FeedbackRoundedIcon from "@mui/icons-material/FeedbackRounded";
-import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
-import TuneRoundedIcon from "@mui/icons-material/TuneRounded";
-import ViewCarouselRoundedIcon from "@mui/icons-material/ViewCarouselRounded";
+import {
+  LayoutDashboard,
+  AppWindow,
+  Tags,
+  Users,
+  MessageSquare,
+  GalleryHorizontalEnd,
+  Megaphone,
+  FileText,
+  FileEdit,
+  Palette,
+  TerminalSquare,
+  LifeBuoy,
+  BookOpen,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/cn";
+import { useQuery } from "@tanstack/react-query";
 
 type AdminNavItem = {
   href: string;
   label: string;
-  icon: SvgIconComponent;
+  icon: React.ElementType;
+  badge?: "support-unread";
 };
 
 const adminNavSections: ReadonlyArray<{
@@ -28,71 +35,29 @@ const adminNavSections: ReadonlyArray<{
   {
     title: "Main menu",
     items: [
-      {
-        href: "/admin",
-        label: "Dashboard",
-        icon: DashboardRoundedIcon,
-      },
-      {
-        href: "/admin/apps",
-        label: "Apps",
-        icon: AppsRoundedIcon,
-      },
-      {
-        href: "/admin/categories",
-        label: "Categories",
-        icon: CategoryRoundedIcon,
-      },
-      {
-        href: "/admin/users",
-        label: "Users",
-        icon: PeopleAltRoundedIcon,
-      },
+      { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+      { href: "/admin/apps", label: "Apps", icon: AppWindow },
+      { href: "/admin/categories", label: "Categories", icon: Tags },
+      { href: "/admin/users", label: "Users", icon: Users },
     ],
   },
   {
     title: "Operations",
     items: [
-      {
-        href: "/admin/feedback",
-        label: "Feedback",
-        icon: FeedbackRoundedIcon,
-      },
-      {
-        href: "/admin/store/sections",
-        label: "Store sections",
-        icon: ViewCarouselRoundedIcon,
-      },
-      {
-        href: "/admin/store/banners",
-        label: "Banners",
-        icon: CampaignRoundedIcon,
-      },
+      { href: "/admin/support", label: "Support", icon: LifeBuoy, badge: "support-unread" },
+      { href: "/admin/feedback", label: "Feedback", icon: MessageSquare },
+      { href: "/admin/store/sections", label: "Store sections", icon: GalleryHorizontalEnd },
+      { href: "/admin/store/banners", label: "Banners", icon: Megaphone },
     ],
   },
   {
     title: "Content",
     items: [
-      {
-        href: "/admin/content/pages",
-        label: "Pages",
-        icon: DescriptionRoundedIcon,
-      },
-      {
-        href: "/admin/content/blog",
-        label: "Blog",
-        icon: ArticleRoundedIcon,
-      },
-      {
-        href: "/admin/theme/configs",
-        label: "Theme configs",
-        icon: TuneRoundedIcon,
-      },
-      {
-        href: "/admin/control",
-        label: "API docs",
-        icon: ApiRoundedIcon,
-      },
+      { href: "/admin/content/pages", label: "Pages", icon: FileText },
+      { href: "/admin/content/posts", label: "Posts", icon: FileEdit },
+      { href: "/admin/help", label: "Help Docs", icon: BookOpen },
+      { href: "/admin/theme/configs", label: "Theme configs", icon: Palette },
+      { href: "/admin/control", label: "API docs", icon: TerminalSquare },
     ],
   },
 ];
@@ -101,18 +66,40 @@ function isNavItemActive(pathname: string, href: string): boolean {
   if (href === "/admin") {
     return pathname === "/admin";
   }
-
   return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+function SupportBadge() {
+  const { data: tickets = [] } = useQuery({
+    queryKey: ["admin-support-tickets"],
+    queryFn: async () => {
+      const res = await fetch("/api/admin/user/support/tickets?limit=100");
+      if (!res.ok) throw new Error("Failed to fetch");
+      const json = await res.json();
+      return json.data as Array<{ unreadAdminCount: number; status: string }>;
+    },
+    refetchInterval: 30000,
+  });
+
+  const unreadCount = tickets.filter(t => t.unreadAdminCount > 0 && t.status !== "CLOSED" && t.status !== "RESOLVED").length;
+
+  if (unreadCount === 0) return null;
+
+  return (
+    <span className="ml-auto inline-flex items-center justify-center rounded-full bg-brand-primary px-2 py-0.5 text-[10px] font-bold text-brand-primary-fg">
+      {unreadCount}
+    </span>
+  );
 }
 
 export function AdminNav() {
   const pathname = usePathname();
 
   return (
-    <nav aria-label="Admin navigation" className="space-y-6">
+    <nav aria-label="Admin navigation" className="space-y-8">
       {adminNavSections.map((section) => (
-        <div key={section.title} className="space-y-2">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[color-mix(in_srgb,var(--foreground)_45%,transparent)]">
+        <div key={section.title} className="space-y-3">
+          <p className="text-xs font-semibold uppercase tracking-wider text-text-muted px-3">
             {section.title}
           </p>
           <div className="space-y-1">
@@ -124,25 +111,30 @@ export function AdminNav() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={[
-                    "group flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition",
+                  className={cn(
+                    "group relative flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                     active
-                      ? "bg-[color-mix(in_srgb,var(--brand-secondary)_18%,var(--background)_82%)] text-[color-mix(in_srgb,var(--foreground)_90%,transparent)]"
-                      : "text-[color-mix(in_srgb,var(--foreground)_60%,transparent)] hover:bg-[color-mix(in_srgb,var(--background)_90%,var(--foreground)_10%)]",
-                  ].join(" ")}
+                      ? "text-brand-primary font-semibold"
+                      : "text-text-secondary hover:text-text-primary hover:bg-surface-hover"
+                  )}
                   aria-current={active ? "page" : undefined}
                 >
-                  <span
-                    className={[
-                      "inline-flex h-8 w-8 items-center justify-center rounded-xl transition",
-                      active
-                        ? "bg-[color-mix(in_srgb,var(--background)_70%,white_30%)] text-[color-mix(in_srgb,var(--foreground)_90%,transparent)] shadow-sm"
-                        : "bg-[color-mix(in_srgb,var(--background)_88%,var(--foreground)_12%)] text-[color-mix(in_srgb,var(--foreground)_45%,transparent)] group-hover:text-[color-mix(in_srgb,var(--foreground)_70%,transparent)]",
-                    ].join(" ")}
-                  >
-                    <Icon fontSize="small" />
-                  </span>
-                  <span>{item.label}</span>
+                  {active && (
+                    <motion.div
+                      layoutId="admin-nav-active"
+                      className="absolute inset-0 rounded-md bg-surface-active"
+                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                      style={{ zIndex: -1 }}
+                    />
+                  )}
+                  <Icon
+                    className={cn(
+                      "h-4 w-4 transition-colors shrink-0",
+                      active ? "text-brand-primary" : "text-text-muted group-hover:text-text-primary"
+                    )}
+                  />
+                  <span className="truncate">{item.label}</span>
+                  {item.badge === "support-unread" && <SupportBadge />}
                 </Link>
               );
             })}

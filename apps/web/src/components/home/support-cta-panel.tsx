@@ -68,30 +68,24 @@ export function SupportCtaPanel({
 
           <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap", gap: 1 }}>
             <Button
-              component={Link}
-              href="/help-support"
-              className={cn(styles.prismButton)}
-              sx={{ px: 2.2, py: 1.1, borderRadius: 999 }}
+              asChild
+              className={cn(styles.prismButton, "px-5 py-2.5 rounded-full")}
             >
-              Open support workspace
+              <Link href="/help-support">Open support workspace</Link>
             </Button>
             <Button
-              component={Link}
-              href="/help"
-              tone="secondary"
-              className={cn(styles.secondaryPrismButton)}
-              sx={{ px: 2.2, py: 1.1, borderRadius: 999 }}
+              asChild
+              variant="secondary"
+              className={cn(styles.secondaryPrismButton, "px-5 py-2.5 rounded-full")}
             >
-              Browse help docs
+              <Link href="/help">Browse help docs</Link>
             </Button>
             <Button
-              component={Link}
-              href="/blog"
-              tone="secondary"
-              className={cn(styles.secondaryPrismButton)}
-              sx={{ px: 2.2, py: 1.1, borderRadius: 999 }}
+              asChild
+              variant="secondary"
+              className={cn(styles.secondaryPrismButton, "px-5 py-2.5 rounded-full")}
             >
-              Read product blog
+              <Link href="/posts">Read product posts</Link>
             </Button>
           </Stack>
         </Stack>
@@ -121,19 +115,12 @@ export function SupportCtaPanel({
               name="search"
               type="search"
               placeholder="Example: connect billing webhook"
-              className={cn(styles.prismInput)}
+              className={cn(styles.prismInput, "min-h-[48px] rounded-2xl")}
               aria-label="Search help docs"
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  minHeight: 48,
-                  borderRadius: "16px",
-                },
-              }}
             />
             <Button
               type="submit"
-              className={cn(styles.prismButton)}
-              sx={{ height: 44, width: "100%", borderRadius: "16px" }}
+              className={cn(styles.prismButton, "h-11 w-full rounded-2xl")}
             >
               Find guides
             </Button>
@@ -165,7 +152,7 @@ export function SupportCtaPanel({
             </Paper>
             <Paper
               component={Link}
-              href="/blog?tag=guides"
+              href="/posts?tag=guides"
               elevation={0}
               sx={{
                 borderRadius: 1.5,

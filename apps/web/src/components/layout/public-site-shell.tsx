@@ -10,7 +10,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 const primaryNav = [
   { href: "/", label: "Home" },
   { href: "/apps", label: "Apps" },
-  { href: "/blog", label: "Blogs" },
+  { href: "/posts", label: "Posts" },
   { href: "/help-support", label: "Support" },
   { href: "/about", label: "About" },
 ] as const;

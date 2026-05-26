@@ -1,31 +1,27 @@
-import { cn } from "@/lib/cn";
-import type { HTMLAttributes } from "react";
+import * as React from "react"
+import { cn } from "@/lib/cn"
 
-type BadgeTone = "neutral" | "success" | "warning" | "danger" | "info";
+export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info"
+}
 
-const toneClassName: Record<BadgeTone, string> = {
-  neutral: "ui-border ui-surface-soft ui-text-muted",
-  success: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  warning: "border-amber-200 bg-amber-50 text-amber-700",
-  danger: "border-rose-200 bg-rose-50 text-rose-700",
-  info: "border-blue-200 bg-blue-50 text-blue-700",
-};
-
-export function Badge({
-  tone = "neutral",
-  className,
-  ...props
-}: HTMLAttributes<HTMLSpanElement> & {
-  tone?: BadgeTone;
-}) {
+function Badge({ className, variant = "default", ...props }: BadgeProps) {
   return (
-    <span
+    <div
       className={cn(
-        "inline-flex rounded-full border px-2 py-1 text-[11px] font-semibold",
-        toneClassName[tone],
-        className,
+        "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-brand-accent focus:ring-offset-2",
+        variant === "default" && "border-transparent bg-brand-primary text-brand-primary-foreground hover:bg-brand-primary/80",
+        variant === "secondary" && "border-transparent bg-surface-active text-text-primary hover:bg-surface-active/80",
+        variant === "destructive" && "border-transparent bg-status-danger text-white hover:bg-status-danger/80",
+        variant === "success" && "border-transparent bg-status-success-bg text-status-success hover:opacity-80",
+        variant === "warning" && "border-transparent bg-status-warning-bg text-status-warning hover:opacity-80",
+        variant === "info" && "border-transparent bg-status-info-bg text-status-info hover:opacity-80",
+        variant === "outline" && "text-text-primary border-border-strong",
+        className
       )}
       {...props}
     />
-  );
+  )
 }
+
+export { Badge }

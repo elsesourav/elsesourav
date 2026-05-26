@@ -191,7 +191,7 @@ export function HelpSupportForm() {
   }, [searchParams]);
 
   return (
-    <Card className="space-y-4">
+    <Card className="p-5 space-y-4">
       <div className="space-y-1">
         <CardTitle>Submit a support request</CardTitle>
         <CardDescription>
@@ -212,11 +212,7 @@ export function HelpSupportForm() {
               onChange={(event) => handleChange("subject", event.target.value)}
               placeholder="Short summary of the issue"
               aria-invalid={Boolean(fieldErrors.subject)}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  minHeight: 44,
-                },
-              }}
+              className="min-h-[44px]"
             />
             {fieldErrors.subject ? (
               <p className="text-xs text-rose-600">{fieldErrors.subject}</p>
@@ -232,7 +228,7 @@ export function HelpSupportForm() {
               name="category"
               value={formState.category}
               onChange={(event) => handleChange("category", event.target.value)}
-              className="ui-input w-full rounded-lg border px-3 py-2 text-sm"
+              className="flex h-9 w-full rounded-md border border-border-subtle bg-bg-base px-3 py-1 text-sm shadow-sm"
             >
               <option value="">Select a category</option>
               {categoryOptions.map((category) => (
@@ -259,7 +255,7 @@ export function HelpSupportForm() {
               onChange={(event) =>
                 handleChange("priority", event.target.value as PriorityOption)
               }
-              className="ui-input w-full rounded-lg border px-3 py-2 text-sm"
+              className="flex h-9 w-full rounded-md border border-border-subtle bg-bg-base px-3 py-1 text-sm shadow-sm"
             >
               {priorityOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -280,11 +276,7 @@ export function HelpSupportForm() {
               onChange={(event) => handleChange("appId", event.target.value)}
               placeholder="app_cuid"
               aria-invalid={Boolean(fieldErrors.appId)}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  minHeight: 44,
-                },
-              }}
+              className="min-h-[44px]"
             />
             {fieldErrors.appId ? (
               <p className="text-xs text-rose-600">{fieldErrors.appId}</p>

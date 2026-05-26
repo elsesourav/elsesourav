@@ -2,6 +2,9 @@
 
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/cn";
+import { Sun, Moon, Monitor } from "lucide-react";
 
 type ThemeMode = "system" | "light" | "dark";
 
@@ -69,6 +72,7 @@ export function ThemeModeControl({ initialMode }: ThemeModeControlProps) {
       }
 
       setStatus("Theme updated");
+      setTimeout(() => setStatus(null), 2000);
     } catch (requestError) {
       setMode(previous);
       setTheme(previous);
@@ -77,6 +81,7 @@ export function ThemeModeControl({ initialMode }: ThemeModeControlProps) {
           ? requestError.message
           : "Failed to update theme mode.",
       );
+      setTimeout(() => setError(null), 3000);
     } finally {
       setPending(false);
     }
@@ -84,21 +89,25 @@ export function ThemeModeControl({ initialMode }: ThemeModeControlProps) {
 
   return (
     <section>
-      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[color-mix(in_srgb,var(--foreground)_45%,transparent)]">
-        Theme
-      </p>
-      <p className="mt-1 text-xs text-[color-mix(in_srgb,var(--foreground)_55%,transparent)]">
-        Follow system or force light/dark mode.
-      </p>
+      <div className="flex items-center justify-between px-2 mb-2">
+        <p className="text-xs font-semibold uppercase tracking-wider text-text-muted">
+          Theme
+        </p>
+        <div className="min-h-5 text-[10px] font-medium flex items-center">
+          {pending && <span className="text-text-muted">Saving...</span>}
+          {error && <span className="text-status-danger">{error}</span>}
+          {!error && status && <span className="text-status-success">{status}</span>}
+        </div>
+      </div>
 
-      <div className="mt-3 grid grid-cols-3 rounded-full bg-[color-mix(in_srgb,var(--background)_88%,var(--foreground)_12%)] p-1 shadow-sm">
+      <div className="relative flex rounded-lg bg-surface-active p-1 shadow-inner">
         {(
           [
-            ["system", "System"],
-            ["light", "Light"],
-            ["dark", "Dark"],
+            { value: "system", label: "System", icon: Monitor },
+            { value: "light", label: "Light", icon: Sun },
+            { value: "dark", label: "Dark", icon: Moon },
           ] as const
-        ).map(([value, label]) => {
+        ).map(({ value, label, icon: Icon }) => {
           const active = (mounted ? mode : initialMode) === value;
 
           return (
@@ -107,27 +116,24 @@ export function ThemeModeControl({ initialMode }: ThemeModeControlProps) {
               type="button"
               onClick={() => applyModeChange(value)}
               disabled={pending}
-              className={[
-                "rounded-full px-3 py-1.5 text-xs font-semibold transition",
-                active
-                  ? "bg-[color-mix(in_srgb,var(--foreground)_85%,transparent)] text-background"
-                  : "text-[color-mix(in_srgb,var(--foreground)_55%,transparent)] hover:bg-[color-mix(in_srgb,var(--background)_82%,var(--foreground)_18%)]",
-              ].join(" ")}
+              className={cn(
+                "relative z-10 flex flex-1 items-center justify-center gap-2 rounded-md py-1.5 text-xs font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-brand-accent",
+                active ? "text-brand-primary-foreground" : "text-text-secondary hover:text-text-primary"
+              )}
             >
-              {label}
+              {active && (
+                <motion.div
+                  layoutId="theme-active"
+                  className="absolute inset-0 rounded-md bg-brand-primary shadow-sm"
+                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  style={{ zIndex: -1 }}
+                />
+              )}
+              <Icon className="h-3 w-3" />
+              <span className="sr-only sm:not-sr-only sm:inline">{label}</span>
             </button>
           );
         })}
-      </div>
-
-      <div className="mt-2 min-h-5 text-xs">
-        {pending ? (
-          <p className="text-[color-mix(in_srgb,var(--foreground)_45%,transparent)]">
-            Saving...
-          </p>
-        ) : null}
-        {error ? <p className="text-rose-600">{error}</p> : null}
-        {!error && status ? <p className="text-emerald-600">{status}</p> : null}
       </div>
     </section>
   );

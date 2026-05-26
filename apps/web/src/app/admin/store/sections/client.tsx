@@ -204,7 +204,7 @@ function SectionItemCard({
           <CardTitle>{item.app.title}</CardTitle>
           <CardDescription className="mt-1">/{item.app.slug}</CardDescription>
         </div>
-        <Badge tone={sectionTypeBadgeTone[sectionType] ?? "neutral"}>
+        <Badge variant={sectionTypeBadgeTone[sectionType] ?? "neutral"}>
           {item.sectionType}
         </Badge>
       </div>
@@ -217,10 +217,10 @@ function SectionItemCard({
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <Button tone="secondary" size="sm" onClick={onEdit}>
+        <Button variant="secondary" size="sm" onClick={onEdit}>
           Edit timing
         </Button>
-        <Button tone="danger" size="sm" disabled={deleting} onClick={onDelete}>
+        <Button variant="destructive" size="sm" disabled={deleting} onClick={onDelete}>
           {deleting ? "Deleting..." : "Delete"}
         </Button>
       </div>
@@ -593,7 +593,7 @@ export function AdminSectionItemsClient({
           {counts.latest} latest, {counts.upcoming} upcoming.
         </p>
         <Button
-          tone="primary"
+          variant="default"
           onClick={() => setCreateOpen(true)}
           disabled={appOptions.length === 0}
         >
@@ -657,7 +657,7 @@ export function AdminSectionItemsClient({
 
           <div className="flex items-center justify-end gap-2">
             <Button
-              tone="secondary"
+              variant="secondary"
               onClick={() => {
                 setCreateOpen(false);
                 setCreateError(null);
@@ -710,7 +710,7 @@ export function AdminSectionItemsClient({
 
             <div className="flex items-center justify-end gap-2">
               <Button
-                tone="secondary"
+                variant="secondary"
                 onClick={() => {
                   setEditingItemId(null);
                   setEditForm(null);

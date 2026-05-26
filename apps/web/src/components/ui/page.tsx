@@ -41,8 +41,8 @@ export function PageShell({
       sx={{
         display: "flex",
         flexDirection: "column",
-        gap: 4,
-        py: { xs: 8, sm: 10 },
+        gap: 2,
+        py: { xs: 6, sm: 8 },
         px: { xs: 3, sm: 5 },
         minHeight: center ? "100dvh" : undefined,
         justifyContent: center ? "center" : undefined,

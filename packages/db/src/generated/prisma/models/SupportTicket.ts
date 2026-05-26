@@ -20,8 +20,20 @@ export type SupportTicketModel = runtime.Types.Result.DefaultSelection<Prisma.$S
 
 export type AggregateSupportTicket = {
   _count: SupportTicketCountAggregateOutputType | null
+  _avg: SupportTicketAvgAggregateOutputType | null
+  _sum: SupportTicketSumAggregateOutputType | null
   _min: SupportTicketMinAggregateOutputType | null
   _max: SupportTicketMaxAggregateOutputType | null
+}
+
+export type SupportTicketAvgAggregateOutputType = {
+  messageCount: number | null
+  unreadAdminCount: number | null
+}
+
+export type SupportTicketSumAggregateOutputType = {
+  messageCount: number | null
+  unreadAdminCount: number | null
 }
 
 export type SupportTicketMinAggregateOutputType = {
@@ -39,6 +51,10 @@ export type SupportTicketMinAggregateOutputType = {
   firstResponseAt: Date | null
   resolvedAt: Date | null
   closedAt: Date | null
+  messageCount: number | null
+  unreadAdminCount: number | null
+  lastMessageAt: Date | null
+  slaBreachAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -58,6 +74,10 @@ export type SupportTicketMaxAggregateOutputType = {
   firstResponseAt: Date | null
   resolvedAt: Date | null
   closedAt: Date | null
+  messageCount: number | null
+  unreadAdminCount: number | null
+  lastMessageAt: Date | null
+  slaBreachAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -78,11 +98,25 @@ export type SupportTicketCountAggregateOutputType = {
   resolvedAt: number
   closedAt: number
   metadata: number
+  messageCount: number
+  unreadAdminCount: number
+  lastMessageAt: number
+  slaBreachAt: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
+
+export type SupportTicketAvgAggregateInputType = {
+  messageCount?: true
+  unreadAdminCount?: true
+}
+
+export type SupportTicketSumAggregateInputType = {
+  messageCount?: true
+  unreadAdminCount?: true
+}
 
 export type SupportTicketMinAggregateInputType = {
   id?: true
@@ -99,6 +133,10 @@ export type SupportTicketMinAggregateInputType = {
   firstResponseAt?: true
   resolvedAt?: true
   closedAt?: true
+  messageCount?: true
+  unreadAdminCount?: true
+  lastMessageAt?: true
+  slaBreachAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -118,6 +156,10 @@ export type SupportTicketMaxAggregateInputType = {
   firstResponseAt?: true
   resolvedAt?: true
   closedAt?: true
+  messageCount?: true
+  unreadAdminCount?: true
+  lastMessageAt?: true
+  slaBreachAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -138,6 +180,10 @@ export type SupportTicketCountAggregateInputType = {
   resolvedAt?: true
   closedAt?: true
   metadata?: true
+  messageCount?: true
+  unreadAdminCount?: true
+  lastMessageAt?: true
+  slaBreachAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -181,6 +227,18 @@ export type SupportTicketAggregateArgs<ExtArgs extends runtime.Types.Extensions.
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: SupportTicketAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: SupportTicketSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: SupportTicketMinAggregateInputType
@@ -211,6 +269,8 @@ export type SupportTicketGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   _count?: SupportTicketCountAggregateInputType | true
+  _avg?: SupportTicketAvgAggregateInputType
+  _sum?: SupportTicketSumAggregateInputType
   _min?: SupportTicketMinAggregateInputType
   _max?: SupportTicketMaxAggregateInputType
 }
@@ -231,9 +291,15 @@ export type SupportTicketGroupByOutputType = {
   resolvedAt: Date | null
   closedAt: Date | null
   metadata: runtime.JsonValue | null
+  messageCount: number
+  unreadAdminCount: number
+  lastMessageAt: Date | null
+  slaBreachAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: SupportTicketCountAggregateOutputType | null
+  _avg: SupportTicketAvgAggregateOutputType | null
+  _sum: SupportTicketSumAggregateOutputType | null
   _min: SupportTicketMinAggregateOutputType | null
   _max: SupportTicketMaxAggregateOutputType | null
 }
@@ -272,6 +338,10 @@ export type SupportTicketWhereInput = {
   resolvedAt?: Prisma.DateTimeNullableFilter<"SupportTicket"> | Date | string | null
   closedAt?: Prisma.DateTimeNullableFilter<"SupportTicket"> | Date | string | null
   metadata?: Prisma.JsonNullableFilter<"SupportTicket">
+  messageCount?: Prisma.IntFilter<"SupportTicket"> | number
+  unreadAdminCount?: Prisma.IntFilter<"SupportTicket"> | number
+  lastMessageAt?: Prisma.DateTimeNullableFilter<"SupportTicket"> | Date | string | null
+  slaBreachAt?: Prisma.DateTimeNullableFilter<"SupportTicket"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"SupportTicket"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SupportTicket"> | Date | string
   requester?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -296,6 +366,10 @@ export type SupportTicketOrderByWithRelationInput = {
   resolvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   closedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
+  messageCount?: Prisma.SortOrder
+  unreadAdminCount?: Prisma.SortOrder
+  lastMessageAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  slaBreachAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   requester?: Prisma.UserOrderByWithRelationInput
@@ -323,6 +397,10 @@ export type SupportTicketWhereUniqueInput = Prisma.AtLeast<{
   resolvedAt?: Prisma.DateTimeNullableFilter<"SupportTicket"> | Date | string | null
   closedAt?: Prisma.DateTimeNullableFilter<"SupportTicket"> | Date | string | null
   metadata?: Prisma.JsonNullableFilter<"SupportTicket">
+  messageCount?: Prisma.IntFilter<"SupportTicket"> | number
+  unreadAdminCount?: Prisma.IntFilter<"SupportTicket"> | number
+  lastMessageAt?: Prisma.DateTimeNullableFilter<"SupportTicket"> | Date | string | null
+  slaBreachAt?: Prisma.DateTimeNullableFilter<"SupportTicket"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"SupportTicket"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SupportTicket"> | Date | string
   requester?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -347,11 +425,17 @@ export type SupportTicketOrderByWithAggregationInput = {
   resolvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   closedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
+  messageCount?: Prisma.SortOrder
+  unreadAdminCount?: Prisma.SortOrder
+  lastMessageAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  slaBreachAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.SupportTicketCountOrderByAggregateInput
+  _avg?: Prisma.SupportTicketAvgOrderByAggregateInput
   _max?: Prisma.SupportTicketMaxOrderByAggregateInput
   _min?: Prisma.SupportTicketMinOrderByAggregateInput
+  _sum?: Prisma.SupportTicketSumOrderByAggregateInput
 }
 
 export type SupportTicketScalarWhereWithAggregatesInput = {
@@ -373,6 +457,10 @@ export type SupportTicketScalarWhereWithAggregatesInput = {
   resolvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SupportTicket"> | Date | string | null
   closedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SupportTicket"> | Date | string | null
   metadata?: Prisma.JsonNullableWithAggregatesFilter<"SupportTicket">
+  messageCount?: Prisma.IntWithAggregatesFilter<"SupportTicket"> | number
+  unreadAdminCount?: Prisma.IntWithAggregatesFilter<"SupportTicket"> | number
+  lastMessageAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SupportTicket"> | Date | string | null
+  slaBreachAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SupportTicket"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SupportTicket"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"SupportTicket"> | Date | string
 }
@@ -390,6 +478,10 @@ export type SupportTicketCreateInput = {
   resolvedAt?: Date | string | null
   closedAt?: Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: number
+  unreadAdminCount?: number
+  lastMessageAt?: Date | string | null
+  slaBreachAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   requester?: Prisma.UserCreateNestedOneWithoutSupportTicketsInput
@@ -414,6 +506,10 @@ export type SupportTicketUncheckedCreateInput = {
   resolvedAt?: Date | string | null
   closedAt?: Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: number
+  unreadAdminCount?: number
+  lastMessageAt?: Date | string | null
+  slaBreachAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   messages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutTicketInput
@@ -432,6 +528,10 @@ export type SupportTicketUpdateInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  unreadAdminCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaBreachAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   requester?: Prisma.UserUpdateOneWithoutSupportTicketsNestedInput
@@ -456,6 +556,10 @@ export type SupportTicketUncheckedUpdateInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  unreadAdminCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaBreachAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   messages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutTicketNestedInput
@@ -477,6 +581,10 @@ export type SupportTicketCreateManyInput = {
   resolvedAt?: Date | string | null
   closedAt?: Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: number
+  unreadAdminCount?: number
+  lastMessageAt?: Date | string | null
+  slaBreachAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -494,6 +602,10 @@ export type SupportTicketUpdateManyMutationInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  unreadAdminCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaBreachAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -514,6 +626,10 @@ export type SupportTicketUncheckedUpdateManyInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  unreadAdminCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaBreachAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -544,8 +660,17 @@ export type SupportTicketCountOrderByAggregateInput = {
   resolvedAt?: Prisma.SortOrder
   closedAt?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
+  messageCount?: Prisma.SortOrder
+  unreadAdminCount?: Prisma.SortOrder
+  lastMessageAt?: Prisma.SortOrder
+  slaBreachAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type SupportTicketAvgOrderByAggregateInput = {
+  messageCount?: Prisma.SortOrder
+  unreadAdminCount?: Prisma.SortOrder
 }
 
 export type SupportTicketMaxOrderByAggregateInput = {
@@ -563,6 +688,10 @@ export type SupportTicketMaxOrderByAggregateInput = {
   firstResponseAt?: Prisma.SortOrder
   resolvedAt?: Prisma.SortOrder
   closedAt?: Prisma.SortOrder
+  messageCount?: Prisma.SortOrder
+  unreadAdminCount?: Prisma.SortOrder
+  lastMessageAt?: Prisma.SortOrder
+  slaBreachAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -582,8 +711,17 @@ export type SupportTicketMinOrderByAggregateInput = {
   firstResponseAt?: Prisma.SortOrder
   resolvedAt?: Prisma.SortOrder
   closedAt?: Prisma.SortOrder
+  messageCount?: Prisma.SortOrder
+  unreadAdminCount?: Prisma.SortOrder
+  lastMessageAt?: Prisma.SortOrder
+  slaBreachAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type SupportTicketSumOrderByAggregateInput = {
+  messageCount?: Prisma.SortOrder
+  unreadAdminCount?: Prisma.SortOrder
 }
 
 export type SupportTicketScalarRelationFilter = {
@@ -756,6 +894,10 @@ export type SupportTicketCreateWithoutRequesterInput = {
   resolvedAt?: Date | string | null
   closedAt?: Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: number
+  unreadAdminCount?: number
+  lastMessageAt?: Date | string | null
+  slaBreachAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   app?: Prisma.AppCreateNestedOneWithoutSupportTicketsInput
@@ -778,6 +920,10 @@ export type SupportTicketUncheckedCreateWithoutRequesterInput = {
   resolvedAt?: Date | string | null
   closedAt?: Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: number
+  unreadAdminCount?: number
+  lastMessageAt?: Date | string | null
+  slaBreachAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   messages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutTicketInput
@@ -806,6 +952,10 @@ export type SupportTicketCreateWithoutAssigneeInput = {
   resolvedAt?: Date | string | null
   closedAt?: Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: number
+  unreadAdminCount?: number
+  lastMessageAt?: Date | string | null
+  slaBreachAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   requester?: Prisma.UserCreateNestedOneWithoutSupportTicketsInput
@@ -828,6 +978,10 @@ export type SupportTicketUncheckedCreateWithoutAssigneeInput = {
   resolvedAt?: Date | string | null
   closedAt?: Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: number
+  unreadAdminCount?: number
+  lastMessageAt?: Date | string | null
+  slaBreachAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   messages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutTicketInput
@@ -878,6 +1032,10 @@ export type SupportTicketScalarWhereInput = {
   resolvedAt?: Prisma.DateTimeNullableFilter<"SupportTicket"> | Date | string | null
   closedAt?: Prisma.DateTimeNullableFilter<"SupportTicket"> | Date | string | null
   metadata?: Prisma.JsonNullableFilter<"SupportTicket">
+  messageCount?: Prisma.IntFilter<"SupportTicket"> | number
+  unreadAdminCount?: Prisma.IntFilter<"SupportTicket"> | number
+  lastMessageAt?: Prisma.DateTimeNullableFilter<"SupportTicket"> | Date | string | null
+  slaBreachAt?: Prisma.DateTimeNullableFilter<"SupportTicket"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"SupportTicket"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SupportTicket"> | Date | string
 }
@@ -911,6 +1069,10 @@ export type SupportTicketCreateWithoutAppInput = {
   resolvedAt?: Date | string | null
   closedAt?: Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: number
+  unreadAdminCount?: number
+  lastMessageAt?: Date | string | null
+  slaBreachAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   requester?: Prisma.UserCreateNestedOneWithoutSupportTicketsInput
@@ -933,6 +1095,10 @@ export type SupportTicketUncheckedCreateWithoutAppInput = {
   resolvedAt?: Date | string | null
   closedAt?: Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: number
+  unreadAdminCount?: number
+  lastMessageAt?: Date | string | null
+  slaBreachAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   messages?: Prisma.SupportTicketMessageUncheckedCreateNestedManyWithoutTicketInput
@@ -977,6 +1143,10 @@ export type SupportTicketCreateWithoutMessagesInput = {
   resolvedAt?: Date | string | null
   closedAt?: Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: number
+  unreadAdminCount?: number
+  lastMessageAt?: Date | string | null
+  slaBreachAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   requester?: Prisma.UserCreateNestedOneWithoutSupportTicketsInput
@@ -1000,6 +1170,10 @@ export type SupportTicketUncheckedCreateWithoutMessagesInput = {
   resolvedAt?: Date | string | null
   closedAt?: Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: number
+  unreadAdminCount?: number
+  lastMessageAt?: Date | string | null
+  slaBreachAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1033,6 +1207,10 @@ export type SupportTicketUpdateWithoutMessagesInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  unreadAdminCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaBreachAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   requester?: Prisma.UserUpdateOneWithoutSupportTicketsNestedInput
@@ -1056,6 +1234,10 @@ export type SupportTicketUncheckedUpdateWithoutMessagesInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  unreadAdminCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaBreachAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1075,6 +1257,10 @@ export type SupportTicketCreateManyRequesterInput = {
   resolvedAt?: Date | string | null
   closedAt?: Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: number
+  unreadAdminCount?: number
+  lastMessageAt?: Date | string | null
+  slaBreachAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1094,6 +1280,10 @@ export type SupportTicketCreateManyAssigneeInput = {
   resolvedAt?: Date | string | null
   closedAt?: Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: number
+  unreadAdminCount?: number
+  lastMessageAt?: Date | string | null
+  slaBreachAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1111,6 +1301,10 @@ export type SupportTicketUpdateWithoutRequesterInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  unreadAdminCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaBreachAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   app?: Prisma.AppUpdateOneWithoutSupportTicketsNestedInput
@@ -1133,6 +1327,10 @@ export type SupportTicketUncheckedUpdateWithoutRequesterInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  unreadAdminCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaBreachAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   messages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutTicketNestedInput
@@ -1153,6 +1351,10 @@ export type SupportTicketUncheckedUpdateManyWithoutRequesterInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  unreadAdminCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaBreachAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1170,6 +1372,10 @@ export type SupportTicketUpdateWithoutAssigneeInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  unreadAdminCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaBreachAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   requester?: Prisma.UserUpdateOneWithoutSupportTicketsNestedInput
@@ -1192,6 +1398,10 @@ export type SupportTicketUncheckedUpdateWithoutAssigneeInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  unreadAdminCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaBreachAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   messages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutTicketNestedInput
@@ -1212,6 +1422,10 @@ export type SupportTicketUncheckedUpdateManyWithoutAssigneeInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  unreadAdminCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaBreachAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1231,6 +1445,10 @@ export type SupportTicketCreateManyAppInput = {
   resolvedAt?: Date | string | null
   closedAt?: Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: number
+  unreadAdminCount?: number
+  lastMessageAt?: Date | string | null
+  slaBreachAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1248,6 +1466,10 @@ export type SupportTicketUpdateWithoutAppInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  unreadAdminCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaBreachAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   requester?: Prisma.UserUpdateOneWithoutSupportTicketsNestedInput
@@ -1270,6 +1492,10 @@ export type SupportTicketUncheckedUpdateWithoutAppInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  unreadAdminCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaBreachAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   messages?: Prisma.SupportTicketMessageUncheckedUpdateManyWithoutTicketNestedInput
@@ -1290,6 +1516,10 @@ export type SupportTicketUncheckedUpdateManyWithoutAppInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  messageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  unreadAdminCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaBreachAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1341,6 +1571,10 @@ export type SupportTicketSelect<ExtArgs extends runtime.Types.Extensions.Interna
   resolvedAt?: boolean
   closedAt?: boolean
   metadata?: boolean
+  messageCount?: boolean
+  unreadAdminCount?: boolean
+  lastMessageAt?: boolean
+  slaBreachAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   requester?: boolean | Prisma.SupportTicket$requesterArgs<ExtArgs>
@@ -1366,6 +1600,10 @@ export type SupportTicketSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   resolvedAt?: boolean
   closedAt?: boolean
   metadata?: boolean
+  messageCount?: boolean
+  unreadAdminCount?: boolean
+  lastMessageAt?: boolean
+  slaBreachAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   requester?: boolean | Prisma.SupportTicket$requesterArgs<ExtArgs>
@@ -1389,6 +1627,10 @@ export type SupportTicketSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   resolvedAt?: boolean
   closedAt?: boolean
   metadata?: boolean
+  messageCount?: boolean
+  unreadAdminCount?: boolean
+  lastMessageAt?: boolean
+  slaBreachAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   requester?: boolean | Prisma.SupportTicket$requesterArgs<ExtArgs>
@@ -1412,11 +1654,15 @@ export type SupportTicketSelectScalar = {
   resolvedAt?: boolean
   closedAt?: boolean
   metadata?: boolean
+  messageCount?: boolean
+  unreadAdminCount?: boolean
+  lastMessageAt?: boolean
+  slaBreachAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type SupportTicketOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "appId" | "subject" | "description" | "status" | "priority" | "category" | "channel" | "sourceUrl" | "assignedToId" | "firstResponseAt" | "resolvedAt" | "closedAt" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["supportTicket"]>
+export type SupportTicketOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "appId" | "subject" | "description" | "status" | "priority" | "category" | "channel" | "sourceUrl" | "assignedToId" | "firstResponseAt" | "resolvedAt" | "closedAt" | "metadata" | "messageCount" | "unreadAdminCount" | "lastMessageAt" | "slaBreachAt" | "createdAt" | "updatedAt", ExtArgs["result"]["supportTicket"]>
 export type SupportTicketInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   requester?: boolean | Prisma.SupportTicket$requesterArgs<ExtArgs>
   app?: boolean | Prisma.SupportTicket$appArgs<ExtArgs>
@@ -1459,6 +1705,10 @@ export type $SupportTicketPayload<ExtArgs extends runtime.Types.Extensions.Inter
     resolvedAt: Date | null
     closedAt: Date | null
     metadata: runtime.JsonValue | null
+    messageCount: number
+    unreadAdminCount: number
+    lastMessageAt: Date | null
+    slaBreachAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["supportTicket"]>
@@ -1903,6 +2153,10 @@ export interface SupportTicketFieldRefs {
   readonly resolvedAt: Prisma.FieldRef<"SupportTicket", 'DateTime'>
   readonly closedAt: Prisma.FieldRef<"SupportTicket", 'DateTime'>
   readonly metadata: Prisma.FieldRef<"SupportTicket", 'Json'>
+  readonly messageCount: Prisma.FieldRef<"SupportTicket", 'Int'>
+  readonly unreadAdminCount: Prisma.FieldRef<"SupportTicket", 'Int'>
+  readonly lastMessageAt: Prisma.FieldRef<"SupportTicket", 'DateTime'>
+  readonly slaBreachAt: Prisma.FieldRef<"SupportTicket", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"SupportTicket", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"SupportTicket", 'DateTime'>
 }

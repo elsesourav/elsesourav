@@ -47,7 +47,7 @@ const ENTITY_OPTIONS: CustomFieldEntity[] = [
   "APP",
   "CATEGORY",
   "CONTENT_PAGE",
-  "BLOG_POST",
+  "POST",
   "HELP_ARTICLE",
   "PROFILE_PAGE",
   "TESTIMONIAL",
@@ -56,7 +56,7 @@ const ENTITY_OPTIONS: CustomFieldEntity[] = [
   "STORE_SECTION_ITEM",
   "HOME_SLIDER",
   "APP_TAG",
-  "BLOG_TAG",
+  "POST_TAG",
   "HELP_CATEGORY",
   "APP_MEDIA",
   "APP_LINK",
@@ -944,7 +944,7 @@ export function AdminCustomFieldsClient({
           />
 
           <div className="flex justify-end">
-            <Button type="submit" tone="primary" disabled={savingDefinition}>
+            <Button type="submit" variant="default" disabled={savingDefinition}>
               {savingDefinition ? "Saving..." : "Create definition"}
             </Button>
           </div>
@@ -959,7 +959,7 @@ export function AdminCustomFieldsClient({
 
         <div className="mt-3 flex flex-wrap gap-2">
           <Button
-            tone={activeEntityFilter === "ALL" ? "primary" : "secondary"}
+            variant={activeEntityFilter === "ALL" ? "default" : "secondary"}
             size="sm"
             onClick={() => setActiveEntityFilter("ALL")}
           >
@@ -968,7 +968,7 @@ export function AdminCustomFieldsClient({
           {ENTITY_OPTIONS.map((entity) => (
             <Button
               key={entity}
-              tone={activeEntityFilter === entity ? "primary" : "secondary"}
+              variant={activeEntityFilter === entity ? "default" : "secondary"}
               size="sm"
               onClick={() => setActiveEntityFilter(entity)}
             >
@@ -1005,15 +1005,15 @@ export function AdminCustomFieldsClient({
                 </div>
 
                 <div className="flex flex-wrap gap-2">
-                  <Badge tone={definition.isActive ? "success" : "neutral"}>
+                  <Badge variant={definition.isActive ? "success" : "secondary"}>
                     {definition.isActive ? "Active" : "Inactive"}
                   </Badge>
-                  <Badge tone="info">{definition.fieldType}</Badge>
+                  <Badge variant="secondary">{definition.fieldType}</Badge>
                   {definition.isRequired ? (
-                    <Badge tone="warning">Required</Badge>
+                    <Badge variant="secondary">Required</Badge>
                   ) : null}
                   {definition.isFilterable ? (
-                    <Badge tone="neutral">Filterable</Badge>
+                    <Badge variant="outline">Filterable</Badge>
                   ) : null}
                 </div>
               </div>
@@ -1031,14 +1031,14 @@ export function AdminCustomFieldsClient({
 
               <div className="flex flex-wrap gap-2">
                 <Button
-                  tone="secondary"
+                  variant="secondary"
                   size="sm"
                   onClick={() => onStartEditDefinition(definition)}
                 >
                   Edit
                 </Button>
                 <Button
-                  tone="danger"
+                  variant="destructive"
                   size="sm"
                   onClick={() =>
                     setConfirmDelete({
@@ -1118,7 +1118,7 @@ export function AdminCustomFieldsClient({
           </div>
 
           <div className="flex justify-end">
-            <Button type="submit" tone="primary" disabled={savingValue}>
+            <Button type="submit" variant="default" disabled={savingValue}>
               {savingValue ? "Saving..." : "Save value"}
             </Button>
           </div>
@@ -1190,7 +1190,7 @@ export function AdminCustomFieldsClient({
                 </div>
 
                 <div className="flex gap-2">
-                  <Badge tone="neutral">{value.definition.fieldType}</Badge>
+                  <Badge variant="outline">{value.definition.fieldType}</Badge>
                 </div>
               </div>
 
@@ -1202,14 +1202,14 @@ export function AdminCustomFieldsClient({
 
               <div className="flex flex-wrap gap-2">
                 <Button
-                  tone="secondary"
+                  variant="secondary"
                   size="sm"
                   onClick={() => onStartEditValue(value)}
                 >
                   Edit value
                 </Button>
                 <Button
-                  tone="danger"
+                  variant="destructive"
                   size="sm"
                   onClick={() =>
                     setConfirmDelete({
@@ -1244,7 +1244,7 @@ export function AdminCustomFieldsClient({
         footer={
           <div className="flex items-center justify-end gap-2">
             <Button
-              tone="secondary"
+              variant="secondary"
               onClick={() => {
                 setEditingDefinition(null);
                 setEditingDefinitionForm(null);
@@ -1254,7 +1254,7 @@ export function AdminCustomFieldsClient({
               Cancel
             </Button>
             <Button
-              tone="primary"
+              variant="default"
               onClick={onSaveDefinitionEdit}
               disabled={updatingDefinition}
             >
@@ -1289,7 +1289,7 @@ export function AdminCustomFieldsClient({
         footer={
           <div className="flex items-center justify-end gap-2">
             <Button
-              tone="secondary"
+              variant="secondary"
               onClick={() => {
                 setEditingValue(null);
                 setEditingValueJson("");
@@ -1299,7 +1299,7 @@ export function AdminCustomFieldsClient({
               Cancel
             </Button>
             <Button
-              tone="primary"
+              variant="default"
               onClick={onSaveValueEdit}
               disabled={updatingValue}
             >

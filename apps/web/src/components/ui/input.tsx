@@ -1,81 +1,23 @@
-import { cn } from "@/lib/cn";
-import TextField, { type TextFieldProps } from "@mui/material/TextField";
-import type { InputHTMLAttributes } from "react";
+import * as React from "react"
+import { cn } from "@/lib/cn"
 
-type InputProps = InputHTMLAttributes<HTMLInputElement> & {
-  fullWidth?: boolean;
-  sx?: TextFieldProps["sx"];
-};
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 
-export function Input({ className, fullWidth, sx, ...props }: InputProps) {
-  const {
-    type,
-    name,
-    id,
-    value,
-    defaultValue,
-    placeholder,
-    onChange,
-    onBlur,
-    onFocus,
-    autoComplete,
-    autoFocus,
-    disabled,
-    required,
-    readOnly,
-    min,
-    max,
-    minLength,
-    maxLength,
-    step,
-    pattern,
-    inputMode,
-    ...nativeInputProps
-  } = props;
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, type, ...props }, ref) => {
+    return (
+      <input
+        type={type}
+        className={cn(
+          "flex h-10 w-full rounded-md border border-border-strong bg-bg-base px-3 py-2 text-sm text-text-primary file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:border-brand-accent disabled:cursor-not-allowed disabled:opacity-50 transition-colors shadow-sm",
+          className
+        )}
+        ref={ref}
+        {...props}
+      />
+    )
+  }
+)
+Input.displayName = "Input"
 
-  return (
-    <TextField
-      fullWidth={fullWidth ?? true}
-      size="small"
-      variant="outlined"
-      type={type}
-      id={id}
-      name={name}
-      value={value}
-      defaultValue={defaultValue}
-      placeholder={placeholder}
-      onChange={onChange}
-      onBlur={onBlur}
-      onFocus={onFocus}
-      autoComplete={autoComplete}
-      autoFocus={autoFocus}
-      disabled={disabled}
-      required={required}
-      slotProps={{
-        htmlInput: {
-          readOnly,
-          min,
-          max,
-          minLength,
-          maxLength,
-          step,
-          pattern,
-          inputMode,
-          ...nativeInputProps,
-        },
-      }}
-      className={cn("ui-input", className)}
-      sx={{
-        "& .MuiOutlinedInput-root": {
-          borderRadius: "12px",
-          backgroundColor:
-            "color-mix(in srgb, var(--background) 94%, white 6%)",
-        },
-        "& .MuiInputBase-input": {
-          fontSize: "0.92rem",
-        },
-        ...sx,
-      }}
-    />
-  );
-}
+export { Input }

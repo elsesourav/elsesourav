@@ -422,6 +422,8 @@ export type AppWhereInput = {
   changelogs?: Prisma.AppChangelogListRelationFilter
   descriptionVersions?: Prisma.AppDescriptionVersionListRelationFilter
   supportTickets?: Prisma.SupportTicketListRelationFilter
+  helpArticles?: Prisma.HelpArticleListRelationFilter
+  faqs?: Prisma.FAQListRelationFilter
 }
 
 export type AppOrderByWithRelationInput = {
@@ -472,6 +474,8 @@ export type AppOrderByWithRelationInput = {
   changelogs?: Prisma.AppChangelogOrderByRelationAggregateInput
   descriptionVersions?: Prisma.AppDescriptionVersionOrderByRelationAggregateInput
   supportTickets?: Prisma.SupportTicketOrderByRelationAggregateInput
+  helpArticles?: Prisma.HelpArticleOrderByRelationAggregateInput
+  faqs?: Prisma.FAQOrderByRelationAggregateInput
 }
 
 export type AppWhereUniqueInput = Prisma.AtLeast<{
@@ -525,6 +529,8 @@ export type AppWhereUniqueInput = Prisma.AtLeast<{
   changelogs?: Prisma.AppChangelogListRelationFilter
   descriptionVersions?: Prisma.AppDescriptionVersionListRelationFilter
   supportTickets?: Prisma.SupportTicketListRelationFilter
+  helpArticles?: Prisma.HelpArticleListRelationFilter
+  faqs?: Prisma.FAQListRelationFilter
 }, "id" | "slug">
 
 export type AppOrderByWithAggregationInput = {
@@ -644,6 +650,8 @@ export type AppCreateInput = {
   changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateInput = {
@@ -691,6 +699,8 @@ export type AppUncheckedCreateInput = {
   changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppUpdateInput = {
@@ -738,6 +748,8 @@ export type AppUpdateInput = {
   changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateInput = {
@@ -785,6 +797,8 @@ export type AppUncheckedUpdateInput = {
   changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUncheckedUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateManyInput = {
@@ -1234,6 +1248,38 @@ export type AppUpdateOneRequiredWithoutSectionItemsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AppUpdateToOneWithWhereWithoutSectionItemsInput, Prisma.AppUpdateWithoutSectionItemsInput>, Prisma.AppUncheckedUpdateWithoutSectionItemsInput>
 }
 
+export type AppCreateNestedOneWithoutHelpArticlesInput = {
+  create?: Prisma.XOR<Prisma.AppCreateWithoutHelpArticlesInput, Prisma.AppUncheckedCreateWithoutHelpArticlesInput>
+  connectOrCreate?: Prisma.AppCreateOrConnectWithoutHelpArticlesInput
+  connect?: Prisma.AppWhereUniqueInput
+}
+
+export type AppUpdateOneWithoutHelpArticlesNestedInput = {
+  create?: Prisma.XOR<Prisma.AppCreateWithoutHelpArticlesInput, Prisma.AppUncheckedCreateWithoutHelpArticlesInput>
+  connectOrCreate?: Prisma.AppCreateOrConnectWithoutHelpArticlesInput
+  upsert?: Prisma.AppUpsertWithoutHelpArticlesInput
+  disconnect?: Prisma.AppWhereInput | boolean
+  delete?: Prisma.AppWhereInput | boolean
+  connect?: Prisma.AppWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AppUpdateToOneWithWhereWithoutHelpArticlesInput, Prisma.AppUpdateWithoutHelpArticlesInput>, Prisma.AppUncheckedUpdateWithoutHelpArticlesInput>
+}
+
+export type AppCreateNestedOneWithoutFaqsInput = {
+  create?: Prisma.XOR<Prisma.AppCreateWithoutFaqsInput, Prisma.AppUncheckedCreateWithoutFaqsInput>
+  connectOrCreate?: Prisma.AppCreateOrConnectWithoutFaqsInput
+  connect?: Prisma.AppWhereUniqueInput
+}
+
+export type AppUpdateOneWithoutFaqsNestedInput = {
+  create?: Prisma.XOR<Prisma.AppCreateWithoutFaqsInput, Prisma.AppUncheckedCreateWithoutFaqsInput>
+  connectOrCreate?: Prisma.AppCreateOrConnectWithoutFaqsInput
+  upsert?: Prisma.AppUpsertWithoutFaqsInput
+  disconnect?: Prisma.AppWhereInput | boolean
+  delete?: Prisma.AppWhereInput | boolean
+  connect?: Prisma.AppWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AppUpdateToOneWithWhereWithoutFaqsInput, Prisma.AppUpdateWithoutFaqsInput>, Prisma.AppUncheckedUpdateWithoutFaqsInput>
+}
+
 export type AppCreateNestedOneWithoutMediaInput = {
   create?: Prisma.XOR<Prisma.AppCreateWithoutMediaInput, Prisma.AppUncheckedCreateWithoutMediaInput>
   connectOrCreate?: Prisma.AppCreateOrConnectWithoutMediaInput
@@ -1406,6 +1452,8 @@ export type AppCreateWithoutCreatedByInput = {
   changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutCreatedByInput = {
@@ -1452,6 +1500,8 @@ export type AppUncheckedCreateWithoutCreatedByInput = {
   changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutCreatedByInput = {
@@ -1508,6 +1558,8 @@ export type AppCreateWithoutUpdatedByInput = {
   changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutUpdatedByInput = {
@@ -1554,6 +1606,8 @@ export type AppUncheckedCreateWithoutUpdatedByInput = {
   changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutUpdatedByInput = {
@@ -1677,6 +1731,8 @@ export type AppCreateWithoutCategoryInput = {
   changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutCategoryInput = {
@@ -1723,6 +1779,8 @@ export type AppUncheckedCreateWithoutCategoryInput = {
   changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutCategoryInput = {
@@ -1795,6 +1853,8 @@ export type AppCreateWithoutTagLinksInput = {
   changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutTagLinksInput = {
@@ -1841,6 +1901,8 @@ export type AppUncheckedCreateWithoutTagLinksInput = {
   changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutTagLinksInput = {
@@ -1903,6 +1965,8 @@ export type AppUpdateWithoutTagLinksInput = {
   changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutTagLinksInput = {
@@ -1949,6 +2013,8 @@ export type AppUncheckedUpdateWithoutTagLinksInput = {
   changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUncheckedUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateWithoutSlidersInput = {
@@ -1995,6 +2061,8 @@ export type AppCreateWithoutSlidersInput = {
   changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutSlidersInput = {
@@ -2041,6 +2109,8 @@ export type AppUncheckedCreateWithoutSlidersInput = {
   changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutSlidersInput = {
@@ -2103,6 +2173,8 @@ export type AppUpdateWithoutSlidersInput = {
   changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutSlidersInput = {
@@ -2149,6 +2221,8 @@ export type AppUncheckedUpdateWithoutSlidersInput = {
   changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUncheckedUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateWithoutViewEventsInput = {
@@ -2195,6 +2269,8 @@ export type AppCreateWithoutViewEventsInput = {
   changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutViewEventsInput = {
@@ -2241,6 +2317,8 @@ export type AppUncheckedCreateWithoutViewEventsInput = {
   changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutViewEventsInput = {
@@ -2303,6 +2381,8 @@ export type AppUpdateWithoutViewEventsInput = {
   changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutViewEventsInput = {
@@ -2349,6 +2429,8 @@ export type AppUncheckedUpdateWithoutViewEventsInput = {
   changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUncheckedUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateWithoutDailyStatsInput = {
@@ -2395,6 +2477,8 @@ export type AppCreateWithoutDailyStatsInput = {
   changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutDailyStatsInput = {
@@ -2441,6 +2525,8 @@ export type AppUncheckedCreateWithoutDailyStatsInput = {
   changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutDailyStatsInput = {
@@ -2503,6 +2589,8 @@ export type AppUpdateWithoutDailyStatsInput = {
   changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutDailyStatsInput = {
@@ -2549,6 +2637,8 @@ export type AppUncheckedUpdateWithoutDailyStatsInput = {
   changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUncheckedUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateWithoutAggregateStatInput = {
@@ -2595,6 +2685,8 @@ export type AppCreateWithoutAggregateStatInput = {
   changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutAggregateStatInput = {
@@ -2641,6 +2733,8 @@ export type AppUncheckedCreateWithoutAggregateStatInput = {
   changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutAggregateStatInput = {
@@ -2703,6 +2797,8 @@ export type AppUpdateWithoutAggregateStatInput = {
   changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutAggregateStatInput = {
@@ -2749,6 +2845,8 @@ export type AppUncheckedUpdateWithoutAggregateStatInput = {
   changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUncheckedUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateWithoutSectionItemsInput = {
@@ -2795,6 +2893,8 @@ export type AppCreateWithoutSectionItemsInput = {
   changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutSectionItemsInput = {
@@ -2841,6 +2941,8 @@ export type AppUncheckedCreateWithoutSectionItemsInput = {
   changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutSectionItemsInput = {
@@ -2903,6 +3005,8 @@ export type AppUpdateWithoutSectionItemsInput = {
   changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutSectionItemsInput = {
@@ -2949,6 +3053,424 @@ export type AppUncheckedUpdateWithoutSectionItemsInput = {
   changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUncheckedUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUncheckedUpdateManyWithoutAppNestedInput
+}
+
+export type AppCreateWithoutHelpArticlesInput = {
+  id?: string
+  title: string
+  slug: string
+  shortDescription: string
+  fullDescription: string
+  releaseNotes?: string | null
+  version: string
+  status?: $Enums.AppStatus
+  publishedAt?: Date | string | null
+  isPaid?: boolean
+  isFeatured?: boolean
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  category?: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
+  updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
+  media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
+  links?: Prisma.AppLinkCreateNestedManyWithoutAppInput
+  libraries?: Prisma.UserLibraryCreateNestedManyWithoutAppInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutAppInput
+  downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutAppInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutAppInput
+  sectionItems?: Prisma.StoreSectionItemCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQCreateNestedManyWithoutAppInput
+}
+
+export type AppUncheckedCreateWithoutHelpArticlesInput = {
+  id?: string
+  title: string
+  slug: string
+  shortDescription: string
+  fullDescription: string
+  releaseNotes?: string | null
+  version: string
+  status?: $Enums.AppStatus
+  publishedAt?: Date | string | null
+  isPaid?: boolean
+  isFeatured?: boolean
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  categoryId?: string | null
+  createdById: string
+  updatedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  media?: Prisma.AppMediaUncheckedCreateNestedManyWithoutAppInput
+  links?: Prisma.AppLinkUncheckedCreateNestedManyWithoutAppInput
+  libraries?: Prisma.UserLibraryUncheckedCreateNestedManyWithoutAppInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutAppInput
+  downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutAppInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAppInput
+  sectionItems?: Prisma.StoreSectionItemUncheckedCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatUncheckedCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderUncheckedCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutAppInput
+}
+
+export type AppCreateOrConnectWithoutHelpArticlesInput = {
+  where: Prisma.AppWhereUniqueInput
+  create: Prisma.XOR<Prisma.AppCreateWithoutHelpArticlesInput, Prisma.AppUncheckedCreateWithoutHelpArticlesInput>
+}
+
+export type AppUpsertWithoutHelpArticlesInput = {
+  update: Prisma.XOR<Prisma.AppUpdateWithoutHelpArticlesInput, Prisma.AppUncheckedUpdateWithoutHelpArticlesInput>
+  create: Prisma.XOR<Prisma.AppCreateWithoutHelpArticlesInput, Prisma.AppUncheckedCreateWithoutHelpArticlesInput>
+  where?: Prisma.AppWhereInput
+}
+
+export type AppUpdateToOneWithWhereWithoutHelpArticlesInput = {
+  where?: Prisma.AppWhereInput
+  data: Prisma.XOR<Prisma.AppUpdateWithoutHelpArticlesInput, Prisma.AppUncheckedUpdateWithoutHelpArticlesInput>
+}
+
+export type AppUpdateWithoutHelpArticlesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  category?: Prisma.CategoryUpdateOneWithoutAppsNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
+  updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
+  media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
+  links?: Prisma.AppLinkUpdateManyWithoutAppNestedInput
+  libraries?: Prisma.UserLibraryUpdateManyWithoutAppNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutAppNestedInput
+  downloadEvents?: Prisma.DownloadEventUpdateManyWithoutAppNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutAppNestedInput
+  sectionItems?: Prisma.StoreSectionItemUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUpdateManyWithoutAppNestedInput
+}
+
+export type AppUncheckedUpdateWithoutHelpArticlesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  media?: Prisma.AppMediaUncheckedUpdateManyWithoutAppNestedInput
+  links?: Prisma.AppLinkUncheckedUpdateManyWithoutAppNestedInput
+  libraries?: Prisma.UserLibraryUncheckedUpdateManyWithoutAppNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutAppNestedInput
+  downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutAppNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutAppNestedInput
+  sectionItems?: Prisma.StoreSectionItemUncheckedUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUncheckedUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUncheckedUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUncheckedUpdateManyWithoutAppNestedInput
+}
+
+export type AppCreateWithoutFaqsInput = {
+  id?: string
+  title: string
+  slug: string
+  shortDescription: string
+  fullDescription: string
+  releaseNotes?: string | null
+  version: string
+  status?: $Enums.AppStatus
+  publishedAt?: Date | string | null
+  isPaid?: boolean
+  isFeatured?: boolean
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  category?: Prisma.CategoryCreateNestedOneWithoutAppsInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedAppsInput
+  updatedBy?: Prisma.UserCreateNestedOneWithoutUpdatedAppsInput
+  media?: Prisma.AppMediaCreateNestedManyWithoutAppInput
+  links?: Prisma.AppLinkCreateNestedManyWithoutAppInput
+  libraries?: Prisma.UserLibraryCreateNestedManyWithoutAppInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutAppInput
+  downloadEvents?: Prisma.DownloadEventCreateNestedManyWithoutAppInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutAppInput
+  sectionItems?: Prisma.StoreSectionItemCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleCreateNestedManyWithoutAppInput
+}
+
+export type AppUncheckedCreateWithoutFaqsInput = {
+  id?: string
+  title: string
+  slug: string
+  shortDescription: string
+  fullDescription: string
+  releaseNotes?: string | null
+  version: string
+  status?: $Enums.AppStatus
+  publishedAt?: Date | string | null
+  isPaid?: boolean
+  isFeatured?: boolean
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: string | null
+  featureGraphicUrl?: string | null
+  promoVideoUrl?: string | null
+  supportEmail?: string | null
+  supportWebsiteUrl?: string | null
+  privacyPolicyUrl?: string | null
+  containsAds?: boolean
+  developerName?: string | null
+  type?: $Enums.AppType
+  appCategory?: string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  categoryId?: string | null
+  createdById: string
+  updatedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  media?: Prisma.AppMediaUncheckedCreateNestedManyWithoutAppInput
+  links?: Prisma.AppLinkUncheckedCreateNestedManyWithoutAppInput
+  libraries?: Prisma.UserLibraryUncheckedCreateNestedManyWithoutAppInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutAppInput
+  downloadEvents?: Prisma.DownloadEventUncheckedCreateNestedManyWithoutAppInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAppInput
+  sectionItems?: Prisma.StoreSectionItemUncheckedCreateNestedManyWithoutAppInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedCreateNestedManyWithoutAppInput
+  viewEvents?: Prisma.AppViewEventUncheckedCreateNestedManyWithoutAppInput
+  dailyStats?: Prisma.AppDailyStatUncheckedCreateNestedManyWithoutAppInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedCreateNestedOneWithoutAppInput
+  sliders?: Prisma.HomeSliderUncheckedCreateNestedManyWithoutAppInput
+  changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutAppInput
+}
+
+export type AppCreateOrConnectWithoutFaqsInput = {
+  where: Prisma.AppWhereUniqueInput
+  create: Prisma.XOR<Prisma.AppCreateWithoutFaqsInput, Prisma.AppUncheckedCreateWithoutFaqsInput>
+}
+
+export type AppUpsertWithoutFaqsInput = {
+  update: Prisma.XOR<Prisma.AppUpdateWithoutFaqsInput, Prisma.AppUncheckedUpdateWithoutFaqsInput>
+  create: Prisma.XOR<Prisma.AppCreateWithoutFaqsInput, Prisma.AppUncheckedCreateWithoutFaqsInput>
+  where?: Prisma.AppWhereInput
+}
+
+export type AppUpdateToOneWithWhereWithoutFaqsInput = {
+  where?: Prisma.AppWhereInput
+  data: Prisma.XOR<Prisma.AppUpdateWithoutFaqsInput, Prisma.AppUncheckedUpdateWithoutFaqsInput>
+}
+
+export type AppUpdateWithoutFaqsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  category?: Prisma.CategoryUpdateOneWithoutAppsNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedAppsNestedInput
+  updatedBy?: Prisma.UserUpdateOneWithoutUpdatedAppsNestedInput
+  media?: Prisma.AppMediaUpdateManyWithoutAppNestedInput
+  links?: Prisma.AppLinkUpdateManyWithoutAppNestedInput
+  libraries?: Prisma.UserLibraryUpdateManyWithoutAppNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutAppNestedInput
+  downloadEvents?: Prisma.DownloadEventUpdateManyWithoutAppNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutAppNestedInput
+  sectionItems?: Prisma.StoreSectionItemUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUpdateManyWithoutAppNestedInput
+}
+
+export type AppUncheckedUpdateWithoutFaqsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  fullDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  releaseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppStatusFieldUpdateOperationsInput | $Enums.AppStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featureGraphicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supportWebsiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsAds?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  developerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAppTypeFieldUpdateOperationsInput | $Enums.AppType
+  appCategory?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  media?: Prisma.AppMediaUncheckedUpdateManyWithoutAppNestedInput
+  links?: Prisma.AppLinkUncheckedUpdateManyWithoutAppNestedInput
+  libraries?: Prisma.UserLibraryUncheckedUpdateManyWithoutAppNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutAppNestedInput
+  downloadEvents?: Prisma.DownloadEventUncheckedUpdateManyWithoutAppNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutAppNestedInput
+  sectionItems?: Prisma.StoreSectionItemUncheckedUpdateManyWithoutAppNestedInput
+  tagLinks?: Prisma.AppTagOnAppUncheckedUpdateManyWithoutAppNestedInput
+  viewEvents?: Prisma.AppViewEventUncheckedUpdateManyWithoutAppNestedInput
+  dailyStats?: Prisma.AppDailyStatUncheckedUpdateManyWithoutAppNestedInput
+  aggregateStat?: Prisma.AppAggregateStatUncheckedUpdateOneWithoutAppNestedInput
+  sliders?: Prisma.HomeSliderUncheckedUpdateManyWithoutAppNestedInput
+  changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
+  descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateWithoutMediaInput = {
@@ -2995,6 +3517,8 @@ export type AppCreateWithoutMediaInput = {
   changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutMediaInput = {
@@ -3041,6 +3565,8 @@ export type AppUncheckedCreateWithoutMediaInput = {
   changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutMediaInput = {
@@ -3103,6 +3629,8 @@ export type AppUpdateWithoutMediaInput = {
   changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutMediaInput = {
@@ -3149,6 +3677,8 @@ export type AppUncheckedUpdateWithoutMediaInput = {
   changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUncheckedUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateWithoutLinksInput = {
@@ -3195,6 +3725,8 @@ export type AppCreateWithoutLinksInput = {
   changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutLinksInput = {
@@ -3241,6 +3773,8 @@ export type AppUncheckedCreateWithoutLinksInput = {
   changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutLinksInput = {
@@ -3303,6 +3837,8 @@ export type AppUpdateWithoutLinksInput = {
   changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutLinksInput = {
@@ -3349,6 +3885,8 @@ export type AppUncheckedUpdateWithoutLinksInput = {
   changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUncheckedUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateWithoutLibrariesInput = {
@@ -3395,6 +3933,8 @@ export type AppCreateWithoutLibrariesInput = {
   changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutLibrariesInput = {
@@ -3441,6 +3981,8 @@ export type AppUncheckedCreateWithoutLibrariesInput = {
   changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutLibrariesInput = {
@@ -3503,6 +4045,8 @@ export type AppUpdateWithoutLibrariesInput = {
   changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutLibrariesInput = {
@@ -3549,6 +4093,8 @@ export type AppUncheckedUpdateWithoutLibrariesInput = {
   changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUncheckedUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateWithoutChangelogsInput = {
@@ -3595,6 +4141,8 @@ export type AppCreateWithoutChangelogsInput = {
   sliders?: Prisma.HomeSliderCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutChangelogsInput = {
@@ -3641,6 +4189,8 @@ export type AppUncheckedCreateWithoutChangelogsInput = {
   sliders?: Prisma.HomeSliderUncheckedCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutChangelogsInput = {
@@ -3703,6 +4253,8 @@ export type AppUpdateWithoutChangelogsInput = {
   sliders?: Prisma.HomeSliderUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutChangelogsInput = {
@@ -3749,6 +4301,8 @@ export type AppUncheckedUpdateWithoutChangelogsInput = {
   sliders?: Prisma.HomeSliderUncheckedUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUncheckedUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateWithoutSupportTicketsInput = {
@@ -3795,6 +4349,8 @@ export type AppCreateWithoutSupportTicketsInput = {
   sliders?: Prisma.HomeSliderCreateNestedManyWithoutAppInput
   changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutSupportTicketsInput = {
@@ -3841,6 +4397,8 @@ export type AppUncheckedCreateWithoutSupportTicketsInput = {
   sliders?: Prisma.HomeSliderUncheckedCreateNestedManyWithoutAppInput
   changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutSupportTicketsInput = {
@@ -3903,6 +4461,8 @@ export type AppUpdateWithoutSupportTicketsInput = {
   sliders?: Prisma.HomeSliderUpdateManyWithoutAppNestedInput
   changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutSupportTicketsInput = {
@@ -3949,6 +4509,8 @@ export type AppUncheckedUpdateWithoutSupportTicketsInput = {
   sliders?: Prisma.HomeSliderUncheckedUpdateManyWithoutAppNestedInput
   changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUncheckedUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateWithoutDescriptionVersionsInput = {
@@ -3995,6 +4557,8 @@ export type AppCreateWithoutDescriptionVersionsInput = {
   sliders?: Prisma.HomeSliderCreateNestedManyWithoutAppInput
   changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutDescriptionVersionsInput = {
@@ -4041,6 +4605,8 @@ export type AppUncheckedCreateWithoutDescriptionVersionsInput = {
   sliders?: Prisma.HomeSliderUncheckedCreateNestedManyWithoutAppInput
   changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutDescriptionVersionsInput = {
@@ -4103,6 +4669,8 @@ export type AppUpdateWithoutDescriptionVersionsInput = {
   sliders?: Prisma.HomeSliderUpdateManyWithoutAppNestedInput
   changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutDescriptionVersionsInput = {
@@ -4149,6 +4717,8 @@ export type AppUncheckedUpdateWithoutDescriptionVersionsInput = {
   sliders?: Prisma.HomeSliderUncheckedUpdateManyWithoutAppNestedInput
   changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUncheckedUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateWithoutFeedbacksInput = {
@@ -4195,6 +4765,8 @@ export type AppCreateWithoutFeedbacksInput = {
   changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutFeedbacksInput = {
@@ -4241,6 +4813,8 @@ export type AppUncheckedCreateWithoutFeedbacksInput = {
   changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutFeedbacksInput = {
@@ -4303,6 +4877,8 @@ export type AppUpdateWithoutFeedbacksInput = {
   changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutFeedbacksInput = {
@@ -4349,6 +4925,8 @@ export type AppUncheckedUpdateWithoutFeedbacksInput = {
   changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUncheckedUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateWithoutDownloadEventsInput = {
@@ -4395,6 +4973,8 @@ export type AppCreateWithoutDownloadEventsInput = {
   changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutDownloadEventsInput = {
@@ -4441,6 +5021,8 @@ export type AppUncheckedCreateWithoutDownloadEventsInput = {
   changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutDownloadEventsInput = {
@@ -4503,6 +5085,8 @@ export type AppUpdateWithoutDownloadEventsInput = {
   changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutDownloadEventsInput = {
@@ -4549,6 +5133,8 @@ export type AppUncheckedUpdateWithoutDownloadEventsInput = {
   changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUncheckedUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateWithoutPaymentsInput = {
@@ -4595,6 +5181,8 @@ export type AppCreateWithoutPaymentsInput = {
   changelogs?: Prisma.AppChangelogCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQCreateNestedManyWithoutAppInput
 }
 
 export type AppUncheckedCreateWithoutPaymentsInput = {
@@ -4641,6 +5229,8 @@ export type AppUncheckedCreateWithoutPaymentsInput = {
   changelogs?: Prisma.AppChangelogUncheckedCreateNestedManyWithoutAppInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedCreateNestedManyWithoutAppInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAppInput
+  helpArticles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutAppInput
+  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutAppInput
 }
 
 export type AppCreateOrConnectWithoutPaymentsInput = {
@@ -4703,6 +5293,8 @@ export type AppUpdateWithoutPaymentsInput = {
   changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutPaymentsInput = {
@@ -4749,6 +5341,8 @@ export type AppUncheckedUpdateWithoutPaymentsInput = {
   changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUncheckedUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppCreateManyCreatedByInput = {
@@ -4857,6 +5451,8 @@ export type AppUpdateWithoutCreatedByInput = {
   changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutCreatedByInput = {
@@ -4903,6 +5499,8 @@ export type AppUncheckedUpdateWithoutCreatedByInput = {
   changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUncheckedUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateManyWithoutCreatedByInput = {
@@ -4980,6 +5578,8 @@ export type AppUpdateWithoutUpdatedByInput = {
   changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutUpdatedByInput = {
@@ -5026,6 +5626,8 @@ export type AppUncheckedUpdateWithoutUpdatedByInput = {
   changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUncheckedUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateManyWithoutUpdatedByInput = {
@@ -5134,6 +5736,8 @@ export type AppUpdateWithoutCategoryInput = {
   changelogs?: Prisma.AppChangelogUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateWithoutCategoryInput = {
@@ -5180,6 +5784,8 @@ export type AppUncheckedUpdateWithoutCategoryInput = {
   changelogs?: Prisma.AppChangelogUncheckedUpdateManyWithoutAppNestedInput
   descriptionVersions?: Prisma.AppDescriptionVersionUncheckedUpdateManyWithoutAppNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutAppNestedInput
+  helpArticles?: Prisma.HelpArticleUncheckedUpdateManyWithoutAppNestedInput
+  faqs?: Prisma.FAQUncheckedUpdateManyWithoutAppNestedInput
 }
 
 export type AppUncheckedUpdateManyWithoutCategoryInput = {
@@ -5233,6 +5839,8 @@ export type AppCountOutputType = {
   changelogs: number
   descriptionVersions: number
   supportTickets: number
+  helpArticles: number
+  faqs: number
 }
 
 export type AppCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -5250,6 +5858,8 @@ export type AppCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.In
   changelogs?: boolean | AppCountOutputTypeCountChangelogsArgs
   descriptionVersions?: boolean | AppCountOutputTypeCountDescriptionVersionsArgs
   supportTickets?: boolean | AppCountOutputTypeCountSupportTicketsArgs
+  helpArticles?: boolean | AppCountOutputTypeCountHelpArticlesArgs
+  faqs?: boolean | AppCountOutputTypeCountFaqsArgs
 }
 
 /**
@@ -5360,6 +5970,20 @@ export type AppCountOutputTypeCountSupportTicketsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.SupportTicketWhereInput
 }
 
+/**
+ * AppCountOutputType without action
+ */
+export type AppCountOutputTypeCountHelpArticlesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HelpArticleWhereInput
+}
+
+/**
+ * AppCountOutputType without action
+ */
+export type AppCountOutputTypeCountFaqsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FAQWhereInput
+}
+
 
 export type AppSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -5409,6 +6033,8 @@ export type AppSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   changelogs?: boolean | Prisma.App$changelogsArgs<ExtArgs>
   descriptionVersions?: boolean | Prisma.App$descriptionVersionsArgs<ExtArgs>
   supportTickets?: boolean | Prisma.App$supportTicketsArgs<ExtArgs>
+  helpArticles?: boolean | Prisma.App$helpArticlesArgs<ExtArgs>
+  faqs?: boolean | Prisma.App$faqsArgs<ExtArgs>
   _count?: boolean | Prisma.AppCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["app"]>
 
@@ -5534,6 +6160,8 @@ export type AppInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   changelogs?: boolean | Prisma.App$changelogsArgs<ExtArgs>
   descriptionVersions?: boolean | Prisma.App$descriptionVersionsArgs<ExtArgs>
   supportTickets?: boolean | Prisma.App$supportTicketsArgs<ExtArgs>
+  helpArticles?: boolean | Prisma.App$helpArticlesArgs<ExtArgs>
+  faqs?: boolean | Prisma.App$faqsArgs<ExtArgs>
   _count?: boolean | Prisma.AppCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AppIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -5568,6 +6196,8 @@ export type $AppPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     changelogs: Prisma.$AppChangelogPayload<ExtArgs>[]
     descriptionVersions: Prisma.$AppDescriptionVersionPayload<ExtArgs>[]
     supportTickets: Prisma.$SupportTicketPayload<ExtArgs>[]
+    helpArticles: Prisma.$HelpArticlePayload<ExtArgs>[]
+    faqs: Prisma.$FAQPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -6011,6 +6641,8 @@ export interface Prisma__AppClient<T, Null = never, ExtArgs extends runtime.Type
   changelogs<T extends Prisma.App$changelogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.App$changelogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppChangelogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   descriptionVersions<T extends Prisma.App$descriptionVersionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.App$descriptionVersionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppDescriptionVersionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   supportTickets<T extends Prisma.App$supportTicketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.App$supportTicketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupportTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  helpArticles<T extends Prisma.App$helpArticlesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.App$helpArticlesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HelpArticlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  faqs<T extends Prisma.App$faqsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.App$faqsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FAQPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6860,6 +7492,54 @@ export type App$supportTicketsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.SupportTicketScalarFieldEnum | Prisma.SupportTicketScalarFieldEnum[]
+}
+
+/**
+ * App.helpArticles
+ */
+export type App$helpArticlesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HelpArticle
+   */
+  select?: Prisma.HelpArticleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HelpArticle
+   */
+  omit?: Prisma.HelpArticleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HelpArticleInclude<ExtArgs> | null
+  where?: Prisma.HelpArticleWhereInput
+  orderBy?: Prisma.HelpArticleOrderByWithRelationInput | Prisma.HelpArticleOrderByWithRelationInput[]
+  cursor?: Prisma.HelpArticleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HelpArticleScalarFieldEnum | Prisma.HelpArticleScalarFieldEnum[]
+}
+
+/**
+ * App.faqs
+ */
+export type App$faqsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FAQ
+   */
+  select?: Prisma.FAQSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FAQ
+   */
+  omit?: Prisma.FAQOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FAQInclude<ExtArgs> | null
+  where?: Prisma.FAQWhereInput
+  orderBy?: Prisma.FAQOrderByWithRelationInput | Prisma.FAQOrderByWithRelationInput[]
+  cursor?: Prisma.FAQWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FAQScalarFieldEnum | Prisma.FAQScalarFieldEnum[]
 }
 
 /**

@@ -1,108 +1,59 @@
-import AboutIcon from "@/components/icons/AboutIcon";
-import AppsIcon from "@/components/icons/AppsIcon";
-import BlogIcon from "@/components/icons/BlogIcon";
-import DashboardIcon from "@/components/icons/DashboardIcon";
-import HelpAndSupportIcon from "@/components/icons/HelpAndSupportIcon";
-import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
+import { BookOpen, Box, CreditCard, Radio, MessageSquare } from "lucide-react";
 import Link from "next/link";
 
 export function HelpSupportPaths() {
-  return (
-    <>
-      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <Card className="space-y-3 text-sm ui-text-primary">
-          <div className="flex items-center gap-3">
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-[color-mix(in_srgb,var(--brand-secondary)_12%,white_88%)]">
-              <HelpAndSupportIcon className="h-5 w-5 fill-[#1f5ed4]" />
-            </span>
-            <div>
-              <CardTitle>Help Center</CardTitle>
-              <CardDescription>
-                Guides, how-tos, and release notes.
-              </CardDescription>
-            </div>
-          </div>
-          <Link
-            href="/help"
-            className="text-sm font-semibold text-[#1f5ed4] underline decoration-black/20 underline-offset-4"
-          >
-            Browse help articles
-          </Link>
-        </Card>
-        <Card className="space-y-3 text-sm ui-text-primary">
-          <div className="flex items-center gap-3">
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-[color-mix(in_srgb,var(--brand-secondary)_12%,white_88%)]">
-              <AppsIcon className="h-5 w-5 fill-[#1f5ed4]" />
-            </span>
-            <div>
-              <CardTitle>App Support</CardTitle>
-              <CardDescription>
-                Install, configure, and troubleshoot apps.
-              </CardDescription>
-            </div>
-          </div>
-          <p className="text-sm text-[#556171]">
-            Response target: within 24-48 hours.
-          </p>
-        </Card>
-        <Card className="space-y-3 text-sm ui-text-primary">
-          <div className="flex items-center gap-3">
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-[color-mix(in_srgb,var(--brand-secondary)_12%,white_88%)]">
-              <DashboardIcon className="h-5 w-5 fill-[#1f5ed4]" />
-            </span>
-            <div>
-              <CardTitle>Billing & Account</CardTitle>
-              <CardDescription>
-                Invoices, refunds, and plan changes.
-              </CardDescription>
-            </div>
-          </div>
-          <p className="text-sm text-[#556171]">
-            Response target: within 2 business days.
-          </p>
-        </Card>
-      </section>
+  const paths = [
+    {
+      title: "Help Center",
+      desc: "Guides and how-tos",
+      icon: BookOpen,
+      href: "/help",
+    },
+    {
+      title: "App Support",
+      desc: "Troubleshooting",
+      icon: Box,
+      href: "/help/apps",
+    },
+    {
+      title: "Billing",
+      desc: "Invoices & plans",
+      icon: CreditCard,
+      href: "/settings/billing",
+    },
+    {
+      title: "Updates",
+      desc: "Changelogs",
+      icon: Radio,
+      href: "/posts",
+    },
+    {
+      title: "Contact",
+      desc: "Direct support",
+      icon: MessageSquare,
+      href: "/contact",
+    },
+  ];
 
-      <section className="grid gap-3 sm:grid-cols-2">
-        <Card className="space-y-3 text-sm ui-text-primary">
-          <div className="flex items-center gap-3">
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-[color-mix(in_srgb,var(--brand-secondary)_12%,white_88%)]">
-              <BlogIcon className="h-5 w-5 fill-[#1f5ed4]" />
-            </span>
-            <div>
-              <CardTitle>Product Updates</CardTitle>
-              <CardDescription>
-                News, changelogs, and launch notes.
-              </CardDescription>
-            </div>
-          </div>
-          <Link
-            href="/blog"
-            className="text-sm font-semibold text-[#1f5ed4] underline decoration-black/20 underline-offset-4"
-          >
-            Read the blog
+  return (
+    <section className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+      {paths.map((path) => {
+        const Icon = path.icon;
+        return (
+          <Link key={path.title} href={path.href}>
+            <Card className="flex flex-col items-center text-center p-4 hover:border-brand-primary/50 transition-colors bg-bg-base cursor-pointer shadow-sm group">
+              <div className="h-10 w-10 rounded-xl bg-surface-active flex items-center justify-center mb-3 group-hover:bg-brand-primary/10 transition-colors">
+                <Icon className="h-5 w-5 text-text-muted group-hover:text-brand-primary transition-colors" />
+              </div>
+              <h3 className="text-sm font-semibold text-text-primary">
+                {path.title}
+              </h3>
+              <p className="text-xs text-text-muted mt-1">{path.desc}</p>
+            </Card>
           </Link>
-        </Card>
-        <Card className="space-y-3 text-sm ui-text-primary">
-          <div className="flex items-center gap-3">
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-[color-mix(in_srgb,var(--brand-secondary)_12%,white_88%)]">
-              <AboutIcon className="h-5 w-5 fill-[#1f5ed4]" />
-            </span>
-            <div>
-              <CardTitle>Contact Support</CardTitle>
-              <CardDescription>
-                Send a direct request to the team.
-              </CardDescription>
-            </div>
-          </div>
-          <Link
-            href="/contact"
-            className="text-sm font-semibold text-[#1f5ed4] underline decoration-black/20 underline-offset-4"
-          >
-            Open contact page
-          </Link>
-        </Card>
-      </section>
-    </>
+        );
+      })}
+    </section>
   );
 }

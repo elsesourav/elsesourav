@@ -42,7 +42,7 @@ export function AppDetailActions({
       <Button
         type="button"
         onClick={onToggleQuickSave}
-        tone="secondary"
+        variant="secondary"
         className="rounded-full"
       >
         {isSaved ? "Remove from quick library" : "Save to quick library"}

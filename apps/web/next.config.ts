@@ -14,6 +14,20 @@ const nextConfig: NextConfig = {
     "@elsesourav/types",
     "@elsesourav/validation",
   ],
+  async redirects() {
+    return [
+      {
+        source: "/blog",
+        destination: "/posts",
+        permanent: true,
+      },
+      {
+        source: "/blog/:slug",
+        destination: "/posts/:slug",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

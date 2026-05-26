@@ -182,69 +182,59 @@ async function getSupportTicketById(
   options?: {
     userId?: string;
   },
-): Promise<SupportTicketSummaryRow | null> {
-  const whereClauses: Prisma.Sql[] = [Prisma.sql`t.id = ${ticketId}`];
+) {
+  const whereClauses: any = { id: ticketId };
 
   if (options?.userId) {
-    whereClauses.push(Prisma.sql`t.user_id = ${options.userId}`);
+    whereClauses.userId = options.userId;
   }
 
-  const rows = await prisma.$queryRaw<SupportTicketSummaryRow[]>(Prisma.sql`
-    SELECT
-      t.id,
-      t.user_id AS "userId",
-      t.app_id AS "appId",
-      t.subject,
-      t.description,
-      t.status::text AS "status",
-      t.priority::text AS "priority",
-      t.category,
-      t.channel::text AS "channel",
-      t.source_url AS "sourceUrl",
-      t.assigned_to AS "assignedToId",
-      t.first_response_at AS "firstResponseAt",
-      t.resolved_at AS "resolvedAt",
-      t.closed_at AS "closedAt",
-      t.created_at AS "createdAt",
-      t.updated_at AS "updatedAt",
-      a.title AS "appTitle",
-      a.slug AS "appSlug",
-      (
-        SELECT COUNT(*)::int
-        FROM support_ticket_messages m
-        WHERE m.ticket_id = t.id
-      ) AS "messageCount"
-    FROM support_tickets t
-    LEFT JOIN apps a ON a.id = t.app_id
-    WHERE ${Prisma.join(whereClauses, " AND ")}
-    LIMIT 1
-  `);
+  const ticket = await prisma.supportTicket.findFirst({
+    where: whereClauses,
+    include: {
+      app: {
+        select: {
+          title: true,
+          slug: true,
+        },
+      },
+    },
+  });
 
-  return rows[0] ?? null;
+  if (!ticket) return null;
+
+  return {
+    ...ticket,
+    appTitle: ticket.app?.title ?? null,
+    appSlug: ticket.app?.slug ?? null,
+  };
 }
 
 async function getSupportTicketMessages(
   ticketId: string,
   includeInternal: boolean,
-): Promise<SupportTicketMessageRow[]> {
-  return prisma.$queryRaw<SupportTicketMessageRow[]>(Prisma.sql`
-    SELECT
-      m.id,
-      m.ticket_id AS "ticketId",
-      m.author_user_id AS "authorUserId",
-      m.author_type AS "authorType",
-      m.body,
-      m.is_internal AS "isInternal",
-      m.attachments,
-      m.created_at AS "createdAt",
-      u.name AS "authorName",
-      u.email AS "authorEmail"
-    FROM support_ticket_messages m
-    LEFT JOIN users u ON u.id = m.author_user_id
-    WHERE m.ticket_id = ${ticketId}
-      ${includeInternal ? Prisma.empty : Prisma.sql`AND m.is_internal = FALSE`}
-    ORDER BY m.created_at ASC
-  `);
+) {
+  return prisma.supportTicketMessage.findMany({
+    where: {
+      ticketId,
+      ...(includeInternal ? {} : { isInternal: false }),
+    },
+    include: {
+      authorUser: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+  }).then((messages: any[]) => messages.map((m: any) => ({
+    ...m,
+    authorName: m.authorUser?.name ?? null,
+    authorEmail: m.authorUser?.email ?? null,
+  })));
 }
 
 async function recomputeAggregateStatsForApp(appId: string, date: Date) {
@@ -1480,40 +1470,25 @@ userRouter.post("/support/tickets/:id/replies", async (req, res) => {
       );
     }
 
-    const attachmentsJson = parsedBody.data.attachments
-      ? JSON.stringify(parsedBody.data.attachments)
-      : null;
-
     await prisma.$transaction([
-      prisma.$executeRaw(Prisma.sql`
-        INSERT INTO support_ticket_messages (
-          ticket_id,
-          author_user_id,
-          author_type,
-          body,
-          is_internal,
-          attachments
-        )
-        VALUES (
-          ${ticket.id},
-          ${userId},
-          'USER',
-          ${parsedBody.data.body},
-          FALSE,
-          ${attachmentsJson}::jsonb
-        )
-      `),
-      prisma.$executeRaw(Prisma.sql`
-        UPDATE support_tickets
-        SET
-          status = CASE
-            WHEN status = 'WAITING_FOR_USER'::"SupportTicketStatus"
-              THEN 'IN_PROGRESS'::"SupportTicketStatus"
-            ELSE status
-          END,
-          updated_at = NOW()
-        WHERE id = ${ticket.id}
-      `),
+      prisma.supportTicketMessage.create({
+        data: {
+          ticketId: ticket.id,
+          authorUserId: userId,
+          authorType: "USER",
+          body: parsedBody.data.body,
+          isInternal: false,
+          attachments: parsedBody.data.attachments ? parsedBody.data.attachments : Prisma.JsonNull,
+        },
+      }),
+      prisma.supportTicket.update({
+        where: { id: ticket.id },
+        data: {
+          status: ticket.status === "WAITING_FOR_USER" ? "IN_PROGRESS" : undefined,
+          messageCount: { increment: 1 },
+          lastMessageAt: new Date(),
+        },
+      }),
     ]);
 
     const updatedTicket = await getSupportTicketById(ticket.id, { userId });
@@ -1561,78 +1536,56 @@ adminUserRouter.get("/support/tickets", async (req, res) => {
       );
     }
 
-    const whereClauses: Prisma.Sql[] = [];
+    const whereClauses: any = {};
 
     if (parsed.data.status) {
-      whereClauses.push(Prisma.sql`t.status::text = ${parsed.data.status}`);
-    }
-
-    if (!parsed.data.includeClosed) {
-      whereClauses.push(Prisma.sql`t.status::text <> 'CLOSED'`);
+      whereClauses.status = parsed.data.status;
+    } else if (!parsed.data.includeClosed) {
+      whereClauses.status = { not: "CLOSED" };
     }
 
     if (parsed.data.priority) {
-      whereClauses.push(Prisma.sql`t.priority::text = ${parsed.data.priority}`);
+      whereClauses.priority = parsed.data.priority;
     }
 
     if (parsed.data.appId) {
-      whereClauses.push(Prisma.sql`t.app_id = ${parsed.data.appId}`);
+      whereClauses.appId = parsed.data.appId;
     }
 
     if (parsed.data.assignedToId) {
-      whereClauses.push(
-        Prisma.sql`t.assigned_to = ${parsed.data.assignedToId}`,
-      );
+      whereClauses.assignedToId = parsed.data.assignedToId;
     }
 
     if (parsed.data.userId) {
-      whereClauses.push(Prisma.sql`t.user_id = ${parsed.data.userId}`);
+      whereClauses.userId = parsed.data.userId;
     }
 
     if (parsed.data.search) {
-      const searchTerm = `%${parsed.data.search}%`;
-      whereClauses.push(
-        Prisma.sql`(t.subject ILIKE ${searchTerm} OR t.description ILIKE ${searchTerm})`,
-      );
+      whereClauses.OR = [
+        { subject: { contains: parsed.data.search, mode: "insensitive" } },
+        { description: { contains: parsed.data.search, mode: "insensitive" } },
+      ];
     }
 
-    const tickets = await prisma.$queryRaw<
-      SupportTicketSummaryRow[]
-    >(Prisma.sql`
-      SELECT
-        t.id,
-        t.user_id AS "userId",
-        t.app_id AS "appId",
-        t.subject,
-        t.description,
-        t.status::text AS "status",
-        t.priority::text AS "priority",
-        t.category,
-        t.channel::text AS "channel",
-        t.source_url AS "sourceUrl",
-        t.assigned_to AS "assignedToId",
-        t.first_response_at AS "firstResponseAt",
-        t.resolved_at AS "resolvedAt",
-        t.closed_at AS "closedAt",
-        t.created_at AS "createdAt",
-        t.updated_at AS "updatedAt",
-        a.title AS "appTitle",
-        a.slug AS "appSlug",
-        (
-          SELECT COUNT(*)::int
-          FROM support_ticket_messages m
-          WHERE m.ticket_id = t.id
-        ) AS "messageCount"
-      FROM support_tickets t
-      LEFT JOIN apps a ON a.id = t.app_id
-      ${
-        whereClauses.length > 0
-          ? Prisma.sql`WHERE ${Prisma.join(whereClauses, " AND ")}`
-          : Prisma.empty
+    const ticketsData = await prisma.supportTicket.findMany({
+      where: whereClauses,
+      orderBy: { updatedAt: "desc" },
+      take: parsed.data.limit,
+      include: {
+        app: {
+          select: {
+            title: true,
+            slug: true,
+          }
+        }
       }
-      ORDER BY t.updated_at DESC
-      LIMIT ${parsed.data.limit}
-    `);
+    });
+
+    const tickets = ticketsData.map((ticket: any) => ({
+      ...ticket,
+      appTitle: ticket.app?.title ?? null,
+      appSlug: ticket.app?.slug ?? null,
+    }));
 
     return sendSuccess(res, requestId, tickets);
   } catch (error) {
@@ -1735,72 +1688,22 @@ adminUserRouter.patch("/support/tickets/:id", async (req, res) => {
       }
     }
 
-    const setClauses: Prisma.Sql[] = [];
+    const updateData: any = {};
 
     if (parsedBody.data.status !== undefined) {
-      setClauses.push(
-        Prisma.sql`status = ${parsedBody.data.status}::"SupportTicketStatus"`,
-      );
+      updateData.status = parsedBody.data.status;
 
-      if (parsedBody.data.status === "IN_PROGRESS") {
-        setClauses.push(
-          Prisma.sql`first_response_at = COALESCE(first_response_at, NOW())`,
-        );
-      }
-
-      if (parsedBody.data.status === "RESOLVED") {
-        setClauses.push(Prisma.sql`resolved_at = COALESCE(resolved_at, NOW())`);
-      }
-
-      if (parsedBody.data.status === "CLOSED") {
-        setClauses.push(Prisma.sql`closed_at = COALESCE(closed_at, NOW())`);
-      }
-
-      if (
-        parsedBody.data.status === "OPEN" ||
-        parsedBody.data.status === "IN_PROGRESS" ||
-        parsedBody.data.status === "WAITING_FOR_USER"
-      ) {
-        setClauses.push(Prisma.sql`closed_at = NULL`);
-      }
+      // Note: we can't do COALESCE directly in Prisma easily without raw SQL,
+      // but we can query the ticket first to check its current values, or just let it overwrite.
+      // A better way is to fetch the ticket first to handle logic safely, but for now we'll do the simple update.
+      // Wait, we can fetch it first to handle COALESCE accurately.
     }
 
-    if (parsedBody.data.priority !== undefined) {
-      setClauses.push(
-        Prisma.sql`priority = ${parsedBody.data.priority}::"SupportTicketPriority"`,
-      );
-    }
+    const existingTicket = await prisma.supportTicket.findUnique({
+      where: { id: parsedParam.data.id }
+    });
 
-    if (parsedBody.data.category !== undefined) {
-      setClauses.push(Prisma.sql`category = ${parsedBody.data.category}`);
-    }
-
-    if (parsedBody.data.assignedToId !== undefined) {
-      setClauses.push(
-        Prisma.sql`assigned_to = ${parsedBody.data.assignedToId}`,
-      );
-    }
-
-    if (parsedBody.data.sourceUrl !== undefined) {
-      setClauses.push(Prisma.sql`source_url = ${parsedBody.data.sourceUrl}`);
-    }
-
-    if (parsedBody.data.metadata !== undefined) {
-      setClauses.push(
-        Prisma.sql`metadata = ${JSON.stringify(parsedBody.data.metadata)}::jsonb`,
-      );
-    }
-
-    setClauses.push(Prisma.sql`updated_at = NOW()`);
-
-    const updated = await prisma.$queryRaw<{ id: string }[]>(Prisma.sql`
-      UPDATE support_tickets
-      SET ${Prisma.join(setClauses, ", ")}
-      WHERE id = ${parsedParam.data.id}
-      RETURNING id
-    `);
-
-    if (updated.length === 0) {
+    if (!existingTicket) {
       return sendFailure(
         res,
         requestId,
@@ -1809,6 +1712,57 @@ adminUserRouter.patch("/support/tickets/:id", async (req, res) => {
         404,
       );
     }
+
+    if (parsedBody.data.status !== undefined) {
+      updateData.status = parsedBody.data.status;
+
+      if (parsedBody.data.status === "IN_PROGRESS" && !existingTicket.firstResponseAt) {
+        updateData.firstResponseAt = new Date();
+      }
+
+      if (parsedBody.data.status === "RESOLVED" && !existingTicket.resolvedAt) {
+        updateData.resolvedAt = new Date();
+      }
+
+      if (parsedBody.data.status === "CLOSED" && !existingTicket.closedAt) {
+        updateData.closedAt = new Date();
+      }
+
+      if (
+        parsedBody.data.status === "OPEN" ||
+        parsedBody.data.status === "IN_PROGRESS" ||
+        parsedBody.data.status === "WAITING_FOR_USER"
+      ) {
+        updateData.closedAt = null;
+      }
+    }
+
+    if (parsedBody.data.priority !== undefined) {
+      updateData.priority = parsedBody.data.priority;
+    }
+
+    if (parsedBody.data.category !== undefined) {
+      updateData.category = parsedBody.data.category;
+    }
+
+    if (parsedBody.data.assignedToId !== undefined) {
+      updateData.assignedToId = parsedBody.data.assignedToId;
+    }
+
+    if (parsedBody.data.sourceUrl !== undefined) {
+      updateData.sourceUrl = parsedBody.data.sourceUrl;
+    }
+
+    if (parsedBody.data.metadata !== undefined) {
+      updateData.metadata = parsedBody.data.metadata;
+    }
+
+    updateData.updatedAt = new Date();
+
+    const updated = await prisma.supportTicket.update({
+      where: { id: existingTicket.id },
+      data: updateData,
+    });
 
     const ticket = await getSupportTicketById(parsedParam.data.id);
     const messages = await getSupportTicketMessages(parsedParam.data.id, true);
@@ -1873,40 +1827,28 @@ adminUserRouter.post("/support/tickets/:id/replies", async (req, res) => {
       : null;
 
     await prisma.$transaction([
-      prisma.$executeRaw(Prisma.sql`
-        INSERT INTO support_ticket_messages (
-          ticket_id,
-          author_user_id,
-          author_type,
-          body,
-          is_internal,
-          attachments
-        )
-        VALUES (
-          ${ticket.id},
-          ${moderatorId},
-          'AGENT',
-          ${parsedBody.data.body},
-          ${parsedBody.data.isInternal ?? false},
-          ${attachmentsJson}::jsonb
-        )
-      `),
-      prisma.$executeRaw(
-        parsedBody.data.isInternal
-          ? Prisma.sql`
-              UPDATE support_tickets
-              SET updated_at = NOW()
-              WHERE id = ${ticket.id}
-            `
-          : Prisma.sql`
-              UPDATE support_tickets
-              SET
-                first_response_at = COALESCE(first_response_at, NOW()),
-                status = 'WAITING_FOR_USER'::"SupportTicketStatus",
-                updated_at = NOW()
-              WHERE id = ${ticket.id}
-            `,
-      ),
+      prisma.supportTicketMessage.create({
+        data: {
+          ticketId: ticket.id,
+          authorUserId: moderatorId,
+          authorType: "AGENT",
+          body: parsedBody.data.body,
+          isInternal: parsedBody.data.isInternal ?? false,
+          attachments: parsedBody.data.attachments ? parsedBody.data.attachments : Prisma.JsonNull,
+        },
+      }),
+      prisma.supportTicket.update({
+        where: { id: ticket.id },
+        data: parsedBody.data.isInternal
+          ? { updatedAt: new Date() }
+          : {
+              firstResponseAt: ticket.firstResponseAt ?? new Date(),
+              status: "WAITING_FOR_USER",
+              messageCount: { increment: 1 },
+              lastMessageAt: new Date(),
+              unreadAdminCount: 0,
+            },
+      }),
     ]);
 
     const updatedTicket = await getSupportTicketById(ticket.id);

@@ -47,7 +47,7 @@ export function MixedHighlights({
             lineHeight: 1.1,
           }}
         >
-          Apps, help docs, and blog updates in one glance
+          Apps, help docs, and post updates in one glance
         </Typography>
         <Typography
           sx={{
@@ -265,11 +265,11 @@ export function MixedHighlights({
                 color: "#5b6680",
               }}
             >
-              Latest blog intel
+              Latest posts
             </Typography>
             <Button
               component={Link}
-              href="/blog"
+              href="/posts"
               variant="text"
               size="small"
               sx={{ fontWeight: 700, textTransform: "none" }}
@@ -283,11 +283,11 @@ export function MixedHighlights({
             spacing={1.5}
             sx={{ mt: 1.5, m: 0, p: 0, listStyle: "none" }}
           >
-            {(supportOverview?.latestBlog ?? []).slice(0, 4).map((post) => (
+            {(supportOverview?.latestPosts ?? []).slice(0, 4).map((post) => (
               <li key={post.id}>
                 <Paper
                   component={Link}
-                  href={`/blog/${post.slug}`}
+                  href={`/posts/${post.slug}`}
                   elevation={0}
                   sx={{
                     display: "block",
@@ -342,7 +342,7 @@ export function MixedHighlights({
                 </Paper>
               </li>
             ))}
-            {(supportOverview?.latestBlog ?? []).length === 0 ? (
+            {(supportOverview?.latestPosts ?? []).length === 0 ? (
               <li>
                 <Paper
                   elevation={0}
@@ -355,7 +355,7 @@ export function MixedHighlights({
                   }}
                 >
                   <Typography sx={{ fontSize: "0.86rem", color: "#4f5e78" }}>
-                    New blog posts will appear here when available.
+                    New posts will appear here when available.
                   </Typography>
                 </Paper>
               </li>

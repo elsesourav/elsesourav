@@ -33,7 +33,7 @@
 }
 
 .ui-markdown-surface .wmde-markdown {
-  color: var(--foreground);
+  background-color: transparent;
 }
 
 .ui-markdown-surface .wmde-markdown > :first-child {

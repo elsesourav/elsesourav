@@ -3,6 +3,7 @@ import { getServerEnv } from "@elsesourav/config";
 import type { ApiFailure, ApiSuccess } from "@elsesourav/types";
 import { randomUUID } from "crypto";
 import { NextResponse } from "next/server";
+import { auth } from "@/auth";
 
 export type ServiceName = "auth" | "catalog" | "user" | "content" | "theme";
 export type ServiceMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
@@ -47,10 +48,14 @@ function resolveServiceUrl(service: ServiceName): string {
   }
 }
 
-function copyHeaderIfPresent(source: Headers, target: Headers, name: string) {
-  const value = source.get(name);
+function copyHeaderIfPresent(
+  source: Headers,
+  target: Headers,
+  headerName: string,
+) {
+  const value = source.get(headerName);
   if (value) {
-    target.set(name, value);
+    target.set(headerName, value);
   }
 }
 
@@ -59,9 +64,8 @@ function createInternalHeaders(options: {
   internalToken: string;
   user?: ServiceUserContext;
   sourceHeaders?: Headers;
-}): Headers {
+}) {
   const headers = new Headers();
-
   headers.set("x-request-id", options.requestId);
   headers.set("x-internal-token", options.internalToken);
 
@@ -69,6 +73,7 @@ function createInternalHeaders(options: {
     copyHeaderIfPresent(options.sourceHeaders, headers, "x-forwarded-for");
     copyHeaderIfPresent(options.sourceHeaders, headers, "x-real-ip");
     copyHeaderIfPresent(options.sourceHeaders, headers, "user-agent");
+    copyHeaderIfPresent(options.sourceHeaders, headers, "x-session-id");
   }
 
   if (options.user?.id) {
@@ -83,7 +88,14 @@ function createInternalHeaders(options: {
 }
 
 export async function proxyToService(options: ProxyOptions) {
-  const { request, service, path, user } = options;
+  const { request, service, path } = options;
+  let user = options.user;
+  
+  if (!user) {
+    const session = await auth();
+    user = session?.user;
+  }
+
   const method = options.method ?? (request.method as ProxyOptions["method"]);
   const requestId = getRequestId(request);
 
@@ -99,7 +111,10 @@ export async function proxyToService(options: ProxyOptions) {
       );
     }
 
-    const targetUrl = `${resolveServiceUrl(service)}${path}`;
+    const requestUrl = new URL(request.url);
+    const search = requestUrl.search;
+    const finalPath = path.includes("?") ? path : `${path}${search}`;
+    const targetUrl = `${resolveServiceUrl(service)}${finalPath}`;
 
     const headers = createInternalHeaders({
       requestId,

@@ -358,7 +358,7 @@ function BannerCard({
               {item.subtitle ?? item.linkUrl ?? "No banner link"}
             </CardDescription>
           </div>
-          <Badge tone={item.isActive ? "success" : "neutral"}>
+          <Badge variant={item.isActive ? "success" : "secondary"}>
             {item.isActive ? "Active" : "Disabled"}
           </Badge>
         </div>
@@ -386,11 +386,11 @@ function BannerCard({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <Button tone="secondary" size="sm" onClick={onEdit}>
+          <Button variant="secondary" size="sm" onClick={onEdit}>
             Edit banner
           </Button>
           <Button
-            tone="danger"
+            variant="destructive"
             size="sm"
             onClick={onDisable}
             disabled={disabling || !item.isActive}
@@ -630,7 +630,7 @@ export function AdminBannersClient({
           {banners.length.toLocaleString()} banners,{" "}
           {activeCount.toLocaleString()} active.
         </p>
-        <Button tone="primary" onClick={() => setCreateOpen(true)}>
+        <Button variant="default" onClick={() => setCreateOpen(true)}>
           Add banner
         </Button>
       </div>
@@ -697,7 +697,7 @@ export function AdminBannersClient({
 
           <div className="flex items-center justify-end gap-2">
             <Button
-              tone="secondary"
+              variant="secondary"
               onClick={() => {
                 setCreateOpen(false);
                 setCreateError(null);
@@ -752,7 +752,7 @@ export function AdminBannersClient({
 
             <div className="flex items-center justify-end gap-2">
               <Button
-                tone="secondary"
+                variant="secondary"
                 onClick={() => {
                   setEditingBannerId(null);
                   setEditForm(null);

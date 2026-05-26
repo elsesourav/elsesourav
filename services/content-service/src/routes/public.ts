@@ -1,14 +1,18 @@
 import {
-  BlogPostStatus,
+  PostStatus,
   ContentStatus,
   HelpArticleStatus,
   Prisma,
   prisma,
 } from "@elsesourav/db";
-import { blogCommentCreateSchema } from "@elsesourav/validation";
+import { 
+  postCommentCreateSchema,
+  postReactionToggleSchema 
+} from "@elsesourav/validation";
 import { Router } from "express";
 import { z } from "zod";
 import { getRequestId, sendFailure, sendSuccess } from "../lib/http";
+import { ProfileController } from "../controllers/profile.controller";
 
 const contentSlugSchema = z.object({
   slug: z.string().trim().min(2).max(100),
@@ -77,67 +81,19 @@ const helpSearchQuerySchema = z.object({
 const supportOverviewQuerySchema = z.object({
   categoryLimit: z.coerce.number().int().min(1).max(12).default(6),
   featuredHelpLimit: z.coerce.number().int().min(1).max(12).default(5),
-  latestBlogLimit: z.coerce.number().int().min(1).max(12).default(4),
+  latestPostsLimit: z.coerce.number().int().min(1).max(12).default(4),
 });
 
 export const publicContentRouter = Router();
 
-publicContentRouter.get("/profile", async (req, res) => {
+const profileController = new ProfileController();
+publicContentRouter.get("/profile", profileController.getProfile);
+
+publicContentRouter.get("/posts/tags", async (_req, res) => {
   const requestId = getRequestId(res);
 
   try {
-    const parsed = profileQuerySchema.safeParse(req.query);
-    if (!parsed.success) {
-      return sendFailure(
-        res,
-        requestId,
-        "VALIDATION_ERROR",
-        "Invalid profile query.",
-        400,
-        parsed.error.flatten(),
-      );
-    }
-
-    const profile = parsed.data.slug
-      ? await prisma.profilePage.findFirst({
-          where: {
-            slug: parsed.data.slug,
-            isActive: true,
-          },
-        })
-      : await prisma.profilePage.findFirst({
-          where: { isActive: true },
-          orderBy: { updatedAt: "desc" },
-        });
-
-    if (!profile) {
-      return sendFailure(
-        res,
-        requestId,
-        "NOT_FOUND",
-        "Profile page not found.",
-        404,
-      );
-    }
-
-    return sendSuccess(res, requestId, profile);
-  } catch (error) {
-    return sendFailure(
-      res,
-      requestId,
-      "INTERNAL_ERROR",
-      "Failed to fetch profile page.",
-      500,
-      error instanceof Error ? error.message : "Unknown error",
-    );
-  }
-});
-
-publicContentRouter.get("/blog/tags", async (_req, res) => {
-  const requestId = getRequestId(res);
-
-  try {
-    const tags = await prisma.blogTag.findMany({
+    const tags = await prisma.postTag.findMany({
       orderBy: [{ name: "asc" }],
       include: {
         _count: {
@@ -161,7 +117,7 @@ publicContentRouter.get("/blog/tags", async (_req, res) => {
   }
 });
 
-publicContentRouter.get("/blog/posts", async (req, res) => {
+publicContentRouter.get("/posts", async (req, res) => {
   const requestId = getRequestId(res);
 
   try {
@@ -181,10 +137,10 @@ publicContentRouter.get("/blog/posts", async (req, res) => {
     const isPreview =
       parsed.data.preview && req.header("x-user-role") === "ADMIN";
 
-    const where: Prisma.BlogPostWhereInput = {};
+    const where: Prisma.PostWhereInput = {};
 
     if (!isPreview) {
-      where.status = BlogPostStatus.PUBLISHED;
+      where.status = PostStatus.PUBLISHED;
       where.AND = [{ OR: [{ publishAt: null }, { publishAt: { lte: now } }] }];
     }
 
@@ -225,7 +181,7 @@ publicContentRouter.get("/blog/posts", async (req, res) => {
       };
     }
 
-    const items = await prisma.blogPost.findMany({
+    const items = await prisma.post.findMany({
       where,
       orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }, { id: "desc" }],
       take: parsed.data.limit + 1,
@@ -278,7 +234,7 @@ publicContentRouter.get("/blog/posts", async (req, res) => {
   }
 });
 
-publicContentRouter.get("/blog/posts/:slug", async (req, res) => {
+publicContentRouter.get("/posts/:slug", async (req, res) => {
   const requestId = getRequestId(res);
 
   try {
@@ -297,7 +253,7 @@ publicContentRouter.get("/blog/posts/:slug", async (req, res) => {
     const isPreview =
       req.query.preview === "true" && req.header("x-user-role") === "ADMIN";
 
-    const post = await prisma.blogPost.findUnique({
+    const post = await prisma.post.findUnique({
       where: { slug: parsedSlug.data.slug },
       include: {
         tags: {
@@ -305,17 +261,12 @@ publicContentRouter.get("/blog/posts/:slug", async (req, res) => {
             tag: true,
           },
         },
-        comments: {
-          where: isPreview ? undefined : { isApproved: true },
-          orderBy: { createdAt: "desc" },
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-          },
+        _count: {
+          select: {
+            comments: {
+              where: isPreview ? undefined : { isApproved: true },
+            }
+          }
         },
       },
     });
@@ -331,7 +282,7 @@ publicContentRouter.get("/blog/posts/:slug", async (req, res) => {
     }
 
     if (!isPreview) {
-      const isPublished = post.status === BlogPostStatus.PUBLISHED;
+      const isPublished = post.status === PostStatus.PUBLISHED;
       const withinWindow = !post.publishAt || post.publishAt <= now;
       if (!isPublished || !withinWindow) {
         return sendFailure(
@@ -360,7 +311,7 @@ publicContentRouter.get("/blog/posts/:slug", async (req, res) => {
   }
 });
 
-publicContentRouter.get("/blog/posts/:slug/related", async (req, res) => {
+publicContentRouter.get("/posts/:slug/related", async (req, res) => {
   const requestId = getRequestId(res);
 
   try {
@@ -387,7 +338,7 @@ publicContentRouter.get("/blog/posts/:slug/related", async (req, res) => {
       );
     }
 
-    const post = await prisma.blogPost.findUnique({
+    const post = await prisma.post.findUnique({
       where: { slug: parsedSlug.data.slug },
       select: {
         id: true,
@@ -412,10 +363,10 @@ publicContentRouter.get("/blog/posts/:slug/related", async (req, res) => {
     const now = new Date();
     const tagIds = post.tags.map((item) => item.tagId);
 
-    const related = await prisma.blogPost.findMany({
+    const related = await prisma.post.findMany({
       where: {
         id: { not: post.id },
-        status: BlogPostStatus.PUBLISHED,
+        status: PostStatus.PUBLISHED,
         AND: [{ OR: [{ publishAt: null }, { publishAt: { lte: now } }] }],
         ...(tagIds.length > 0
           ? {
@@ -450,12 +401,12 @@ publicContentRouter.get("/blog/posts/:slug/related", async (req, res) => {
     if (related.length < parsedQuery.data.limit) {
       const remainder = parsedQuery.data.limit - related.length;
 
-      const fallback = await prisma.blogPost.findMany({
+      const fallback = await prisma.post.findMany({
         where: {
           id: {
             notIn: [post.id, ...existingIds],
           },
-          status: BlogPostStatus.PUBLISHED,
+          status: PostStatus.PUBLISHED,
           AND: [{ OR: [{ publishAt: null }, { publishAt: { lte: now } }] }],
         },
         orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
@@ -495,7 +446,7 @@ publicContentRouter.get("/blog/posts/:slug/related", async (req, res) => {
   }
 });
 
-publicContentRouter.post("/blog/posts/:slug/comments", async (req, res) => {
+publicContentRouter.post("/posts/:slug/comments", async (req, res) => {
   const requestId = getRequestId(res);
 
   try {
@@ -510,7 +461,7 @@ publicContentRouter.post("/blog/posts/:slug/comments", async (req, res) => {
       );
     }
 
-    const parsedBody = blogCommentCreateSchema.safeParse(req.body);
+    const parsedBody = postCommentCreateSchema.safeParse(req.body);
     if (!parsedBody.success) {
       return sendFailure(
         res,
@@ -522,7 +473,7 @@ publicContentRouter.post("/blog/posts/:slug/comments", async (req, res) => {
       );
     }
 
-    const post = await prisma.blogPost.findUnique({
+    const post = await prisma.post.findUnique({
       where: { slug: parsedSlug.data.slug },
       select: {
         id: true,
@@ -541,7 +492,7 @@ publicContentRouter.post("/blog/posts/:slug/comments", async (req, res) => {
       );
     }
 
-    const isPublished = post.status === BlogPostStatus.PUBLISHED;
+    const isPublished = post.status === PostStatus.PUBLISHED;
     const withinWindow = !post.publishAt || post.publishAt <= new Date();
     if (!isPublished || !withinWindow) {
       return sendFailure(
@@ -553,21 +504,49 @@ publicContentRouter.post("/blog/posts/:slug/comments", async (req, res) => {
       );
     }
 
-    const userId = req.header("x-user-id") ?? null;
+    const rawUserId = req.header("x-user-id") ?? null;
+    let userId = rawUserId;
+    let dbUser: { id: string; name: string | null; role: string } | null = null;
 
-    const comment = await prisma.blogComment.create({
+    if (rawUserId) {
+      dbUser = await prisma.user.findUnique({
+        where: { id: rawUserId },
+        select: { id: true, name: true, role: true }
+      });
+      if (!dbUser) {
+        userId = null;
+      }
+    }
+
+    let finalAuthorName = parsedBody.data.authorName;
+    if (dbUser) {
+      if (dbUser.name) {
+        finalAuthorName = dbUser.name;
+      } else if (dbUser.role === "ADMIN") {
+        finalAuthorName = "Admin";
+      } else {
+        finalAuthorName = "User";
+      }
+    }
+
+    const comment = await prisma.postComment.create({
       data: {
         postId: post.id,
+        parentId: parsedBody.data.parentId || null,
         userId,
-        authorName: parsedBody.data.authorName,
+        authorName: finalAuthorName,
         authorEmail: parsedBody.data.authorEmail,
         content: parsedBody.data.content,
+        isGuest: !userId,
+        isApproved: true, // Auto-approve all comments to prevent persistence bugs
       },
       include: {
         user: {
           select: {
             id: true,
             name: true,
+            image: true,
+            role: true,
           },
         },
       },
@@ -580,6 +559,332 @@ publicContentRouter.post("/blog/posts/:slug/comments", async (req, res) => {
       requestId,
       "INTERNAL_ERROR",
       "Failed to submit blog comment.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+publicContentRouter.get("/posts/:slug/comments", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedSlug = contentSlugSchema.safeParse(req.params);
+    if (!parsedSlug.success) {
+      return sendFailure(res, requestId, "VALIDATION_ERROR", "Invalid slug.", 400);
+    }
+
+    const post = await prisma.post.findUnique({
+      where: { slug: parsedSlug.data.slug },
+      select: { id: true, status: true, publishAt: true },
+    });
+
+    if (!post) {
+      return sendFailure(res, requestId, "NOT_FOUND", "Blog post not found.", 404);
+    }
+
+    const limit = parseInt(req.query.limit as string) || 20;
+    const cursor = req.query.cursor as string | undefined;
+    const sort = req.query.sort as string || "newest";
+
+    let orderBy: any = { createdAt: "desc" };
+    if (sort === "oldest") orderBy = { createdAt: "asc" };
+    if (sort === "liked") orderBy = [{ likesCount: "desc" }, { createdAt: "desc" }];
+
+    const baseWhere = {
+      postId: post.id,
+      parentId: null, // Only fetch root comments directly
+      OR: [
+        { isApproved: true },
+        ...(req.header("x-user-id") ? [{ userId: req.header("x-user-id") }] : []),
+      ]
+    };
+
+    const userId = req.header("x-user-id") ?? null;
+    const sessionId = req.header("x-session-id") ?? null;
+
+    const authConditions = [];
+    if (userId) authConditions.push({ userId });
+    if (sessionId) authConditions.push({ sessionId });
+    // dummy condition if no auth to prevent fetching all reactions
+    if (authConditions.length === 0) authConditions.push({ id: "unmatched" });
+
+    const rootComments = await prisma.postComment.findMany({
+      where: baseWhere,
+      take: limit + 1,
+      cursor: cursor ? { id: cursor } : undefined,
+      orderBy,
+      include: {
+        user: { select: { id: true, name: true, image: true, role: true } },
+        reactions: { where: { OR: authConditions }, select: { id: true } },
+        replies: {
+          where: {
+            OR: [
+              { isApproved: true },
+              ...(req.header("x-user-id") ? [{ userId: req.header("x-user-id") }] : []),
+            ]
+          },
+          orderBy: { createdAt: "asc" }, // Replies always oldest first
+          include: {
+            user: { select: { id: true, name: true, image: true, role: true } },
+            reactions: { where: { OR: authConditions }, select: { id: true } },
+            replies: {
+              where: {
+                OR: [
+                  { isApproved: true },
+                  ...(req.header("x-user-id") ? [{ userId: req.header("x-user-id") }] : []),
+                ]
+              },
+              orderBy: { createdAt: "asc" },
+              include: {
+                user: { select: { id: true, name: true, image: true, role: true } },
+                reactions: { where: { OR: authConditions }, select: { id: true } }
+              }
+            }
+          }
+        }
+      },
+    });
+
+    const hasMore = rootComments.length > limit;
+    const items = hasMore ? rootComments.slice(0, -1) : rootComments;
+    const nextCursor = hasMore ? items[items.length - 1]?.id ?? null : null;
+
+    return sendSuccess(res, requestId, {
+      items,
+      pagination: {
+        hasMore,
+        nextCursor,
+        limit,
+      }
+    });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+publicContentRouter.get("/posts/:slug/reactions", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedSlug = contentSlugSchema.safeParse(req.params);
+    if (!parsedSlug.success) {
+      return sendFailure(res, requestId, "VALIDATION_ERROR", "Invalid slug.", 400);
+    }
+
+    const post = await prisma.post.findUnique({
+      where: { slug: parsedSlug.data.slug },
+      select: { id: true },
+    });
+
+    if (!post) {
+      return sendFailure(res, requestId, "NOT_FOUND", "Blog post not found.", 404);
+    }
+
+    const reactions = await prisma.postReaction.groupBy({
+      by: ['type'],
+      where: { postId: post.id },
+      _count: true,
+    });
+
+    const commentsCount = await prisma.postComment.count({
+      where: { postId: post.id, isApproved: true }
+    });
+
+    const userId = req.header("x-user-id") ?? null;
+    const sessionId = req.header("x-session-id") ?? null;
+    let userReaction = null;
+
+    if (userId || sessionId) {
+      const userReact = await prisma.postReaction.findFirst({
+        where: { postId: post.id, OR: [{ userId }, { sessionId }] },
+      });
+      if (userReact) userReaction = userReact.type;
+    }
+
+    return sendSuccess(res, requestId, {
+      counts: {
+        ...reactions.reduce((acc, curr) => {
+          acc[curr.type] = curr._count;
+          return acc;
+        }, {} as Record<string, number>),
+        comments: commentsCount,
+      },
+      userReaction,
+    });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to fetch reactions.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+publicContentRouter.post("/posts/:slug/reactions", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const rawUserId = req.header("x-user-id") ?? null;
+    const sessionId = req.header("x-session-id") ?? null;
+    
+    let userId = rawUserId;
+    if (rawUserId) {
+      const userExists = await prisma.user.findUnique({
+        where: { id: rawUserId },
+        select: { id: true }
+      });
+      if (!userExists) userId = null;
+    }
+
+    if (!userId && !sessionId) {
+      return sendFailure(res, requestId, "UNAUTHORIZED", "Authentication or session required.", 401);
+    }
+
+    const parsedSlug = contentSlugSchema.safeParse(req.params);
+    const parsedBody = postReactionToggleSchema.safeParse(req.body);
+
+    if (!parsedSlug.success || !parsedBody.success) {
+      return sendFailure(res, requestId, "VALIDATION_ERROR", "Invalid payload.", 400);
+    }
+
+    const post = await prisma.post.findUnique({
+      where: { slug: parsedSlug.data.slug },
+      select: { id: true },
+    });
+
+    if (!post) {
+      return sendFailure(res, requestId, "NOT_FOUND", "Blog post not found.", 404);
+    }
+
+    const authConditions = [];
+    if (userId) authConditions.push({ userId });
+    if (sessionId) authConditions.push({ sessionId });
+
+    const existingReaction = await prisma.postReaction.findFirst({
+      where: { postId: post.id, type: parsedBody.data.type, OR: authConditions },
+    });
+
+    if (existingReaction) {
+      await prisma.postReaction.delete({ where: { id: existingReaction.id } });
+      return sendSuccess(res, requestId, { active: false });
+    } else {
+      await prisma.postReaction.create({
+        data: { postId: post.id, userId, sessionId, type: parsedBody.data.type },
+      });
+      return sendSuccess(res, requestId, { active: true });
+    }
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to toggle reaction.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+publicContentRouter.get("/posts/:slug/bookmarks/status", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const userId = req.header("x-user-id");
+    if (!userId) {
+      return sendSuccess(res, requestId, { isBookmarked: false });
+    }
+
+    const parsedSlug = contentSlugSchema.safeParse(req.params);
+    if (!parsedSlug.success) {
+      return sendFailure(res, requestId, "VALIDATION_ERROR", "Invalid slug.", 400);
+    }
+
+    const post = await prisma.post.findUnique({
+      where: { slug: parsedSlug.data.slug },
+      select: { id: true },
+    });
+
+    if (!post) {
+      return sendFailure(res, requestId, "NOT_FOUND", "Blog post not found.", 404);
+    }
+
+    const bookmark = await prisma.postBookmark.findFirst({
+      where: { postId: post.id, userId },
+    });
+
+    return sendSuccess(res, requestId, { isBookmarked: !!bookmark });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to fetch bookmark status.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+publicContentRouter.post("/posts/:slug/bookmarks", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const rawUserId = req.header("x-user-id");
+    let userId = rawUserId;
+    if (rawUserId) {
+      const userExists = await prisma.user.findUnique({
+        where: { id: rawUserId },
+        select: { id: true }
+      });
+      if (!userExists) userId = undefined;
+    }
+
+    if (!userId) {
+      return sendFailure(res, requestId, "UNAUTHORIZED", "Authentication required.", 401);
+    }
+
+    const parsedSlug = contentSlugSchema.safeParse(req.params);
+    if (!parsedSlug.success) {
+      return sendFailure(res, requestId, "VALIDATION_ERROR", "Invalid slug.", 400);
+    }
+
+    const post = await prisma.post.findUnique({
+      where: { slug: parsedSlug.data.slug },
+      select: { id: true },
+    });
+
+    if (!post) {
+      return sendFailure(res, requestId, "NOT_FOUND", "Blog post not found.", 404);
+    }
+
+    const existingBookmark = await prisma.postBookmark.findFirst({
+      where: { postId: post.id, userId },
+    });
+
+    if (existingBookmark) {
+      await prisma.postBookmark.delete({ where: { id: existingBookmark.id } });
+      return sendSuccess(res, requestId, { isBookmarked: false });
+    } else {
+      await prisma.postBookmark.create({
+        data: { postId: post.id, userId },
+      });
+      return sendSuccess(res, requestId, { isBookmarked: true });
+    }
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to toggle bookmark.",
       500,
       error instanceof Error ? error.message : "Unknown error",
     );
@@ -903,7 +1208,7 @@ publicContentRouter.get("/support/overview", async (req, res) => {
 
     const now = new Date();
 
-    const [categories, featuredHelp, latestBlog] = await Promise.all([
+    const [categories, featuredHelp, latestPosts] = await Promise.all([
       prisma.helpCategory.findMany({
         where: { isActive: true },
         orderBy: [{ orderIndex: "asc" }, { name: "asc" }],
@@ -934,13 +1239,13 @@ publicContentRouter.get("/support/overview", async (req, res) => {
           },
         },
       }),
-      prisma.blogPost.findMany({
+      prisma.post.findMany({
         where: {
-          status: BlogPostStatus.PUBLISHED,
+          status: PostStatus.PUBLISHED,
           AND: [{ OR: [{ publishAt: null }, { publishAt: { lte: now } }] }],
         },
         orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
-        take: parsed.data.latestBlogLimit,
+        take: parsed.data.latestPostsLimit,
         include: {
           tags: {
             include: {
@@ -959,7 +1264,7 @@ publicContentRouter.get("/support/overview", async (req, res) => {
     return sendSuccess(res, requestId, {
       categories,
       featuredHelp,
-      latestBlog: latestBlog.map((item) => ({
+      latestPosts: latestPosts.map((item) => ({
         ...item,
         tags: item.tags.map((tagLink) => tagLink.tag),
       })),
@@ -1168,6 +1473,109 @@ publicContentRouter.get("/pages/:slug", async (req, res) => {
       requestId,
       "INTERNAL_ERROR",
       "Failed to fetch content page.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+publicContentRouter.post("/posts/:slug/comments/:commentId/like", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const rawUserId = req.header("x-user-id") ?? null;
+    const sessionId = req.header("x-session-id") ?? null;
+    
+    let userId = rawUserId;
+    if (rawUserId) {
+      const userExists = await prisma.user.findUnique({
+        where: { id: rawUserId },
+        select: { id: true }
+      });
+      if (!userExists) userId = null;
+    }
+
+    if (!userId && !sessionId) {
+      return sendFailure(res, requestId, "UNAUTHORIZED", "Authentication or session required.", 401);
+    }
+
+    const { slug, commentId } = req.params;
+
+    const post = await prisma.post.findUnique({
+      where: { slug },
+      select: { id: true }
+    });
+
+    if (!post) {
+      return sendFailure(res, requestId, "NOT_FOUND", "Post not found.", 404);
+    }
+
+    const comment = await prisma.postComment.findUnique({
+      where: { id: commentId, postId: post.id }
+    });
+
+    if (!comment) {
+      return sendFailure(res, requestId, "NOT_FOUND", "Comment not found.", 404);
+    }
+
+    const authConditions = [];
+    if (userId) authConditions.push({ userId });
+    if (sessionId) authConditions.push({ sessionId });
+
+    const existingReaction = await prisma.commentReaction.findFirst({
+      where: { commentId, type: "like", OR: authConditions }
+    });
+
+    let updated;
+    if (existingReaction) {
+      await prisma.$transaction([
+        prisma.commentReaction.delete({ where: { id: existingReaction.id } }),
+        prisma.postComment.update({ where: { id: commentId }, data: { likesCount: { decrement: 1 } } })
+      ]);
+      updated = { id: commentId, likesCount: Math.max(0, comment.likesCount - 1), hasLiked: false };
+    } else {
+      await prisma.$transaction([
+        prisma.commentReaction.create({ data: { commentId, userId, sessionId, type: "like" } }),
+        prisma.postComment.update({ where: { id: commentId }, data: { likesCount: { increment: 1 } } })
+      ]);
+      updated = { id: commentId, likesCount: comment.likesCount + 1, hasLiked: true };
+    }
+
+    return sendSuccess(res, requestId, updated, 200);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      error instanceof Error ? error.message : "Unknown error",
+      500,
+    );
+  }
+});
+
+publicContentRouter.get("/help/faqs", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const categoryId = req.query.categoryId as string | undefined;
+    const appId = req.query.appId as string | undefined;
+
+    const where: Prisma.FAQWhereInput = {};
+    if (categoryId) where.categoryId = categoryId;
+    if (appId) where.appId = appId;
+
+    const faqs = await prisma.fAQ.findMany({
+      where,
+      orderBy: { orderIndex: "asc" },
+    });
+
+    return sendSuccess(res, requestId, faqs);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to fetch FAQs.",
       500,
       error instanceof Error ? error.message : "Unknown error",
     );

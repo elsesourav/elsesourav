@@ -16,7 +16,7 @@ type CategoryStatusTone = "active" | "pending" | "deleted";
 
 type CategoryStatus = {
   label: string;
-  tone: CategoryStatusTone;
+  variant: CategoryStatusTone;
 };
 
 type AdminCategoriesClientProps = {
@@ -25,11 +25,11 @@ type AdminCategoriesClientProps = {
 
 const STATUS_BADGE_TONE: Record<
   CategoryStatusTone,
-  "success" | "warning" | "neutral"
+  "success" | "warning" | "secondary"
 > = {
   active: "success",
   pending: "warning",
-  deleted: "neutral",
+  deleted: "secondary",
 };
 
 function parseApiMessage(payload: unknown): string | null {
@@ -72,20 +72,20 @@ export function resolveCategoryStatus(
   if (category.deletedAt) {
     return {
       label: "Deleted",
-      tone: "deleted",
+      variant: "deleted",
     };
   }
 
   if (category.scheduledDeletionAt) {
     return {
       label: "Pending deletion",
-      tone: "pending",
+      variant: "pending",
     };
   }
 
   return {
     label: "Active",
-    tone: "active",
+    variant: "active",
   };
 }
 
@@ -156,10 +156,10 @@ export function AdminCategoriesClient({
         null)
       : null;
 
-  function pushNotification(tone: "success" | "error", message: string): void {
+  function pushNotification(variant: "success" | "error", message: string): void {
     dispatch(
       enqueueNotification({
-        tone,
+        tone: variant,
         message,
       }),
     );
@@ -401,7 +401,7 @@ export function AdminCategoriesClient({
                         : "No icon configured"}
                     </CardDescription>
                   </div>
-                  <Badge tone={STATUS_BADGE_TONE[status.tone]}>
+                  <Badge variant={STATUS_BADGE_TONE[status.variant]}>
                     {status.label}
                   </Badge>
                 </div>
@@ -414,7 +414,7 @@ export function AdminCategoriesClient({
                 <div className="flex flex-wrap items-center gap-2">
                   {category.scheduledDeletionAt ? (
                     <Button
-                      tone="secondary"
+                      variant="secondary"
                       size="sm"
                       disabled={isBusy}
                       onClick={() =>
@@ -428,7 +428,7 @@ export function AdminCategoriesClient({
                     </Button>
                   ) : (
                     <Button
-                      tone="danger"
+                      variant="destructive"
                       size="sm"
                       disabled={!canSchedule || isBusy}
                       onClick={() =>

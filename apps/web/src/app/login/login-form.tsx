@@ -91,7 +91,7 @@ export function LoginForm() {
       <Button
         type="button"
         onClick={loginWithGithub}
-        tone="secondary"
+        variant="secondary"
         className="w-full rounded-full"
       >
         Continue with GitHub

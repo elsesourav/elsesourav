@@ -88,25 +88,25 @@ export type ContentPageVersion = Prisma.ContentPageVersionModel
  */
 export type ProfilePage = Prisma.ProfilePageModel
 /**
- * Model BlogTag
+ * Model PostTag
  * 
  */
-export type BlogTag = Prisma.BlogTagModel
+export type PostTag = Prisma.PostTagModel
 /**
- * Model BlogPost
+ * Model Post
  * 
  */
-export type BlogPost = Prisma.BlogPostModel
+export type Post = Prisma.PostModel
 /**
- * Model BlogPostTag
+ * Model PostTagLink
  * 
  */
-export type BlogPostTag = Prisma.BlogPostTagModel
+export type PostTagLink = Prisma.PostTagLinkModel
 /**
- * Model BlogComment
+ * Model PostComment
  * 
  */
-export type BlogComment = Prisma.BlogCommentModel
+export type PostComment = Prisma.PostCommentModel
 /**
  * Model HelpCategory
  * 
@@ -117,6 +117,21 @@ export type HelpCategory = Prisma.HelpCategoryModel
  * 
  */
 export type HelpArticle = Prisma.HelpArticleModel
+/**
+ * Model FAQ
+ * 
+ */
+export type FAQ = Prisma.FAQModel
+/**
+ * Model HelpArticleFeedback
+ * 
+ */
+export type HelpArticleFeedback = Prisma.HelpArticleFeedbackModel
+/**
+ * Model HelpArticleTag
+ * 
+ */
+export type HelpArticleTag = Prisma.HelpArticleTagModel
 /**
  * Model Testimonial
  * 
@@ -168,10 +183,25 @@ export type CustomFieldValue = Prisma.CustomFieldValueModel
  */
 export type AppChangelog = Prisma.AppChangelogModel
 /**
- * Model BlogPostVersion
+ * Model PostVersion
  * 
  */
-export type BlogPostVersion = Prisma.BlogPostVersionModel
+export type PostVersion = Prisma.PostVersionModel
+/**
+ * Model PostReaction
+ * 
+ */
+export type PostReaction = Prisma.PostReactionModel
+/**
+ * Model CommentReaction
+ * 
+ */
+export type CommentReaction = Prisma.CommentReactionModel
+/**
+ * Model PostBookmark
+ * 
+ */
+export type PostBookmark = Prisma.PostBookmarkModel
 /**
  * Model HelpArticleVersion
  * 

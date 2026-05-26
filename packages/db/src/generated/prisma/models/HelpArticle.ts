@@ -28,24 +28,37 @@ export type AggregateHelpArticle = {
 
 export type HelpArticleAvgAggregateOutputType = {
   viewCount: number | null
+  upvotes: number | null
+  downvotes: number | null
+  readingTimeMins: number | null
 }
 
 export type HelpArticleSumAggregateOutputType = {
   viewCount: number | null
+  upvotes: number | null
+  downvotes: number | null
+  readingTimeMins: number | null
 }
 
 export type HelpArticleMinAggregateOutputType = {
   id: string | null
   categoryId: string | null
+  appId: string | null
   slug: string | null
   title: string | null
   summary: string | null
   contentMarkdown: string | null
+  contentMdx: string | null
   status: $Enums.HelpArticleStatus | null
   isFeatured: boolean | null
   publishAt: Date | null
   publishedAt: Date | null
   viewCount: number | null
+  upvotes: number | null
+  downvotes: number | null
+  readingTimeMins: number | null
+  seoTitle: string | null
+  seoDescription: string | null
   createdBy: string | null
   updatedBy: string | null
   createdAt: Date | null
@@ -55,15 +68,22 @@ export type HelpArticleMinAggregateOutputType = {
 export type HelpArticleMaxAggregateOutputType = {
   id: string | null
   categoryId: string | null
+  appId: string | null
   slug: string | null
   title: string | null
   summary: string | null
   contentMarkdown: string | null
+  contentMdx: string | null
   status: $Enums.HelpArticleStatus | null
   isFeatured: boolean | null
   publishAt: Date | null
   publishedAt: Date | null
   viewCount: number | null
+  upvotes: number | null
+  downvotes: number | null
+  readingTimeMins: number | null
+  seoTitle: string | null
+  seoDescription: string | null
   createdBy: string | null
   updatedBy: string | null
   createdAt: Date | null
@@ -73,15 +93,23 @@ export type HelpArticleMaxAggregateOutputType = {
 export type HelpArticleCountAggregateOutputType = {
   id: number
   categoryId: number
+  appId: number
   slug: number
   title: number
   summary: number
   contentMarkdown: number
+  contentMdx: number
   status: number
   isFeatured: number
   publishAt: number
   publishedAt: number
   viewCount: number
+  upvotes: number
+  downvotes: number
+  readingTimeMins: number
+  relatedArticleIds: number
+  seoTitle: number
+  seoDescription: number
   createdBy: number
   updatedBy: number
   createdAt: number
@@ -92,24 +120,37 @@ export type HelpArticleCountAggregateOutputType = {
 
 export type HelpArticleAvgAggregateInputType = {
   viewCount?: true
+  upvotes?: true
+  downvotes?: true
+  readingTimeMins?: true
 }
 
 export type HelpArticleSumAggregateInputType = {
   viewCount?: true
+  upvotes?: true
+  downvotes?: true
+  readingTimeMins?: true
 }
 
 export type HelpArticleMinAggregateInputType = {
   id?: true
   categoryId?: true
+  appId?: true
   slug?: true
   title?: true
   summary?: true
   contentMarkdown?: true
+  contentMdx?: true
   status?: true
   isFeatured?: true
   publishAt?: true
   publishedAt?: true
   viewCount?: true
+  upvotes?: true
+  downvotes?: true
+  readingTimeMins?: true
+  seoTitle?: true
+  seoDescription?: true
   createdBy?: true
   updatedBy?: true
   createdAt?: true
@@ -119,15 +160,22 @@ export type HelpArticleMinAggregateInputType = {
 export type HelpArticleMaxAggregateInputType = {
   id?: true
   categoryId?: true
+  appId?: true
   slug?: true
   title?: true
   summary?: true
   contentMarkdown?: true
+  contentMdx?: true
   status?: true
   isFeatured?: true
   publishAt?: true
   publishedAt?: true
   viewCount?: true
+  upvotes?: true
+  downvotes?: true
+  readingTimeMins?: true
+  seoTitle?: true
+  seoDescription?: true
   createdBy?: true
   updatedBy?: true
   createdAt?: true
@@ -137,15 +185,23 @@ export type HelpArticleMaxAggregateInputType = {
 export type HelpArticleCountAggregateInputType = {
   id?: true
   categoryId?: true
+  appId?: true
   slug?: true
   title?: true
   summary?: true
   contentMarkdown?: true
+  contentMdx?: true
   status?: true
   isFeatured?: true
   publishAt?: true
   publishedAt?: true
   viewCount?: true
+  upvotes?: true
+  downvotes?: true
+  readingTimeMins?: true
+  relatedArticleIds?: true
+  seoTitle?: true
+  seoDescription?: true
   createdBy?: true
   updatedBy?: true
   createdAt?: true
@@ -242,15 +298,23 @@ export type HelpArticleGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 export type HelpArticleGroupByOutputType = {
   id: string
   categoryId: string | null
+  appId: string | null
   slug: string
   title: string
   summary: string | null
   contentMarkdown: string
+  contentMdx: string | null
   status: $Enums.HelpArticleStatus
   isFeatured: boolean
   publishAt: Date | null
   publishedAt: Date | null
   viewCount: number
+  upvotes: number
+  downvotes: number
+  readingTimeMins: number
+  relatedArticleIds: string[]
+  seoTitle: string | null
+  seoDescription: string | null
   createdBy: string | null
   updatedBy: string | null
   createdAt: Date
@@ -283,41 +347,63 @@ export type HelpArticleWhereInput = {
   NOT?: Prisma.HelpArticleWhereInput | Prisma.HelpArticleWhereInput[]
   id?: Prisma.StringFilter<"HelpArticle"> | string
   categoryId?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
+  appId?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
   slug?: Prisma.StringFilter<"HelpArticle"> | string
   title?: Prisma.StringFilter<"HelpArticle"> | string
   summary?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
   contentMarkdown?: Prisma.StringFilter<"HelpArticle"> | string
+  contentMdx?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
   status?: Prisma.EnumHelpArticleStatusFilter<"HelpArticle"> | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFilter<"HelpArticle"> | boolean
   publishAt?: Prisma.DateTimeNullableFilter<"HelpArticle"> | Date | string | null
   publishedAt?: Prisma.DateTimeNullableFilter<"HelpArticle"> | Date | string | null
   viewCount?: Prisma.IntFilter<"HelpArticle"> | number
+  upvotes?: Prisma.IntFilter<"HelpArticle"> | number
+  downvotes?: Prisma.IntFilter<"HelpArticle"> | number
+  readingTimeMins?: Prisma.IntFilter<"HelpArticle"> | number
+  relatedArticleIds?: Prisma.StringNullableListFilter<"HelpArticle">
+  seoTitle?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
+  seoDescription?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
   createdBy?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
   updatedBy?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
   createdAt?: Prisma.DateTimeFilter<"HelpArticle"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"HelpArticle"> | Date | string
   category?: Prisma.XOR<Prisma.HelpCategoryNullableScalarRelationFilter, Prisma.HelpCategoryWhereInput> | null
+  app?: Prisma.XOR<Prisma.AppNullableScalarRelationFilter, Prisma.AppWhereInput> | null
   versions?: Prisma.HelpArticleVersionListRelationFilter
+  tags?: Prisma.HelpArticleTagListRelationFilter
+  feedback?: Prisma.HelpArticleFeedbackListRelationFilter
 }
 
 export type HelpArticleOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   categoryId?: Prisma.SortOrderInput | Prisma.SortOrder
+  appId?: Prisma.SortOrderInput | Prisma.SortOrder
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   summary?: Prisma.SortOrderInput | Prisma.SortOrder
   contentMarkdown?: Prisma.SortOrder
+  contentMdx?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   publishAt?: Prisma.SortOrderInput | Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   viewCount?: Prisma.SortOrder
+  upvotes?: Prisma.SortOrder
+  downvotes?: Prisma.SortOrder
+  readingTimeMins?: Prisma.SortOrder
+  relatedArticleIds?: Prisma.SortOrder
+  seoTitle?: Prisma.SortOrderInput | Prisma.SortOrder
+  seoDescription?: Prisma.SortOrderInput | Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   category?: Prisma.HelpCategoryOrderByWithRelationInput
+  app?: Prisma.AppOrderByWithRelationInput
   versions?: Prisma.HelpArticleVersionOrderByRelationAggregateInput
+  tags?: Prisma.HelpArticleTagOrderByRelationAggregateInput
+  feedback?: Prisma.HelpArticleFeedbackOrderByRelationAggregateInput
 }
 
 export type HelpArticleWhereUniqueInput = Prisma.AtLeast<{
@@ -327,34 +413,53 @@ export type HelpArticleWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.HelpArticleWhereInput[]
   NOT?: Prisma.HelpArticleWhereInput | Prisma.HelpArticleWhereInput[]
   categoryId?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
+  appId?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
   title?: Prisma.StringFilter<"HelpArticle"> | string
   summary?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
   contentMarkdown?: Prisma.StringFilter<"HelpArticle"> | string
+  contentMdx?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
   status?: Prisma.EnumHelpArticleStatusFilter<"HelpArticle"> | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFilter<"HelpArticle"> | boolean
   publishAt?: Prisma.DateTimeNullableFilter<"HelpArticle"> | Date | string | null
   publishedAt?: Prisma.DateTimeNullableFilter<"HelpArticle"> | Date | string | null
   viewCount?: Prisma.IntFilter<"HelpArticle"> | number
+  upvotes?: Prisma.IntFilter<"HelpArticle"> | number
+  downvotes?: Prisma.IntFilter<"HelpArticle"> | number
+  readingTimeMins?: Prisma.IntFilter<"HelpArticle"> | number
+  relatedArticleIds?: Prisma.StringNullableListFilter<"HelpArticle">
+  seoTitle?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
+  seoDescription?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
   createdBy?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
   updatedBy?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
   createdAt?: Prisma.DateTimeFilter<"HelpArticle"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"HelpArticle"> | Date | string
   category?: Prisma.XOR<Prisma.HelpCategoryNullableScalarRelationFilter, Prisma.HelpCategoryWhereInput> | null
+  app?: Prisma.XOR<Prisma.AppNullableScalarRelationFilter, Prisma.AppWhereInput> | null
   versions?: Prisma.HelpArticleVersionListRelationFilter
+  tags?: Prisma.HelpArticleTagListRelationFilter
+  feedback?: Prisma.HelpArticleFeedbackListRelationFilter
 }, "id" | "slug">
 
 export type HelpArticleOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   categoryId?: Prisma.SortOrderInput | Prisma.SortOrder
+  appId?: Prisma.SortOrderInput | Prisma.SortOrder
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   summary?: Prisma.SortOrderInput | Prisma.SortOrder
   contentMarkdown?: Prisma.SortOrder
+  contentMdx?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   publishAt?: Prisma.SortOrderInput | Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   viewCount?: Prisma.SortOrder
+  upvotes?: Prisma.SortOrder
+  downvotes?: Prisma.SortOrder
+  readingTimeMins?: Prisma.SortOrder
+  relatedArticleIds?: Prisma.SortOrder
+  seoTitle?: Prisma.SortOrderInput | Prisma.SortOrder
+  seoDescription?: Prisma.SortOrderInput | Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -372,15 +477,23 @@ export type HelpArticleScalarWhereWithAggregatesInput = {
   NOT?: Prisma.HelpArticleScalarWhereWithAggregatesInput | Prisma.HelpArticleScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"HelpArticle"> | string
   categoryId?: Prisma.StringNullableWithAggregatesFilter<"HelpArticle"> | string | null
+  appId?: Prisma.StringNullableWithAggregatesFilter<"HelpArticle"> | string | null
   slug?: Prisma.StringWithAggregatesFilter<"HelpArticle"> | string
   title?: Prisma.StringWithAggregatesFilter<"HelpArticle"> | string
   summary?: Prisma.StringNullableWithAggregatesFilter<"HelpArticle"> | string | null
   contentMarkdown?: Prisma.StringWithAggregatesFilter<"HelpArticle"> | string
+  contentMdx?: Prisma.StringNullableWithAggregatesFilter<"HelpArticle"> | string | null
   status?: Prisma.EnumHelpArticleStatusWithAggregatesFilter<"HelpArticle"> | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolWithAggregatesFilter<"HelpArticle"> | boolean
   publishAt?: Prisma.DateTimeNullableWithAggregatesFilter<"HelpArticle"> | Date | string | null
   publishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"HelpArticle"> | Date | string | null
   viewCount?: Prisma.IntWithAggregatesFilter<"HelpArticle"> | number
+  upvotes?: Prisma.IntWithAggregatesFilter<"HelpArticle"> | number
+  downvotes?: Prisma.IntWithAggregatesFilter<"HelpArticle"> | number
+  readingTimeMins?: Prisma.IntWithAggregatesFilter<"HelpArticle"> | number
+  relatedArticleIds?: Prisma.StringNullableListFilter<"HelpArticle">
+  seoTitle?: Prisma.StringNullableWithAggregatesFilter<"HelpArticle"> | string | null
+  seoDescription?: Prisma.StringNullableWithAggregatesFilter<"HelpArticle"> | string | null
   createdBy?: Prisma.StringNullableWithAggregatesFilter<"HelpArticle"> | string | null
   updatedBy?: Prisma.StringNullableWithAggregatesFilter<"HelpArticle"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"HelpArticle"> | Date | string
@@ -393,36 +506,56 @@ export type HelpArticleCreateInput = {
   title: string
   summary?: string | null
   contentMarkdown: string
+  contentMdx?: string | null
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
   publishedAt?: Date | string | null
   viewCount?: number
+  upvotes?: number
+  downvotes?: number
+  readingTimeMins?: number
+  relatedArticleIds?: Prisma.HelpArticleCreaterelatedArticleIdsInput | string[]
+  seoTitle?: string | null
+  seoDescription?: string | null
   createdBy?: string | null
   updatedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   category?: Prisma.HelpCategoryCreateNestedOneWithoutArticlesInput
+  app?: Prisma.AppCreateNestedOneWithoutHelpArticlesInput
   versions?: Prisma.HelpArticleVersionCreateNestedManyWithoutArticleInput
+  tags?: Prisma.HelpArticleTagCreateNestedManyWithoutArticleInput
+  feedback?: Prisma.HelpArticleFeedbackCreateNestedManyWithoutArticleInput
 }
 
 export type HelpArticleUncheckedCreateInput = {
   id?: string
   categoryId?: string | null
+  appId?: string | null
   slug: string
   title: string
   summary?: string | null
   contentMarkdown: string
+  contentMdx?: string | null
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
   publishedAt?: Date | string | null
   viewCount?: number
+  upvotes?: number
+  downvotes?: number
+  readingTimeMins?: number
+  relatedArticleIds?: Prisma.HelpArticleCreaterelatedArticleIdsInput | string[]
+  seoTitle?: string | null
+  seoDescription?: string | null
   createdBy?: string | null
   updatedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.HelpArticleVersionUncheckedCreateNestedManyWithoutArticleInput
+  tags?: Prisma.HelpArticleTagUncheckedCreateNestedManyWithoutArticleInput
+  feedback?: Prisma.HelpArticleFeedbackUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type HelpArticleUpdateInput = {
@@ -431,50 +564,78 @@ export type HelpArticleUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  upvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  readingTimeMins?: Prisma.IntFieldUpdateOperationsInput | number
+  relatedArticleIds?: Prisma.HelpArticleUpdaterelatedArticleIdsInput | string[]
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.HelpCategoryUpdateOneWithoutArticlesNestedInput
+  app?: Prisma.AppUpdateOneWithoutHelpArticlesNestedInput
   versions?: Prisma.HelpArticleVersionUpdateManyWithoutArticleNestedInput
+  tags?: Prisma.HelpArticleTagUpdateManyWithoutArticleNestedInput
+  feedback?: Prisma.HelpArticleFeedbackUpdateManyWithoutArticleNestedInput
 }
 
 export type HelpArticleUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  upvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  readingTimeMins?: Prisma.IntFieldUpdateOperationsInput | number
+  relatedArticleIds?: Prisma.HelpArticleUpdaterelatedArticleIdsInput | string[]
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.HelpArticleVersionUncheckedUpdateManyWithoutArticleNestedInput
+  tags?: Prisma.HelpArticleTagUncheckedUpdateManyWithoutArticleNestedInput
+  feedback?: Prisma.HelpArticleFeedbackUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type HelpArticleCreateManyInput = {
   id?: string
   categoryId?: string | null
+  appId?: string | null
   slug: string
   title: string
   summary?: string | null
   contentMarkdown: string
+  contentMdx?: string | null
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
   publishedAt?: Date | string | null
   viewCount?: number
+  upvotes?: number
+  downvotes?: number
+  readingTimeMins?: number
+  relatedArticleIds?: Prisma.HelpArticleCreaterelatedArticleIdsInput | string[]
+  seoTitle?: string | null
+  seoDescription?: string | null
   createdBy?: string | null
   updatedBy?: string | null
   createdAt?: Date | string
@@ -487,11 +648,18 @@ export type HelpArticleUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  upvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  readingTimeMins?: Prisma.IntFieldUpdateOperationsInput | number
+  relatedArticleIds?: Prisma.HelpArticleUpdaterelatedArticleIdsInput | string[]
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -501,15 +669,23 @@ export type HelpArticleUpdateManyMutationInput = {
 export type HelpArticleUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  upvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  readingTimeMins?: Prisma.IntFieldUpdateOperationsInput | number
+  relatedArticleIds?: Prisma.HelpArticleUpdaterelatedArticleIdsInput | string[]
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -526,18 +702,34 @@ export type HelpArticleOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
+}
+
 export type HelpArticleCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
+  appId?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   contentMarkdown?: Prisma.SortOrder
+  contentMdx?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   publishAt?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   viewCount?: Prisma.SortOrder
+  upvotes?: Prisma.SortOrder
+  downvotes?: Prisma.SortOrder
+  readingTimeMins?: Prisma.SortOrder
+  relatedArticleIds?: Prisma.SortOrder
+  seoTitle?: Prisma.SortOrder
+  seoDescription?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   updatedBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -546,20 +738,30 @@ export type HelpArticleCountOrderByAggregateInput = {
 
 export type HelpArticleAvgOrderByAggregateInput = {
   viewCount?: Prisma.SortOrder
+  upvotes?: Prisma.SortOrder
+  downvotes?: Prisma.SortOrder
+  readingTimeMins?: Prisma.SortOrder
 }
 
 export type HelpArticleMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
+  appId?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   contentMarkdown?: Prisma.SortOrder
+  contentMdx?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   publishAt?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   viewCount?: Prisma.SortOrder
+  upvotes?: Prisma.SortOrder
+  downvotes?: Prisma.SortOrder
+  readingTimeMins?: Prisma.SortOrder
+  seoTitle?: Prisma.SortOrder
+  seoDescription?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   updatedBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -569,15 +771,22 @@ export type HelpArticleMaxOrderByAggregateInput = {
 export type HelpArticleMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
+  appId?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   contentMarkdown?: Prisma.SortOrder
+  contentMdx?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   publishAt?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   viewCount?: Prisma.SortOrder
+  upvotes?: Prisma.SortOrder
+  downvotes?: Prisma.SortOrder
+  readingTimeMins?: Prisma.SortOrder
+  seoTitle?: Prisma.SortOrder
+  seoDescription?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   updatedBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -586,11 +795,56 @@ export type HelpArticleMinOrderByAggregateInput = {
 
 export type HelpArticleSumOrderByAggregateInput = {
   viewCount?: Prisma.SortOrder
+  upvotes?: Prisma.SortOrder
+  downvotes?: Prisma.SortOrder
+  readingTimeMins?: Prisma.SortOrder
 }
 
 export type HelpArticleScalarRelationFilter = {
   is?: Prisma.HelpArticleWhereInput
   isNot?: Prisma.HelpArticleWhereInput
+}
+
+export type HelpArticleCreateNestedManyWithoutAppInput = {
+  create?: Prisma.XOR<Prisma.HelpArticleCreateWithoutAppInput, Prisma.HelpArticleUncheckedCreateWithoutAppInput> | Prisma.HelpArticleCreateWithoutAppInput[] | Prisma.HelpArticleUncheckedCreateWithoutAppInput[]
+  connectOrCreate?: Prisma.HelpArticleCreateOrConnectWithoutAppInput | Prisma.HelpArticleCreateOrConnectWithoutAppInput[]
+  createMany?: Prisma.HelpArticleCreateManyAppInputEnvelope
+  connect?: Prisma.HelpArticleWhereUniqueInput | Prisma.HelpArticleWhereUniqueInput[]
+}
+
+export type HelpArticleUncheckedCreateNestedManyWithoutAppInput = {
+  create?: Prisma.XOR<Prisma.HelpArticleCreateWithoutAppInput, Prisma.HelpArticleUncheckedCreateWithoutAppInput> | Prisma.HelpArticleCreateWithoutAppInput[] | Prisma.HelpArticleUncheckedCreateWithoutAppInput[]
+  connectOrCreate?: Prisma.HelpArticleCreateOrConnectWithoutAppInput | Prisma.HelpArticleCreateOrConnectWithoutAppInput[]
+  createMany?: Prisma.HelpArticleCreateManyAppInputEnvelope
+  connect?: Prisma.HelpArticleWhereUniqueInput | Prisma.HelpArticleWhereUniqueInput[]
+}
+
+export type HelpArticleUpdateManyWithoutAppNestedInput = {
+  create?: Prisma.XOR<Prisma.HelpArticleCreateWithoutAppInput, Prisma.HelpArticleUncheckedCreateWithoutAppInput> | Prisma.HelpArticleCreateWithoutAppInput[] | Prisma.HelpArticleUncheckedCreateWithoutAppInput[]
+  connectOrCreate?: Prisma.HelpArticleCreateOrConnectWithoutAppInput | Prisma.HelpArticleCreateOrConnectWithoutAppInput[]
+  upsert?: Prisma.HelpArticleUpsertWithWhereUniqueWithoutAppInput | Prisma.HelpArticleUpsertWithWhereUniqueWithoutAppInput[]
+  createMany?: Prisma.HelpArticleCreateManyAppInputEnvelope
+  set?: Prisma.HelpArticleWhereUniqueInput | Prisma.HelpArticleWhereUniqueInput[]
+  disconnect?: Prisma.HelpArticleWhereUniqueInput | Prisma.HelpArticleWhereUniqueInput[]
+  delete?: Prisma.HelpArticleWhereUniqueInput | Prisma.HelpArticleWhereUniqueInput[]
+  connect?: Prisma.HelpArticleWhereUniqueInput | Prisma.HelpArticleWhereUniqueInput[]
+  update?: Prisma.HelpArticleUpdateWithWhereUniqueWithoutAppInput | Prisma.HelpArticleUpdateWithWhereUniqueWithoutAppInput[]
+  updateMany?: Prisma.HelpArticleUpdateManyWithWhereWithoutAppInput | Prisma.HelpArticleUpdateManyWithWhereWithoutAppInput[]
+  deleteMany?: Prisma.HelpArticleScalarWhereInput | Prisma.HelpArticleScalarWhereInput[]
+}
+
+export type HelpArticleUncheckedUpdateManyWithoutAppNestedInput = {
+  create?: Prisma.XOR<Prisma.HelpArticleCreateWithoutAppInput, Prisma.HelpArticleUncheckedCreateWithoutAppInput> | Prisma.HelpArticleCreateWithoutAppInput[] | Prisma.HelpArticleUncheckedCreateWithoutAppInput[]
+  connectOrCreate?: Prisma.HelpArticleCreateOrConnectWithoutAppInput | Prisma.HelpArticleCreateOrConnectWithoutAppInput[]
+  upsert?: Prisma.HelpArticleUpsertWithWhereUniqueWithoutAppInput | Prisma.HelpArticleUpsertWithWhereUniqueWithoutAppInput[]
+  createMany?: Prisma.HelpArticleCreateManyAppInputEnvelope
+  set?: Prisma.HelpArticleWhereUniqueInput | Prisma.HelpArticleWhereUniqueInput[]
+  disconnect?: Prisma.HelpArticleWhereUniqueInput | Prisma.HelpArticleWhereUniqueInput[]
+  delete?: Prisma.HelpArticleWhereUniqueInput | Prisma.HelpArticleWhereUniqueInput[]
+  connect?: Prisma.HelpArticleWhereUniqueInput | Prisma.HelpArticleWhereUniqueInput[]
+  update?: Prisma.HelpArticleUpdateWithWhereUniqueWithoutAppInput | Prisma.HelpArticleUpdateWithWhereUniqueWithoutAppInput[]
+  updateMany?: Prisma.HelpArticleUpdateManyWithWhereWithoutAppInput | Prisma.HelpArticleUpdateManyWithWhereWithoutAppInput[]
+  deleteMany?: Prisma.HelpArticleScalarWhereInput | Prisma.HelpArticleScalarWhereInput[]
 }
 
 export type HelpArticleCreateNestedManyWithoutCategoryInput = {
@@ -635,8 +889,45 @@ export type HelpArticleUncheckedUpdateManyWithoutCategoryNestedInput = {
   deleteMany?: Prisma.HelpArticleScalarWhereInput | Prisma.HelpArticleScalarWhereInput[]
 }
 
+export type HelpArticleCreaterelatedArticleIdsInput = {
+  set: string[]
+}
+
 export type EnumHelpArticleStatusFieldUpdateOperationsInput = {
   set?: $Enums.HelpArticleStatus
+}
+
+export type HelpArticleUpdaterelatedArticleIdsInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type HelpArticleCreateNestedOneWithoutFeedbackInput = {
+  create?: Prisma.XOR<Prisma.HelpArticleCreateWithoutFeedbackInput, Prisma.HelpArticleUncheckedCreateWithoutFeedbackInput>
+  connectOrCreate?: Prisma.HelpArticleCreateOrConnectWithoutFeedbackInput
+  connect?: Prisma.HelpArticleWhereUniqueInput
+}
+
+export type HelpArticleUpdateOneRequiredWithoutFeedbackNestedInput = {
+  create?: Prisma.XOR<Prisma.HelpArticleCreateWithoutFeedbackInput, Prisma.HelpArticleUncheckedCreateWithoutFeedbackInput>
+  connectOrCreate?: Prisma.HelpArticleCreateOrConnectWithoutFeedbackInput
+  upsert?: Prisma.HelpArticleUpsertWithoutFeedbackInput
+  connect?: Prisma.HelpArticleWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.HelpArticleUpdateToOneWithWhereWithoutFeedbackInput, Prisma.HelpArticleUpdateWithoutFeedbackInput>, Prisma.HelpArticleUncheckedUpdateWithoutFeedbackInput>
+}
+
+export type HelpArticleCreateNestedOneWithoutTagsInput = {
+  create?: Prisma.XOR<Prisma.HelpArticleCreateWithoutTagsInput, Prisma.HelpArticleUncheckedCreateWithoutTagsInput>
+  connectOrCreate?: Prisma.HelpArticleCreateOrConnectWithoutTagsInput
+  connect?: Prisma.HelpArticleWhereUniqueInput
+}
+
+export type HelpArticleUpdateOneRequiredWithoutTagsNestedInput = {
+  create?: Prisma.XOR<Prisma.HelpArticleCreateWithoutTagsInput, Prisma.HelpArticleUncheckedCreateWithoutTagsInput>
+  connectOrCreate?: Prisma.HelpArticleCreateOrConnectWithoutTagsInput
+  upsert?: Prisma.HelpArticleUpsertWithoutTagsInput
+  connect?: Prisma.HelpArticleWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.HelpArticleUpdateToOneWithWhereWithoutTagsInput, Prisma.HelpArticleUpdateWithoutTagsInput>, Prisma.HelpArticleUncheckedUpdateWithoutTagsInput>
 }
 
 export type HelpArticleCreateNestedOneWithoutVersionsInput = {
@@ -653,40 +944,171 @@ export type HelpArticleUpdateOneRequiredWithoutVersionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.HelpArticleUpdateToOneWithWhereWithoutVersionsInput, Prisma.HelpArticleUpdateWithoutVersionsInput>, Prisma.HelpArticleUncheckedUpdateWithoutVersionsInput>
 }
 
+export type HelpArticleCreateWithoutAppInput = {
+  id?: string
+  slug: string
+  title: string
+  summary?: string | null
+  contentMarkdown: string
+  contentMdx?: string | null
+  status?: $Enums.HelpArticleStatus
+  isFeatured?: boolean
+  publishAt?: Date | string | null
+  publishedAt?: Date | string | null
+  viewCount?: number
+  upvotes?: number
+  downvotes?: number
+  readingTimeMins?: number
+  relatedArticleIds?: Prisma.HelpArticleCreaterelatedArticleIdsInput | string[]
+  seoTitle?: string | null
+  seoDescription?: string | null
+  createdBy?: string | null
+  updatedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  category?: Prisma.HelpCategoryCreateNestedOneWithoutArticlesInput
+  versions?: Prisma.HelpArticleVersionCreateNestedManyWithoutArticleInput
+  tags?: Prisma.HelpArticleTagCreateNestedManyWithoutArticleInput
+  feedback?: Prisma.HelpArticleFeedbackCreateNestedManyWithoutArticleInput
+}
+
+export type HelpArticleUncheckedCreateWithoutAppInput = {
+  id?: string
+  categoryId?: string | null
+  slug: string
+  title: string
+  summary?: string | null
+  contentMarkdown: string
+  contentMdx?: string | null
+  status?: $Enums.HelpArticleStatus
+  isFeatured?: boolean
+  publishAt?: Date | string | null
+  publishedAt?: Date | string | null
+  viewCount?: number
+  upvotes?: number
+  downvotes?: number
+  readingTimeMins?: number
+  relatedArticleIds?: Prisma.HelpArticleCreaterelatedArticleIdsInput | string[]
+  seoTitle?: string | null
+  seoDescription?: string | null
+  createdBy?: string | null
+  updatedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  versions?: Prisma.HelpArticleVersionUncheckedCreateNestedManyWithoutArticleInput
+  tags?: Prisma.HelpArticleTagUncheckedCreateNestedManyWithoutArticleInput
+  feedback?: Prisma.HelpArticleFeedbackUncheckedCreateNestedManyWithoutArticleInput
+}
+
+export type HelpArticleCreateOrConnectWithoutAppInput = {
+  where: Prisma.HelpArticleWhereUniqueInput
+  create: Prisma.XOR<Prisma.HelpArticleCreateWithoutAppInput, Prisma.HelpArticleUncheckedCreateWithoutAppInput>
+}
+
+export type HelpArticleCreateManyAppInputEnvelope = {
+  data: Prisma.HelpArticleCreateManyAppInput | Prisma.HelpArticleCreateManyAppInput[]
+  skipDuplicates?: boolean
+}
+
+export type HelpArticleUpsertWithWhereUniqueWithoutAppInput = {
+  where: Prisma.HelpArticleWhereUniqueInput
+  update: Prisma.XOR<Prisma.HelpArticleUpdateWithoutAppInput, Prisma.HelpArticleUncheckedUpdateWithoutAppInput>
+  create: Prisma.XOR<Prisma.HelpArticleCreateWithoutAppInput, Prisma.HelpArticleUncheckedCreateWithoutAppInput>
+}
+
+export type HelpArticleUpdateWithWhereUniqueWithoutAppInput = {
+  where: Prisma.HelpArticleWhereUniqueInput
+  data: Prisma.XOR<Prisma.HelpArticleUpdateWithoutAppInput, Prisma.HelpArticleUncheckedUpdateWithoutAppInput>
+}
+
+export type HelpArticleUpdateManyWithWhereWithoutAppInput = {
+  where: Prisma.HelpArticleScalarWhereInput
+  data: Prisma.XOR<Prisma.HelpArticleUpdateManyMutationInput, Prisma.HelpArticleUncheckedUpdateManyWithoutAppInput>
+}
+
+export type HelpArticleScalarWhereInput = {
+  AND?: Prisma.HelpArticleScalarWhereInput | Prisma.HelpArticleScalarWhereInput[]
+  OR?: Prisma.HelpArticleScalarWhereInput[]
+  NOT?: Prisma.HelpArticleScalarWhereInput | Prisma.HelpArticleScalarWhereInput[]
+  id?: Prisma.StringFilter<"HelpArticle"> | string
+  categoryId?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
+  appId?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
+  slug?: Prisma.StringFilter<"HelpArticle"> | string
+  title?: Prisma.StringFilter<"HelpArticle"> | string
+  summary?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
+  contentMarkdown?: Prisma.StringFilter<"HelpArticle"> | string
+  contentMdx?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
+  status?: Prisma.EnumHelpArticleStatusFilter<"HelpArticle"> | $Enums.HelpArticleStatus
+  isFeatured?: Prisma.BoolFilter<"HelpArticle"> | boolean
+  publishAt?: Prisma.DateTimeNullableFilter<"HelpArticle"> | Date | string | null
+  publishedAt?: Prisma.DateTimeNullableFilter<"HelpArticle"> | Date | string | null
+  viewCount?: Prisma.IntFilter<"HelpArticle"> | number
+  upvotes?: Prisma.IntFilter<"HelpArticle"> | number
+  downvotes?: Prisma.IntFilter<"HelpArticle"> | number
+  readingTimeMins?: Prisma.IntFilter<"HelpArticle"> | number
+  relatedArticleIds?: Prisma.StringNullableListFilter<"HelpArticle">
+  seoTitle?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
+  seoDescription?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
+  createdBy?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
+  updatedBy?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"HelpArticle"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"HelpArticle"> | Date | string
+}
+
 export type HelpArticleCreateWithoutCategoryInput = {
   id?: string
   slug: string
   title: string
   summary?: string | null
   contentMarkdown: string
+  contentMdx?: string | null
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
   publishedAt?: Date | string | null
   viewCount?: number
+  upvotes?: number
+  downvotes?: number
+  readingTimeMins?: number
+  relatedArticleIds?: Prisma.HelpArticleCreaterelatedArticleIdsInput | string[]
+  seoTitle?: string | null
+  seoDescription?: string | null
   createdBy?: string | null
   updatedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  app?: Prisma.AppCreateNestedOneWithoutHelpArticlesInput
   versions?: Prisma.HelpArticleVersionCreateNestedManyWithoutArticleInput
+  tags?: Prisma.HelpArticleTagCreateNestedManyWithoutArticleInput
+  feedback?: Prisma.HelpArticleFeedbackCreateNestedManyWithoutArticleInput
 }
 
 export type HelpArticleUncheckedCreateWithoutCategoryInput = {
   id?: string
+  appId?: string | null
   slug: string
   title: string
   summary?: string | null
   contentMarkdown: string
+  contentMdx?: string | null
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
   publishedAt?: Date | string | null
   viewCount?: number
+  upvotes?: number
+  downvotes?: number
+  readingTimeMins?: number
+  relatedArticleIds?: Prisma.HelpArticleCreaterelatedArticleIdsInput | string[]
+  seoTitle?: string | null
+  seoDescription?: string | null
   createdBy?: string | null
   updatedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.HelpArticleVersionUncheckedCreateNestedManyWithoutArticleInput
+  tags?: Prisma.HelpArticleTagUncheckedCreateNestedManyWithoutArticleInput
+  feedback?: Prisma.HelpArticleFeedbackUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type HelpArticleCreateOrConnectWithoutCategoryInput = {
@@ -715,25 +1137,260 @@ export type HelpArticleUpdateManyWithWhereWithoutCategoryInput = {
   data: Prisma.XOR<Prisma.HelpArticleUpdateManyMutationInput, Prisma.HelpArticleUncheckedUpdateManyWithoutCategoryInput>
 }
 
-export type HelpArticleScalarWhereInput = {
-  AND?: Prisma.HelpArticleScalarWhereInput | Prisma.HelpArticleScalarWhereInput[]
-  OR?: Prisma.HelpArticleScalarWhereInput[]
-  NOT?: Prisma.HelpArticleScalarWhereInput | Prisma.HelpArticleScalarWhereInput[]
-  id?: Prisma.StringFilter<"HelpArticle"> | string
-  categoryId?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
-  slug?: Prisma.StringFilter<"HelpArticle"> | string
-  title?: Prisma.StringFilter<"HelpArticle"> | string
-  summary?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
-  contentMarkdown?: Prisma.StringFilter<"HelpArticle"> | string
-  status?: Prisma.EnumHelpArticleStatusFilter<"HelpArticle"> | $Enums.HelpArticleStatus
-  isFeatured?: Prisma.BoolFilter<"HelpArticle"> | boolean
-  publishAt?: Prisma.DateTimeNullableFilter<"HelpArticle"> | Date | string | null
-  publishedAt?: Prisma.DateTimeNullableFilter<"HelpArticle"> | Date | string | null
-  viewCount?: Prisma.IntFilter<"HelpArticle"> | number
-  createdBy?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
-  updatedBy?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"HelpArticle"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"HelpArticle"> | Date | string
+export type HelpArticleCreateWithoutFeedbackInput = {
+  id?: string
+  slug: string
+  title: string
+  summary?: string | null
+  contentMarkdown: string
+  contentMdx?: string | null
+  status?: $Enums.HelpArticleStatus
+  isFeatured?: boolean
+  publishAt?: Date | string | null
+  publishedAt?: Date | string | null
+  viewCount?: number
+  upvotes?: number
+  downvotes?: number
+  readingTimeMins?: number
+  relatedArticleIds?: Prisma.HelpArticleCreaterelatedArticleIdsInput | string[]
+  seoTitle?: string | null
+  seoDescription?: string | null
+  createdBy?: string | null
+  updatedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  category?: Prisma.HelpCategoryCreateNestedOneWithoutArticlesInput
+  app?: Prisma.AppCreateNestedOneWithoutHelpArticlesInput
+  versions?: Prisma.HelpArticleVersionCreateNestedManyWithoutArticleInput
+  tags?: Prisma.HelpArticleTagCreateNestedManyWithoutArticleInput
+}
+
+export type HelpArticleUncheckedCreateWithoutFeedbackInput = {
+  id?: string
+  categoryId?: string | null
+  appId?: string | null
+  slug: string
+  title: string
+  summary?: string | null
+  contentMarkdown: string
+  contentMdx?: string | null
+  status?: $Enums.HelpArticleStatus
+  isFeatured?: boolean
+  publishAt?: Date | string | null
+  publishedAt?: Date | string | null
+  viewCount?: number
+  upvotes?: number
+  downvotes?: number
+  readingTimeMins?: number
+  relatedArticleIds?: Prisma.HelpArticleCreaterelatedArticleIdsInput | string[]
+  seoTitle?: string | null
+  seoDescription?: string | null
+  createdBy?: string | null
+  updatedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  versions?: Prisma.HelpArticleVersionUncheckedCreateNestedManyWithoutArticleInput
+  tags?: Prisma.HelpArticleTagUncheckedCreateNestedManyWithoutArticleInput
+}
+
+export type HelpArticleCreateOrConnectWithoutFeedbackInput = {
+  where: Prisma.HelpArticleWhereUniqueInput
+  create: Prisma.XOR<Prisma.HelpArticleCreateWithoutFeedbackInput, Prisma.HelpArticleUncheckedCreateWithoutFeedbackInput>
+}
+
+export type HelpArticleUpsertWithoutFeedbackInput = {
+  update: Prisma.XOR<Prisma.HelpArticleUpdateWithoutFeedbackInput, Prisma.HelpArticleUncheckedUpdateWithoutFeedbackInput>
+  create: Prisma.XOR<Prisma.HelpArticleCreateWithoutFeedbackInput, Prisma.HelpArticleUncheckedCreateWithoutFeedbackInput>
+  where?: Prisma.HelpArticleWhereInput
+}
+
+export type HelpArticleUpdateToOneWithWhereWithoutFeedbackInput = {
+  where?: Prisma.HelpArticleWhereInput
+  data: Prisma.XOR<Prisma.HelpArticleUpdateWithoutFeedbackInput, Prisma.HelpArticleUncheckedUpdateWithoutFeedbackInput>
+}
+
+export type HelpArticleUpdateWithoutFeedbackInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  upvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  readingTimeMins?: Prisma.IntFieldUpdateOperationsInput | number
+  relatedArticleIds?: Prisma.HelpArticleUpdaterelatedArticleIdsInput | string[]
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.HelpCategoryUpdateOneWithoutArticlesNestedInput
+  app?: Prisma.AppUpdateOneWithoutHelpArticlesNestedInput
+  versions?: Prisma.HelpArticleVersionUpdateManyWithoutArticleNestedInput
+  tags?: Prisma.HelpArticleTagUpdateManyWithoutArticleNestedInput
+}
+
+export type HelpArticleUncheckedUpdateWithoutFeedbackInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  upvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  readingTimeMins?: Prisma.IntFieldUpdateOperationsInput | number
+  relatedArticleIds?: Prisma.HelpArticleUpdaterelatedArticleIdsInput | string[]
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  versions?: Prisma.HelpArticleVersionUncheckedUpdateManyWithoutArticleNestedInput
+  tags?: Prisma.HelpArticleTagUncheckedUpdateManyWithoutArticleNestedInput
+}
+
+export type HelpArticleCreateWithoutTagsInput = {
+  id?: string
+  slug: string
+  title: string
+  summary?: string | null
+  contentMarkdown: string
+  contentMdx?: string | null
+  status?: $Enums.HelpArticleStatus
+  isFeatured?: boolean
+  publishAt?: Date | string | null
+  publishedAt?: Date | string | null
+  viewCount?: number
+  upvotes?: number
+  downvotes?: number
+  readingTimeMins?: number
+  relatedArticleIds?: Prisma.HelpArticleCreaterelatedArticleIdsInput | string[]
+  seoTitle?: string | null
+  seoDescription?: string | null
+  createdBy?: string | null
+  updatedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  category?: Prisma.HelpCategoryCreateNestedOneWithoutArticlesInput
+  app?: Prisma.AppCreateNestedOneWithoutHelpArticlesInput
+  versions?: Prisma.HelpArticleVersionCreateNestedManyWithoutArticleInput
+  feedback?: Prisma.HelpArticleFeedbackCreateNestedManyWithoutArticleInput
+}
+
+export type HelpArticleUncheckedCreateWithoutTagsInput = {
+  id?: string
+  categoryId?: string | null
+  appId?: string | null
+  slug: string
+  title: string
+  summary?: string | null
+  contentMarkdown: string
+  contentMdx?: string | null
+  status?: $Enums.HelpArticleStatus
+  isFeatured?: boolean
+  publishAt?: Date | string | null
+  publishedAt?: Date | string | null
+  viewCount?: number
+  upvotes?: number
+  downvotes?: number
+  readingTimeMins?: number
+  relatedArticleIds?: Prisma.HelpArticleCreaterelatedArticleIdsInput | string[]
+  seoTitle?: string | null
+  seoDescription?: string | null
+  createdBy?: string | null
+  updatedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  versions?: Prisma.HelpArticleVersionUncheckedCreateNestedManyWithoutArticleInput
+  feedback?: Prisma.HelpArticleFeedbackUncheckedCreateNestedManyWithoutArticleInput
+}
+
+export type HelpArticleCreateOrConnectWithoutTagsInput = {
+  where: Prisma.HelpArticleWhereUniqueInput
+  create: Prisma.XOR<Prisma.HelpArticleCreateWithoutTagsInput, Prisma.HelpArticleUncheckedCreateWithoutTagsInput>
+}
+
+export type HelpArticleUpsertWithoutTagsInput = {
+  update: Prisma.XOR<Prisma.HelpArticleUpdateWithoutTagsInput, Prisma.HelpArticleUncheckedUpdateWithoutTagsInput>
+  create: Prisma.XOR<Prisma.HelpArticleCreateWithoutTagsInput, Prisma.HelpArticleUncheckedCreateWithoutTagsInput>
+  where?: Prisma.HelpArticleWhereInput
+}
+
+export type HelpArticleUpdateToOneWithWhereWithoutTagsInput = {
+  where?: Prisma.HelpArticleWhereInput
+  data: Prisma.XOR<Prisma.HelpArticleUpdateWithoutTagsInput, Prisma.HelpArticleUncheckedUpdateWithoutTagsInput>
+}
+
+export type HelpArticleUpdateWithoutTagsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  upvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  readingTimeMins?: Prisma.IntFieldUpdateOperationsInput | number
+  relatedArticleIds?: Prisma.HelpArticleUpdaterelatedArticleIdsInput | string[]
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.HelpCategoryUpdateOneWithoutArticlesNestedInput
+  app?: Prisma.AppUpdateOneWithoutHelpArticlesNestedInput
+  versions?: Prisma.HelpArticleVersionUpdateManyWithoutArticleNestedInput
+  feedback?: Prisma.HelpArticleFeedbackUpdateManyWithoutArticleNestedInput
+}
+
+export type HelpArticleUncheckedUpdateWithoutTagsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  upvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  readingTimeMins?: Prisma.IntFieldUpdateOperationsInput | number
+  relatedArticleIds?: Prisma.HelpArticleUpdaterelatedArticleIdsInput | string[]
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  versions?: Prisma.HelpArticleVersionUncheckedUpdateManyWithoutArticleNestedInput
+  feedback?: Prisma.HelpArticleFeedbackUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type HelpArticleCreateWithoutVersionsInput = {
@@ -742,34 +1399,54 @@ export type HelpArticleCreateWithoutVersionsInput = {
   title: string
   summary?: string | null
   contentMarkdown: string
+  contentMdx?: string | null
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
   publishedAt?: Date | string | null
   viewCount?: number
+  upvotes?: number
+  downvotes?: number
+  readingTimeMins?: number
+  relatedArticleIds?: Prisma.HelpArticleCreaterelatedArticleIdsInput | string[]
+  seoTitle?: string | null
+  seoDescription?: string | null
   createdBy?: string | null
   updatedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   category?: Prisma.HelpCategoryCreateNestedOneWithoutArticlesInput
+  app?: Prisma.AppCreateNestedOneWithoutHelpArticlesInput
+  tags?: Prisma.HelpArticleTagCreateNestedManyWithoutArticleInput
+  feedback?: Prisma.HelpArticleFeedbackCreateNestedManyWithoutArticleInput
 }
 
 export type HelpArticleUncheckedCreateWithoutVersionsInput = {
   id?: string
   categoryId?: string | null
+  appId?: string | null
   slug: string
   title: string
   summary?: string | null
   contentMarkdown: string
+  contentMdx?: string | null
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
   publishedAt?: Date | string | null
   viewCount?: number
+  upvotes?: number
+  downvotes?: number
+  readingTimeMins?: number
+  relatedArticleIds?: Prisma.HelpArticleCreaterelatedArticleIdsInput | string[]
+  seoTitle?: string | null
+  seoDescription?: string | null
   createdBy?: string | null
   updatedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  tags?: Prisma.HelpArticleTagUncheckedCreateNestedManyWithoutArticleInput
+  feedback?: Prisma.HelpArticleFeedbackUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type HelpArticleCreateOrConnectWithoutVersionsInput = {
@@ -794,30 +1471,156 @@ export type HelpArticleUpdateWithoutVersionsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  upvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  readingTimeMins?: Prisma.IntFieldUpdateOperationsInput | number
+  relatedArticleIds?: Prisma.HelpArticleUpdaterelatedArticleIdsInput | string[]
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.HelpCategoryUpdateOneWithoutArticlesNestedInput
+  app?: Prisma.AppUpdateOneWithoutHelpArticlesNestedInput
+  tags?: Prisma.HelpArticleTagUpdateManyWithoutArticleNestedInput
+  feedback?: Prisma.HelpArticleFeedbackUpdateManyWithoutArticleNestedInput
 }
 
 export type HelpArticleUncheckedUpdateWithoutVersionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  upvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  readingTimeMins?: Prisma.IntFieldUpdateOperationsInput | number
+  relatedArticleIds?: Prisma.HelpArticleUpdaterelatedArticleIdsInput | string[]
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tags?: Prisma.HelpArticleTagUncheckedUpdateManyWithoutArticleNestedInput
+  feedback?: Prisma.HelpArticleFeedbackUncheckedUpdateManyWithoutArticleNestedInput
+}
+
+export type HelpArticleCreateManyAppInput = {
+  id?: string
+  categoryId?: string | null
+  slug: string
+  title: string
+  summary?: string | null
+  contentMarkdown: string
+  contentMdx?: string | null
+  status?: $Enums.HelpArticleStatus
+  isFeatured?: boolean
+  publishAt?: Date | string | null
+  publishedAt?: Date | string | null
+  viewCount?: number
+  upvotes?: number
+  downvotes?: number
+  readingTimeMins?: number
+  relatedArticleIds?: Prisma.HelpArticleCreaterelatedArticleIdsInput | string[]
+  seoTitle?: string | null
+  seoDescription?: string | null
+  createdBy?: string | null
+  updatedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type HelpArticleUpdateWithoutAppInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  upvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  readingTimeMins?: Prisma.IntFieldUpdateOperationsInput | number
+  relatedArticleIds?: Prisma.HelpArticleUpdaterelatedArticleIdsInput | string[]
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.HelpCategoryUpdateOneWithoutArticlesNestedInput
+  versions?: Prisma.HelpArticleVersionUpdateManyWithoutArticleNestedInput
+  tags?: Prisma.HelpArticleTagUpdateManyWithoutArticleNestedInput
+  feedback?: Prisma.HelpArticleFeedbackUpdateManyWithoutArticleNestedInput
+}
+
+export type HelpArticleUncheckedUpdateWithoutAppInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  upvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  readingTimeMins?: Prisma.IntFieldUpdateOperationsInput | number
+  relatedArticleIds?: Prisma.HelpArticleUpdaterelatedArticleIdsInput | string[]
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  versions?: Prisma.HelpArticleVersionUncheckedUpdateManyWithoutArticleNestedInput
+  tags?: Prisma.HelpArticleTagUncheckedUpdateManyWithoutArticleNestedInput
+  feedback?: Prisma.HelpArticleFeedbackUncheckedUpdateManyWithoutArticleNestedInput
+}
+
+export type HelpArticleUncheckedUpdateManyWithoutAppInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  upvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  readingTimeMins?: Prisma.IntFieldUpdateOperationsInput | number
+  relatedArticleIds?: Prisma.HelpArticleUpdaterelatedArticleIdsInput | string[]
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -826,15 +1629,23 @@ export type HelpArticleUncheckedUpdateWithoutVersionsInput = {
 
 export type HelpArticleCreateManyCategoryInput = {
   id?: string
+  appId?: string | null
   slug: string
   title: string
   summary?: string | null
   contentMarkdown: string
+  contentMdx?: string | null
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
   publishedAt?: Date | string | null
   viewCount?: number
+  upvotes?: number
+  downvotes?: number
+  readingTimeMins?: number
+  relatedArticleIds?: Prisma.HelpArticleCreaterelatedArticleIdsInput | string[]
+  seoTitle?: string | null
+  seoDescription?: string | null
   createdBy?: string | null
   updatedBy?: string | null
   createdAt?: Date | string
@@ -847,47 +1658,75 @@ export type HelpArticleUpdateWithoutCategoryInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  upvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  readingTimeMins?: Prisma.IntFieldUpdateOperationsInput | number
+  relatedArticleIds?: Prisma.HelpArticleUpdaterelatedArticleIdsInput | string[]
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  app?: Prisma.AppUpdateOneWithoutHelpArticlesNestedInput
   versions?: Prisma.HelpArticleVersionUpdateManyWithoutArticleNestedInput
+  tags?: Prisma.HelpArticleTagUpdateManyWithoutArticleNestedInput
+  feedback?: Prisma.HelpArticleFeedbackUpdateManyWithoutArticleNestedInput
 }
 
 export type HelpArticleUncheckedUpdateWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  appId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  upvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  readingTimeMins?: Prisma.IntFieldUpdateOperationsInput | number
+  relatedArticleIds?: Prisma.HelpArticleUpdaterelatedArticleIdsInput | string[]
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.HelpArticleVersionUncheckedUpdateManyWithoutArticleNestedInput
+  tags?: Prisma.HelpArticleTagUncheckedUpdateManyWithoutArticleNestedInput
+  feedback?: Prisma.HelpArticleFeedbackUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type HelpArticleUncheckedUpdateManyWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  appId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  upvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  readingTimeMins?: Prisma.IntFieldUpdateOperationsInput | number
+  relatedArticleIds?: Prisma.HelpArticleUpdaterelatedArticleIdsInput | string[]
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -901,10 +1740,14 @@ export type HelpArticleUncheckedUpdateManyWithoutCategoryInput = {
 
 export type HelpArticleCountOutputType = {
   versions: number
+  tags: number
+  feedback: number
 }
 
 export type HelpArticleCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   versions?: boolean | HelpArticleCountOutputTypeCountVersionsArgs
+  tags?: boolean | HelpArticleCountOutputTypeCountTagsArgs
+  feedback?: boolean | HelpArticleCountOutputTypeCountFeedbackArgs
 }
 
 /**
@@ -924,115 +1767,182 @@ export type HelpArticleCountOutputTypeCountVersionsArgs<ExtArgs extends runtime.
   where?: Prisma.HelpArticleVersionWhereInput
 }
 
+/**
+ * HelpArticleCountOutputType without action
+ */
+export type HelpArticleCountOutputTypeCountTagsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HelpArticleTagWhereInput
+}
+
+/**
+ * HelpArticleCountOutputType without action
+ */
+export type HelpArticleCountOutputTypeCountFeedbackArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HelpArticleFeedbackWhereInput
+}
+
 
 export type HelpArticleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   categoryId?: boolean
+  appId?: boolean
   slug?: boolean
   title?: boolean
   summary?: boolean
   contentMarkdown?: boolean
+  contentMdx?: boolean
   status?: boolean
   isFeatured?: boolean
   publishAt?: boolean
   publishedAt?: boolean
   viewCount?: boolean
+  upvotes?: boolean
+  downvotes?: boolean
+  readingTimeMins?: boolean
+  relatedArticleIds?: boolean
+  seoTitle?: boolean
+  seoDescription?: boolean
   createdBy?: boolean
   updatedBy?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   category?: boolean | Prisma.HelpArticle$categoryArgs<ExtArgs>
+  app?: boolean | Prisma.HelpArticle$appArgs<ExtArgs>
   versions?: boolean | Prisma.HelpArticle$versionsArgs<ExtArgs>
+  tags?: boolean | Prisma.HelpArticle$tagsArgs<ExtArgs>
+  feedback?: boolean | Prisma.HelpArticle$feedbackArgs<ExtArgs>
   _count?: boolean | Prisma.HelpArticleCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["helpArticle"]>
 
 export type HelpArticleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   categoryId?: boolean
+  appId?: boolean
   slug?: boolean
   title?: boolean
   summary?: boolean
   contentMarkdown?: boolean
+  contentMdx?: boolean
   status?: boolean
   isFeatured?: boolean
   publishAt?: boolean
   publishedAt?: boolean
   viewCount?: boolean
+  upvotes?: boolean
+  downvotes?: boolean
+  readingTimeMins?: boolean
+  relatedArticleIds?: boolean
+  seoTitle?: boolean
+  seoDescription?: boolean
   createdBy?: boolean
   updatedBy?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   category?: boolean | Prisma.HelpArticle$categoryArgs<ExtArgs>
+  app?: boolean | Prisma.HelpArticle$appArgs<ExtArgs>
 }, ExtArgs["result"]["helpArticle"]>
 
 export type HelpArticleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   categoryId?: boolean
+  appId?: boolean
   slug?: boolean
   title?: boolean
   summary?: boolean
   contentMarkdown?: boolean
+  contentMdx?: boolean
   status?: boolean
   isFeatured?: boolean
   publishAt?: boolean
   publishedAt?: boolean
   viewCount?: boolean
+  upvotes?: boolean
+  downvotes?: boolean
+  readingTimeMins?: boolean
+  relatedArticleIds?: boolean
+  seoTitle?: boolean
+  seoDescription?: boolean
   createdBy?: boolean
   updatedBy?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   category?: boolean | Prisma.HelpArticle$categoryArgs<ExtArgs>
+  app?: boolean | Prisma.HelpArticle$appArgs<ExtArgs>
 }, ExtArgs["result"]["helpArticle"]>
 
 export type HelpArticleSelectScalar = {
   id?: boolean
   categoryId?: boolean
+  appId?: boolean
   slug?: boolean
   title?: boolean
   summary?: boolean
   contentMarkdown?: boolean
+  contentMdx?: boolean
   status?: boolean
   isFeatured?: boolean
   publishAt?: boolean
   publishedAt?: boolean
   viewCount?: boolean
+  upvotes?: boolean
+  downvotes?: boolean
+  readingTimeMins?: boolean
+  relatedArticleIds?: boolean
+  seoTitle?: boolean
+  seoDescription?: boolean
   createdBy?: boolean
   updatedBy?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type HelpArticleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "categoryId" | "slug" | "title" | "summary" | "contentMarkdown" | "status" | "isFeatured" | "publishAt" | "publishedAt" | "viewCount" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["helpArticle"]>
+export type HelpArticleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "categoryId" | "appId" | "slug" | "title" | "summary" | "contentMarkdown" | "contentMdx" | "status" | "isFeatured" | "publishAt" | "publishedAt" | "viewCount" | "upvotes" | "downvotes" | "readingTimeMins" | "relatedArticleIds" | "seoTitle" | "seoDescription" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["helpArticle"]>
 export type HelpArticleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.HelpArticle$categoryArgs<ExtArgs>
+  app?: boolean | Prisma.HelpArticle$appArgs<ExtArgs>
   versions?: boolean | Prisma.HelpArticle$versionsArgs<ExtArgs>
+  tags?: boolean | Prisma.HelpArticle$tagsArgs<ExtArgs>
+  feedback?: boolean | Prisma.HelpArticle$feedbackArgs<ExtArgs>
   _count?: boolean | Prisma.HelpArticleCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type HelpArticleIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.HelpArticle$categoryArgs<ExtArgs>
+  app?: boolean | Prisma.HelpArticle$appArgs<ExtArgs>
 }
 export type HelpArticleIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.HelpArticle$categoryArgs<ExtArgs>
+  app?: boolean | Prisma.HelpArticle$appArgs<ExtArgs>
 }
 
 export type $HelpArticlePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "HelpArticle"
   objects: {
     category: Prisma.$HelpCategoryPayload<ExtArgs> | null
+    app: Prisma.$AppPayload<ExtArgs> | null
     versions: Prisma.$HelpArticleVersionPayload<ExtArgs>[]
+    tags: Prisma.$HelpArticleTagPayload<ExtArgs>[]
+    feedback: Prisma.$HelpArticleFeedbackPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     categoryId: string | null
+    appId: string | null
     slug: string
     title: string
     summary: string | null
     contentMarkdown: string
+    contentMdx: string | null
     status: $Enums.HelpArticleStatus
     isFeatured: boolean
     publishAt: Date | null
     publishedAt: Date | null
     viewCount: number
+    upvotes: number
+    downvotes: number
+    readingTimeMins: number
+    relatedArticleIds: string[]
+    seoTitle: string | null
+    seoDescription: string | null
     createdBy: string | null
     updatedBy: string | null
     createdAt: Date
@@ -1432,7 +2342,10 @@ readonly fields: HelpArticleFieldRefs;
 export interface Prisma__HelpArticleClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   category<T extends Prisma.HelpArticle$categoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HelpArticle$categoryArgs<ExtArgs>>): Prisma.Prisma__HelpCategoryClient<runtime.Types.Result.GetResult<Prisma.$HelpCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  app<T extends Prisma.HelpArticle$appArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HelpArticle$appArgs<ExtArgs>>): Prisma.Prisma__AppClient<runtime.Types.Result.GetResult<Prisma.$AppPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   versions<T extends Prisma.HelpArticle$versionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HelpArticle$versionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HelpArticleVersionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tags<T extends Prisma.HelpArticle$tagsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HelpArticle$tagsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HelpArticleTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  feedback<T extends Prisma.HelpArticle$feedbackArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HelpArticle$feedbackArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HelpArticleFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1464,15 +2377,23 @@ export interface Prisma__HelpArticleClient<T, Null = never, ExtArgs extends runt
 export interface HelpArticleFieldRefs {
   readonly id: Prisma.FieldRef<"HelpArticle", 'String'>
   readonly categoryId: Prisma.FieldRef<"HelpArticle", 'String'>
+  readonly appId: Prisma.FieldRef<"HelpArticle", 'String'>
   readonly slug: Prisma.FieldRef<"HelpArticle", 'String'>
   readonly title: Prisma.FieldRef<"HelpArticle", 'String'>
   readonly summary: Prisma.FieldRef<"HelpArticle", 'String'>
   readonly contentMarkdown: Prisma.FieldRef<"HelpArticle", 'String'>
+  readonly contentMdx: Prisma.FieldRef<"HelpArticle", 'String'>
   readonly status: Prisma.FieldRef<"HelpArticle", 'HelpArticleStatus'>
   readonly isFeatured: Prisma.FieldRef<"HelpArticle", 'Boolean'>
   readonly publishAt: Prisma.FieldRef<"HelpArticle", 'DateTime'>
   readonly publishedAt: Prisma.FieldRef<"HelpArticle", 'DateTime'>
   readonly viewCount: Prisma.FieldRef<"HelpArticle", 'Int'>
+  readonly upvotes: Prisma.FieldRef<"HelpArticle", 'Int'>
+  readonly downvotes: Prisma.FieldRef<"HelpArticle", 'Int'>
+  readonly readingTimeMins: Prisma.FieldRef<"HelpArticle", 'Int'>
+  readonly relatedArticleIds: Prisma.FieldRef<"HelpArticle", 'String[]'>
+  readonly seoTitle: Prisma.FieldRef<"HelpArticle", 'String'>
+  readonly seoDescription: Prisma.FieldRef<"HelpArticle", 'String'>
   readonly createdBy: Prisma.FieldRef<"HelpArticle", 'String'>
   readonly updatedBy: Prisma.FieldRef<"HelpArticle", 'String'>
   readonly createdAt: Prisma.FieldRef<"HelpArticle", 'DateTime'>
@@ -1897,6 +2818,25 @@ export type HelpArticle$categoryArgs<ExtArgs extends runtime.Types.Extensions.In
 }
 
 /**
+ * HelpArticle.app
+ */
+export type HelpArticle$appArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the App
+   */
+  select?: Prisma.AppSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the App
+   */
+  omit?: Prisma.AppOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AppInclude<ExtArgs> | null
+  where?: Prisma.AppWhereInput
+}
+
+/**
  * HelpArticle.versions
  */
 export type HelpArticle$versionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1918,6 +2858,54 @@ export type HelpArticle$versionsArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.HelpArticleVersionScalarFieldEnum | Prisma.HelpArticleVersionScalarFieldEnum[]
+}
+
+/**
+ * HelpArticle.tags
+ */
+export type HelpArticle$tagsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HelpArticleTag
+   */
+  select?: Prisma.HelpArticleTagSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HelpArticleTag
+   */
+  omit?: Prisma.HelpArticleTagOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HelpArticleTagInclude<ExtArgs> | null
+  where?: Prisma.HelpArticleTagWhereInput
+  orderBy?: Prisma.HelpArticleTagOrderByWithRelationInput | Prisma.HelpArticleTagOrderByWithRelationInput[]
+  cursor?: Prisma.HelpArticleTagWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HelpArticleTagScalarFieldEnum | Prisma.HelpArticleTagScalarFieldEnum[]
+}
+
+/**
+ * HelpArticle.feedback
+ */
+export type HelpArticle$feedbackArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HelpArticleFeedback
+   */
+  select?: Prisma.HelpArticleFeedbackSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HelpArticleFeedback
+   */
+  omit?: Prisma.HelpArticleFeedbackOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HelpArticleFeedbackInclude<ExtArgs> | null
+  where?: Prisma.HelpArticleFeedbackWhereInput
+  orderBy?: Prisma.HelpArticleFeedbackOrderByWithRelationInput | Prisma.HelpArticleFeedbackOrderByWithRelationInput[]
+  cursor?: Prisma.HelpArticleFeedbackWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HelpArticleFeedbackScalarFieldEnum | Prisma.HelpArticleFeedbackScalarFieldEnum[]
 }
 
 /**

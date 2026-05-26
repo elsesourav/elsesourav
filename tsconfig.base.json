@@ -9,7 +9,6 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noUncheckedIndexedAccess": true,
-    "ignoreDeprecations": "6.0"
+    "noUncheckedIndexedAccess": true
   }
 }

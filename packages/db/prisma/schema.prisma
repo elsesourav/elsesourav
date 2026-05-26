@@ -73,7 +73,7 @@ enum SliderType {
   PROMO
 }
 
-enum BlogPostStatus {
+enum PostStatus {
   DRAFT
   PUBLISHED
   ARCHIVED
@@ -111,7 +111,7 @@ enum CustomFieldEntity {
   APP
   CATEGORY
   CONTENT_PAGE
-  BLOG_POST
+  POST
   HELP_ARTICLE
   PROFILE_PAGE
   TESTIMONIAL
@@ -120,7 +120,7 @@ enum CustomFieldEntity {
   STORE_SECTION_ITEM
   HOME_SLIDER
   APP_TAG
-  BLOG_TAG
+  POST_TAG
   HELP_CATEGORY
   APP_MEDIA
   APP_LINK
@@ -140,34 +140,38 @@ enum CustomFieldType {
 }
 
 model User {
-  id                  String                 @id @default(cuid())
-  name                String?
-  email               String                 @unique
-  emailVerified       DateTime?              @map("email_verified")
-  image               String?
-  passwordHash        String?                @map("password_hash")
-  role                Role                   @default(USER)
-  createdAt           DateTime               @default(now()) @map("created_at")
-  updatedAt           DateTime               @updatedAt @map("updated_at")
-  deletedAt           DateTime?              @map("deleted_at")
-  scheduledDeletionAt DateTime?              @map("scheduled_deletion_at")
-  accounts            Account[]
-  sessions            Session[]
-  createdApps         App[]                  @relation("AppCreatedBy")
-  updatedApps         App[]                  @relation("AppUpdatedBy")
-  libraries           UserLibrary[]
-  feedbacks           Feedback[]
-  moderatedFeedback   Feedback[]             @relation("FeedbackModeratedBy")
-  downloadEvents      DownloadEvent[]
-  payments            Payment[]
-  appViewEvents       AppViewEvent[]
-  blogPosts           BlogPost[]             @relation("BlogPostAuthor")
-  blogComments        BlogComment[]
-  supportTickets      SupportTicket[]        @relation("SupportTicketRequester")
-  assignedTickets     SupportTicket[]        @relation("SupportTicketAssignee")
-  supportMessages     SupportTicketMessage[] @relation("SupportTicketMessageAuthor")
-  settings            UserSettings?
-  activityLogs        ActivityLog[]
+  id                   String                 @id @default(cuid())
+  name                 String?
+  email                String                 @unique
+  emailVerified        DateTime?              @map("email_verified")
+  image                String?
+  passwordHash         String?                @map("password_hash")
+  role                 Role                   @default(USER)
+  createdAt            DateTime               @default(now()) @map("created_at")
+  updatedAt            DateTime               @updatedAt @map("updated_at")
+  deletedAt            DateTime?              @map("deleted_at")
+  scheduledDeletionAt  DateTime?              @map("scheduled_deletion_at")
+  accounts             Account[]
+  sessions             Session[]
+  createdApps          App[]                  @relation("AppCreatedBy")
+  updatedApps          App[]                  @relation("AppUpdatedBy")
+  libraries            UserLibrary[]
+  feedbacks            Feedback[]
+  moderatedFeedback    Feedback[]             @relation("FeedbackModeratedBy")
+  downloadEvents       DownloadEvent[]
+  payments             Payment[]
+  appViewEvents        AppViewEvent[]
+  posts                Post[]                 @relation("PostAuthor")
+  postComments         PostComment[]
+  postReactions        PostReaction[]
+  commentReactions     CommentReaction[]
+  postBookmarks        PostBookmark[]
+  supportTickets       SupportTicket[]        @relation("SupportTicketRequester")
+  assignedTickets      SupportTicket[]        @relation("SupportTicketAssignee")
+  supportMessages      SupportTicketMessage[] @relation("SupportTicketMessageAuthor")
+  settings             UserSettings?
+  activityLogs         ActivityLog[]
+  helpArticleFeedbacks HelpArticleFeedback[]  @relation("HelpArticleFeedbackUser")
 
   @@index([role])
   @@index([scheduledDeletionAt])
@@ -239,6 +243,8 @@ model App {
   changelogs          AppChangelog[]
   descriptionVersions AppDescriptionVersion[]
   supportTickets      SupportTicket[]
+  helpArticles        HelpArticle[]
+  faqs                FAQ[]
 
   @@index([type])
   @@index([categoryId])
@@ -308,9 +314,9 @@ model AppViewEvent {
   app       App      @relation(fields: [appId], references: [id], onDelete: Cascade)
   user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 
-  @@index([appId, createdAt])
-  @@index([userId, createdAt])
-  @@index([sessionId, createdAt])
+  @@index([appId, createdAt(sort: Desc)])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([sessionId, createdAt(sort: Desc)])
   @@map("app_view_events")
 }
 
@@ -461,111 +467,197 @@ model ProfilePage {
   @@map("profile_pages")
 }
 
-model BlogTag {
-  id        String        @id @default(cuid())
-  name      String        @unique
-  slug      String        @unique
-  createdAt DateTime      @default(now()) @map("created_at")
-  updatedAt DateTime      @updatedAt @map("updated_at")
-  posts     BlogPostTag[]
+model PostTag {
+  id          String        @id @default(cuid())
+  name        String        @unique
+  slug        String        @unique
+  description String?
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+  posts       PostTagLink[]
 
   @@map("blog_tags")
 }
 
-model BlogPost {
-  id              String            @id @default(cuid())
-  slug            String            @unique
-  title           String
-  excerpt         String?
-  contentMarkdown String            @map("content_markdown") @db.Text
-  metadata        Json?
-  status          BlogPostStatus    @default(DRAFT)
-  publishAt       DateTime?         @map("publish_at")
-  publishedAt     DateTime?         @map("published_at")
-  authorId        String?           @map("author_id")
-  createdBy       String?           @map("created_by")
-  updatedBy       String?           @map("updated_by")
-  createdAt       DateTime          @default(now()) @map("created_at")
-  updatedAt       DateTime          @updatedAt @map("updated_at")
-  author          User?             @relation("BlogPostAuthor", fields: [authorId], references: [id], onDelete: SetNull)
-  tags            BlogPostTag[]
-  comments        BlogComment[]
-  versions        BlogPostVersion[]
+model Post {
+  id                 String         @id @default(cuid())
+  slug               String         @unique
+  title              String
+  excerpt            String?
+  contentMarkdown    String         @map("content_markdown") @db.Text
+  contentHtml        String?        @map("content_html") @db.Text
+  featuredImageUrl   String?        @map("featured_image_url")
+  readingTimeMinutes Int            @default(0) @map("reading_time_minutes")
+  isFeatured         Boolean        @default(false) @map("is_featured")
+  viewCount          Int            @default(0) @map("view_count")
+  seoTitle           String?        @map("seo_title")
+  seoDescription     String?        @map("seo_description")
+  metadata           Json?
+  status             PostStatus     @default(DRAFT)
+  publishAt          DateTime?      @map("publish_at")
+  publishedAt        DateTime?      @map("published_at")
+  authorId           String?        @map("author_id")
+  createdBy          String?        @map("created_by")
+  updatedBy          String?        @map("updated_by")
+  createdAt          DateTime       @default(now()) @map("created_at")
+  updatedAt          DateTime       @updatedAt @map("updated_at")
+  deletedAt          DateTime?      @map("deleted_at")
+  author             User?          @relation("PostAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  tags               PostTagLink[]
+  comments           PostComment[]
+  versions           PostVersion[]
+  reactions          PostReaction[]
+  bookmarks          PostBookmark[]
 
   @@index([status, publishedAt])
   @@index([authorId, createdAt])
+  @@index([isFeatured, publishedAt])
   @@map("blog_posts")
 }
 
-model BlogPostTag {
+model PostTagLink {
   id        String   @id @default(cuid())
   postId    String   @map("post_id")
   tagId     String   @map("tag_id")
   createdAt DateTime @default(now()) @map("created_at")
-  post      BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
-  tag       BlogTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag       PostTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@unique([postId, tagId])
   @@index([tagId])
   @@map("blog_post_tags")
 }
 
-model BlogComment {
-  id          String   @id @default(cuid())
-  postId      String   @map("post_id")
-  userId      String?  @map("user_id")
-  authorName  String?  @map("author_name")
-  authorEmail String?  @map("author_email")
-  content     String   @db.Text
-  isGuest     Boolean  @default(false) @map("is_guest")
-  isApproved  Boolean  @default(false) @map("is_approved")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  post        BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
-  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+model PostComment {
+  id          String            @id @default(cuid())
+  postId      String            @map("post_id")
+  parentId    String?           @map("parent_id")
+  userId      String?           @map("user_id")
+  authorName  String?           @map("author_name")
+  authorEmail String?           @map("author_email")
+  content     String            @db.Text
+  isGuest     Boolean           @default(false) @map("is_guest")
+  isApproved  Boolean           @default(false) @map("is_approved")
+  likesCount  Int               @default(0) @map("likes_count")
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @updatedAt @map("updated_at")
+  post        Post              @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user        User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  parent      PostComment?      @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies     PostComment[]     @relation("CommentReplies")
+  reactions   CommentReaction[]
 
-  @@index([postId, createdAt])
-  @@index([isApproved, createdAt])
+  @@index([postId, createdAt(sort: Desc)])
+  @@index([isApproved, createdAt(sort: Desc)])
+  @@index([postId, parentId, createdAt(sort: Desc)])
+  @@index([postId, parentId, likesCount(sort: Desc)])
   @@map("blog_comments")
 }
 
 model HelpCategory {
-  id          String        @id @default(cuid())
+  id          String   @id @default(cuid())
+  parentId    String?  @map("parent_id")
   name        String
-  slug        String        @unique
+  slug        String   @unique
   description String?
-  orderIndex  Int           @default(0) @map("order_index")
-  isActive    Boolean       @default(true) @map("is_active")
-  createdAt   DateTime      @default(now()) @map("created_at")
-  updatedAt   DateTime      @updatedAt @map("updated_at")
-  articles    HelpArticle[]
+  orderIndex  Int      @default(0) @map("order_index")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  parent   HelpCategory?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children HelpCategory[] @relation("CategoryHierarchy")
+  articles HelpArticle[]
+  faqs     FAQ[]
 
   @@index([isActive, orderIndex])
+  @@index([parentId])
   @@map("help_categories")
 }
 
 model HelpArticle {
-  id              String               @id @default(cuid())
-  categoryId      String?              @map("category_id")
-  slug            String               @unique
-  title           String
-  summary         String?
-  contentMarkdown String               @map("content_markdown") @db.Text
-  status          HelpArticleStatus    @default(DRAFT)
-  isFeatured      Boolean              @default(false) @map("is_featured")
-  publishAt       DateTime?            @map("publish_at")
-  publishedAt     DateTime?            @map("published_at")
-  viewCount       Int                  @default(0) @map("view_count")
-  createdBy       String?              @map("created_by")
-  updatedBy       String?              @map("updated_by")
-  createdAt       DateTime             @default(now()) @map("created_at")
-  updatedAt       DateTime             @updatedAt @map("updated_at")
-  category        HelpCategory?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  versions        HelpArticleVersion[]
+  id                String            @id @default(cuid())
+  categoryId        String?           @map("category_id")
+  appId             String?           @map("app_id")
+  slug              String            @unique
+  title             String
+  summary           String?
+  contentMarkdown   String            @map("content_markdown") @db.Text
+  contentMdx        String?           @map("content_mdx") @db.Text
+  status            HelpArticleStatus @default(DRAFT)
+  isFeatured        Boolean           @default(false) @map("is_featured")
+  publishAt         DateTime?         @map("publish_at")
+  publishedAt       DateTime?         @map("published_at")
+  viewCount         Int               @default(0) @map("view_count")
+  upvotes           Int               @default(0)
+  downvotes         Int               @default(0)
+  readingTimeMins   Int               @default(0) @map("reading_time_mins")
+  relatedArticleIds String[]          @map("related_article_ids")
+  seoTitle          String?           @map("seo_title")
+  seoDescription    String?           @map("seo_description")
+  createdBy         String?           @map("created_by")
+  updatedBy         String?           @map("updated_by")
+  createdAt         DateTime          @default(now()) @map("created_at")
+  updatedAt         DateTime          @updatedAt @map("updated_at")
+
+  category HelpCategory?         @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  app      App?                  @relation(fields: [appId], references: [id], onDelete: SetNull)
+  versions HelpArticleVersion[]
+  tags     HelpArticleTag[]
+  feedback HelpArticleFeedback[]
 
   @@index([status, publishedAt])
   @@index([categoryId, isFeatured])
+  @@index([appId])
   @@map("help_articles")
+}
+
+model FAQ {
+  id         String   @id @default(cuid())
+  question   String
+  answerMdx  String   @db.Text
+  categoryId String?  @map("category_id")
+  appId      String?  @map("app_id")
+  orderIndex Int      @default(0) @map("order_index")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  category HelpCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  app      App?          @relation(fields: [appId], references: [id], onDelete: Cascade)
+
+  @@index([categoryId, orderIndex])
+  @@index([appId, orderIndex])
+  @@map("faqs")
+}
+
+model HelpArticleFeedback {
+  id        String   @id @default(cuid())
+  articleId String   @map("article_id")
+  userId    String?  @map("user_id")
+  isHelpful Boolean  @map("is_helpful")
+  comment   String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+
+  article HelpArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  user    User?       @relation("HelpArticleFeedbackUser", fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([articleId])
+  @@index([userId])
+  @@map("help_article_feedback")
+}
+
+model HelpArticleTag {
+  id        String   @id @default(cuid())
+  articleId String   @map("article_id")
+  name      String
+  slug      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  article HelpArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@index([articleId])
+  @@index([slug])
+  @@map("help_article_tags")
 }
 
 model Testimonial {
@@ -751,7 +843,7 @@ model AppChangelog {
   @@map("app_changelogs")
 }
 
-model BlogPostVersion {
+model PostVersion {
   id              String   @id @default(cuid())
   postId          String   @map("post_id")
   title           String
@@ -760,11 +852,61 @@ model BlogPostVersion {
   metadata        Json?
   createdBy       String?  @map("created_by")
   createdAt       DateTime @default(now()) @map("created_at")
-  post            BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  post            Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   @@index([postId])
   @@index([postId, createdAt])
   @@map("blog_post_versions")
+}
+
+model PostReaction {
+  id        String   @id @default(cuid())
+  postId    String   @map("post_id")
+  userId    String?  @map("user_id")
+  sessionId String?  @map("session_id")
+  type      String   @default("like")
+  createdAt DateTime @default(now()) @map("created_at")
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId, type])
+  @@unique([postId, sessionId, type])
+  @@index([postId])
+  @@index([userId])
+  @@index([sessionId])
+  @@map("post_reactions")
+}
+
+model CommentReaction {
+  id        String      @id @default(cuid())
+  commentId String      @map("comment_id")
+  userId    String?     @map("user_id")
+  sessionId String?     @map("session_id")
+  type      String      @default("like")
+  createdAt DateTime    @default(now()) @map("created_at")
+  comment   PostComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  user      User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([commentId, userId, type])
+  @@unique([commentId, sessionId, type])
+  @@index([commentId])
+  @@index([userId])
+  @@index([sessionId])
+  @@map("comment_reactions")
+}
+
+model PostBookmark {
+  id        String   @id @default(cuid())
+  postId    String   @map("post_id")
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@index([postId])
+  @@index([userId])
+  @@map("post_bookmarks")
 }
 
 model HelpArticleVersion {
@@ -782,32 +924,37 @@ model HelpArticleVersion {
 }
 
 model SupportTicket {
-  id              String                 @id @default(cuid())
-  userId          String?                @map("user_id")
-  appId           String?                @map("app_id")
-  subject         String
-  description     String                 @db.Text
-  status          SupportTicketStatus    @default(OPEN)
-  priority        SupportTicketPriority  @default(MEDIUM)
-  category        String?
-  channel         SupportTicketChannel   @default(WEB)
-  sourceUrl       String?                @map("source_url")
-  assignedToId    String?                @map("assigned_to")
-  firstResponseAt DateTime?              @map("first_response_at")
-  resolvedAt      DateTime?              @map("resolved_at")
-  closedAt        DateTime?              @map("closed_at")
-  metadata        Json?
-  createdAt       DateTime               @default(now()) @map("created_at")
-  updatedAt       DateTime               @updatedAt @map("updated_at")
-  requester       User?                  @relation("SupportTicketRequester", fields: [userId], references: [id], onDelete: SetNull)
-  app             App?                   @relation(fields: [appId], references: [id], onDelete: SetNull)
-  assignee        User?                  @relation("SupportTicketAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
-  messages        SupportTicketMessage[]
+  id               String                 @id @default(cuid())
+  userId           String?                @map("user_id")
+  appId            String?                @map("app_id")
+  subject          String
+  description      String                 @db.Text
+  status           SupportTicketStatus    @default(OPEN)
+  priority         SupportTicketPriority  @default(MEDIUM)
+  category         String?
+  channel          SupportTicketChannel   @default(WEB)
+  sourceUrl        String?                @map("source_url")
+  assignedToId     String?                @map("assigned_to")
+  firstResponseAt  DateTime?              @map("first_response_at")
+  resolvedAt       DateTime?              @map("resolved_at")
+  closedAt         DateTime?              @map("closed_at")
+  metadata         Json?
+  messageCount     Int                    @default(0) @map("message_count")
+  unreadAdminCount Int                    @default(0) @map("unread_admin_count")
+  lastMessageAt    DateTime?              @map("last_message_at")
+  slaBreachAt      DateTime?              @map("sla_breach_at")
+  createdAt        DateTime               @default(now()) @map("created_at")
+  updatedAt        DateTime               @updatedAt @map("updated_at")
+  requester        User?                  @relation("SupportTicketRequester", fields: [userId], references: [id], onDelete: SetNull)
+  app              App?                   @relation(fields: [appId], references: [id], onDelete: SetNull)
+  assignee         User?                  @relation("SupportTicketAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  messages         SupportTicketMessage[]
 
-  @@index([userId, createdAt])
+  @@index([userId, createdAt(sort: Desc)])
   @@index([appId, createdAt])
-  @@index([status, priority, updatedAt])
-  @@index([assignedToId, status])
+  @@index([status, priority, createdAt(sort: Desc)])
+  @@index([assignedToId, status, createdAt(sort: Desc)])
+  @@index([slaBreachAt, status])
   @@map("support_tickets")
 }
 

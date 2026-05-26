@@ -134,20 +134,13 @@ export function HeroShowcase({
             <Input
               type="search"
               name="search"
-              className={cn(styles.prismInput)}
+              className={cn(styles.prismInput, "min-h-[48px] rounded-2xl")}
               placeholder="Search apps, categories, or developer names"
               aria-label="Search apps"
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  minHeight: 48,
-                  borderRadius: "16px",
-                },
-              }}
             />
             <Button
               type="submit"
-              className={cn(styles.prismButton)}
-              sx={{ height: 48, borderRadius: "16px", px: 2.5, minWidth: 160 }}
+              className={cn(styles.prismButton, "h-12 rounded-2xl px-6 min-w-[160px]")}
             >
               Search apps
             </Button>
@@ -157,23 +150,17 @@ export function HeroShowcase({
             {[
               { href: "/apps?sort=latest", label: "New arrivals" },
               { href: "/apps?featured=true", label: "Staff picks" },
-              { href: "/blog", label: "Blog insights" },
+              { href: "/posts", label: "Insights" },
               { href: "/help", label: "Help guides" },
             ].map((item) => (
               <Button
                 key={item.href}
-                component={Link}
-                href={item.href}
-                tone="secondary"
+                asChild
+                variant="secondary"
                 size="sm"
-                className={cn(styles.chipLink)}
-                sx={{
-                  color: "#14213a",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.08em",
-                }}
+                className={cn(styles.chipLink, "text-[#14213a] uppercase tracking-wide")}
               >
-                {item.label}
+                <Link href={item.href}>{item.label}</Link>
               </Button>
             ))}
           </Stack>
@@ -357,24 +344,22 @@ export function HeroShowcase({
                 sx={{ flexWrap: "wrap", gap: 1 }}
               >
                 <Button
-                  component={Link}
-                  href={
-                    heroSlider?.linkUrl ??
-                    (spotlightApp ? `/apps/${spotlightApp.slug}` : "/apps")
-                  }
+                  asChild
                   className={cn(styles.prismButton)}
                   size="sm"
                 >
-                  Open spotlight
+                  <Link href={
+                    heroSlider?.linkUrl ??
+                    (spotlightApp ? `/apps/${spotlightApp.slug}` : "/apps")
+                  }>Open spotlight</Link>
                 </Button>
                 <Button
-                  component={Link}
-                  href="/help-support"
-                  tone="secondary"
+                  asChild
+                  variant="secondary"
                   className={cn(styles.secondaryPrismButton)}
                   size="sm"
                 >
-                  Get support
+                  <Link href="/help-support">Get support</Link>
                 </Button>
               </Stack>
             </Stack>

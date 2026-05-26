@@ -263,7 +263,7 @@ function SliderCard({
               {appLabel}
             </CardDescription>
           </div>
-          <Badge tone={item.isActive ? "success" : "neutral"}>
+          <Badge variant={item.isActive ? "success" : "secondary"}>
             {item.isActive ? "Active" : "Disabled"}
           </Badge>
         </div>
@@ -277,11 +277,11 @@ function SliderCard({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <Button tone="secondary" size="sm" onClick={onEdit}>
+          <Button variant="secondary" size="sm" onClick={onEdit}>
             Edit slider
           </Button>
           <Button
-            tone="danger"
+            variant="destructive"
             size="sm"
             onClick={onDisable}
             disabled={disabling || !item.isActive}
@@ -710,7 +710,7 @@ export function AdminSlidersClient({
           {activeCount.toLocaleString()} active, {heroCount.toLocaleString()}{" "}
           hero placements.
         </p>
-        <Button tone="primary" onClick={() => setCreateOpen(true)}>
+        <Button variant="default" onClick={() => setCreateOpen(true)}>
           Add slider
         </Button>
       </div>
@@ -779,7 +779,7 @@ export function AdminSlidersClient({
 
           <div className="flex items-center justify-end gap-2">
             <Button
-              tone="secondary"
+              variant="secondary"
               onClick={() => {
                 setCreateOpen(false);
                 setCreateError(null);
@@ -839,7 +839,7 @@ export function AdminSlidersClient({
 
             <div className="flex items-center justify-end gap-2">
               <Button
-                tone="secondary"
+                variant="secondary"
                 onClick={() => {
                   setEditingSliderId(null);
                   setEditForm(null);

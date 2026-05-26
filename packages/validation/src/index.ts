@@ -47,7 +47,7 @@ export const customFieldEntitySchema = z.enum([
   "APP",
   "CATEGORY",
   "CONTENT_PAGE",
-  "BLOG_POST",
+  "POST",
   "HELP_ARTICLE",
   "PROFILE_PAGE",
   "TESTIMONIAL",
@@ -56,7 +56,7 @@ export const customFieldEntitySchema = z.enum([
   "STORE_SECTION_ITEM",
   "HOME_SLIDER",
   "APP_TAG",
-  "BLOG_TAG",
+  "POST_TAG",
   "HELP_CATEGORY",
   "APP_MEDIA",
   "APP_LINK",
@@ -757,37 +757,56 @@ export const profilePageCreateSchema = z.object({
 
 export const profilePageUpdateSchema = profilePageCreateSchema.partial();
 
-export const blogPostStatusSchema = z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]);
+export const postStatusSchema = z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]);
 
-export const blogTagCreateSchema = z.object({
+export const postTagCreateSchema = z.object({
   name: z.string().min(2).max(80),
   slug: slugSchema.optional(),
 });
 
-export const blogTagUpdateSchema = blogTagCreateSchema.partial();
+export const postTagUpdateSchema = postTagCreateSchema.partial();
 
-export const blogPostCreateSchema = z.object({
+export const postCreateSchema = z.object({
   slug: slugSchema,
   title: z.string().min(3).max(180),
   excerpt: z.string().max(500).optional(),
   contentMarkdown: z.string().min(20),
+  featuredImageUrl: z.string().url().optional(),
   metadata: metadataSchema.optional(),
-  status: blogPostStatusSchema.default("DRAFT"),
+  status: postStatusSchema.default("DRAFT"),
   publishAt: z.coerce.date().optional(),
   tagIds: z.array(z.string().cuid()).max(25).default([]),
 });
 
-export const blogPostUpdateSchema = blogPostCreateSchema.partial();
+export const postUpdateSchema = postCreateSchema.partial();
 
-export const blogCommentCreateSchema = z.object({
+export const postCommentCreateSchema = z.object({
   content: z.string().min(2).max(5000),
   authorName: z.string().min(2).max(120).optional(),
   authorEmail: z.string().email().optional(),
+  parentId: z.string().cuid().optional(),
 });
 
-export const blogCommentModerationSchema = z.object({
+export const postCommentModerationSchema = z.object({
   isApproved: z.coerce.boolean(),
 });
+
+export const postReactionToggleSchema = z.object({
+  type: z.enum(["like", "love", "insightful", "celebrate"]).default("like"),
+});
+
+export const postBookmarkToggleSchema = z.object({}); // Empty body for toggle
+
+// Backwards-compatible aliases
+export const blogPostStatusSchema = postStatusSchema;
+export const blogTagCreateSchema = postTagCreateSchema;
+export const blogTagUpdateSchema = postTagUpdateSchema;
+export const blogPostCreateSchema = postCreateSchema;
+export const blogPostUpdateSchema = postUpdateSchema;
+export const blogCommentCreateSchema = postCommentCreateSchema;
+export const blogCommentModerationSchema = postCommentModerationSchema;
+export const blogReactionToggleSchema = postReactionToggleSchema;
+export const blogBookmarkToggleSchema = postBookmarkToggleSchema;
 
 export const helpArticleStatusSchema = z.enum([
   "DRAFT",
@@ -796,6 +815,7 @@ export const helpArticleStatusSchema = z.enum([
 ]);
 
 export const helpCategoryCreateSchema = z.object({
+  parentId: z.string().cuid().optional(),
   name: z.string().min(2).max(120),
   slug: slugSchema,
   description: z.string().max(300).optional(),
@@ -807,16 +827,30 @@ export const helpCategoryUpdateSchema = helpCategoryCreateSchema.partial();
 
 export const helpArticleCreateSchema = z.object({
   categoryId: z.string().cuid().optional(),
+  appId: z.string().cuid().optional(),
   slug: slugSchema,
   title: z.string().min(3).max(180),
   summary: z.string().max(500).optional(),
   contentMarkdown: z.string().min(20),
+  contentMdx: z.string().optional(),
   status: helpArticleStatusSchema.default("DRAFT"),
   isFeatured: z.coerce.boolean().default(false),
   publishAt: z.coerce.date().optional(),
+  seoTitle: z.string().optional(),
+  seoDescription: z.string().optional(),
 });
 
 export const helpArticleUpdateSchema = helpArticleCreateSchema.partial();
+
+export const faqCreateSchema = z.object({
+  question: z.string().min(3),
+  answerMdx: z.string().min(5),
+  categoryId: z.string().cuid().optional(),
+  appId: z.string().cuid().optional(),
+  orderIndex: z.coerce.number().int().min(0).default(0),
+});
+
+export const faqUpdateSchema = faqCreateSchema.partial();
 
 export const testimonialCreateSchema = z.object({
   authorName: z.string().min(2).max(120),
@@ -942,15 +976,26 @@ export type SupportTicketListQueryInput = z.infer<
 >;
 export type ProfilePageCreateInput = z.infer<typeof profilePageCreateSchema>;
 export type ProfilePageUpdateInput = z.infer<typeof profilePageUpdateSchema>;
-export type BlogPostStatusInput = z.infer<typeof blogPostStatusSchema>;
-export type BlogTagCreateInput = z.infer<typeof blogTagCreateSchema>;
-export type BlogTagUpdateInput = z.infer<typeof blogTagUpdateSchema>;
-export type BlogPostCreateInput = z.infer<typeof blogPostCreateSchema>;
-export type BlogPostUpdateInput = z.infer<typeof blogPostUpdateSchema>;
-export type BlogCommentCreateInput = z.infer<typeof blogCommentCreateSchema>;
-export type BlogCommentModerationInput = z.infer<
-  typeof blogCommentModerationSchema
+export type PostStatusInput = z.infer<typeof postStatusSchema>;
+export type PostTagCreateInput = z.infer<typeof postTagCreateSchema>;
+export type PostTagUpdateInput = z.infer<typeof postTagUpdateSchema>;
+export type PostCreateInput = z.infer<typeof postCreateSchema>;
+export type PostUpdateInput = z.infer<typeof postUpdateSchema>;
+export type PostCommentCreateInput = z.infer<typeof postCommentCreateSchema>;
+export type PostCommentModerationInput = z.infer<
+  typeof postCommentModerationSchema
 >;
+export type PostReactionToggleInput = z.infer<typeof postReactionToggleSchema>;
+export type PostBookmarkToggleInput = z.infer<typeof postBookmarkToggleSchema>;
+
+// Backwards-compatible aliases
+export type BlogPostStatusInput = PostStatusInput;
+export type BlogTagCreateInput = PostTagCreateInput;
+export type BlogTagUpdateInput = PostTagUpdateInput;
+export type BlogPostCreateInput = PostCreateInput;
+export type BlogPostUpdateInput = PostUpdateInput;
+export type BlogCommentCreateInput = PostCommentCreateInput;
+export type BlogCommentModerationInput = PostCommentModerationInput;
 export type HelpArticleStatusInput = z.infer<typeof helpArticleStatusSchema>;
 export type HelpCategoryCreateInput = z.infer<typeof helpCategoryCreateSchema>;
 export type HelpCategoryUpdateInput = z.infer<typeof helpCategoryUpdateSchema>;

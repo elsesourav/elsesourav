@@ -26,11 +26,11 @@ export function ConfirmDialog({
     <Modal open={open} onClose={onCancel} title={title} width="md">
       <p className="text-sm text-[#4c5770]">{description}</p>
       <div className="mt-5 flex items-center justify-end gap-2">
-        <Button tone="secondary" onClick={onCancel} disabled={busy}>
+        <Button variant="outline" onClick={onCancel} disabled={busy}>
           Cancel
         </Button>
         <Button
-          tone={confirmTone === "danger" ? "danger" : "primary"}
+          variant={confirmTone === "danger" ? "destructive" : "default"}
           onClick={onConfirm}
           disabled={busy}
         >

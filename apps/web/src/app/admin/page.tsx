@@ -1,258 +1,152 @@
 import { requireAdminContext } from "@/lib/page-access";
-import { fetchServiceData } from "@/lib/service-client";
-import type { AuthStats, CatalogStats, UserStats } from "@/lib/view-models";
 import Link from "next/link";
+import { AdminDashboardStats } from "./dashboard-stats";
+import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
+import { getAdminAuthStats, getAdminCatalogStats, getAdminUserStats } from "./actions";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Activity, LayoutGrid, Users, MessageSquare, Megaphone, FileText, Settings, Rocket, ArrowRight } from "lucide-react";
+import { ActivityStream } from "./activity-stream";
+import { SupportWidget } from "./support-widget";
 
 export const dynamic = "force-dynamic";
 
 const quickRoutes = [
-  {
-    href: "/admin/apps",
-    title: "Apps",
-    summary: "Manage catalog app records.",
-  },
-  {
-    href: "/admin/categories",
-    title: "Categories",
-    summary: "Organize and maintain taxonomy.",
-  },
-  {
-    href: "/admin/users",
-    title: "Users",
-    summary: "Review roles and account status.",
-  },
-  {
-    href: "/admin/feedback",
-    title: "Feedback",
-    summary: "Moderate incoming submissions.",
-  },
-  {
-    href: "/admin/store/sections",
-    title: "Store sections",
-    summary: "Control storefront rail sections.",
-  },
-  {
-    href: "/admin/store/banners",
-    title: "Store banners",
-    summary: "Schedule and place banners.",
-  },
-  {
-    href: "/admin/content/pages",
-    title: "Pages",
-    summary: "Edit static content pages.",
-  },
-  {
-    href: "/admin/content/blog",
-    title: "Blog",
-    summary: "Publish editorial updates.",
-  },
-  {
-    href: "/admin/theme/configs",
-    title: "Theme configs",
-    summary: "Manage visual brand presets.",
-  },
-  {
-    href: "/admin/control",
-    title: "API docs",
-    summary: "Open service references.",
-  },
+  { href: "/admin/apps", title: "Apps", summary: "Manage catalog app records.", icon: LayoutGrid },
+  { href: "/admin/users", title: "Users", summary: "Review roles and account status.", icon: Users },
+  { href: "/admin/feedback", title: "Feedback", summary: "Moderate incoming submissions.", icon: MessageSquare },
+  { href: "/admin/store/banners", title: "Store banners", summary: "Schedule and place banners.", icon: Megaphone },
+  { href: "/admin/content/pages", title: "Pages", summary: "Edit static content pages.", icon: FileText },
+  { href: "/admin/theme/configs", title: "Theme configs", summary: "Manage visual brand presets.", icon: Settings },
 ] as const;
-
-function toneForStatus(status: string): string {
-  const normalized = status.toUpperCase();
-
-  if (normalized.includes("PUBLISH") || normalized.includes("ACTIVE")) {
-    return "border-emerald-200 bg-emerald-50 text-emerald-700";
-  }
-
-  if (normalized.includes("DRAFT") || normalized.includes("PENDING")) {
-    return "border-amber-200 bg-amber-50 text-amber-700";
-  }
-
-  if (normalized.includes("ARCHIVE") || normalized.includes("DELETE")) {
-    return "border-rose-200 bg-rose-50 text-rose-700";
-  }
-
-  return "border-[color-mix(in_srgb,var(--foreground)_12%,transparent)] bg-[color-mix(in_srgb,var(--background)_90%,var(--foreground)_10%)] text-[color-mix(in_srgb,var(--foreground)_55%,transparent)]";
-}
 
 export default async function AdminPage() {
   const user = await requireAdminContext();
   const displayName = user.email?.split("@")[0] ?? "Admin";
 
-  const [catalogStats, authStats, userStats] = await Promise.all([
-    fetchServiceData<CatalogStats>({
-      service: "catalog",
-      path: "/v1/admin/catalog/stats",
-      user,
-    }).catch(() => ({
-      appsCount: 0,
-      categoriesCount: 0,
-      recentApps: [],
-    })),
-    fetchServiceData<AuthStats>({
-      service: "auth",
-      path: "/v1/auth/admin/stats",
-      user,
-    }).catch(() => ({
-      usersCount: 0,
-    })),
-    fetchServiceData<UserStats>({
-      service: "user",
-      path: "/v1/admin/user/stats",
-      user,
-    }).catch(() => ({
-      feedbackCount: 0,
-    })),
+  const queryClient = new QueryClient();
+
+  // Prefetch data on the server
+  await Promise.all([
+    queryClient.prefetchQuery({
+      queryKey: ["admin", "catalogStats"],
+      queryFn: () => getAdminCatalogStats(),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["admin", "authStats"],
+      queryFn: () => getAdminAuthStats(),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["admin", "userStats"],
+      queryFn: () => getAdminUserStats(),
+    }),
   ]);
 
-  const topCards = [
-    {
-      label: "Catalog apps",
-      value: catalogStats.appsCount,
-      detail: "Current app entities",
-    },
-    {
-      label: "Total users",
-      value: authStats.usersCount,
-      detail: "Registered accounts",
-    },
-    {
-      label: "Feedback entries",
-      value: userStats.feedbackCount,
-      detail: "Moderation queue size",
-    },
-  ] as const;
-
   return (
-    <div className="space-y-8 py-2 sm:py-4">
-      <header className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color-mix(in_srgb,var(--foreground)_45%,transparent)]">
-          Admin
-        </p>
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h1 className="text-3xl font-semibold text-[color-mix(in_srgb,var(--foreground)_90%,transparent)]">
-            Analytics
-          </h1>
-        </div>
-        <p className="max-w-2xl text-sm text-[color-mix(in_srgb,var(--foreground)_55%,transparent)]">
-          Monitor apps, users, content, and support flows in one place.
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
+      <header className="space-y-1">
+        <h1 className="text-3xl font-bold tracking-tight text-text-primary">
+          Overview
+        </h1>
+        <p className="text-sm text-text-muted">
+          Monitor your application metrics, recent activity, and system health.
         </p>
       </header>
 
-      <section className="flex flex-wrap items-center gap-3">
-        <span className="rounded-full bg-[color-mix(in_srgb,var(--background)_94%,var(--foreground)_6%)] px-4 py-2 text-xs font-semibold text-[color-mix(in_srgb,var(--foreground)_65%,transparent)] shadow-sm">
-          Full statistics
-        </span>
-        <span className="rounded-full bg-[color-mix(in_srgb,var(--background)_90%,var(--foreground)_10%)] px-4 py-2 text-xs font-semibold text-[color-mix(in_srgb,var(--foreground)_45%,transparent)]">
-          Results summary
-        </span>
-      </section>
+      <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+        <Card className="lg:col-span-4 bg-gradient-to-br from-brand-primary to-brand-secondary text-brand-primary-foreground border-transparent">
+          <CardHeader>
+            <CardTitle className="text-brand-primary-foreground text-xl flex items-center gap-2">
+              <Rocket className="h-5 w-5 text-brand-accent" />
+              Welcome back, {displayName}
+            </CardTitle>
+            <CardDescription className="text-brand-primary-foreground/70">
+              Your platform is performing optimally today. You have {user.role === "ADMIN" ? "full" : "limited"} access.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex gap-4 mt-2">
+              <button className="bg-brand-accent hover:bg-brand-accent-hover text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                View Reports
+              </button>
+              <button className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors backdrop-blur-sm">
+                System Health
+              </button>
+            </div>
+          </CardContent>
+        </Card>
 
-      <section className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
-        <div className="rounded-3xl bg-[color-mix(in_srgb,var(--background)_96%,var(--foreground)_4%)] p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[color-mix(in_srgb,var(--foreground)_45%,transparent)]">
-            Team Payments
-          </p>
-          <h2 className="mt-2 text-2xl font-semibold text-[color-mix(in_srgb,var(--foreground)_90%,transparent)]">
-            Hello, {displayName}
-          </h2>
-          <p className="mt-2 text-sm text-[color-mix(in_srgb,var(--foreground)_55%,transparent)]">
-            Use the sidebar to move between sections and keep operations tidy.
-          </p>
-        </div>
-        <div className="rounded-3xl bg-[color-mix(in_srgb,var(--background)_96%,var(--foreground)_4%)] p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[color-mix(in_srgb,var(--foreground)_45%,transparent)]">
-            Account Snapshot
-          </p>
-          <p className="mt-2 text-sm font-semibold text-[color-mix(in_srgb,var(--foreground)_90%,transparent)]">
-            Email
-          </p>
-          <p className="text-xs text-[color-mix(in_srgb,var(--foreground)_55%,transparent)]">
-            {user.email ?? "Unknown"}
-          </p>
-          <p className="mt-3 text-sm font-semibold text-[color-mix(in_srgb,var(--foreground)_90%,transparent)]">
-            Role
-          </p>
-          <p className="text-xs text-[color-mix(in_srgb,var(--foreground)_55%,transparent)]">
-            {user.role}
-          </p>
-        </div>
-      </section>
-
-      <section className="grid gap-4 sm:grid-cols-3">
-        {topCards.map((card) => (
-          <div
-            key={card.label}
-            className="rounded-3xl bg-[color-mix(in_srgb,var(--background)_96%,var(--foreground)_4%)] p-5 shadow-sm"
-          >
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[color-mix(in_srgb,var(--foreground)_45%,transparent)]">
-              {card.label}
-            </p>
-            <p className="mt-2 text-3xl font-semibold text-[color-mix(in_srgb,var(--foreground)_90%,transparent)]">
-              {card.value.toLocaleString()}
-            </p>
-            <p className="mt-2 text-xs text-[color-mix(in_srgb,var(--foreground)_55%,transparent)]">
-              {card.detail}
-            </p>
-          </div>
-        ))}
-      </section>
-
-      <section className="rounded-3xl bg-[color-mix(in_srgb,var(--background)_96%,var(--foreground)_4%)] p-5 shadow-sm">
-        <h2 className="text-lg font-semibold text-[color-mix(in_srgb,var(--foreground)_90%,transparent)]">
-          Recent apps
-        </h2>
-        <div className="mt-4 grid gap-3">
-          {catalogStats.recentApps.length === 0 ? (
-            <p className="rounded-xl border border-[color-mix(in_srgb,var(--foreground)_12%,transparent)] px-3 py-2 text-sm text-[color-mix(in_srgb,var(--foreground)_55%,transparent)]">
-              No recent apps available.
-            </p>
-          ) : null}
-          {catalogStats.recentApps.map((app) => (
-            <div
-              key={app.id}
-              className="flex items-start justify-between gap-3 rounded-2xl border border-[color-mix(in_srgb,var(--foreground)_12%,transparent)] px-3 py-2"
-            >
-              <div>
-                <p className="font-semibold text-[color-mix(in_srgb,var(--foreground)_90%,transparent)]">
-                  {app.title}
-                </p>
-                <p className="text-xs text-[color-mix(in_srgb,var(--foreground)_55%,transparent)]">
-                  /{app.slug}
-                </p>
-              </div>
-              <span
-                className={`rounded-full border px-2 py-1 text-[11px] font-semibold ${toneForStatus(app.status)}`}
-              >
-                {app.status}
+        <Card className="lg:col-span-3">
+          <CardHeader>
+            <CardTitle className="text-lg">Account Snapshot</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex justify-between items-center border-b border-border-subtle pb-3">
+              <span className="text-sm font-medium text-text-muted">Email</span>
+              <span className="text-sm text-text-primary">{user.email ?? "Unknown"}</span>
+            </div>
+            <div className="flex justify-between items-center border-b border-border-subtle pb-3">
+              <span className="text-sm font-medium text-text-muted">Role</span>
+              <span className="inline-flex items-center rounded-full bg-status-info-bg px-2.5 py-0.5 text-xs font-semibold text-status-info">
+                {user.role}
               </span>
             </div>
-          ))}
-        </div>
+          </CardContent>
+        </Card>
       </section>
 
-      <section className="rounded-3xl bg-[color-mix(in_srgb,var(--background)_96%,var(--foreground)_4%)] p-5 shadow-sm">
-        <h2 className="text-lg font-semibold text-[color-mix(in_srgb,var(--foreground)_90%,transparent)]">
-          Quick routes
-        </h2>
-        <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-          {quickRoutes.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded-2xl border border-[color-mix(in_srgb,var(--foreground)_12%,transparent)] px-3 py-2.5 text-sm transition hover:border-[color-mix(in_srgb,var(--foreground)_18%,transparent)] hover:bg-[color-mix(in_srgb,var(--background)_90%,var(--foreground)_10%)]"
-            >
-              <p className="font-semibold text-[color-mix(in_srgb,var(--foreground)_90%,transparent)]">
-                {item.title}
-              </p>
-              <p className="text-xs text-[color-mix(in_srgb,var(--foreground)_55%,transparent)]">
-                {item.summary}
-              </p>
-            </Link>
-          ))}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+        <div className="lg:col-span-4 space-y-8">
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <AdminDashboardStats />
+          </HydrationBoundary>
         </div>
-      </section>
+
+        <div className="lg:col-span-3 space-y-8">
+          <SupportWidget />
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <div className="space-y-1">
+                <CardTitle className="text-lg">Recent Activity</CardTitle>
+                <CardDescription>Latest events across the platform</CardDescription>
+              </div>
+              <Activity className="h-4 w-4 text-text-muted" />
+            </CardHeader>
+            <CardContent>
+              <ActivityStream />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Quick Actions</CardTitle>
+              <CardDescription>Jump straight to operations</CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-2">
+              {quickRoutes.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="group flex items-center justify-between rounded-md p-3 hover:bg-surface-hover transition-colors border border-transparent hover:border-border-subtle"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="h-8 w-8 rounded-md bg-surface-active flex items-center justify-center text-text-muted group-hover:text-brand-primary group-hover:bg-brand-primary/5 transition-colors">
+                        <Icon className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-text-primary">{item.title}</p>
+                        <p className="text-xs text-text-muted">{item.summary}</p>
+                      </div>
+                    </div>
+                    <ArrowRight className="h-4 w-4 text-text-muted opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                  </Link>
+                );
+              })}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }

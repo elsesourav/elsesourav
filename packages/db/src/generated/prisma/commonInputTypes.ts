@@ -372,21 +372,21 @@ export type EnumContentStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumContentStatusFilter<$PrismaModel>
 }
 
-export type EnumBlogPostStatusFilter<$PrismaModel = never> = {
-  equals?: $Enums.BlogPostStatus | Prisma.EnumBlogPostStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.BlogPostStatus[] | Prisma.ListEnumBlogPostStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.BlogPostStatus[] | Prisma.ListEnumBlogPostStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumBlogPostStatusFilter<$PrismaModel> | $Enums.BlogPostStatus
+export type EnumPostStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.PostStatus | Prisma.EnumPostStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.PostStatus[] | Prisma.ListEnumPostStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PostStatus[] | Prisma.ListEnumPostStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPostStatusFilter<$PrismaModel> | $Enums.PostStatus
 }
 
-export type EnumBlogPostStatusWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.BlogPostStatus | Prisma.EnumBlogPostStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.BlogPostStatus[] | Prisma.ListEnumBlogPostStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.BlogPostStatus[] | Prisma.ListEnumBlogPostStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumBlogPostStatusWithAggregatesFilter<$PrismaModel> | $Enums.BlogPostStatus
+export type EnumPostStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PostStatus | Prisma.EnumPostStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.PostStatus[] | Prisma.ListEnumPostStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PostStatus[] | Prisma.ListEnumPostStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPostStatusWithAggregatesFilter<$PrismaModel> | $Enums.PostStatus
   _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumBlogPostStatusFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumBlogPostStatusFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPostStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPostStatusFilter<$PrismaModel>
 }
 
 export type EnumHelpArticleStatusFilter<$PrismaModel = never> = {
@@ -991,21 +991,21 @@ export type NestedEnumContentStatusWithAggregatesFilter<$PrismaModel = never> = 
   _max?: Prisma.NestedEnumContentStatusFilter<$PrismaModel>
 }
 
-export type NestedEnumBlogPostStatusFilter<$PrismaModel = never> = {
-  equals?: $Enums.BlogPostStatus | Prisma.EnumBlogPostStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.BlogPostStatus[] | Prisma.ListEnumBlogPostStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.BlogPostStatus[] | Prisma.ListEnumBlogPostStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumBlogPostStatusFilter<$PrismaModel> | $Enums.BlogPostStatus
+export type NestedEnumPostStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.PostStatus | Prisma.EnumPostStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.PostStatus[] | Prisma.ListEnumPostStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PostStatus[] | Prisma.ListEnumPostStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPostStatusFilter<$PrismaModel> | $Enums.PostStatus
 }
 
-export type NestedEnumBlogPostStatusWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.BlogPostStatus | Prisma.EnumBlogPostStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.BlogPostStatus[] | Prisma.ListEnumBlogPostStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.BlogPostStatus[] | Prisma.ListEnumBlogPostStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumBlogPostStatusWithAggregatesFilter<$PrismaModel> | $Enums.BlogPostStatus
+export type NestedEnumPostStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PostStatus | Prisma.EnumPostStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.PostStatus[] | Prisma.ListEnumPostStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PostStatus[] | Prisma.ListEnumPostStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPostStatusWithAggregatesFilter<$PrismaModel> | $Enums.PostStatus
   _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumBlogPostStatusFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumBlogPostStatusFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPostStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPostStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumHelpArticleStatusFilter<$PrismaModel = never> = {

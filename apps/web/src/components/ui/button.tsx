@@ -1,86 +1,52 @@
-import { cn } from "@/lib/cn";
-import MuiButton, {
-  type ButtonProps as MuiButtonProps,
-} from "@mui/material/Button";
-import CircularProgress from "@mui/material/CircularProgress";
-import type { ReactNode } from "react";
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { cn } from "@/lib/cn"
 
-type ButtonTone = "primary" | "secondary" | "danger" | "ghost";
-type ButtonSize = "sm" | "md" | "lg";
-
-const sizeByTone: Record<ButtonSize, MuiButtonProps["size"]> = {
-  sm: "small",
-  md: "medium",
-  lg: "large",
-};
-
-const toneStyle: Record<ButtonTone, MuiButtonProps> = {
-  primary: {
-    variant: "contained",
-    color: "primary",
-  },
-  secondary: {
-    variant: "outlined",
-    color: "inherit",
-  },
-  danger: {
-    variant: "contained",
-    color: "error",
-  },
-  ghost: {
-    variant: "text",
-    color: "primary",
-  },
-};
-
-type ButtonProps = Omit<MuiButtonProps, "variant" | "color" | "size"> & {
-  tone?: ButtonTone;
-  size?: ButtonSize;
-  loading?: boolean;
-  children?: ReactNode;
-};
-
-export function Button({
-  tone = "primary",
-  size = "md",
-  loading = false,
-  className,
-  type = "button",
-  children,
-  ...props
-}: ButtonProps) {
-  const toneProps = toneStyle[tone];
-
-  return (
-    <MuiButton
-      type={type}
-      variant={toneProps.variant}
-      color={toneProps.color}
-      size={sizeByTone[size]}
-      disabled={loading || props.disabled}
-      className={cn("ui-btn-base font-medium", className)}
-      sx={{
-        borderRadius: 999,
-        boxShadow: "none",
-        ...(tone === "primary"
-          ? {
-              background:
-                "linear-gradient(135deg, color-mix(in srgb, var(--brand-primary) 84%, black 16%), color-mix(in srgb, var(--brand-secondary) 62%, var(--brand-primary) 38%))",
-              borderColor:
-                "color-mix(in srgb, var(--brand-primary) 70%, black 30%)",
-            }
-          : {}),
-      }}
-      {...props}
-    >
-      {loading ? (
-        <>
-          <CircularProgress size={16} color="inherit" />
-          Processing...
-        </>
-      ) : (
-        children
-      )}
-    </MuiButton>
-  );
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  asChild?: boolean
+  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
+  size?: "default" | "sm" | "lg" | "icon"
+  loading?: boolean
 }
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant = "default", size = "default", asChild = false, loading = false, disabled, children, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button"
+    
+    return (
+      <Comp
+        className={cn(
+          "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+          // Variants
+          variant === "default" && "bg-brand-primary text-brand-primary-foreground hover:bg-brand-primary-hover shadow-sm",
+          variant === "destructive" && "bg-status-danger text-white hover:bg-status-danger/90 shadow-sm",
+          variant === "outline" && "border border-border-strong bg-transparent hover:bg-surface-hover text-text-primary",
+          variant === "secondary" && "bg-surface-active text-text-primary hover:bg-surface-hover",
+          variant === "ghost" && "hover:bg-surface-active text-text-primary",
+          variant === "link" && "text-brand-accent underline-offset-4 hover:underline",
+          // Sizes
+          size === "default" && "h-10 px-4 py-2",
+          size === "sm" && "h-9 rounded-md px-3",
+          size === "lg" && "h-11 rounded-md px-8",
+          size === "icon" && "h-10 w-10",
+          className
+        )}
+        ref={ref}
+        disabled={disabled || loading}
+        {...props}
+      >
+        {loading && (
+          <svg className="mr-2 h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        )}
+        {children}
+      </Comp>
+    )
+  }
+)
+Button.displayName = "Button"
+
+export { Button }

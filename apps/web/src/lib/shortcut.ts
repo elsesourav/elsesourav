@@ -12,6 +12,7 @@ let mounted = false;
 
 function handleKeydown(e: KeyboardEvent) {
   for (const [, sc] of shortcuts) {
+    if (!e.key || !sc.key) continue;
     if (e.key.toLowerCase() !== sc.key.toLowerCase()) continue;
 
     if (sc.requireCtrlOrMeta && !(e.ctrlKey || e.metaKey)) continue;

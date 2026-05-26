@@ -2,203 +2,82 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { formatDateTime, type AdminFeedbackItem } from "@/lib/view-models";
 import { useAppDispatch } from "@/store/hooks";
 import { enqueueNotification } from "@/store/slices/notificationsSlice";
 import type { ApiResponse } from "@elsesourav/types";
 import { useMemo, useState } from "react";
+import { cn } from "@/lib/cn";
+import { Search, Filter, Star, EyeOff, Eye, Clock, User, AppWindow, MessageSquare } from "lucide-react";
 
 type FeedbackVisibilityFilter = "all" | "visible" | "hidden";
-
-type FeedbackMutationResponse = {
-  id: string;
-  isHidden: boolean;
-};
+type FeedbackMutationResponse = { id: string; isHidden: boolean; };
 
 function parseApiMessage(payload: unknown): string | null {
-  if (!payload || typeof payload !== "object") {
-    return null;
-  }
-
-  const candidate = payload as {
-    ok?: boolean;
-    error?: {
-      message?: string;
-    };
-  };
-
-  if (candidate.ok === false && candidate.error?.message) {
-    return candidate.error.message;
-  }
-
+  if (!payload || typeof payload !== "object") return null;
+  const candidate = payload as { ok?: boolean; error?: { message?: string; }; };
+  if (candidate.ok === false && candidate.error?.message) return candidate.error.message;
   return null;
 }
 
-function isApiSuccess<T>(
-  payload: unknown,
-): payload is Extract<ApiResponse<T>, { ok: true }> {
-  if (!payload || typeof payload !== "object") {
-    return false;
-  }
-
-  const candidate = payload as {
-    ok?: boolean;
-    data?: T;
-  };
-
+function isApiSuccess<T>(payload: unknown): payload is Extract<ApiResponse<T>, { ok: true }> {
+  if (!payload || typeof payload !== "object") return false;
+  const candidate = payload as { ok?: boolean; data?: T; };
   return candidate.ok === true && "data" in candidate;
 }
 
 function toSortedFeedback(items: AdminFeedbackItem[]): AdminFeedbackItem[] {
-  return [...items].sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-  );
+  return [...items].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
-function ratingStars(rating: number): string {
-  const safe = Math.min(5, Math.max(1, Math.round(rating)));
-  return "★".repeat(safe) + "☆".repeat(5 - safe);
-}
-
-export function AdminFeedbackClient({
-  initialFeedback,
-}: {
-  initialFeedback: AdminFeedbackItem[];
-}) {
+export function AdminFeedbackClient({ initialFeedback }: { initialFeedback: AdminFeedbackItem[] }) {
   const dispatch = useAppDispatch();
-  const [feedback, setFeedback] = useState(() =>
-    toSortedFeedback(initialFeedback),
-  );
+  const [feedback, setFeedback] = useState(() => toSortedFeedback(initialFeedback));
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<FeedbackVisibilityFilter>("all");
-  const [pendingFeedbackId, setPendingFeedbackId] = useState<string | null>(
-    null,
-  );
-  const [confirmAction, setConfirmAction] = useState<{
-    feedbackId: string;
-    nextHidden: boolean;
-  } | null>(null);
-
-  const stats = useMemo(() => {
-    const hidden = feedback.filter((item) => item.isHidden).length;
-    const visible = feedback.length - hidden;
-
-    return {
-      total: feedback.length,
-      hidden,
-      visible,
-      averageRating:
-        feedback.length === 0
-          ? "-"
-          : (
-              feedback.reduce((sum, item) => sum + item.rating, 0) /
-              feedback.length
-            ).toFixed(1),
-    };
-  }, [feedback]);
+  const [selectedId, setSelectedId] = useState<string | null>(feedback[0]?.id ?? null);
+  const [pendingFeedbackId, setPendingFeedbackId] = useState<string | null>(null);
+  const [confirmAction, setConfirmAction] = useState<{ feedbackId: string; nextHidden: boolean; } | null>(null);
 
   const filteredFeedback = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
-
     return feedback.filter((item) => {
-      if (filter === "visible" && item.isHidden) {
-        return false;
-      }
-
-      if (filter === "hidden" && !item.isHidden) {
-        return false;
-      }
-
-      if (!normalizedQuery) {
-        return true;
-      }
-
-      const haystack = [
-        item.app.title,
-        item.app.slug,
-        item.user.name,
-        item.user.email,
-        item.message,
-      ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
-
+      if (filter === "visible" && item.isHidden) return false;
+      if (filter === "hidden" && !item.isHidden) return false;
+      if (!normalizedQuery) return true;
+      const haystack = [item.app.title, item.app.slug, item.user.name, item.user.email, item.message].filter(Boolean).join(" ").toLowerCase();
       return haystack.includes(normalizedQuery);
     });
   }, [feedback, filter, query]);
 
-  const confirmItem =
-    confirmAction !== null
-      ? (feedback.find((item) => item.id === confirmAction.feedbackId) ?? null)
-      : null;
+  const selectedItem = useMemo(() => feedback.find(f => f.id === selectedId), [feedback, selectedId]);
+  const confirmItem = confirmAction ? feedback.find((item) => item.id === confirmAction.feedbackId) : null;
 
   async function onConfirmModeration() {
-    if (!confirmAction || !confirmItem) {
-      return;
-    }
-
+    if (!confirmAction || !confirmItem) return;
     setPendingFeedbackId(confirmAction.feedbackId);
 
     try {
-      const response = await fetch(
-        `/api/admin/feedback/${confirmAction.feedbackId}`,
-        {
-          method: "PATCH",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify({
-            isHidden: confirmAction.nextHidden,
-          }),
-        },
-      );
+      const response = await fetch(`/api/admin/feedback/${confirmAction.feedbackId}`, {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ isHidden: confirmAction.nextHidden }),
+      });
 
       const payload = await response.json().catch(() => null);
       if (!response.ok || !isApiSuccess<FeedbackMutationResponse>(payload)) {
-        dispatch(
-          enqueueNotification({
-            tone: "error",
-            message:
-              parseApiMessage(payload) ??
-              "Failed to update feedback visibility.",
-          }),
-        );
+        dispatch(enqueueNotification({ tone: "error", message: parseApiMessage(payload) ?? "Failed to update feedback visibility." }));
         return;
       }
 
-      setFeedback((previous) =>
-        previous.map((item) =>
-          item.id === confirmAction.feedbackId
-            ? {
-                ...item,
-                isHidden: payload.data.isHidden,
-              }
-            : item,
-        ),
-      );
-
-      dispatch(
-        enqueueNotification({
-          tone: "success",
-          message: payload.data.isHidden
-            ? "Feedback hidden from public surfaces."
-            : "Feedback restored to public surfaces.",
-        }),
-      );
+      setFeedback((prev) => prev.map((item) => item.id === confirmAction.feedbackId ? { ...item, isHidden: payload.data.isHidden } : item));
+      dispatch(enqueueNotification({ tone: "success", message: payload.data.isHidden ? "Feedback hidden." : "Feedback restored." }));
     } catch (error) {
-      dispatch(
-        enqueueNotification({
-          tone: "error",
-          message:
-            error instanceof Error
-              ? error.message
-              : "Failed to update feedback visibility.",
-        }),
-      );
+      dispatch(enqueueNotification({ tone: "error", message: error instanceof Error ? error.message : "Failed." }));
     } finally {
       setPendingFeedbackId(null);
       setConfirmAction(null);
@@ -206,145 +85,144 @@ export function AdminFeedbackClient({
   }
 
   return (
-    <section className="space-y-4">
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <p className="ui-text-muted text-xs uppercase tracking-wide">
-            Entries
-          </p>
-          <p className="ui-text-heading mt-1 text-2xl font-semibold">
-            {stats.total.toLocaleString()}
-          </p>
-        </Card>
-        <Card>
-          <p className="ui-text-muted text-xs uppercase tracking-wide">
-            Visible
-          </p>
-          <p className="ui-text-heading mt-1 text-2xl font-semibold">
-            {stats.visible.toLocaleString()}
-          </p>
-        </Card>
-        <Card>
-          <p className="ui-text-muted text-xs uppercase tracking-wide">
-            Hidden
-          </p>
-          <p className="ui-text-heading mt-1 text-2xl font-semibold">
-            {stats.hidden.toLocaleString()}
-          </p>
-        </Card>
-        <Card>
-          <p className="ui-text-muted text-xs uppercase tracking-wide">
-            Avg rating
-          </p>
-          <p className="ui-text-heading mt-1 text-2xl font-semibold">
-            {stats.averageRating}
-          </p>
-        </Card>
-      </div>
-
-      <Card className="space-y-3">
-        <div className="grid gap-3 md:grid-cols-[1fr_auto]">
-          <div className="space-y-1.5">
-            <label
-              htmlFor="feedback-search"
-              className="ui-label text-xs font-semibold uppercase tracking-wide"
-            >
-              Search
-            </label>
-            <Input
-              id="feedback-search"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search by app, user, or message"
+    <div className="flex h-[calc(100vh-12rem)] min-h-[600px] border border-border-subtle rounded-xl overflow-hidden bg-bg-base shadow-sm animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
+      
+      {/* LEFT PANEL - LIST */}
+      <div className="w-1/3 flex flex-col border-r border-border-subtle bg-bg-surface shrink-0">
+        <div className="p-4 border-b border-border-subtle space-y-3">
+          <div className="relative">
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-text-muted" />
+            <Input 
+              placeholder="Search feedback..." 
+              value={query} 
+              onChange={(e) => setQuery(e.target.value)}
+              className="pl-9 h-9"
             />
           </div>
-
-          <div className="space-y-1.5">
-            <label
-              htmlFor="feedback-filter"
-              className="ui-label text-xs font-semibold uppercase tracking-wide"
-            >
-              Visibility
-            </label>
+          <div className="flex items-center gap-2">
+            <Filter className="h-4 w-4 text-text-muted" />
             <select
-              id="feedback-filter"
               value={filter}
-              onChange={(event) =>
-                setFilter(event.target.value as FeedbackVisibilityFilter)
-              }
-              className="ui-input min-w-45 rounded-lg border px-3 py-2 text-sm"
+              onChange={(e) => setFilter(e.target.value as FeedbackVisibilityFilter)}
+              className="h-8 w-full rounded-md border border-border-subtle bg-bg-base px-2 text-xs text-text-primary focus:ring-1 focus:ring-brand-accent outline-none"
             >
-              <option value="all">All</option>
-              <option value="visible">Visible only</option>
-              <option value="hidden">Hidden only</option>
+              <option value="all">All Feedback</option>
+              <option value="visible">Visible Only</option>
+              <option value="hidden">Hidden Only</option>
             </select>
           </div>
         </div>
-      </Card>
 
-      {filteredFeedback.length === 0 ? (
-        <Card>
-          <CardTitle>No feedback matches current filter</CardTitle>
-          <CardDescription className="mt-1">
-            Try clearing search text or changing visibility filter.
-          </CardDescription>
-        </Card>
-      ) : (
-        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {filteredFeedback.map((item) => {
-            const isBusy = pendingFeedbackId === item.id;
-            const nextHidden = !item.isHidden;
-
-            return (
-              <Card key={item.id} className="space-y-3">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <CardTitle>{item.app.title}</CardTitle>
-                    <CardDescription className="mt-1">
-                      {item.user.name ?? item.user.email}
-                    </CardDescription>
+        <div className="flex-1 overflow-y-auto">
+          {filteredFeedback.length === 0 ? (
+            <div className="p-8 text-center text-text-muted text-sm">
+              No feedback matches your search.
+            </div>
+          ) : (
+            <div className="divide-y divide-border-subtle">
+              {filteredFeedback.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => setSelectedId(item.id)}
+                  className={cn(
+                    "w-full text-left p-4 hover:bg-surface-hover transition-colors flex flex-col gap-2",
+                    selectedId === item.id && "bg-brand-primary/5 hover:bg-brand-primary/10 border-l-2 border-l-brand-primary pl-[14px]"
+                  )}
+                >
+                  <div className="flex justify-between items-start">
+                    <span className="font-semibold text-sm text-text-primary line-clamp-1">{item.app.title}</span>
+                    <Badge variant={item.isHidden ? "warning" : "default"} className="text-[10px] px-1.5 py-0">
+                      {item.isHidden ? "Hidden" : "Visible"}
+                    </Badge>
                   </div>
-                  <Badge tone={item.isHidden ? "warning" : "success"}>
-                    {item.isHidden ? "Hidden" : "Visible"}
-                  </Badge>
-                </div>
+                  <p className="text-xs text-text-secondary line-clamp-2">{item.message}</p>
+                  <div className="flex justify-between items-center mt-1">
+                    <span className="text-[10px] text-text-muted flex items-center gap-1">
+                      <Star className="h-3 w-3 text-status-warning fill-current" />
+                      {item.rating}/5
+                    </span>
+                    <span className="text-[10px] text-text-muted">{formatDateTime(item.createdAt).split(",")[0]}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
 
-                <div className="ui-text-muted grid gap-1 text-xs">
-                  <p>
-                    Rating: {item.rating}/5 ({ratingStars(item.rating)})
-                  </p>
-                  <p>Created: {formatDateTime(item.createdAt)}</p>
-                  <p>App slug: /{item.app.slug}</p>
+      {/* RIGHT PANEL - DETAIL */}
+      <div className="w-2/3 flex flex-col bg-bg-base">
+        {selectedItem ? (
+          <>
+            <div className="p-6 border-b border-border-subtle flex justify-between items-start">
+              <div>
+                <h2 className="text-xl font-bold text-text-primary mb-1">Feedback for {selectedItem.app.title}</h2>
+                <div className="flex items-center gap-4 text-sm text-text-muted">
+                  <span className="flex items-center gap-1"><AppWindow className="h-4 w-4" /> /{selectedItem.app.slug}</span>
+                  <span className="flex items-center gap-1"><Clock className="h-4 w-4" /> {formatDateTime(selectedItem.createdAt)}</span>
                 </div>
+              </div>
+              <Badge variant={selectedItem.isHidden ? "warning" : "success"} className="text-sm px-3 py-1">
+                {selectedItem.isHidden ? "Hidden from public" : "Visible to public"}
+              </Badge>
+            </div>
 
-                <p className="ui-surface-soft ui-border ui-text-muted line-clamp-4 rounded-lg border px-3 py-2 text-sm">
-                  {item.message}
-                </p>
-
-                <div className="flex flex-wrap gap-2">
-                  <Button
-                    tone={item.isHidden ? "secondary" : "danger"}
-                    size="sm"
-                    disabled={isBusy}
-                    onClick={() =>
-                      setConfirmAction({
-                        feedbackId: item.id,
-                        nextHidden,
-                      })
-                    }
-                  >
-                    {isBusy
-                      ? "Updating..."
-                      : item.isHidden
-                        ? "Restore feedback"
-                        : "Hide feedback"}
-                  </Button>
-                </div>
+            <div className="p-6 flex-1 overflow-y-auto space-y-6">
+              {/* User Info Card */}
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm text-text-muted uppercase tracking-wider">User Information</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center gap-4">
+                    <div className="h-10 w-10 rounded-full bg-surface-active flex items-center justify-center font-bold text-text-primary">
+                      {(selectedItem.user.name ?? selectedItem.user.email)[0].toUpperCase()}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-text-primary">{selectedItem.user.name ?? "No name provided"}</p>
+                      <p className="text-sm text-text-secondary">{selectedItem.user.email}</p>
+                    </div>
+                  </div>
+                </CardContent>
               </Card>
-            );
-          })}
-        </section>
-      )}
+
+              {/* Feedback Content Card */}
+              <Card>
+                <CardHeader className="pb-3 flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm text-text-muted uppercase tracking-wider">Feedback Message</CardTitle>
+                  <div className="flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star key={s} className={cn("h-4 w-4", s <= selectedItem.rating ? "text-status-warning fill-current" : "text-border-strong")} />
+                    ))}
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="bg-surface-active/50 rounded-lg p-4 text-text-primary whitespace-pre-wrap leading-relaxed">
+                    {selectedItem.message}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Actions Footer */}
+            <div className="p-4 border-t border-border-subtle bg-bg-surface flex justify-end gap-3">
+              <Button
+                variant={selectedItem.isHidden ? "secondary" : "destructive"}
+                disabled={pendingFeedbackId === selectedItem.id}
+                onClick={() => setConfirmAction({ feedbackId: selectedItem.id, nextHidden: !selectedItem.isHidden })}
+              >
+                {selectedItem.isHidden ? <Eye className="h-4 w-4 mr-2" /> : <EyeOff className="h-4 w-4 mr-2" />}
+                {pendingFeedbackId === selectedItem.id ? "Updating..." : selectedItem.isHidden ? "Restore to Public" : "Hide Feedback"}
+              </Button>
+            </div>
+          </>
+        ) : (
+          <div className="flex-1 flex items-center justify-center text-text-muted flex-col gap-3">
+            <MessageSquare className="h-12 w-12 opacity-20" />
+            <p>Select a feedback item from the list to view details</p>
+          </div>
+        )}
+      </div>
 
       <ConfirmDialog
         open={Boolean(confirmAction && confirmItem)}
@@ -360,6 +238,6 @@ export function AdminFeedbackClient({
         onCancel={() => setConfirmAction(null)}
         onConfirm={() => void onConfirmModeration()}
       />
-    </section>
+    </div>
   );
 }

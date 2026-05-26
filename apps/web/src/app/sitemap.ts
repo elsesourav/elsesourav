@@ -10,7 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/apps",
     "/about",
     "/feedback",
-    "/blog",
+    "/posts",
     "/help",
     "/help-support",
     "/contact",

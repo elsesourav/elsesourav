@@ -334,7 +334,7 @@ function validateForm(form: AppFormState): string | null {
   return null;
 }
 
-function statusTone(status: string): "success" | "warning" | "neutral" {
+function statusTone(status: string): "success" | "warning" | "secondary" {
   const normalized = status.toUpperCase();
 
   if (normalized.includes("PUBLISH")) {
@@ -345,7 +345,7 @@ function statusTone(status: string): "success" | "warning" | "neutral" {
     return "warning";
   }
 
-  return "neutral";
+  return "secondary";
 }
 
 function AppCard({
@@ -372,7 +372,7 @@ function AppCard({
           <CardTitle>{app.title}</CardTitle>
           <CardDescription className="mt-1">/{app.slug}</CardDescription>
         </div>
-        <Badge tone={statusTone(app.status)}>{app.status}</Badge>
+        <Badge variant={statusTone(app.status)}>{app.status}</Badge>
       </div>
 
       <p className="line-clamp-3 text-sm text-[#4f5970]">
@@ -388,7 +388,7 @@ function AppCard({
           <span className="text-xs text-[#5a647d]">No tags assigned</span>
         ) : (
           app.tags.map((tag) => (
-            <Badge key={tag.id} tone="info" className="text-[10px]">
+            <Badge key={tag.id} variant="info" className="text-[10px]">
               {tag.name}
             </Badge>
           ))
@@ -407,19 +407,19 @@ function AppCard({
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <Button tone="secondary" size="sm" onClick={onEdit}>
+        <Button variant="secondary" size="sm" onClick={onEdit}>
           Edit app
         </Button>
-        <Button tone="ghost" size="sm" onClick={onManageTags}>
+        <Button variant="ghost" size="sm" onClick={onManageTags}>
           Manage tags
         </Button>
-        <Button tone="ghost" size="sm" onClick={onManageLinks}>
+        <Button variant="ghost" size="sm" onClick={onManageLinks}>
           Release links
         </Button>
-        <Button tone="ghost" size="sm" onClick={onManageMedia}>
+        <Button variant="ghost" size="sm" onClick={onManageMedia}>
           Media gallery
         </Button>
-        <Button tone="danger" size="sm" disabled={deleting} onClick={onDelete}>
+        <Button variant="destructive" size="sm" disabled={deleting} onClick={onDelete}>
           {deleting ? "Deleting..." : "Delete app"}
         </Button>
       </div>
@@ -2208,11 +2208,11 @@ export function AdminAppsClient({
           />
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <Button tone="ghost" onClick={() => setTagLibraryOpen(true)}>
+          <Button variant="ghost" onClick={() => setTagLibraryOpen(true)}>
             Manage tags
           </Button>
           <Button
-            tone="primary"
+            variant="default"
             onClick={() => setCreateOpen(true)}
             disabled={categoryOptions.length === 0}
           >
@@ -2274,7 +2274,7 @@ export function AdminAppsClient({
               </CardDescription>
               <div className="mt-3">
                 <Button
-                  tone="ghost"
+                  variant="ghost"
                   size="sm"
                   onClick={() => {
                     setTagLibraryOpen(true);
@@ -2335,7 +2335,7 @@ export function AdminAppsClient({
 
           <div className="flex items-center justify-end gap-2">
             <Button
-              tone="secondary"
+              variant="secondary"
               onClick={() => {
                 setTaggingAppId(null);
                 setTagAssignmentError(null);
@@ -2436,7 +2436,7 @@ export function AdminAppsClient({
                           {savingTagId === tag.id ? "Saving..." : "Save"}
                         </Button>
                         <Button
-                          tone="secondary"
+                          variant="secondary"
                           size="sm"
                           onClick={() => setEditingTagId(null)}
                           disabled={savingTagId === tag.id}
@@ -2458,14 +2458,14 @@ export function AdminAppsClient({
 
                         <div className="flex flex-wrap gap-2">
                           <Button
-                            tone="secondary"
+                            variant="secondary"
                             size="sm"
                             onClick={() => startTagEdit(tag)}
                           >
                             Edit
                           </Button>
                           <Button
-                            tone="danger"
+                            variant="destructive"
                             size="sm"
                             onClick={() => setConfirmDeleteTagId(tag.id)}
                           >
@@ -2605,7 +2605,7 @@ export function AdminAppsClient({
                           {savingLinkId === link.id ? "Saving..." : "Save"}
                         </Button>
                         <Button
-                          tone="secondary"
+                          variant="secondary"
                           size="sm"
                           onClick={() => setEditingLinkId(null)}
                           disabled={savingLinkId === link.id}
@@ -2626,14 +2626,14 @@ export function AdminAppsClient({
                         </div>
                         <div className="flex flex-wrap gap-2">
                           <Button
-                            tone="secondary"
+                            variant="secondary"
                             size="sm"
                             onClick={() => startLinkEdit(link)}
                           >
                             Edit
                           </Button>
                           <Button
-                            tone="danger"
+                            variant="destructive"
                             size="sm"
                             onClick={() => setConfirmDeleteLinkId(link.id)}
                           >
@@ -2969,7 +2969,7 @@ export function AdminAppsClient({
 
                       <div className="flex justify-end gap-2">
                         <Button
-                          tone="secondary"
+                          variant="secondary"
                           size="sm"
                           onClick={() => setEditingMediaId(null)}
                           disabled={savingMediaId === item.id}
@@ -3030,7 +3030,7 @@ export function AdminAppsClient({
 
                       <div className="flex justify-end gap-2">
                         <Button
-                          tone="secondary"
+                          variant="secondary"
                           size="sm"
                           onClick={() => startMediaEdit(item)}
                           disabled={Boolean(savingMediaId) || reorderingMedia}
@@ -3038,7 +3038,7 @@ export function AdminAppsClient({
                           Edit
                         </Button>
                         <Button
-                          tone="danger"
+                          variant="destructive"
                           size="sm"
                           onClick={() => void onDeleteMedia(item.id)}
                           disabled={
@@ -3093,7 +3093,7 @@ export function AdminAppsClient({
 
           <div className="flex items-center justify-end gap-2">
             <Button
-              tone="secondary"
+              variant="secondary"
               onClick={() => {
                 setCreateOpen(false);
                 setCreateError(null);
@@ -3143,7 +3143,7 @@ export function AdminAppsClient({
 
             <div className="flex items-center justify-end gap-2">
               <Button
-                tone="secondary"
+                variant="secondary"
                 onClick={() => {
                   setEditingAppId(null);
                   setEditForm(null);

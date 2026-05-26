@@ -11,8 +11,12 @@ import CssBaseline from "@mui/material/CssBaseline";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import { ThemeProvider, alpha, createTheme } from "@mui/material/styles";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { SessionProvider } from "next-auth/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { Provider } from "react-redux";
+import { motion, AnimatePresence } from "framer-motion";
+import { X } from "lucide-react";
 
 type AppProvidersProps = {
   children: React.ReactNode;
@@ -143,44 +147,46 @@ function NotificationToast({ item }: { item: NotificationItem }) {
 
   const toneClassName =
     item.tone === "success"
-      ? "border-emerald-300 bg-emerald-50 text-emerald-900"
+      ? "border-status-success-bg bg-status-success-bg/50 text-status-success"
       : item.tone === "error"
-        ? "border-rose-300 bg-rose-50 text-rose-900"
-        : "border-sky-300 bg-sky-50 text-sky-900";
+        ? "border-status-danger-bg bg-status-danger-bg/50 text-status-danger"
+        : "border-status-info-bg bg-status-info-bg/50 text-status-info";
 
   return (
-    <article
-      className={`pointer-events-auto rounded-xl border px-3 py-2 text-sm shadow-[0_14px_30px_-24px_rgba(20,23,31,0.65)] ${toneClassName}`}
+    <motion.article
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      layout
+      className={`pointer-events-auto rounded-xl border px-4 py-3 text-sm shadow-xl backdrop-blur-md ${toneClassName}`}
       role="status"
       aria-live="polite"
     >
       <div className="flex items-start justify-between gap-3">
-        <p className="leading-6">{item.message}</p>
+        <p className="leading-5 font-medium">{item.message}</p>
         <button
           type="button"
           onClick={() => dispatch(dismissNotification(item.id))}
-          className="rounded-full border border-black/20 bg-white px-2 py-0.5 text-xs text-[#131924]"
+          className="rounded-full hover:bg-black/5 dark:hover:bg-white/10 p-1 transition-colors -mr-1 -mt-1"
           aria-label="Dismiss notification"
         >
-          Dismiss
+          <X className="h-4 w-4" />
         </button>
       </div>
-    </article>
+    </motion.article>
   );
 }
 
 function NotificationViewport() {
   const items = useAppSelector(selectNotifications);
 
-  if (items.length === 0) {
-    return null;
-  }
-
   return (
     <div className="pointer-events-none fixed bottom-4 right-4 z-50 flex w-[min(24rem,calc(100vw-2rem))] flex-col gap-2">
-      {items.map((item) => (
-        <NotificationToast key={item.id} item={item} />
-      ))}
+      <AnimatePresence mode="popLayout">
+        {items.map((item) => (
+          <NotificationToast key={item.id} item={item} />
+        ))}
+      </AnimatePresence>
     </div>
   );
 }
@@ -189,6 +195,15 @@ export function AppProviders({
   children,
   initialThemeMode,
 }: AppProvidersProps) {
+  const [queryClient] = useState(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 60 * 1000,
+        refetchOnWindowFocus: false,
+        retry: 1,
+      },
+    },
+  }));
   const [store] = useState<AppStore>(() => createAppStore());
   const [mode, setMode] = useState<"light" | "dark">(
     resolveInitialMuiMode(initialThemeMode),
@@ -281,27 +296,31 @@ export function AppProviders({
   );
 
   return (
-    <NextThemesProvider
-      attribute="data-theme-mode"
-      defaultTheme={initialThemeMode}
-      enableSystem
-      disableTransitionOnChange
-    >
-      <ThemeProvider theme={theme}>
-        <CssBaseline enableColorScheme />
-        <GlobalStyles
-          styles={{
-            a: {
-              color: "var(--brand-secondary)",
-              textUnderlineOffset: "2px",
-            },
-          }}
-        />
-        <Provider store={store}>
-          {children}
-          <NotificationViewport />
-        </Provider>
-      </ThemeProvider>
-    </NextThemesProvider>
+    <QueryClientProvider client={queryClient}>
+      <SessionProvider>
+        <NextThemesProvider
+          attribute="data-theme-mode"
+          defaultTheme={initialThemeMode}
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ThemeProvider theme={theme}>
+            <CssBaseline enableColorScheme />
+            <GlobalStyles
+              styles={{
+                a: {
+                  color: "var(--brand-secondary)",
+                  textUnderlineOffset: "2px",
+                },
+              }}
+            />
+            <Provider store={store}>
+              {children}
+              <NotificationViewport />
+            </Provider>
+          </ThemeProvider>
+        </NextThemesProvider>
+      </SessionProvider>
+    </QueryClientProvider>
   );
 }

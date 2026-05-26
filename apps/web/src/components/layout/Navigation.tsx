@@ -20,7 +20,7 @@ import {
   useState,
   type MouseEvent,
 } from "react";
-import BlogIcon from "../icons/BlogIcon";
+import PostIcon from "../icons/PostIcon";
 
 function getDesktopNavLinkClass(active: boolean): string {
   return [
@@ -37,8 +37,8 @@ function NavItemIcon({ href, className }: { href: string; className: string }) {
       return <HomeIcon className={className} />;
     case "/apps":
       return <AppsIcon className={className} />;
-    case "/blog":
-      return <BlogIcon className={className} />;
+    case "/posts":
+      return <PostIcon className={className} />;
     case "/help-support":
       return <HelpAndSupportIcon className={className} />;
     case "/about":
