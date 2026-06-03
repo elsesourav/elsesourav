@@ -152,6 +152,11 @@ export type FAQ = Prisma.FAQModel
  */
 export type HelpArticleFeedback = Prisma.HelpArticleFeedbackModel
 /**
+ * Model HelpArticleSection
+ * 
+ */
+export type HelpArticleSection = Prisma.HelpArticleSectionModel
+/**
  * Model HelpArticleTag
  * 
  */

@@ -372,6 +372,7 @@ export type HelpArticleWhereInput = {
   app?: Prisma.XOR<Prisma.AppNullableScalarRelationFilter, Prisma.AppWhereInput> | null
   versions?: Prisma.HelpArticleVersionListRelationFilter
   tags?: Prisma.HelpArticleTagListRelationFilter
+  sections?: Prisma.HelpArticleSectionListRelationFilter
   feedback?: Prisma.HelpArticleFeedbackListRelationFilter
 }
 
@@ -403,6 +404,7 @@ export type HelpArticleOrderByWithRelationInput = {
   app?: Prisma.AppOrderByWithRelationInput
   versions?: Prisma.HelpArticleVersionOrderByRelationAggregateInput
   tags?: Prisma.HelpArticleTagOrderByRelationAggregateInput
+  sections?: Prisma.HelpArticleSectionOrderByRelationAggregateInput
   feedback?: Prisma.HelpArticleFeedbackOrderByRelationAggregateInput
 }
 
@@ -437,6 +439,7 @@ export type HelpArticleWhereUniqueInput = Prisma.AtLeast<{
   app?: Prisma.XOR<Prisma.AppNullableScalarRelationFilter, Prisma.AppWhereInput> | null
   versions?: Prisma.HelpArticleVersionListRelationFilter
   tags?: Prisma.HelpArticleTagListRelationFilter
+  sections?: Prisma.HelpArticleSectionListRelationFilter
   feedback?: Prisma.HelpArticleFeedbackListRelationFilter
 }, "id" | "slug">
 
@@ -526,6 +529,7 @@ export type HelpArticleCreateInput = {
   app?: Prisma.AppCreateNestedOneWithoutHelpArticlesInput
   versions?: Prisma.HelpArticleVersionCreateNestedManyWithoutArticleInput
   tags?: Prisma.HelpArticleTagCreateNestedManyWithoutArticleInput
+  sections?: Prisma.HelpArticleSectionCreateNestedManyWithoutArticleInput
   feedback?: Prisma.HelpArticleFeedbackCreateNestedManyWithoutArticleInput
 }
 
@@ -555,6 +559,7 @@ export type HelpArticleUncheckedCreateInput = {
   updatedAt?: Date | string
   versions?: Prisma.HelpArticleVersionUncheckedCreateNestedManyWithoutArticleInput
   tags?: Prisma.HelpArticleTagUncheckedCreateNestedManyWithoutArticleInput
+  sections?: Prisma.HelpArticleSectionUncheckedCreateNestedManyWithoutArticleInput
   feedback?: Prisma.HelpArticleFeedbackUncheckedCreateNestedManyWithoutArticleInput
 }
 
@@ -584,6 +589,7 @@ export type HelpArticleUpdateInput = {
   app?: Prisma.AppUpdateOneWithoutHelpArticlesNestedInput
   versions?: Prisma.HelpArticleVersionUpdateManyWithoutArticleNestedInput
   tags?: Prisma.HelpArticleTagUpdateManyWithoutArticleNestedInput
+  sections?: Prisma.HelpArticleSectionUpdateManyWithoutArticleNestedInput
   feedback?: Prisma.HelpArticleFeedbackUpdateManyWithoutArticleNestedInput
 }
 
@@ -613,6 +619,7 @@ export type HelpArticleUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.HelpArticleVersionUncheckedUpdateManyWithoutArticleNestedInput
   tags?: Prisma.HelpArticleTagUncheckedUpdateManyWithoutArticleNestedInput
+  sections?: Prisma.HelpArticleSectionUncheckedUpdateManyWithoutArticleNestedInput
   feedback?: Prisma.HelpArticleFeedbackUncheckedUpdateManyWithoutArticleNestedInput
 }
 
@@ -916,6 +923,20 @@ export type HelpArticleUpdateOneRequiredWithoutFeedbackNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.HelpArticleUpdateToOneWithWhereWithoutFeedbackInput, Prisma.HelpArticleUpdateWithoutFeedbackInput>, Prisma.HelpArticleUncheckedUpdateWithoutFeedbackInput>
 }
 
+export type HelpArticleCreateNestedOneWithoutSectionsInput = {
+  create?: Prisma.XOR<Prisma.HelpArticleCreateWithoutSectionsInput, Prisma.HelpArticleUncheckedCreateWithoutSectionsInput>
+  connectOrCreate?: Prisma.HelpArticleCreateOrConnectWithoutSectionsInput
+  connect?: Prisma.HelpArticleWhereUniqueInput
+}
+
+export type HelpArticleUpdateOneRequiredWithoutSectionsNestedInput = {
+  create?: Prisma.XOR<Prisma.HelpArticleCreateWithoutSectionsInput, Prisma.HelpArticleUncheckedCreateWithoutSectionsInput>
+  connectOrCreate?: Prisma.HelpArticleCreateOrConnectWithoutSectionsInput
+  upsert?: Prisma.HelpArticleUpsertWithoutSectionsInput
+  connect?: Prisma.HelpArticleWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.HelpArticleUpdateToOneWithWhereWithoutSectionsInput, Prisma.HelpArticleUpdateWithoutSectionsInput>, Prisma.HelpArticleUncheckedUpdateWithoutSectionsInput>
+}
+
 export type HelpArticleCreateNestedOneWithoutTagsInput = {
   create?: Prisma.XOR<Prisma.HelpArticleCreateWithoutTagsInput, Prisma.HelpArticleUncheckedCreateWithoutTagsInput>
   connectOrCreate?: Prisma.HelpArticleCreateOrConnectWithoutTagsInput
@@ -969,6 +990,7 @@ export type HelpArticleCreateWithoutAppInput = {
   category?: Prisma.HelpCategoryCreateNestedOneWithoutArticlesInput
   versions?: Prisma.HelpArticleVersionCreateNestedManyWithoutArticleInput
   tags?: Prisma.HelpArticleTagCreateNestedManyWithoutArticleInput
+  sections?: Prisma.HelpArticleSectionCreateNestedManyWithoutArticleInput
   feedback?: Prisma.HelpArticleFeedbackCreateNestedManyWithoutArticleInput
 }
 
@@ -997,6 +1019,7 @@ export type HelpArticleUncheckedCreateWithoutAppInput = {
   updatedAt?: Date | string
   versions?: Prisma.HelpArticleVersionUncheckedCreateNestedManyWithoutArticleInput
   tags?: Prisma.HelpArticleTagUncheckedCreateNestedManyWithoutArticleInput
+  sections?: Prisma.HelpArticleSectionUncheckedCreateNestedManyWithoutArticleInput
   feedback?: Prisma.HelpArticleFeedbackUncheckedCreateNestedManyWithoutArticleInput
 }
 
@@ -1080,6 +1103,7 @@ export type HelpArticleCreateWithoutCategoryInput = {
   app?: Prisma.AppCreateNestedOneWithoutHelpArticlesInput
   versions?: Prisma.HelpArticleVersionCreateNestedManyWithoutArticleInput
   tags?: Prisma.HelpArticleTagCreateNestedManyWithoutArticleInput
+  sections?: Prisma.HelpArticleSectionCreateNestedManyWithoutArticleInput
   feedback?: Prisma.HelpArticleFeedbackCreateNestedManyWithoutArticleInput
 }
 
@@ -1108,6 +1132,7 @@ export type HelpArticleUncheckedCreateWithoutCategoryInput = {
   updatedAt?: Date | string
   versions?: Prisma.HelpArticleVersionUncheckedCreateNestedManyWithoutArticleInput
   tags?: Prisma.HelpArticleTagUncheckedCreateNestedManyWithoutArticleInput
+  sections?: Prisma.HelpArticleSectionUncheckedCreateNestedManyWithoutArticleInput
   feedback?: Prisma.HelpArticleFeedbackUncheckedCreateNestedManyWithoutArticleInput
 }
 
@@ -1163,6 +1188,7 @@ export type HelpArticleCreateWithoutFeedbackInput = {
   app?: Prisma.AppCreateNestedOneWithoutHelpArticlesInput
   versions?: Prisma.HelpArticleVersionCreateNestedManyWithoutArticleInput
   tags?: Prisma.HelpArticleTagCreateNestedManyWithoutArticleInput
+  sections?: Prisma.HelpArticleSectionCreateNestedManyWithoutArticleInput
 }
 
 export type HelpArticleUncheckedCreateWithoutFeedbackInput = {
@@ -1191,6 +1217,7 @@ export type HelpArticleUncheckedCreateWithoutFeedbackInput = {
   updatedAt?: Date | string
   versions?: Prisma.HelpArticleVersionUncheckedCreateNestedManyWithoutArticleInput
   tags?: Prisma.HelpArticleTagUncheckedCreateNestedManyWithoutArticleInput
+  sections?: Prisma.HelpArticleSectionUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type HelpArticleCreateOrConnectWithoutFeedbackInput = {
@@ -1235,6 +1262,7 @@ export type HelpArticleUpdateWithoutFeedbackInput = {
   app?: Prisma.AppUpdateOneWithoutHelpArticlesNestedInput
   versions?: Prisma.HelpArticleVersionUpdateManyWithoutArticleNestedInput
   tags?: Prisma.HelpArticleTagUpdateManyWithoutArticleNestedInput
+  sections?: Prisma.HelpArticleSectionUpdateManyWithoutArticleNestedInput
 }
 
 export type HelpArticleUncheckedUpdateWithoutFeedbackInput = {
@@ -1263,6 +1291,139 @@ export type HelpArticleUncheckedUpdateWithoutFeedbackInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.HelpArticleVersionUncheckedUpdateManyWithoutArticleNestedInput
   tags?: Prisma.HelpArticleTagUncheckedUpdateManyWithoutArticleNestedInput
+  sections?: Prisma.HelpArticleSectionUncheckedUpdateManyWithoutArticleNestedInput
+}
+
+export type HelpArticleCreateWithoutSectionsInput = {
+  id?: string
+  slug: string
+  title: string
+  summary?: string | null
+  contentMarkdown: string
+  contentMdx?: string | null
+  status?: $Enums.HelpArticleStatus
+  isFeatured?: boolean
+  publishAt?: Date | string | null
+  publishedAt?: Date | string | null
+  viewCount?: number
+  upvotes?: number
+  downvotes?: number
+  readingTimeMins?: number
+  relatedArticleIds?: Prisma.HelpArticleCreaterelatedArticleIdsInput | string[]
+  seoTitle?: string | null
+  seoDescription?: string | null
+  createdBy?: string | null
+  updatedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  category?: Prisma.HelpCategoryCreateNestedOneWithoutArticlesInput
+  app?: Prisma.AppCreateNestedOneWithoutHelpArticlesInput
+  versions?: Prisma.HelpArticleVersionCreateNestedManyWithoutArticleInput
+  tags?: Prisma.HelpArticleTagCreateNestedManyWithoutArticleInput
+  feedback?: Prisma.HelpArticleFeedbackCreateNestedManyWithoutArticleInput
+}
+
+export type HelpArticleUncheckedCreateWithoutSectionsInput = {
+  id?: string
+  categoryId?: string | null
+  appId?: string | null
+  slug: string
+  title: string
+  summary?: string | null
+  contentMarkdown: string
+  contentMdx?: string | null
+  status?: $Enums.HelpArticleStatus
+  isFeatured?: boolean
+  publishAt?: Date | string | null
+  publishedAt?: Date | string | null
+  viewCount?: number
+  upvotes?: number
+  downvotes?: number
+  readingTimeMins?: number
+  relatedArticleIds?: Prisma.HelpArticleCreaterelatedArticleIdsInput | string[]
+  seoTitle?: string | null
+  seoDescription?: string | null
+  createdBy?: string | null
+  updatedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  versions?: Prisma.HelpArticleVersionUncheckedCreateNestedManyWithoutArticleInput
+  tags?: Prisma.HelpArticleTagUncheckedCreateNestedManyWithoutArticleInput
+  feedback?: Prisma.HelpArticleFeedbackUncheckedCreateNestedManyWithoutArticleInput
+}
+
+export type HelpArticleCreateOrConnectWithoutSectionsInput = {
+  where: Prisma.HelpArticleWhereUniqueInput
+  create: Prisma.XOR<Prisma.HelpArticleCreateWithoutSectionsInput, Prisma.HelpArticleUncheckedCreateWithoutSectionsInput>
+}
+
+export type HelpArticleUpsertWithoutSectionsInput = {
+  update: Prisma.XOR<Prisma.HelpArticleUpdateWithoutSectionsInput, Prisma.HelpArticleUncheckedUpdateWithoutSectionsInput>
+  create: Prisma.XOR<Prisma.HelpArticleCreateWithoutSectionsInput, Prisma.HelpArticleUncheckedCreateWithoutSectionsInput>
+  where?: Prisma.HelpArticleWhereInput
+}
+
+export type HelpArticleUpdateToOneWithWhereWithoutSectionsInput = {
+  where?: Prisma.HelpArticleWhereInput
+  data: Prisma.XOR<Prisma.HelpArticleUpdateWithoutSectionsInput, Prisma.HelpArticleUncheckedUpdateWithoutSectionsInput>
+}
+
+export type HelpArticleUpdateWithoutSectionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  upvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  readingTimeMins?: Prisma.IntFieldUpdateOperationsInput | number
+  relatedArticleIds?: Prisma.HelpArticleUpdaterelatedArticleIdsInput | string[]
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.HelpCategoryUpdateOneWithoutArticlesNestedInput
+  app?: Prisma.AppUpdateOneWithoutHelpArticlesNestedInput
+  versions?: Prisma.HelpArticleVersionUpdateManyWithoutArticleNestedInput
+  tags?: Prisma.HelpArticleTagUpdateManyWithoutArticleNestedInput
+  feedback?: Prisma.HelpArticleFeedbackUpdateManyWithoutArticleNestedInput
+}
+
+export type HelpArticleUncheckedUpdateWithoutSectionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
+  contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  upvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  readingTimeMins?: Prisma.IntFieldUpdateOperationsInput | number
+  relatedArticleIds?: Prisma.HelpArticleUpdaterelatedArticleIdsInput | string[]
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  versions?: Prisma.HelpArticleVersionUncheckedUpdateManyWithoutArticleNestedInput
+  tags?: Prisma.HelpArticleTagUncheckedUpdateManyWithoutArticleNestedInput
+  feedback?: Prisma.HelpArticleFeedbackUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type HelpArticleCreateWithoutTagsInput = {
@@ -1290,6 +1451,7 @@ export type HelpArticleCreateWithoutTagsInput = {
   category?: Prisma.HelpCategoryCreateNestedOneWithoutArticlesInput
   app?: Prisma.AppCreateNestedOneWithoutHelpArticlesInput
   versions?: Prisma.HelpArticleVersionCreateNestedManyWithoutArticleInput
+  sections?: Prisma.HelpArticleSectionCreateNestedManyWithoutArticleInput
   feedback?: Prisma.HelpArticleFeedbackCreateNestedManyWithoutArticleInput
 }
 
@@ -1318,6 +1480,7 @@ export type HelpArticleUncheckedCreateWithoutTagsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   versions?: Prisma.HelpArticleVersionUncheckedCreateNestedManyWithoutArticleInput
+  sections?: Prisma.HelpArticleSectionUncheckedCreateNestedManyWithoutArticleInput
   feedback?: Prisma.HelpArticleFeedbackUncheckedCreateNestedManyWithoutArticleInput
 }
 
@@ -1362,6 +1525,7 @@ export type HelpArticleUpdateWithoutTagsInput = {
   category?: Prisma.HelpCategoryUpdateOneWithoutArticlesNestedInput
   app?: Prisma.AppUpdateOneWithoutHelpArticlesNestedInput
   versions?: Prisma.HelpArticleVersionUpdateManyWithoutArticleNestedInput
+  sections?: Prisma.HelpArticleSectionUpdateManyWithoutArticleNestedInput
   feedback?: Prisma.HelpArticleFeedbackUpdateManyWithoutArticleNestedInput
 }
 
@@ -1390,6 +1554,7 @@ export type HelpArticleUncheckedUpdateWithoutTagsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.HelpArticleVersionUncheckedUpdateManyWithoutArticleNestedInput
+  sections?: Prisma.HelpArticleSectionUncheckedUpdateManyWithoutArticleNestedInput
   feedback?: Prisma.HelpArticleFeedbackUncheckedUpdateManyWithoutArticleNestedInput
 }
 
@@ -1418,6 +1583,7 @@ export type HelpArticleCreateWithoutVersionsInput = {
   category?: Prisma.HelpCategoryCreateNestedOneWithoutArticlesInput
   app?: Prisma.AppCreateNestedOneWithoutHelpArticlesInput
   tags?: Prisma.HelpArticleTagCreateNestedManyWithoutArticleInput
+  sections?: Prisma.HelpArticleSectionCreateNestedManyWithoutArticleInput
   feedback?: Prisma.HelpArticleFeedbackCreateNestedManyWithoutArticleInput
 }
 
@@ -1446,6 +1612,7 @@ export type HelpArticleUncheckedCreateWithoutVersionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   tags?: Prisma.HelpArticleTagUncheckedCreateNestedManyWithoutArticleInput
+  sections?: Prisma.HelpArticleSectionUncheckedCreateNestedManyWithoutArticleInput
   feedback?: Prisma.HelpArticleFeedbackUncheckedCreateNestedManyWithoutArticleInput
 }
 
@@ -1490,6 +1657,7 @@ export type HelpArticleUpdateWithoutVersionsInput = {
   category?: Prisma.HelpCategoryUpdateOneWithoutArticlesNestedInput
   app?: Prisma.AppUpdateOneWithoutHelpArticlesNestedInput
   tags?: Prisma.HelpArticleTagUpdateManyWithoutArticleNestedInput
+  sections?: Prisma.HelpArticleSectionUpdateManyWithoutArticleNestedInput
   feedback?: Prisma.HelpArticleFeedbackUpdateManyWithoutArticleNestedInput
 }
 
@@ -1518,6 +1686,7 @@ export type HelpArticleUncheckedUpdateWithoutVersionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tags?: Prisma.HelpArticleTagUncheckedUpdateManyWithoutArticleNestedInput
+  sections?: Prisma.HelpArticleSectionUncheckedUpdateManyWithoutArticleNestedInput
   feedback?: Prisma.HelpArticleFeedbackUncheckedUpdateManyWithoutArticleNestedInput
 }
 
@@ -1571,6 +1740,7 @@ export type HelpArticleUpdateWithoutAppInput = {
   category?: Prisma.HelpCategoryUpdateOneWithoutArticlesNestedInput
   versions?: Prisma.HelpArticleVersionUpdateManyWithoutArticleNestedInput
   tags?: Prisma.HelpArticleTagUpdateManyWithoutArticleNestedInput
+  sections?: Prisma.HelpArticleSectionUpdateManyWithoutArticleNestedInput
   feedback?: Prisma.HelpArticleFeedbackUpdateManyWithoutArticleNestedInput
 }
 
@@ -1599,6 +1769,7 @@ export type HelpArticleUncheckedUpdateWithoutAppInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.HelpArticleVersionUncheckedUpdateManyWithoutArticleNestedInput
   tags?: Prisma.HelpArticleTagUncheckedUpdateManyWithoutArticleNestedInput
+  sections?: Prisma.HelpArticleSectionUncheckedUpdateManyWithoutArticleNestedInput
   feedback?: Prisma.HelpArticleFeedbackUncheckedUpdateManyWithoutArticleNestedInput
 }
 
@@ -1677,6 +1848,7 @@ export type HelpArticleUpdateWithoutCategoryInput = {
   app?: Prisma.AppUpdateOneWithoutHelpArticlesNestedInput
   versions?: Prisma.HelpArticleVersionUpdateManyWithoutArticleNestedInput
   tags?: Prisma.HelpArticleTagUpdateManyWithoutArticleNestedInput
+  sections?: Prisma.HelpArticleSectionUpdateManyWithoutArticleNestedInput
   feedback?: Prisma.HelpArticleFeedbackUpdateManyWithoutArticleNestedInput
 }
 
@@ -1705,6 +1877,7 @@ export type HelpArticleUncheckedUpdateWithoutCategoryInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   versions?: Prisma.HelpArticleVersionUncheckedUpdateManyWithoutArticleNestedInput
   tags?: Prisma.HelpArticleTagUncheckedUpdateManyWithoutArticleNestedInput
+  sections?: Prisma.HelpArticleSectionUncheckedUpdateManyWithoutArticleNestedInput
   feedback?: Prisma.HelpArticleFeedbackUncheckedUpdateManyWithoutArticleNestedInput
 }
 
@@ -1741,12 +1914,14 @@ export type HelpArticleUncheckedUpdateManyWithoutCategoryInput = {
 export type HelpArticleCountOutputType = {
   versions: number
   tags: number
+  sections: number
   feedback: number
 }
 
 export type HelpArticleCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   versions?: boolean | HelpArticleCountOutputTypeCountVersionsArgs
   tags?: boolean | HelpArticleCountOutputTypeCountTagsArgs
+  sections?: boolean | HelpArticleCountOutputTypeCountSectionsArgs
   feedback?: boolean | HelpArticleCountOutputTypeCountFeedbackArgs
 }
 
@@ -1772,6 +1947,13 @@ export type HelpArticleCountOutputTypeCountVersionsArgs<ExtArgs extends runtime.
  */
 export type HelpArticleCountOutputTypeCountTagsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.HelpArticleTagWhereInput
+}
+
+/**
+ * HelpArticleCountOutputType without action
+ */
+export type HelpArticleCountOutputTypeCountSectionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HelpArticleSectionWhereInput
 }
 
 /**
@@ -1810,6 +1992,7 @@ export type HelpArticleSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   app?: boolean | Prisma.HelpArticle$appArgs<ExtArgs>
   versions?: boolean | Prisma.HelpArticle$versionsArgs<ExtArgs>
   tags?: boolean | Prisma.HelpArticle$tagsArgs<ExtArgs>
+  sections?: boolean | Prisma.HelpArticle$sectionsArgs<ExtArgs>
   feedback?: boolean | Prisma.HelpArticle$feedbackArgs<ExtArgs>
   _count?: boolean | Prisma.HelpArticleCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["helpArticle"]>
@@ -1902,6 +2085,7 @@ export type HelpArticleInclude<ExtArgs extends runtime.Types.Extensions.Internal
   app?: boolean | Prisma.HelpArticle$appArgs<ExtArgs>
   versions?: boolean | Prisma.HelpArticle$versionsArgs<ExtArgs>
   tags?: boolean | Prisma.HelpArticle$tagsArgs<ExtArgs>
+  sections?: boolean | Prisma.HelpArticle$sectionsArgs<ExtArgs>
   feedback?: boolean | Prisma.HelpArticle$feedbackArgs<ExtArgs>
   _count?: boolean | Prisma.HelpArticleCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1921,6 +2105,7 @@ export type $HelpArticlePayload<ExtArgs extends runtime.Types.Extensions.Interna
     app: Prisma.$AppPayload<ExtArgs> | null
     versions: Prisma.$HelpArticleVersionPayload<ExtArgs>[]
     tags: Prisma.$HelpArticleTagPayload<ExtArgs>[]
+    sections: Prisma.$HelpArticleSectionPayload<ExtArgs>[]
     feedback: Prisma.$HelpArticleFeedbackPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -2345,6 +2530,7 @@ export interface Prisma__HelpArticleClient<T, Null = never, ExtArgs extends runt
   app<T extends Prisma.HelpArticle$appArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HelpArticle$appArgs<ExtArgs>>): Prisma.Prisma__AppClient<runtime.Types.Result.GetResult<Prisma.$AppPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   versions<T extends Prisma.HelpArticle$versionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HelpArticle$versionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HelpArticleVersionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tags<T extends Prisma.HelpArticle$tagsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HelpArticle$tagsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HelpArticleTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sections<T extends Prisma.HelpArticle$sectionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HelpArticle$sectionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HelpArticleSectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   feedback<T extends Prisma.HelpArticle$feedbackArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HelpArticle$feedbackArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HelpArticleFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2882,6 +3068,30 @@ export type HelpArticle$tagsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.HelpArticleTagScalarFieldEnum | Prisma.HelpArticleTagScalarFieldEnum[]
+}
+
+/**
+ * HelpArticle.sections
+ */
+export type HelpArticle$sectionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HelpArticleSection
+   */
+  select?: Prisma.HelpArticleSectionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HelpArticleSection
+   */
+  omit?: Prisma.HelpArticleSectionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HelpArticleSectionInclude<ExtArgs> | null
+  where?: Prisma.HelpArticleSectionWhereInput
+  orderBy?: Prisma.HelpArticleSectionOrderByWithRelationInput | Prisma.HelpArticleSectionOrderByWithRelationInput[]
+  cursor?: Prisma.HelpArticleSectionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HelpArticleSectionScalarFieldEnum | Prisma.HelpArticleSectionScalarFieldEnum[]
 }
 
 /**

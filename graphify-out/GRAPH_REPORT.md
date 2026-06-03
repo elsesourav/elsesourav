@@ -1,11 +1,11 @@
-# Graph Report - elsesourav  (2026-05-26)
+# Graph Report - elsesourav  (2026-06-01)
 
 ## Corpus Check
 - 417 files · ~462,655 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1081 nodes · 1649 edges · 49 communities detected
+- 1081 nodes · 1649 edges · 50 communities detected
 - Extraction: 89% EXTRACTED · 11% INFERRED · 0% AMBIGUOUS · INFERRED: 187 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
@@ -46,19 +46,20 @@
 - [[_COMMUNITY_Community 33|Community 33]]
 - [[_COMMUNITY_Community 34|Community 34]]
 - [[_COMMUNITY_Community 35|Community 35]]
-- [[_COMMUNITY_Community 37|Community 37]]
+- [[_COMMUNITY_Community 36|Community 36]]
 - [[_COMMUNITY_Community 38|Community 38]]
 - [[_COMMUNITY_Community 39|Community 39]]
 - [[_COMMUNITY_Community 40|Community 40]]
 - [[_COMMUNITY_Community 41|Community 41]]
 - [[_COMMUNITY_Community 42|Community 42]]
-- [[_COMMUNITY_Community 44|Community 44]]
-- [[_COMMUNITY_Community 46|Community 46]]
+- [[_COMMUNITY_Community 43|Community 43]]
+- [[_COMMUNITY_Community 45|Community 45]]
 - [[_COMMUNITY_Community 47|Community 47]]
-- [[_COMMUNITY_Community 49|Community 49]]
-- [[_COMMUNITY_Community 51|Community 51]]
+- [[_COMMUNITY_Community 48|Community 48]]
+- [[_COMMUNITY_Community 50|Community 50]]
 - [[_COMMUNITY_Community 52|Community 52]]
 - [[_COMMUNITY_Community 53|Community 53]]
+- [[_COMMUNITY_Community 54|Community 54]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `proxyToService()` - 79 edges
@@ -84,7 +85,7 @@
 - `POST()` --calls--> `requireEnv()`  [INFERRED]
   apps/web/src/app/api/upload/cloudinary/sign/route.ts → packages/config/src/env.ts
 
-## Communities (191 total, 21 thin omitted)
+## Communities (192 total, 21 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.06
@@ -115,20 +116,20 @@ Cohesion: 0.05
 Nodes (6): ActivityStream(), HeroShowcase(), formatCompactCount(), formatRating(), pickFirstAvailableUrl(), cn()
 
 ### Community 7 - "Community 7"
-Cohesion: 0.07
-Nodes (21): GET(), POST(), GET(), GET(), POST(), GET(), POST(), proxyToService() (+13 more)
-
-### Community 8 - "Community 8"
 Cohesion: 0.06
 Nodes (16): AppsBannerSlider(), buildDetails(), buildMeta(), formatBannerDate(), ResendVerificationClient(), createEditFormFromItem(), createEmptyForm(), onConfirmDelete() (+8 more)
 
-### Community 9 - "Community 9"
+### Community 8 - "Community 8"
 Cohesion: 0.1
 Nodes (24): DELETE(), GET(), POST(), POST(), GET(), GET(), failure(), getRequestId() (+16 more)
 
+### Community 9 - "Community 9"
+Cohesion: 0.08
+Nodes (17): GET(), GET(), POST(), GET(), GET(), POST(), GET(), proxyToService() (+9 more)
+
 ### Community 10 - "Community 10"
-Cohesion: 0.09
-Nodes (20): GET(), POST(), GET(), POST(), GET(), POST(), GET(), PATCH() (+12 more)
+Cohesion: 0.1
+Nodes (19): POST(), GET(), POST(), GET(), POST(), GET(), PATCH(), GET() (+11 more)
 
 ### Community 11 - "Community 11"
 Cohesion: 0.19
@@ -163,22 +164,26 @@ Cohesion: 0.23
 Nodes (7): coerceMuiColor(), isMuiColor(), refreshMuiTheme(), resolveMuiModeFromDom(), resolveMuiPaletteFromCss(), selectNotifications(), createAppStore()
 
 ### Community 21 - "Community 21"
+Cohesion: 0.17
+Nodes (5): POST(), POST(), POST(), POST(), POST()
+
+### Community 22 - "Community 22"
 Cohesion: 0.3
 Nodes (9): createEmptyForm(), createFormFromItem(), onConfirmDisableSlider(), onCreateSlider(), onSaveSliderEdits(), parseApiMessage(), toDateTimeLocal(), toIsoOrUndefined() (+1 more)
 
-### Community 22 - "Community 22"
+### Community 23 - "Community 23"
 Cohesion: 0.18
 Nodes (3): onConfirmModeration(), parseApiMessage(), Skeleton()
 
-### Community 23 - "Community 23"
+### Community 24 - "Community 24"
 Cohesion: 0.27
 Nodes (7): getThemeRuntimeData(), RootLayout(), buildThemeVariables(), normalizeHexColor(), resolveCustomThemeColor(), resolveThemeMode(), MuiEmotionCacheProvider()
 
-### Community 24 - "Community 24"
+### Community 25 - "Community 25"
 Cohesion: 0.36
 Nodes (8): fillAggregateStats(), fillApps(), fillAppTypes(), fillCategories(), generateIconUrl(), main(), pickColor(), pickFeatureGraphic()
 
-### Community 27 - "Community 27"
+### Community 28 - "Community 28"
 Cohesion: 0.33
 Nodes (5): CarouselContent(), CarouselIndicator(), CarouselIndicatorGroup(), Trigger(), useCarousel()
 
@@ -194,7 +199,7 @@ Nodes (3): ConfirmDialog(), onConfirmRoleChange(), parseApiMessage()
 Cohesion: 0.6
 Nodes (5): buildOpenApiDocument(), collectMountedRoutes(), extractPathParams(), normalizePath(), toOpenApiPath()
 
-### Community 35 - "Community 35"
+### Community 36 - "Community 36"
 Cohesion: 0.4
 Nodes (3): GET(), PATCH(), PUT()
 
@@ -204,11 +209,11 @@ Nodes (3): GET(), PATCH(), PUT()
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `fetchServiceData()` connect `Community 1` to `Community 4`, `Community 6`, `Community 8`, `Community 11`, `Community 12`, `Community 23`, `Community 28`?**
+- **Why does `fetchServiceData()` connect `Community 1` to `Community 4`, `Community 6`, `Community 7`, `Community 11`, `Community 12`, `Community 24`, `Community 29`?**
   _High betweenness centrality (0.236) - this node is a cross-community bridge._
-- **Why does `proxyToService()` connect `Community 7` to `Community 32`, `Community 33`, `Community 1`, `Community 35`, `Community 39`, `Community 40`, `Community 9`, `Community 42`, `Community 10`, `Community 41`, `Community 12`, `Community 29`?**
+- **Why does `proxyToService()` connect `Community 9` to `Community 32`, `Community 33`, `Community 1`, `Community 35`, `Community 36`, `Community 40`, `Community 41`, `Community 8`, `Community 43`, `Community 42`, `Community 10`, `Community 12`, `Community 21`?**
   _High betweenness centrality (0.194) - this node is a cross-community bridge._
-- **Why does `formatDateTime()` connect `Community 4` to `Community 1`, `Community 2`, `Community 5`, `Community 8`, `Community 11`, `Community 13`, `Community 14`, `Community 15`, `Community 16`, `Community 21`, `Community 22`, `Community 31`?**
+- **Why does `formatDateTime()` connect `Community 4` to `Community 1`, `Community 2`, `Community 5`, `Community 7`, `Community 11`, `Community 13`, `Community 14`, `Community 15`, `Community 16`, `Community 22`, `Community 23`, `Community 31`?**
   _High betweenness centrality (0.131) - this node is a cross-community bridge._
 - **Are the 35 inferred relationships involving `proxyToService()` (e.g. with `POST()` and `POST()`) actually correct?**
   _`proxyToService()` has 35 INFERRED edges - model-reasoned connections that need verification._

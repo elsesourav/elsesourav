@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import { HelpArticleFeedbackWidget } from "./feedback-widget";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import { TableOfContents } from "@/components/help/TableOfContents";
 
 type HelpArticleDetail = {
   id: string;
@@ -25,6 +26,12 @@ type HelpArticleDetail = {
     name: string;
     slug: string;
   } | null;
+  sections?: {
+    id: string;
+    title: string;
+    slug: string;
+    contentMarkdown: string;
+  }[];
 };
 
 type HelpArticlePageProps = {
@@ -71,23 +78,23 @@ export default async function HelpArticlePage({
   const content = article.contentMdx || article.contentMarkdown;
 
   return (
-    <div className="flex flex-col lg:flex-row gap-12">
+    <div className="flex flex-col lg:flex-row gap-12 relative">
       {/* Main Content */}
-      <div className="flex-1 max-w-3xl space-y-8">
+      <div className="flex-1 min-w-0 max-w-3xl space-y-8">
         
         {/* Breadcrumbs */}
-        <nav className="flex items-center text-sm font-medium text-text-muted space-x-2">
+        <nav className="flex items-center text-sm font-medium text-text-muted space-x-2 whitespace-nowrap overflow-hidden text-ellipsis">
           <Link href="/help" className="hover:text-text-primary transition-colors">Help Center</Link>
           {article.category && (
             <>
-              <ChevronRight className="h-4 w-4" />
-              <Link href={`/help?categorySlug=${article.category.slug}`} className="hover:text-text-primary transition-colors">
+              <ChevronRight className="h-4 w-4 shrink-0" />
+              <Link href={`/help/category/${article.category.slug}`} className="hover:text-text-primary transition-colors">
                 {article.category.name}
               </Link>
             </>
           )}
-          <ChevronRight className="h-4 w-4" />
-          <span className="text-text-primary">{article.title}</span>
+          <ChevronRight className="h-4 w-4 shrink-0" />
+          <span className="text-text-primary truncate">{article.title}</span>
         </nav>
 
         <header className="space-y-4">
@@ -98,23 +105,19 @@ export default async function HelpArticlePage({
           </div>
         </header>
 
-        <article className="prose prose-slate dark:prose-invert max-w-none prose-headings:font-semibold prose-a:text-brand-primary">
-          <MarkdownContent markdown={content} />
-        </article>
+        <div className="prose prose-brand dark:prose-invert max-w-none">
+          {content && <MarkdownContent markdown={content} />}
+        </div>
 
-        <hr className="border-border my-8" />
-        
-        <HelpArticleFeedbackWidget articleId={article.id} />
+        <div className="mt-12 pt-8 border-t border-border-subtle">
+          <HelpArticleFeedbackWidget articleId={article.id} />
+        </div>
       </div>
 
-      {/* Floating TOC */}
-      <aside className="hidden lg:block w-64 shrink-0">
+      {/* Right Sidebar - TOC */}
+      <aside className="hidden xl:block w-64 shrink-0">
         <div className="sticky top-24">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-text-muted mb-4">On this page</h3>
-          {/* Note: A real TOC would parse headings from MDX here */}
-          <ul className="space-y-3 text-sm text-text-secondary border-l-2 border-border pl-4">
-            <li><a href="#" className="hover:text-brand-primary">Introduction</a></li>
-          </ul>
+          <TableOfContents />
         </div>
       </aside>
     </div>

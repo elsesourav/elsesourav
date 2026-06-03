@@ -73,6 +73,7 @@ export const ModelName = {
   HelpArticle: 'HelpArticle',
   FAQ: 'FAQ',
   HelpArticleFeedback: 'HelpArticleFeedback',
+  HelpArticleSection: 'HelpArticleSection',
   HelpArticleTag: 'HelpArticleTag',
   Testimonial: 'Testimonial',
   ThemeConfig: 'ThemeConfig',
@@ -504,12 +505,27 @@ export const HelpArticleFeedbackScalarFieldEnum = {
   id: 'id',
   articleId: 'articleId',
   userId: 'userId',
+  guestSessionId: 'guestSessionId',
   isHelpful: 'isHelpful',
   comment: 'comment',
   createdAt: 'createdAt'
 } as const
 
 export type HelpArticleFeedbackScalarFieldEnum = (typeof HelpArticleFeedbackScalarFieldEnum)[keyof typeof HelpArticleFeedbackScalarFieldEnum]
+
+
+export const HelpArticleSectionScalarFieldEnum = {
+  id: 'id',
+  articleId: 'articleId',
+  title: 'title',
+  slug: 'slug',
+  contentMarkdown: 'contentMarkdown',
+  orderIndex: 'orderIndex',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HelpArticleSectionScalarFieldEnum = (typeof HelpArticleSectionScalarFieldEnum)[keyof typeof HelpArticleSectionScalarFieldEnum]
 
 
 export const HelpArticleTagScalarFieldEnum = {

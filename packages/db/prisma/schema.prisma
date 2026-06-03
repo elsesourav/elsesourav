@@ -584,6 +584,7 @@ model HelpArticle {
   summary           String?
   contentMarkdown   String            @map("content_markdown") @db.Text
   contentMdx        String?           @map("content_mdx") @db.Text
+  orderIndex        Int               @default(0) @map("order_index")
   status            HelpArticleStatus @default(DRAFT)
   isFeatured        Boolean           @default(false) @map("is_featured")
   publishAt         DateTime?         @map("publish_at")
@@ -604,6 +605,7 @@ model HelpArticle {
   app      App?                  @relation(fields: [appId], references: [id], onDelete: SetNull)
   versions HelpArticleVersion[]
   tags     HelpArticleTag[]
+  sections HelpArticleSection[]
   feedback HelpArticleFeedback[]
 
   @@index([status, publishedAt])
@@ -631,19 +633,37 @@ model FAQ {
 }
 
 model HelpArticleFeedback {
-  id        String   @id @default(cuid())
-  articleId String   @map("article_id")
-  userId    String?  @map("user_id")
-  isHelpful Boolean  @map("is_helpful")
-  comment   String?  @db.Text
-  createdAt DateTime @default(now()) @map("created_at")
+  id             String   @id @default(cuid())
+  articleId      String   @map("article_id")
+  userId         String?  @map("user_id")
+  guestSessionId String?  @map("guest_session_id")
+  isHelpful      Boolean  @map("is_helpful")
+  comment        String?  @db.Text
+  createdAt      DateTime @default(now()) @map("created_at")
 
   article HelpArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
   user    User?       @relation("HelpArticleFeedbackUser", fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([articleId])
   @@index([userId])
+  @@index([guestSessionId])
   @@map("help_article_feedback")
+}
+
+model HelpArticleSection {
+  id              String   @id @default(cuid())
+  articleId       String   @map("article_id")
+  title           String
+  slug            String
+  contentMarkdown String   @map("content_markdown") @db.Text
+  orderIndex      Int      @default(0) @map("order_index")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  article HelpArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@index([articleId, orderIndex])
+  @@map("help_article_sections")
 }
 
 model HelpArticleTag {

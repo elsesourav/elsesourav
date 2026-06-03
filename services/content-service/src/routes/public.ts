@@ -7,7 +7,8 @@ import {
 } from "@elsesourav/db";
 import { 
   postCommentCreateSchema,
-  postReactionToggleSchema 
+  postReactionToggleSchema,
+  helpArticleFeedbackCreateSchema
 } from "@elsesourav/validation";
 import { Router } from "express";
 import { z } from "zod";
@@ -212,9 +213,9 @@ publicContentRouter.get("/posts", async (req, res) => {
       : null;
 
     return sendSuccess(res, requestId, {
-      items: pageItems.map((item) => ({
+      items: pageItems.map((item: any) => ({
         ...item,
-        tags: item.tags.map((tagLink) => tagLink.tag),
+        tags: item.tags.map((tagLink: any) => tagLink.tag),
       })),
       pagination: {
         limit: parsed.data.limit,
@@ -297,7 +298,7 @@ publicContentRouter.get("/posts/:slug", async (req, res) => {
 
     return sendSuccess(res, requestId, {
       ...post,
-      tags: post.tags.map((tagLink) => tagLink.tag),
+      tags: post.tags.map((tagLink: any) => tagLink.tag),
     });
   } catch (error) {
     return sendFailure(
@@ -361,7 +362,7 @@ publicContentRouter.get("/posts/:slug/related", async (req, res) => {
     }
 
     const now = new Date();
-    const tagIds = post.tags.map((item) => item.tagId);
+    const tagIds = post.tags.map((item: any) => item.tagId);
 
     const related = await prisma.post.findMany({
       where: {
@@ -396,7 +397,7 @@ publicContentRouter.get("/posts/:slug/related", async (req, res) => {
       },
     });
 
-    const existingIds = new Set(related.map((item) => item.id));
+    const existingIds = new Set(related.map((item: any) => item.id));
 
     if (related.length < parsedQuery.data.limit) {
       const remainder = parsedQuery.data.limit - related.length;
@@ -429,9 +430,9 @@ publicContentRouter.get("/posts/:slug/related", async (req, res) => {
     }
 
     return sendSuccess(res, requestId, {
-      items: related.map((item) => ({
+      items: related.map((item: any) => ({
         ...item,
-        tags: item.tags.map((tagLink) => tagLink.tag),
+        tags: item.tags.map((tagLink: any) => tagLink.tag),
       })),
     });
   } catch (error) {
@@ -709,7 +710,7 @@ publicContentRouter.get("/posts/:slug/reactions", async (req, res) => {
 
     return sendSuccess(res, requestId, {
       counts: {
-        ...reactions.reduce((acc, curr) => {
+        ...reactions.reduce((acc: Record<string, number>, curr: any) => {
           acc[curr.type] = curr._count;
           return acc;
         }, {} as Record<string, number>),
@@ -920,6 +921,64 @@ publicContentRouter.get("/help/categories", async (_req, res) => {
   }
 });
 
+publicContentRouter.get("/help/tree", async (_req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const [categories, articles, faqs] = await Promise.all([
+      prisma.helpCategory.findMany({
+        where: { isActive: true },
+        orderBy: [{ orderIndex: "asc" }, { name: "asc" }],
+      }),
+      prisma.helpArticle.findMany({
+        where: { status: "PUBLISHED" },
+        select: {
+          id: true,
+          categoryId: true,
+          slug: true,
+          title: true,
+        },
+        orderBy: [{ orderIndex: "asc" }, { title: "asc" }],
+      }).catch(() => prisma.helpArticle.findMany({
+        where: { status: "PUBLISHED" },
+        select: {
+          id: true,
+          categoryId: true,
+          slug: true,
+          title: true,
+        },
+        orderBy: [{ title: "asc" }],
+      })),
+      prisma.fAQ.findMany({
+        orderBy: [{ orderIndex: "asc" }, { question: "asc" }],
+      }),
+    ]);
+
+    const buildTree = (parentId: string | null = null): any[] => {
+      return categories
+        .filter((cat: any) => cat.parentId === parentId)
+        .map((cat: any) => ({
+          ...cat,
+          children: buildTree(cat.id),
+          articles: articles.filter((art: any) => art.categoryId === cat.id),
+          faqs: faqs.filter((faq: any) => faq.categoryId === cat.id),
+        }));
+    };
+
+    const tree = buildTree(null);
+    return sendSuccess(res, requestId, tree);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to fetch help tree.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
 publicContentRouter.get("/help/articles", async (req, res) => {
   const requestId = getRequestId(res);
 
@@ -991,6 +1050,9 @@ publicContentRouter.get("/help/articles", async (req, res) => {
             slug: true,
           },
         },
+        sections: {
+          orderBy: { orderIndex: "asc" },
+        },
       },
     });
 
@@ -1044,6 +1106,9 @@ publicContentRouter.get("/help/articles/:slug", async (req, res) => {
             name: true,
             slug: true,
           },
+        },
+        sections: {
+          orderBy: { orderIndex: "asc" },
         },
       },
     });
@@ -1264,9 +1329,9 @@ publicContentRouter.get("/support/overview", async (req, res) => {
     return sendSuccess(res, requestId, {
       categories,
       featuredHelp,
-      latestPosts: latestPosts.map((item) => ({
+      latestPosts: latestPosts.map((item: any) => ({
         ...item,
-        tags: item.tags.map((tagLink) => tagLink.tag),
+        tags: item.tags.map((tagLink: any) => tagLink.tag),
       })),
     });
   } catch (error) {
@@ -1576,6 +1641,99 @@ publicContentRouter.get("/help/faqs", async (req, res) => {
       requestId,
       "INTERNAL_ERROR",
       "Failed to fetch FAQs.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+publicContentRouter.post("/help/articles/:id/feedback", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const { id } = req.params;
+    const parsed = helpArticleFeedbackCreateSchema.safeParse(req.body);
+    
+    if (!parsed.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid feedback payload.",
+        400,
+        parsed.error.flatten(),
+      );
+    }
+
+    const userId = req.header("x-user-id") ?? null;
+    const guestSessionId = req.header("x-guest-session") ?? null;
+
+    if (!userId && !guestSessionId) {
+      return sendFailure(
+        res,
+        requestId,
+        "UNAUTHORIZED",
+        "User ID or Guest Session ID required.",
+        401,
+      );
+    }
+
+    const article = await prisma.helpArticle.findUnique({
+      where: { id },
+    });
+
+    if (!article) {
+      return sendFailure(res, requestId, "NOT_FOUND", "Article not found.", 404);
+    }
+
+    // Check if user/session already voted
+    const authConditions = [];
+    if (userId) authConditions.push({ userId });
+    if (guestSessionId) authConditions.push({ guestSessionId });
+
+    const existingFeedback = await prisma.helpArticleFeedback.findFirst({
+      where: {
+        articleId: id,
+        OR: authConditions,
+      },
+    });
+
+    if (existingFeedback) {
+      return sendFailure(
+        res,
+        requestId,
+        "CONFLICT",
+        "Feedback already submitted.",
+        409,
+      );
+    }
+
+    await prisma.$transaction([
+      prisma.helpArticleFeedback.create({
+        data: {
+          articleId: id,
+          userId,
+          guestSessionId,
+          isHelpful: parsed.data.isHelpful,
+          comment: parsed.data.comment,
+        },
+      }),
+      prisma.helpArticle.update({
+        where: { id },
+        data: {
+          upvotes: parsed.data.isHelpful ? { increment: 1 } : undefined,
+          downvotes: !parsed.data.isHelpful ? { increment: 1 } : undefined,
+        },
+      }),
+    ]);
+
+    return sendSuccess(res, requestId, { recorded: true }, 201);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to submit feedback.",
       500,
       error instanceof Error ? error.message : "Unknown error",
     );

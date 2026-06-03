@@ -9,8 +9,24 @@ export function HelpArticleFeedbackWidget({ articleId }: { articleId: string }) 
 
   const handleFeedback = async (isHelpful: boolean) => {
     setFeedback(isHelpful ? "helpful" : "not-helpful");
-    // Implementation: Send feedback to API
-    // fetch(`/api/content/help/articles/${articleId}/feedback`, { method: "POST", body: JSON.stringify({ isHelpful }) })
+    try {
+      let guestSessionId = localStorage.getItem("guest_session_id");
+      if (!guestSessionId) {
+        guestSessionId = crypto.randomUUID();
+        localStorage.setItem("guest_session_id", guestSessionId);
+      }
+
+      await fetch(`/api/content/help/articles/${articleId}/feedback`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-guest-session": guestSessionId,
+        },
+        body: JSON.stringify({ isHelpful }),
+      });
+    } catch (error) {
+      console.error("Failed to submit feedback", error);
+    }
   };
 
   if (feedback) {

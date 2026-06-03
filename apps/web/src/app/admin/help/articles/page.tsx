@@ -6,17 +6,24 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminHelpArticlesPage() {
   const user = await requireAdminContext();
-  const res = await fetchServiceData<any>({
-    service: "content",
-    path: "/v1/admin/content/help/articles?limit=100",
-    user,
-  }).catch(() => ({ items: [] }));
+  
+  const [articlesRes, categories] = await Promise.all([
+    fetchServiceData<any>({
+      service: "content",
+      path: "/v1/admin/content/help/articles?limit=30",
+      user,
+    }).catch(() => ({ items: [] })),
+    fetchServiceData<any[]>({
+      service: "content",
+      path: "/v1/content/help/categories",
+    }).catch(() => []),
+  ]);
 
-  const articles = res.items || [];
+  const articles = articlesRes.items || [];
 
   return (
     <div className="pt-4">
-      <AdminHelpArticlesClient initialArticles={articles} />
+      <AdminHelpArticlesClient initialArticles={articles} categories={categories} />
     </div>
   );
 }

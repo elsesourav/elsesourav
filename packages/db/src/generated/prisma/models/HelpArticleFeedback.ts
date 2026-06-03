@@ -28,6 +28,7 @@ export type HelpArticleFeedbackMinAggregateOutputType = {
   id: string | null
   articleId: string | null
   userId: string | null
+  guestSessionId: string | null
   isHelpful: boolean | null
   comment: string | null
   createdAt: Date | null
@@ -37,6 +38,7 @@ export type HelpArticleFeedbackMaxAggregateOutputType = {
   id: string | null
   articleId: string | null
   userId: string | null
+  guestSessionId: string | null
   isHelpful: boolean | null
   comment: string | null
   createdAt: Date | null
@@ -46,6 +48,7 @@ export type HelpArticleFeedbackCountAggregateOutputType = {
   id: number
   articleId: number
   userId: number
+  guestSessionId: number
   isHelpful: number
   comment: number
   createdAt: number
@@ -57,6 +60,7 @@ export type HelpArticleFeedbackMinAggregateInputType = {
   id?: true
   articleId?: true
   userId?: true
+  guestSessionId?: true
   isHelpful?: true
   comment?: true
   createdAt?: true
@@ -66,6 +70,7 @@ export type HelpArticleFeedbackMaxAggregateInputType = {
   id?: true
   articleId?: true
   userId?: true
+  guestSessionId?: true
   isHelpful?: true
   comment?: true
   createdAt?: true
@@ -75,6 +80,7 @@ export type HelpArticleFeedbackCountAggregateInputType = {
   id?: true
   articleId?: true
   userId?: true
+  guestSessionId?: true
   isHelpful?: true
   comment?: true
   createdAt?: true
@@ -157,6 +163,7 @@ export type HelpArticleFeedbackGroupByOutputType = {
   id: string
   articleId: string
   userId: string | null
+  guestSessionId: string | null
   isHelpful: boolean
   comment: string | null
   createdAt: Date
@@ -187,6 +194,7 @@ export type HelpArticleFeedbackWhereInput = {
   id?: Prisma.StringFilter<"HelpArticleFeedback"> | string
   articleId?: Prisma.StringFilter<"HelpArticleFeedback"> | string
   userId?: Prisma.StringNullableFilter<"HelpArticleFeedback"> | string | null
+  guestSessionId?: Prisma.StringNullableFilter<"HelpArticleFeedback"> | string | null
   isHelpful?: Prisma.BoolFilter<"HelpArticleFeedback"> | boolean
   comment?: Prisma.StringNullableFilter<"HelpArticleFeedback"> | string | null
   createdAt?: Prisma.DateTimeFilter<"HelpArticleFeedback"> | Date | string
@@ -198,6 +206,7 @@ export type HelpArticleFeedbackOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   articleId?: Prisma.SortOrder
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
+  guestSessionId?: Prisma.SortOrderInput | Prisma.SortOrder
   isHelpful?: Prisma.SortOrder
   comment?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -212,6 +221,7 @@ export type HelpArticleFeedbackWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.HelpArticleFeedbackWhereInput | Prisma.HelpArticleFeedbackWhereInput[]
   articleId?: Prisma.StringFilter<"HelpArticleFeedback"> | string
   userId?: Prisma.StringNullableFilter<"HelpArticleFeedback"> | string | null
+  guestSessionId?: Prisma.StringNullableFilter<"HelpArticleFeedback"> | string | null
   isHelpful?: Prisma.BoolFilter<"HelpArticleFeedback"> | boolean
   comment?: Prisma.StringNullableFilter<"HelpArticleFeedback"> | string | null
   createdAt?: Prisma.DateTimeFilter<"HelpArticleFeedback"> | Date | string
@@ -223,6 +233,7 @@ export type HelpArticleFeedbackOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   articleId?: Prisma.SortOrder
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
+  guestSessionId?: Prisma.SortOrderInput | Prisma.SortOrder
   isHelpful?: Prisma.SortOrder
   comment?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -238,6 +249,7 @@ export type HelpArticleFeedbackScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"HelpArticleFeedback"> | string
   articleId?: Prisma.StringWithAggregatesFilter<"HelpArticleFeedback"> | string
   userId?: Prisma.StringNullableWithAggregatesFilter<"HelpArticleFeedback"> | string | null
+  guestSessionId?: Prisma.StringNullableWithAggregatesFilter<"HelpArticleFeedback"> | string | null
   isHelpful?: Prisma.BoolWithAggregatesFilter<"HelpArticleFeedback"> | boolean
   comment?: Prisma.StringNullableWithAggregatesFilter<"HelpArticleFeedback"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"HelpArticleFeedback"> | Date | string
@@ -245,6 +257,7 @@ export type HelpArticleFeedbackScalarWhereWithAggregatesInput = {
 
 export type HelpArticleFeedbackCreateInput = {
   id?: string
+  guestSessionId?: string | null
   isHelpful: boolean
   comment?: string | null
   createdAt?: Date | string
@@ -256,6 +269,7 @@ export type HelpArticleFeedbackUncheckedCreateInput = {
   id?: string
   articleId: string
   userId?: string | null
+  guestSessionId?: string | null
   isHelpful: boolean
   comment?: string | null
   createdAt?: Date | string
@@ -263,6 +277,7 @@ export type HelpArticleFeedbackUncheckedCreateInput = {
 
 export type HelpArticleFeedbackUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  guestSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isHelpful?: Prisma.BoolFieldUpdateOperationsInput | boolean
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -274,6 +289,7 @@ export type HelpArticleFeedbackUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   articleId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guestSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isHelpful?: Prisma.BoolFieldUpdateOperationsInput | boolean
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -283,6 +299,7 @@ export type HelpArticleFeedbackCreateManyInput = {
   id?: string
   articleId: string
   userId?: string | null
+  guestSessionId?: string | null
   isHelpful: boolean
   comment?: string | null
   createdAt?: Date | string
@@ -290,6 +307,7 @@ export type HelpArticleFeedbackCreateManyInput = {
 
 export type HelpArticleFeedbackUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  guestSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isHelpful?: Prisma.BoolFieldUpdateOperationsInput | boolean
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -299,6 +317,7 @@ export type HelpArticleFeedbackUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   articleId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guestSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isHelpful?: Prisma.BoolFieldUpdateOperationsInput | boolean
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -318,6 +337,7 @@ export type HelpArticleFeedbackCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   articleId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  guestSessionId?: Prisma.SortOrder
   isHelpful?: Prisma.SortOrder
   comment?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -327,6 +347,7 @@ export type HelpArticleFeedbackMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   articleId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  guestSessionId?: Prisma.SortOrder
   isHelpful?: Prisma.SortOrder
   comment?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -336,6 +357,7 @@ export type HelpArticleFeedbackMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   articleId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  guestSessionId?: Prisma.SortOrder
   isHelpful?: Prisma.SortOrder
   comment?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -427,6 +449,7 @@ export type HelpArticleFeedbackUncheckedUpdateManyWithoutArticleNestedInput = {
 
 export type HelpArticleFeedbackCreateWithoutUserInput = {
   id?: string
+  guestSessionId?: string | null
   isHelpful: boolean
   comment?: string | null
   createdAt?: Date | string
@@ -436,6 +459,7 @@ export type HelpArticleFeedbackCreateWithoutUserInput = {
 export type HelpArticleFeedbackUncheckedCreateWithoutUserInput = {
   id?: string
   articleId: string
+  guestSessionId?: string | null
   isHelpful: boolean
   comment?: string | null
   createdAt?: Date | string
@@ -474,6 +498,7 @@ export type HelpArticleFeedbackScalarWhereInput = {
   id?: Prisma.StringFilter<"HelpArticleFeedback"> | string
   articleId?: Prisma.StringFilter<"HelpArticleFeedback"> | string
   userId?: Prisma.StringNullableFilter<"HelpArticleFeedback"> | string | null
+  guestSessionId?: Prisma.StringNullableFilter<"HelpArticleFeedback"> | string | null
   isHelpful?: Prisma.BoolFilter<"HelpArticleFeedback"> | boolean
   comment?: Prisma.StringNullableFilter<"HelpArticleFeedback"> | string | null
   createdAt?: Prisma.DateTimeFilter<"HelpArticleFeedback"> | Date | string
@@ -481,6 +506,7 @@ export type HelpArticleFeedbackScalarWhereInput = {
 
 export type HelpArticleFeedbackCreateWithoutArticleInput = {
   id?: string
+  guestSessionId?: string | null
   isHelpful: boolean
   comment?: string | null
   createdAt?: Date | string
@@ -490,6 +516,7 @@ export type HelpArticleFeedbackCreateWithoutArticleInput = {
 export type HelpArticleFeedbackUncheckedCreateWithoutArticleInput = {
   id?: string
   userId?: string | null
+  guestSessionId?: string | null
   isHelpful: boolean
   comment?: string | null
   createdAt?: Date | string
@@ -524,6 +551,7 @@ export type HelpArticleFeedbackUpdateManyWithWhereWithoutArticleInput = {
 export type HelpArticleFeedbackCreateManyUserInput = {
   id?: string
   articleId: string
+  guestSessionId?: string | null
   isHelpful: boolean
   comment?: string | null
   createdAt?: Date | string
@@ -531,6 +559,7 @@ export type HelpArticleFeedbackCreateManyUserInput = {
 
 export type HelpArticleFeedbackUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  guestSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isHelpful?: Prisma.BoolFieldUpdateOperationsInput | boolean
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -540,6 +569,7 @@ export type HelpArticleFeedbackUpdateWithoutUserInput = {
 export type HelpArticleFeedbackUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   articleId?: Prisma.StringFieldUpdateOperationsInput | string
+  guestSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isHelpful?: Prisma.BoolFieldUpdateOperationsInput | boolean
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -548,6 +578,7 @@ export type HelpArticleFeedbackUncheckedUpdateWithoutUserInput = {
 export type HelpArticleFeedbackUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   articleId?: Prisma.StringFieldUpdateOperationsInput | string
+  guestSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isHelpful?: Prisma.BoolFieldUpdateOperationsInput | boolean
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -556,6 +587,7 @@ export type HelpArticleFeedbackUncheckedUpdateManyWithoutUserInput = {
 export type HelpArticleFeedbackCreateManyArticleInput = {
   id?: string
   userId?: string | null
+  guestSessionId?: string | null
   isHelpful: boolean
   comment?: string | null
   createdAt?: Date | string
@@ -563,6 +595,7 @@ export type HelpArticleFeedbackCreateManyArticleInput = {
 
 export type HelpArticleFeedbackUpdateWithoutArticleInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  guestSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isHelpful?: Prisma.BoolFieldUpdateOperationsInput | boolean
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -572,6 +605,7 @@ export type HelpArticleFeedbackUpdateWithoutArticleInput = {
 export type HelpArticleFeedbackUncheckedUpdateWithoutArticleInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guestSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isHelpful?: Prisma.BoolFieldUpdateOperationsInput | boolean
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -580,6 +614,7 @@ export type HelpArticleFeedbackUncheckedUpdateWithoutArticleInput = {
 export type HelpArticleFeedbackUncheckedUpdateManyWithoutArticleInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guestSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isHelpful?: Prisma.BoolFieldUpdateOperationsInput | boolean
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -591,6 +626,7 @@ export type HelpArticleFeedbackSelect<ExtArgs extends runtime.Types.Extensions.I
   id?: boolean
   articleId?: boolean
   userId?: boolean
+  guestSessionId?: boolean
   isHelpful?: boolean
   comment?: boolean
   createdAt?: boolean
@@ -602,6 +638,7 @@ export type HelpArticleFeedbackSelectCreateManyAndReturn<ExtArgs extends runtime
   id?: boolean
   articleId?: boolean
   userId?: boolean
+  guestSessionId?: boolean
   isHelpful?: boolean
   comment?: boolean
   createdAt?: boolean
@@ -613,6 +650,7 @@ export type HelpArticleFeedbackSelectUpdateManyAndReturn<ExtArgs extends runtime
   id?: boolean
   articleId?: boolean
   userId?: boolean
+  guestSessionId?: boolean
   isHelpful?: boolean
   comment?: boolean
   createdAt?: boolean
@@ -624,12 +662,13 @@ export type HelpArticleFeedbackSelectScalar = {
   id?: boolean
   articleId?: boolean
   userId?: boolean
+  guestSessionId?: boolean
   isHelpful?: boolean
   comment?: boolean
   createdAt?: boolean
 }
 
-export type HelpArticleFeedbackOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "articleId" | "userId" | "isHelpful" | "comment" | "createdAt", ExtArgs["result"]["helpArticleFeedback"]>
+export type HelpArticleFeedbackOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "articleId" | "userId" | "guestSessionId" | "isHelpful" | "comment" | "createdAt", ExtArgs["result"]["helpArticleFeedback"]>
 export type HelpArticleFeedbackInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   article?: boolean | Prisma.HelpArticleDefaultArgs<ExtArgs>
   user?: boolean | Prisma.HelpArticleFeedback$userArgs<ExtArgs>
@@ -653,6 +692,7 @@ export type $HelpArticleFeedbackPayload<ExtArgs extends runtime.Types.Extensions
     id: string
     articleId: string
     userId: string | null
+    guestSessionId: string | null
     isHelpful: boolean
     comment: string | null
     createdAt: Date
@@ -1084,6 +1124,7 @@ export interface HelpArticleFeedbackFieldRefs {
   readonly id: Prisma.FieldRef<"HelpArticleFeedback", 'String'>
   readonly articleId: Prisma.FieldRef<"HelpArticleFeedback", 'String'>
   readonly userId: Prisma.FieldRef<"HelpArticleFeedback", 'String'>
+  readonly guestSessionId: Prisma.FieldRef<"HelpArticleFeedback", 'String'>
   readonly isHelpful: Prisma.FieldRef<"HelpArticleFeedback", 'Boolean'>
   readonly comment: Prisma.FieldRef<"HelpArticleFeedback", 'String'>
   readonly createdAt: Prisma.FieldRef<"HelpArticleFeedback", 'DateTime'>

@@ -44,9 +44,10 @@ const publicSearchQuerySchema = z.object({
     .string()
     .optional()
     .transform((value) => (value ? Number(value) : 5))
-    .pipe(z.number().int().min(1).max(10)),
+    .pipe(z.number().int().min(1).max(20)),
   categoryId: z.string().optional(),
   mode: z.enum(["text", "rich"]).optional().default("rich"),
+  context: z.enum(["home", "apps", "posts", "help", "support"]).optional().default("home"),
 });
 
 export const publicCatalogRouter = Router();
@@ -185,7 +186,7 @@ publicCatalogRouter.get("/top-apps", async (req, res) => {
       },
     });
 
-    const normalizedApps = apps.map((app) => {
+    const normalizedApps = apps.map((app: any) => {
       const media = app.media?.[0] ?? null;
       return {
         id: app.id, title: app.title, slug: app.slug,
@@ -238,7 +239,7 @@ publicCatalogRouter.get("/category-previews", async (req, res) => {
     });
 
     const categoryItems = await Promise.all(
-      categories.map(async (category) => {
+      categories.map(async (category: any) => {
         const apps = await prisma.app.findMany({
           where: {
             status: AppStatus.PUBLISHED,
@@ -276,7 +277,7 @@ publicCatalogRouter.get("/category-previews", async (req, res) => {
           },
         });
 
-        const normalizedApps = apps.map((app) => {
+        const normalizedApps = apps.map((app: any) => {
           const media = app.media?.[0] ?? null;
 
           return {
@@ -394,7 +395,7 @@ publicCatalogRouter.get("/type-previews", async (req, res) => {
           },
         });
 
-        const normalizedApps = apps.map((app) => {
+        const normalizedApps = apps.map((app: any) => {
           const media = app.media?.[0] ?? null;
           return {
             id: app.id,
@@ -463,55 +464,173 @@ publicCatalogRouter.get("/search", async (req, res) => {
 
     const query = parsed.data;
     const search = query.q.trim();
+    const isRich = query.mode === "rich";
 
-    const appWhere: Prisma.AppWhereInput = {
-      status: AppStatus.PUBLISHED,
-      deletedAt: null,
-      OR: [
-        {
-          title: {
-            contains: search,
-            mode: "insensitive",
-          },
+    const [apps, appCategories, posts, postTags, helpArticles, helpCategories, faqs] = await Promise.all([
+      // 1. Apps
+      prisma.app.findMany({
+        where: {
+          status: "PUBLISHED", // Use string to avoid needing AppStatus import if not present, though it is present
+          deletedAt: null,
+          OR: [
+            { title: { contains: search, mode: "insensitive" } },
+            { shortDescription: { contains: search, mode: "insensitive" } },
+          ],
+          ...(query.categoryId ? { categoryId: query.categoryId } : {}),
         },
-        {
-          shortDescription: {
-            contains: search,
-            mode: "insensitive",
-          },
+        take: query.limit,
+        select: { id: true, title: true, slug: true, shortDescription: true, iconUrl: true },
+      }),
+      // 2. App Categories
+      prisma.category.findMany({
+        where: {
+          deletedAt: null,
+          name: { contains: search, mode: "insensitive" },
         },
-      ],
-    };
+        take: 3,
+        select: { id: true, name: true, description: true },
+      }),
+      // 3. Posts
+      prisma.post.findMany({
+        where: {
+          status: "PUBLISHED",
+          deletedAt: null,
+          OR: [
+            { title: { contains: search, mode: "insensitive" } },
+            { excerpt: { contains: search, mode: "insensitive" } },
+          ],
+        },
+        take: query.limit,
+        select: { id: true, title: true, slug: true, excerpt: true, featuredImageUrl: true },
+      }),
+      // 4. Post Tags
+      prisma.postTag.findMany({
+        where: { name: { contains: search, mode: "insensitive" } },
+        take: 3,
+        select: { id: true, name: true, slug: true },
+      }),
+      // 5. Help Articles
+      prisma.helpArticle.findMany({
+        where: {
+          status: "PUBLISHED",
+          OR: [
+            { title: { contains: search, mode: "insensitive" } },
+            { summary: { contains: search, mode: "insensitive" } },
+          ],
+        },
+        take: query.limit,
+        select: { id: true, title: true, slug: true, summary: true },
+      }),
+      // 6. Help Categories
+      prisma.helpCategory.findMany({
+        where: {
+          isActive: true,
+          name: { contains: search, mode: "insensitive" },
+        },
+        take: 3,
+        select: { id: true, name: true, slug: true, description: true },
+      }),
+      // 7. FAQs
+      prisma.fAQ.findMany({
+        where: {
+          question: { contains: search, mode: "insensitive" },
+        },
+        take: query.limit,
+        select: { id: true, question: true },
+      }),
+    ]);
 
-    if (query.categoryId) {
-      appWhere.categoryId = query.categoryId;
-    }
+    // Map to normalized items with a source flag for scoring
+    const items = [
+      ...apps.map((app: any) => ({
+        type: "app" as const,
+        id: app.id,
+        title: app.title,
+        subtitle: app.shortDescription,
+        imageUrl: app.iconUrl,
+        href: `/apps/${app.slug}`,
+        _source: "apps",
+      })),
+      ...appCategories.map((cat: any) => ({
+        type: "category" as const,
+        id: cat.id,
+        title: cat.name,
+        subtitle: cat.description,
+        href: `/apps/category/${cat.id}`,
+        _source: "apps",
+      })),
+      ...posts.map((post: any) => ({
+        type: "post" as const,
+        id: post.id,
+        title: post.title,
+        subtitle: post.excerpt,
+        imageUrl: post.featuredImageUrl,
+        href: `/posts/${post.slug}`,
+        _source: "posts",
+      })),
+      ...postTags.map((tag: any) => ({
+        type: "postTag" as const,
+        id: tag.id,
+        title: tag.name,
+        subtitle: "Blog Tag",
+        href: `/posts?tag=${tag.slug}`,
+        _source: "posts",
+      })),
+      ...helpArticles.map((article: any) => ({
+        type: "helpArticle" as const,
+        id: article.id,
+        title: article.title,
+        subtitle: article.summary,
+        href: `/help/${article.slug}`,
+        _source: "help",
+      })),
+      ...helpCategories.map((cat: any) => ({
+        type: "helpCategory" as const,
+        id: cat.id,
+        title: cat.name,
+        subtitle: cat.description,
+        href: `/help/category/${cat.slug}`,
+        _source: "help",
+      })),
+      ...faqs.map((faq: any) => ({
+        type: "faq" as const,
+        id: faq.id,
+        title: faq.question,
+        subtitle: "FAQ",
+        href: `/help-support`,
+        _source: "support",
+      })),
+    ];
 
-    const apps = await prisma.app.findMany({
-      where: appWhere,
-      orderBy: [{ publishedAt: "desc" }, { updatedAt: "desc" }],
-      take: query.limit,
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        shortDescription: true,
-        iconUrl: true,
-      },
+    // Compute score based on search exactness and context
+    const searchLower = search.toLowerCase();
+    
+    items.forEach((item: any) => {
+      let score = 0;
+      const titleLower = item.title.toLowerCase();
+      
+      // Exact match bonus
+      if (titleLower === searchLower) score += 100;
+      else if (titleLower.startsWith(searchLower)) score += 50;
+      else score += 10;
+      
+      // Context multipliers
+      if (query.context === "apps" && item._source === "apps") score += 200;
+      if (query.context === "posts" && item._source === "posts") score += 200;
+      if (query.context === "help" && item._source === "help") score += 200;
+      if (query.context === "support" && (item._source === "support" || item._source === "help")) score += 200;
+
+      (item as any)._score = score;
     });
 
-    const items = apps.map((app) => ({
-      type: "app" as const,
-      id: app.id,
-      title: app.title,
-      subtitle: app.shortDescription,
-      imageUrl: app.iconUrl,
-      href: `/apps/${app.slug}`,
-    }));
+    items.sort((a: any, b: any) => b._score - a._score);
+    
+    // Clean up internal properties and limit results
+    const finalItems = items.slice(0, query.limit).map(({ _score, _source, ...rest }: any) => rest);
 
     return sendSuccess(res, requestId, {
       mode: query.mode,
-      items,
+      items: finalItems,
     });
   } catch (error) {
     return sendFailure(
@@ -613,12 +732,12 @@ publicCatalogRouter.get("/sliders", async (req, res) => {
       },
     });
 
-    const normalizedSliders = sliders.map((slider) => ({
+    const normalizedSliders = sliders.map((slider: any) => ({
       ...slider,
       app: slider.app
         ? {
             ...slider.app,
-            tags: slider.app.tagLinks.map((entry) => entry.tag),
+            tags: slider.app.tagLinks.map((entry: any) => entry.tag),
             aggregateStat: slider.app.aggregateStat,
           }
         : null,
@@ -804,13 +923,13 @@ publicCatalogRouter.get("/apps", async (req, res) => {
         },
       });
 
-      const items = sectionItems.map((item) => ({
+      const items = sectionItems.map((item: any) => ({
         ...item.app,
         iconUrl:
           item.app.iconUrl ??
           `https://ui-avatars.com/api/?name=${encodeURIComponent(item.app.title.slice(0, 2))}&size=400&background=4F46E5&color=fff&bold=true&format=png`,
         developerName: item.app.developerName ?? "ElseSourav Labs",
-        tags: item.app.tagLinks.map((entry) => entry.tag),
+        tags: item.app.tagLinks.map((entry: any) => entry.tag),
         section: {
           id: item.id,
           sectionType: item.sectionType,
@@ -936,13 +1055,13 @@ publicCatalogRouter.get("/apps", async (req, res) => {
       ? (pageItems[pageItems.length - 1]?.id ?? null)
       : null;
 
-    const normalizedItems = pageItems.map((item) => ({
+    const normalizedItems = pageItems.map((item: any) => ({
       ...item,
       iconUrl:
         item.iconUrl ??
         `https://ui-avatars.com/api/?name=${encodeURIComponent(item.title.slice(0, 2))}&size=400&background=4F46E5&color=fff&bold=true&format=png`,
       developerName: item.developerName ?? "ElseSourav Labs",
-      tags: item.tagLinks.map((entry) => entry.tag),
+      tags: item.tagLinks.map((entry: any) => entry.tag),
       aggregateStat: item.aggregateStat,
     }));
 
@@ -1073,7 +1192,7 @@ publicCatalogRouter.get("/apps/:slug", async (req, res) => {
         app.iconUrl ??
         `https://ui-avatars.com/api/?name=${encodeURIComponent(app.title.slice(0, 2))}&size=400&background=4F46E5&color=fff&bold=true&format=png`,
       developerName: app.developerName ?? "ElseSourav Labs",
-      tags: app.tagLinks.map((entry) => entry.tag),
+      tags: app.tagLinks.map((entry: any) => entry.tag),
       aggregateStat: app.aggregateStat,
     });
   } catch (error) {

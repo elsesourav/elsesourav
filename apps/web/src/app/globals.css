@@ -12,18 +12,18 @@
   --bg-surface: #fafafa;
   --bg-surface-hover: #f4f4f5;
   --bg-surface-active: #e4e4e7;
-  
+
   --text-primary: #09090b;
   --text-secondary: #52525b;
   --text-muted: #71717a;
-  
+
   --border-subtle: #e4e4e7;
   --border-strong: #d4d4d8;
-  
+
   --brand-primary: #18181b;
   --brand-primary-hover: #27272a;
   --brand-primary-foreground: #ffffff;
-  
+
   --brand-accent: #3b82f6; /* Modern Blue */
   --brand-accent-hover: #2563eb;
   --brand-accent-foreground: #ffffff;
@@ -39,7 +39,8 @@
 
   /* Typography */
   --font-sans: "Inter", "Segoe UI", Helvetica, Arial, sans-serif;
-  --font-heading: "Inter", "Segoe UI", Helvetica, Arial, sans-serif; /* Simplified for minimal look */
+  --font-heading:
+    "Inter", "Segoe UI", Helvetica, Arial, sans-serif; /* Simplified for minimal look */
   --font-mono: "JetBrains Mono", "Courier New", monospace;
 
   /* Radius */
@@ -51,10 +52,19 @@
 
   /* Shadows (Stripe-like depth) */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.02);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.01);
-  --shadow-float: 0 0 0 1px rgba(0,0,0,0.03), 0 2px 12px rgba(0,0,0,0.04), 0 16px 32px rgba(0,0,0,0.04);
+  --shadow-md:
+    0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-lg:
+    0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.02);
+  --shadow-xl:
+    0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.01);
+  --shadow-float:
+    0 0 0 1px rgba(0, 0, 0, 0.03), 0 2px 12px rgba(0, 0, 0, 0.04),
+    0 16px 32px rgba(0, 0, 0, 0.04);
+}
+
+* {
+  outline: 1px solid #f003;
 }
 
 /* 
@@ -67,21 +77,21 @@ html[data-theme-mode="dark"] {
   --bg-surface: #121214;
   --bg-surface-hover: #1f1f22;
   --bg-surface-active: #27272a;
-  
+
   --text-primary: #fafafa;
   --text-secondary: #a1a1aa;
   --text-muted: #71717a;
-  
+
   --border-subtle: #27272a;
   --border-strong: #3f3f46;
-  
+
   --brand-primary: #fafafa;
   --brand-primary-hover: #e4e4e7;
   --brand-primary-foreground: #09090b;
-  
-  --brand-accent: #3b82f6; 
+
+  --brand-accent: #3b82f6;
   --brand-accent-hover: #60a5fa;
-  
+
   --status-success: #10b981;
   --status-success-bg: rgba(16, 185, 129, 0.15);
   --status-warning: #f59e0b;
@@ -91,7 +101,9 @@ html[data-theme-mode="dark"] {
   --status-info: #3b82f6;
   --status-info-bg: rgba(59, 130, 246, 0.15);
 
-  --shadow-float: 0 0 0 1px rgba(255,255,255,0.05), 0 2px 12px rgba(0,0,0,0.4), 0 16px 32px rgba(0,0,0,0.4);
+  --shadow-float:
+    0 0 0 1px rgba(255, 255, 255, 0.05), 0 2px 12px rgba(0, 0, 0, 0.4),
+    0 16px 32px rgba(0, 0, 0, 0.4);
 }
 
 /* System preference fallback if not explicitly set */
@@ -114,7 +126,9 @@ html[data-theme-mode="dark"] {
     --status-warning-bg: rgba(245, 158, 11, 0.15);
     --status-danger-bg: rgba(239, 68, 68, 0.15);
     --status-info-bg: rgba(59, 130, 246, 0.15);
-    --shadow-float: 0 0 0 1px rgba(255,255,255,0.05), 0 2px 12px rgba(0,0,0,0.4), 0 16px 32px rgba(0,0,0,0.4);
+    --shadow-float:
+      0 0 0 1px rgba(255, 255, 255, 0.05), 0 2px 12px rgba(0, 0, 0, 0.4),
+      0 16px 32px rgba(0, 0, 0, 0.4);
   }
 }
 
@@ -126,7 +140,7 @@ html[data-theme-mode="dark"] {
 @theme {
   --color-background: var(--bg-base);
   --color-foreground: var(--text-primary);
-  
+
   --color-surface: var(--bg-surface);
   --color-surface-hover: var(--bg-surface-hover);
   --color-surface-active: var(--bg-surface-active);
@@ -180,7 +194,9 @@ body {
   font-family: var(--font-sans);
   min-height: 100vh;
   /* Smooth background transition for theme switching */
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

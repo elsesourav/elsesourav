@@ -232,9 +232,9 @@ adminCatalogRouter.get("/apps", async (_req, res) => {
     return sendSuccess(
       res,
       requestId,
-      items.map((item) => ({
+      items.map((item: any) => ({
         ...item,
-        tags: item.tagLinks.map((entry) => entry.tag),
+        tags: item.tagLinks.map((entry: any) => entry.tag),
       })),
     );
   } catch (error) {
@@ -1047,7 +1047,7 @@ adminCatalogRouter.put("/apps/:id/tags", async (req, res) => {
       return sendFailure(res, requestId, "NOT_FOUND", "App not found.", 404);
     }
 
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: any) => {
       await tx.appTagOnApp.deleteMany({
         where: {
           appId: parsedId.data.id,
@@ -1084,7 +1084,7 @@ adminCatalogRouter.put("/apps/:id/tags", async (req, res) => {
 
     return sendSuccess(res, requestId, {
       appId: parsedId.data.id,
-      tags: updatedApp?.tagLinks.map((entry) => entry.tag) ?? [],
+      tags: updatedApp?.tagLinks.map((entry: any) => entry.tag) ?? [],
     });
   } catch (error) {
     return sendFailure(
@@ -1436,7 +1436,7 @@ adminCatalogRouter.get("/apps/:id/media", async (req, res) => {
     return sendSuccess(
       res,
       requestId,
-      media.map((entry) => normalizeMediaResponse(entry)),
+      media.map((entry: any) => normalizeMediaResponse(entry)),
     );
   } catch (error) {
     return sendFailure(

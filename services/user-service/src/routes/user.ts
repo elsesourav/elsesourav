@@ -1036,7 +1036,7 @@ userRouter.get("/recently-viewed", async (req, res) => {
       },
     });
 
-    const appMap = new Map(apps.map((app) => [app.id, app]));
+    const appMap = new Map(apps.map((app: any) => [app.id, app]));
     const items = orderedAppIds
       .map((appId) => {
         const app = appMap.get(appId);
@@ -1222,7 +1222,7 @@ userRouter.post("/support/tickets", async (req, res) => {
       ? JSON.stringify(parsed.data.metadata)
       : null;
 
-    const inserted = await prisma.$queryRaw<{ id: string }[]>(Prisma.sql`
+    const inserted = (await prisma.$queryRaw(Prisma.sql`
       INSERT INTO support_tickets (
         user_id,
         app_id,
@@ -1246,7 +1246,7 @@ userRouter.post("/support/tickets", async (req, res) => {
         ${metadataJson}::jsonb
       )
       RETURNING id
-    `);
+    `)) as { id: string }[];
 
     const ticketId = inserted[0]?.id;
     if (!ticketId) {
@@ -1332,9 +1332,7 @@ userRouter.get("/support/tickets", async (req, res) => {
       );
     }
 
-    const tickets = await prisma.$queryRaw<
-      SupportTicketSummaryRow[]
-    >(Prisma.sql`
+    const tickets = (await prisma.$queryRaw(Prisma.sql`
       SELECT
         t.id,
         t.user_id AS "userId",
@@ -1365,7 +1363,7 @@ userRouter.get("/support/tickets", async (req, res) => {
       WHERE ${Prisma.join(whereClauses, " AND ")}
       ORDER BY t.updated_at DESC
       LIMIT ${parsed.data.limit}
-    `);
+    `)) as SupportTicketSummaryRow[];
 
     return sendSuccess(res, requestId, tickets);
   } catch (error) {
@@ -2017,7 +2015,7 @@ adminUserRouter.post("/stats/recompute", async (req, res) => {
         where: { deletedAt: null },
         select: { id: true },
       });
-      appIds = apps.map((app) => app.id);
+      appIds = apps.map((app: any) => app.id);
     }
 
     for (const appId of appIds) {

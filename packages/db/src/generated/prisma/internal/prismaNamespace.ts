@@ -406,6 +406,7 @@ export const ModelName = {
   HelpArticle: 'HelpArticle',
   FAQ: 'FAQ',
   HelpArticleFeedback: 'HelpArticleFeedback',
+  HelpArticleSection: 'HelpArticleSection',
   HelpArticleTag: 'HelpArticleTag',
   Testimonial: 'Testimonial',
   ThemeConfig: 'ThemeConfig',
@@ -447,7 +448,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "category" | "app" | "appTag" | "appTagOnApp" | "homeSlider" | "appViewEvent" | "appDailyStat" | "appAggregateStat" | "storeSectionItem" | "storeBanner" | "contentPage" | "contentPageVersion" | "profilePage" | "postTag" | "post" | "postTagLink" | "postComment" | "helpCategory" | "helpArticle" | "fAQ" | "helpArticleFeedback" | "helpArticleTag" | "testimonial" | "themeConfig" | "appMedia" | "appLink" | "userLibrary" | "userSettings" | "activityLog" | "customFieldDefinition" | "customFieldValue" | "appChangelog" | "postVersion" | "postReaction" | "commentReaction" | "postBookmark" | "helpArticleVersion" | "supportTicket" | "supportTicketMessage" | "appDescriptionVersion" | "guestSession" | "feedback" | "downloadEvent" | "payment" | "account" | "session" | "verificationToken"
+    modelProps: "user" | "category" | "app" | "appTag" | "appTagOnApp" | "homeSlider" | "appViewEvent" | "appDailyStat" | "appAggregateStat" | "storeSectionItem" | "storeBanner" | "contentPage" | "contentPageVersion" | "profilePage" | "postTag" | "post" | "postTagLink" | "postComment" | "helpCategory" | "helpArticle" | "fAQ" | "helpArticleFeedback" | "helpArticleSection" | "helpArticleTag" | "testimonial" | "themeConfig" | "appMedia" | "appLink" | "userLibrary" | "userSettings" | "activityLog" | "customFieldDefinition" | "customFieldValue" | "appChangelog" | "postVersion" | "postReaction" | "commentReaction" | "postBookmark" | "helpArticleVersion" | "supportTicket" | "supportTicketMessage" | "appDescriptionVersion" | "guestSession" | "feedback" | "downloadEvent" | "payment" | "account" | "session" | "verificationToken"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2076,6 +2077,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.HelpArticleFeedbackCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.HelpArticleFeedbackCountAggregateOutputType> | number
+        }
+      }
+    }
+    HelpArticleSection: {
+      payload: Prisma.$HelpArticleSectionPayload<ExtArgs>
+      fields: Prisma.HelpArticleSectionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HelpArticleSectionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HelpArticleSectionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HelpArticleSectionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HelpArticleSectionPayload>
+        }
+        findFirst: {
+          args: Prisma.HelpArticleSectionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HelpArticleSectionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HelpArticleSectionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HelpArticleSectionPayload>
+        }
+        findMany: {
+          args: Prisma.HelpArticleSectionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HelpArticleSectionPayload>[]
+        }
+        create: {
+          args: Prisma.HelpArticleSectionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HelpArticleSectionPayload>
+        }
+        createMany: {
+          args: Prisma.HelpArticleSectionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HelpArticleSectionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HelpArticleSectionPayload>[]
+        }
+        delete: {
+          args: Prisma.HelpArticleSectionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HelpArticleSectionPayload>
+        }
+        update: {
+          args: Prisma.HelpArticleSectionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HelpArticleSectionPayload>
+        }
+        deleteMany: {
+          args: Prisma.HelpArticleSectionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HelpArticleSectionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HelpArticleSectionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HelpArticleSectionPayload>[]
+        }
+        upsert: {
+          args: Prisma.HelpArticleSectionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HelpArticleSectionPayload>
+        }
+        aggregate: {
+          args: Prisma.HelpArticleSectionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHelpArticleSection>
+        }
+        groupBy: {
+          args: Prisma.HelpArticleSectionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HelpArticleSectionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HelpArticleSectionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HelpArticleSectionCountAggregateOutputType> | number
         }
       }
     }
@@ -4429,12 +4504,27 @@ export const HelpArticleFeedbackScalarFieldEnum = {
   id: 'id',
   articleId: 'articleId',
   userId: 'userId',
+  guestSessionId: 'guestSessionId',
   isHelpful: 'isHelpful',
   comment: 'comment',
   createdAt: 'createdAt'
 } as const
 
 export type HelpArticleFeedbackScalarFieldEnum = (typeof HelpArticleFeedbackScalarFieldEnum)[keyof typeof HelpArticleFeedbackScalarFieldEnum]
+
+
+export const HelpArticleSectionScalarFieldEnum = {
+  id: 'id',
+  articleId: 'articleId',
+  title: 'title',
+  slug: 'slug',
+  contentMarkdown: 'contentMarkdown',
+  orderIndex: 'orderIndex',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HelpArticleSectionScalarFieldEnum = (typeof HelpArticleSectionScalarFieldEnum)[keyof typeof HelpArticleSectionScalarFieldEnum]
 
 
 export const HelpArticleTagScalarFieldEnum = {
@@ -5348,6 +5438,7 @@ export type GlobalOmitConfig = {
   helpArticle?: Prisma.HelpArticleOmit
   fAQ?: Prisma.FAQOmit
   helpArticleFeedback?: Prisma.HelpArticleFeedbackOmit
+  helpArticleSection?: Prisma.HelpArticleSectionOmit
   helpArticleTag?: Prisma.HelpArticleTagOmit
   testimonial?: Prisma.TestimonialOmit
   themeConfig?: Prisma.ThemeConfigOmit

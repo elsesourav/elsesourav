@@ -825,6 +825,14 @@ export const helpCategoryCreateSchema = z.object({
 
 export const helpCategoryUpdateSchema = helpCategoryCreateSchema.partial();
 
+export const helpArticleSectionSchema = z.object({
+  id: z.string().cuid().optional(),
+  title: z.string().min(2).max(180),
+  slug: slugSchema,
+  contentMarkdown: z.string().min(10),
+  orderIndex: z.coerce.number().int().min(0).default(0),
+});
+
 export const helpArticleCreateSchema = z.object({
   categoryId: z.string().cuid().optional(),
   appId: z.string().cuid().optional(),
@@ -838,6 +846,7 @@ export const helpArticleCreateSchema = z.object({
   publishAt: z.coerce.date().optional(),
   seoTitle: z.string().optional(),
   seoDescription: z.string().optional(),
+  sections: z.array(helpArticleSectionSchema).default([]),
 });
 
 export const helpArticleUpdateSchema = helpArticleCreateSchema.partial();
@@ -851,6 +860,11 @@ export const faqCreateSchema = z.object({
 });
 
 export const faqUpdateSchema = faqCreateSchema.partial();
+
+export const helpArticleFeedbackCreateSchema = z.object({
+  isHelpful: z.coerce.boolean(),
+  comment: z.string().max(1000).optional(),
+});
 
 export const testimonialCreateSchema = z.object({
   authorName: z.string().min(2).max(120),
@@ -999,6 +1013,7 @@ export type BlogCommentModerationInput = PostCommentModerationInput;
 export type HelpArticleStatusInput = z.infer<typeof helpArticleStatusSchema>;
 export type HelpCategoryCreateInput = z.infer<typeof helpCategoryCreateSchema>;
 export type HelpCategoryUpdateInput = z.infer<typeof helpCategoryUpdateSchema>;
+export type HelpArticleFeedbackCreateInput = z.infer<typeof helpArticleFeedbackCreateSchema>;
 export type HelpArticleCreateInput = z.infer<typeof helpArticleCreateSchema>;
 export type HelpArticleUpdateInput = z.infer<typeof helpArticleUpdateSchema>;
 export type TestimonialCreateInput = z.infer<typeof testimonialCreateSchema>;

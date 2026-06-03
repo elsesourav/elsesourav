@@ -700,9 +700,9 @@ adminContentRouter.get("/posts", async (req, res) => {
       : null;
 
     return sendSuccess(res, requestId, {
-      items: pageItems.map((item) => ({
+      items: pageItems.map((item: any) => ({
         ...item,
-        tags: item.tags.map((entry) => entry.tag),
+        tags: item.tags.map((entry: any) => entry.tag),
       })),
       pagination: {
         limit: parsed.data.limit,
@@ -783,7 +783,7 @@ adminContentRouter.post("/posts", async (req, res) => {
       requestId,
       {
         ...post,
-        tags: post.tags.map((entry) => entry.tag),
+        tags: post.tags.map((entry: any) => entry.tag),
       },
       201,
     );
@@ -876,7 +876,7 @@ adminContentRouter.put("/posts/:id", async (req, res) => {
     const tagIds = parsed.data.tagIds;
 
     if (tagIds) {
-      await prisma.$transaction(async (tx) => {
+      await prisma.$transaction(async (tx: any) => {
         await tx.postTagLink.deleteMany({
           where: { postId: parsedId.data.id },
         });
@@ -904,7 +904,7 @@ adminContentRouter.put("/posts/:id", async (req, res) => {
 
     return sendSuccess(res, requestId, {
       ...post,
-      tags: hydrated?.tags.map((entry) => entry.tag) ?? [],
+      tags: hydrated?.tags.map((entry: any) => entry.tag) ?? [],
     });
   } catch (error) {
     return sendFailure(
@@ -1241,6 +1241,9 @@ adminContentRouter.get("/help/articles", async (req, res) => {
             slug: true,
           },
         },
+        sections: {
+          orderBy: { orderIndex: "asc" },
+        },
       },
     });
 
@@ -1308,6 +1311,19 @@ adminContentRouter.post("/help/articles", async (req, res) => {
             : null,
         createdBy: userId,
         updatedBy: userId,
+        sections: {
+          create: parsed.data.sections.map((sec) => ({
+            title: sec.title,
+            slug: sec.slug,
+            contentMarkdown: sec.contentMarkdown,
+            orderIndex: sec.orderIndex,
+          })),
+        },
+      },
+      include: {
+        sections: {
+          orderBy: { orderIndex: "asc" },
+        },
       },
     });
 
@@ -1391,6 +1407,20 @@ adminContentRouter.put("/help/articles/:id", async (req, res) => {
               ? null
               : undefined,
         updatedBy: userId,
+        sections: parsed.data.sections ? {
+          deleteMany: {},
+          create: parsed.data.sections.map((sec) => ({
+            title: sec.title,
+            slug: sec.slug,
+            contentMarkdown: sec.contentMarkdown,
+            orderIndex: sec.orderIndex,
+          })),
+        } : undefined,
+      },
+      include: {
+        sections: {
+          orderBy: { orderIndex: "asc" },
+        },
       },
     });
 
@@ -1479,6 +1509,140 @@ adminContentRouter.delete("/help/articles/:id", async (req, res) => {
       requestId,
       "INTERNAL_ERROR",
       "Failed to archive help article.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminContentRouter.get("/help/faqs", async (_req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const faqs = await prisma.fAQ.findMany({
+      orderBy: { orderIndex: "asc" },
+      include: {
+        category: true,
+      },
+    });
+
+    return sendSuccess(res, requestId, { items: faqs });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to fetch faqs.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminContentRouter.post("/help/faqs", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedBody = faqCreateSchema.safeParse(req.body);
+    if (!parsedBody.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid input data.",
+        400,
+        parsedBody.error.flatten(),
+      );
+    }
+
+    const faq = await prisma.fAQ.create({
+      data: parsedBody.data,
+    });
+
+    return sendSuccess(res, requestId, faq, 201);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to create faq.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminContentRouter.patch("/help/faqs/:id", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedId = pageIdSchema.safeParse(req.params);
+    if (!parsedId.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid id.",
+        400,
+      );
+    }
+
+    const parsedBody = faqUpdateSchema.safeParse(req.body);
+    if (!parsedBody.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid input data.",
+        400,
+        parsedBody.error.flatten(),
+      );
+    }
+
+    const faq = await prisma.fAQ.update({
+      where: { id: parsedId.data.id },
+      data: parsedBody.data,
+    });
+
+    return sendSuccess(res, requestId, faq);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to update faq.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminContentRouter.delete("/help/faqs/:id", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedId = pageIdSchema.safeParse(req.params);
+    if (!parsedId.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid id.",
+        400,
+      );
+    }
+
+    await prisma.fAQ.delete({
+      where: { id: parsedId.data.id },
+    });
+
+    return sendSuccess(res, requestId, { success: true });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to delete faq.",
       500,
       error instanceof Error ? error.message : "Unknown error",
     );

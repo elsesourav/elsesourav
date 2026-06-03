@@ -116,10 +116,8 @@ export default async function AppsPage({
   const search = typeof params.search === "string" ? params.search.trim() : "";
   const categoryId =
     typeof params.categoryId === "string" ? params.categoryId : undefined;
-  const typeFilter =
-    typeof params.type === "string" ? params.type : undefined;
-  const sortFilter =
-    typeof params.sort === "string" ? params.sort : undefined;
+  const typeFilter = typeof params.type === "string" ? params.type : undefined;
+  const sortFilter = typeof params.sort === "string" ? params.sort : undefined;
 
   const showSearch =
     Boolean(search) ||
@@ -223,8 +221,7 @@ export default async function AppsPage({
       slug: app.slug,
       shortDescription: app.shortDescription,
       iconUrl: app.iconUrl,
-      featureGraphicUrl:
-        heroMedia?.thumbnailUrl ?? heroMedia?.url ?? null,
+      featureGraphicUrl: heroMedia?.thumbnailUrl ?? heroMedia?.url ?? null,
       developerName: app.developerName,
       averageRating: app.aggregateStat?.averageRating ?? null,
       isPaid: app.isPaid,
@@ -317,9 +314,7 @@ export default async function AppsPage({
                 <CategoryShowcase
                   key={cat.id ?? cat.name}
                   category={cat}
-                  showMoreHref={
-                    cat.id ? `/apps?categoryId=${cat.id}` : "/apps"
-                  }
+                  showMoreHref={cat.id ? `/apps?categoryId=${cat.id}` : "/apps"}
                 />
               ))}
             </section>

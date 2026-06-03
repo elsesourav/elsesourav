@@ -59,7 +59,7 @@ type SearchCategory = {
 };
 
 type SearchResultItem = {
-  type: "app";
+  type: "app" | "category" | "post" | "postTag" | "helpArticle" | "helpCategory" | "faq";
   id: string;
   title: string;
   subtitle?: string | null;
@@ -310,6 +310,14 @@ const Navigation = ({
         if (selectedCategory !== "ANY") {
           params.set("categoryId", selectedCategory);
         }
+        
+        let context = "home";
+        if (pathname.startsWith("/apps")) context = "apps";
+        else if (pathname.startsWith("/posts")) context = "posts";
+        else if (pathname.startsWith("/help-support")) context = "support";
+        else if (pathname.startsWith("/help")) context = "help";
+        
+        params.set("context", context);
 
         const response = await fetch(`/api/search?${params.toString()}`, {
           signal: controller.signal,

@@ -24,6 +24,7 @@
     "db:generate": "set -a; [ -f ./.env ] && . ./.env; set +a; npm run db:generate --workspace @elsesourav/db",
     "db:migrate": "set -a; [ -f ./.env ] && . ./.env; set +a; npm run db:migrate --workspace @elsesourav/db",
     "db:seed": "set -a; [ -f ./.env ] && . ./.env; set +a; npm run db:seed --workspace @elsesourav/db",
+    "db:seed:help": "set -a; [ -f ./.env ] && . ./.env; set +a; npx tsx packages/db/prisma/seed-help.ts",
     "db:studio": "set -a; [ -f ./.env ] && . ./.env; set +a; npm run db:studio --workspace @elsesourav/db",
     "dev:services": "set -a; [ -f ./.env ] && . ./.env; set +a; concurrently --kill-others-on-fail -n AUTH,CATALOG,USER,CONTENT,THEME -c green,yellow,blue,magenta,cyan \"npm run dev:auth\" \"npm run dev:catalog\" \"npm run dev:user\" \"npm run dev:content\" \"npm run dev:theme\""
   },
