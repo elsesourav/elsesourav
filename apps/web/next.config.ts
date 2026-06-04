@@ -14,6 +14,14 @@ const nextConfig: NextConfig = {
     "@elsesourav/types",
     "@elsesourav/validation",
   ],
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
+    ],
+  },
   async redirects() {
     return [
       {

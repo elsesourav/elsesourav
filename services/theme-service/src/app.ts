@@ -2,7 +2,7 @@ import express from "express";
 import { registerSwaggerDocs } from "../../shared/swagger";
 import { attachRequestId } from "./lib/http";
 import { requireAdminRole, requireInternalToken } from "./lib/internal-auth";
-import { adminThemeRouter } from "./routes/admin";
+import { adminThemeRouter, adminImageRouter } from "./routes/admin";
 import { healthRouter } from "./routes/health";
 import { publicThemeRouter } from "./routes/public";
 
@@ -25,6 +25,11 @@ export function createApp() {
         router: adminThemeRouter,
         tag: "theme-admin",
       },
+      {
+        basePath: "/v1/admin/images",
+        router: adminImageRouter,
+        tag: "image-admin",
+      },
     ],
   });
 
@@ -33,6 +38,7 @@ export function createApp() {
   app.use("/v1", requireInternalToken);
   app.use("/v1/theme", publicThemeRouter);
   app.use("/v1/admin/theme", requireAdminRole, adminThemeRouter);
+  app.use("/v1/admin/images", requireAdminRole, adminImageRouter);
 
   return app;
 }

@@ -57,6 +57,7 @@ const adminNavSections: ReadonlyArray<{
       { href: "/admin/content/posts", label: "Posts", icon: FileEdit },
       { href: "/admin/help", label: "Help Docs", icon: BookOpen },
       { href: "/admin/theme/configs", label: "Theme configs", icon: Palette },
+      { href: "/admin/theme/images", label: "Image configs", icon: Palette },
       { href: "/admin/control", label: "API docs", icon: TerminalSquare },
     ],
   },

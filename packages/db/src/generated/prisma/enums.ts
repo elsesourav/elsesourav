@@ -188,3 +188,11 @@ export const CustomFieldType = {
 } as const
 
 export type CustomFieldType = (typeof CustomFieldType)[keyof typeof CustomFieldType]
+
+
+export const ImageSection = {
+  HELP_SUPPORT: 'HELP_SUPPORT',
+  ABOUT_PROFILE: 'ABOUT_PROFILE'
+} as const
+
+export type ImageSection = (typeof ImageSection)[keyof typeof ImageSection]

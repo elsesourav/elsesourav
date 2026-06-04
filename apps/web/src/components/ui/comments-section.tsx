@@ -27,7 +27,7 @@ export function CommentsSection({ slug }: CommentsSectionProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [sort, setSort] = useState("newest");
+  const [sort, setSort] = useState("liked");
   const [cursor, setCursor] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(false);
   const sessionId = useSessionId();
@@ -241,13 +241,13 @@ function CommentItem({
 
   const handleLike = async () => {
     if (isLiking) return;
-    
+
     // Snapshot previous state for rollback
     const previousLikes = likes;
     const previousHasLiked = hasLikedLocally;
 
     setIsLiking(true);
-    setLikes((prev) => previousHasLiked ? prev - 1 : prev + 1);
+    setLikes((prev) => (previousHasLiked ? prev - 1 : prev + 1));
     setHasLikedLocally(!previousHasLiked);
 
     try {
@@ -280,13 +280,7 @@ function CommentItem({
   const isAdmin = comment.user?.role === "ADMIN";
 
   return (
-    <div
-      className={`flex gap-3 sm:gap-4 ${isReply ? "mt-6 relative" : ""} ${
-        isAdmin
-          ? "p-3 sm:p-4 -mx-3 sm:-mx-4 rounded-xl bg-[color-mix(in_srgb,var(--brand-primary)_3%,transparent)] border border-[color-mix(in_srgb,var(--brand-primary)_10%,transparent)]"
-          : ""
-      }`}
-    >
+    <div className={`flex gap-3 sm:gap-4 ${isReply ? "mt-6 relative" : ""}`}>
       {isReply && (
         <div className="absolute -left-5 top-0 bottom-0 w-px bg-[color-mix(in_srgb,var(--foreground)_6%,transparent)] hidden sm:block" />
       )}
@@ -405,7 +399,7 @@ function CommentForm({
   const [authorEmail, setAuthorEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   const { data: session } = useSession();
   const isAuthenticated = !!session?.user;
 
@@ -487,13 +481,23 @@ function CommentForm({
       {isAuthenticated && (
         <div className="flex items-center gap-2 mb-3 px-1 text-sm font-medium text-[color-mix(in_srgb,var(--foreground)_70%,transparent)]">
           {session?.user?.image ? (
-            <img src={session.user.image} alt={session.user.name || "User"} className="w-6 h-6 rounded-full" />
+            <img
+              src={session.user.image}
+              alt={session.user.name || "User"}
+              className="w-6 h-6 rounded-full"
+            />
           ) : (
             <div className="w-6 h-6 rounded-full bg-[color-mix(in_srgb,var(--foreground)_8%,transparent)] flex items-center justify-center font-bold text-xs">
               {(session?.user?.name || "U")[0].toUpperCase()}
             </div>
           )}
-          <span>Commenting as <strong className="text-foreground">{session?.user?.name || (session?.user?.role === "ADMIN" ? "Admin" : "User")}</strong></span>
+          <span>
+            Commenting as{" "}
+            <strong className="text-foreground">
+              {session?.user?.name ||
+                (session?.user?.role === "ADMIN" ? "Admin" : "User")}
+            </strong>
+          </span>
         </div>
       )}
 

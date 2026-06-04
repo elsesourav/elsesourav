@@ -2,6 +2,8 @@ import { prisma } from "@elsesourav/db";
 import {
   themeConfigCreateSchema,
   themeConfigUpdateSchema,
+  imageConfigCreateSchema,
+  imageConfigUpdateSchema,
 } from "@elsesourav/validation";
 import { Router } from "express";
 import { z } from "zod";
@@ -212,6 +214,184 @@ adminThemeRouter.post("/configs/:id/activate", async (req, res) => {
       requestId,
       "INTERNAL_ERROR",
       "Failed to activate theme config.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+export const adminImageRouter = Router();
+
+adminImageRouter.get("/configs", async (_req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const configs = await prisma.imageConfig.findMany({
+      orderBy: [{ isActive: "desc" }, { updatedAt: "desc" }],
+    });
+
+    return sendSuccess(res, requestId, configs);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to fetch image configs.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminImageRouter.post("/configs", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsed = imageConfigCreateSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid image config payload.",
+        400,
+        parsed.error.flatten(),
+      );
+    }
+
+    const userId = req.header("x-user-id") ?? null;
+
+    const config = await prisma.imageConfig.create({
+      data: {
+        name: parsed.data.name,
+        section: parsed.data.section,
+        url: parsed.data.url,
+        isActive: parsed.data.isActive,
+        createdBy: userId,
+        updatedBy: userId,
+      },
+    });
+
+    if (parsed.data.isActive) {
+      await prisma.imageConfig.updateMany({
+        where: { id: { not: config.id }, section: config.section },
+        data: { isActive: false },
+      });
+    }
+
+    return sendSuccess(res, requestId, config, 201);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to create image config.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminImageRouter.patch("/configs/:id", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedId = idParamSchema.safeParse(req.params);
+    if (!parsedId.success) {
+      return sendFailure(res, requestId, "VALIDATION_ERROR", "Invalid id.", 400);
+    }
+
+    const parsedBody = imageConfigUpdateSchema.safeParse(req.body);
+    if (!parsedBody.success) {
+      return sendFailure(
+        res,
+        requestId,
+        "VALIDATION_ERROR",
+        "Invalid image config payload.",
+        400,
+        parsedBody.error.flatten(),
+      );
+    }
+
+    const userId = req.header("x-user-id") ?? null;
+
+    const config = await prisma.imageConfig.update({
+      where: { id: parsedId.data.id },
+      data: {
+        name: parsedBody.data.name,
+        section: parsedBody.data.section,
+        url: parsedBody.data.url,
+        isActive: parsedBody.data.isActive,
+        updatedBy: userId,
+      },
+    });
+
+    if (parsedBody.data.isActive === true) {
+      await prisma.imageConfig.updateMany({
+        where: { id: { not: config.id }, section: config.section },
+        data: { isActive: false },
+      });
+    }
+
+    return sendSuccess(res, requestId, config);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to update image config.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminImageRouter.post("/configs/:id/activate", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedId = idParamSchema.safeParse(req.params);
+    if (!parsedId.success) {
+      return sendFailure(res, requestId, "VALIDATION_ERROR", "Invalid id.", 400);
+    }
+
+    const userId = req.header("x-user-id") ?? null;
+
+    const targetConfig = await prisma.imageConfig.findUnique({
+      where: { id: parsedId.data.id },
+    });
+
+    if (!targetConfig) {
+      return sendFailure(res, requestId, "NOT_FOUND", "Image config not found.", 404);
+    }
+
+    await prisma.$transaction([
+      prisma.imageConfig.updateMany({
+        where: { section: targetConfig.section },
+        data: {
+          isActive: false,
+        },
+      }),
+      prisma.imageConfig.update({
+        where: { id: parsedId.data.id },
+        data: {
+          isActive: true,
+          updatedBy: userId,
+        },
+      }),
+    ]);
+
+    const activeConfig = await prisma.imageConfig.findUnique({
+      where: { id: parsedId.data.id },
+    });
+
+    return sendSuccess(res, requestId, activeConfig);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to activate image config.",
       500,
       error instanceof Error ? error.message : "Unknown error",
     );

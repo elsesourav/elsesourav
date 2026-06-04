@@ -251,7 +251,6 @@ export type HelpCategoryWhereInput = {
   parent?: Prisma.XOR<Prisma.HelpCategoryNullableScalarRelationFilter, Prisma.HelpCategoryWhereInput> | null
   children?: Prisma.HelpCategoryListRelationFilter
   articles?: Prisma.HelpArticleListRelationFilter
-  faqs?: Prisma.FAQListRelationFilter
 }
 
 export type HelpCategoryOrderByWithRelationInput = {
@@ -267,7 +266,6 @@ export type HelpCategoryOrderByWithRelationInput = {
   parent?: Prisma.HelpCategoryOrderByWithRelationInput
   children?: Prisma.HelpCategoryOrderByRelationAggregateInput
   articles?: Prisma.HelpArticleOrderByRelationAggregateInput
-  faqs?: Prisma.FAQOrderByRelationAggregateInput
 }
 
 export type HelpCategoryWhereUniqueInput = Prisma.AtLeast<{
@@ -286,7 +284,6 @@ export type HelpCategoryWhereUniqueInput = Prisma.AtLeast<{
   parent?: Prisma.XOR<Prisma.HelpCategoryNullableScalarRelationFilter, Prisma.HelpCategoryWhereInput> | null
   children?: Prisma.HelpCategoryListRelationFilter
   articles?: Prisma.HelpArticleListRelationFilter
-  faqs?: Prisma.FAQListRelationFilter
 }, "id" | "slug">
 
 export type HelpCategoryOrderByWithAggregationInput = {
@@ -333,7 +330,6 @@ export type HelpCategoryCreateInput = {
   parent?: Prisma.HelpCategoryCreateNestedOneWithoutChildrenInput
   children?: Prisma.HelpCategoryCreateNestedManyWithoutParentInput
   articles?: Prisma.HelpArticleCreateNestedManyWithoutCategoryInput
-  faqs?: Prisma.FAQCreateNestedManyWithoutCategoryInput
 }
 
 export type HelpCategoryUncheckedCreateInput = {
@@ -348,7 +344,6 @@ export type HelpCategoryUncheckedCreateInput = {
   updatedAt?: Date | string
   children?: Prisma.HelpCategoryUncheckedCreateNestedManyWithoutParentInput
   articles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutCategoryInput
-  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutCategoryInput
 }
 
 export type HelpCategoryUpdateInput = {
@@ -363,7 +358,6 @@ export type HelpCategoryUpdateInput = {
   parent?: Prisma.HelpCategoryUpdateOneWithoutChildrenNestedInput
   children?: Prisma.HelpCategoryUpdateManyWithoutParentNestedInput
   articles?: Prisma.HelpArticleUpdateManyWithoutCategoryNestedInput
-  faqs?: Prisma.FAQUpdateManyWithoutCategoryNestedInput
 }
 
 export type HelpCategoryUncheckedUpdateInput = {
@@ -378,7 +372,6 @@ export type HelpCategoryUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   children?: Prisma.HelpCategoryUncheckedUpdateManyWithoutParentNestedInput
   articles?: Prisma.HelpArticleUncheckedUpdateManyWithoutCategoryNestedInput
-  faqs?: Prisma.FAQUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
 export type HelpCategoryCreateManyInput = {
@@ -549,22 +542,6 @@ export type HelpCategoryUpdateOneWithoutArticlesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.HelpCategoryUpdateToOneWithWhereWithoutArticlesInput, Prisma.HelpCategoryUpdateWithoutArticlesInput>, Prisma.HelpCategoryUncheckedUpdateWithoutArticlesInput>
 }
 
-export type HelpCategoryCreateNestedOneWithoutFaqsInput = {
-  create?: Prisma.XOR<Prisma.HelpCategoryCreateWithoutFaqsInput, Prisma.HelpCategoryUncheckedCreateWithoutFaqsInput>
-  connectOrCreate?: Prisma.HelpCategoryCreateOrConnectWithoutFaqsInput
-  connect?: Prisma.HelpCategoryWhereUniqueInput
-}
-
-export type HelpCategoryUpdateOneWithoutFaqsNestedInput = {
-  create?: Prisma.XOR<Prisma.HelpCategoryCreateWithoutFaqsInput, Prisma.HelpCategoryUncheckedCreateWithoutFaqsInput>
-  connectOrCreate?: Prisma.HelpCategoryCreateOrConnectWithoutFaqsInput
-  upsert?: Prisma.HelpCategoryUpsertWithoutFaqsInput
-  disconnect?: Prisma.HelpCategoryWhereInput | boolean
-  delete?: Prisma.HelpCategoryWhereInput | boolean
-  connect?: Prisma.HelpCategoryWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.HelpCategoryUpdateToOneWithWhereWithoutFaqsInput, Prisma.HelpCategoryUpdateWithoutFaqsInput>, Prisma.HelpCategoryUncheckedUpdateWithoutFaqsInput>
-}
-
 export type HelpCategoryCreateWithoutChildrenInput = {
   id?: string
   name: string
@@ -576,7 +553,6 @@ export type HelpCategoryCreateWithoutChildrenInput = {
   updatedAt?: Date | string
   parent?: Prisma.HelpCategoryCreateNestedOneWithoutChildrenInput
   articles?: Prisma.HelpArticleCreateNestedManyWithoutCategoryInput
-  faqs?: Prisma.FAQCreateNestedManyWithoutCategoryInput
 }
 
 export type HelpCategoryUncheckedCreateWithoutChildrenInput = {
@@ -590,7 +566,6 @@ export type HelpCategoryUncheckedCreateWithoutChildrenInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   articles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutCategoryInput
-  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutCategoryInput
 }
 
 export type HelpCategoryCreateOrConnectWithoutChildrenInput = {
@@ -609,7 +584,6 @@ export type HelpCategoryCreateWithoutParentInput = {
   updatedAt?: Date | string
   children?: Prisma.HelpCategoryCreateNestedManyWithoutParentInput
   articles?: Prisma.HelpArticleCreateNestedManyWithoutCategoryInput
-  faqs?: Prisma.FAQCreateNestedManyWithoutCategoryInput
 }
 
 export type HelpCategoryUncheckedCreateWithoutParentInput = {
@@ -623,7 +597,6 @@ export type HelpCategoryUncheckedCreateWithoutParentInput = {
   updatedAt?: Date | string
   children?: Prisma.HelpCategoryUncheckedCreateNestedManyWithoutParentInput
   articles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutCategoryInput
-  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutCategoryInput
 }
 
 export type HelpCategoryCreateOrConnectWithoutParentInput = {
@@ -658,7 +631,6 @@ export type HelpCategoryUpdateWithoutChildrenInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   parent?: Prisma.HelpCategoryUpdateOneWithoutChildrenNestedInput
   articles?: Prisma.HelpArticleUpdateManyWithoutCategoryNestedInput
-  faqs?: Prisma.FAQUpdateManyWithoutCategoryNestedInput
 }
 
 export type HelpCategoryUncheckedUpdateWithoutChildrenInput = {
@@ -672,7 +644,6 @@ export type HelpCategoryUncheckedUpdateWithoutChildrenInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   articles?: Prisma.HelpArticleUncheckedUpdateManyWithoutCategoryNestedInput
-  faqs?: Prisma.FAQUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
 export type HelpCategoryUpsertWithWhereUniqueWithoutParentInput = {
@@ -717,7 +688,6 @@ export type HelpCategoryCreateWithoutArticlesInput = {
   updatedAt?: Date | string
   parent?: Prisma.HelpCategoryCreateNestedOneWithoutChildrenInput
   children?: Prisma.HelpCategoryCreateNestedManyWithoutParentInput
-  faqs?: Prisma.FAQCreateNestedManyWithoutCategoryInput
 }
 
 export type HelpCategoryUncheckedCreateWithoutArticlesInput = {
@@ -731,7 +701,6 @@ export type HelpCategoryUncheckedCreateWithoutArticlesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   children?: Prisma.HelpCategoryUncheckedCreateNestedManyWithoutParentInput
-  faqs?: Prisma.FAQUncheckedCreateNestedManyWithoutCategoryInput
 }
 
 export type HelpCategoryCreateOrConnectWithoutArticlesInput = {
@@ -761,7 +730,6 @@ export type HelpCategoryUpdateWithoutArticlesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   parent?: Prisma.HelpCategoryUpdateOneWithoutChildrenNestedInput
   children?: Prisma.HelpCategoryUpdateManyWithoutParentNestedInput
-  faqs?: Prisma.FAQUpdateManyWithoutCategoryNestedInput
 }
 
 export type HelpCategoryUncheckedUpdateWithoutArticlesInput = {
@@ -775,79 +743,6 @@ export type HelpCategoryUncheckedUpdateWithoutArticlesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   children?: Prisma.HelpCategoryUncheckedUpdateManyWithoutParentNestedInput
-  faqs?: Prisma.FAQUncheckedUpdateManyWithoutCategoryNestedInput
-}
-
-export type HelpCategoryCreateWithoutFaqsInput = {
-  id?: string
-  name: string
-  slug: string
-  description?: string | null
-  orderIndex?: number
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  parent?: Prisma.HelpCategoryCreateNestedOneWithoutChildrenInput
-  children?: Prisma.HelpCategoryCreateNestedManyWithoutParentInput
-  articles?: Prisma.HelpArticleCreateNestedManyWithoutCategoryInput
-}
-
-export type HelpCategoryUncheckedCreateWithoutFaqsInput = {
-  id?: string
-  parentId?: string | null
-  name: string
-  slug: string
-  description?: string | null
-  orderIndex?: number
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  children?: Prisma.HelpCategoryUncheckedCreateNestedManyWithoutParentInput
-  articles?: Prisma.HelpArticleUncheckedCreateNestedManyWithoutCategoryInput
-}
-
-export type HelpCategoryCreateOrConnectWithoutFaqsInput = {
-  where: Prisma.HelpCategoryWhereUniqueInput
-  create: Prisma.XOR<Prisma.HelpCategoryCreateWithoutFaqsInput, Prisma.HelpCategoryUncheckedCreateWithoutFaqsInput>
-}
-
-export type HelpCategoryUpsertWithoutFaqsInput = {
-  update: Prisma.XOR<Prisma.HelpCategoryUpdateWithoutFaqsInput, Prisma.HelpCategoryUncheckedUpdateWithoutFaqsInput>
-  create: Prisma.XOR<Prisma.HelpCategoryCreateWithoutFaqsInput, Prisma.HelpCategoryUncheckedCreateWithoutFaqsInput>
-  where?: Prisma.HelpCategoryWhereInput
-}
-
-export type HelpCategoryUpdateToOneWithWhereWithoutFaqsInput = {
-  where?: Prisma.HelpCategoryWhereInput
-  data: Prisma.XOR<Prisma.HelpCategoryUpdateWithoutFaqsInput, Prisma.HelpCategoryUncheckedUpdateWithoutFaqsInput>
-}
-
-export type HelpCategoryUpdateWithoutFaqsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  orderIndex?: Prisma.IntFieldUpdateOperationsInput | number
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  parent?: Prisma.HelpCategoryUpdateOneWithoutChildrenNestedInput
-  children?: Prisma.HelpCategoryUpdateManyWithoutParentNestedInput
-  articles?: Prisma.HelpArticleUpdateManyWithoutCategoryNestedInput
-}
-
-export type HelpCategoryUncheckedUpdateWithoutFaqsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  orderIndex?: Prisma.IntFieldUpdateOperationsInput | number
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  children?: Prisma.HelpCategoryUncheckedUpdateManyWithoutParentNestedInput
-  articles?: Prisma.HelpArticleUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
 export type HelpCategoryCreateManyParentInput = {
@@ -872,7 +767,6 @@ export type HelpCategoryUpdateWithoutParentInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   children?: Prisma.HelpCategoryUpdateManyWithoutParentNestedInput
   articles?: Prisma.HelpArticleUpdateManyWithoutCategoryNestedInput
-  faqs?: Prisma.FAQUpdateManyWithoutCategoryNestedInput
 }
 
 export type HelpCategoryUncheckedUpdateWithoutParentInput = {
@@ -886,7 +780,6 @@ export type HelpCategoryUncheckedUpdateWithoutParentInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   children?: Prisma.HelpCategoryUncheckedUpdateManyWithoutParentNestedInput
   articles?: Prisma.HelpArticleUncheckedUpdateManyWithoutCategoryNestedInput
-  faqs?: Prisma.FAQUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
 export type HelpCategoryUncheckedUpdateManyWithoutParentInput = {
@@ -908,13 +801,11 @@ export type HelpCategoryUncheckedUpdateManyWithoutParentInput = {
 export type HelpCategoryCountOutputType = {
   children: number
   articles: number
-  faqs: number
 }
 
 export type HelpCategoryCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   children?: boolean | HelpCategoryCountOutputTypeCountChildrenArgs
   articles?: boolean | HelpCategoryCountOutputTypeCountArticlesArgs
-  faqs?: boolean | HelpCategoryCountOutputTypeCountFaqsArgs
 }
 
 /**
@@ -941,13 +832,6 @@ export type HelpCategoryCountOutputTypeCountArticlesArgs<ExtArgs extends runtime
   where?: Prisma.HelpArticleWhereInput
 }
 
-/**
- * HelpCategoryCountOutputType without action
- */
-export type HelpCategoryCountOutputTypeCountFaqsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.FAQWhereInput
-}
-
 
 export type HelpCategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -962,7 +846,6 @@ export type HelpCategorySelect<ExtArgs extends runtime.Types.Extensions.Internal
   parent?: boolean | Prisma.HelpCategory$parentArgs<ExtArgs>
   children?: boolean | Prisma.HelpCategory$childrenArgs<ExtArgs>
   articles?: boolean | Prisma.HelpCategory$articlesArgs<ExtArgs>
-  faqs?: boolean | Prisma.HelpCategory$faqsArgs<ExtArgs>
   _count?: boolean | Prisma.HelpCategoryCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["helpCategory"]>
 
@@ -1009,7 +892,6 @@ export type HelpCategoryInclude<ExtArgs extends runtime.Types.Extensions.Interna
   parent?: boolean | Prisma.HelpCategory$parentArgs<ExtArgs>
   children?: boolean | Prisma.HelpCategory$childrenArgs<ExtArgs>
   articles?: boolean | Prisma.HelpCategory$articlesArgs<ExtArgs>
-  faqs?: boolean | Prisma.HelpCategory$faqsArgs<ExtArgs>
   _count?: boolean | Prisma.HelpCategoryCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type HelpCategoryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1025,7 +907,6 @@ export type $HelpCategoryPayload<ExtArgs extends runtime.Types.Extensions.Intern
     parent: Prisma.$HelpCategoryPayload<ExtArgs> | null
     children: Prisma.$HelpCategoryPayload<ExtArgs>[]
     articles: Prisma.$HelpArticlePayload<ExtArgs>[]
-    faqs: Prisma.$FAQPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1434,7 +1315,6 @@ export interface Prisma__HelpCategoryClient<T, Null = never, ExtArgs extends run
   parent<T extends Prisma.HelpCategory$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HelpCategory$parentArgs<ExtArgs>>): Prisma.Prisma__HelpCategoryClient<runtime.Types.Result.GetResult<Prisma.$HelpCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   children<T extends Prisma.HelpCategory$childrenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HelpCategory$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HelpCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   articles<T extends Prisma.HelpCategory$articlesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HelpCategory$articlesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HelpArticlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  faqs<T extends Prisma.HelpCategory$faqsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HelpCategory$faqsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FAQPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1938,30 +1818,6 @@ export type HelpCategory$articlesArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.HelpArticleScalarFieldEnum | Prisma.HelpArticleScalarFieldEnum[]
-}
-
-/**
- * HelpCategory.faqs
- */
-export type HelpCategory$faqsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the FAQ
-   */
-  select?: Prisma.FAQSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the FAQ
-   */
-  omit?: Prisma.FAQOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.FAQInclude<ExtArgs> | null
-  where?: Prisma.FAQWhereInput
-  orderBy?: Prisma.FAQOrderByWithRelationInput | Prisma.FAQOrderByWithRelationInput[]
-  cursor?: Prisma.FAQWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.FAQScalarFieldEnum | Prisma.FAQScalarFieldEnum[]
 }
 
 /**

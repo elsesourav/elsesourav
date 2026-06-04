@@ -71,12 +71,12 @@ export const ModelName = {
   PostComment: 'PostComment',
   HelpCategory: 'HelpCategory',
   HelpArticle: 'HelpArticle',
-  FAQ: 'FAQ',
   HelpArticleFeedback: 'HelpArticleFeedback',
   HelpArticleSection: 'HelpArticleSection',
   HelpArticleTag: 'HelpArticleTag',
   Testimonial: 'Testimonial',
   ThemeConfig: 'ThemeConfig',
+  ImageConfig: 'ImageConfig',
   AppMedia: 'AppMedia',
   AppLink: 'AppLink',
   UserLibrary: 'UserLibrary',
@@ -467,6 +467,7 @@ export const HelpArticleScalarFieldEnum = {
   summary: 'summary',
   contentMarkdown: 'contentMarkdown',
   contentMdx: 'contentMdx',
+  orderIndex: 'orderIndex',
   status: 'status',
   isFeatured: 'isFeatured',
   publishAt: 'publishAt',
@@ -485,20 +486,6 @@ export const HelpArticleScalarFieldEnum = {
 } as const
 
 export type HelpArticleScalarFieldEnum = (typeof HelpArticleScalarFieldEnum)[keyof typeof HelpArticleScalarFieldEnum]
-
-
-export const FAQScalarFieldEnum = {
-  id: 'id',
-  question: 'question',
-  answerMdx: 'answerMdx',
-  categoryId: 'categoryId',
-  appId: 'appId',
-  orderIndex: 'orderIndex',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type FAQScalarFieldEnum = (typeof FAQScalarFieldEnum)[keyof typeof FAQScalarFieldEnum]
 
 
 export const HelpArticleFeedbackScalarFieldEnum = {
@@ -586,6 +573,21 @@ export const ThemeConfigScalarFieldEnum = {
 } as const
 
 export type ThemeConfigScalarFieldEnum = (typeof ThemeConfigScalarFieldEnum)[keyof typeof ThemeConfigScalarFieldEnum]
+
+
+export const ImageConfigScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  section: 'section',
+  url: 'url',
+  isActive: 'isActive',
+  createdBy: 'createdBy',
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ImageConfigScalarFieldEnum = (typeof ImageConfigScalarFieldEnum)[keyof typeof ImageConfigScalarFieldEnum]
 
 
 export const AppMediaScalarFieldEnum = {

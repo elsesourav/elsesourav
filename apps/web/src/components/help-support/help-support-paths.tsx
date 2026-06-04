@@ -14,20 +14,15 @@ export function HelpSupportPaths() {
       title: "App Support",
       desc: "Troubleshooting",
       icon: Box,
-      href: "/help/apps",
+      href: "/help?category=app-support",
     },
     {
       title: "Billing",
       desc: "Invoices & plans",
       icon: CreditCard,
-      href: "/settings/billing",
+      href: "/help?category=billing",
     },
-    {
-      title: "Updates",
-      desc: "Changelogs",
-      icon: Radio,
-      href: "/posts",
-    },
+
     {
       title: "Contact",
       desc: "Direct support",
@@ -37,7 +32,7 @@ export function HelpSupportPaths() {
   ];
 
   return (
-    <section className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+    <section className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
       {paths.map((path) => {
         const Icon = path.icon;
         return (

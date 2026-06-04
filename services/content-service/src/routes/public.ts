@@ -925,7 +925,7 @@ publicContentRouter.get("/help/tree", async (_req, res) => {
   const requestId = getRequestId(res);
 
   try {
-    const [categories, articles, faqs] = await Promise.all([
+    const [categories, articles] = await Promise.all([
       prisma.helpCategory.findMany({
         where: { isActive: true },
         orderBy: [{ orderIndex: "asc" }, { name: "asc" }],
@@ -949,9 +949,6 @@ publicContentRouter.get("/help/tree", async (_req, res) => {
         },
         orderBy: [{ title: "asc" }],
       })),
-      prisma.fAQ.findMany({
-        orderBy: [{ orderIndex: "asc" }, { question: "asc" }],
-      }),
     ]);
 
     const buildTree = (parentId: string | null = null): any[] => {
@@ -961,7 +958,6 @@ publicContentRouter.get("/help/tree", async (_req, res) => {
           ...cat,
           children: buildTree(cat.id),
           articles: articles.filter((art: any) => art.categoryId === cat.id),
-          faqs: faqs.filter((faq: any) => faq.categoryId === cat.id),
         }));
     };
 
@@ -1614,35 +1610,6 @@ publicContentRouter.post("/posts/:slug/comments/:commentId/like", async (req, re
       "INTERNAL_ERROR",
       error instanceof Error ? error.message : "Unknown error",
       500,
-    );
-  }
-});
-
-publicContentRouter.get("/help/faqs", async (req, res) => {
-  const requestId = getRequestId(res);
-
-  try {
-    const categoryId = req.query.categoryId as string | undefined;
-    const appId = req.query.appId as string | undefined;
-
-    const where: Prisma.FAQWhereInput = {};
-    if (categoryId) where.categoryId = categoryId;
-    if (appId) where.appId = appId;
-
-    const faqs = await prisma.fAQ.findMany({
-      where,
-      orderBy: { orderIndex: "asc" },
-    });
-
-    return sendSuccess(res, requestId, faqs);
-  } catch (error) {
-    return sendFailure(
-      res,
-      requestId,
-      "INTERNAL_ERROR",
-      "Failed to fetch FAQs.",
-      500,
-      error instanceof Error ? error.message : "Unknown error",
     );
   }
 });

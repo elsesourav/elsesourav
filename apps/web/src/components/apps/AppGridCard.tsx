@@ -125,7 +125,7 @@ export default function AppGridCard({
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.8] -z-20"
         style={{
-          backgroundImage: 'url("/img/pattern/light/white-waves.png")',
+          backgroundImage: 'url("/img/pattern/light/ptn-light-[2].png")',
           backgroundRepeat: "repeat",
           backgroundSize: "200px",
         }}

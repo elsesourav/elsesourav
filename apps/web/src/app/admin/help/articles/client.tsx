@@ -8,12 +8,15 @@ import MDEditor from "@uiw/react-md-editor";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { HelpDndBoard } from "./HelpDndBoard";
 
 export function AdminHelpArticlesClient({ initialArticles, categories = [] }: { initialArticles: any[], categories?: any[] }) {
   const [articles, setArticles] = useState(initialArticles);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   
   useEffect(() => {
     setArticles(initialArticles);
+    setHasUnsavedChanges(false);
   }, [initialArticles]);
   const [isCreating, setIsCreating] = useState(false);
   const [editingArticle, setEditingArticle] = useState<any>(null);
@@ -111,6 +114,34 @@ export function AdminHelpArticlesClient({ initialArticles, categories = [] }: { 
     },
   });
 
+  const saveLayoutMutation = useMutation({
+    mutationFn: async () => {
+      // 1. Articles
+      const articlePayload = articles.map((a, idx) => ({ id: a.id, orderIndex: idx, categoryId: a.categoryId }));
+      const resArticles = await fetch(`/api/admin/content/help/articles/reorder`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(articlePayload),
+      });
+      if (!resArticles.ok) throw new Error("Failed to save article layout");
+
+      return { success: true };
+    },
+    onSuccess: () => {
+      setHasUnsavedChanges(false);
+      router.refresh();
+    },
+    onError: (err) => {
+      alert("Failed to save layout: " + err.message);
+    }
+  });
+
+  const handleArticlesChange = (newArticles: any[]) => {
+    setArticles(newArticles);
+    setHasUnsavedChanges(true);
+  };
+
+
   if (isCreating) {
     return (
       <div className="space-y-4">
@@ -180,79 +211,46 @@ export function AdminHelpArticlesClient({ initialArticles, categories = [] }: { 
     );
   }
 
-  return (
-    <div className="space-y-4">
-      <div className="flex justify-end">
-        <Button onClick={openCreate}>
-          <Plus className="mr-2 h-4 w-4" />
-          Create Article
-        </Button>
-      </div>
-      
-      {articles.length === 0 ? (
-        <div className="ui-card p-8 text-center text-text-muted rounded-xl border">
-          No articles found. Create one to get started!
+    return (
+      <div className="space-y-4">
+        <div className="flex justify-end items-center gap-4">
+          {hasUnsavedChanges && (
+            <div className="flex items-center gap-2">
+              <Button variant="outline" onClick={() => {
+                setArticles(initialArticles);
+                setHasUnsavedChanges(false);
+              }} disabled={saveLayoutMutation.isPending}>
+                Cancel
+              </Button>
+              <Button variant="default" onClick={() => saveLayoutMutation.mutate()} disabled={saveLayoutMutation.isPending}>
+                {saveLayoutMutation.isPending ? "Saving..." : "Save Layout"}
+              </Button>
+            </div>
+          )}
+          <Button onClick={openCreate}>
+            <Plus className="mr-2 h-4 w-4" />
+            Create Article
+          </Button>
         </div>
-      ) : (
-        <div className="ui-card rounded-xl border overflow-hidden">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-surface-elevated/50 text-text-muted">
-              <tr>
-                <th className="px-4 py-3 font-medium">Title</th>
-                <th className="px-4 py-3 font-medium">Slug</th>
-                <th className="px-4 py-3 font-medium">Status</th>
-                <th className="px-4 py-3 font-medium text-center">Views</th>
-                <th className="px-4 py-3 font-medium text-center">👍 / 👎</th>
-                <th className="px-4 py-3 font-medium text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {articles.map((article) => (
-                <tr key={article.id} className="hover:bg-surface-hover/50">
-                  <td className="px-4 py-3 font-medium text-text-primary">{article.title}</td>
-                  <td className="px-4 py-3 text-text-secondary">{article.slug}</td>
-                  <td className="px-4 py-3">
-                    <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${
-                      article.status === 'PUBLISHED' 
-                        ? 'bg-status-success/10 text-status-success' 
-                        : article.status === 'DRAFT'
-                        ? 'bg-status-warning/10 text-status-warning'
-                        : 'bg-status-error/10 text-status-error'
-                    }`}>
-                      {article.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-center text-text-secondary">{article.viewCount || 0}</td>
-                  <td className="px-4 py-3 text-center">
-                    <span className="text-status-success font-medium mr-2">👍 {article.upvotes || 0}</span>
-                    <span className="text-status-error font-medium">👎 {article.downvotes || 0}</span>
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <div className="flex justify-end items-center gap-2">
-                      <Button variant="ghost" size="icon" onClick={() => openEdit(article)}>
-                        <Edit2 className="h-4 w-4 text-text-secondary" />
-                      </Button>
-                      <Button variant="ghost" size="icon" onClick={() => setDeletingId(article.id)}>
-                        <Trash2 className="h-4 w-4 text-status-error" />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+        
+        <HelpDndBoard 
+          categories={categories}
+          articles={articles}
+          onArticlesChange={handleArticlesChange}
+          onCategoriesChange={() => {}}
+          onEditArticle={openEdit}
+          onDeleteArticle={setDeletingId}
+        />
 
-      <ConfirmDialog
-        open={!!deletingId}
-        onCancel={() => setDeletingId(null)}
-        onConfirm={() => deletingId && deleteMutation.mutate(deletingId)}
-        title="Delete Article"
-        description="Are you sure you want to delete this article? This action cannot be undone."
-        confirmLabel="Delete"
-        confirmTone="danger"
-      />
-    </div>
-  );
+        <ConfirmDialog
+          open={!!deletingId}
+          onCancel={() => setDeletingId(null)}
+          onConfirm={() => deletingId && deleteMutation.mutate(deletingId)}
+          title="Delete Article"
+          description="Are you sure you want to delete this article? This action cannot be undone."
+          confirmLabel="Delete"
+          confirmTone="danger"
+        />
+      </div>
+    );
 }

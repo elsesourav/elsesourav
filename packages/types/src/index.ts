@@ -92,6 +92,7 @@ export type ThemeConfigDto = {
   fontSans: string;
   fontHeading: string;
   headingScale: string;
+  helpSupportBgImage: string | null;
   updatedAt: string;
 };
 

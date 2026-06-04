@@ -846,20 +846,11 @@ export const helpArticleCreateSchema = z.object({
   publishAt: z.coerce.date().optional(),
   seoTitle: z.string().optional(),
   seoDescription: z.string().optional(),
+  orderIndex: z.coerce.number().int().min(0).default(0),
   sections: z.array(helpArticleSectionSchema).default([]),
 });
 
 export const helpArticleUpdateSchema = helpArticleCreateSchema.partial();
-
-export const faqCreateSchema = z.object({
-  question: z.string().min(3),
-  answerMdx: z.string().min(5),
-  categoryId: z.string().cuid().optional(),
-  appId: z.string().cuid().optional(),
-  orderIndex: z.coerce.number().int().min(0).default(0),
-});
-
-export const faqUpdateSchema = faqCreateSchema.partial();
 
 export const helpArticleFeedbackCreateSchema = z.object({
   isHelpful: z.coerce.boolean(),
@@ -887,21 +878,21 @@ const hexColorSchema = z
   .regex(/^#(?:[0-9a-fA-F]{3}){1,2}$/);
 
 export const themeConfigCreateSchema = z.object({
-  name: z.string().min(2).max(120),
-  primaryColor: hexColorSchema,
-  secondaryColor: hexColorSchema,
-  accentColor: hexColorSchema,
-  actionColor: hexColorSchema,
-  backgroundColor: hexColorSchema,
-  foregroundColor: hexColorSchema,
-  darkPrimaryColor: hexColorSchema,
-  darkSecondaryColor: hexColorSchema,
-  darkAccentColor: hexColorSchema,
-  darkActionColor: hexColorSchema,
-  darkBackgroundColor: hexColorSchema,
-  darkForegroundColor: hexColorSchema,
-  fontSans: z.string().min(2).max(120),
-  fontHeading: z.string().min(2).max(120),
+  name: z.string().trim().min(2).max(120),
+  primaryColor: hexColorSchema.default("#1f2937"),
+  secondaryColor: hexColorSchema.default("#0f172a"),
+  accentColor: hexColorSchema.default("#f59e0b"),
+  actionColor: hexColorSchema.default("#f59e0b"),
+  backgroundColor: hexColorSchema.default("#f8fafc"),
+  foregroundColor: hexColorSchema.default("#111827"),
+  darkPrimaryColor: hexColorSchema.default("#e2e8f0"),
+  darkSecondaryColor: hexColorSchema.default("#334155"),
+  darkAccentColor: hexColorSchema.default("#38bdf8"),
+  darkActionColor: hexColorSchema.default("#38bdf8"),
+  darkBackgroundColor: hexColorSchema.default("#0b1220"),
+  darkForegroundColor: hexColorSchema.default("#f8fafc"),
+  fontSans: z.string().trim().min(2).max(100).default("Inter"),
+  fontHeading: z.string().trim().min(2).max(100).default("Manrope"),
   headingScale: z.coerce.number().min(0.8).max(1.6).default(1),
   isActive: z.coerce.boolean().default(false),
 });
@@ -1013,10 +1004,23 @@ export type BlogCommentModerationInput = PostCommentModerationInput;
 export type HelpArticleStatusInput = z.infer<typeof helpArticleStatusSchema>;
 export type HelpCategoryCreateInput = z.infer<typeof helpCategoryCreateSchema>;
 export type HelpCategoryUpdateInput = z.infer<typeof helpCategoryUpdateSchema>;
-export type HelpArticleFeedbackCreateInput = z.infer<typeof helpArticleFeedbackCreateSchema>;
+export type HelpArticleFeedbackCreateInput = z.infer<
+  typeof helpArticleFeedbackCreateSchema
+>;
 export type HelpArticleCreateInput = z.infer<typeof helpArticleCreateSchema>;
 export type HelpArticleUpdateInput = z.infer<typeof helpArticleUpdateSchema>;
 export type TestimonialCreateInput = z.infer<typeof testimonialCreateSchema>;
 export type TestimonialUpdateInput = z.infer<typeof testimonialUpdateSchema>;
 export type ThemeConfigCreateInput = z.infer<typeof themeConfigCreateSchema>;
 export type ThemeConfigUpdateInput = z.infer<typeof themeConfigUpdateSchema>;
+
+export const imageConfigCreateSchema = z.object({
+  name: z.string().trim().min(2).max(120),
+  section: z.enum(["HELP_SUPPORT", "ABOUT_PROFILE"]),
+  url: z.string().url(),
+  isActive: z.coerce.boolean().default(false),
+});
+
+export const imageConfigUpdateSchema = imageConfigCreateSchema.partial();
+export type ImageConfigCreateInput = z.infer<typeof imageConfigCreateSchema>;
+export type ImageConfigUpdateInput = z.infer<typeof imageConfigUpdateSchema>;

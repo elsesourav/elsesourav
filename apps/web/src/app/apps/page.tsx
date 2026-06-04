@@ -44,11 +44,11 @@ const TYPE_LABELS: Record<string, string> = {
 function SectionDivider({ label }: { label: string }) {
   return (
     <div className="flex items-center gap-4 pt-4">
-      <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[color-mix(in_srgb,var(--brand-primary)_20%,transparent)] to-transparent" />
+      <div className="h-px flex-1 bg-linear-to-r from-transparent via-[color-mix(in_srgb,var(--brand-primary)_20%,transparent)] to-transparent" />
       <span className="rounded-full border ui-border bg-[color-mix(in_srgb,var(--background)_90%,white_10%)] px-4 py-1 text-[10px] font-bold uppercase tracking-[0.22em] ui-text-muted">
         {label}
       </span>
-      <div className="h-px flex-1 bg-gradient-to-l from-transparent via-[color-mix(in_srgb,var(--brand-primary)_20%,transparent)] to-transparent" />
+      <div className="h-px flex-1 bg-linear-to-l from-transparent via-[color-mix(in_srgb,var(--brand-primary)_20%,transparent)] to-transparent" />
     </div>
   );
 }

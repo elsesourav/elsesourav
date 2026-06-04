@@ -406,6 +406,23 @@ export type EnumHelpArticleStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumHelpArticleStatusFilter<$PrismaModel>
 }
 
+export type EnumImageSectionFilter<$PrismaModel = never> = {
+  equals?: $Enums.ImageSection | Prisma.EnumImageSectionFieldRefInput<$PrismaModel>
+  in?: $Enums.ImageSection[] | Prisma.ListEnumImageSectionFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ImageSection[] | Prisma.ListEnumImageSectionFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumImageSectionFilter<$PrismaModel> | $Enums.ImageSection
+}
+
+export type EnumImageSectionWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ImageSection | Prisma.EnumImageSectionFieldRefInput<$PrismaModel>
+  in?: $Enums.ImageSection[] | Prisma.ListEnumImageSectionFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ImageSection[] | Prisma.ListEnumImageSectionFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumImageSectionWithAggregatesFilter<$PrismaModel> | $Enums.ImageSection
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumImageSectionFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumImageSectionFilter<$PrismaModel>
+}
+
 export type EnumMediaTypeFilter<$PrismaModel = never> = {
   equals?: $Enums.MediaType | Prisma.EnumMediaTypeFieldRefInput<$PrismaModel>
   in?: $Enums.MediaType[] | Prisma.ListEnumMediaTypeFieldRefInput<$PrismaModel>
@@ -1023,6 +1040,23 @@ export type NestedEnumHelpArticleStatusWithAggregatesFilter<$PrismaModel = never
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumHelpArticleStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumHelpArticleStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumImageSectionFilter<$PrismaModel = never> = {
+  equals?: $Enums.ImageSection | Prisma.EnumImageSectionFieldRefInput<$PrismaModel>
+  in?: $Enums.ImageSection[] | Prisma.ListEnumImageSectionFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ImageSection[] | Prisma.ListEnumImageSectionFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumImageSectionFilter<$PrismaModel> | $Enums.ImageSection
+}
+
+export type NestedEnumImageSectionWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ImageSection | Prisma.EnumImageSectionFieldRefInput<$PrismaModel>
+  in?: $Enums.ImageSection[] | Prisma.ListEnumImageSectionFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ImageSection[] | Prisma.ListEnumImageSectionFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumImageSectionWithAggregatesFilter<$PrismaModel> | $Enums.ImageSection
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumImageSectionFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumImageSectionFilter<$PrismaModel>
 }
 
 export type NestedEnumMediaTypeFilter<$PrismaModel = never> = {

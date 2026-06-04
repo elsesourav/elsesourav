@@ -142,11 +142,6 @@ export type HelpCategory = Prisma.HelpCategoryModel
  */
 export type HelpArticle = Prisma.HelpArticleModel
 /**
- * Model FAQ
- * 
- */
-export type FAQ = Prisma.FAQModel
-/**
  * Model HelpArticleFeedback
  * 
  */
@@ -171,6 +166,11 @@ export type Testimonial = Prisma.TestimonialModel
  * 
  */
 export type ThemeConfig = Prisma.ThemeConfigModel
+/**
+ * Model ImageConfig
+ * 
+ */
+export type ImageConfig = Prisma.ImageConfigModel
 /**
  * Model AppMedia
  * 

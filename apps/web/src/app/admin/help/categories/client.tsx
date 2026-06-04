@@ -8,6 +8,7 @@ import { Modal } from "@/components/ui/modal";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { CategoryDndBoard } from "./CategoryDndBoard";
 
 export function AdminHelpCategoriesClient({ initialCategories }: { initialCategories: any[] }) {
   const [categories, setCategories] = useState(initialCategories);
@@ -24,15 +25,33 @@ export function AdminHelpCategoriesClient({ initialCategories }: { initialCatego
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [description, setDescription] = useState("");
-  const [orderIndex, setOrderIndex] = useState("0");
   const [parentId, setParentId] = useState("");
+
+  const hasUnsavedChanges = JSON.stringify(categories.map(c => c.id)) !== JSON.stringify(initialCategories.map(c => c.id));
+
+  const saveLayoutMutation = useMutation({
+    mutationFn: async () => {
+      const payload = categories.map((c, idx) => ({ id: c.id, orderIndex: idx }));
+      const res = await fetch(`/api/admin/content/help/categories/reorder`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error("Failed to save layout");
+      return res.json();
+    },
+    onSuccess: () => {
+      router.refresh();
+    },
+    onError: (err) => alert(err.message),
+  });
 
   const openCreate = () => {
     setEditingCategory(null);
     setName("");
     setSlug("");
     setDescription("");
-    setOrderIndex("0");
+
     setParentId("");
     setIsModalOpen(true);
   };
@@ -42,7 +61,6 @@ export function AdminHelpCategoriesClient({ initialCategories }: { initialCatego
     setName(cat.name);
     setSlug(cat.slug);
     setDescription(cat.description || "");
-    setOrderIndex(String(cat.orderIndex || 0));
     setParentId(cat.parentId || "");
     setIsModalOpen(true);
   };
@@ -60,7 +78,6 @@ export function AdminHelpCategoriesClient({ initialCategories }: { initialCatego
           name,
           slug,
           description: description || undefined,
-          orderIndex: parseInt(orderIndex, 10),
           parentId: parentId || undefined,
         }),
       });
@@ -105,50 +122,32 @@ export function AdminHelpCategoriesClient({ initialCategories }: { initialCatego
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
-        <Button onClick={openCreate}>
-          <Plus className="mr-2 h-4 w-4" />
-          Create Category
-        </Button>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold">Categories</h2>
+        <div className="flex items-center gap-3">
+          {hasUnsavedChanges && (
+            <div className="flex items-center gap-2">
+              <Button variant="outline" onClick={() => setCategories(initialCategories)} disabled={saveLayoutMutation.isPending}>
+                Cancel
+              </Button>
+              <Button variant="default" onClick={() => saveLayoutMutation.mutate()} disabled={saveLayoutMutation.isPending}>
+                {saveLayoutMutation.isPending ? "Saving..." : "Save Layout"}
+              </Button>
+            </div>
+          )}
+          <Button onClick={openCreate}>
+            <Plus className="mr-2 h-4 w-4" />
+            Create Category
+          </Button>
+        </div>
       </div>
-      
-      {categories.length === 0 ? (
-        <div className="ui-card p-8 text-center text-text-muted rounded-xl border">
-          No categories found. Create one to get started!
-        </div>
-      ) : (
-        <div className="ui-card rounded-xl border overflow-hidden">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-surface-elevated/50 text-text-muted">
-              <tr>
-                <th className="px-4 py-3 font-medium">Name</th>
-                <th className="px-4 py-3 font-medium">Slug</th>
-                <th className="px-4 py-3 font-medium">Order</th>
-                <th className="px-4 py-3 font-medium text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {categories.map((category) => (
-                <tr key={category.id} className="hover:bg-surface-hover/50">
-                  <td className="px-4 py-3 font-medium text-text-primary">{category.name}</td>
-                  <td className="px-4 py-3 text-text-secondary">{category.slug}</td>
-                  <td className="px-4 py-3 text-text-secondary">{category.orderIndex}</td>
-                  <td className="px-4 py-3 text-right">
-                    <div className="flex justify-end items-center gap-2">
-                      <Button variant="ghost" size="icon" onClick={() => openEdit(category)}>
-                        <Edit2 className="h-4 w-4 text-text-secondary" />
-                      </Button>
-                      <Button variant="ghost" size="icon" onClick={() => setDeletingId(category.id)}>
-                        <Trash2 className="h-4 w-4 text-status-error" />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+
+      <CategoryDndBoard 
+        categories={categories}
+        onCategoriesChange={setCategories}
+        onEditCategory={openEdit}
+        onDeleteCategory={setDeletingId}
+      />
 
       <Modal 
         open={isModalOpen} 
@@ -183,10 +182,7 @@ export function AdminHelpCategoriesClient({ initialCategories }: { initialCatego
             <label className="text-sm font-medium mb-1 block">Description</label>
             <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Optional description" />
           </div>
-          <div>
-            <label className="text-sm font-medium mb-1 block">Order Index</label>
-            <Input type="number" value={orderIndex} onChange={(e) => setOrderIndex(e.target.value)} />
-          </div>
+
           <div className="flex justify-end gap-2 pt-4">
             <Button variant="outline" onClick={() => setIsModalOpen(false)}>Cancel</Button>
             <Button onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending}>

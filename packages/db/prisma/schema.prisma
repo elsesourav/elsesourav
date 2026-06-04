@@ -244,7 +244,6 @@ model App {
   descriptionVersions AppDescriptionVersion[]
   supportTickets      SupportTicket[]
   helpArticles        HelpArticle[]
-  faqs                FAQ[]
 
   @@index([type])
   @@index([categoryId])
@@ -568,7 +567,6 @@ model HelpCategory {
   parent   HelpCategory?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
   children HelpCategory[] @relation("CategoryHierarchy")
   articles HelpArticle[]
-  faqs     FAQ[]
 
   @@index([isActive, orderIndex])
   @@index([parentId])
@@ -609,28 +607,12 @@ model HelpArticle {
   feedback HelpArticleFeedback[]
 
   @@index([status, publishedAt])
-  @@index([categoryId, isFeatured])
+  @@index([categoryId, orderIndex])
   @@index([appId])
   @@map("help_articles")
 }
 
-model FAQ {
-  id         String   @id @default(cuid())
-  question   String
-  answerMdx  String   @db.Text
-  categoryId String?  @map("category_id")
-  appId      String?  @map("app_id")
-  orderIndex Int      @default(0) @map("order_index")
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
 
-  category HelpCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  app      App?          @relation(fields: [appId], references: [id], onDelete: Cascade)
-
-  @@index([categoryId, orderIndex])
-  @@index([appId, orderIndex])
-  @@map("faqs")
-}
 
 model HelpArticleFeedback {
   id             String   @id @default(cuid())
@@ -727,6 +709,26 @@ model ThemeConfig {
 
   @@index([isActive, updatedAt])
   @@map("theme_configs")
+}
+
+enum ImageSection {
+  HELP_SUPPORT
+  ABOUT_PROFILE
+}
+
+model ImageConfig {
+  id                 String       @id @default(cuid())
+  name               String
+  section            ImageSection
+  url                String
+  isActive           Boolean      @default(false) @map("is_active")
+  createdBy          String?      @map("created_by")
+  updatedBy          String?      @map("updated_by")
+  createdAt          DateTime     @default(now()) @map("created_at")
+  updatedAt          DateTime     @updatedAt @map("updated_at")
+
+  @@index([section, isActive, updatedAt])
+  @@map("image_configs")
 }
 
 model AppMedia {

@@ -11,7 +11,7 @@ import { formatDateTime, type AdminThemeConfig } from "@/lib/view-models";
 import { useAppDispatch } from "@/store/hooks";
 import { enqueueNotification } from "@/store/slices/notificationsSlice";
 import type { ApiResponse } from "@elsesourav/types";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useRef } from "react";
 
 type ThemeFormState = {
   name: string;
@@ -237,7 +237,7 @@ function ThemePreview({
             color: normalizeHexColor(form.backgroundColor),
           }}
         >
-          Action CTA
+          Text
         </button>
       </article>
 
@@ -320,7 +320,7 @@ function ThemeConfigCard({
           <ColorChip label="Primary" color={item.primaryColor} />
           <ColorChip label="Secondary" color={item.secondaryColor} />
           <ColorChip label="Accent" color={item.accentColor} />
-          <ColorChip label="Action" color={item.actionColor} />
+          <ColorChip label="Text" color={item.actionColor} />
           <ColorChip label="Background" color={item.backgroundColor} />
           <ColorChip label="Foreground" color={item.foregroundColor} />
         </div>
@@ -334,7 +334,7 @@ function ThemeConfigCard({
           <ColorChip label="Primary" color={item.darkPrimaryColor} />
           <ColorChip label="Secondary" color={item.darkSecondaryColor} />
           <ColorChip label="Accent" color={item.darkAccentColor} />
-          <ColorChip label="Action" color={item.darkActionColor} />
+          <ColorChip label="Text" color={item.darkActionColor} />
           <ColorChip label="Background" color={item.darkBackgroundColor} />
           <ColorChip label="Foreground" color={item.darkForegroundColor} />
         </div>
@@ -798,8 +798,8 @@ function ThemeEditorFields({
   }
 
   return (
-    <div className="grid gap-4 lg:grid-cols-2">
-      <div className="space-y-1.5 lg:col-span-2">
+    <div className="space-y-6">
+      <div className="space-y-1.5">
         <Label htmlFor="theme-name">Name</Label>
         <Input
           id="theme-name"
@@ -810,123 +810,125 @@ function ThemeEditorFields({
         />
       </div>
 
-      <div className="space-y-1.5 lg:col-span-2">
-        <p className="text-xs font-semibold uppercase tracking-widest text-[#5a647d]">
-          Light palette
-        </p>
+      <div className="grid gap-8 lg:grid-cols-2">
+        <div className="space-y-4">
+          <p className="text-xs font-semibold uppercase tracking-widest text-[#5a647d]">
+            Light palette
+          </p>
+          <ColorField
+            id="theme-primary"
+            label="Primary color"
+            value={form.primaryColor}
+            onChange={(value) => updateField("primaryColor", value)}
+          />
+          <ColorField
+            id="theme-secondary"
+            label="Secondary color"
+            value={form.secondaryColor}
+            onChange={(value) => updateField("secondaryColor", value)}
+          />
+          <ColorField
+            id="theme-accent"
+            label="Accent color"
+            value={form.accentColor}
+            onChange={(value) => updateField("accentColor", value)}
+          />
+          <ColorField
+            id="theme-action"
+            label="Text color"
+            value={form.actionColor}
+            onChange={(value) => updateField("actionColor", value)}
+          />
+          <ColorField
+            id="theme-background"
+            label="Background color"
+            value={form.backgroundColor}
+            onChange={(value) => updateField("backgroundColor", value)}
+          />
+          <ColorField
+            id="theme-foreground"
+            label="Foreground color"
+            value={form.foregroundColor}
+            onChange={(value) => updateField("foregroundColor", value)}
+          />
+        </div>
+
+        <div className="space-y-4">
+          <p className="text-xs font-semibold uppercase tracking-widest text-[#5a647d]">
+            Dark palette
+          </p>
+          <ColorField
+            id="theme-dark-primary"
+            label="Dark primary color"
+            value={form.darkPrimaryColor}
+            onChange={(value) => updateField("darkPrimaryColor", value)}
+          />
+          <ColorField
+            id="theme-dark-secondary"
+            label="Dark secondary color"
+            value={form.darkSecondaryColor}
+            onChange={(value) => updateField("darkSecondaryColor", value)}
+          />
+          <ColorField
+            id="theme-dark-accent"
+            label="Dark accent color"
+            value={form.darkAccentColor}
+            onChange={(value) => updateField("darkAccentColor", value)}
+          />
+          <ColorField
+            id="theme-dark-action"
+            label="Dark text color"
+            value={form.darkActionColor}
+            onChange={(value) => updateField("darkActionColor", value)}
+          />
+          <ColorField
+            id="theme-dark-background"
+            label="Dark background color"
+            value={form.darkBackgroundColor}
+            onChange={(value) => updateField("darkBackgroundColor", value)}
+          />
+          <ColorField
+            id="theme-dark-foreground"
+            label="Dark foreground color"
+            value={form.darkForegroundColor}
+            onChange={(value) => updateField("darkForegroundColor", value)}
+          />
+        </div>
       </div>
 
-      <ColorField
-        id="theme-primary"
-        label="Primary color"
-        value={form.primaryColor}
-        onChange={(value) => updateField("primaryColor", value)}
-      />
-      <ColorField
-        id="theme-secondary"
-        label="Secondary color"
-        value={form.secondaryColor}
-        onChange={(value) => updateField("secondaryColor", value)}
-      />
-      <ColorField
-        id="theme-accent"
-        label="Accent color"
-        value={form.accentColor}
-        onChange={(value) => updateField("accentColor", value)}
-      />
-      <ColorField
-        id="theme-action"
-        label="Action color"
-        value={form.actionColor}
-        onChange={(value) => updateField("actionColor", value)}
-      />
-      <ColorField
-        id="theme-background"
-        label="Background color"
-        value={form.backgroundColor}
-        onChange={(value) => updateField("backgroundColor", value)}
-      />
-      <ColorField
-        id="theme-foreground"
-        label="Foreground color"
-        value={form.foregroundColor}
-        onChange={(value) => updateField("foregroundColor", value)}
-      />
+      <div className="grid gap-4 sm:grid-cols-3">
+        <div className="space-y-1.5">
+          <Label htmlFor="theme-font-sans">Font Sans</Label>
+          <Input
+            id="theme-font-sans"
+            value={form.fontSans}
+            onChange={(event) => updateField("fontSans", event.target.value)}
+            placeholder="Inter"
+          />
+        </div>
 
-      <div className="space-y-1.5 lg:col-span-2">
-        <p className="text-xs font-semibold uppercase tracking-widest text-[#5a647d]">
-          Dark palette
-        </p>
-      </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="theme-font-heading">Font Heading</Label>
+          <Input
+            id="theme-font-heading"
+            value={form.fontHeading}
+            onChange={(event) => updateField("fontHeading", event.target.value)}
+            placeholder="Manrope"
+          />
+        </div>
 
-      <ColorField
-        id="theme-dark-primary"
-        label="Dark primary color"
-        value={form.darkPrimaryColor}
-        onChange={(value) => updateField("darkPrimaryColor", value)}
-      />
-      <ColorField
-        id="theme-dark-secondary"
-        label="Dark secondary color"
-        value={form.darkSecondaryColor}
-        onChange={(value) => updateField("darkSecondaryColor", value)}
-      />
-      <ColorField
-        id="theme-dark-accent"
-        label="Dark accent color"
-        value={form.darkAccentColor}
-        onChange={(value) => updateField("darkAccentColor", value)}
-      />
-      <ColorField
-        id="theme-dark-action"
-        label="Dark action color"
-        value={form.darkActionColor}
-        onChange={(value) => updateField("darkActionColor", value)}
-      />
-      <ColorField
-        id="theme-dark-background"
-        label="Dark background color"
-        value={form.darkBackgroundColor}
-        onChange={(value) => updateField("darkBackgroundColor", value)}
-      />
-      <ColorField
-        id="theme-dark-foreground"
-        label="Dark foreground color"
-        value={form.darkForegroundColor}
-        onChange={(value) => updateField("darkForegroundColor", value)}
-      />
-
-      <div className="space-y-1.5">
-        <Label htmlFor="theme-font-sans">Font Sans</Label>
-        <Input
-          id="theme-font-sans"
-          value={form.fontSans}
-          onChange={(event) => updateField("fontSans", event.target.value)}
-          placeholder="Inter"
-        />
-      </div>
-
-      <div className="space-y-1.5">
-        <Label htmlFor="theme-font-heading">Font Heading</Label>
-        <Input
-          id="theme-font-heading"
-          value={form.fontHeading}
-          onChange={(event) => updateField("fontHeading", event.target.value)}
-          placeholder="Manrope"
-        />
-      </div>
-
-      <div className="space-y-1.5">
-        <Label htmlFor="theme-heading-scale">Heading Scale</Label>
-        <Input
-          id="theme-heading-scale"
-          type="number"
-          step="0.01"
-          min="0.8"
-          max="1.6"
-          value={form.headingScale}
-          onChange={(event) => updateField("headingScale", event.target.value)}
-        />
+        <div className="space-y-1.5">
+          <Label htmlFor="theme-heading-scale">Heading Scale</Label>
+          <Input
+            id="theme-heading-scale"
+            type="number"
+            step="0.01"
+            min="0.8"
+            max="1.6"
+            value={form.headingScale}
+            onChange={(event) => updateField("headingScale", event.target.value)}
+          />
+        </div>
       </div>
 
       <label className="inline-flex items-center gap-2 rounded-lg border border-black/10 bg-[#f8fbff] px-3 py-2 text-sm text-[#1a2439]">
@@ -939,6 +941,75 @@ function ThemeEditorFields({
         Mark as active on save
       </label>
     </div>
+  );
+}
+
+function CloudinaryUploadButton({ onUpload }: { onUpload: (url: string) => void }) {
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const signatureResponse = await fetch("/api/upload/cloudinary/sign", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ folder: "content/theme-configs" }),
+      });
+
+      const signaturePayload = await signatureResponse.json();
+      if (!signatureResponse.ok || !signaturePayload.ok) {
+        throw new Error("Failed to get signature");
+      }
+
+      const signData = signaturePayload.data;
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("api_key", signData.apiKey);
+      formData.append("timestamp", String(signData.timestamp));
+      formData.append("signature", signData.signature);
+      formData.append("folder", signData.folder);
+
+      const uploadResponse = await fetch(
+        `https://api.cloudinary.com/v1_1/${signData.cloudName}/auto/upload`,
+        { method: "POST", body: formData }
+      );
+
+      const uploadPayload = await uploadResponse.json();
+      if (!uploadResponse.ok || !uploadPayload.secure_url) {
+        throw new Error("Upload failed");
+      }
+
+      onUpload(uploadPayload.secure_url);
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Failed to upload image");
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  return (
+    <>
+      <input 
+        type="file" 
+        accept="image/*" 
+        className="hidden" 
+        ref={fileInputRef}
+        onChange={handleFileChange}
+      />
+      <Button 
+        type="button" 
+        variant="secondary" 
+        onClick={() => fileInputRef.current?.click()}
+        disabled={uploading}
+      >
+        {uploading ? "Uploading..." : "Upload Image"}
+      </Button>
+    </>
   );
 }
 

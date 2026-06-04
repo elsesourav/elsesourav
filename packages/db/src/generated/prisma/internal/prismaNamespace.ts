@@ -404,12 +404,12 @@ export const ModelName = {
   PostComment: 'PostComment',
   HelpCategory: 'HelpCategory',
   HelpArticle: 'HelpArticle',
-  FAQ: 'FAQ',
   HelpArticleFeedback: 'HelpArticleFeedback',
   HelpArticleSection: 'HelpArticleSection',
   HelpArticleTag: 'HelpArticleTag',
   Testimonial: 'Testimonial',
   ThemeConfig: 'ThemeConfig',
+  ImageConfig: 'ImageConfig',
   AppMedia: 'AppMedia',
   AppLink: 'AppLink',
   UserLibrary: 'UserLibrary',
@@ -448,7 +448,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "category" | "app" | "appTag" | "appTagOnApp" | "homeSlider" | "appViewEvent" | "appDailyStat" | "appAggregateStat" | "storeSectionItem" | "storeBanner" | "contentPage" | "contentPageVersion" | "profilePage" | "postTag" | "post" | "postTagLink" | "postComment" | "helpCategory" | "helpArticle" | "fAQ" | "helpArticleFeedback" | "helpArticleSection" | "helpArticleTag" | "testimonial" | "themeConfig" | "appMedia" | "appLink" | "userLibrary" | "userSettings" | "activityLog" | "customFieldDefinition" | "customFieldValue" | "appChangelog" | "postVersion" | "postReaction" | "commentReaction" | "postBookmark" | "helpArticleVersion" | "supportTicket" | "supportTicketMessage" | "appDescriptionVersion" | "guestSession" | "feedback" | "downloadEvent" | "payment" | "account" | "session" | "verificationToken"
+    modelProps: "user" | "category" | "app" | "appTag" | "appTagOnApp" | "homeSlider" | "appViewEvent" | "appDailyStat" | "appAggregateStat" | "storeSectionItem" | "storeBanner" | "contentPage" | "contentPageVersion" | "profilePage" | "postTag" | "post" | "postTagLink" | "postComment" | "helpCategory" | "helpArticle" | "helpArticleFeedback" | "helpArticleSection" | "helpArticleTag" | "testimonial" | "themeConfig" | "imageConfig" | "appMedia" | "appLink" | "userLibrary" | "userSettings" | "activityLog" | "customFieldDefinition" | "customFieldValue" | "appChangelog" | "postVersion" | "postReaction" | "commentReaction" | "postBookmark" | "helpArticleVersion" | "supportTicket" | "supportTicketMessage" | "appDescriptionVersion" | "guestSession" | "feedback" | "downloadEvent" | "payment" | "account" | "session" | "verificationToken"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1932,80 +1932,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    FAQ: {
-      payload: Prisma.$FAQPayload<ExtArgs>
-      fields: Prisma.FAQFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.FAQFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FAQPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.FAQFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FAQPayload>
-        }
-        findFirst: {
-          args: Prisma.FAQFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FAQPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.FAQFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FAQPayload>
-        }
-        findMany: {
-          args: Prisma.FAQFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FAQPayload>[]
-        }
-        create: {
-          args: Prisma.FAQCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FAQPayload>
-        }
-        createMany: {
-          args: Prisma.FAQCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.FAQCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FAQPayload>[]
-        }
-        delete: {
-          args: Prisma.FAQDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FAQPayload>
-        }
-        update: {
-          args: Prisma.FAQUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FAQPayload>
-        }
-        deleteMany: {
-          args: Prisma.FAQDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.FAQUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.FAQUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FAQPayload>[]
-        }
-        upsert: {
-          args: Prisma.FAQUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FAQPayload>
-        }
-        aggregate: {
-          args: Prisma.FAQAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateFAQ>
-        }
-        groupBy: {
-          args: Prisma.FAQGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.FAQGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.FAQCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.FAQCountAggregateOutputType> | number
-        }
-      }
-    }
     HelpArticleFeedback: {
       payload: Prisma.$HelpArticleFeedbackPayload<ExtArgs>
       fields: Prisma.HelpArticleFeedbackFieldRefs
@@ -2373,6 +2299,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ThemeConfigCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ThemeConfigCountAggregateOutputType> | number
+        }
+      }
+    }
+    ImageConfig: {
+      payload: Prisma.$ImageConfigPayload<ExtArgs>
+      fields: Prisma.ImageConfigFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ImageConfigFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImageConfigPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ImageConfigFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImageConfigPayload>
+        }
+        findFirst: {
+          args: Prisma.ImageConfigFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImageConfigPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ImageConfigFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImageConfigPayload>
+        }
+        findMany: {
+          args: Prisma.ImageConfigFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImageConfigPayload>[]
+        }
+        create: {
+          args: Prisma.ImageConfigCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImageConfigPayload>
+        }
+        createMany: {
+          args: Prisma.ImageConfigCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ImageConfigCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImageConfigPayload>[]
+        }
+        delete: {
+          args: Prisma.ImageConfigDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImageConfigPayload>
+        }
+        update: {
+          args: Prisma.ImageConfigUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImageConfigPayload>
+        }
+        deleteMany: {
+          args: Prisma.ImageConfigDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ImageConfigUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ImageConfigUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImageConfigPayload>[]
+        }
+        upsert: {
+          args: Prisma.ImageConfigUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImageConfigPayload>
+        }
+        aggregate: {
+          args: Prisma.ImageConfigAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateImageConfig>
+        }
+        groupBy: {
+          args: Prisma.ImageConfigGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ImageConfigGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ImageConfigCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ImageConfigCountAggregateOutputType> | number
         }
       }
     }
@@ -4466,6 +4466,7 @@ export const HelpArticleScalarFieldEnum = {
   summary: 'summary',
   contentMarkdown: 'contentMarkdown',
   contentMdx: 'contentMdx',
+  orderIndex: 'orderIndex',
   status: 'status',
   isFeatured: 'isFeatured',
   publishAt: 'publishAt',
@@ -4484,20 +4485,6 @@ export const HelpArticleScalarFieldEnum = {
 } as const
 
 export type HelpArticleScalarFieldEnum = (typeof HelpArticleScalarFieldEnum)[keyof typeof HelpArticleScalarFieldEnum]
-
-
-export const FAQScalarFieldEnum = {
-  id: 'id',
-  question: 'question',
-  answerMdx: 'answerMdx',
-  categoryId: 'categoryId',
-  appId: 'appId',
-  orderIndex: 'orderIndex',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type FAQScalarFieldEnum = (typeof FAQScalarFieldEnum)[keyof typeof FAQScalarFieldEnum]
 
 
 export const HelpArticleFeedbackScalarFieldEnum = {
@@ -4585,6 +4572,21 @@ export const ThemeConfigScalarFieldEnum = {
 } as const
 
 export type ThemeConfigScalarFieldEnum = (typeof ThemeConfigScalarFieldEnum)[keyof typeof ThemeConfigScalarFieldEnum]
+
+
+export const ImageConfigScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  section: 'section',
+  url: 'url',
+  isActive: 'isActive',
+  createdBy: 'createdBy',
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ImageConfigScalarFieldEnum = (typeof ImageConfigScalarFieldEnum)[keyof typeof ImageConfigScalarFieldEnum]
 
 
 export const AppMediaScalarFieldEnum = {
@@ -5168,6 +5170,20 @@ export type ListEnumHelpArticleStatusFieldRefInput<$PrismaModel> = FieldRefInput
 
 
 /**
+ * Reference to a field of type 'ImageSection'
+ */
+export type EnumImageSectionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ImageSection'>
+    
+
+
+/**
+ * Reference to a field of type 'ImageSection[]'
+ */
+export type ListEnumImageSectionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ImageSection[]'>
+    
+
+
+/**
  * Reference to a field of type 'MediaType'
  */
 export type EnumMediaTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MediaType'>
@@ -5436,12 +5452,12 @@ export type GlobalOmitConfig = {
   postComment?: Prisma.PostCommentOmit
   helpCategory?: Prisma.HelpCategoryOmit
   helpArticle?: Prisma.HelpArticleOmit
-  fAQ?: Prisma.FAQOmit
   helpArticleFeedback?: Prisma.HelpArticleFeedbackOmit
   helpArticleSection?: Prisma.HelpArticleSectionOmit
   helpArticleTag?: Prisma.HelpArticleTagOmit
   testimonial?: Prisma.TestimonialOmit
   themeConfig?: Prisma.ThemeConfigOmit
+  imageConfig?: Prisma.ImageConfigOmit
   appMedia?: Prisma.AppMediaOmit
   appLink?: Prisma.AppLinkOmit
   userLibrary?: Prisma.UserLibraryOmit

@@ -1,14 +1,14 @@
+import { CommentsSection } from "@/components/ui/comments-section";
 import { MarkdownContent } from "@/components/ui/markdown-content";
 import { PageShell } from "@/components/ui/page";
+import { PostInteractions } from "@/components/ui/post-interactions";
+import { RelatedPosts } from "@/components/ui/related-posts";
 import { markdownExcerpt } from "@/lib/markdown";
 import { fetchServiceData } from "@/lib/service-client";
 import { formatDateTime } from "@/lib/view-models";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { PostInteractions } from "@/components/ui/post-interactions";
-import { CommentsSection } from "@/components/ui/comments-section";
-import { RelatedPosts } from "@/components/ui/related-posts";
 
 type PostTag = {
   id: string;
@@ -87,116 +87,132 @@ export default async function PostPage({ params }: PostPageProps) {
     post.readingTimeMinutes || estimateReadingTime(post.contentMarkdown);
 
   return (
-    <PageShell width="content" className="gap-0 pb-16">
-      {/* Back link */}
-      <div className="mb-8">
-        <Link
-          href="/posts"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-[color-mix(in_srgb,var(--foreground)_50%,transparent)] transition-colors hover:text-foreground"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="m15 18-6-6 6-6" />
-          </svg>
-          All posts
-        </Link>
-      </div>
-
-      {/* Featured image */}
-      {post.featuredImageUrl && (
-        <div className="mb-1 overflow-hidden rounded-2xl bg-[color-mix(in_srgb,var(--foreground)_5%,transparent)]">
-          <img
-            src={post.featuredImageUrl}
-            alt={post.title}
-            loading="lazy"
-            className="w-full object-cover"
-            style={{ maxHeight: "480px" }}
-          />
-        </div>
-      )}
-
-      {/* Interactions (Like, Bookmark, Share) */}
-      <PostInteractions slug={post.slug} />
-
-      {/* Header */}
-      <header className="mb-10 space-y-4">
-        {post.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
-            {post.tags.map((tag) => (
-              <Link
-                key={tag.id}
-                href={`/posts?tag=${tag.slug}`}
-                className="rounded-full border border-[color-mix(in_srgb,var(--foreground)_10%,transparent)] px-3 py-0.5 text-[11px] font-semibold text-[color-mix(in_srgb,var(--foreground)_55%,transparent)] transition-colors hover:border-[color-mix(in_srgb,var(--foreground)_20%,transparent)] hover:text-foreground"
+    <PageShell width="wide" className="gap-0 pb-16">
+      <div className="mx-auto w-full max-w-7xl grid grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_460px]">
+        {/* Left Column: Main Content */}
+        <div className="min-w-0 relative">
+          {/* Back link */}
+          <div className="absolute -top-8 lg:-top-8 left-0 z-10">
+            <Link
+              href="/posts"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-[color-mix(in_srgb,var(--foreground)_50%,transparent)] transition-colors hover:text-foreground"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
-                {tag.name}
-              </Link>
-            ))}
+                <path d="m15 18-6-6 6-6" />
+              </svg>
+              All posts
+            </Link>
           </div>
-        )}
 
-        <h1 className="text-3xl font-extrabold leading-tight tracking-tight text-foreground sm:text-4xl md:text-5xl">
-          {post.title}
-        </h1>
-
-        {post.excerpt && (
-          <p className="text-lg leading-relaxed text-[color-mix(in_srgb,var(--foreground)_65%,transparent)]">
-            {post.excerpt}
-          </p>
-        )}
-
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-[color-mix(in_srgb,var(--foreground)_45%,transparent)]">
-          {post.author?.name && (
-            <span className="font-medium text-foreground">
-              {post.author.name}
-            </span>
+          {/* Featured image */}
+          {post.featuredImageUrl && (
+            <div className="mb-1 overflow-hidden rounded-2xl bg-[color-mix(in_srgb,var(--foreground)_5%,transparent)]">
+              <img
+                src={post.featuredImageUrl}
+                alt={post.title}
+                loading="lazy"
+                className="w-full object-cover"
+                style={{ maxHeight: "480px" }}
+              />
+            </div>
           )}
-          {post.author?.name && <span className="hidden sm:inline">·</span>}
-          <time>{formatDateTime(post.publishedAt)}</time>
-          <span className="hidden sm:inline">·</span>
-          <span>{readTime} min read</span>
-        </div>
-      </header>
 
-      {/* Article content */}
-      <article className="prose-article max-w-none mb-10">
-        <MarkdownContent markdown={post.contentMarkdown} />
-      </article>
+          {/* Interactions (Like, Bookmark, Share) */}
+          <PostInteractions slug={post.slug} />
 
-      {/* Footer tags */}
-      {post.tags.length > 0 && (
-        <footer className="mt-8 mb-16 space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-widest text-[color-mix(in_srgb,var(--foreground)_35%,transparent)]">
-            Tagged in
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {post.tags.map((tag) => (
-              <Link
-                key={tag.id}
-                href={`/posts?tag=${tag.slug}`}
-                className="rounded-full border border-[color-mix(in_srgb,var(--foreground)_10%,transparent)] bg-[color-mix(in_srgb,var(--foreground)_3%,transparent)] px-3 py-1 text-xs font-medium text-[color-mix(in_srgb,var(--foreground)_60%,transparent)] transition-colors hover:bg-[color-mix(in_srgb,var(--foreground)_6%,transparent)] hover:text-foreground"
-              >
-                {tag.name}
-              </Link>
-            ))}
+          <div className="px-2 sm:px-2 lg:px-4 mt-6">
+            {/* Header */}
+            <header className="mb-10 space-y-4">
+              <h1 className="text-2xl font-extrabold leading-tight tracking-tight text-foreground sm:text-3xl md:text-4xl">
+                {post.title}
+              </h1>
+
+              {post.excerpt && (
+                <p className="text-lg leading-relaxed text-[color-mix(in_srgb,var(--foreground)_65%,transparent)]">
+                  {post.excerpt}
+                </p>
+              )}
+
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-[color-mix(in_srgb,var(--foreground)_45%,transparent)]">
+                {post.author?.name && (
+                  <span className="font-medium text-foreground">
+                    {post.author.name}
+                  </span>
+                )}
+                {post.author?.name && (
+                  <span className="hidden sm:inline">·</span>
+                )}
+                <time>{formatDateTime(post.publishedAt)}</time>
+                <span className="hidden sm:inline">·</span>
+                <span>{readTime} min read</span>
+              </div>
+            </header>
+
+            {/* Article content */}
+            <article className="prose-article max-w-none mb-10">
+              <MarkdownContent markdown={post.contentMarkdown} />
+            </article>
+
+            {/* Comments */}
+            <div id="comments-section" className="scroll-mt-24 mt-16">
+              <CommentsSection slug={post.slug} />
+            </div>
           </div>
-        </footer>
-      )}
+        </div>
 
-      {/* Related Posts */}
-      <RelatedPosts slug={post.slug} />
+        {/* Right Column: Sidebar */}
+        <aside className="space-y-8 lg:sticky lg:top-24 lg:h-fit">
+          {/* Tagged in Box */}
+          {post.tags.length > 0 && (
+            <div className="relative overflow-hidden rounded-2xl border ui-border shadow-sm p-6 bg-[color-mix(in_srgb,var(--background)_90%,var(--brand-primary)_10%)]">
+              {/* Background pattern repeat image */}
+              <div
+                className="absolute inset-0 pointer-events-none opacity-60 dark:opacity-50"
+                style={{
+                  backgroundImage:
+                    'url("/img/pattern/light/ptn-light-[5].png")',
+                  backgroundRepeat: "repeat",
+                  backgroundSize: "200px",
+                }}
+              />
 
-      {/* Comments */}
-      <div id="comments-section" className="scroll-mt-24">
-        <CommentsSection slug={post.slug} />
+              <div className="relative z-10">
+                <h3 className="mb-5 text-xl font-extrabold tracking-tight upper ui-text-heading">
+                  Tagged in
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {post.tags.map((tag) => (
+                    <Link
+                      key={tag.id}
+                      href={`/posts?tag=${tag.slug}`}
+                      className="rounded-full border ui-border bg-background/90 px-3 py-1 text-xs font-semibold ui-text-primary transition-all hover:bg-background hover:shadow-sm"
+                    >
+                      {tag.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Related Posts */}
+          <div className="rounded-2xl border ui-border bg-surface p-6 shadow-sm">
+            <h3 className="text-xl font-extrabold tracking-tight ui-text-heading border-b ui-border pb-1">
+              Related Posts
+            </h3>
+            <RelatedPosts slug={post.slug} variant="sidebar" />
+          </div>
+        </aside>
       </div>
     </PageShell>
   );

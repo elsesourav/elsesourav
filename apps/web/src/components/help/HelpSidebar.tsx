@@ -3,8 +3,8 @@
 import { cn } from "@/lib/cn";
 import { ChevronDown, ChevronRight, Menu, X } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { Button } from "../ui/button";
 
 type HelpTreeItem = {
@@ -13,45 +13,34 @@ type HelpTreeItem = {
   slug: string;
   children: HelpTreeItem[];
   articles: { id: string; slug: string; title: string; categoryId: string }[];
-  faqs: { id: string; question: string; categoryId: string }[];
 };
 
 function TreeCategory({
   category,
   level = 0,
-  pathname,
   expandedCategorySlug,
   setExpandedCategorySlug,
+  activeArticleSlug,
+  setActiveArticleSlug,
 }: {
   category: HelpTreeItem;
   level?: number;
-  pathname: string;
   expandedCategorySlug: string | null;
   setExpandedCategorySlug: (slug: string | null) => void;
+  activeArticleSlug: string | null;
+  setActiveArticleSlug: (slug: string | null) => void;
 }) {
+  const isExpanded = expandedCategorySlug === category.slug;
   const router = useRouter();
 
-  const hasActiveChild = (cat: HelpTreeItem): boolean => {
-    if (pathname === `/help/category/${cat.slug}`) return true;
-    if (cat.articles.some((a) => pathname === `/help/${a.slug}`)) return true;
-    if (cat.children.some(hasActiveChild)) return true;
-    return false;
-  };
-
-  const isCategoryActive = hasActiveChild(category);
-  const isExpanded = expandedCategorySlug === category.slug;
-
   const handleCategoryClick = () => {
-    const nextState = isExpanded ? null : category.slug;
-    setExpandedCategorySlug(nextState);
-
-    if (nextState) {
-      // Navigate when expanded
-      if (category.articles.length > 0) {
-        router.push(`/help/${category.articles[0].slug}`);
-      } else if (category.faqs.length > 0 || category.children.length > 0) {
-        router.push(`/help/category/${category.slug}`);
-      }
+    if (!isExpanded) {
+      setExpandedCategorySlug(category.slug);
+      setActiveArticleSlug(category.articles[0]?.slug || null);
+      router.push(`?category=${category.slug}`);
+    } else {
+      setExpandedCategorySlug(null);
+      setActiveArticleSlug(null);
     }
   };
 
@@ -62,10 +51,10 @@ function TreeCategory({
     <div className="select-none">
       <div
         className={cn(
-          "flex items-center w-full group cursor-pointer text-sm py-1 pr-3 rounded-md transition-colors",
-          isCategoryActive
-            ? "bg-brand-primary/10 text-brand-primary font-semibold"
-            : "text-text-secondary hover:bg-surface-active hover:text-text-primary font-medium",
+          "flex items-center w-full group cursor-pointer text-sm py-1 pr-3 rounded-md transition-colors font-medium",
+          isExpanded
+            ? "bg-brand-primary/5 text-brand-primary"
+            : "text-text-secondary hover:bg-surface-active hover:text-text-primary"
         )}
         style={{ paddingLeft }}
         onClick={handleCategoryClick}
@@ -87,49 +76,38 @@ function TreeCategory({
               key={child.id}
               category={child}
               level={level + 1}
-              pathname={pathname}
               expandedCategorySlug={expandedCategorySlug}
               setExpandedCategorySlug={setExpandedCategorySlug}
+              activeArticleSlug={activeArticleSlug}
+              setActiveArticleSlug={setActiveArticleSlug}
             />
           ))}
 
           {category.articles.length > 0 && (
             <div className="mt-1 pb-2">
               {category.articles.map((article) => {
-                const isArticleActive = pathname === `/help/${article.slug}`;
+                const isActive = activeArticleSlug === article.slug;
                 return (
-                  <Link
+                  <a
                     key={article.id}
-                    href={`/help/${article.slug}`}
+                    href={`#${article.slug}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setActiveArticleSlug(article.slug);
+                      document.getElementById(article.slug)?.scrollIntoView({ behavior: "smooth" });
+                    }}
                     className={cn(
                       "flex items-center w-full text-sm py-1.5 pr-3 rounded-md transition-colors",
-                      isArticleActive
-                        ? "text-brand-primary font-medium bg-brand-primary/5"
-                        : "text-text-secondary hover:bg-surface-active hover:text-text-primary",
+                      isActive
+                        ? "font-bold text-brand-primary"
+                        : "text-text-secondary hover:bg-surface-active hover:text-text-primary font-normal"
                     )}
                     style={{ paddingLeft: childrenPaddingLeft }}
                   >
                     <span className="truncate">{article.title}</span>
-                  </Link>
+                  </a>
                 );
               })}
-            </div>
-          )}
-
-          {category.faqs.length > 0 && (
-            <div>
-              {category.faqs.map((faq) => (
-                <Link
-                  key={faq.id}
-                  href={`/help/category/${category.slug}#faq-${faq.id}`}
-                  className="flex items-start w-full text-sm py-1.5 pr-3 rounded-md transition-colors text-text-secondary hover:bg-surface-active hover:text-text-primary"
-                  style={{ paddingLeft: childrenPaddingLeft }}
-                >
-                  <span className="line-clamp-2 leading-snug">
-                    {faq.question}
-                  </span>
-                </Link>
-              ))}
             </div>
           )}
         </div>
@@ -139,36 +117,18 @@ function TreeCategory({
 }
 
 export function HelpSidebar({ tree }: { tree: HelpTreeItem[] }) {
-  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [expandedCategorySlug, setExpandedCategorySlug] = useState<
-    string | null
-  >(null);
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams.get("category");
+  const defaultCategory = tree.find(c => c.slug === categoryParam) || tree[0];
 
-  // Auto-expand the active category on initial load or route changes
-  useEffect(() => {
-    const findActiveCategory = (items: HelpTreeItem[]): string | null => {
-      for (const item of items) {
-        if (pathname === `/help/category/${item.slug}`) return item.slug;
-        if (item.articles.some((a) => pathname === `/help/${a.slug}`))
-          return item.slug;
-
-        const childActive = findActiveCategory(item.children);
-        if (childActive) return item.slug;
-      }
-      return null;
-    };
-
-    const active = findActiveCategory(tree);
-    if (active && active !== expandedCategorySlug) {
-      setExpandedCategorySlug(active);
-    }
-  }, [pathname, tree]);
-
-  // Close mobile menu on route change
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [pathname]);
+  const [expandedCategorySlug, setExpandedCategorySlug] = useState<string | null>(
+    defaultCategory?.slug || null
+  );
+  
+  const [activeArticleSlug, setActiveArticleSlug] = useState<string | null>(
+    defaultCategory?.articles?.[0]?.slug || null
+  );
 
   const SidebarContent = () => (
     <div className="space-y-8">
@@ -182,9 +142,10 @@ export function HelpSidebar({ tree }: { tree: HelpTreeItem[] }) {
               <TreeCategory
                 key={cat.id}
                 category={cat}
-                pathname={pathname}
                 expandedCategorySlug={expandedCategorySlug}
                 setExpandedCategorySlug={setExpandedCategorySlug}
+                activeArticleSlug={activeArticleSlug}
+                setActiveArticleSlug={setActiveArticleSlug}
               />
             ))}
           </div>
@@ -198,12 +159,7 @@ export function HelpSidebar({ tree }: { tree: HelpTreeItem[] }) {
             <li>
               <Link
                 href="/contact"
-                className={cn(
-                  "block px-3 py-2 text-sm font-medium rounded-lg transition-colors",
-                  pathname === "/contact"
-                    ? "bg-brand-primary/10 text-brand-primary"
-                    : "text-text-secondary hover:text-text-primary hover:bg-surface-active",
-                )}
+                className="block px-3 py-2 text-sm font-medium rounded-lg transition-colors text-text-secondary hover:text-text-primary hover:bg-surface-active"
               >
                 Contact Support
               </Link>

@@ -27,6 +27,7 @@ export type AggregateHelpArticle = {
 }
 
 export type HelpArticleAvgAggregateOutputType = {
+  orderIndex: number | null
   viewCount: number | null
   upvotes: number | null
   downvotes: number | null
@@ -34,6 +35,7 @@ export type HelpArticleAvgAggregateOutputType = {
 }
 
 export type HelpArticleSumAggregateOutputType = {
+  orderIndex: number | null
   viewCount: number | null
   upvotes: number | null
   downvotes: number | null
@@ -49,6 +51,7 @@ export type HelpArticleMinAggregateOutputType = {
   summary: string | null
   contentMarkdown: string | null
   contentMdx: string | null
+  orderIndex: number | null
   status: $Enums.HelpArticleStatus | null
   isFeatured: boolean | null
   publishAt: Date | null
@@ -74,6 +77,7 @@ export type HelpArticleMaxAggregateOutputType = {
   summary: string | null
   contentMarkdown: string | null
   contentMdx: string | null
+  orderIndex: number | null
   status: $Enums.HelpArticleStatus | null
   isFeatured: boolean | null
   publishAt: Date | null
@@ -99,6 +103,7 @@ export type HelpArticleCountAggregateOutputType = {
   summary: number
   contentMarkdown: number
   contentMdx: number
+  orderIndex: number
   status: number
   isFeatured: number
   publishAt: number
@@ -119,6 +124,7 @@ export type HelpArticleCountAggregateOutputType = {
 
 
 export type HelpArticleAvgAggregateInputType = {
+  orderIndex?: true
   viewCount?: true
   upvotes?: true
   downvotes?: true
@@ -126,6 +132,7 @@ export type HelpArticleAvgAggregateInputType = {
 }
 
 export type HelpArticleSumAggregateInputType = {
+  orderIndex?: true
   viewCount?: true
   upvotes?: true
   downvotes?: true
@@ -141,6 +148,7 @@ export type HelpArticleMinAggregateInputType = {
   summary?: true
   contentMarkdown?: true
   contentMdx?: true
+  orderIndex?: true
   status?: true
   isFeatured?: true
   publishAt?: true
@@ -166,6 +174,7 @@ export type HelpArticleMaxAggregateInputType = {
   summary?: true
   contentMarkdown?: true
   contentMdx?: true
+  orderIndex?: true
   status?: true
   isFeatured?: true
   publishAt?: true
@@ -191,6 +200,7 @@ export type HelpArticleCountAggregateInputType = {
   summary?: true
   contentMarkdown?: true
   contentMdx?: true
+  orderIndex?: true
   status?: true
   isFeatured?: true
   publishAt?: true
@@ -304,6 +314,7 @@ export type HelpArticleGroupByOutputType = {
   summary: string | null
   contentMarkdown: string
   contentMdx: string | null
+  orderIndex: number
   status: $Enums.HelpArticleStatus
   isFeatured: boolean
   publishAt: Date | null
@@ -353,6 +364,7 @@ export type HelpArticleWhereInput = {
   summary?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
   contentMarkdown?: Prisma.StringFilter<"HelpArticle"> | string
   contentMdx?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
+  orderIndex?: Prisma.IntFilter<"HelpArticle"> | number
   status?: Prisma.EnumHelpArticleStatusFilter<"HelpArticle"> | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFilter<"HelpArticle"> | boolean
   publishAt?: Prisma.DateTimeNullableFilter<"HelpArticle"> | Date | string | null
@@ -385,6 +397,7 @@ export type HelpArticleOrderByWithRelationInput = {
   summary?: Prisma.SortOrderInput | Prisma.SortOrder
   contentMarkdown?: Prisma.SortOrder
   contentMdx?: Prisma.SortOrderInput | Prisma.SortOrder
+  orderIndex?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   publishAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -420,6 +433,7 @@ export type HelpArticleWhereUniqueInput = Prisma.AtLeast<{
   summary?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
   contentMarkdown?: Prisma.StringFilter<"HelpArticle"> | string
   contentMdx?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
+  orderIndex?: Prisma.IntFilter<"HelpArticle"> | number
   status?: Prisma.EnumHelpArticleStatusFilter<"HelpArticle"> | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFilter<"HelpArticle"> | boolean
   publishAt?: Prisma.DateTimeNullableFilter<"HelpArticle"> | Date | string | null
@@ -452,6 +466,7 @@ export type HelpArticleOrderByWithAggregationInput = {
   summary?: Prisma.SortOrderInput | Prisma.SortOrder
   contentMarkdown?: Prisma.SortOrder
   contentMdx?: Prisma.SortOrderInput | Prisma.SortOrder
+  orderIndex?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   publishAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -486,6 +501,7 @@ export type HelpArticleScalarWhereWithAggregatesInput = {
   summary?: Prisma.StringNullableWithAggregatesFilter<"HelpArticle"> | string | null
   contentMarkdown?: Prisma.StringWithAggregatesFilter<"HelpArticle"> | string
   contentMdx?: Prisma.StringNullableWithAggregatesFilter<"HelpArticle"> | string | null
+  orderIndex?: Prisma.IntWithAggregatesFilter<"HelpArticle"> | number
   status?: Prisma.EnumHelpArticleStatusWithAggregatesFilter<"HelpArticle"> | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolWithAggregatesFilter<"HelpArticle"> | boolean
   publishAt?: Prisma.DateTimeNullableWithAggregatesFilter<"HelpArticle"> | Date | string | null
@@ -510,6 +526,7 @@ export type HelpArticleCreateInput = {
   summary?: string | null
   contentMarkdown: string
   contentMdx?: string | null
+  orderIndex?: number
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
@@ -542,6 +559,7 @@ export type HelpArticleUncheckedCreateInput = {
   summary?: string | null
   contentMarkdown: string
   contentMdx?: string | null
+  orderIndex?: number
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
@@ -570,6 +588,7 @@ export type HelpArticleUpdateInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
   contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderIndex?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -602,6 +621,7 @@ export type HelpArticleUncheckedUpdateInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
   contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderIndex?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -632,6 +652,7 @@ export type HelpArticleCreateManyInput = {
   summary?: string | null
   contentMarkdown: string
   contentMdx?: string | null
+  orderIndex?: number
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
@@ -656,6 +677,7 @@ export type HelpArticleUpdateManyMutationInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
   contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderIndex?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -682,6 +704,7 @@ export type HelpArticleUncheckedUpdateManyInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
   contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderIndex?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -726,6 +749,7 @@ export type HelpArticleCountOrderByAggregateInput = {
   summary?: Prisma.SortOrder
   contentMarkdown?: Prisma.SortOrder
   contentMdx?: Prisma.SortOrder
+  orderIndex?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   publishAt?: Prisma.SortOrder
@@ -744,6 +768,7 @@ export type HelpArticleCountOrderByAggregateInput = {
 }
 
 export type HelpArticleAvgOrderByAggregateInput = {
+  orderIndex?: Prisma.SortOrder
   viewCount?: Prisma.SortOrder
   upvotes?: Prisma.SortOrder
   downvotes?: Prisma.SortOrder
@@ -759,6 +784,7 @@ export type HelpArticleMaxOrderByAggregateInput = {
   summary?: Prisma.SortOrder
   contentMarkdown?: Prisma.SortOrder
   contentMdx?: Prisma.SortOrder
+  orderIndex?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   publishAt?: Prisma.SortOrder
@@ -784,6 +810,7 @@ export type HelpArticleMinOrderByAggregateInput = {
   summary?: Prisma.SortOrder
   contentMarkdown?: Prisma.SortOrder
   contentMdx?: Prisma.SortOrder
+  orderIndex?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   publishAt?: Prisma.SortOrder
@@ -801,6 +828,7 @@ export type HelpArticleMinOrderByAggregateInput = {
 }
 
 export type HelpArticleSumOrderByAggregateInput = {
+  orderIndex?: Prisma.SortOrder
   viewCount?: Prisma.SortOrder
   upvotes?: Prisma.SortOrder
   downvotes?: Prisma.SortOrder
@@ -972,6 +1000,7 @@ export type HelpArticleCreateWithoutAppInput = {
   summary?: string | null
   contentMarkdown: string
   contentMdx?: string | null
+  orderIndex?: number
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
@@ -1002,6 +1031,7 @@ export type HelpArticleUncheckedCreateWithoutAppInput = {
   summary?: string | null
   contentMarkdown: string
   contentMdx?: string | null
+  orderIndex?: number
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
@@ -1061,6 +1091,7 @@ export type HelpArticleScalarWhereInput = {
   summary?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
   contentMarkdown?: Prisma.StringFilter<"HelpArticle"> | string
   contentMdx?: Prisma.StringNullableFilter<"HelpArticle"> | string | null
+  orderIndex?: Prisma.IntFilter<"HelpArticle"> | number
   status?: Prisma.EnumHelpArticleStatusFilter<"HelpArticle"> | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFilter<"HelpArticle"> | boolean
   publishAt?: Prisma.DateTimeNullableFilter<"HelpArticle"> | Date | string | null
@@ -1085,6 +1116,7 @@ export type HelpArticleCreateWithoutCategoryInput = {
   summary?: string | null
   contentMarkdown: string
   contentMdx?: string | null
+  orderIndex?: number
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
@@ -1115,6 +1147,7 @@ export type HelpArticleUncheckedCreateWithoutCategoryInput = {
   summary?: string | null
   contentMarkdown: string
   contentMdx?: string | null
+  orderIndex?: number
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
@@ -1169,6 +1202,7 @@ export type HelpArticleCreateWithoutFeedbackInput = {
   summary?: string | null
   contentMarkdown: string
   contentMdx?: string | null
+  orderIndex?: number
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
@@ -1200,6 +1234,7 @@ export type HelpArticleUncheckedCreateWithoutFeedbackInput = {
   summary?: string | null
   contentMarkdown: string
   contentMdx?: string | null
+  orderIndex?: number
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
@@ -1243,6 +1278,7 @@ export type HelpArticleUpdateWithoutFeedbackInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
   contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderIndex?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1274,6 +1310,7 @@ export type HelpArticleUncheckedUpdateWithoutFeedbackInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
   contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderIndex?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1301,6 +1338,7 @@ export type HelpArticleCreateWithoutSectionsInput = {
   summary?: string | null
   contentMarkdown: string
   contentMdx?: string | null
+  orderIndex?: number
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
@@ -1332,6 +1370,7 @@ export type HelpArticleUncheckedCreateWithoutSectionsInput = {
   summary?: string | null
   contentMarkdown: string
   contentMdx?: string | null
+  orderIndex?: number
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
@@ -1375,6 +1414,7 @@ export type HelpArticleUpdateWithoutSectionsInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
   contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderIndex?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1406,6 +1446,7 @@ export type HelpArticleUncheckedUpdateWithoutSectionsInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
   contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderIndex?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1433,6 +1474,7 @@ export type HelpArticleCreateWithoutTagsInput = {
   summary?: string | null
   contentMarkdown: string
   contentMdx?: string | null
+  orderIndex?: number
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
@@ -1464,6 +1506,7 @@ export type HelpArticleUncheckedCreateWithoutTagsInput = {
   summary?: string | null
   contentMarkdown: string
   contentMdx?: string | null
+  orderIndex?: number
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
@@ -1507,6 +1550,7 @@ export type HelpArticleUpdateWithoutTagsInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
   contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderIndex?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1538,6 +1582,7 @@ export type HelpArticleUncheckedUpdateWithoutTagsInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
   contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderIndex?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1565,6 +1610,7 @@ export type HelpArticleCreateWithoutVersionsInput = {
   summary?: string | null
   contentMarkdown: string
   contentMdx?: string | null
+  orderIndex?: number
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
@@ -1596,6 +1642,7 @@ export type HelpArticleUncheckedCreateWithoutVersionsInput = {
   summary?: string | null
   contentMarkdown: string
   contentMdx?: string | null
+  orderIndex?: number
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
@@ -1639,6 +1686,7 @@ export type HelpArticleUpdateWithoutVersionsInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
   contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderIndex?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1670,6 +1718,7 @@ export type HelpArticleUncheckedUpdateWithoutVersionsInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
   contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderIndex?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1698,6 +1747,7 @@ export type HelpArticleCreateManyAppInput = {
   summary?: string | null
   contentMarkdown: string
   contentMdx?: string | null
+  orderIndex?: number
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
@@ -1722,6 +1772,7 @@ export type HelpArticleUpdateWithoutAppInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
   contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderIndex?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1752,6 +1803,7 @@ export type HelpArticleUncheckedUpdateWithoutAppInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
   contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderIndex?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1781,6 +1833,7 @@ export type HelpArticleUncheckedUpdateManyWithoutAppInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
   contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderIndex?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1806,6 +1859,7 @@ export type HelpArticleCreateManyCategoryInput = {
   summary?: string | null
   contentMarkdown: string
   contentMdx?: string | null
+  orderIndex?: number
   status?: $Enums.HelpArticleStatus
   isFeatured?: boolean
   publishAt?: Date | string | null
@@ -1830,6 +1884,7 @@ export type HelpArticleUpdateWithoutCategoryInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
   contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderIndex?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1860,6 +1915,7 @@ export type HelpArticleUncheckedUpdateWithoutCategoryInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
   contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderIndex?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1889,6 +1945,7 @@ export type HelpArticleUncheckedUpdateManyWithoutCategoryInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentMarkdown?: Prisma.StringFieldUpdateOperationsInput | string
   contentMdx?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderIndex?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumHelpArticleStatusFieldUpdateOperationsInput | $Enums.HelpArticleStatus
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1973,6 +2030,7 @@ export type HelpArticleSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   summary?: boolean
   contentMarkdown?: boolean
   contentMdx?: boolean
+  orderIndex?: boolean
   status?: boolean
   isFeatured?: boolean
   publishAt?: boolean
@@ -2006,6 +2064,7 @@ export type HelpArticleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   summary?: boolean
   contentMarkdown?: boolean
   contentMdx?: boolean
+  orderIndex?: boolean
   status?: boolean
   isFeatured?: boolean
   publishAt?: boolean
@@ -2034,6 +2093,7 @@ export type HelpArticleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   summary?: boolean
   contentMarkdown?: boolean
   contentMdx?: boolean
+  orderIndex?: boolean
   status?: boolean
   isFeatured?: boolean
   publishAt?: boolean
@@ -2062,6 +2122,7 @@ export type HelpArticleSelectScalar = {
   summary?: boolean
   contentMarkdown?: boolean
   contentMdx?: boolean
+  orderIndex?: boolean
   status?: boolean
   isFeatured?: boolean
   publishAt?: boolean
@@ -2079,7 +2140,7 @@ export type HelpArticleSelectScalar = {
   updatedAt?: boolean
 }
 
-export type HelpArticleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "categoryId" | "appId" | "slug" | "title" | "summary" | "contentMarkdown" | "contentMdx" | "status" | "isFeatured" | "publishAt" | "publishedAt" | "viewCount" | "upvotes" | "downvotes" | "readingTimeMins" | "relatedArticleIds" | "seoTitle" | "seoDescription" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["helpArticle"]>
+export type HelpArticleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "categoryId" | "appId" | "slug" | "title" | "summary" | "contentMarkdown" | "contentMdx" | "orderIndex" | "status" | "isFeatured" | "publishAt" | "publishedAt" | "viewCount" | "upvotes" | "downvotes" | "readingTimeMins" | "relatedArticleIds" | "seoTitle" | "seoDescription" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["helpArticle"]>
 export type HelpArticleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.HelpArticle$categoryArgs<ExtArgs>
   app?: boolean | Prisma.HelpArticle$appArgs<ExtArgs>
@@ -2117,6 +2178,7 @@ export type $HelpArticlePayload<ExtArgs extends runtime.Types.Extensions.Interna
     summary: string | null
     contentMarkdown: string
     contentMdx: string | null
+    orderIndex: number
     status: $Enums.HelpArticleStatus
     isFeatured: boolean
     publishAt: Date | null
@@ -2569,6 +2631,7 @@ export interface HelpArticleFieldRefs {
   readonly summary: Prisma.FieldRef<"HelpArticle", 'String'>
   readonly contentMarkdown: Prisma.FieldRef<"HelpArticle", 'String'>
   readonly contentMdx: Prisma.FieldRef<"HelpArticle", 'String'>
+  readonly orderIndex: Prisma.FieldRef<"HelpArticle", 'Int'>
   readonly status: Prisma.FieldRef<"HelpArticle", 'HelpArticleStatus'>
   readonly isFeatured: Prisma.FieldRef<"HelpArticle", 'Boolean'>
   readonly publishAt: Prisma.FieldRef<"HelpArticle", 'DateTime'>

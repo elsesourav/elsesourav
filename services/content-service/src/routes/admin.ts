@@ -17,8 +17,7 @@ import {
   helpArticleUpdateSchema,
   helpCategoryCreateSchema,
   helpCategoryUpdateSchema,
-  faqCreateSchema,
-  faqUpdateSchema,
+
   profilePageCreateSchema,
   profilePageUpdateSchema,
   testimonialCreateSchema,
@@ -43,6 +42,17 @@ const helpListQuerySchema = z.object({
   cursor: z.string().cuid().optional(),
   limit: z.coerce.number().int().min(1).max(30).default(12),
 });
+
+const helpCategoryReorderSchema = z.array(z.object({
+  id: z.string().cuid(),
+  orderIndex: z.number().int()
+}));
+
+const helpArticleReorderSchema = z.array(z.object({
+  id: z.string().cuid(),
+  categoryId: z.string().cuid().nullable().optional(),
+  orderIndex: z.number().int()
+}));
 
 function toSlug(value: string): string {
   return value
@@ -1123,6 +1133,30 @@ adminContentRouter.post("/help/categories", async (req, res) => {
   }
 });
 
+adminContentRouter.post("/help/categories/reorder", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsed = helpCategoryReorderSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return sendFailure(res, requestId, "VALIDATION_ERROR", "Invalid payload.", 400);
+    }
+
+    await prisma.$transaction(
+      parsed.data.map((item) =>
+        prisma.helpCategory.update({
+          where: { id: item.id },
+          data: { orderIndex: item.orderIndex },
+        })
+      )
+    );
+
+    return sendSuccess(res, requestId, { success: true });
+  } catch (error) {
+    return sendFailure(res, requestId, "INTERNAL_ERROR", "Failed to reorder categories.", 500);
+  }
+});
+
 adminContentRouter.patch("/help/categories/:id", async (req, res) => {
   const requestId = getRequestId(res);
 
@@ -1203,6 +1237,33 @@ adminContentRouter.delete("/help/categories/:id", async (req, res) => {
   }
 });
 
+adminContentRouter.post("/help/articles/reorder", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsed = helpArticleReorderSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return sendFailure(res, requestId, "VALIDATION_ERROR", "Invalid payload.", 400);
+    }
+
+    await prisma.$transaction(
+      parsed.data.map((item) =>
+        prisma.helpArticle.update({
+          where: { id: item.id },
+          data: { 
+            orderIndex: item.orderIndex,
+            ...(item.categoryId !== undefined ? { categoryId: item.categoryId } : {})
+          },
+        })
+      )
+    );
+
+    return sendSuccess(res, requestId, { success: true });
+  } catch (error) {
+    return sendFailure(res, requestId, "INTERNAL_ERROR", "Failed to reorder articles.", 500);
+  }
+});
+
 adminContentRouter.get("/help/articles", async (req, res) => {
   const requestId = getRequestId(res);
 
@@ -1225,7 +1286,7 @@ adminContentRouter.get("/help/articles", async (req, res) => {
 
     const items = await prisma.helpArticle.findMany({
       where,
-      orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
+      orderBy: [{ categoryId: "asc" }, { orderIndex: "asc" }, { createdAt: "desc" }],
       take: parsed.data.limit + 1,
       ...(parsed.data.cursor
         ? {
@@ -1509,140 +1570,6 @@ adminContentRouter.delete("/help/articles/:id", async (req, res) => {
       requestId,
       "INTERNAL_ERROR",
       "Failed to archive help article.",
-      500,
-      error instanceof Error ? error.message : "Unknown error",
-    );
-  }
-});
-
-adminContentRouter.get("/help/faqs", async (_req, res) => {
-  const requestId = getRequestId(res);
-
-  try {
-    const faqs = await prisma.fAQ.findMany({
-      orderBy: { orderIndex: "asc" },
-      include: {
-        category: true,
-      },
-    });
-
-    return sendSuccess(res, requestId, { items: faqs });
-  } catch (error) {
-    return sendFailure(
-      res,
-      requestId,
-      "INTERNAL_ERROR",
-      "Failed to fetch faqs.",
-      500,
-      error instanceof Error ? error.message : "Unknown error",
-    );
-  }
-});
-
-adminContentRouter.post("/help/faqs", async (req, res) => {
-  const requestId = getRequestId(res);
-
-  try {
-    const parsedBody = faqCreateSchema.safeParse(req.body);
-    if (!parsedBody.success) {
-      return sendFailure(
-        res,
-        requestId,
-        "VALIDATION_ERROR",
-        "Invalid input data.",
-        400,
-        parsedBody.error.flatten(),
-      );
-    }
-
-    const faq = await prisma.fAQ.create({
-      data: parsedBody.data,
-    });
-
-    return sendSuccess(res, requestId, faq, 201);
-  } catch (error) {
-    return sendFailure(
-      res,
-      requestId,
-      "INTERNAL_ERROR",
-      "Failed to create faq.",
-      500,
-      error instanceof Error ? error.message : "Unknown error",
-    );
-  }
-});
-
-adminContentRouter.patch("/help/faqs/:id", async (req, res) => {
-  const requestId = getRequestId(res);
-
-  try {
-    const parsedId = pageIdSchema.safeParse(req.params);
-    if (!parsedId.success) {
-      return sendFailure(
-        res,
-        requestId,
-        "VALIDATION_ERROR",
-        "Invalid id.",
-        400,
-      );
-    }
-
-    const parsedBody = faqUpdateSchema.safeParse(req.body);
-    if (!parsedBody.success) {
-      return sendFailure(
-        res,
-        requestId,
-        "VALIDATION_ERROR",
-        "Invalid input data.",
-        400,
-        parsedBody.error.flatten(),
-      );
-    }
-
-    const faq = await prisma.fAQ.update({
-      where: { id: parsedId.data.id },
-      data: parsedBody.data,
-    });
-
-    return sendSuccess(res, requestId, faq);
-  } catch (error) {
-    return sendFailure(
-      res,
-      requestId,
-      "INTERNAL_ERROR",
-      "Failed to update faq.",
-      500,
-      error instanceof Error ? error.message : "Unknown error",
-    );
-  }
-});
-
-adminContentRouter.delete("/help/faqs/:id", async (req, res) => {
-  const requestId = getRequestId(res);
-
-  try {
-    const parsedId = pageIdSchema.safeParse(req.params);
-    if (!parsedId.success) {
-      return sendFailure(
-        res,
-        requestId,
-        "VALIDATION_ERROR",
-        "Invalid id.",
-        400,
-      );
-    }
-
-    await prisma.fAQ.delete({
-      where: { id: parsedId.data.id },
-    });
-
-    return sendSuccess(res, requestId, { success: true });
-  } catch (error) {
-    return sendFailure(
-      res,
-      requestId,
-      "INTERNAL_ERROR",
-      "Failed to delete faq.",
       500,
       error instanceof Error ? error.message : "Unknown error",
     );

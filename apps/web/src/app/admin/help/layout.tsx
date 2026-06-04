@@ -12,7 +12,7 @@ export default function AdminHelpLayout({
       <PageHeader
         eyebrow="Documentation"
         title="Help Center"
-        description="Manage your enterprise Help Center, documentation, and FAQs."
+        description="Manage your enterprise Help Center and documentation."
       />
 
       <div className="flex gap-4 border-b pb-2">
@@ -27,12 +27,6 @@ export default function AdminHelpLayout({
           className="text-sm font-medium hover:text-brand-primary transition-colors"
         >
           Categories
-        </Link>
-        <Link
-          href="/admin/help/faqs"
-          className="text-sm font-medium hover:text-brand-primary transition-colors"
-        >
-          FAQs
         </Link>
       </div>
 

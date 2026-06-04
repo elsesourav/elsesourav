@@ -65,32 +65,59 @@ export default async function PostsPage({
   const tagFilter = params.tag ?? "";
 
   const tagQuery = tagFilter ? `&tag=${encodeURIComponent(tagFilter)}` : "";
-  const posts = await fetchServiceData<PostListResult>({
-    service: "content",
-    path: `/v1/content/posts?limit=${POSTS_PER_PAGE}${tagQuery}`,
-  })
-    .then((payload) => payload.items)
-    .catch(() => []);
+  const [posts, tags] = await Promise.all([
+    fetchServiceData<PostListResult>({
+      service: "content",
+      path: `/v1/content/posts?limit=${POSTS_PER_PAGE}${tagQuery}`,
+    })
+      .then((payload) => payload.items)
+      .catch(() => []),
+    fetchServiceData<PostTag[]>({
+      service: "content",
+      path: "/v1/content/posts/tags",
+    }).catch(() => []),
+  ]);
 
   const totalPosts = posts.length;
   const totalPages = Math.max(1, Math.ceil(totalPosts / POSTS_PER_PAGE));
   const paginatedPosts = posts.slice(0, POSTS_PER_PAGE);
 
   return (
-    <PageShell width="wide" className="gap-8 pb-20">
-      {/* Compact Editorial Header */}
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-[color-mix(in_srgb,var(--foreground)_8%,transparent)] pb-8 pt-4">
-        <div className="space-y-3">
-          <p className="text-xs font-bold uppercase tracking-widest text-[color-mix(in_srgb,var(--foreground)_40%,transparent)]">
-            Content
-          </p>
-          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-foreground">
-            Posts
-          </h1>
-          <p className="max-w-2xl text-lg text-[color-mix(in_srgb,var(--foreground)_60%,transparent)] leading-relaxed">
-            Product updates, engineering notes, and release communication.
-          </p>
-        </div>
+    <PageShell width="content" className="gap-8 pb-20">
+      <header className="flex flex-col gap-5 border-b border-[color-mix(in_srgb,var(--foreground)_8%,transparent)] pb-5 pt-4">
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+          {tagFilter
+            ? `Posts tagged "${tags.find((t) => t.slug === tagFilter)?.name || tagFilter}"`
+            : "Latest Posts"}
+        </h1>
+
+        {tags.length > 0 && (
+          <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-1">
+            <Link
+              href="/posts"
+              className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
+                !tagFilter
+                  ? "bg-(--bg-surface) text-(--text-primary)"
+                  : "bg-[color-mix(in_srgb,var(--foreground)_4%,transparent)] text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)] hover:bg-[color-mix(in_srgb,var(--foreground)_8%,transparent)] hover:text-foreground"
+              }`}
+            >
+              All
+            </Link>
+            {tags.map((tag) => (
+              <Link
+                key={tag.id}
+                href={`/posts?tag=${tag.slug}`}
+                className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
+                  tagFilter === tag.slug
+                    ? "bg-(--bg-surface) text-(--text-primary)"
+                    : "bg-[color-mix(in_srgb,var(--foreground)_4%,transparent)] text-[color-mix(in_srgb,var(--foreground)_70%,transparent)] hover:bg-[color-mix(in_srgb,var(--foreground)_8%,transparent)] hover:text-foreground"
+                }`}
+              >
+                {tag.name}
+              </Link>
+            ))}
+          </div>
+        )}
       </header>
 
       {paginatedPosts.length === 0 ? (

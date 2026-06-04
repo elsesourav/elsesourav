@@ -46,13 +46,6 @@ async function main() {
     return res.data;
   }
 
-  // Helper to create FAQ
-  async function createFAQ(question: string, answerMdx: string, categoryId: string, orderIndex: number) {
-    const res = await api('/faqs', 'POST', {
-      question, answerMdx, categoryId, orderIndex
-    });
-    return res.data;
-  }
 
   // CATEGORY 1: Getting Started
   const c1 = await createCategory("Getting Started", "getting-started", 0);
@@ -124,15 +117,19 @@ async function main() {
   // CATEGORY 4: FAQs
   const c4 = await createCategory("FAQs", "faqs", 3);
 
-  await createFAQ(
+  await createArticle(
     "Why is my download failing?",
+    "download-failing-faq",
+    "FAQ about failing downloads",
     "Downloads usually fail due to strict firewall settings or VPNs. Try disabling your VPN temporarily.",
     c4.id,
     0
   );
 
-  await createFAQ(
+  await createArticle(
     "Installation failed, what should I do?",
+    "installation-failed-faq",
+    "FAQ about installation failures",
     "Make sure you have administrator privileges on your computer. On Mac, you may need to allow the app in System Settings > Privacy & Security.",
     c4.id,
     1

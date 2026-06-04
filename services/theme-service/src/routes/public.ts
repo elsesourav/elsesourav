@@ -35,3 +35,29 @@ publicThemeRouter.get("/active", async (_req, res) => {
     );
   }
 });
+
+publicThemeRouter.get("/active-images", async (_req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const activeImages = await prisma.imageConfig.findMany({
+      where: { isActive: true },
+    });
+
+    const activeImagesMap = activeImages.reduce((acc: Record<string, string>, img: any) => {
+      acc[img.section] = img.url;
+      return acc;
+    }, {} as Record<string, string>);
+
+    return sendSuccess(res, requestId, activeImagesMap);
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to fetch active image config.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});

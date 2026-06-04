@@ -23,9 +23,10 @@ type Post = {
 
 type RelatedPostsProps = {
   slug: string;
+  variant?: "default" | "sidebar";
 };
 
-export function RelatedPosts({ slug }: RelatedPostsProps) {
+export function RelatedPosts({ slug, variant = "default" }: RelatedPostsProps) {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -33,7 +34,10 @@ export function RelatedPosts({ slug }: RelatedPostsProps) {
     let isMounted = true;
     async function fetchRelated() {
       try {
-        const res = await fetch(`/api/content/posts/${slug}/related?limit=2`);
+        const limit = variant === "sidebar" ? 4 : 2;
+        const res = await fetch(
+          `/api/content/posts/${slug}/related?limit=${limit}`,
+        );
         if (!isMounted) return;
         if (res.ok) {
           const data = await res.json();
@@ -46,9 +50,44 @@ export function RelatedPosts({ slug }: RelatedPostsProps) {
       }
     }
     fetchRelated();
-  }, [slug]);
+  }, [slug, variant]);
 
   if (isLoading || posts.length === 0) return null;
+
+  if (variant === "sidebar") {
+    return (
+      <div className="flex flex-col gap-4 mt-2">
+        {posts.map((post) => (
+          <Link
+            key={post.id}
+            href={`/posts/${post.slug}`}
+            className="group flex gap-4 overflow-hidden rounded-xl bg-transparent transition-all hover:bg-[color-mix(in_srgb,var(--foreground)_2%,transparent)]"
+          >
+            {post.featuredImageUrl && (
+              <div className="aspect-4/3 w-28 xl:w-32 shrink-0 overflow-hidden rounded-lg border ui-border shadow-sm">
+                <img
+                  src={post.featuredImageUrl}
+                  alt={post.title}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
+            )}
+            <div className="flex flex-col justify-center py-1">
+              <h4 className="text-sm xl:text-base font-bold leading-tight ui-text-heading mb-1.5 group-hover:text-brand-accent transition-colors line-clamp-2">
+                {post.title}
+              </h4>
+              <div className="flex items-center gap-1.5 text-[10px] font-medium ui-text-muted">
+                <time>{formatDateTime(post.publishedAt)}</time>
+                <span>·</span>
+                <span>{post.readingTimeMinutes || 1} min read</span>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="mt-16 mb-24">
@@ -84,7 +123,7 @@ export function RelatedPosts({ slug }: RelatedPostsProps) {
               <div className="flex items-center gap-3 text-[11px] font-medium text-[color-mix(in_srgb,var(--foreground)_40%,transparent)] uppercase tracking-wide mt-4">
                 <time>{formatDateTime(post.publishedAt)}</time>
                 <span>·</span>
-                <span>{post.readingTimeMinutes} min read</span>
+                <span>{post.readingTimeMinutes || 1} min read</span>
               </div>
             </div>
           </Link>

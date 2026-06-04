@@ -1,8 +1,8 @@
 import { PageHeader } from "@/components/ui/page";
 import { getServerEnv } from "@elsesourav/config";
+import { CheckCircle2, Database, Layers, Server, XCircle } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
-import { Server, Database, Layers, CheckCircle2, XCircle } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -10,12 +10,14 @@ async function HealthStatus() {
   const env = getServerEnv();
   const res = await fetch(`${env.NEXTAUTH_URL}/api/admin/health`, {
     headers: {
-      cookie: "" // Would pass session cookie here for actual auth, but we can't in RSC directly without cookies(). Let's just bypass it for now.
-    }
+      cookie: "", // Would pass session cookie here for actual auth, but we can't in RSC directly without cookies(). Let's just bypass it for now.
+    },
   });
 
   if (!res.ok) {
-    return <div className="text-red-500">Failed to load API health status.</div>;
+    return (
+      <div className="text-red-500">Failed to load API health status.</div>
+    );
   }
 
   const data = await res.json();
@@ -36,7 +38,9 @@ async function HealthStatus() {
             ) : (
               <XCircle className="w-3.5 h-3.5 text-red-500" />
             )}
-            <span className="font-mono">{infrastructure.database.timeMs}ms</span>
+            <span className="font-mono">
+              {infrastructure.database.timeMs}ms
+            </span>
           </div>
         </div>
         <div className="flex justify-between items-center text-xs">
@@ -54,7 +58,10 @@ async function HealthStatus() {
 
       {/* Services */}
       {services.map((service: any) => (
-        <div key={service.name} className="rounded-2xl border ui-border p-4 bg-surface flex flex-col gap-3">
+        <div
+          key={service.name}
+          className="rounded-2xl border ui-border p-4 bg-surface flex flex-col gap-3"
+        >
           <h3 className="font-semibold text-sm text-text-primary flex items-center gap-2">
             <Server className="w-4 h-4" /> {service.name}
           </h3>
@@ -106,8 +113,12 @@ export default function AdminApiDocsPage() {
         <h2 className="text-lg font-semibold text-text-primary flex items-center gap-2">
           <Layers className="w-5 h-5" /> Service Health Overview
         </h2>
-        
-        <Suspense fallback={<div className="animate-pulse h-32 bg-surface rounded-2xl border ui-border"></div>}>
+
+        <Suspense
+          fallback={
+            <div className="animate-pulse h-32 bg-surface rounded-2xl border ui-border"></div>
+          }
+        >
           <HealthStatus />
         </Suspense>
       </section>
@@ -117,12 +128,27 @@ export default function AdminApiDocsPage() {
           About API Documentation
         </h2>
         <p className="ui-text-muted mt-2 text-sm max-w-3xl leading-relaxed">
-          The platform uses a microservices architecture. Each service automatically generates an OpenAPI 3.0 specification from its routing layer. The Swagger UI provided by each service allows you to explore request/response examples and test endpoints directly.
+          The platform uses a microservices architecture. Each service
+          automatically generates an OpenAPI 3.0 specification from its routing
+          layer. The Swagger UI provided by each service allows you to explore
+          request/response examples and test endpoints directly.
         </p>
         <ul className="ui-text-muted mt-4 list-disc space-y-2 pl-5 text-sm">
-          <li><strong>Authentication:</strong> Most administrative endpoints require the <code>x-internal-token</code> header which can be found in your environment variables.</li>
-          <li><strong>Context Search:</strong> The unified search endpoint in the Catalog Service accepts a <code>context</code> parameter to rank results dynamically based on user location.</li>
-          <li><strong>Test Mode:</strong> Never use destructive methods (POST, DELETE) on production data through Swagger without a staging dataset.</li>
+          <li>
+            <strong>Authentication:</strong> Most administrative endpoints
+            require the <code>x-internal-token</code> header which can be found
+            in your environment variables.
+          </li>
+          <li>
+            <strong>Context Search:</strong> The unified search endpoint in the
+            Catalog Service accepts a <code>context</code> parameter to rank
+            results dynamically based on user location.
+          </li>
+          <li>
+            <strong>Test Mode:</strong> Never use destructive methods (POST,
+            DELETE) on production data through Swagger without a staging
+            dataset.
+          </li>
         </ul>
       </section>
     </div>

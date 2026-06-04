@@ -455,6 +455,15 @@ export type AdminThemeConfig = {
   updatedAt: string;
 };
 
+export type AdminImageConfig = {
+  id: string;
+  name: string;
+  section: "HELP_SUPPORT" | "ABOUT_PROFILE";
+  url: string;
+  isActive: boolean;
+  updatedAt: string;
+};
+
 export type UserLibraryItem = {
   id: string;
   createdAt: string;

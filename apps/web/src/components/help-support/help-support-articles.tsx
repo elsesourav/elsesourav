@@ -34,7 +34,7 @@ export function HelpSupportArticles({
             {categories.slice(0, 6).map((category) => (
               <Link
                 key={category.id}
-                href={`/help/category/${category.slug}`}
+                href={`/help?category=${category.slug}`}
                 className="flex items-center justify-between p-3 rounded-xl hover:bg-surface-hover transition-colors border border-transparent hover:border-border-subtle group"
               >
                 <div className="flex items-center gap-3 min-w-0">
@@ -73,7 +73,7 @@ export function HelpSupportArticles({
             {articles.slice(0, 6).map((article) => (
               <Link
                 key={article.id}
-                href={`/help/${article.slug}`}
+                href={`/help?category=${article.category?.slug || 'general'}#${article.slug}`}
                 className="flex items-start gap-3 p-3 rounded-xl hover:bg-surface-hover transition-colors border border-transparent hover:border-border-subtle group"
               >
                 <div className="h-8 w-8 rounded-lg bg-surface-active flex items-center justify-center shrink-0 group-hover:bg-brand-primary/10 transition-colors">

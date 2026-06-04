@@ -64,7 +64,7 @@
 }
 
 * {
-  outline: 1px solid #f003;
+  outline: 1px solid #f005;
 }
 
 /* 
@@ -181,6 +181,56 @@ html[data-theme-mode="dark"] {
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
   --shadow-float: var(--shadow-float);
+}
+
+/* 
+  ========================================
+  3.5. CUSTOM UTILITIES & VARIABLES
+  ========================================
+*/
+@theme {
+  --radius-app-card: 1.5rem;
+}
+
+:root {
+  --app-card-radius: 1.5rem;
+}
+
+@utility ui-border {
+  border-color: var(--border-subtle);
+}
+@utility ui-text-primary {
+  color: var(--text-primary);
+}
+@utility ui-text-secondary {
+  color: var(--text-secondary);
+}
+@utility ui-text-muted {
+  color: var(--text-muted);
+}
+@utility ui-text-heading {
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+}
+@utility ui-card {
+  background-color: var(--bg-surface);
+}
+@utility ui-skeleton {
+  background-color: var(--bg-surface-active);
+}
+@utility ui-btn-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+@utility ui-btn-primary {
+  background-color: var(--brand-primary);
+  color: var(--brand-primary-foreground);
+}
+@utility ui-btn-secondary {
+  background-color: var(--bg-surface-active);
+  color: var(--text-primary);
 }
 
 /* 

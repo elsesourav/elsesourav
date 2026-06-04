@@ -167,7 +167,7 @@ export function PostInteractions({ slug }: PostInteractionsProps) {
   }
 
   return (
-    <div className="sticky bottom-0 md:static z-40 px-2 md:px-4 w-full">
+    <div className="sticky bottom-0 md:static z-40 py-2 px-2 md:px-4 w-full">
       <div className="flex items-center justify-between md:justify-start gap-4 md:gap-6 w-full max-w-content mx-auto">
         <div className="flex items-center gap-4 md:gap-6">
           <button
@@ -252,7 +252,8 @@ export function PostInteractions({ slug }: PostInteractionsProps) {
         }
       >
         <div className="py-2 text-sm text-[color-mix(in_srgb,var(--foreground)_70%,transparent)]">
-          Join our community to save your favorite articles, leave comments, and more.
+          Join our community to save your favorite articles, leave comments, and
+          more.
         </div>
       </Modal>
     </div>

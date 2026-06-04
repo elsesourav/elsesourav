@@ -9,6 +9,8 @@ import type {
 import { PageHeader, PageShell } from "@/components/ui/page";
 import { fetchServiceData } from "@/lib/service-client";
 
+import Image from "next/image";
+
 export const metadata = {
   title: "Help & Support",
   description: "Get fast help for accounts, apps, and billing in one place.",
@@ -26,7 +28,7 @@ type HelpArticleListResult = {
 };
 
 export default async function HelpSupportPage() {
-  const [categories, articles] = await Promise.all([
+  const [categories, articles, activeImages] = await Promise.all([
     fetchServiceData<HelpCategory[]>({
       service: "content",
       path: "/v1/content/help/categories",
@@ -37,29 +39,44 @@ export default async function HelpSupportPage() {
     })
       .then((payload) => payload.items)
       .catch(() => []),
+    fetchServiceData<any>({
+      service: "theme",
+      path: "/v1/theme/active-images",
+    }).catch(() => null),
   ]);
 
   const featuredArticle = articles[0] ?? null;
+  const bgImage = activeImages?.HELP_SUPPORT || "/img/help-support.png";
 
   return (
-    <PageShell width="content" className="gap-8 py-10">
-      <HelpSupportHero />
+    <div className="relative min-h-screen">
+      <div className="absolute top-0 left-0 right-0 mx-auto w-full lg:w-3/4 h-[50vh] md:h-[60vh] lg:h-[70vh] -z-10 overflow-hidden bg-brand-primary/5">
+        <Image
+          src={bgImage}
+          alt="Help and Support Background"
+          fill
+          className="object-cover object-top opacity-60 dark:opacity-50"
+          priority
+          unoptimized={bgImage.includes("cloudinary.com")}
+        />
+        <div className="absolute inset-0 bg-linear-to-b from-transparent via-background/10 to-background" />
+      </div>
 
-      <PageHeader
-        eyebrow="Support"
-        title="Start here"
-        description="Choose the fastest path for answers, guides, and support tickets."
-      />
+      <PageShell width="content" className="gap-8 py-10 md:py-16 relative z-10">
+        <HelpSupportHero />
 
-      <HelpSupportPaths />
+        <PageHeader eyebrow="Support" title="Start here" />
 
-      <HelpSupportForm />
+        <HelpSupportPaths />
 
-      <HelpSupportArticles
-        featuredArticle={featuredArticle}
-        categories={categories}
-        articles={articles}
-      />
-    </PageShell>
+        <HelpSupportForm />
+
+        <HelpSupportArticles
+          featuredArticle={featuredArticle}
+          categories={categories}
+          articles={articles}
+        />
+      </PageShell>
+    </div>
   );
 }
