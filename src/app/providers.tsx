@@ -1,5 +1,6 @@
 import React from 'react';
 import { ThemeProvider } from './theme';
+import { AuthProvider } from './auth-provider';
 import { ToastProvider } from '@/components';
 
 export interface AppProvidersProps {
@@ -12,7 +13,9 @@ export interface AppProvidersProps {
 export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
   return (
     <ThemeProvider>
-      <ToastProvider>{children}</ToastProvider>
+      <AuthProvider>
+        <ToastProvider>{children}</ToastProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 };

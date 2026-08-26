@@ -1,0 +1,190 @@
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { AuthContext } from './auth-context';
+import { authService, deriveUserProfile } from '@/services/auth.service';
+import { isOk, isErr } from '@/lib/result';
+import { isFirebaseConfigured } from '@/firebase';
+import type {
+  AuthUser,
+  SignInCredentials,
+  SignUpCredentials,
+  PasswordResetPayload,
+  AuthContextValue,
+} from '@/types/auth.types';
+import type { User, UserRole } from '@/types/user.types';
+import type { AppError } from '@/lib/errors';
+import type { Result } from '@/types/result.types';
+
+export interface AuthProviderProps {
+  readonly children: React.ReactNode;
+  readonly defaultRole?: UserRole;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children, defaultRole }) => {
+  const [authUser, setAuthUser] = useState<AuthUser | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<AppError | null>(null);
+
+  useEffect(() => {
+    if (!isFirebaseConfigured()) {
+      setIsLoading(false);
+      return undefined;
+    }
+
+    try {
+      const unsubscribe = authService.onAuthStateChanged((nextAuthUser) => {
+        setAuthUser(nextAuthUser);
+        if (nextAuthUser) {
+          const profile = deriveUserProfile(nextAuthUser, defaultRole);
+          setUser(profile);
+        } else {
+          setUser(null);
+        }
+        setIsLoading(false);
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    } catch {
+      setIsLoading(false);
+      return undefined;
+    }
+  }, [defaultRole]);
+
+  const clearError = useCallback((): void => {
+    setError(null);
+  }, []);
+
+  const signIn = useCallback(
+    async (credentials: SignInCredentials): Promise<Result<AuthUser, AppError>> => {
+      setIsLoading(true);
+      setError(null);
+      const result = await authService.signIn(credentials);
+
+      if (isOk(result)) {
+        setAuthUser(result.data);
+        setUser(deriveUserProfile(result.data, defaultRole));
+      } else if (isErr(result)) {
+        setError(result.error);
+      }
+
+      setIsLoading(false);
+      return result;
+    },
+    [defaultRole]
+  );
+
+  const signUp = useCallback(
+    async (credentials: SignUpCredentials): Promise<Result<AuthUser, AppError>> => {
+      setIsLoading(true);
+      setError(null);
+      const result = await authService.signUp(credentials);
+
+      if (isOk(result)) {
+        setAuthUser(result.data);
+        setUser(deriveUserProfile(result.data, defaultRole));
+      } else if (isErr(result)) {
+        setError(result.error);
+      }
+
+      setIsLoading(false);
+      return result;
+    },
+    [defaultRole]
+  );
+
+  const signInWithGoogle = useCallback(async (): Promise<Result<AuthUser, AppError>> => {
+    setIsLoading(true);
+    setError(null);
+    const result = await authService.signInWithGoogle();
+
+    if (isOk(result)) {
+      setAuthUser(result.data);
+      setUser(deriveUserProfile(result.data, defaultRole));
+    } else if (isErr(result)) {
+      setError(result.error);
+    }
+
+    setIsLoading(false);
+    return result;
+  }, [defaultRole]);
+
+  const signOut = useCallback(async (): Promise<Result<void, AppError>> => {
+    setIsLoading(true);
+    setError(null);
+    const result = await authService.signOut();
+
+    if (isOk(result)) {
+      setAuthUser(null);
+      setUser(null);
+    } else if (isErr(result)) {
+      setError(result.error);
+    }
+
+    setIsLoading(false);
+    return result;
+  }, []);
+
+  const sendPasswordReset = useCallback(
+    async (payload: PasswordResetPayload): Promise<Result<void, AppError>> => {
+      setError(null);
+      const result = await authService.sendPasswordReset(payload);
+      if (isErr(result)) {
+        setError(result.error);
+      }
+      return result;
+    },
+    []
+  );
+
+  const sendVerificationEmail = useCallback(async (): Promise<Result<void, AppError>> => {
+    setError(null);
+    const result = await authService.sendVerificationEmail();
+    if (isErr(result)) {
+      setError(result.error);
+    }
+    return result;
+  }, []);
+
+  const isAuthenticated = Boolean(authUser);
+  const role: UserRole = user?.role || 'user';
+  const isAdmin = role === 'admin';
+
+  const contextValue = useMemo<AuthContextValue>(
+    () => ({
+      authUser,
+      user,
+      role,
+      isAuthenticated,
+      isAdmin,
+      isLoading,
+      error,
+      signIn,
+      signUp,
+      signInWithGoogle,
+      signOut,
+      sendPasswordReset,
+      sendVerificationEmail,
+      clearError,
+    }),
+    [
+      authUser,
+      user,
+      role,
+      isAuthenticated,
+      isAdmin,
+      isLoading,
+      error,
+      signIn,
+      signUp,
+      signInWithGoogle,
+      signOut,
+      sendPasswordReset,
+      sendVerificationEmail,
+      clearError,
+    ]
+  );
+
+  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
+};

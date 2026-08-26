@@ -6,6 +6,7 @@
 export * from './common.types';
 export * from './theme.types';
 export * from './user.types';
+export * from './auth.types';
 export * from './app.types';
 export * from './blog.types';
 export * from './support.types';
