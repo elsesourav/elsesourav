@@ -20,6 +20,7 @@ dist-ssr/
 build/
 coverage/
 *.tsbuildinfo
+graphify-out/
 
 # OS & Editor
 .DS_Store
