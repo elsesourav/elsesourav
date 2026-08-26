@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { Layers, ShieldCheck, Code2, Zap, Database, ArrowRight } from 'lucide-react';
 import { appConfig } from '@/config';
 import { AppLayout } from '@/layouts';
-import { Card } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { Card, Badge, Button } from '@/components';
 import './App.css';
 
 export const App: React.FC = () => {

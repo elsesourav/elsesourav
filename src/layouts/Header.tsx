@@ -2,8 +2,7 @@ import React from 'react';
 import { Sparkles, Search, User, ShieldCheck, Sun, Moon } from 'lucide-react';
 import { appConfig } from '@/config';
 import { PRIMARY_NAVIGATION } from '@/constants/navigation';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
+import { Button, Badge } from '@/components';
 import { useTheme } from '@/hooks/useTheme';
 import './Header.css';
 
