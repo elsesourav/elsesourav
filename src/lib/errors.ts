@@ -52,6 +52,10 @@ export class AppError extends Error {
     return new AppError('VALIDATION_ERROR', message, { field, cause });
   }
 
+  public static configuration(message: string, cause?: unknown): AppError {
+    return new AppError('CONFIGURATION_ERROR', message, { cause });
+  }
+
   public static internal(message = 'An unexpected error occurred', cause?: unknown): AppError {
     return new AppError('INTERNAL_ERROR', message, { cause });
   }

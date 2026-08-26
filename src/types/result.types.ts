@@ -10,6 +10,7 @@ export type ErrorCode =
   | 'NOT_FOUND'
   | 'CONFLICT'
   | 'VALIDATION_ERROR'
+  | 'CONFIGURATION_ERROR'
   | 'NETWORK_ERROR'
   | 'INTERNAL_ERROR'
   | 'NOT_IMPLEMENTED';
