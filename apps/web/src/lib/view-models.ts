@@ -458,9 +458,10 @@ export type AdminThemeConfig = {
 export type AdminImageConfig = {
   id: string;
   name: string;
-  section: "HELP_SUPPORT" | "ABOUT_PROFILE";
+  section: string;
   url: string;
   isActive: boolean;
+  metadata?: Record<string, unknown> | null;
   updatedAt: string;
 };
 

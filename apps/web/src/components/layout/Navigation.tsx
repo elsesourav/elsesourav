@@ -24,7 +24,7 @@ import PostIcon from "../icons/PostIcon";
 
 function getDesktopNavLinkClass(active: boolean): string {
   return [
-    "relative z-10 inline-flex flex-col items-center gap-1 rounded-full px-5 py-2.5 text-xs font-semibold transition duration-300 ease-out",
+    "relative z-10 inline-flex flex-col items-center gap-1 rounded-full px-5 py-2.5 my-1 text-xs font-semibold transition duration-300 ease-out",
     active
       ? "text-foreground"
       : "text-[color-mix(in_srgb,var(--foreground)_72%,var(--background)_28%)] hover:-translate-y-px hover:bg-[color-mix(in_srgb,var(--background)_84%,var(--foreground)_16%)]",
@@ -59,7 +59,14 @@ type SearchCategory = {
 };
 
 type SearchResultItem = {
-  type: "app" | "category" | "post" | "postTag" | "helpArticle" | "helpCategory" | "faq";
+  type:
+    | "app"
+    | "category"
+    | "post"
+    | "postTag"
+    | "helpArticle"
+    | "helpCategory"
+    | "faq";
   id: string;
   title: string;
   subtitle?: string | null;
@@ -310,13 +317,13 @@ const Navigation = ({
         if (selectedCategory !== "ANY") {
           params.set("categoryId", selectedCategory);
         }
-        
+
         let context = "home";
         if (pathname.startsWith("/apps")) context = "apps";
         else if (pathname.startsWith("/posts")) context = "posts";
         else if (pathname.startsWith("/help-support")) context = "support";
         else if (pathname.startsWith("/help")) context = "help";
-        
+
         params.set("context", context);
 
         const response = await fetch(`/api/search?${params.toString()}`, {

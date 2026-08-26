@@ -1,0 +1,1690 @@
+================================================================================
+ ELSESOURAV PLATFORM — FULL APPLICATION CONTEXT
+ Generated: 2026-08-27
+================================================================================
+
+1. PROJECT OVERVIEW
+================================================================================
+
+ElseSourav is a portfolio-driven developer platform and app marketplace built as
+a monorepo. It blends public app discovery, personalized user features, a blog/
+help center, and a full admin control center powered by a microservice architecture.
+
+Name:       elsesourav
+Version:    0.1.0
+License:    MIT
+Monorepo:   npm workspaces
+
+Tech Stack:
+  Frontend:    Next.js 16 (App Router), React 19, TypeScript 6, Tailwind CSS 4
+  Backend:     Express 4 microservices, TypeScript
+  Database:    PostgreSQL 16 (Prisma 7 ORM)
+  Cache:       Redis 7
+  Auth:        NextAuth v5 (JWT sessions)
+  State Mgmt:  Redux Toolkit, TanStack React Query
+  UI:          MUI 9, Radix UI, Framer Motion, Lucide Icons, Tiptap Editor
+  3D/WebGL:    Three.js, React Three Fiber, WASM (C++ particle engine)
+  Styling:     Tailwind CSS 4, CSS Modules, Glassmorphism components
+  Testing:     Vitest, Supertest
+  Deploy:      Docker Compose (Postgres + Redis)
+
+Workspaces:
+  apps/*        — Frontend applications (Next.js web app)
+  packages/*    — Shared libraries (db, config, cache, types, validation, queue)
+  services/*    — Backend microservices (auth, catalog, user, content, theme)
+
+
+2. FULL PROJECT TREE
+================================================================================
+
+elsesourav/
+├── .env                              # Environment variables (secrets)
+├── .env.example                      # Environment template
+├── .gitignore
+├── .github/                          # GitHub CI/CD configs
+├── .vscode/                          # VSCode workspace settings
+├── README.md                         # Product & architecture documentation
+├── docker-compose.yml                # Postgres 16 + Redis 7 containers
+├── package.json                      # Root workspace config & scripts
+├── tsconfig.base.json                # Shared TypeScript base config
+├── test-express.js                   # Express test utility
+├── scripts/
+│   └── verify-prisma-generated.sh    # CI: verify Prisma client is fresh
+│
+├── apps/
+│   └── web/                          # ═══ NEXT.JS 16 WEB APP ═══
+│       ├── package.json
+│       ├── next.config.ts
+│       ├── eslint.config.mjs
+│       ├── tsconfig.json
+│       ├── vitest.config.ts
+│       ├── public/                   # Static assets (images, icons, fonts)
+│       │   ├── img/
+│       │   ├── wasm/
+│       │   └── ...
+│       └── src/
+│           ├── auth.ts               # NextAuth configuration
+│           ├── proxy.ts              # Service proxy config
+│           │
+│           ├── app/                   # ─── Next.js App Router Pages ───
+│           │   ├── layout.tsx         # Root layout (theme, providers, shell)
+│           │   ├── page.tsx           # Homepage
+│           │   ├── globals.css        # Global Tailwind styles
+│           │   ├── providers.tsx      # Client providers (Redux, Query, Theme)
+│           │   ├── loading.tsx        # Global loading skeleton
+│           │   ├── error.tsx          # Global error boundary
+│           │   ├── not-found.tsx      # 404 page
+│           │   ├── robots.ts          # SEO robots.txt
+│           │   ├── sitemap.ts         # SEO sitemap
+│           │   │
+│           │   ├── about/             # About/portfolio page
+│           │   │   └── page.tsx
+│           │   ├── apps/              # App marketplace listing
+│           │   │   ├── page.tsx
+│           │   │   ├── [slug]/        # App detail page (dynamic route)
+│           │   │   └── apps-banner-slider.tsx
+│           │   ├── contact/           # Contact page
+│           │   │   └── page.tsx
+│           │   ├── content/           # Static content pages
+│           │   │   └── [slug]/page.tsx
+│           │   ├── cookies/           # Cookie policy
+│           │   │   └── page.tsx
+│           │   ├── dashboard/         # User dashboard
+│           │   │   └── page.tsx
+│           │   ├── feedback/          # User feedback page
+│           │   │   └── page.tsx
+│           │   ├── forgot-password/   # Password recovery
+│           │   │   └── page.tsx
+│           │   ├── help/              # Help center (article browser)
+│           │   │   ├── page.tsx
+│           │   │   └── [slug]/page.tsx
+│           │   ├── help-support/      # Help & support landing
+│           │   │   └── page.tsx
+│           │   ├── history/           # User view history
+│           │   │   └── page.tsx
+│           │   ├── library/           # User saved apps
+│           │   │   └── page.tsx
+│           │   ├── login/             # Login page
+│           │   │   └── page.tsx
+│           │   ├── posts/             # Blog listing & detail
+│           │   │   ├── page.tsx
+│           │   │   └── [slug]/page.tsx
+│           │   ├── privacy/           # Privacy policy
+│           │   │   └── page.tsx
+│           │   ├── refund-policy/     # Refund policy
+│           │   │   └── page.tsx
+│           │   ├── register/          # Registration page
+│           │   │   └── page.tsx
+│           │   ├── resend-verification/ # Email verification resend
+│           │   │   └── page.tsx
+│           │   ├── reset-password/    # Password reset form
+│           │   │   └── page.tsx
+│           │   ├── settings/          # User settings
+│           │   │   └── page.tsx
+│           │   ├── support/           # Support ticket system
+│           │   │   └── page.tsx
+│           │   ├── terms/             # Terms of service
+│           │   │   └── page.tsx
+│           │   ├── verify-email/      # Email verification
+│           │   │   └── page.tsx
+│           │   │
+│           │   ├── admin/             # ─── Admin Dashboard ───
+│           │   │   ├── layout.tsx     # Admin sidebar layout
+│           │   │   ├── nav.tsx        # Admin navigation menu
+│           │   │   ├── page.tsx       # Admin dashboard home
+│           │   │   ├── actions.ts     # Server actions
+│           │   │   ├── activity-stream.tsx
+│           │   │   ├── dashboard-stats.tsx
+│           │   │   ├── sign-out-button.tsx
+│           │   │   ├── support-widget.tsx
+│           │   │   ├── theme-mode-control.tsx
+│           │   │   │
+│           │   │   ├── about/         # Admin: About page editor
+│           │   │   │   ├── page.tsx
+│           │   │   │   └── client.tsx
+│           │   │   ├── api-docs/      # Admin: API documentation
+│           │   │   │   └── page.tsx
+│           │   │   ├── apps/          # Admin: App management
+│           │   │   │   ├── page.tsx
+│           │   │   │   ├── client.tsx
+│           │   │   │   └── [id]/      # App detail editor
+│           │   │   ├── categories/    # Admin: Category management
+│           │   │   │   ├── page.tsx
+│           │   │   │   └── client.tsx
+│           │   │   ├── content/       # Admin: Content management
+│           │   │   │   ├── pages/     # Static pages CRUD
+│           │   │   │   └── posts/     # Blog posts CRUD
+│           │   │   ├── control/       # Admin: System controls
+│           │   │   │   └── page.tsx
+│           │   │   ├── custom-fields/ # Admin: Custom field definitions
+│           │   │   │   └── page.tsx
+│           │   │   ├── feedback/      # Admin: Feedback moderation
+│           │   │   │   ├── page.tsx
+│           │   │   │   └── client.tsx
+│           │   │   ├── help/          # Admin: Help center management
+│           │   │   │   ├── layout.tsx # Tabbed layout (articles/categories/images)
+│           │   │   │   ├── page.tsx
+│           │   │   │   ├── articles/  # Help articles CRUD
+│           │   │   │   ├── categories/ # Help categories CRUD
+│           │   │   │   └── images/    # Help section images
+│           │   │   ├── store/         # Admin: Store merchandising
+│           │   │   │   ├── banners/   # Banner management
+│           │   │   │   ├── hero/      # Homepage hero config
+│           │   │   │   ├── sections/  # Store section management
+│           │   │   │   └── sliders/   # Home slider management
+│           │   │   ├── support/       # Admin: Support ticket management
+│           │   │   │   └── page.tsx
+│           │   │   ├── theme/         # Admin: Theme management
+│           │   │   │   └── configs/   # Theme config CRUD
+│           │   │   └── users/         # Admin: User management
+│           │   │       └── page.tsx
+│           │   │
+│           │   └── api/               # ─── Next.js API Routes (BFF) ───
+│           │       ├── health/route.ts
+│           │       │
+│           │       ├── auth/          # Auth endpoints
+│           │       │   ├── [...nextauth]/route.ts
+│           │       │   ├── register/route.ts
+│           │       │   ├── forgot-password/route.ts
+│           │       │   ├── reset-password/route.ts
+│           │       │   ├── verify-email/route.ts
+│           │       │   └── resend-verification/route.ts
+│           │       │
+│           │       ├── apps/          # Public app endpoints
+│           │       │   ├── route.ts
+│           │       │   ├── tags/route.ts
+│           │       │   └── [slug]/route.ts
+│           │       │
+│           │       ├── categories/route.ts
+│           │       ├── category-previews/route.ts
+│           │       ├── search/route.ts
+│           │       │
+│           │       ├── content/       # Public content endpoints
+│           │       │   ├── route.ts
+│           │       │   ├── [slug]/route.ts
+│           │       │   ├── profile/route.ts
+│           │       │   ├── testimonials/route.ts
+│           │       │   ├── help/
+│           │       │   │   ├── articles/route.ts
+│           │       │   │   ├── articles/[slug]/route.ts
+│           │       │   │   └── categories/route.ts
+│           │       │   └── posts/
+│           │       │       ├── route.ts
+│           │       │       ├── tags/route.ts
+│           │       │       └── [slug]/
+│           │       │           ├── route.ts
+│           │       │           ├── comments/route.ts
+│           │       │           ├── comments/[commentId]/like/route.ts
+│           │       │           ├── reactions/route.ts
+│           │       │           ├── related/route.ts
+│           │       │           ├── bookmarks/route.ts
+│           │       │           └── bookmarks/status/route.ts
+│           │       │
+│           │       ├── store/         # Store data endpoints
+│           │       │   ├── banners/route.ts
+│           │       │   └── sliders/route.ts
+│           │       │
+│           │       ├── theme/         # Theme endpoints
+│           │       │   └── active/route.ts
+│           │       │
+│           │       ├── download/track/route.ts
+│           │       ├── view/track/route.ts
+│           │       ├── upload/cloudinary/sign/route.ts
+│           │       │
+│           │       ├── user/          # Authenticated user endpoints
+│           │       │   ├── feedback/route.ts
+│           │       │   ├── history/route.ts
+│           │       │   ├── library/route.ts
+│           │       │   ├── recently-viewed/route.ts
+│           │       │   ├── settings/route.ts
+│           │       │   ├── settings/deletion/route.ts
+│           │       │   └── support/tickets/route.ts
+│           │       │
+│           │       └── admin/         # Admin API proxy routes
+│           │           ├── health/route.ts
+│           │           ├── about/route.ts
+│           │           ├── apps/...   # Full CRUD for apps, tags, media, links
+│           │           ├── categories/...
+│           │           ├── content/...  # Pages, posts, help, testimonials, profile
+│           │           ├── custom-fields/...
+│           │           ├── feedback/...
+│           │           ├── images/configs/...
+│           │           ├── store/...    # Banners, sections, sliders
+│           │           ├── theme/configs/...
+│           │           ├── user/...     # Stats, support tickets
+│           │           └── users/...    # User management
+│           │
+│           ├── components/            # ─── Shared React Components ───
+│           │   ├── CardCarousel.tsx    # Animated card carousel
+│           │   │
+│           │   ├── admin/             # Admin-specific components
+│           │   │   └── ImageConfigGrid.tsx   # Reusable image config manager
+│           │   │
+│           │   ├── application/       # App-related components
+│           │   │
+│           │   ├── apps/              # App card components
+│           │   │   ├── AppCarouselCard.tsx
+│           │   │   ├── AppCatalogCard.tsx
+│           │   │   ├── AppGridCard.tsx
+│           │   │   └── CategoryShowcase.tsx
+│           │   │
+│           │   ├── help/              # Help center components
+│           │   │   ├── HelpSearch.tsx
+│           │   │   ├── HelpSidebar.tsx
+│           │   │   └── TableOfContents.tsx
+│           │   │
+│           │   ├── help-support/      # Help & support landing components
+│           │   │   ├── help-support-hero.tsx
+│           │   │   ├── help-support-articles.tsx
+│           │   │   ├── help-support-form.tsx
+│           │   │   ├── help-support-paths.tsx
+│           │   │   └── types.ts
+│           │   │
+│           │   ├── home/              # Homepage components
+│           │   │   ├── index.ts       # Barrel exports
+│           │   │   ├── home-hero.tsx           # WebGL canvas hero
+│           │   │   ├── hero-showcase.tsx       # App spotlight hero
+│           │   │   ├── creator-identity.tsx    # Personal branding section
+│           │   │   ├── blog-rail.tsx           # Latest posts rail
+│           │   │   ├── discovery-rail.tsx      # Horizontal app rail
+│           │   │   ├── discovery-card.tsx      # App discovery card
+│           │   │   ├── mixed-highlights.tsx    # Mixed content highlights
+│           │   │   ├── support-cta-panel.tsx   # Support call-to-action
+│           │   │   ├── home-utils.ts           # Formatting helpers
+│           │   │   ├── homepage.module.css     # CSS Modules styles
+│           │   │   └── types.ts               # Homepage types
+│           │   │
+│           │   ├── icons/             # Custom icon components
+│           │   │
+│           │   ├── layout/            # Layout components
+│           │   │   ├── header.tsx      # Site header
+│           │   │   ├── Navigation.tsx  # Navigation menu
+│           │   │   └── public-site-shell.tsx  # Public page wrapper
+│           │   │
+│           │   ├── providers/         # Context providers
+│           │   │   └── mui-emotion-cache-provider.tsx
+│           │   │
+│           │   ├── search/            # Search components
+│           │   │   └── SearchResultsPanel.tsx
+│           │   │
+│           │   └── ui/                # Primitive UI components
+│           │       ├── badge.tsx
+│           │       ├── button.tsx
+│           │       ├── card.tsx
+│           │       ├── confirm-dialog.tsx
+│           │       ├── input.tsx
+│           │       ├── label.tsx
+│           │       ├── modal.tsx
+│           │       ├── skeleton.tsx
+│           │       ├── textarea.tsx
+│           │       ├── page.tsx              # PageShell, PageHeader
+│           │       ├── GlassButton.tsx       # Glassmorphism button
+│           │       ├── GlassSurface.tsx      # Glassmorphism surface
+│           │       ├── comments-section.tsx  # Blog comments
+│           │       ├── post-interactions.tsx # Reactions, bookmarks
+│           │       ├── related-posts.tsx     # Related posts sidebar
+│           │       ├── markdown-content.tsx  # Markdown renderer
+│           │       ├── markdown-content.css
+│           │       ├── github-markdown-editor.tsx
+│           │       └── rich-markdown-editor.tsx  # Tiptap WYSIWYG editor
+│           │
+│           ├── features/              # ─── Feature Modules ───
+│           │   └── about-canvas/      # WebGL particle canvas system
+│           │       ├── index.ts
+│           │       ├── components/
+│           │       │   ├── AboutHeroCanvas.tsx      # Standalone canvas
+│           │       │   └── CompositeHeroCanvas.tsx   # Canvas wrapping children
+│           │       ├── config/
+│           │       │   └── defaults.ts              # Default config values
+│           │       ├── engine/
+│           │       │   └── renderer.ts              # WebGL2 particle renderer
+│           │       ├── hooks/
+│           │       │   └── usePointer.ts            # Mouse/touch tracking
+│           │       ├── image/
+│           │       │   └── image-loader.ts          # Image → pixel extraction
+│           │       ├── types/
+│           │       │   └── particle.ts              # Particle type definitions
+│           │       └── wasm/                        # WASM acceleration
+│           │           ├── interfaces.ts
+│           │           ├── wasm-loader.ts
+│           │           ├── README.md
+│           │           ├── cpp/                     # C++ source
+│           │           │   ├── force_calculator.cpp
+│           │           │   ├── force_calculator.h
+│           │           │   ├── image_processor.cpp
+│           │           │   ├── image_processor.h
+│           │           │   ├── particle_engine.cpp
+│           │           │   └── particle_engine.h
+│           │           └── build/
+│           │               ├── build.sh
+│           │               └── Makefile
+│           │
+│           ├── lib/                   # ─── Shared Utilities ───
+│           │   ├── api-response.ts    # Unified API response helper
+│           │   ├── api-response.test.ts
+│           │   ├── auth-guard.ts      # Auth middleware
+│           │   ├── cloudinary.ts      # Cloudinary upload config
+│           │   ├── cn.ts              # Tailwind class merger (clsx + twMerge)
+│           │   ├── markdown.ts        # Markdown processing utils
+│           │   ├── metadata.ts        # Next.js metadata helpers
+│           │   ├── page-access.ts     # Admin/user page access control
+│           │   ├── route-proxy.ts     # API route → service proxy
+│           │   ├── service-client.ts  # Server-side service fetcher
+│           │   ├── shortcut.ts        # Keyboard shortcut system
+│           │   ├── slug.ts            # Slug generation
+│           │   ├── slug.test.ts
+│           │   ├── theme-runtime.ts   # Runtime theme CSS variable injection
+│           │   ├── use-session-id.ts  # Guest session ID hook
+│           │   ├── useDeviceInfo.ts   # Device detection hook
+│           │   └── view-models.ts     # Shared frontend type definitions
+│           │
+│           ├── store/                 # ─── Redux Store ───
+│           │   ├── store.ts           # Store configuration
+│           │   ├── hooks.ts           # Typed useSelector/useDispatch
+│           │   └── slices/
+│           │       ├── feedbackDraftSlice.ts
+│           │       ├── librarySlice.ts
+│           │       ├── notificationsSlice.ts
+│           │       ├── recentAppsSlice.ts
+│           │       ├── uiSlice.ts
+│           │       └── uploadSlice.ts
+│           │
+│           ├── types/                 # ─── Type Declarations ───
+│           │   ├── next-auth.d.ts     # NextAuth session type augmentation
+│           │   └── style.d.ts         # CSS module type declarations
+│           │
+│           └── utils/
+│               └── cx.ts              # classNames utility
+│
+├── packages/                          # ═══ SHARED PACKAGES ═══
+│   │
+│   ├── db/                            # @elsesourav/db — Database layer
+│   │   ├── package.json
+│   │   ├── prisma.config.ts           # Prisma configuration
+│   │   ├── prisma/
+│   │   │   ├── schema.prisma          # ★ SINGLE SOURCE OF TRUTH ★ (41KB)
+│   │   │   ├── seed.ts                # Database seeding (134KB)
+│   │   │   ├── seed-help.ts           # Help center seeding
+│   │   │   ├── fill-missing-data.ts   # Data migration utility
+│   │   │   ├── update-banners.ts      # Banner data migration
+│   │   │   └── migrations/            # Prisma migrations
+│   │   ├── src/
+│   │   │   ├── index.ts               # Re-exports Prisma client + types
+│   │   │   ├── client.ts              # Prisma client singleton
+│   │   │   ├── cache-extension.ts     # Redis cache extension for Prisma
+│   │   │   └── generated/             # Auto-generated Prisma client
+│   │   └── tsconfig.json
+│   │
+│   ├── cache/                         # @elsesourav/cache — Redis cache
+│   │   ├── package.json
+│   │   ├── src/index.ts               # Redis client + cache helpers
+│   │   └── tsconfig.json
+│   │
+│   ├── config/                        # @elsesourav/config — Env config
+│   │   ├── package.json
+│   │   ├── src/
+│   │   │   ├── index.ts
+│   │   │   └── env.ts                 # Environment variable loader
+│   │   └── tsconfig.json
+│   │
+│   ├── queue/                         # @elsesourav/queue — Job queue
+│   │   ├── package.json
+│   │   ├── src/index.ts               # Queue abstraction
+│   │   └── tsconfig.json
+│   │
+│   ├── types/                         # @elsesourav/types — Shared types
+│   │   ├── package.json
+│   │   ├── src/index.ts               # ApiResponse, common types
+│   │   └── tsconfig.json
+│   │
+│   └── validation/                    # @elsesourav/validation — Zod schemas
+│       ├── package.json
+│       ├── src/index.ts               # All validation schemas (33KB)
+│       └── tsconfig.json
+│
+└── services/                          # ═══ BACKEND MICROSERVICES ═══
+    │
+    ├── README.md                      # Services documentation
+    ├── shared/
+    │   └── swagger.ts                 # Shared Swagger/OpenAPI setup
+    │
+    ├── auth-service/                  # Authentication & identity
+    │   ├── package.json
+    │   ├── tsconfig.json
+    │   └── src/
+    │       ├── index.ts               # Server entry (PORT: AUTH_SERVICE_PORT)
+    │       ├── app.ts                 # Express app setup
+    │       ├── lib/
+    │       │   └── http.ts            # HTTP helpers
+    │       └── routes/
+    │           ├── auth.ts            # Auth routes (20KB)
+    │           └── health.ts
+    │
+    ├── catalog-service/               # App catalog & merchandising
+    │   ├── package.json
+    │   ├── tsconfig.json
+    │   └── src/
+    │       ├── index.ts               # Server entry (PORT: CATALOG_SERVICE_PORT)
+    │       ├── app.ts
+    │       ├── lib/
+    │       │   ├── http.ts
+    │       │   ├── internal-auth.ts   # Internal token verification
+    │       │   └── category-deletion-processor.ts
+    │       └── routes/
+    │           ├── admin.ts           # Admin catalog routes (67KB)
+    │           ├── public.ts          # Public catalog routes (35KB)
+    │           └── health.ts
+    │
+    ├── user-service/                  # User engagement & interactions
+    │   ├── package.json
+    │   ├── tsconfig.json
+    │   └── src/
+    │       ├── index.ts               # Server entry (PORT: USER_SERVICE_PORT)
+    │       ├── app.ts
+    │       ├── lib/
+    │       │   ├── http.ts
+    │       │   ├── internal-auth.ts
+    │       │   └── deletion-processor.ts
+    │       └── routes/
+    │           ├── user.ts            # User routes (52KB)
+    │           └── health.ts
+    │
+    ├── content-service/               # Content publishing & CMS
+    │   ├── package.json
+    │   ├── tsconfig.json
+    │   └── src/
+    │       ├── index.ts               # Server entry (PORT: CONTENT_SERVICE_PORT)
+    │       ├── app.ts
+    │       ├── controllers/
+    │       │   └── profile.controller.ts
+    │       ├── repositories/
+    │       │   └── profile.repository.ts
+    │       ├── services/
+    │       │   └── profile.service.ts
+    │       ├── lib/
+    │       │   ├── http.ts
+    │       │   └── internal-auth.ts
+    │       └── routes/
+    │           ├── admin.ts           # Admin content routes (43KB)
+    │           ├── public.ts          # Public content routes (44KB)
+    │           └── health.ts
+    │
+    └── theme-service/                 # Theme & visual branding
+        ├── package.json
+        ├── tsconfig.json
+        └── src/
+            ├── index.ts               # Server entry (PORT: THEME_SERVICE_PORT)
+            ├── app.ts
+            ├── lib/
+            │   ├── http.ts
+            │   └── internal-auth.ts
+            └── routes/
+                ├── admin.ts           # Admin theme routes (12KB)
+                ├── public.ts          # Public theme routes (2KB)
+                └── health.ts
+
+
+3. DATABASE SCHEMA (PRISMA MODELS)
+================================================================================
+
+50 Models (tables) in packages/db/prisma/schema.prisma:
+
+Identity & Auth:
+  • User                 — Core user entity (email, password, role, avatar, etc.)
+  • Account              — OAuth provider accounts (NextAuth)
+  • Session              — Active sessions (NextAuth)
+  • VerificationToken    — Email verification tokens
+  • GuestSession         — Anonymous session tracking
+  • UserSettings         — Per-user preferences (theme mode, etc.)
+  • UserLibrary          — Saved apps per user
+  • ActivityLog          — User activity audit trail
+
+Catalog & Merchandising:
+  • App                  — Application listings (name, slug, status, pricing, etc.)
+  • Category             — App categories (hierarchical, soft-delete)
+  • AppTag               — Tags for apps
+  • AppTagOnApp          — Many-to-many: app ↔ tag
+  • AppMedia             — Images/videos per app
+  • AppLink              — Download/source links per app
+  • AppChangelog         — Version changelog per app
+  • AppDescriptionVersion — Description version history
+  • HomeSlider           — Homepage slider items
+  • StoreSectionItem     — Curated store sections (LATEST/UPCOMING/FEATURED)
+  • StoreBanner          — Promotional banners
+
+Analytics & Engagement:
+  • AppViewEvent         — Individual view tracking
+  • DownloadEvent        — Download tracking
+  • AppDailyStat         — Per-day aggregated app stats
+  • AppAggregateStat     — Lifetime aggregated app stats
+  • Feedback             — User feedback/ratings
+  • Payment              — Payment records
+
+Content & Publishing:
+  • ContentPage          — Static CMS pages
+  • ContentPageVersion   — Page version history
+  • ProfilePage          — Developer profile content
+  • Post                 — Blog posts
+  • PostTag              — Blog tags
+  • PostTagLink          — Many-to-many: post ↔ tag
+  • PostComment          — Blog comments
+  • PostVersion          — Post version history
+  • PostReaction         — Post likes/reactions
+  • PostBookmark         — User bookmarks on posts
+  • CommentReaction      — Comment likes
+  • SocialLink           — Social media links
+
+Help Center:
+  • HelpCategory         — Help documentation categories
+  • HelpArticle          — Help articles
+  • HelpArticleVersion   — Article version history
+  • HelpArticleFeedback  — Article helpfulness ratings
+  • HelpArticleSection   — Article content sections
+  • HelpArticleTag       — Article tags
+  • Testimonial          — User testimonials
+
+Theme & Branding:
+  • ThemeConfig          — Visual theme configurations
+  • ImageConfig          — Section-specific image configs (with metadata)
+
+Support:
+  • SupportTicket        — Support tickets
+  • SupportTicketMessage — Ticket conversation messages
+
+Custom Fields:
+  • CustomFieldDefinition — Dynamic field definitions
+  • CustomFieldValue      — Dynamic field values
+
+18 Enums:
+  Role, AppStatus, AppType, MediaType, LinkPlatform, PaymentStatus,
+  StoreSectionType, BannerPlacement, ContentStatus, SliderType,
+  PostStatus, HelpArticleStatus, SupportTicketStatus, SupportTicketPriority,
+  SupportTicketChannel, CustomFieldEntity, CustomFieldType, ImageSection
+
+
+4. SERVICE API NAMESPACE MAP
+================================================================================
+
+Auth Service (auth-service):
+  POST   /v1/auth/register
+  POST   /v1/auth/login
+  POST   /v1/auth/forgot-password
+  POST   /v1/auth/reset-password
+  GET    /v1/auth/verify-email
+  POST   /v1/auth/resend-verification
+  GET    /health
+
+Catalog Service (catalog-service):
+  Public:
+    GET    /v1/catalog/apps
+    GET    /v1/catalog/apps/:slug
+    GET    /v1/catalog/apps/tags
+    GET    /v1/catalog/categories
+    GET    /v1/catalog/category-previews
+    GET    /v1/catalog/search
+    GET    /v1/catalog/banners
+    GET    /v1/catalog/sliders
+  Admin:
+    CRUD   /v1/admin/catalog/apps
+    CRUD   /v1/admin/catalog/apps/:id/media
+    CRUD   /v1/admin/catalog/apps/:id/links
+    CRUD   /v1/admin/catalog/apps/:id/tags
+    CRUD   /v1/admin/catalog/categories
+    CRUD   /v1/admin/catalog/tags
+    CRUD   /v1/admin/catalog/store/sections
+    CRUD   /v1/admin/catalog/store/banners
+    CRUD   /v1/admin/catalog/store/sliders
+    GET    /v1/admin/catalog/stats
+  GET    /health
+
+User Service (user-service):
+  User:
+    GET/POST   /v1/user/library
+    GET        /v1/user/history
+    GET        /v1/user/recently-viewed
+    POST       /v1/user/feedback
+    GET/PUT    /v1/user/settings
+    POST       /v1/user/download/track
+    POST       /v1/user/view/track
+    CRUD       /v1/user/support/tickets
+  Admin:
+    GET    /v1/admin/user/stats
+    POST   /v1/admin/user/stats/recompute
+    GET    /v1/admin/user/stats/apps
+    CRUD   /v1/admin/user/feedback
+    CRUD   /v1/admin/user/support/tickets
+    GET    /v1/admin/user/users
+    GET    /v1/admin/user/users/stats
+  GET    /health
+
+Content Service (content-service):
+  Public:
+    GET    /v1/content/pages/:slug
+    GET    /v1/content/profile
+    GET    /v1/content/testimonials
+    GET    /v1/content/posts
+    GET    /v1/content/posts/:slug
+    GET    /v1/content/posts/tags
+    GET    /v1/content/posts/:slug/comments
+    POST   /v1/content/posts/:slug/comments
+    POST   /v1/content/posts/:slug/reactions
+    GET    /v1/content/posts/:slug/related
+    POST   /v1/content/posts/:slug/bookmarks
+    GET    /v1/content/help/categories
+    GET    /v1/content/help/articles
+    GET    /v1/content/help/articles/:slug
+    GET    /v1/content/support/overview
+  Admin:
+    CRUD   /v1/admin/content/pages
+    CRUD   /v1/admin/content/posts
+    CRUD   /v1/admin/content/posts/tags
+    CRUD   /v1/admin/content/posts/comments
+    CRUD   /v1/admin/content/profile
+    CRUD   /v1/admin/content/testimonials
+    CRUD   /v1/admin/content/help/categories
+    CRUD   /v1/admin/content/help/articles
+  GET    /health
+
+Theme Service (theme-service):
+  Public:
+    GET    /v1/theme/active
+    GET    /v1/theme/active-images
+  Admin:
+    CRUD   /v1/admin/theme/configs
+    POST   /v1/admin/theme/configs/:id/activate
+    CRUD   /v1/admin/theme/images
+    GET    /v1/admin/theme/images/section/:section
+  GET    /health
+
+
+5. REQUEST FLOW
+================================================================================
+
+  Browser ──→ Next.js App Router (pages/api routes)
+                │
+                ├─ Server Components: fetch data via service-client.ts
+                │    (adds x-internal-token, x-user-id, x-user-role headers)
+                │
+                ├─ API Routes: proxy requests via route-proxy.ts
+                │    (validates session, forwards to backend service)
+                │
+                └─→ Backend Microservices (Express)
+                      │
+                      ├─ Internal auth middleware (verifies x-internal-token)
+                      ├─ Admin middleware (checks x-user-role === "ADMIN")
+                      ├─ Business logic
+                      └─→ PostgreSQL (via Prisma ORM)
+
+
+6. DEVELOPMENT COMMANDS
+================================================================================
+
+Infrastructure:
+  docker compose up -d              # Start Postgres + Redis
+
+Database:
+  npm run db:generate               # Generate Prisma client
+  npm run db:migrate                # Run migrations
+  npm run db:seed                   # Seed database
+  npm run db:studio                 # Open Prisma Studio
+
+Development:
+  npm run dev                       # Start Next.js web app
+  npm run dev:services              # Start all 5 backend services concurrently
+  npm run dev:auth                  # Start auth-service only
+  npm run dev:catalog               # Start catalog-service only
+  npm run dev:user                  # Start user-service only
+  npm run dev:content               # Start content-service only
+  npm run dev:theme                 # Start theme-service only
+
+Quality:
+  npm run typecheck                 # TypeScript check all workspaces
+  npm run lint                      # ESLint all workspaces
+  npm run test                      # Run all tests
+  npm run build                     # Build all workspaces
+
+
+7. KEY DEPENDENCIES
+================================================================================
+
+Frontend:
+  next@16.2.5, react@19.2.6, next-auth@5.0.0-beta.25
+  tailwindcss@4, @tailwindcss/postcss@4
+  @mui/material@9, @emotion/react@11, @emotion/styled@11
+  framer-motion@12, lucide-react@1
+  @reduxjs/toolkit@2, react-redux@9
+  @tanstack/react-query@5, @tanstack/react-table@8
+  @tiptap/* (WYSIWYG editor suite)
+  three@0.184, @react-three/fiber@9, @react-three/drei@10
+  zod@4, cloudinary@2, embla-carousel-react@8
+
+Backend:
+  express@4, prisma@7, @prisma/client@7
+  typescript@6, tsx (runtime), vitest@4
+
+Shared:
+  zod@4 (validation schemas across all packages/services)
+
+
+8. FEATURE HIGHLIGHTS
+================================================================================
+
+  • Crystal Glow WebGL Particle Canvas (About + Homepage hero)
+    - C++ WASM-accelerated particle engine
+    - Interactive mouse repulsion + crystal glow effect
+    - Configurable: glowDuration, glowStrength, glowColor, waveSpeed
+
+  • Dynamic Admin-Configurable Hero Sections
+    - Admin Dashboard → Store → Homepage Hero (background + title/subtitle)
+    - Admin Dashboard → Help → Images (help center hero)
+    - Metadata JSON field for dynamic text on image configs
+
+  • Rich Blog System
+    - Tiptap WYSIWYG markdown editor
+    - Comments, reactions, bookmarks
+    - Related posts, tags, reading time
+    - Version history
+
+  • Help Center
+    - Categorized articles with search
+    - Article feedback (helpfulness ratings)
+    - Sidebar tree navigation
+
+  • App Marketplace
+    - Category-based browsing, tag filtering, search
+    - Featured/latest/popular discovery rails
+    - User library, download tracking, view analytics
+    - Feedback & rating system
+
+  • Support Ticket System
+    - User ticket creation with priority/channel
+    - Admin ticket management with message threads
+
+  • Runtime Theming
+    - CSS variable injection from theme configs
+    - Dark/light/system mode switching
+    - Admin-managed theme configs
+
+================================================================================
+9. FULL DATABASE CONTEXT (Prisma Schema Details)
+================================================================================
+
+Source: packages/db/prisma/schema.prisma (1137 lines, 41KB)
+Provider: PostgreSQL with citext extension
+ORM: Prisma 7 (prisma-client generator)
+
+─────────────────────────────────────────────────────────────────────────────────
+9.1 ENUMS
+─────────────────────────────────────────────────────────────────────────────────
+
+Role:                  ADMIN | USER
+AppStatus:             DRAFT | PUBLISHED
+AppType:               GAMING | SOCIAL_MEDIA_COMMUNICATION | PRODUCTIVITY_BUSINESS | LIFESTYLE | UTILITY_TOOL
+MediaType:             IMAGE | VIDEO
+LinkPlatform:          CHROME | ANDROID | GITHUB | WEBSITE | OTHER
+PaymentStatus:         PENDING | SUCCESS | FAILED | REFUNDED
+StoreSectionType:      LATEST | UPCOMING | FEATURED
+BannerPlacement:       NEW | COMING_SOON | SPECIAL_OFFER | EVENT
+ContentStatus:         DRAFT | SCHEDULED | PUBLISHED | ARCHIVED
+SliderType:            HERO | FEATURED | PROMO
+PostStatus:            DRAFT | PUBLISHED | ARCHIVED
+HelpArticleStatus:     DRAFT | PUBLISHED | ARCHIVED
+SupportTicketStatus:   OPEN | IN_PROGRESS | WAITING_FOR_USER | RESOLVED | CLOSED
+SupportTicketPriority: LOW | MEDIUM | HIGH | URGENT
+SupportTicketChannel:  WEB | EMAIL | CHAT | API
+CustomFieldEntity:     APP | CATEGORY | CONTENT_PAGE | POST | HELP_ARTICLE | PROFILE_PAGE | TESTIMONIAL | THEME_CONFIG | STORE_BANNER | STORE_SECTION_ITEM | HOME_SLIDER | APP_TAG | POST_TAG | HELP_CATEGORY | APP_MEDIA | APP_LINK | USER
+CustomFieldType:       TEXT | LONG_TEXT | NUMBER | BOOLEAN | DATE | URL | JSON | SELECT | MULTISELECT
+ImageSection:          HELP_SUPPORT | ABOUT_PROFILE | ABOUT_NAME_LOGO
+
+─────────────────────────────────────────────────────────────────────────────────
+9.2 ALL MODELS — DETAILED FIELD DEFINITIONS
+─────────────────────────────────────────────────────────────────────────────────
+
+═══════════════════════════════════════
+ IDENTITY & AUTHENTICATION
+═══════════════════════════════════════
+
+MODEL: User  →  TABLE: "users"
+  id                   String    @id @default(cuid())
+  name                 String?
+  email                String    @unique
+  emailVerified        DateTime? @map("email_verified")
+  image                String?
+  passwordHash         String?   @map("password_hash")
+  role                 Role      @default(USER)
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  deletedAt            DateTime? (soft delete)
+  scheduledDeletionAt  DateTime? (scheduled deletion)
+  RELATIONS:
+    accounts, sessions, createdApps, updatedApps, libraries, feedbacks,
+    moderatedFeedback, downloadEvents, payments, appViewEvents, posts,
+    postComments, postReactions, commentReactions, postBookmarks,
+    supportTickets, assignedTickets, supportMessages, settings,
+    activityLogs, helpArticleFeedbacks
+  INDEXES: role, scheduledDeletionAt, deletedAt
+
+MODEL: Account  →  TABLE: "accounts"
+  userId               String
+  type                 String
+  provider             String
+  providerAccountId    String
+  refresh_token        String?   @db.Text
+  access_token         String?   @db.Text
+  expires_at           Int?
+  token_type           String?
+  scope                String?
+  id_token             String?   @db.Text
+  session_state        String?
+  createdAt            DateTime
+  updatedAt            DateTime
+  COMPOSITE PK: [provider, providerAccountId]
+  RELATION: → User (cascade delete)
+  INDEXES: userId
+
+MODEL: Session  →  TABLE: "sessions"
+  sessionToken         String    @unique
+  userId               String
+  expires              DateTime
+  createdAt            DateTime
+  updatedAt            DateTime
+  RELATION: → User (cascade delete)
+  INDEXES: userId
+
+MODEL: VerificationToken  →  TABLE: "verification_tokens"
+  identifier           String
+  token                String    @unique
+  expires              DateTime
+  UNIQUE: [identifier, token]
+
+MODEL: GuestSession  →  TABLE: "guest_sessions"
+  id                   String    @id @default(cuid())
+  sessionId            String    @unique
+  ipHash               String?
+  createdAt            DateTime
+  lastSeenAt           DateTime?
+  INDEXES: lastSeenAt
+
+MODEL: UserSettings  →  TABLE: "user_settings"
+  id                   String    @id @default(cuid())
+  userId               String    @unique
+  themeMode            String?   ("system" | "light" | "dark")
+  customTheme          Json?
+  emailNotifications   Boolean   @default(true)
+  marketingEmails      Boolean   @default(false)
+  createdAt            DateTime
+  updatedAt            DateTime
+  RELATION: → User (cascade delete)
+
+═══════════════════════════════════════
+ CATALOG & APP MARKETPLACE
+═══════════════════════════════════════
+
+MODEL: App  →  TABLE: "apps"
+  id                   String    @id @default(cuid())
+  title                String
+  slug                 String    @unique
+  shortDescription     String
+  fullDescription      String
+  releaseNotes         String?   @db.Text
+  version              String
+  status               AppStatus @default(DRAFT)
+  publishedAt          DateTime?
+  isPaid               Boolean   @default(false)
+  isFeatured           Boolean   @default(false)
+  price                Decimal   @default(0) @db.Decimal(10,2)
+  iconUrl              String?
+  featureGraphicUrl    String?
+  promoVideoUrl        String?
+  supportEmail         String?
+  supportWebsiteUrl    String?
+  privacyPolicyUrl     String?
+  containsAds          Boolean   @default(false)
+  developerName        String?
+  type                 AppType   @default(UTILITY_TOOL)
+  appCategory          String    @default("")
+  metadata             Json?
+  categoryId           String?
+  createdById          String
+  updatedById          String?
+  createdAt            DateTime
+  updatedAt            DateTime
+  deletedAt            DateTime? (soft delete)
+  RELATIONS:
+    → Category (optional, onDelete: SetNull)
+    → User as createdBy (onDelete: Restrict)
+    → User as updatedBy (optional, onDelete: SetNull)
+    ← media, links, libraries, feedbacks, downloadEvents, payments,
+       sectionItems, tagLinks, viewEvents, dailyStats, aggregateStat,
+       sliders, changelogs, descriptionVersions, supportTickets, helpArticles
+  INDEXES: type, categoryId, [status+createdAt], publishedAt, [isFeatured+publishedAt]
+
+MODEL: Category  →  TABLE: "categories"
+  id                   String    @id @default(cuid())
+  name                 String    @unique
+  icon                 String?
+  description          String?
+  createdAt            DateTime
+  updatedAt            DateTime
+  scheduledDeletionAt  DateTime? (scheduled deletion)
+  deletedAt            DateTime? (soft delete)
+  RELATIONS: ← apps[]
+  INDEXES: scheduledDeletionAt, deletedAt
+
+MODEL: AppTag  →  TABLE: "app_tags"
+  id                   String    @id @default(cuid())
+  name                 String    @unique
+  slug                 String    @unique
+  createdAt            DateTime
+  updatedAt            DateTime
+  RELATIONS: ← appLinks (AppTagOnApp[])
+
+MODEL: AppTagOnApp  →  TABLE: "app_tags_on_apps"  (JUNCTION TABLE)
+  id                   String    @id @default(cuid())
+  appId                String
+  tagId                String
+  createdAt            DateTime
+  UNIQUE: [appId, tagId]
+  RELATIONS: → App (cascade), → AppTag (cascade)
+  INDEXES: tagId
+
+MODEL: AppMedia  →  TABLE: "app_media"
+  id                   String    @id @default(cuid())
+  appId                String
+  type                 MediaType (IMAGE | VIDEO)
+  url                  String
+  alt                  String?
+  mimeType             String?
+  width                Int?
+  height               Int?
+  durationSec          Int?
+  thumbnailUrl         String?
+  fileSizeBytes        BigInt?
+  isAnimated           Boolean   @default(false)
+  sortOrder            Int       @default(0)
+  createdAt            DateTime
+  updatedAt            DateTime
+  RELATION: → App (cascade delete)
+  INDEXES: appId, [appId+sortOrder]
+
+MODEL: AppLink  →  TABLE: "app_links"
+  id                   String       @id @default(cuid())
+  appId                String
+  platform             LinkPlatform (CHROME | ANDROID | GITHUB | WEBSITE | OTHER)
+  downloadUrl          String
+  sourceCodeUrl        String?
+  createdAt            DateTime
+  updatedAt            DateTime
+  UNIQUE: [appId, platform]
+  RELATION: → App (cascade delete)
+  INDEXES: appId
+
+MODEL: AppChangelog  →  TABLE: "app_changelogs"
+  id                   String    @id @default(cuid())
+  appId                String
+  version              String
+  title                String?
+  contentMarkdown      String    @db.Text
+  releaseDate          DateTime?
+  createdAt            DateTime
+  RELATION: → App (cascade delete)
+  INDEXES: [appId+releaseDate], [appId+version]
+
+MODEL: AppDescriptionVersion  →  TABLE: "app_description_versions"
+  id                   String    @id @default(cuid())
+  appId                String
+  versionLabel         String
+  descriptionMarkdown  String    @db.Text
+  createdBy            String?
+  createdAt            DateTime
+  RELATION: → App (cascade delete)
+  INDEXES: appId, [appId+createdAt], [appId+versionLabel]
+
+═══════════════════════════════════════
+ STORE MERCHANDISING
+═══════════════════════════════════════
+
+MODEL: HomeSlider  →  TABLE: "home_sliders"
+  id                   String     @id @default(cuid())
+  title                String
+  description          String?
+  type                 SliderType @default(HERO)
+  imageUrl             String?
+  linkUrl              String?
+  appId                String?
+  orderIndex           Int        @default(0)
+  startsAt             DateTime?
+  endsAt               DateTime?
+  isActive             Boolean    @default(true)
+  createdBy            String?
+  updatedBy            String?
+  createdAt            DateTime
+  updatedAt            DateTime
+  RELATION: → App (optional, onDelete: SetNull)
+  INDEXES: [type+isActive+orderIndex], [startsAt+endsAt]
+
+MODEL: StoreSectionItem  →  TABLE: "store_section_items"
+  id                   String           @id @default(cuid())
+  appId                String
+  sectionType          StoreSectionType (LATEST | UPCOMING | FEATURED)
+  orderIndex           Int              @default(0)
+  releaseAt            DateTime?
+  startsAt             DateTime?
+  endsAt               DateTime?
+  createdAt            DateTime
+  updatedAt            DateTime
+  UNIQUE: [appId, sectionType]
+  RELATION: → App (cascade delete)
+  INDEXES: [sectionType+orderIndex], [sectionType+releaseAt], [startsAt+endsAt]
+
+MODEL: StoreBanner  →  TABLE: "store_banners"
+  id                   String          @id @default(cuid())
+  title                String
+  subtitle             String?
+  imageUrl             String
+  linkUrl              String?
+  placement            BannerPlacement @default(NEW)
+  liveStartsAt         DateTime?
+  liveEndsAt           DateTime?
+  appStartsAt          DateTime?
+  appEndsAt            DateTime?
+  isActive             Boolean         @default(true)
+  createdBy            String?
+  updatedBy            String?
+  createdAt            DateTime
+  updatedAt            DateTime
+  INDEXES: [placement+isActive+liveStartsAt+liveEndsAt], [placement+appStartsAt+appEndsAt]
+
+═══════════════════════════════════════
+ ANALYTICS & USER ENGAGEMENT
+═══════════════════════════════════════
+
+MODEL: AppViewEvent  →  TABLE: "app_view_events"
+  id                   String    @id @default(cuid())
+  appId                String
+  userId               String?
+  sessionId            String?
+  source               String?
+  isUnique             Boolean   @default(false)
+  ipHash               String?
+  userAgent            String?
+  createdAt            DateTime
+  RELATIONS: → App (cascade), → User (optional, SetNull)
+  INDEXES: [appId+createdAt DESC], [userId+createdAt DESC], [sessionId+createdAt DESC]
+
+MODEL: AppDailyStat  →  TABLE: "app_daily_stats"
+  id                   String    @id @default(cuid())
+  appId                String
+  date                 DateTime  @db.Date
+  viewCount            Int       @default(0)
+  downloadCount        Int       @default(0)
+  libraryCount         Int       @default(0)
+  feedbackCount        Int       @default(0)
+  averageRating        Decimal   @default(0) @db.Decimal(3,2)
+  createdAt            DateTime
+  updatedAt            DateTime
+  UNIQUE: [appId, date]
+  RELATION: → App (cascade delete)
+  INDEXES: date
+
+MODEL: AppAggregateStat  →  TABLE: "app_aggregate_stats"
+  appId                String    @id (PK = app FK)
+  viewCount            Int       @default(0)
+  downloadCount        Int       @default(0)
+  libraryCount         Int       @default(0)
+  feedbackCount        Int       @default(0)
+  averageRating        Decimal   @default(0) @db.Decimal(3,2)
+  lastViewedAt         DateTime?
+  lastDownloadedAt     DateTime?
+  updatedAt            DateTime
+  RELATION: → App (cascade delete, 1:1)
+  INDEXES: [viewCount+updatedAt], [downloadCount+updatedAt]
+
+MODEL: UserLibrary  →  TABLE: "user_library"
+  id                   String    @id @default(cuid())
+  userId               String
+  appId                String
+  note                 String?   @db.Text
+  createdAt            DateTime
+  UNIQUE: [userId, appId]
+  RELATIONS: → User (cascade), → App (cascade)
+  INDEXES: userId, appId
+
+MODEL: Feedback  →  TABLE: "feedback"
+  id                   String    @id @default(cuid())
+  userId               String
+  appId                String
+  message              String
+  rating               Int
+  isHidden             Boolean   @default(false)
+  moderatedAt          DateTime?
+  moderatedById        String?
+  createdAt            DateTime
+  updatedAt            DateTime
+  RELATIONS: → User (cascade), → App (cascade), → User as moderatedBy (optional)
+  INDEXES: [appId+createdAt], [userId+createdAt]
+
+MODEL: DownloadEvent  →  TABLE: "download_events"
+  id                   String       @id @default(cuid())
+  userId               String?
+  appId                String
+  platform             LinkPlatform
+  ipHash               String?
+  userAgent            String?
+  createdAt            DateTime
+  RELATIONS: → User (optional, SetNull), → App (cascade)
+  INDEXES: [appId+createdAt], [userId+createdAt]
+
+MODEL: Payment  →  TABLE: "payments"
+  id                   String        @id @default(cuid())
+  userId               String
+  appId                String
+  amount               Decimal       @db.Decimal(10,2)
+  status               PaymentStatus @default(PENDING)
+  paymentProvider      String
+  providerReference    String?       @unique
+  createdAt            DateTime
+  updatedAt            DateTime
+  RELATIONS: → User (restrict), → App (restrict)
+  INDEXES: [userId+createdAt], [appId+createdAt]
+
+MODEL: ActivityLog  →  TABLE: "activity_logs"
+  id                   String    @id @default(cuid())
+  userId               String?
+  action               String
+  entity               String
+  entityId             String?
+  metadata             Json?
+  createdAt            DateTime
+  RELATION: → User (optional, SetNull)
+  INDEXES: [userId+createdAt], [entity+entityId], [action+createdAt]
+
+═══════════════════════════════════════
+ CONTENT & PUBLISHING
+═══════════════════════════════════════
+
+MODEL: ContentPage  →  TABLE: "content_pages"
+  id                   String        @id @default(cuid())
+  slug                 String        @unique
+  title                String
+  summary              String?
+  body                 String        @db.Text
+  seoTitle             String?
+  seoDescription       String?
+  metadata             Json?
+  status               ContentStatus @default(DRAFT)
+  publishAt            DateTime?
+  publishedAt          DateTime?
+  createdBy            String?
+  updatedBy            String?
+  createdAt            DateTime
+  updatedAt            DateTime
+  RELATIONS: ← versions (ContentPageVersion[])
+  INDEXES: [status+publishAt], [slug+status]
+
+MODEL: ContentPageVersion  →  TABLE: "content_page_versions"
+  id                   String        @id @default(cuid())
+  pageId               String
+  version              Int
+  title                String
+  summary              String?
+  body                 String        @db.Text
+  seoTitle             String?
+  seoDescription       String?
+  metadata             Json?
+  status               ContentStatus @default(DRAFT)
+  createdBy            String?
+  createdAt            DateTime
+  UNIQUE: [pageId, version]
+  RELATION: → ContentPage (cascade delete)
+  INDEXES: [pageId+createdAt]
+
+MODEL: ProfilePage  →  TABLE: "profile_pages"
+  id                   String    @id @default(cuid())
+  slug                 String    @unique
+  fullName             String
+  headline             String?
+  shortBio             String?
+  bioMarkdown          String    @db.Text
+  experienceMarkdown   String?   @db.Text
+  skills               Json?
+  tools                Json?
+  contactEmail         String?
+  location             String?
+  websiteUrl           String?
+  githubUrl            String?
+  linkedinUrl          String?
+  resumeUrl            String?
+  avatarUrl            String?
+  coverImageUrl        String?
+  isActive             Boolean   @default(true)
+  createdBy            String?
+  updatedBy            String?
+  createdAt            DateTime
+  updatedAt            DateTime
+  INDEXES: [isActive+updatedAt]
+
+MODEL: SocialLink  →  TABLE: "social_links"
+  id                   String    @id @default(cuid())
+  platform             String    @unique
+  url                  String
+  iconUrl              String?
+  isActive             Boolean   @default(true)
+  order                Int       @default(0)
+  createdAt            DateTime
+  updatedAt            DateTime
+  INDEXES: [isActive+order]
+
+═══════════════════════════════════════
+ BLOG SYSTEM
+═══════════════════════════════════════
+
+MODEL: Post  →  TABLE: "blog_posts"
+  id                   String     @id @default(cuid())
+  slug                 String     @unique
+  title                String
+  excerpt              String?
+  contentMarkdown      String     @db.Text
+  contentHtml          String?    @db.Text
+  featuredImageUrl     String?
+  readingTimeMinutes   Int        @default(0)
+  isFeatured           Boolean    @default(false)
+  viewCount            Int        @default(0)
+  seoTitle             String?
+  seoDescription       String?
+  metadata             Json?
+  status               PostStatus @default(DRAFT)
+  publishAt            DateTime?
+  publishedAt          DateTime?
+  authorId             String?
+  createdBy            String?
+  updatedBy            String?
+  createdAt            DateTime
+  updatedAt            DateTime
+  deletedAt            DateTime?
+  RELATIONS:
+    → User as author (optional, SetNull)
+    ← tags (PostTagLink[]), comments (PostComment[]), versions (PostVersion[]),
+      reactions (PostReaction[]), bookmarks (PostBookmark[])
+  INDEXES: [status+publishedAt], [authorId+createdAt], [isFeatured+publishedAt]
+
+MODEL: PostTag  →  TABLE: "blog_tags"
+  id                   String    @id @default(cuid())
+  name                 String    @unique
+  slug                 String    @unique
+  description          String?
+  createdAt            DateTime
+  updatedAt            DateTime
+  RELATIONS: ← posts (PostTagLink[])
+
+MODEL: PostTagLink  →  TABLE: "blog_post_tags"  (JUNCTION TABLE)
+  id                   String    @id @default(cuid())
+  postId               String
+  tagId                String
+  createdAt            DateTime
+  UNIQUE: [postId, tagId]
+  RELATIONS: → Post (cascade), → PostTag (cascade)
+  INDEXES: tagId
+
+MODEL: PostComment  →  TABLE: "blog_comments"
+  id                   String    @id @default(cuid())
+  postId               String
+  parentId             String?   (self-referencing for threaded replies)
+  userId               String?
+  authorName           String?   (for guest comments)
+  authorEmail          String?   (for guest comments)
+  content              String    @db.Text
+  isGuest              Boolean   @default(false)
+  isApproved           Boolean   @default(false)
+  likesCount           Int       @default(0)
+  createdAt            DateTime
+  updatedAt            DateTime
+  RELATIONS:
+    → Post (cascade), → User (optional, SetNull),
+    → PostComment as parent (self-ref, cascade)
+    ← replies (PostComment[]), reactions (CommentReaction[])
+  INDEXES: [postId+createdAt DESC], [isApproved+createdAt DESC],
+           [postId+parentId+createdAt DESC], [postId+parentId+likesCount DESC]
+
+MODEL: PostVersion  →  TABLE: "blog_post_versions"
+  id                   String    @id @default(cuid())
+  postId               String
+  title                String
+  excerpt              String?
+  contentMarkdown      String    @db.Text
+  metadata             Json?
+  createdBy            String?
+  createdAt            DateTime
+  RELATION: → Post (cascade delete)
+  INDEXES: postId, [postId+createdAt]
+
+MODEL: PostReaction  →  TABLE: "post_reactions"
+  id                   String    @id @default(cuid())
+  postId               String
+  userId               String?
+  sessionId            String?   (for guest reactions)
+  type                 String    @default("like")
+  createdAt            DateTime
+  UNIQUE: [postId+userId+type], [postId+sessionId+type]
+  RELATIONS: → Post (cascade), → User (optional, cascade)
+  INDEXES: postId, userId, sessionId
+
+MODEL: CommentReaction  →  TABLE: "comment_reactions"
+  id                   String    @id @default(cuid())
+  commentId            String
+  userId               String?
+  sessionId            String?
+  type                 String    @default("like")
+  createdAt            DateTime
+  UNIQUE: [commentId+userId+type], [commentId+sessionId+type]
+  RELATIONS: → PostComment (cascade), → User (optional, cascade)
+  INDEXES: commentId, userId, sessionId
+
+MODEL: PostBookmark  →  TABLE: "post_bookmarks"
+  id                   String    @id @default(cuid())
+  postId               String
+  userId               String
+  createdAt            DateTime
+  UNIQUE: [postId, userId]
+  RELATIONS: → Post (cascade), → User (cascade)
+  INDEXES: postId, userId
+
+═══════════════════════════════════════
+ HELP CENTER
+═══════════════════════════════════════
+
+MODEL: HelpCategory  →  TABLE: "help_categories"
+  id                   String    @id @default(cuid())
+  parentId             String?   (self-referencing hierarchy)
+  name                 String
+  slug                 String    @unique
+  description          String?
+  orderIndex           Int       @default(0)
+  isActive             Boolean   @default(true)
+  createdAt            DateTime
+  updatedAt            DateTime
+  RELATIONS:
+    → HelpCategory as parent (self-ref, SetNull)
+    ← children (HelpCategory[]), articles (HelpArticle[])
+  INDEXES: [isActive+orderIndex], parentId
+
+MODEL: HelpArticle  →  TABLE: "help_articles"
+  id                   String            @id @default(cuid())
+  categoryId           String?
+  appId                String?           (link article to specific app)
+  slug                 String            @unique
+  title                String
+  summary              String?
+  contentMarkdown      String            @db.Text
+  contentMdx           String?           @db.Text
+  orderIndex           Int               @default(0)
+  status               HelpArticleStatus @default(DRAFT)
+  isFeatured           Boolean           @default(false)
+  publishAt            DateTime?
+  publishedAt          DateTime?
+  viewCount            Int               @default(0)
+  upvotes              Int               @default(0)
+  downvotes            Int               @default(0)
+  readingTimeMins      Int               @default(0)
+  relatedArticleIds    String[]
+  seoTitle             String?
+  seoDescription       String?
+  createdBy            String?
+  updatedBy            String?
+  createdAt            DateTime
+  updatedAt            DateTime
+  RELATIONS:
+    → HelpCategory (optional, SetNull), → App (optional, SetNull)
+    ← versions, tags, sections, feedback
+  INDEXES: [status+publishedAt], [categoryId+orderIndex], appId
+
+MODEL: HelpArticleVersion  →  TABLE: "help_article_versions"
+  id                   String    @id @default(cuid())
+  articleId            String
+  title                String
+  contentMarkdown      String    @db.Text
+  createdBy            String?
+  createdAt            DateTime
+  RELATION: → HelpArticle (cascade delete)
+  INDEXES: articleId, [articleId+createdAt]
+
+MODEL: HelpArticleFeedback  →  TABLE: "help_article_feedback"
+  id                   String    @id @default(cuid())
+  articleId            String
+  userId               String?
+  guestSessionId       String?
+  isHelpful            Boolean
+  comment              String?   @db.Text
+  createdAt            DateTime
+  RELATIONS: → HelpArticle (cascade), → User (optional, SetNull)
+  INDEXES: articleId, userId, guestSessionId
+
+MODEL: HelpArticleSection  →  TABLE: "help_article_sections"
+  id                   String    @id @default(cuid())
+  articleId            String
+  title                String
+  slug                 String
+  contentMarkdown      String    @db.Text
+  orderIndex           Int       @default(0)
+  createdAt            DateTime
+  updatedAt            DateTime
+  RELATION: → HelpArticle (cascade delete)
+  INDEXES: [articleId+orderIndex]
+
+MODEL: HelpArticleTag  →  TABLE: "help_article_tags"
+  id                   String    @id @default(cuid())
+  articleId            String
+  name                 String
+  slug                 String
+  createdAt            DateTime
+  RELATION: → HelpArticle (cascade delete)
+  INDEXES: articleId, slug
+
+MODEL: Testimonial  →  TABLE: "testimonials"
+  id                   String    @id @default(cuid())
+  authorName           String
+  authorRole           String?
+  company              String?
+  avatarUrl            String?
+  quoteMarkdown        String    @db.Text
+  rating               Int       @default(5)
+  sourceUrl            String?
+  sortOrder            Int       @default(0)
+  isFeatured           Boolean   @default(true)
+  isActive             Boolean   @default(true)
+  createdBy            String?
+  updatedBy            String?
+  createdAt            DateTime
+  updatedAt            DateTime
+  INDEXES: [isActive+isFeatured+sortOrder]
+
+═══════════════════════════════════════
+ THEME & BRANDING
+═══════════════════════════════════════
+
+MODEL: ThemeConfig  →  TABLE: "theme_configs"
+  id                   String    @id @default(cuid())
+  name                 String    @unique
+  isActive             Boolean   @default(false)
+  primaryColor         String
+  secondaryColor       String
+  accentColor          String
+  actionColor          String
+  backgroundColor      String
+  foregroundColor      String
+  darkPrimaryColor     String    @default("#e2e8f0")
+  darkSecondaryColor   String    @default("#334155")
+  darkAccentColor      String    @default("#38bdf8")
+  darkActionColor      String    @default("#38bdf8")
+  darkBackgroundColor  String    @default("#0b1220")
+  darkForegroundColor  String    @default("#f8fafc")
+  fontSans             String
+  fontHeading          String
+  headingScale         Decimal   @default(1) @db.Decimal(3,2)
+  createdBy            String?
+  updatedBy            String?
+  createdAt            DateTime
+  updatedAt            DateTime
+  INDEXES: [isActive+updatedAt]
+
+MODEL: ImageConfig  →  TABLE: "image_configs"
+  id                   String       @id @default(cuid())
+  name                 String
+  section              ImageSection (HELP_SUPPORT | ABOUT_PROFILE | ABOUT_NAME_LOGO)
+  url                  String
+  isActive             Boolean      @default(false)
+  metadata             Json?        (stores dynamic text like title/subtitle)
+  createdBy            String?
+  updatedBy            String?
+  createdAt            DateTime
+  updatedAt            DateTime
+  INDEXES: [section+isActive+updatedAt]
+
+═══════════════════════════════════════
+ SUPPORT TICKET SYSTEM
+═══════════════════════════════════════
+
+MODEL: SupportTicket  →  TABLE: "support_tickets"
+  id                   String                @id @default(cuid())
+  userId               String?
+  appId                String?
+  subject              String
+  description          String                @db.Text
+  status               SupportTicketStatus   @default(OPEN)
+  priority             SupportTicketPriority @default(MEDIUM)
+  category             String?
+  channel              SupportTicketChannel  @default(WEB)
+  sourceUrl            String?
+  assignedToId         String?
+  firstResponseAt      DateTime?
+  resolvedAt           DateTime?
+  closedAt             DateTime?
+  metadata             Json?
+  messageCount         Int                   @default(0)
+  unreadAdminCount     Int                   @default(0)
+  lastMessageAt        DateTime?
+  slaBreachAt          DateTime?
+  createdAt            DateTime
+  updatedAt            DateTime
+  RELATIONS:
+    → User as requester (optional, SetNull)
+    → App (optional, SetNull)
+    → User as assignee (optional, SetNull)
+    ← messages (SupportTicketMessage[])
+  INDEXES: [userId+createdAt DESC], [appId+createdAt],
+           [status+priority+createdAt DESC],
+           [assignedToId+status+createdAt DESC],
+           [slaBreachAt+status]
+
+MODEL: SupportTicketMessage  →  TABLE: "support_ticket_messages"
+  id                   String    @id @default(cuid())
+  ticketId             String
+  authorUserId         String?
+  authorType           String    @default("USER") ("USER" | "ADMIN")
+  body                 String    @db.Text
+  isInternal           Boolean   @default(false) (admin-only notes)
+  attachments          Json?
+  createdAt            DateTime
+  RELATIONS: → SupportTicket (cascade), → User as author (optional, SetNull)
+  INDEXES: [ticketId+createdAt], [authorUserId+createdAt]
+
+═══════════════════════════════════════
+ CUSTOM FIELDS (DYNAMIC METADATA)
+═══════════════════════════════════════
+
+MODEL: CustomFieldDefinition  →  TABLE: "custom_field_definitions"
+  id                   String           @id @default(cuid())
+  entity               CustomFieldEntity (APP | CATEGORY | POST | ... 17 options)
+  key                  String
+  label                String
+  description          String?
+  fieldType            CustomFieldType  @default(TEXT) (TEXT | NUMBER | BOOLEAN | ...)
+  isRequired           Boolean          @default(false)
+  isActive             Boolean          @default(true)
+  isFilterable         Boolean          @default(false)
+  options              Json?            (for SELECT/MULTISELECT fields)
+  defaultValue         Json?
+  createdAt            DateTime
+  updatedAt            DateTime
+  UNIQUE: [entity, key]
+  RELATIONS: ← values (CustomFieldValue[])
+  INDEXES: [entity+isActive]
+
+MODEL: CustomFieldValue  →  TABLE: "custom_field_values"
+  id                   String    @id @default(cuid())
+  definitionId         String
+  entityId             String
+  value                Json
+  createdAt            DateTime
+  updatedAt            DateTime
+  UNIQUE: [definitionId, entityId]
+  RELATION: → CustomFieldDefinition (cascade delete)
+  INDEXES: entityId, [definitionId+updatedAt]
+
+─────────────────────────────────────────────────────────────────────────────────
+9.3 KEY RELATIONSHIPS DIAGRAM (TEXT)
+─────────────────────────────────────────────────────────────────────────────────
+
+  User ──┬── 1:N ──→ App (created/updated)
+         ├── 1:N ──→ UserLibrary ←── N:1 ──── App
+         ├── 1:N ──→ Feedback ←──── N:1 ──── App
+         ├── 1:N ──→ DownloadEvent ←── N:1 ── App
+         ├── 1:N ──→ AppViewEvent ←── N:1 ── App
+         ├── 1:N ──→ Payment ←───── N:1 ──── App
+         ├── 1:N ──→ Post
+         ├── 1:N ──→ PostComment
+         ├── 1:N ──→ PostReaction
+         ├── 1:N ──→ PostBookmark
+         ├── 1:N ──→ SupportTicket (requester + assignee)
+         ├── 1:1 ──→ UserSettings
+         ├── 1:N ──→ Account (OAuth)
+         ├── 1:N ──→ Session
+         └── 1:N ──→ ActivityLog
+
+  App ───┬── N:1 ──→ Category
+         ├── 1:N ──→ AppMedia
+         ├── 1:N ──→ AppLink
+         ├── 1:N ──→ AppChangelog
+         ├── 1:N ──→ AppDescriptionVersion
+         ├── 1:1 ──→ AppAggregateStat
+         ├── 1:N ──→ AppDailyStat
+         ├── M:N ──→ AppTag (via AppTagOnApp)
+         ├── 1:N ──→ StoreSectionItem
+         ├── 1:N ──→ HomeSlider
+         └── 1:N ──→ HelpArticle
+
+  Post ──┬── N:1 ──→ User (author)
+         ├── M:N ──→ PostTag (via PostTagLink)
+         ├── 1:N ──→ PostComment (threaded, self-referencing)
+         ├── 1:N ──→ PostVersion
+         ├── 1:N ──→ PostReaction
+         └── 1:N ──→ PostBookmark
+
+  HelpCategory ──┬── self-ref (parent/children hierarchy)
+                 └── 1:N ──→ HelpArticle ──┬── 1:N → HelpArticleVersion
+                                            ├── 1:N → HelpArticleSection
+                                            ├── 1:N → HelpArticleTag
+                                            └── 1:N → HelpArticleFeedback
+
+  SupportTicket ── 1:N ──→ SupportTicketMessage
+
+  CustomFieldDefinition ── 1:N ──→ CustomFieldValue
+
+─────────────────────────────────────────────────────────────────────────────────
+9.4 DATABASE CONVENTIONS
+─────────────────────────────────────────────────────────────────────────────────
+
+  • IDs:           CUID strings (@default(cuid()))
+  • Timestamps:    createdAt (auto), updatedAt (@updatedAt)
+  • Soft deletes:  deletedAt DateTime? on User, Category, App, Post
+  • Column naming: snake_case via @map()
+  • Table naming:  plural snake_case via @@map()
+  • Cascades:      Child records cascade on parent delete
+  • Restrict:      Payment → User/App (prevent accidental delete)
+  • SetNull:       Optional FKs nullified on parent delete
+  • Text columns:  Long content uses @db.Text (no length limit)
+  • Decimals:      @db.Decimal(10,2) for money, @db.Decimal(3,2) for ratings
+
+================================================================================
+ END OF CONTEXT
+================================================================================

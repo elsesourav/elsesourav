@@ -31,7 +31,7 @@ export function RelatedPosts({ slug, variant = "default" }: RelatedPostsProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    let isMounted = true;
+    const isMounted = true;
     async function fetchRelated() {
       try {
         const limit = variant === "sidebar" ? 4 : 2;

@@ -191,18 +191,20 @@ export function HelpSupportForm() {
   }, [searchParams]);
 
   return (
-    <Card className="p-5 space-y-4">
-      <div className="space-y-1">
-        <CardTitle>Submit a support request</CardTitle>
-        <CardDescription>
-          Tell us what you need and we will route it to the right team.
+    <Card className="p-6 md:p-8 space-y-6 shadow-sm border-border-subtle bg-surface-base rounded-2xl">
+      <div className="space-y-1.5 pb-2 border-b border-border-subtle/50">
+        <CardTitle className="text-xl md:text-2xl font-bold tracking-tight text-text-primary">
+          Submit a support request
+        </CardTitle>
+        <CardDescription className="text-sm md:text-base text-text-secondary">
+          Tell us what you need and we&apos;ll route it to the right team for a quick response.
         </CardDescription>
       </div>
 
-      <form className="space-y-4" onSubmit={handleSubmit} noValidate>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div className="space-y-1">
-            <label htmlFor="support-subject" className="text-xs font-semibold">
+      <form className="space-y-5" onSubmit={handleSubmit} noValidate>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div className="space-y-1.5">
+            <label htmlFor="support-subject" className="text-sm font-semibold text-text-primary">
               Subject
             </label>
             <Input
@@ -212,82 +214,92 @@ export function HelpSupportForm() {
               onChange={(event) => handleChange("subject", event.target.value)}
               placeholder="Short summary of the issue"
               aria-invalid={Boolean(fieldErrors.subject)}
-              className="min-h-[44px]"
+              className="min-h-[44px] bg-bg-base border-border-subtle focus-visible:ring-brand-primary"
             />
             {fieldErrors.subject ? (
-              <p className="text-xs text-rose-600">{fieldErrors.subject}</p>
+              <p className="text-xs font-medium text-status-danger">{fieldErrors.subject}</p>
             ) : null}
           </div>
 
-          <div className="space-y-1">
-            <label htmlFor="support-category" className="text-xs font-semibold">
+          <div className="space-y-1.5">
+            <label htmlFor="support-category" className="text-sm font-semibold text-text-primary">
               Category
             </label>
-            <select
-              id="support-category"
-              name="category"
-              value={formState.category}
-              onChange={(event) => handleChange("category", event.target.value)}
-              className="flex h-9 w-full rounded-md border border-border-subtle bg-bg-base px-3 py-1 text-sm shadow-sm"
-            >
-              <option value="">Select a category</option>
-              {categoryOptions.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                id="support-category"
+                name="category"
+                value={formState.category}
+                onChange={(event) => handleChange("category", event.target.value)}
+                className="flex h-11 w-full appearance-none rounded-md border border-border-subtle bg-bg-base px-3 py-1 text-sm shadow-sm focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary transition-colors"
+              >
+                <option value="" disabled>Select a category</option>
+                {categoryOptions.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-text-muted">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+              </div>
+            </div>
             {fieldErrors.category ? (
-              <p className="text-xs text-rose-600">{fieldErrors.category}</p>
+              <p className="text-xs font-medium text-status-danger">{fieldErrors.category}</p>
             ) : null}
           </div>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div className="space-y-1">
-            <label htmlFor="support-priority" className="text-xs font-semibold">
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div className="space-y-1.5">
+            <label htmlFor="support-priority" className="text-sm font-semibold text-text-primary">
               Priority
             </label>
-            <select
-              id="support-priority"
-              name="priority"
-              value={formState.priority}
-              onChange={(event) =>
-                handleChange("priority", event.target.value as PriorityOption)
-              }
-              className="flex h-9 w-full rounded-md border border-border-subtle bg-bg-base px-3 py-1 text-sm shadow-sm"
-            >
-              {priorityOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                id="support-priority"
+                name="priority"
+                value={formState.priority}
+                onChange={(event) =>
+                  handleChange("priority", event.target.value as PriorityOption)
+                }
+                className="flex h-11 w-full appearance-none rounded-md border border-border-subtle bg-bg-base px-3 py-1 text-sm shadow-sm focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary transition-colors"
+              >
+                {priorityOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-text-muted">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+              </div>
+            </div>
           </div>
 
-          <div className="space-y-1">
-            <label htmlFor="support-app-id" className="text-xs font-semibold">
-              App ID (optional)
+          <div className="space-y-1.5">
+            <label htmlFor="support-app-id" className="text-sm font-semibold text-text-primary">
+              App ID <span className="text-text-muted font-normal">(optional)</span>
             </label>
             <Input
               id="support-app-id"
               name="appId"
               value={formState.appId}
               onChange={(event) => handleChange("appId", event.target.value)}
-              placeholder="app_cuid"
+              placeholder="e.g. app_cuid_123"
               aria-invalid={Boolean(fieldErrors.appId)}
-              className="min-h-[44px]"
+              className="min-h-[44px] bg-bg-base border-border-subtle focus-visible:ring-brand-primary"
             />
             {fieldErrors.appId ? (
-              <p className="text-xs text-rose-600">{fieldErrors.appId}</p>
+              <p className="text-xs font-medium text-status-danger">{fieldErrors.appId}</p>
             ) : null}
           </div>
         </div>
 
-        <div className="space-y-1">
+        <div className="space-y-1.5 pt-1">
           <label
             htmlFor="support-description"
-            className="text-xs font-semibold"
+            className="text-sm font-semibold text-text-primary"
           >
             Description
           </label>
@@ -298,30 +310,46 @@ export function HelpSupportForm() {
             onChange={(event) =>
               handleChange("description", event.target.value)
             }
-            placeholder="Tell us what you were trying to do and what happened."
-            rows={6}
+            placeholder="Tell us what you were trying to do, what happened, and any steps to reproduce."
+            rows={5}
             aria-invalid={Boolean(fieldErrors.description)}
+            className="bg-bg-base border-border-subtle focus-visible:ring-brand-primary resize-y min-h-[120px]"
           />
           {fieldErrors.description ? (
-            <p className="text-xs text-rose-600">{fieldErrors.description}</p>
+            <p className="text-xs font-medium text-status-danger">{fieldErrors.description}</p>
           ) : null}
         </div>
 
         {status ? (
-          <p
-            className={
+          <div
+            className={`p-3 rounded-md border ${
               status.tone === "success"
-                ? "text-xs text-emerald-600"
-                : "text-xs text-rose-600"
-            }
+                ? "bg-status-success/10 border-status-success/20 text-status-success"
+                : "bg-status-danger/10 border-status-danger/20 text-status-danger"
+            }`}
           >
-            {status.message}
-          </p>
+            <p className="text-sm font-medium flex items-center gap-2">
+              {status.tone === "success" ? (
+                <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+              ) : (
+                <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              )}
+              {status.message}
+            </p>
+          </div>
         ) : null}
 
-        <Button type="submit" loading={isSubmitting} disabled={!canSubmit}>
-          Submit request
-        </Button>
+        <div className="pt-2 flex justify-end">
+          <Button 
+            type="submit" 
+            loading={isSubmitting} 
+            disabled={!canSubmit}
+            size="lg"
+            className="w-full sm:w-auto px-8"
+          >
+            Submit request
+          </Button>
+        </div>
       </form>
     </Card>
   );

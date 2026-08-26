@@ -44,10 +44,10 @@ publicThemeRouter.get("/active-images", async (_req, res) => {
       where: { isActive: true },
     });
 
-    const activeImagesMap = activeImages.reduce((acc: Record<string, string>, img: any) => {
-      acc[img.section] = img.url;
+    const activeImagesMap = activeImages.reduce((acc: Record<string, any>, img: any) => {
+      acc[img.section] = img;
       return acc;
-    }, {} as Record<string, string>);
+    }, {} as Record<string, any>);
 
     return sendSuccess(res, requestId, activeImagesMap);
   } catch (error) {

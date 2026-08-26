@@ -46,11 +46,14 @@ export default async function HelpSupportPage() {
   ]);
 
   const featuredArticle = articles[0] ?? null;
-  const bgImage = activeImages?.HELP_SUPPORT || "/img/help-support.png";
+  const helpSupportConfig = activeImages?.HELP_SUPPORT;
+  const bgImage = helpSupportConfig?.url || "/img/help-support.png";
+  const heroTitle = helpSupportConfig?.metadata?.title;
+  const heroSubtitle = helpSupportConfig?.metadata?.subtitle;
 
   return (
     <div className="relative min-h-screen">
-      <div className="absolute top-0 left-0 right-0 mx-auto w-full lg:w-3/4 h-[50vh] md:h-[60vh] lg:h-[70vh] -z-10 overflow-hidden bg-brand-primary/5">
+      <div className="relative mx-auto w-full lg:w-3/4 h-[50vh] md:h-[60vh] lg:h-[70vh] overflow-hidden bg-brand-primary/5">
         <Image
           src={bgImage}
           alt="Help and Support Background"
@@ -60,11 +63,10 @@ export default async function HelpSupportPage() {
           unoptimized={bgImage.includes("cloudinary.com")}
         />
         <div className="absolute inset-0 bg-linear-to-b from-transparent via-background/10 to-background" />
+        <HelpSupportHero title={heroTitle} subtitle={heroSubtitle} />
       </div>
 
       <PageShell width="content" className="gap-8 py-10 md:py-16 relative z-10">
-        <HelpSupportHero />
-
         <PageHeader eyebrow="Support" title="Start here" />
 
         <HelpSupportPaths />

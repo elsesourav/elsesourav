@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { AppsBannerSlider } from "@/app/apps/apps-banner-slider";
 import AppGridCard, {
   type AppGridCardData,
@@ -269,12 +270,12 @@ export default async function AppsPage({
               <p className="text-sm ui-text-muted">
                 No apps matched this filter.
               </p>
-              <a
+              <Link
                 href="/apps"
                 className="mt-2 rounded-full border ui-border px-5 py-2 text-xs font-semibold ui-text-primary transition-colors hover:border-[color-mix(in_srgb,var(--brand-secondary)_45%,transparent)]"
               >
                 Browse all apps
-              </a>
+              </Link>
             </div>
           )}
         </section>

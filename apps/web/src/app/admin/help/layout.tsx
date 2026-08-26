@@ -28,6 +28,12 @@ export default function AdminHelpLayout({
         >
           Categories
         </Link>
+        <Link
+          href="/admin/help/images"
+          className="text-sm font-medium hover:text-brand-primary transition-colors"
+        >
+          Images
+        </Link>
       </div>
 
       <div>{children}</div>

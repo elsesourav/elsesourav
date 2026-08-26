@@ -64,7 +64,8 @@
 }
 
 * {
-  outline: 1px solid #f005;
+  border-color: transparent;
+  /* outline: 1px solid #f005; */
 }
 
 /* 

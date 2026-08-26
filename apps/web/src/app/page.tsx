@@ -1,10 +1,14 @@
 import {
+  BlogRail,
+  CreatorIdentity,
   DiscoveryRail,
   HeroShowcase,
+  HomeHero,
   MixedHighlights,
   SupportCtaPanel,
   type HomeBanner,
   type HomeSlider,
+  type PostListItem,
   type SupportOverviewPayload,
 } from "@/components/home";
 import { PageHeader, PageShell } from "@/components/ui/page";
@@ -33,6 +37,8 @@ export default async function Home() {
     latestApps,
     popularApps,
     supportOverview,
+    activeImages,
+    latestPosts,
   ] = await Promise.all([
     fetchServiceData<HomeSlider[]>({
       service: "catalog",
@@ -64,14 +70,28 @@ export default async function Home() {
       service: "content",
       path: "/v1/content/support/overview?categoryLimit=6&featuredHelpLimit=4&latestPostsLimit=4",
     }).catch(() => null),
+    fetchServiceData<any>({
+      service: "theme",
+      path: "/v1/theme/active-images",
+    }).catch(() => null),
+    fetchServiceData<{ items: PostListItem[] }>({
+      service: "content",
+      path: "/v1/content/posts?limit=4",
+    })
+      .then((payload) => payload.items)
+      .catch(() => []),
   ]);
 
   const heroSlider = sliders[0] ?? null;
   const heroBanner =
     banners.find((banner) => banner.placement === "NEW") ?? banners[0] ?? null;
 
+  const homeHeroConfig = activeImages?.HOME_HERO ?? null;
+
   return (
     <PageShell width="wide" className={cn(bodyFont.className, "gap-10 py-10")}>
+      <HomeHero heroConfig={homeHeroConfig} />
+
       <HeroShowcase
         heroSlider={heroSlider}
         heroBanner={heroBanner}
@@ -80,11 +100,7 @@ export default async function Home() {
         displayClassName={headingFont.className}
       />
 
-      <PageHeader
-        eyebrow="Homepage Experience"
-        title="A modular light-first storefront"
-        description="The homepage now blends app discovery, support docs, and post highlights in reusable sections with accessible motion and contrast-safe controls."
-      />
+      <CreatorIdentity />
 
       <MixedHighlights
         supportOverview={supportOverview}
@@ -113,6 +129,13 @@ export default async function Home() {
         apps={popularApps}
         href="/apps?sort=popular"
         compact
+      />
+
+      <BlogRail
+        title="Technical Insights"
+        subtitle="Latest articles, tutorials, and release notes."
+        posts={latestPosts}
+        href="/posts"
       />
 
       <SupportCtaPanel displayClassName={headingFont.className} />

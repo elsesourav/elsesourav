@@ -77,6 +77,7 @@ export const ModelName = {
   Testimonial: 'Testimonial',
   ThemeConfig: 'ThemeConfig',
   ImageConfig: 'ImageConfig',
+  SocialLink: 'SocialLink',
   AppMedia: 'AppMedia',
   AppLink: 'AppLink',
   UserLibrary: 'UserLibrary',
@@ -581,6 +582,7 @@ export const ImageConfigScalarFieldEnum = {
   section: 'section',
   url: 'url',
   isActive: 'isActive',
+  metadata: 'metadata',
   createdBy: 'createdBy',
   updatedBy: 'updatedBy',
   createdAt: 'createdAt',
@@ -588,6 +590,20 @@ export const ImageConfigScalarFieldEnum = {
 } as const
 
 export type ImageConfigScalarFieldEnum = (typeof ImageConfigScalarFieldEnum)[keyof typeof ImageConfigScalarFieldEnum]
+
+
+export const SocialLinkScalarFieldEnum = {
+  id: 'id',
+  platform: 'platform',
+  url: 'url',
+  iconUrl: 'iconUrl',
+  isActive: 'isActive',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SocialLinkScalarFieldEnum = (typeof SocialLinkScalarFieldEnum)[keyof typeof SocialLinkScalarFieldEnum]
 
 
 export const AppMediaScalarFieldEnum = {

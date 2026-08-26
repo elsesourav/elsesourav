@@ -46,6 +46,7 @@ const adminNavSections: ReadonlyArray<{
     items: [
       { href: "/admin/support", label: "Support", icon: LifeBuoy, badge: "support-unread" },
       { href: "/admin/feedback", label: "Feedback", icon: MessageSquare },
+      { href: "/admin/store/hero", label: "Homepage Hero", icon: AppWindow },
       { href: "/admin/store/sections", label: "Store sections", icon: GalleryHorizontalEnd },
       { href: "/admin/store/banners", label: "Banners", icon: Megaphone },
     ],
@@ -55,9 +56,9 @@ const adminNavSections: ReadonlyArray<{
     items: [
       { href: "/admin/content/pages", label: "Pages", icon: FileText },
       { href: "/admin/content/posts", label: "Posts", icon: FileEdit },
-      { href: "/admin/help", label: "Help Docs", icon: BookOpen },
+      { href: "/admin/about", label: "About", icon: FileText },
+      { href: "/admin/help/articles", label: "Help & Support", icon: BookOpen },
       { href: "/admin/theme/configs", label: "Theme configs", icon: Palette },
-      { href: "/admin/theme/images", label: "Image configs", icon: Palette },
       { href: "/admin/control", label: "API docs", icon: TerminalSquare },
     ],
   },

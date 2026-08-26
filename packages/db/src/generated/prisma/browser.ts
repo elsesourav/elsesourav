@@ -148,6 +148,11 @@ export type ThemeConfig = Prisma.ThemeConfigModel
  */
 export type ImageConfig = Prisma.ImageConfigModel
 /**
+ * Model SocialLink
+ * 
+ */
+export type SocialLink = Prisma.SocialLinkModel
+/**
  * Model AppMedia
  * 
  */

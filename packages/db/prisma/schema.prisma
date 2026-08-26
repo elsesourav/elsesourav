@@ -714,6 +714,7 @@ model ThemeConfig {
 enum ImageSection {
   HELP_SUPPORT
   ABOUT_PROFILE
+  ABOUT_NAME_LOGO
 }
 
 model ImageConfig {
@@ -722,6 +723,7 @@ model ImageConfig {
   section            ImageSection
   url                String
   isActive           Boolean      @default(false) @map("is_active")
+  metadata           Json?
   createdBy          String?      @map("created_by")
   updatedBy          String?      @map("updated_by")
   createdAt          DateTime     @default(now()) @map("created_at")
@@ -729,6 +731,20 @@ model ImageConfig {
 
   @@index([section, isActive, updatedAt])
   @@map("image_configs")
+}
+
+model SocialLink {
+  id        String   @id @default(cuid())
+  platform  String   @unique // e.g. GITHUB, LINKEDIN
+  url       String
+  iconUrl   String?  @map("icon_url")
+  isActive  Boolean  @default(true) @map("is_active")
+  order     Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([isActive, order])
+  @@map("social_links")
 }
 
 model AppMedia {

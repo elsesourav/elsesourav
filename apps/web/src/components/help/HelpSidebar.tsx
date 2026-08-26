@@ -130,7 +130,7 @@ export function HelpSidebar({ tree }: { tree: HelpTreeItem[] }) {
     defaultCategory?.articles?.[0]?.slug || null
   );
 
-  const SidebarContent = () => (
+  const sidebarContent = (
     <div className="space-y-8">
       <nav className="space-y-6">
         <div>
@@ -211,7 +211,7 @@ export function HelpSidebar({ tree }: { tree: HelpTreeItem[] }) {
                 <X className="h-5 w-5" />
               </Button>
             </div>
-            <SidebarContent />
+            {sidebarContent}
           </div>
         </div>
       )}
@@ -219,7 +219,7 @@ export function HelpSidebar({ tree }: { tree: HelpTreeItem[] }) {
       {/* Desktop Sidebar */}
       <aside className="hidden md:block w-64 lg:w-72 shrink-0">
         <div className="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto pb-8 pr-6 scrollbar-hide">
-          <SidebarContent />
+          {sidebarContent}
         </div>
       </aside>
     </>

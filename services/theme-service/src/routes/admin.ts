@@ -267,6 +267,7 @@ adminImageRouter.post("/configs", async (req, res) => {
         section: parsed.data.section,
         url: parsed.data.url,
         isActive: parsed.data.isActive,
+        metadata: parsed.data.metadata ?? undefined,
         createdBy: userId,
         updatedBy: userId,
       },
@@ -322,6 +323,7 @@ adminImageRouter.patch("/configs/:id", async (req, res) => {
         section: parsedBody.data.section,
         url: parsedBody.data.url,
         isActive: parsedBody.data.isActive,
+        metadata: parsedBody.data.metadata ?? undefined,
         updatedBy: userId,
       },
     });
@@ -392,6 +394,44 @@ adminImageRouter.post("/configs/:id/activate", async (req, res) => {
       requestId,
       "INTERNAL_ERROR",
       "Failed to activate image config.",
+      500,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+});
+
+adminImageRouter.delete("/configs/:id", async (req, res) => {
+  const requestId = getRequestId(res);
+
+  try {
+    const parsedId = idParamSchema.safeParse(req.params);
+    if (!parsedId.success) {
+      return sendFailure(res, requestId, "VALIDATION_ERROR", "Invalid id.", 400);
+    }
+
+    const config = await prisma.imageConfig.findUnique({
+      where: { id: parsedId.data.id },
+    });
+
+    if (!config) {
+      return sendFailure(res, requestId, "NOT_FOUND", "Image config not found.", 404);
+    }
+
+    if (config.isActive) {
+      return sendFailure(res, requestId, "VALIDATION_ERROR", "Cannot delete an active image. Please activate a different image first.", 400);
+    }
+
+    await prisma.imageConfig.delete({
+      where: { id: parsedId.data.id },
+    });
+
+    return sendSuccess(res, requestId, { deleted: true });
+  } catch (error) {
+    return sendFailure(
+      res,
+      requestId,
+      "INTERNAL_ERROR",
+      "Failed to delete image config.",
       500,
       error instanceof Error ? error.message : "Unknown error",
     );

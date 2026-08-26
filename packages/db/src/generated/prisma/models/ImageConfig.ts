@@ -54,6 +54,7 @@ export type ImageConfigCountAggregateOutputType = {
   section: number
   url: number
   isActive: number
+  metadata: number
   createdBy: number
   updatedBy: number
   createdAt: number
@@ -92,6 +93,7 @@ export type ImageConfigCountAggregateInputType = {
   section?: true
   url?: true
   isActive?: true
+  metadata?: true
   createdBy?: true
   updatedBy?: true
   createdAt?: true
@@ -177,6 +179,7 @@ export type ImageConfigGroupByOutputType = {
   section: $Enums.ImageSection
   url: string
   isActive: boolean
+  metadata: runtime.JsonValue | null
   createdBy: string | null
   updatedBy: string | null
   createdAt: Date
@@ -210,6 +213,7 @@ export type ImageConfigWhereInput = {
   section?: Prisma.EnumImageSectionFilter<"ImageConfig"> | $Enums.ImageSection
   url?: Prisma.StringFilter<"ImageConfig"> | string
   isActive?: Prisma.BoolFilter<"ImageConfig"> | boolean
+  metadata?: Prisma.JsonNullableFilter<"ImageConfig">
   createdBy?: Prisma.StringNullableFilter<"ImageConfig"> | string | null
   updatedBy?: Prisma.StringNullableFilter<"ImageConfig"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ImageConfig"> | Date | string
@@ -222,6 +226,7 @@ export type ImageConfigOrderByWithRelationInput = {
   section?: Prisma.SortOrder
   url?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -237,6 +242,7 @@ export type ImageConfigWhereUniqueInput = Prisma.AtLeast<{
   section?: Prisma.EnumImageSectionFilter<"ImageConfig"> | $Enums.ImageSection
   url?: Prisma.StringFilter<"ImageConfig"> | string
   isActive?: Prisma.BoolFilter<"ImageConfig"> | boolean
+  metadata?: Prisma.JsonNullableFilter<"ImageConfig">
   createdBy?: Prisma.StringNullableFilter<"ImageConfig"> | string | null
   updatedBy?: Prisma.StringNullableFilter<"ImageConfig"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ImageConfig"> | Date | string
@@ -249,6 +255,7 @@ export type ImageConfigOrderByWithAggregationInput = {
   section?: Prisma.SortOrder
   url?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -267,6 +274,7 @@ export type ImageConfigScalarWhereWithAggregatesInput = {
   section?: Prisma.EnumImageSectionWithAggregatesFilter<"ImageConfig"> | $Enums.ImageSection
   url?: Prisma.StringWithAggregatesFilter<"ImageConfig"> | string
   isActive?: Prisma.BoolWithAggregatesFilter<"ImageConfig"> | boolean
+  metadata?: Prisma.JsonNullableWithAggregatesFilter<"ImageConfig">
   createdBy?: Prisma.StringNullableWithAggregatesFilter<"ImageConfig"> | string | null
   updatedBy?: Prisma.StringNullableWithAggregatesFilter<"ImageConfig"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ImageConfig"> | Date | string
@@ -279,6 +287,7 @@ export type ImageConfigCreateInput = {
   section: $Enums.ImageSection
   url: string
   isActive?: boolean
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: string | null
   updatedBy?: string | null
   createdAt?: Date | string
@@ -291,6 +300,7 @@ export type ImageConfigUncheckedCreateInput = {
   section: $Enums.ImageSection
   url: string
   isActive?: boolean
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: string | null
   updatedBy?: string | null
   createdAt?: Date | string
@@ -303,6 +313,7 @@ export type ImageConfigUpdateInput = {
   section?: Prisma.EnumImageSectionFieldUpdateOperationsInput | $Enums.ImageSection
   url?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -315,6 +326,7 @@ export type ImageConfigUncheckedUpdateInput = {
   section?: Prisma.EnumImageSectionFieldUpdateOperationsInput | $Enums.ImageSection
   url?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -327,6 +339,7 @@ export type ImageConfigCreateManyInput = {
   section: $Enums.ImageSection
   url: string
   isActive?: boolean
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: string | null
   updatedBy?: string | null
   createdAt?: Date | string
@@ -339,6 +352,7 @@ export type ImageConfigUpdateManyMutationInput = {
   section?: Prisma.EnumImageSectionFieldUpdateOperationsInput | $Enums.ImageSection
   url?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -351,6 +365,7 @@ export type ImageConfigUncheckedUpdateManyInput = {
   section?: Prisma.EnumImageSectionFieldUpdateOperationsInput | $Enums.ImageSection
   url?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -363,6 +378,7 @@ export type ImageConfigCountOrderByAggregateInput = {
   section?: Prisma.SortOrder
   url?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  metadata?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   updatedBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -405,6 +421,7 @@ export type ImageConfigSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   section?: boolean
   url?: boolean
   isActive?: boolean
+  metadata?: boolean
   createdBy?: boolean
   updatedBy?: boolean
   createdAt?: boolean
@@ -417,6 +434,7 @@ export type ImageConfigSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   section?: boolean
   url?: boolean
   isActive?: boolean
+  metadata?: boolean
   createdBy?: boolean
   updatedBy?: boolean
   createdAt?: boolean
@@ -429,6 +447,7 @@ export type ImageConfigSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   section?: boolean
   url?: boolean
   isActive?: boolean
+  metadata?: boolean
   createdBy?: boolean
   updatedBy?: boolean
   createdAt?: boolean
@@ -441,13 +460,14 @@ export type ImageConfigSelectScalar = {
   section?: boolean
   url?: boolean
   isActive?: boolean
+  metadata?: boolean
   createdBy?: boolean
   updatedBy?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ImageConfigOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "section" | "url" | "isActive" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["imageConfig"]>
+export type ImageConfigOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "section" | "url" | "isActive" | "metadata" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["imageConfig"]>
 
 export type $ImageConfigPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ImageConfig"
@@ -458,6 +478,7 @@ export type $ImageConfigPayload<ExtArgs extends runtime.Types.Extensions.Interna
     section: $Enums.ImageSection
     url: string
     isActive: boolean
+    metadata: runtime.JsonValue | null
     createdBy: string | null
     updatedBy: string | null
     createdAt: Date
@@ -890,6 +911,7 @@ export interface ImageConfigFieldRefs {
   readonly section: Prisma.FieldRef<"ImageConfig", 'ImageSection'>
   readonly url: Prisma.FieldRef<"ImageConfig", 'String'>
   readonly isActive: Prisma.FieldRef<"ImageConfig", 'Boolean'>
+  readonly metadata: Prisma.FieldRef<"ImageConfig", 'Json'>
   readonly createdBy: Prisma.FieldRef<"ImageConfig", 'String'>
   readonly updatedBy: Prisma.FieldRef<"ImageConfig", 'String'>
   readonly createdAt: Prisma.FieldRef<"ImageConfig", 'DateTime'>

@@ -116,7 +116,7 @@ export function HelpSearch() {
             </div>
           ) : query.length >= 2 ? (
             <div className="p-4 text-sm text-center text-text-muted">
-              No results found for "{query}"
+              No results found for &quot;{query}&quot;
             </div>
           ) : (
             <div className="p-4 text-xs text-center text-text-muted">

@@ -877,6 +877,7 @@ const hexColorSchema = z
   .trim()
   .regex(/^#(?:[0-9a-fA-F]{3}){1,2}$/);
 
+
 export const themeConfigCreateSchema = z.object({
   name: z.string().trim().min(2).max(120),
   primaryColor: hexColorSchema.default("#1f2937"),
@@ -1015,10 +1016,11 @@ export type ThemeConfigCreateInput = z.infer<typeof themeConfigCreateSchema>;
 export type ThemeConfigUpdateInput = z.infer<typeof themeConfigUpdateSchema>;
 
 export const imageConfigCreateSchema = z.object({
-  name: z.string().trim().min(2).max(120),
-  section: z.enum(["HELP_SUPPORT", "ABOUT_PROFILE"]),
-  url: z.string().url(),
-  isActive: z.coerce.boolean().default(false),
+  name: z.string().min(1, "Name is required"),
+  section: z.enum(["HELP_SUPPORT", "ABOUT_PROFILE", "ABOUT_NAME_LOGO", "HOME_HERO"]),
+  url: z.string().url("Must be a valid URL"),
+  isActive: z.boolean().optional(),
+  metadata: metadataSchema.optional(),
 });
 
 export const imageConfigUpdateSchema = imageConfigCreateSchema.partial();

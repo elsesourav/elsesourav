@@ -14,5 +14,6 @@
     { "file": ".copilot/instructions.md" },
     { "text": "Use latest docs. Avoid deprecated APIs." }
   ],
-  "prismaERDPreviewer.preferredTheme": "dark"
+  "prismaERDPreviewer.preferredTheme": "dark",
+  "fallow.coverage.capturePath": "/Users/sourav/Developer/WEB/elsesourav/apps/web/src/app/admin/apps"
 }

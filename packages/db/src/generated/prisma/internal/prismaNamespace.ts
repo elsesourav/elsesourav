@@ -410,6 +410,7 @@ export const ModelName = {
   Testimonial: 'Testimonial',
   ThemeConfig: 'ThemeConfig',
   ImageConfig: 'ImageConfig',
+  SocialLink: 'SocialLink',
   AppMedia: 'AppMedia',
   AppLink: 'AppLink',
   UserLibrary: 'UserLibrary',
@@ -448,7 +449,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "category" | "app" | "appTag" | "appTagOnApp" | "homeSlider" | "appViewEvent" | "appDailyStat" | "appAggregateStat" | "storeSectionItem" | "storeBanner" | "contentPage" | "contentPageVersion" | "profilePage" | "postTag" | "post" | "postTagLink" | "postComment" | "helpCategory" | "helpArticle" | "helpArticleFeedback" | "helpArticleSection" | "helpArticleTag" | "testimonial" | "themeConfig" | "imageConfig" | "appMedia" | "appLink" | "userLibrary" | "userSettings" | "activityLog" | "customFieldDefinition" | "customFieldValue" | "appChangelog" | "postVersion" | "postReaction" | "commentReaction" | "postBookmark" | "helpArticleVersion" | "supportTicket" | "supportTicketMessage" | "appDescriptionVersion" | "guestSession" | "feedback" | "downloadEvent" | "payment" | "account" | "session" | "verificationToken"
+    modelProps: "user" | "category" | "app" | "appTag" | "appTagOnApp" | "homeSlider" | "appViewEvent" | "appDailyStat" | "appAggregateStat" | "storeSectionItem" | "storeBanner" | "contentPage" | "contentPageVersion" | "profilePage" | "postTag" | "post" | "postTagLink" | "postComment" | "helpCategory" | "helpArticle" | "helpArticleFeedback" | "helpArticleSection" | "helpArticleTag" | "testimonial" | "themeConfig" | "imageConfig" | "socialLink" | "appMedia" | "appLink" | "userLibrary" | "userSettings" | "activityLog" | "customFieldDefinition" | "customFieldValue" | "appChangelog" | "postVersion" | "postReaction" | "commentReaction" | "postBookmark" | "helpArticleVersion" | "supportTicket" | "supportTicketMessage" | "appDescriptionVersion" | "guestSession" | "feedback" | "downloadEvent" | "payment" | "account" | "session" | "verificationToken"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2373,6 +2374,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ImageConfigCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ImageConfigCountAggregateOutputType> | number
+        }
+      }
+    }
+    SocialLink: {
+      payload: Prisma.$SocialLinkPayload<ExtArgs>
+      fields: Prisma.SocialLinkFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SocialLinkFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SocialLinkPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SocialLinkFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SocialLinkPayload>
+        }
+        findFirst: {
+          args: Prisma.SocialLinkFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SocialLinkPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SocialLinkFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SocialLinkPayload>
+        }
+        findMany: {
+          args: Prisma.SocialLinkFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SocialLinkPayload>[]
+        }
+        create: {
+          args: Prisma.SocialLinkCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SocialLinkPayload>
+        }
+        createMany: {
+          args: Prisma.SocialLinkCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SocialLinkCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SocialLinkPayload>[]
+        }
+        delete: {
+          args: Prisma.SocialLinkDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SocialLinkPayload>
+        }
+        update: {
+          args: Prisma.SocialLinkUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SocialLinkPayload>
+        }
+        deleteMany: {
+          args: Prisma.SocialLinkDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SocialLinkUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SocialLinkUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SocialLinkPayload>[]
+        }
+        upsert: {
+          args: Prisma.SocialLinkUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SocialLinkPayload>
+        }
+        aggregate: {
+          args: Prisma.SocialLinkAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSocialLink>
+        }
+        groupBy: {
+          args: Prisma.SocialLinkGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SocialLinkGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SocialLinkCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SocialLinkCountAggregateOutputType> | number
         }
       }
     }
@@ -4580,6 +4655,7 @@ export const ImageConfigScalarFieldEnum = {
   section: 'section',
   url: 'url',
   isActive: 'isActive',
+  metadata: 'metadata',
   createdBy: 'createdBy',
   updatedBy: 'updatedBy',
   createdAt: 'createdAt',
@@ -4587,6 +4663,20 @@ export const ImageConfigScalarFieldEnum = {
 } as const
 
 export type ImageConfigScalarFieldEnum = (typeof ImageConfigScalarFieldEnum)[keyof typeof ImageConfigScalarFieldEnum]
+
+
+export const SocialLinkScalarFieldEnum = {
+  id: 'id',
+  platform: 'platform',
+  url: 'url',
+  iconUrl: 'iconUrl',
+  isActive: 'isActive',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SocialLinkScalarFieldEnum = (typeof SocialLinkScalarFieldEnum)[keyof typeof SocialLinkScalarFieldEnum]
 
 
 export const AppMediaScalarFieldEnum = {
@@ -5458,6 +5548,7 @@ export type GlobalOmitConfig = {
   testimonial?: Prisma.TestimonialOmit
   themeConfig?: Prisma.ThemeConfigOmit
   imageConfig?: Prisma.ImageConfigOmit
+  socialLink?: Prisma.SocialLinkOmit
   appMedia?: Prisma.AppMediaOmit
   appLink?: Prisma.AppLinkOmit
   userLibrary?: Prisma.UserLibraryOmit
