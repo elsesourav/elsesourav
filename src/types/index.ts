@@ -1,20 +1,7 @@
 /**
- * Core Type Definitions for ElseSourav
- * Strict types without `any`
+ * Shared Type Exports
  */
 
-export type NavigationItem = {
-  readonly label: string;
-  readonly path: string;
-  readonly iconName?: string;
-  readonly isExternal?: boolean;
-};
-
-export type SystemStatus = 'ready' | 'building' | 'maintenance';
-
-export interface AppMetadata {
-  readonly name: string;
-  readonly version: string;
-  readonly status: SystemStatus;
-  readonly environment: 'development' | 'production' | 'test';
-}
+export * from './result.types';
+export * from './navigation.types';
+export * from './system.types';

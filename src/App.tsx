@@ -1,111 +1,110 @@
-import React from 'react';
-import { Layers, ShieldCheck, Sparkles, Terminal, Code2, Zap } from 'lucide-react';
+import React, { useState } from 'react';
+import { Layers, ShieldCheck, Code2, Zap, Database, ArrowRight } from 'lucide-react';
 import { appConfig } from '@/config';
-import { PRIMARY_NAVIGATION } from '@/constants';
+import { AppLayout } from '@/layouts';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
 import './App.css';
 
 export const App: React.FC = () => {
+  const [currentPath, setCurrentPath] = useState<string>('/');
+
   return (
-    <div className="app-layout">
-      {/* Header Shell */}
-      <header className="app-header glass-panel">
-        <div className="brand-group">
-          <div className="brand-icon">
-            <Sparkles size={18} className="icon-glow" />
-          </div>
-          <span className="brand-title">{appConfig.name}</span>
-          <span className="badge-mono">v{appConfig.version}</span>
-        </div>
+    <AppLayout currentPath={currentPath} onNavigate={setCurrentPath}>
+      <div className="foundation-view">
+        <Card variant="glass" padding="lg" className="foundation-view__card">
+          <div className="foundation-view__header">
+            <Badge variant="accent" size="md">
+              <Layers size={13} />
+              <span>Phase 1 Architecture</span>
+            </Badge>
 
-        <nav className="header-nav" aria-label="Primary Navigation">
-          {PRIMARY_NAVIGATION.map((item) => (
-            <span key={item.path} className="nav-item-placeholder">
-              {item.label}
-            </span>
-          ))}
-        </nav>
+            <h1 className="foundation-view__title">{appConfig.name} Platform</h1>
 
-        <div className="header-status">
-          <span className="status-indicator">
-            <span className="status-dot"></span>
-            TypeScript Strict Mode
-          </span>
-        </div>
-      </header>
-
-      {/* Foundation Status Showcase */}
-      <main className="main-content">
-        <div className="foundation-card glass-panel">
-          <div className="card-header">
-            <div className="card-badge">
-              <Layers size={14} />
-              <span>Foundation Architecture</span>
-            </div>
-            <h1 className="hero-title">ElseSourav Platform</h1>
-            <p className="hero-subtitle">
-              Clean React 19 + Vite 6 + TypeScript foundation initialized with zero-tolerance strict
-              type safety and Apple-inspired developer aesthetics.
+            <p className="foundation-view__description">
+              Scalable, feature-oriented architecture initialized with strict type safety, modular
+              layers, and Apple-inspired dark aesthetic.
             </p>
           </div>
 
-          <div className="grid-specs">
-            <div className="spec-card">
-              <div className="spec-icon-wrapper">
-                <Code2 size={20} className="spec-icon" />
+          <div className="foundation-view__grid">
+            <Card variant="glass" padding="sm" className="arch-layer-card">
+              <div className="arch-layer-card__icon-wrap">
+                <Code2 size={18} />
               </div>
-              <div className="spec-body">
-                <h3>Strict TypeScript</h3>
-                <p>Configured with strict mode, no implicit any, and path aliasing.</p>
-                <code className="spec-code">tsconfig.app.json</code>
+              <div className="arch-layer-card__content">
+                <h3>Strict Domain Types</h3>
+                <p>Clean, modular types and Result/Error patterns without any.</p>
+                <Badge variant="mono" size="sm">
+                  src/types/ & src/lib/
+                </Badge>
               </div>
-            </div>
+            </Card>
 
-            <div className="spec-card">
-              <div className="spec-icon-wrapper">
-                <Zap size={20} className="spec-icon" />
+            <Card variant="glass" padding="sm" className="arch-layer-card">
+              <div className="arch-layer-card__icon-wrap">
+                <Database size={18} />
               </div>
-              <div className="spec-body">
-                <h3>Vite 6 Fast Bundling</h3>
-                <p>Lightning-fast HMR and optimized production build pipeline.</p>
-                <code className="spec-code">vite.config.ts</code>
+              <div className="arch-layer-card__content">
+                <h3>Repository Abstraction</h3>
+                <p>Base repository contracts isolating Firestore queries from UI.</p>
+                <Badge variant="mono" size="sm">
+                  src/repositories/
+                </Badge>
               </div>
-            </div>
+            </Card>
 
-            <div className="spec-card">
-              <div className="spec-icon-wrapper">
-                <ShieldCheck size={20} className="spec-icon" />
+            <Card variant="glass" padding="sm" className="arch-layer-card">
+              <div className="arch-layer-card__icon-wrap">
+                <Zap size={18} />
               </div>
-              <div className="spec-body">
-                <h3>ESLint & Formatting</h3>
-                <p>Modern flat config with strict rules preventing explicit any.</p>
-                <code className="spec-code">eslint.config.js</code>
+              <div className="arch-layer-card__content">
+                <h3>Reusable UI Primitives</h3>
+                <p>Composable buttons, cards, badges, and layout shells.</p>
+                <Badge variant="mono" size="sm">
+                  src/components/ui/
+                </Badge>
               </div>
-            </div>
+            </Card>
 
-            <div className="spec-card">
-              <div className="spec-icon-wrapper">
-                <Terminal size={20} className="spec-icon" />
+            <Card variant="glass" padding="sm" className="arch-layer-card">
+              <div className="arch-layer-card__icon-wrap">
+                <ShieldCheck size={18} />
               </div>
-              <div className="spec-body">
-                <h3>Typography & Design Tokens</h3>
-                <p>Geist (UI), Space Grotesk (Headings), JetBrains Mono (Code).</p>
-                <code className="spec-code">src/styles/index.css</code>
+              <div className="arch-layer-card__content">
+                <h3>Runtime Schemas</h3>
+                <p>Zod schemas with static type inference and validations.</p>
+                <Badge variant="mono" size="sm">
+                  src/schemas/
+                </Badge>
               </div>
-            </div>
+            </Card>
           </div>
 
-          <div className="footer-status-bar">
-            <div className="status-tag">
-              <span className="dot-green"></span>
-              Environment: <code>{appConfig.environment}</code>
+          <div className="foundation-view__footer">
+            <div className="foundation-view__status-group">
+              <span className="live-dot" />
+              <span className="status-label">Environment:</span>
+              <Badge variant="mono" size="sm">
+                {appConfig.environment}
+              </Badge>
             </div>
-            <div className="status-tag">
-              Architecture Status: <span className="status-accent">Ready for Next Phase</span>
+
+            <div className="foundation-view__cta">
+              <Button
+                variant="primary"
+                size="sm"
+                rightIcon={<ArrowRight size={14} />}
+                onClick={() => setCurrentPath('/apps')}
+              >
+                Explore Architecture Ready
+              </Button>
             </div>
           </div>
-        </div>
-      </main>
-    </div>
+        </Card>
+      </div>
+    </AppLayout>
   );
 };
 

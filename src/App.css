@@ -1,158 +1,26 @@
-.app-layout {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 24px 20px;
-  position: relative;
-}
-
-/* Header */
-.app-header {
+.foundation-view {
   width: 100%;
-  max-width: 1120px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 24px;
-  margin-bottom: 48px;
-  position: sticky;
-  top: 16px;
-  z-index: 50;
-}
-
-.brand-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.brand-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-sm);
-  background: var(--gradient-accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #07090e;
-  box-shadow: var(--glow-accent);
-}
-
-.brand-title {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 1.15rem;
-  letter-spacing: -0.02em;
-  background: var(--gradient-accent);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.badge-mono {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: var(--text-secondary);
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border-subtle);
-  padding: 2px 6px;
-  border-radius: var(--radius-sm);
-}
-
-.header-nav {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.nav-item-placeholder {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  transition: var(--transition-smooth);
-}
-
-.nav-item-placeholder:hover {
-  color: var(--text-primary);
-}
-
-.header-status {
-  display: flex;
-  align-items: center;
-}
-
-.status-indicator {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-subtle);
-  padding: 6px 12px;
-  border-radius: var(--radius-full);
-}
-
-.status-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: var(--accent-emerald);
-  box-shadow: 0 0 8px var(--accent-emerald);
-  animation: pulse-dot 2s infinite ease-in-out;
-}
-
-@keyframes pulse-dot {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.5;
-    transform: scale(0.85);
-  }
-}
-
-/* Main Content */
-.main-content {
-  width: 100%;
-  max-width: 1040px;
+  max-width: 1080px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.foundation-card {
+.foundation-view__card {
   width: 100%;
-  padding: 48px 40px;
   display: flex;
   flex-direction: column;
-  gap: 36px;
+  gap: 32px;
 }
 
-.card-header {
+.foundation-view__header {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 12px;
 }
 
-.card-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--accent-primary);
-  background: rgba(56, 189, 248, 0.1);
-  border: 1px solid var(--border-glow);
-  padding: 4px 10px;
-  border-radius: var(--radius-full);
-}
-
-.hero-title {
+.foundation-view__title {
   font-size: 2.5rem;
   font-weight: 700;
   line-height: 1.15;
@@ -162,40 +30,34 @@
   -webkit-text-fill-color: transparent;
 }
 
-.hero-subtitle {
-  font-size: 1.1rem;
+.foundation-view__description {
+  font-size: 1.05rem;
   line-height: 1.6;
   color: var(--text-secondary);
-  max-width: 760px;
+  max-width: 720px;
 }
 
-/* Grid Specs */
-.grid-specs {
+.foundation-view__grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
+  gap: 16px;
 }
 
-.spec-card {
-  background: var(--bg-surface-glass-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 20px;
+.arch-layer-card {
   display: flex;
   flex-direction: column;
   gap: 14px;
   transition: var(--transition-smooth);
 }
 
-.spec-card:hover {
+.arch-layer-card:hover {
   transform: translateY(-2px);
-  border-color: var(--border-glass);
-  background: rgba(25, 33, 50, 0.65);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
-.spec-icon-wrapper {
-  width: 40px;
-  height: 40px;
+.arch-layer-card__icon-wrap {
+  width: 36px;
+  height: 36px;
   border-radius: var(--radius-sm);
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--border-subtle);
@@ -205,92 +67,55 @@
   color: var(--accent-primary);
 }
 
-.spec-body {
+.arch-layer-card__content {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.spec-body h3 {
-  font-size: 1rem;
+.arch-layer-card__content h3 {
+  font-size: 0.98rem;
   font-weight: 600;
 }
 
-.spec-body p {
-  font-size: 0.85rem;
+.arch-layer-card__content p {
+  font-size: 0.84rem;
   color: var(--text-muted);
   line-height: 1.5;
 }
 
-.spec-code {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  background: rgba(0, 0, 0, 0.4);
-  padding: 4px 8px;
-  border-radius: 4px;
-  align-self: flex-start;
-  margin-top: 4px;
-  border: 1px solid var(--border-subtle);
-}
-
-/* Footer Status Bar */
-.footer-status-bar {
+.foundation-view__footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 24px;
+  padding-top: 20px;
   border-top: 1px solid var(--border-subtle);
-  font-size: 0.85rem;
-  color: var(--text-secondary);
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 16px;
 }
 
-.status-tag {
-  display: inline-flex;
+.foundation-view__status-group {
+  display: flex;
   align-items: center;
   gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
 }
 
-.dot-green {
+.live-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: var(--accent-emerald);
+  box-shadow: 0 0 8px var(--accent-emerald);
 }
 
-.status-tag code {
-  font-family: var(--font-mono);
-  color: var(--accent-primary);
-  background: rgba(56, 189, 248, 0.1);
-  padding: 2px 6px;
-  border-radius: 4px;
+.status-label {
+  font-weight: 500;
 }
 
-.status-accent {
-  color: var(--accent-indigo);
-  font-weight: 600;
-}
-
-/* Responsive */
 @media (max-width: 768px) {
-  .app-header {
-    flex-direction: column;
-    gap: 16px;
-    align-items: flex-start;
-  }
-
-  .header-nav {
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
-  .foundation-card {
-    padding: 28px 20px;
-  }
-
-  .hero-title {
+  .foundation-view__title {
     font-size: 1.85rem;
   }
 }
