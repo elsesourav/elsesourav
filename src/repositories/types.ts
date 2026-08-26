@@ -1,10 +1,11 @@
 import type { Result } from '@/types/result.types';
+import type { ID, Timestamp } from '@/types/common.types';
 import type { AppError } from '@/lib/errors';
 
 export interface BaseEntity {
-  readonly id: string;
-  readonly createdAt: number;
-  readonly updatedAt: number;
+  readonly id: ID;
+  readonly createdAt: Timestamp;
+  readonly updatedAt: Timestamp;
 }
 
 export type QueryOperator = '==' | '!=' | '<' | '<=' | '>' | '>=' | 'in' | 'array-contains';
