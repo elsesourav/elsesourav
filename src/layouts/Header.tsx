@@ -1,9 +1,10 @@
 import React from 'react';
-import { Sparkles, Search, User, ShieldCheck } from 'lucide-react';
+import { Sparkles, Search, User, ShieldCheck, Sun, Moon } from 'lucide-react';
 import { appConfig } from '@/config';
 import { PRIMARY_NAVIGATION } from '@/constants/navigation';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
+import { useTheme } from '@/hooks/useTheme';
 import './Header.css';
 
 export interface HeaderProps {
@@ -12,6 +13,8 @@ export interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ currentPath = '/', onNavigate }) => {
+  const { resolvedTheme, toggleTheme } = useTheme();
+
   return (
     <header className="global-header glass-panel">
       <div className="global-header__left">
@@ -63,6 +66,15 @@ export const Header: React.FC<HeaderProps> = ({ currentPath = '/', onNavigate })
           className="global-header__icon-btn"
           aria-label="Search software and apps"
           leftIcon={<Search size={16} />}
+        />
+
+        <Button
+          variant="ghost"
+          size="sm"
+          className="global-header__icon-btn"
+          aria-label={resolvedTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          onClick={toggleTheme}
+          leftIcon={resolvedTheme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
         />
 
         <div className="global-header__divider" />

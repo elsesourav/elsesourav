@@ -1,54 +1,54 @@
 .ui-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-1-5);
   border-radius: var(--radius-full);
-  font-weight: 500;
-  line-height: 1;
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-none);
   width: fit-content;
 }
 
 .ui-badge--sm {
-  font-size: 0.7rem;
-  padding: 3px 8px;
+  font-size: var(--font-size-badge);
+  padding: var(--space-0-5) var(--space-2);
 }
 
 .ui-badge--md {
-  font-size: 0.8rem;
-  padding: 4px 10px;
+  font-size: var(--font-size-caption);
+  padding: var(--space-1) var(--space-2-5);
 }
 
 /* Variants */
 .ui-badge--default {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-subtle);
+  background: var(--color-border-subtle);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-subtle);
 }
 
 .ui-badge--mono {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  background: rgba(0, 0, 0, 0.4);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  padding: 2px 6px;
+  font-size: var(--font-size-badge);
+  background: var(--color-bg-surface-sunken);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-xs);
+  padding: 2px var(--space-1-5);
 }
 
 .ui-badge--success {
-  background: rgba(52, 211, 153, 0.1);
-  color: var(--accent-emerald);
-  border: 1px solid rgba(52, 211, 153, 0.25);
+  background: var(--color-success-bg);
+  color: var(--color-success);
+  border: 1px solid var(--color-success-border);
 }
 
 .ui-badge--accent {
-  background: rgba(56, 189, 248, 0.1);
-  color: var(--accent-primary);
-  border: 1px solid var(--border-glow);
+  background: var(--color-info-bg);
+  color: var(--color-accent-primary);
+  border: 1px solid var(--color-info-border);
 }
 
 .ui-badge--outline {
   background: transparent;
-  color: var(--text-secondary);
-  border: 1px solid var(--border-subtle);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-default);
 }

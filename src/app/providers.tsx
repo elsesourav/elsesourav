@@ -1,4 +1,5 @@
 import React from 'react';
+import { ThemeProvider } from './theme';
 
 export interface AppProvidersProps {
   readonly children: React.ReactNode;
@@ -8,5 +9,5 @@ export interface AppProvidersProps {
  * Root composition of application providers
  */
 export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
-  return <>{children}</>;
+  return <ThemeProvider>{children}</ThemeProvider>;
 };

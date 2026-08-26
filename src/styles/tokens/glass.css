@@ -1,0 +1,70 @@
+/**
+ * Design Tokens & Utilities: Glassmorphism
+ * Performance-conscious glass effects used selectively as accents
+ */
+
+:root,
+[data-theme='dark'] {
+  --glass-bg-subtle: rgba(15, 20, 31, 0.55);
+  --glass-bg-default: rgba(15, 20, 31, 0.72);
+  --glass-bg-elevated: rgba(21, 27, 42, 0.85);
+
+  --glass-blur-sm: 8px;
+  --glass-blur-default: 16px;
+  --glass-blur-lg: 24px;
+
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-border-hover: rgba(255, 255, 255, 0.2);
+  --glass-shadow: var(--shadow-lg);
+}
+
+[data-theme='light'] {
+  --glass-bg-subtle: rgba(255, 255, 255, 0.6);
+  --glass-bg-default: rgba(255, 255, 255, 0.75);
+  --glass-bg-elevated: rgba(255, 255, 255, 0.9);
+
+  --glass-blur-sm: 8px;
+  --glass-blur-default: 16px;
+  --glass-blur-lg: 24px;
+
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-border-hover: rgba(0, 0, 0, 0.16);
+  --glass-shadow: var(--shadow-md);
+}
+
+/* Base Glass Container Utility */
+.glass-panel {
+  background: var(--glass-bg-default);
+  backdrop-filter: blur(var(--glass-blur-default));
+  -webkit-backdrop-filter: blur(var(--glass-blur-default));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-panel-subtle {
+  background: var(--glass-bg-subtle);
+  backdrop-filter: blur(var(--glass-blur-sm));
+  -webkit-backdrop-filter: blur(var(--glass-blur-sm));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+}
+
+.glass-panel-elevated {
+  background: var(--glass-bg-elevated);
+  backdrop-filter: blur(var(--glass-blur-lg));
+  -webkit-backdrop-filter: blur(var(--glass-blur-lg));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+}
+
+.glass-interactive {
+  transition: var(--transition-smooth);
+  cursor: pointer;
+}
+
+.glass-interactive:hover {
+  border-color: var(--glass-border-hover);
+  transform: translateY(-2px);
+}

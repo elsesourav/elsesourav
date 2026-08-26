@@ -1,27 +1,27 @@
 .global-header {
   width: 100%;
-  max-width: 1160px;
+  max-width: var(--container-max-width);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 20px;
+  padding: var(--space-2-5) var(--space-5);
   position: sticky;
-  top: 16px;
-  z-index: 100;
-  gap: 16px;
+  top: var(--space-4);
+  z-index: var(--z-header);
+  gap: var(--space-4);
 }
 
 .global-header__left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
   flex-shrink: 0;
 }
 
 .global-header__brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-2-5);
 }
 
 .global-header__brand-icon {
@@ -32,15 +32,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #07090e;
-  box-shadow: var(--glow-accent);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-glow-primary);
 }
 
 .global-header__brand-name {
   font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 1.15rem;
-  letter-spacing: -0.02em;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-h4);
+  letter-spacing: var(--letter-spacing-tight);
   background: var(--gradient-accent);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -49,71 +49,71 @@
 .global-header__nav {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-1-5);
 }
 
 .global-header__nav-link {
-  font-size: 0.88rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  padding: 6px 12px;
+  font-size: var(--font-size-body-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  padding: var(--space-1-5) var(--space-3);
   border-radius: var(--radius-sm);
-  transition: var(--transition-smooth);
+  transition: var(--transition-fast);
 }
 
 .global-header__nav-link:hover {
-  color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-text-primary);
+  background: var(--color-border-subtle);
 }
 
 .global-header__nav-link.is-active {
-  color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-text-primary);
+  background: var(--color-border-default);
 }
 
 .global-header__actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   flex-shrink: 0;
 }
 
 .global-header__icon-btn {
-  padding: 8px;
+  padding: var(--space-2);
   border-radius: var(--radius-sm);
 }
 
 .global-header__divider {
   width: 1px;
   height: 20px;
-  background: var(--border-subtle);
-  margin: 0 4px;
+  background: var(--color-border-subtle);
+  margin: 0 var(--space-1);
 }
 
 .global-header__auth-btn {
-  font-size: 0.82rem;
-  padding: 6px 14px;
+  font-size: var(--font-size-caption);
+  padding: var(--space-1-5) var(--space-3-5);
 }
 
 .global-header__status-indicator {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--accent-emerald);
-  padding: 4px;
+  color: var(--color-success);
+  padding: var(--space-1);
 }
 
 @media (max-width: 860px) {
   .global-header {
     flex-wrap: wrap;
-    padding: 12px 16px;
+    padding: var(--space-3) var(--space-4);
   }
 
   .global-header__nav {
     order: 3;
     width: 100%;
     overflow-x: auto;
-    padding-top: 8px;
-    border-top: 1px solid var(--border-subtle);
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--color-border-subtle);
   }
 }

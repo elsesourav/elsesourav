@@ -1,0 +1,18 @@
+/**
+ * Design Tokens: Z-Index Scale
+ * Layering hierarchy to prevent arbitrary z-index conflicts
+ */
+
+:root {
+  --z-hide: -1;
+  --z-base: 0;
+  --z-elevated: 10;
+  --z-sticky: 100;
+  --z-header: 200;
+  --z-drawer: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 450;
+  --z-popover: 500;
+  --z-toast: 600;
+  --z-tooltip: 700;
+}

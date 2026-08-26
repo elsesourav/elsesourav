@@ -1,0 +1,42 @@
+/**
+ * Design Tokens & Utilities: Accessibility & Focus States
+ * WCAG-compliant keyboard focus visibility and screen-reader helpers
+ */
+
+:root,
+[data-theme='dark'] {
+  --focus-ring-color: #38bdf8;
+  --focus-ring-offset-color: #07090e;
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+}
+
+[data-theme='light'] {
+  --focus-ring-color: #0284c7;
+  --focus-ring-offset-color: #ffffff;
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+}
+
+/* Global Focus-Visible Styling */
+:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Screen Reader Only Utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

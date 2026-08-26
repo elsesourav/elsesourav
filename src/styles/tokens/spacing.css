@@ -1,0 +1,40 @@
+/**
+ * Design Tokens: Spacing & Layout Constraints
+ * Predictable 4px / 8px linear spacing scale
+ */
+
+:root {
+  /* Spacing Scale */
+  --space-0: 0px;
+  --space-0-5: 2px;
+  --space-1: 4px;
+  --space-1-5: 6px;
+  --space-2: 8px;
+  --space-2-5: 10px;
+  --space-3: 12px;
+  --space-3-5: 14px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-9: 36px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-14: 56px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* Layout & Container Constraints */
+  --container-max-width: 1160px;
+  --container-narrow-width: 860px;
+  --container-prose-width: 720px;
+
+  /* Viewport Breakpoints (Reference constants for media queries) */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
