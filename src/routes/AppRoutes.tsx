@@ -81,9 +81,6 @@ export const AppRoutes: React.FC = () => {
           <Route path={ROUTES.SUPPORT_TICKETS} element={<SupportTicketsPage />} />
           <Route path={ROUTES.SUPPORT_TICKET_DETAIL} element={<SupportTicketDetailPage />} />
         </Route>
-
-        {/* 404 Catch-All within AppLayout */}
-        <Route path="*" element={<NotFoundPage />} />
       </Route>
 
       {/* Admin Portal Routes (Dedicated AdminLayout & Authorization Guard) */}
@@ -106,6 +103,11 @@ export const AppRoutes: React.FC = () => {
           <Route path={ROUTES.ADMIN.THEME} element={<AdminThemePage />} />
           <Route path={ROUTES.ADMIN.AUDIT_LOGS} element={<AdminAuditLogsPage />} />
         </Route>
+      </Route>
+
+      {/* 404 Catch-All */}
+      <Route element={<AppLayout />}>
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
   );

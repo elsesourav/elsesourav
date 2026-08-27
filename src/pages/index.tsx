@@ -98,13 +98,7 @@ export { AdminHelpEditorPage } from './admin/AdminHelpEditorPage';
 
 export { AdminSupportPage } from './admin/AdminSupportPage';
 
-export const AdminAnalyticsPage: React.FC = () => (
-  <PlaceholderPage
-    title="Platform Analytics"
-    description="Monitor app launch volume, library adds, page views, and visitor trends."
-    badge="Admin - Analytics"
-  />
-);
+export { AdminAnalyticsPage } from './admin/AdminAnalyticsPage';
 
 export const AdminThemePage: React.FC = () => (
   <PlaceholderPage
