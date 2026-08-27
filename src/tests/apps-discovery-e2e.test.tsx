@@ -172,6 +172,33 @@ describe('Apps Discovery & Details End-to-End Integration Suite', () => {
       })
     );
 
+    vi.spyOn(classificationService, 'getCategoryBySlug').mockResolvedValue(
+      ok({
+        id: 'cat-1',
+        slug: 'developer-tools',
+        name: 'Developer Tools',
+        description: 'Engineering tools',
+        orderIndex: 0,
+        isActive: true,
+        createdAt: 100,
+        updatedAt: 100,
+      })
+    );
+
+    vi.spyOn(appRepository, 'findBySlug').mockImplementation(async (slug) => {
+      if (slug === 'codeflow-ide') return ok(mockFlowApp);
+      if (slug === 'quick-calc') return ok(mockCalcApp);
+      if (slug === 'secret-beta') return ok(mockDraftApp);
+      return ok(null);
+    });
+
+    vi.spyOn(appRepository, 'findById').mockImplementation(async (id) => {
+      if (id === 'app-flow') return ok(mockFlowApp);
+      if (id === 'app-calc') return ok(mockCalcApp);
+      if (id === 'app-draft') return ok(mockDraftApp);
+      return ok(null);
+    });
+
     vi.spyOn(appService, 'getAppBySlug').mockImplementation(async (slug) => {
       if (slug === 'codeflow-ide') return ok(mockFlowApp);
       if (slug === 'quick-calc') return ok(mockCalcApp);

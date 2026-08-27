@@ -13,7 +13,8 @@ import {
 } from 'lucide-react';
 import { Button, Badge, Skeleton, ErrorState } from '@/components';
 import { AppCard } from '@/components/apps';
-import { useFeaturedApps } from '@/hooks/useApps';
+import { LatestUpdateCard } from '@/components/home';
+import { useFeaturedApps, useLatestApps } from '@/hooks/useApps';
 import { ROUTES } from '@/constants/routes';
 import './HomePage.css';
 
@@ -22,8 +23,15 @@ export const HomePage: React.FC = () => {
     apps: featuredApps,
     isLoading: isFeaturedLoading,
     error: featuredError,
-    refetch,
+    refetch: refetchFeatured,
   } = useFeaturedApps(3);
+
+  const {
+    apps: latestApps,
+    isLoading: isLatestLoading,
+    error: latestError,
+    refetch: refetchLatest,
+  } = useLatestApps(4);
 
   // Dynamic SEO & Structured Data
   useEffect(() => {
@@ -139,7 +147,7 @@ export const HomePage: React.FC = () => {
             title="Featured Apps Unavailable"
             description="Could not load featured applications at this time."
             action={
-              <Button variant="secondary" size="sm" onClick={() => void refetch()}>
+              <Button variant="secondary" size="sm" onClick={() => void refetchFeatured()}>
                 Retry
               </Button>
             }
@@ -156,7 +164,69 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* =========================================================================
-          3. Software Categories Preview
+          3. Latest Updates Section
+          ========================================================================= */}
+      <section className="home-section" aria-labelledby="updates-heading">
+        <header className="home-section__header">
+          <div className="home-section__title-group">
+            <h2 id="updates-heading" className="home-section__title">
+              Latest Releases & Updates
+            </h2>
+            <p className="home-section__subtitle">
+              Recent releases, improvements, and new tools across the catalog.
+            </p>
+          </div>
+
+          <Link to={ROUTES.APPS} className="home-section__link">
+            <span>All updates</span>
+            <ArrowRight size={16} />
+          </Link>
+        </header>
+
+        {isLatestLoading && (
+          <div className="home-updates-grid" data-testid="home-updates-skeleton">
+            <Skeleton variant="rounded" height={90} />
+            <Skeleton variant="rounded" height={90} />
+            <Skeleton variant="rounded" height={90} />
+            <Skeleton variant="rounded" height={90} />
+          </div>
+        )}
+
+        {latestError && !isLatestLoading && (
+          <ErrorState
+            title="Latest Updates Unavailable"
+            description="Could not load latest application updates at this time."
+            action={
+              <Button variant="secondary" size="sm" onClick={() => void refetchLatest()}>
+                Retry
+              </Button>
+            }
+          />
+        )}
+
+        {!isLatestLoading && !latestError && latestApps.length > 0 && (
+          <div className="home-updates-grid">
+            {latestApps.map((app) => (
+              <LatestUpdateCard
+                key={app.id}
+                item={{
+                  appId: app.id,
+                  appName: app.name,
+                  appSlug: app.slug,
+                  iconUrl: app.iconUrl,
+                  version: undefined,
+                  title: app.shortDescription,
+                  summary: app.shortDescription,
+                  updatedAt: app.updatedAt || app.publishedAt || app.createdAt,
+                }}
+              />
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* =========================================================================
+          4. Software Categories Preview
           ========================================================================= */}
       <section className="home-section" aria-labelledby="categories-heading">
         <header className="home-section__header">
@@ -219,7 +289,7 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* =========================================================================
-          4. Creator Introduction (20-30% Personal Layer)
+          5. Creator Introduction (20-30% Personal Layer)
           ========================================================================= */}
       <section className="home-section" aria-labelledby="creator-heading">
         <div className="home-creator-card">
@@ -249,7 +319,7 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* =========================================================================
-          5. Community Feedback & Support Banner
+          6. Community Feedback & Support Banner
           ========================================================================= */}
       <section className="home-support-banner" aria-label="Support and Feedback">
         <div className="home-support-banner__content">

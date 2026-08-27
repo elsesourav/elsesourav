@@ -5,6 +5,7 @@ import { HomePage } from '../HomePage';
 import * as useAppsModule from '@/hooks/useApps';
 import * as useUserLibraryModule from '@/hooks/useUserLibrary';
 import * as useAuthModule from '@/hooks/useAuth';
+import { analyticsService } from '@/services/analytics.service';
 import { AppError } from '@/lib/errors';
 import type { App } from '@/types/app.types';
 
@@ -44,11 +45,38 @@ const mockFeaturedApps: App[] = [
   },
 ];
 
+const mockLatestApps: App[] = [
+  {
+    id: 'app-calc',
+    slug: 'quick-calc',
+    name: 'Quick Calc',
+    shortDescription: 'Instant popup math calculator for Chrome.',
+    description: 'Fast math extension.',
+    iconUrl: 'https://cdn.elsesourav.com/calc.png',
+    primaryCategory: 'utilities',
+    tags: ['calculator', 'math'],
+    status: 'published',
+    platforms: ['chrome'],
+    links: [],
+    screenshots: [],
+    stats: { views: 100, launches: 50, libraryAdds: 10, ratingAverage: 4.5 },
+    isFeatured: false,
+    isPinned: false,
+    sortOrder: 2,
+    createdAt: 1700002000000,
+    updatedAt: 1700003000000,
+    publishedAt: 1700002000000,
+  },
+];
+
 describe('HomePage Component', () => {
-  const mockRefetch = vi.fn();
+  const mockRefetchFeatured = vi.fn();
+  const mockRefetchLatest = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
+
+    vi.spyOn(analyticsService, 'trackView').mockResolvedValue(undefined);
 
     vi.spyOn(useUserLibraryModule, 'useUserLibrary').mockReturnValue({
       savedAppIds: new Set(),
@@ -84,7 +112,15 @@ describe('HomePage Component', () => {
       hasMore: false,
       isLoading: false,
       error: null,
-      refetch: mockRefetch,
+      refetch: mockRefetchFeatured,
+    });
+
+    vi.spyOn(useAppsModule, 'useLatestApps').mockReturnValue({
+      apps: mockLatestApps,
+      hasMore: false,
+      isLoading: false,
+      error: null,
+      refetch: mockRefetchLatest,
     });
   });
 
@@ -133,13 +169,46 @@ describe('HomePage Component', () => {
     expect(screen.getByText('CodeFlow IDE')).toBeInTheDocument();
   });
 
-  it('4. Shows loading skeleton during featured apps loading', () => {
+  it('4. Renders latest releases & updates section with update card and links', () => {
+    render(
+      <BrowserRouter>
+        <HomePage />
+      </BrowserRouter>
+    );
+
+    expect(
+      screen.getByRole('heading', { level: 2, name: /latest releases & updates/i })
+    ).toBeInTheDocument();
+    expect(screen.getByText('Quick Calc')).toBeInTheDocument();
+    expect(screen.getByText('Instant popup math calculator for Chrome.')).toBeInTheDocument();
+
+    const updateLink = screen.getByRole('link', {
+      name: /view quick calc update: instant popup math calculator for chrome\./i,
+    });
+    expect(updateLink).toHaveAttribute('href', '/apps/quick-calc');
+
+    // Click update card to verify non-blocking telemetry
+    fireEvent.click(updateLink);
+    expect(analyticsService.trackView).toHaveBeenCalledWith('app-calc', {
+      source: 'home_latest_updates',
+    });
+  });
+
+  it('5. Shows loading skeletons during featured apps and latest updates loading', () => {
     vi.spyOn(useAppsModule, 'useFeaturedApps').mockReturnValue({
       apps: [],
       hasMore: false,
       isLoading: true,
       error: null,
-      refetch: mockRefetch,
+      refetch: mockRefetchFeatured,
+    });
+
+    vi.spyOn(useAppsModule, 'useLatestApps').mockReturnValue({
+      apps: [],
+      hasMore: false,
+      isLoading: true,
+      error: null,
+      refetch: mockRefetchLatest,
     });
 
     render(
@@ -149,15 +218,16 @@ describe('HomePage Component', () => {
     );
 
     expect(screen.getByTestId('home-featured-skeleton')).toBeInTheDocument();
+    expect(screen.getByTestId('home-updates-skeleton')).toBeInTheDocument();
   });
 
-  it('5. Handles featured apps error gracefully without breaking homepage', () => {
+  it('6. Handles featured apps error gracefully without breaking latest updates', () => {
     vi.spyOn(useAppsModule, 'useFeaturedApps').mockReturnValue({
       apps: [],
       hasMore: false,
       isLoading: false,
       error: AppError.internal('Failed to fetch featured'),
-      refetch: mockRefetch,
+      refetch: mockRefetchFeatured,
     });
 
     render(
@@ -167,12 +237,37 @@ describe('HomePage Component', () => {
     );
 
     expect(screen.getByText('Featured Apps Unavailable')).toBeInTheDocument();
+    expect(screen.getByText('Quick Calc')).toBeInTheDocument();
+
     const retryBtn = screen.getByRole('button', { name: /retry/i });
     fireEvent.click(retryBtn);
-    expect(mockRefetch).toHaveBeenCalled();
+    expect(mockRefetchFeatured).toHaveBeenCalled();
   });
 
-  it('6. Renders categories preview, creator spotlight, and support banner', () => {
+  it('7. Handles latest updates error gracefully without breaking featured apps', () => {
+    vi.spyOn(useAppsModule, 'useLatestApps').mockReturnValue({
+      apps: [],
+      hasMore: false,
+      isLoading: false,
+      error: AppError.internal('Failed to fetch updates'),
+      refetch: mockRefetchLatest,
+    });
+
+    render(
+      <BrowserRouter>
+        <HomePage />
+      </BrowserRouter>
+    );
+
+    expect(screen.getByText('Latest Updates Unavailable')).toBeInTheDocument();
+    expect(screen.getByText('CodeFlow IDE')).toBeInTheDocument();
+
+    const retryBtn = screen.getByRole('button', { name: /retry/i });
+    fireEvent.click(retryBtn);
+    expect(mockRefetchLatest).toHaveBeenCalled();
+  });
+
+  it('8. Renders categories preview, creator spotlight, and support banner', () => {
     render(
       <BrowserRouter>
         <HomePage />
@@ -193,7 +288,7 @@ describe('HomePage Component', () => {
     ).toBeInTheDocument();
   });
 
-  it('7. Sets document title and injects JSON-LD structured data', () => {
+  it('9. Sets document title and injects JSON-LD structured data', () => {
     render(
       <BrowserRouter>
         <HomePage />

@@ -21,3 +21,5 @@ export function formatDateTime(timestamp: number): string {
     day: 'numeric',
   }).format(new Date(timestamp));
 }
+
+export const formatDate = formatDateTime;
