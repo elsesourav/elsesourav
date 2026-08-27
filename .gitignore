@@ -20,6 +20,7 @@ dist-ssr/
 build/
 coverage/
 *.tsbuildinfo
+.firebase/
 graphify-out/
 
 # OS & Editor
