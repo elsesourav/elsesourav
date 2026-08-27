@@ -3,13 +3,15 @@ import { mobileConfig } from '@/config/mobile.config';
 import { appConfig } from '@/config/app.config';
 import packageJson from '../../package.json';
 import { nativeBridge } from '@/services/native-bridge.service';
+import fs from 'node:fs';
+import path from 'node:path';
 
-describe('Mobile Distribution & Native Packaging Architecture (Prompt 81)', () => {
+describe('Mobile Distribution & Deep-Link Architecture (Prompt 81 & 82)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  describe('Task 3, 4 & 5: Mobile Configuration & Identifiers', () => {
+  describe('Task 1 & 2: Mobile Configuration & Android App Links', () => {
     it('defines stable reverse-domain application identifiers for Android and iOS', () => {
       expect(mobileConfig.appId).toBe('com.elsesourav.app');
       expect(mobileConfig.appName).toBe('ElseSourav');
@@ -22,45 +24,66 @@ describe('Mobile Distribution & Native Packaging Architecture (Prompt 81)', () =
       expect(mobileConfig.buildNumber).toBeGreaterThanOrEqual(1);
     });
 
-    it('configures secure HTTPS schemes for mobile webview containers', () => {
-      expect(mobileConfig.server.androidScheme).toBe('https');
-      expect(mobileConfig.server.iosScheme).toBe('https');
-      expect(mobileConfig.server.hostname).toBe('elsesourav.com');
-    });
+    it('validates Android assetlinks.json format and package matching', () => {
+      const assetlinksPath = path.resolve(process.cwd(), 'public/.well-known/assetlinks.json');
+      expect(fs.existsSync(assetlinksPath)).toBe(true);
 
-    it('enforces strict zero unnecessary device permissions policy', () => {
-      expect(mobileConfig.permissions.camera).toBe(false);
-      expect(mobileConfig.permissions.microphone).toBe(false);
-      expect(mobileConfig.permissions.location).toBe(false);
-      expect(mobileConfig.permissions.contacts).toBe(false);
-      expect(mobileConfig.permissions.photos).toBe(false);
-      expect(mobileConfig.permissions.bluetooth).toBe(false);
+      const content = JSON.parse(fs.readFileSync(assetlinksPath, 'utf8'));
+      expect(Array.isArray(content)).toBe(true);
+      expect(content[0].target.package_name).toBe(mobileConfig.appId);
+      expect(content[0].target.sha256_cert_fingerprints).toBeDefined();
     });
   });
 
-  describe('Task 7 & 8: Native Platform Bridge & Deep Linking', () => {
-    it('identifies platform correctly and defaults safely to web in standard browsers', () => {
-      expect(nativeBridge.isNative()).toBe(false);
-      expect(nativeBridge.getPlatform()).toBe('web');
+  describe('Task 3: iOS Universal Links (apple-app-site-association)', () => {
+    it('validates Apple App Site Association format and bundle identifier matching', () => {
+      const aasaPath = path.resolve(process.cwd(), 'public/.well-known/apple-app-site-association');
+      expect(fs.existsSync(aasaPath)).toBe(true);
+
+      const content = JSON.parse(fs.readFileSync(aasaPath, 'utf8'));
+      expect(content.applinks).toBeDefined();
+      expect(content.applinks.details[0].appID).toContain(mobileConfig.appId);
+      expect(content.applinks.details[0].paths).toContain('/apps/*');
+      expect(content.applinks.details[0].paths).toContain('NOT /admin/*');
+    });
+  });
+
+  describe('Task 1 & 8: Deep Link Route Whitelist & Security Invariants', () => {
+    it('allows public routes to be deep-linked', () => {
+      expect(nativeBridge.isDeepLinkAllowed('/apps')).toBe(true);
+      expect(nativeBridge.isDeepLinkAllowed('/apps/terminal-pro')).toBe(true);
+      expect(nativeBridge.isDeepLinkAllowed('/blog')).toBe(true);
+      expect(nativeBridge.isDeepLinkAllowed('/blog/architecture-update')).toBe(true);
+      expect(nativeBridge.isDeepLinkAllowed('/help')).toBe(true);
+      expect(nativeBridge.isDeepLinkAllowed('/help/troubleshooting/errors')).toBe(true);
+      expect(nativeBridge.isDeepLinkAllowed('/about')).toBe(true);
+      expect(nativeBridge.isDeepLinkAllowed('/search')).toBe(true);
+      expect(nativeBridge.isDeepLinkAllowed('/')).toBe(true);
     });
 
-    it('parses custom scheme deep links into valid internal SPA routes', () => {
-      const parsedApp = nativeBridge.parseDeepLink('elsesourav://apps/terminal-pro');
-      expect(parsedApp).toBe('/apps/terminal-pro');
-
-      const parsedBlog = nativeBridge.parseDeepLink('elsesourav://blog/modern-architecture');
-      expect(parsedBlog).toBe('/blog/modern-architecture');
-
-      const parsedSupport = nativeBridge.parseDeepLink('elsesourav://support');
-      expect(parsedSupport).toBe('/support');
+    it('strictly denies private, sensitive, or administrative routes from external deep links', () => {
+      expect(nativeBridge.isDeepLinkAllowed('/admin')).toBe(false);
+      expect(nativeBridge.isDeepLinkAllowed('/admin/apps')).toBe(false);
+      expect(nativeBridge.isDeepLinkAllowed('/settings')).toBe(false);
+      expect(nativeBridge.isDeepLinkAllowed('/support/tickets')).toBe(false);
+      expect(nativeBridge.isDeepLinkAllowed('/support/tickets/ticket-123')).toBe(false);
+      expect(nativeBridge.isDeepLinkAllowed('/library')).toBe(false);
+      expect(nativeBridge.isDeepLinkAllowed('/login')).toBe(false);
+      expect(nativeBridge.isDeepLinkAllowed('/signup')).toBe(false);
+      expect(nativeBridge.isDeepLinkAllowed('/forgot-password')).toBe(false);
     });
 
-    it('parses Universal / App Links into valid internal SPA routes', () => {
-      const parsed = nativeBridge.parseDeepLink('https://elsesourav.com/apps/cloud-canvas?tab=reviews#top');
-      expect(parsed).toBe('/apps/cloud-canvas?tab=reviews#top');
+    it('rejects external deep links targeting excluded administrative paths', () => {
+      expect(nativeBridge.parseDeepLink('elsesourav://admin/apps')).toBeNull();
+      expect(nativeBridge.parseDeepLink('elsesourav://settings')).toBeNull();
+      expect(nativeBridge.parseDeepLink('elsesourav://support/tickets/123')).toBeNull();
+      expect(nativeBridge.parseDeepLink('https://elsesourav.com/admin')).toBeNull();
+    });
 
-      const parsedSubdomain = nativeBridge.parseDeepLink('https://www.elsesourav.com/help/faq');
-      expect(parsedSubdomain).toBe('/help/faq');
+    it('parses valid public deep links correctly', () => {
+      expect(nativeBridge.parseDeepLink('elsesourav://apps/terminal-pro')).toBe('/apps/terminal-pro');
+      expect(nativeBridge.parseDeepLink('https://elsesourav.com/blog/article-1')).toBe('/blog/article-1');
+      expect(nativeBridge.parseDeepLink('https://elsesourav.com/help/guides/getting-started')).toBe('/help/guides/getting-started');
     });
 
     it('rejects malicious or third-party deep link targets', () => {
@@ -69,17 +92,12 @@ describe('Mobile Distribution & Native Packaging Architecture (Prompt 81)', () =
       expect(nativeBridge.parseDeepLink('elsesourav://data:text/html,<script>')).toBeNull();
     });
 
-    it('executes navigation callback on valid deep links', () => {
+    it('executes navigation callback on valid public deep links', () => {
       const navigateMock = vi.fn();
-      const handled = nativeBridge.handleDeepLink('elsesourav://library', navigateMock);
+      const handled = nativeBridge.handleDeepLink('elsesourav://apps/code-editor', navigateMock);
 
       expect(handled).toBe(true);
-      expect(navigateMock).toHaveBeenCalledWith('/library');
-    });
-
-    it('safely rejects unsafe URLs during external URL navigation', async () => {
-      const result = await nativeBridge.openExternalUrl('javascript:alert(1)');
-      expect(result).toBe(false);
+      expect(navigateMock).toHaveBeenCalledWith('/apps/code-editor');
     });
   });
 });

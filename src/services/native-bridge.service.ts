@@ -1,4 +1,5 @@
 import { Capacitor } from '@capacitor/core';
+import { App as CapApp } from '@capacitor/app';
 import { isSafeExternalUrl, isSafeUrl } from '@/utils/url-safety';
 import { mobileConfig } from '@/config/mobile.config';
 
@@ -7,6 +8,35 @@ export interface ShareOptions {
   readonly text?: string;
   readonly url?: string;
 }
+
+/**
+ * Public routes allowed for external deep linking into the mobile application
+ */
+export const ALLOWED_DEEP_LINK_PREFIXES: readonly string[] = [
+  '/apps',
+  '/blog',
+  '/help',
+  '/about',
+  '/search',
+  '/privacy',
+  '/terms',
+  '/cookies',
+  '/accessibility',
+  '/',
+];
+
+/**
+ * Private, administrative, or sensitive routes explicitly excluded from external deep links
+ */
+export const DISALLOWED_DEEP_LINK_PREFIXES: readonly string[] = [
+  '/admin',
+  '/settings',
+  '/support/tickets',
+  '/library',
+  '/login',
+  '/signup',
+  '/forgot-password',
+];
 
 export class NativeBridgeService {
   /**
@@ -31,6 +61,26 @@ export class NativeBridgeService {
     } catch {
       return 'web';
     }
+  }
+
+  /**
+   * Verifies if a given path is allowed for external deep-link navigation.
+   */
+  public isDeepLinkAllowed(path: string): boolean {
+    if (!path || !path.startsWith('/')) return false;
+
+    // Check for explicit exclusions
+    const isExcluded = DISALLOWED_DEEP_LINK_PREFIXES.some(
+      (prefix) => path === prefix || path.startsWith(`${prefix}/`) || path.startsWith(`${prefix}?`)
+    );
+    if (isExcluded) return false;
+
+    // Check for allowed public prefixes
+    if (path === '/' || path === '') return true;
+
+    return ALLOWED_DEEP_LINK_PREFIXES.some(
+      (prefix) => prefix !== '/' && (path === prefix || path.startsWith(`${prefix}/`) || path.startsWith(`${prefix}?`))
+    );
   }
 
   /**
@@ -88,7 +138,7 @@ export class NativeBridgeService {
 
   /**
    * Parses deep links from custom scheme (elsesourav://...) or Universal Links (https://elsesourav.com/...)
-   * into a standard internal SPA route path.
+   * into a safe, allowed internal SPA route path.
    */
   public parseDeepLink(rawUrl: string): string | null {
     if (!rawUrl || typeof rawUrl !== 'string') return null;
@@ -110,7 +160,10 @@ export class NativeBridgeService {
       }
 
       const normalizedPath = pathPart.startsWith('/') ? pathPart : `/${pathPart}`;
-      return isSafeUrl(normalizedPath) ? normalizedPath : null;
+      if (!isSafeUrl(normalizedPath) || !this.isDeepLinkAllowed(normalizedPath)) {
+        return null;
+      }
+      return normalizedPath;
     }
 
     // 2. Universal / App Links: https://elsesourav.com/path
@@ -122,7 +175,10 @@ export class NativeBridgeService {
 
       if (isConfiguredDomain) {
         const fullPath = `${url.pathname}${url.search}${url.hash}`;
-        return isSafeUrl(fullPath) ? fullPath : null;
+        if (!isSafeUrl(fullPath) || !this.isDeepLinkAllowed(url.pathname)) {
+          return null;
+        }
+        return fullPath;
       }
     } catch {
       // Invalid URL format
@@ -141,6 +197,29 @@ export class NativeBridgeService {
       return true;
     }
     return false;
+  }
+
+  /**
+   * Initializes native deep-link listener when running in Capacitor container.
+   */
+  public initDeepLinkListener(navigate: (path: string) => void): () => void {
+    if (!this.isNative()) {
+      return () => {
+        // No-op on web
+      };
+    }
+
+    let isSubscribed = true;
+    void CapApp.addListener('appUrlOpen', (event) => {
+      if (isSubscribed && event.url) {
+        this.handleDeepLink(event.url, navigate);
+      }
+    });
+
+    return () => {
+      isSubscribed = false;
+      void CapApp.removeAllListeners();
+    };
   }
 }
 

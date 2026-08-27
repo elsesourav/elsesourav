@@ -1,0 +1,74 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "TEAM_ID_PLACEHOLDER.com.elsesourav.app",
+        "paths": [
+          "NOT /admin/*",
+          "NOT /settings/*",
+          "NOT /support/tickets/*",
+          "NOT /library",
+          "NOT /login",
+          "NOT /signup",
+          "NOT /forgot-password",
+          "/apps/*",
+          "/apps",
+          "/blog/*",
+          "/blog",
+          "/help/*",
+          "/help",
+          "/about",
+          "/"
+        ],
+        "components": [
+          {
+            "/": "/admin/*",
+            "exclude": true,
+            "comment": "Exclude administrative control center from universal links"
+          },
+          {
+            "/": "/settings/*",
+            "exclude": true,
+            "comment": "Exclude private user settings from universal links"
+          },
+          {
+            "/": "/support/tickets/*",
+            "exclude": true,
+            "comment": "Exclude private support tickets from universal links"
+          },
+          {
+            "/": "/library",
+            "exclude": true,
+            "comment": "Exclude private user library from universal links"
+          },
+          {
+            "/": "/apps/*",
+            "comment": "Deep link directly into software catalog and application detail views"
+          },
+          {
+            "/": "/blog/*",
+            "comment": "Deep link directly into engineering devlogs and blog articles"
+          },
+          {
+            "/": "/help/*",
+            "comment": "Deep link directly into knowledge base categories and documentation articles"
+          },
+          {
+            "/": "/about",
+            "comment": "Deep link into creator showcase and platform overview"
+          },
+          {
+            "/": "/",
+            "comment": "Deep link into showcase homepage"
+          }
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": [
+      "TEAM_ID_PLACEHOLDER.com.elsesourav.app"
+    ]
+  }
+}

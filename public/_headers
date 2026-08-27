@@ -23,3 +23,8 @@
 
 /robots.txt
   Cache-Control: public, max-age=3600
+
+/.well-known/*
+  Content-Type: application/json
+  Cache-Control: public, max-age=3600
+

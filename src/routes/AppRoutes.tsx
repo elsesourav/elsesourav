@@ -1,10 +1,11 @@
-import React, { Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { Suspense, useEffect } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { AppLayout, AdminLayout } from '@/layouts';
 import { ProtectedRoute } from '@/components/routes/ProtectedRoute';
 import { AdminRoute } from '@/components/routes/AdminRoute';
 import { LoadingFallback } from '@/components/feedback/LoadingFallback';
 import { ROUTES } from '@/constants/routes';
+import { nativeBridge } from '@/services/native-bridge.service';
 
 // =============================================================================
 // PRIMARY DISCOVERY PAGES (Eagerly loaded for sub-millisecond initial paint)
@@ -118,6 +119,15 @@ const AdminAuditLogsPage = React.lazy(() =>
 );
 
 export const AppRoutes: React.FC = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const cleanup = nativeBridge.initDeepLinkListener((path) => {
+      navigate(path);
+    });
+    return cleanup;
+  }, [navigate]);
+
   return (
     <Suspense fallback={<LoadingFallback message="Loading content..." />}>
       <Routes>

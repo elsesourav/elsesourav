@@ -113,15 +113,41 @@ permissions: {
 
 ---
 
-## 6. Deep Linking & Universal Links
+## 6. Deep Linking & Universal Links Architecture
 
-Incoming URLs are normalized and dispatched to the internal React router via [`nativeBridge.handleDeepLink()`](file:///Users/sourav/Developer/WEB/elsesourav/src/services/native-bridge.service.ts):
+Incoming URLs are verified against an explicit security allowlist and dispatched to the internal React router via [`nativeBridge.handleDeepLink()`](file:///Users/sourav/Developer/WEB/elsesourav/src/services/native-bridge.service.ts):
 
-1. **Custom Scheme**: `elsesourav://apps/terminal-pro` $\to$ `/apps/terminal-pro`
-2. **Universal Links**: `https://elsesourav.com/blog/article-slug` $\to$ `/blog/article-slug`
-3. **Internal Routing**: Navigation is executed client-side without full page reloads.
+### A. Supported Public Deep-Link Routes
+- Applications Directory & Details: `https://elsesourav.com/apps`, `https://elsesourav.com/apps/:slug`
+- Blog & Engineering Articles: `https://elsesourav.com/blog`, `https://elsesourav.com/blog/:slug`
+- Help Center & Knowledge Base: `https://elsesourav.com/help`, `https://elsesourav.com/help/:category`, `https://elsesourav.com/help/:category/:article`
+- Search & Discovery: `https://elsesourav.com/search`
+- Creator Showcase & Legal: `https://elsesourav.com/about`, `/privacy`, `/terms`, `/cookies`, `/accessibility`
 
----
+### B. Explicitly Excluded Routes (Never Deep-Linked into Native)
+- Administrative Control Center (`/admin/*`)
+- User Settings & Account Management (`/settings/*`)
+- Private Support Tickets & Threads (`/support/tickets/*`)
+- Personal Software Library (`/library`)
+- Authentication Flows (`/login`, `/signup`, `/forgot-password`)
+
+### C. Android App Links (`/.well-known/assetlinks.json`)
+- Hosted statically at: `https://elsesourav.com/.well-known/assetlinks.json`
+- Verification is automatically performed by Android OS on app install.
+- To obtain the production SHA256 fingerprint from your release keystore:
+  ```bash
+  keytool -list -v -keystore release-key.jks -alias elsesourav
+  ```
+  Replace `REPLACE_WITH_PRODUCTION_RELEASE_KEYSTORE_SHA256_FINGERPRINT` in `public/.well-known/assetlinks.json` with the output.
+
+### D. iOS Universal Links (`/.well-known/apple-app-site-association`)
+- Hosted statically at: `https://elsesourav.com/.well-known/apple-app-site-association`
+- Configured with Associated Domains entitlement: `applinks:elsesourav.com`.
+- Replace `TEAM_ID_PLACEHOLDER` with your 10-character Apple Developer Team ID.
+
+### E. Web Fallback & Open Redirect Defense
+- When the mobile app is **not** installed, all links open normally in standard desktop or mobile web browsers.
+- Query parameters containing redirects (`?redirect=...`) are strictly sanitized through `safeRedirectPath()` to prevent open-redirect vulnerabilities.
 
 ## 7. Build & Packaging Commands
 

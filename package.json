@@ -28,6 +28,7 @@
     "mobile:open:ios": "cap open ios"
   },
   "dependencies": {
+    "@capacitor/app": "^8.1.1",
     "@capacitor/core": "^8.5.0",
     "firebase": "^12.18.0",
     "lucide-react": "^1.16.0",
