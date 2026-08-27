@@ -6,4 +6,5 @@ export * from './interfaces';
 export * from './category.repository';
 export * from './tag.repository';
 export * from './app.repository';
+export * from './version.repository';
 export * from './user.repository';

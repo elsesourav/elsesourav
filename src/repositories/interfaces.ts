@@ -58,6 +58,23 @@ export interface ITagRepository extends IRepository<Tag, CreateTagDto, UpdateTag
   checkSlugUnique(slug: string, excludeId?: string): RepositoryResult<boolean>;
 }
 
+import type { AppVersion } from '@/types/version.types';
+import type { CreateAppVersionDto, UpdateAppVersionDto } from './version.repository';
+
+/**
+ * App Version Repository Contract (Subcollection: apps/{appId}/versions/{versionId})
+ */
+export interface IAppVersionRepository {
+  findById(appId: string, versionId: string): RepositoryResult<AppVersion | null>;
+  findByVersion(appId: string, version: string): RepositoryResult<AppVersion | null>;
+  listByApp(appId: string, options?: QueryOptions): PaginatedRepositoryResult<AppVersion>;
+  getLatest(appId: string): RepositoryResult<AppVersion | null>;
+  create(appId: string, data: CreateAppVersionDto): RepositoryResult<AppVersion>;
+  update(appId: string, versionId: string, data: UpdateAppVersionDto): RepositoryResult<AppVersion>;
+  checkVersionUnique(appId: string, version: string, excludeId?: string): RepositoryResult<boolean>;
+  setCurrentVersion(appId: string, versionId: string): RepositoryResult<AppVersion>;
+}
+
 import type { AuthUser } from '@/types/auth.types';
 import type {
   CreateUserProfileDto,
