@@ -25,7 +25,9 @@
     "validate": "npm run typecheck && npm run lint && npm run test && npm run build",
     "mobile:sync": "cap sync",
     "mobile:open:android": "cap open android",
-    "mobile:open:ios": "cap open ios"
+    "mobile:open:ios": "cap open ios",
+    "db:seed": "npx vite-node scripts/seed-firestore.ts",
+    "db:validate": "npx vite-node scripts/validate-database.ts"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.0",
