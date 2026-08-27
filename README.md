@@ -177,5 +177,7 @@ npx firebase deploy --only hosting,firestore
 | [`docs/APP_STORE_SUBMISSION_CHECKLIST.md`](file:///Users/sourav/Developer/WEB/elsesourav/docs/APP_STORE_SUBMISSION_CHECKLIST.md) | Google Play Store & Apple App Store submission metadata and compliance |
 | [`docs/DEPLOYMENT_AND_OPERATIONS.md`](file:///Users/sourav/Developer/WEB/elsesourav/docs/DEPLOYMENT_AND_OPERATIONS.md) | Hosting headers, security policies, edge CDN rules, and rollbacks |
 | [`docs/BACKUP_AND_RECOVERY.md`](file:///Users/sourav/Developer/WEB/elsesourav/docs/BACKUP_AND_RECOVERY.md) | Firestore automated export schedules, point-in-time recovery, and disaster runbook |
+| [`docs/OPERATIONAL_RUNBOOK.md`](file:///Users/sourav/Developer/WEB/elsesourav/docs/OPERATIONAL_RUNBOOK.md) | Master incident response, deployments, rollbacks, and security emergencies |
 | [`docs/TROUBLESHOOTING.md`](file:///Users/sourav/Developer/WEB/elsesourav/docs/TROUBLESHOOTING.md) | Practical diagnostic runbook for builds, auth, permissions, and native errors |
+| [`docs/CONTRIBUTING.md`](file:///Users/sourav/Developer/WEB/elsesourav/docs/CONTRIBUTING.md) | Developer workflow, commit conventions, and pre-release quality gate |
 | [`docs/RELEASE_PROCESS.md`](file:///Users/sourav/Developer/WEB/elsesourav/docs/RELEASE_PROCESS.md) | Solo maintainer release workflow, semver bumping, and changelog updates |
