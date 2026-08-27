@@ -13,9 +13,12 @@ export interface AppLayoutProps {
 export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   return (
     <div className="app-shell">
+      <a href="#main-content" className="skip-to-content">
+        Skip to main content
+      </a>
       <PWAStatusBanner />
       <Header />
-      <main className="app-shell__content">
+      <main id="main-content" className="app-shell__content" tabIndex={-1}>
         <RouteErrorBoundary>{children || <Outlet />}</RouteErrorBoundary>
       </main>
       <Footer />

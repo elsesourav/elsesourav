@@ -40,3 +40,26 @@
   white-space: nowrap;
   border-width: 0;
 }
+
+/* Skip to Content Link */
+.skip-to-content {
+  position: absolute;
+  top: var(--space-3, 12px);
+  left: var(--space-4, 16px);
+  z-index: calc(var(--z-toast, 1000) + 100);
+  padding: var(--space-2, 8px) var(--space-4, 16px);
+  background: var(--color-bg-surface-elevated, #1e293b);
+  color: var(--color-text-primary, #ffffff);
+  border: 2px solid var(--focus-ring-color, #38bdf8);
+  border-radius: var(--radius-md, 8px);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform var(--duration-fast, 150ms) ease;
+}
+
+.skip-to-content:focus-visible {
+  transform: translateY(0);
+}
+

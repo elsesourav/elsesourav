@@ -40,6 +40,9 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   return (
     <div className="admin-layout">
+      <a href="#admin-main-content" className="skip-to-content">
+        Skip to admin content
+      </a>
       <SEO title="Admin Control Center" noIndex />
       {/* Desktop Persistent Sidebar */}
       <div className="admin-layout__desktop-sidebar">
@@ -79,7 +82,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
           isMobileOpen={isMobileMenuOpen}
         />
-        <main className="admin-layout__content" id="admin-main-content">
+        <main className="admin-layout__content" id="admin-main-content" tabIndex={-1}>
           <RouteErrorBoundary featureName="Admin Console" adminMode={true}>
             {children || <Outlet />}
           </RouteErrorBoundary>

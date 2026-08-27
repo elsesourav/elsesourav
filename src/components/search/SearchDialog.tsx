@@ -26,8 +26,15 @@ const DEFAULT_SUGGESTIONS: readonly QuickResult[] = [
 
 export const SearchDialog: React.FC<SearchDialogProps> = ({ isOpen, onClose }) => {
   const [query, setQuery] = useState('');
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const navigate = useNavigate();
   const searchInputId = useId();
+  const listboxId = useId();
+
+  // Reset selected index when query changes
+  useEffect(() => {
+    setSelectedIndex(-1);
+  }, [query]);
 
   // Listen for Cmd+K / Ctrl+K global shortcut
   useEffect(() => {
@@ -48,6 +55,7 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({ isOpen, onClose }) =
     (path: string) => {
       onClose();
       setQuery('');
+      setSelectedIndex(-1);
       navigate(path);
     },
     [navigate, onClose]
@@ -75,13 +83,32 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({ isOpen, onClose }) =
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
         <Input
           id={searchInputId}
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded={true}
+          aria-controls={listboxId}
+          aria-activedescendant={
+            selectedIndex >= 0 && filtered[selectedIndex]
+              ? `search-opt-${selectedIndex}`
+              : undefined
+          }
           placeholder="Search apps, tools, categories, articles..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter' && query.trim()) {
+            if (e.key === 'ArrowDown') {
               e.preventDefault();
-              handleSelect(`/search?q=${encodeURIComponent(query.trim())}`);
+              setSelectedIndex((prev) => (prev < filtered.length - 1 ? prev + 1 : 0));
+            } else if (e.key === 'ArrowUp') {
+              e.preventDefault();
+              setSelectedIndex((prev) => (prev > 0 ? prev - 1 : filtered.length - 1));
+            } else if (e.key === 'Enter') {
+              e.preventDefault();
+              if (selectedIndex >= 0 && filtered[selectedIndex]) {
+                handleSelect(filtered[selectedIndex].path);
+              } else if (query.trim()) {
+                handleSelect(`/search?q=${encodeURIComponent(query.trim())}`);
+              }
             }
           }}
           leftIcon={<Search size={16} />}
@@ -107,7 +134,12 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({ isOpen, onClose }) =
           autoFocus
         />
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
+        <div
+          id={listboxId}
+          role="listbox"
+          aria-label="Search suggestions"
+          style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}
+        >
           <Text variant="muted" size="xs" weight="medium">
             {query.trim() ? 'Quick Suggestions' : 'Quick Navigation'}
           </Text>
@@ -119,45 +151,48 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({ isOpen, onClose }) =
               </Text>
             </div>
           ) : (
-            filtered.map((item) => (
-              <button
-                key={item.path}
-                type="button"
-                onClick={() => handleSelect(item.path)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: 'var(--space-2) var(--space-3)',
-                  borderRadius: 'var(--radius-md)',
-                  backgroundColor: 'transparent',
-                  border: 'none',
-                  color: 'var(--color-text-primary)',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  transition: 'background-color var(--motion-fast) ease',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--color-bg-tertiary)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-                  <span style={{ color: 'var(--color-text-muted)', display: 'flex' }}>
-                    {getTypeIcon(item.type)}
-                  </span>
-                  <span style={{ fontSize: 'var(--font-size-sm)' }}>{item.title}</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-                  <Badge variant="mono" size="sm">
-                    {item.type}
-                  </Badge>
-                  <ArrowRight size={12} style={{ color: 'var(--color-text-muted)' }} />
-                </div>
-              </button>
-            ))
+            filtered.map((item, idx) => {
+              const isSelected = selectedIndex === idx;
+              return (
+                <button
+                  key={item.path}
+                  id={`search-opt-${idx}`}
+                  role="option"
+                  aria-selected={isSelected}
+                  type="button"
+                  onClick={() => handleSelect(item.path)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: 'var(--space-2) var(--space-3)',
+                    borderRadius: 'var(--radius-md)',
+                    backgroundColor: isSelected
+                      ? 'var(--color-bg-tertiary, rgba(255, 255, 255, 0.08))'
+                      : 'transparent',
+                    border: 'none',
+                    color: 'var(--color-text-primary)',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    transition: 'background-color var(--motion-fast) ease',
+                  }}
+                  onMouseEnter={() => setSelectedIndex(idx)}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                    <span style={{ color: 'var(--color-text-muted)', display: 'flex' }}>
+                      {getTypeIcon(item.type)}
+                    </span>
+                    <span style={{ fontSize: 'var(--font-size-sm)' }}>{item.title}</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                    <Badge variant="mono" size="sm">
+                      {item.type}
+                    </Badge>
+                    <ArrowRight size={12} style={{ color: 'var(--color-text-muted)' }} />
+                  </div>
+                </button>
+              );
+            })
           )}
 
           {query.trim() && (

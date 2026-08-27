@@ -254,7 +254,12 @@ export const AdminBlogPage: React.FC = () => {
 
               <div className="admin-blog-card__actions">
                 <Link to={`/admin/blog/${post.id}/edit`} style={{ textDecoration: 'none' }}>
-                  <Button variant="secondary" size="sm" leftIcon={<PenSquare size={14} />}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<PenSquare size={14} />}
+                    title={`Edit ${post.title}`}
+                  >
                     Edit
                   </Button>
                 </Link>
@@ -264,6 +269,7 @@ export const AdminBlogPage: React.FC = () => {
                   size="sm"
                   disabled={actionInProgress === post.id}
                   onClick={() => void handleTogglePublish(post)}
+                  title={post.status === 'published' ? `Unpublish ${post.title}` : `Publish ${post.title}`}
                   leftIcon={
                     post.status === 'published' ? <XCircle size={14} /> : <CheckCircle size={14} />
                   }
@@ -276,6 +282,7 @@ export const AdminBlogPage: React.FC = () => {
                   size="sm"
                   disabled={actionInProgress === post.id}
                   onClick={() => void handleToggleArchive(post)}
+                  title={post.status === 'archived' ? `Restore ${post.title}` : `Archive ${post.title}`}
                   leftIcon={<Archive size={14} />}
                 >
                   {post.status === 'archived' ? 'Restore' : 'Archive'}

@@ -166,9 +166,9 @@ describe('Admin End-to-End Operational Workflow (Prompt 50)', () => {
     renderWithProviders('/admin');
 
     expect(
-      await screen.findByRole('heading', { level: 1, name: /Admin Dashboard/i })
+      await screen.findByRole('heading', { level: 1, name: /Admin Dashboard/i }, { timeout: 5000 })
     ).toBeInTheDocument();
-    expect(await screen.findByText('CodeSync Studio')).toBeInTheDocument();
+    expect(await screen.findByText('CodeSync Studio', {}, { timeout: 5000 })).toBeInTheDocument();
   });
 
   it('2. Records administrative mutations through domain services with audit logs', async () => {

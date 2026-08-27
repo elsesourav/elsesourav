@@ -155,15 +155,29 @@ export const AppRatingSection: React.FC<AppRatingSectionProps> = ({
                 className="app-rating-section__star-picker"
                 role="radiogroup"
                 aria-label="Select star rating"
+                onKeyDown={(e) => {
+                  if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    setRating((prev) => Math.min(5, prev + 1));
+                  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    setRating((prev) => Math.max(1, prev - 1));
+                  } else if (['1', '2', '3', '4', '5'].includes(e.key)) {
+                    e.preventDefault();
+                    setRating(parseInt(e.key, 10));
+                  }
+                }}
               >
                 {[1, 2, 3, 4, 5].map((starValue) => {
                   const active = (hoverRating || rating) >= starValue;
+                  const isChecked = rating === starValue;
                   return (
                     <button
                       key={starValue}
                       type="button"
                       role="radio"
-                      aria-checked={rating === starValue}
+                      tabIndex={isChecked ? 0 : -1}
+                      aria-checked={isChecked}
                       aria-label={`${starValue} star${starValue > 1 ? 's' : ''}`}
                       className={`app-rating-section__star-btn ${active ? 'app-rating-section__star-btn--active' : ''}`}
                       onMouseEnter={() => setHoverRating(starValue)}
