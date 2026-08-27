@@ -366,5 +366,35 @@ describe('AppService & Core Application System', () => {
       const tagResult = await appService.listAppsByTag('tools');
       expect(tagResult.success).toBe(true);
     });
+
+    it('ranks trending apps by weighted aggregate statistics', async () => {
+      const appLowStats: App = {
+        ...mockApp,
+        id: 'app-low',
+        name: 'Low Traffic App',
+        stats: { views: 10, launches: 2, libraryAdds: 0 },
+      };
+      const appHighStats: App = {
+        ...mockApp,
+        id: 'app-high',
+        name: 'High Traffic App',
+        stats: { views: 500, launches: 200, libraryAdds: 50, ratingAverage: 4.8, ratingCount: 10 },
+      };
+
+      vi.mocked(mockAppRepo.listPublished).mockResolvedValue(
+        ok({
+          items: [appLowStats, appHighStats],
+          hasMore: false,
+        })
+      );
+
+      const result = await appService.listTrendingApps(2);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        // High traffic app should be ranked #1
+        expect(result.data.items[0]?.id).toBe('app-high');
+        expect(result.data.items[1]?.id).toBe('app-low');
+      }
+    });
   });
 });

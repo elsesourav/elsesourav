@@ -167,6 +167,13 @@
   margin-left: auto;
 }
 
+.app-card__rank-badge {
+  font-family: var(--font-family-mono);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.02em;
+  opacity: 0.9;
+}
+
 .app-card__description {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);

@@ -128,6 +128,44 @@ export function useLatestApps(limit = 10): UseAppsReturn {
   };
 }
 
+export function useTrendingApps(limit = 6): UseAppsReturn {
+  const [data, setData] = useState<PaginatedResult<App>>({ items: [], hasMore: false });
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<AppError | null>(null);
+
+  const fetchTrending = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const result = await appService.listTrendingApps(limit);
+      if (isErr(result)) {
+        setError(result.error);
+      } else {
+        setData({
+          items: [...result.data.items],
+          hasMore: result.data.hasMore,
+          nextCursor: result.data.nextCursor,
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [limit]);
+
+  useEffect(() => {
+    void fetchTrending();
+  }, [fetchTrending]);
+
+  return {
+    apps: [...data.items],
+    hasMore: data.hasMore,
+    nextCursor: data.nextCursor,
+    isLoading,
+    error,
+    refetch: fetchTrending,
+  };
+}
+
 export function useAppsByCategory(category: string, options?: QueryOptions): UseAppsReturn {
   const [data, setData] = useState<PaginatedResult<App>>({ items: [], hasMore: false });
   const [isLoading, setIsLoading] = useState<boolean>(Boolean(category));

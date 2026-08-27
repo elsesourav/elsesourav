@@ -1,4 +1,4 @@
-import type { App, AppStatus } from '@/types/app.types';
+import type { App, AppStatus, AppStatistics } from '@/types/app.types';
 import type { Result } from '@/types/result.types';
 import type { AppError } from '@/lib/errors';
 import type { PaginatedResult, QueryOptions } from '@/repositories/types';
@@ -12,6 +12,21 @@ import { ok, err } from '@/lib/result';
 import { AppError as ErrorFactory } from '@/lib/errors';
 
 export type { CreateAppDto, UpdateAppDto };
+
+/**
+ * Deterministic weighted scoring algorithm for trending software
+ * Weights: library saves (5) > launches (3) > rating score (2) > views (1)
+ */
+export function calculateTrendingScore(stats?: AppStatistics): number {
+  if (!stats) return 0;
+  const views = stats.views || 0;
+  const launches = stats.launches || 0;
+  const libraryAdds = stats.libraryAdds || 0;
+  const ratingAvg = stats.ratingAverage || 0;
+  const ratingCount = stats.ratingCount || 0;
+
+  return views * 1 + launches * 3 + libraryAdds * 5 + ratingAvg * ratingCount * 2;
+}
 
 export interface IAppService {
   getAppById(id: string): Promise<Result<App | null, AppError>>;
@@ -28,6 +43,7 @@ export interface IAppService {
   listPublishedApps(options?: QueryOptions): Promise<Result<PaginatedResult<App>, AppError>>;
   listFeaturedApps(limit?: number): Promise<Result<PaginatedResult<App>, AppError>>;
   listLatestApps(limit?: number): Promise<Result<PaginatedResult<App>, AppError>>;
+  listTrendingApps(limit?: number): Promise<Result<PaginatedResult<App>, AppError>>;
   listAppsByCategory(
     category: string,
     options?: QueryOptions
@@ -147,6 +163,37 @@ export class AppService implements IAppService {
 
   public async listLatestApps(limit = 10): Promise<Result<PaginatedResult<App>, AppError>> {
     return this.appRepo.listLatest(limit);
+  }
+
+  public async listTrendingApps(limit = 6): Promise<Result<PaginatedResult<App>, AppError>> {
+    const result = await this.appRepo.listPublished({ limit: Math.max(limit * 3, 15) });
+    if (!result.success) {
+      return result;
+    }
+
+    const items = [...result.data.items];
+
+    // Rank deterministically by aggregate trending score
+    items.sort((a, b) => {
+      const scoreA = calculateTrendingScore(a.stats);
+      const scoreB = calculateTrendingScore(b.stats);
+
+      if (scoreB !== scoreA) {
+        return scoreB - scoreA;
+      }
+
+      const dateA = a.publishedAt || a.createdAt;
+      const dateB = b.publishedAt || b.createdAt;
+      return dateB - dateA;
+    });
+
+    const topItems = items.slice(0, limit);
+
+    return ok({
+      items: topItems,
+      hasMore: items.length > limit,
+      totalCount: result.data.totalCount,
+    });
   }
 
   public async listAppsByCategory(

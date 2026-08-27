@@ -24,6 +24,7 @@ export interface AppCardProps {
   readonly variant?: 'default' | 'featured' | 'compact';
   readonly isUnavailable?: boolean;
   readonly ratingAverage?: number;
+  readonly rank?: number;
   readonly className?: string;
   readonly onActionClick?: (action: SmartAction, event: React.MouseEvent) => void;
 }
@@ -33,6 +34,7 @@ export const AppCard: React.FC<AppCardProps> = ({
   variant = 'default',
   isUnavailable = false,
   ratingAverage,
+  rank,
   className = '',
   onActionClick,
 }) => {
@@ -169,6 +171,16 @@ export const AppCard: React.FC<AppCardProps> = ({
         </div>
 
         <div className="app-card__badges">
+          {rank !== undefined && rank > 0 && (
+            <Badge
+              variant="mono"
+              size="sm"
+              className="app-card__rank-badge"
+              aria-label={`Rank #${rank}`}
+            >
+              #{rank}
+            </Badge>
+          )}
           {isArchived ? (
             <Badge variant="mono" size="sm" icon={<AlertCircle size={12} />}>
               Unavailable

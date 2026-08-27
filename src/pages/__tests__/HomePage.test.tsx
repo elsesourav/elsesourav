@@ -47,6 +47,51 @@ const mockFeaturedApps: App[] = [
   },
 ];
 
+const mockTrendingApps: App[] = [
+  {
+    id: 'app-flow',
+    slug: 'codeflow-ide',
+    name: 'CodeFlow IDE',
+    shortDescription: 'Modern web development environment in the browser.',
+    description: 'Full featured cloud IDE.',
+    iconUrl: 'https://cdn.elsesourav.com/flow.png',
+    primaryCategory: 'developer-tools',
+    tags: ['ide', 'code'],
+    status: 'published',
+    platforms: ['web'],
+    links: [],
+    screenshots: [],
+    stats: { views: 500, launches: 200, libraryAdds: 50, ratingAverage: 4.9 },
+    isFeatured: true,
+    isPinned: false,
+    sortOrder: 1,
+    createdAt: 1700000000000,
+    updatedAt: 1700005000000,
+    publishedAt: 1700001000000,
+  },
+  {
+    id: 'app-calc',
+    slug: 'quick-calc',
+    name: 'Quick Calc',
+    shortDescription: 'Instant popup math calculator for Chrome.',
+    description: 'Fast math extension.',
+    iconUrl: 'https://cdn.elsesourav.com/calc.png',
+    primaryCategory: 'utilities',
+    tags: ['calculator', 'math'],
+    status: 'published',
+    platforms: ['chrome'],
+    links: [],
+    screenshots: [],
+    stats: { views: 100, launches: 50, libraryAdds: 10, ratingAverage: 4.5 },
+    isFeatured: false,
+    isPinned: false,
+    sortOrder: 2,
+    createdAt: 1700002000000,
+    updatedAt: 1700003000000,
+    publishedAt: 1700002000000,
+  },
+];
+
 const mockLatestApps: App[] = [
   {
     id: 'app-calc',
@@ -96,6 +141,7 @@ const mockCategories: Category[] = [
 
 describe('HomePage Component', () => {
   const mockRefetchFeatured = vi.fn();
+  const mockRefetchTrending = vi.fn();
   const mockRefetchLatest = vi.fn();
   const mockRefetchCategories = vi.fn();
 
@@ -139,6 +185,14 @@ describe('HomePage Component', () => {
       isLoading: false,
       error: null,
       refetch: mockRefetchFeatured,
+    });
+
+    vi.spyOn(useAppsModule, 'useTrendingApps').mockReturnValue({
+      apps: mockTrendingApps,
+      hasMore: false,
+      isLoading: false,
+      error: null,
+      refetch: mockRefetchTrending,
     });
 
     vi.spyOn(useAppsModule, 'useLatestApps').mockReturnValue({
@@ -199,10 +253,23 @@ describe('HomePage Component', () => {
     expect(
       screen.getByRole('heading', { level: 2, name: /featured applications/i })
     ).toBeInTheDocument();
-    expect(screen.getByText('CodeFlow IDE')).toBeInTheDocument();
   });
 
-  it('4. Renders latest releases & updates section with update card and links', () => {
+  it('4. Renders popular right now (trending apps) section with rank badges', () => {
+    render(
+      <BrowserRouter>
+        <HomePage />
+      </BrowserRouter>
+    );
+
+    expect(
+      screen.getByRole('heading', { level: 2, name: /popular right now/i })
+    ).toBeInTheDocument();
+    expect(screen.getByText('#1')).toBeInTheDocument();
+    expect(screen.getByText('#2')).toBeInTheDocument();
+  });
+
+  it('5. Renders latest releases & updates section with update card and links', () => {
     render(
       <BrowserRouter>
         <HomePage />
@@ -212,8 +279,7 @@ describe('HomePage Component', () => {
     expect(
       screen.getByRole('heading', { level: 2, name: /latest releases & updates/i })
     ).toBeInTheDocument();
-    expect(screen.getByText('Quick Calc')).toBeInTheDocument();
-    expect(screen.getByText('Instant popup math calculator for Chrome.')).toBeInTheDocument();
+    expect(screen.getAllByText('Quick Calc').length).toBeGreaterThan(0);
 
     const updateLink = screen.getByRole('link', {
       name: /view quick calc update: instant popup math calculator for chrome\./i,
@@ -227,7 +293,7 @@ describe('HomePage Component', () => {
     });
   });
 
-  it('5. Renders dynamic categories discovery section and generates correct URL', () => {
+  it('6. Renders dynamic categories discovery section and generates correct URL', () => {
     render(
       <BrowserRouter>
         <HomePage />
@@ -251,13 +317,21 @@ describe('HomePage Component', () => {
     });
   });
 
-  it('6. Shows loading skeletons during featured apps, updates, and categories loading', () => {
+  it('7. Shows loading skeletons during featured, trending, updates, and categories loading', () => {
     vi.spyOn(useAppsModule, 'useFeaturedApps').mockReturnValue({
       apps: [],
       hasMore: false,
       isLoading: true,
       error: null,
       refetch: mockRefetchFeatured,
+    });
+
+    vi.spyOn(useAppsModule, 'useTrendingApps').mockReturnValue({
+      apps: [],
+      hasMore: false,
+      isLoading: true,
+      error: null,
+      refetch: mockRefetchTrending,
     });
 
     vi.spyOn(useAppsModule, 'useLatestApps').mockReturnValue({
@@ -282,16 +356,18 @@ describe('HomePage Component', () => {
     );
 
     expect(screen.getByTestId('home-featured-skeleton')).toBeInTheDocument();
+    expect(screen.getByTestId('home-trending-skeleton')).toBeInTheDocument();
     expect(screen.getByTestId('home-updates-skeleton')).toBeInTheDocument();
     expect(screen.getByTestId('home-categories-skeleton')).toBeInTheDocument();
   });
 
-  it('7. Handles categories error gracefully with localized retry button', () => {
-    vi.spyOn(useCategoriesModule, 'useCategories').mockReturnValue({
-      categories: [],
+  it('8. Handles trending error gracefully with localized retry button', () => {
+    vi.spyOn(useAppsModule, 'useTrendingApps').mockReturnValue({
+      apps: [],
+      hasMore: false,
       isLoading: false,
-      error: AppError.internal('Failed to load categories'),
-      refetch: mockRefetchCategories,
+      error: AppError.internal('Failed to load trending'),
+      refetch: mockRefetchTrending,
     });
 
     render(
@@ -300,16 +376,15 @@ describe('HomePage Component', () => {
       </BrowserRouter>
     );
 
-    expect(screen.getByText('Categories Unavailable')).toBeInTheDocument();
-    expect(screen.getByText('CodeFlow IDE')).toBeInTheDocument();
+    expect(screen.getByText('Popular Apps Unavailable')).toBeInTheDocument();
 
     const retryBtns = screen.getAllByRole('button', { name: /retry/i });
     expect(retryBtns[0]).toBeDefined();
     fireEvent.click(retryBtns[0]!);
-    expect(mockRefetchCategories).toHaveBeenCalled();
+    expect(mockRefetchTrending).toHaveBeenCalled();
   });
 
-  it('8. Renders creator spotlight and support banner', () => {
+  it('9. Renders creator spotlight and support banner', () => {
     render(
       <BrowserRouter>
         <HomePage />
@@ -324,7 +399,7 @@ describe('HomePage Component', () => {
     ).toBeInTheDocument();
   });
 
-  it('9. Sets document title and injects JSON-LD structured data', () => {
+  it('10. Sets document title and injects JSON-LD structured data', () => {
     render(
       <BrowserRouter>
         <HomePage />

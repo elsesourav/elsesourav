@@ -4,7 +4,7 @@ import { Sparkles, ArrowRight, User, Compass, MessageSquareHeart } from 'lucide-
 import { Button, Badge, Skeleton, ErrorState } from '@/components';
 import { AppCard } from '@/components/apps';
 import { LatestUpdateCard, CategoryCard } from '@/components/home';
-import { useFeaturedApps, useLatestApps, useCategories } from '@/hooks';
+import { useFeaturedApps, useTrendingApps, useLatestApps, useCategories } from '@/hooks';
 import { ROUTES } from '@/constants/routes';
 import './HomePage.css';
 
@@ -15,6 +15,13 @@ export const HomePage: React.FC = () => {
     error: featuredError,
     refetch: refetchFeatured,
   } = useFeaturedApps(3);
+
+  const {
+    apps: trendingApps,
+    isLoading: isTrendingLoading,
+    error: trendingError,
+    refetch: refetchTrending,
+  } = useTrendingApps(4);
 
   const {
     apps: latestApps,
@@ -161,7 +168,57 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* =========================================================================
-          3. Latest Updates Section
+          3. Popular / Trending Applications Section
+          ========================================================================= */}
+      <section className="home-section" aria-labelledby="trending-heading">
+        <header className="home-section__header">
+          <div className="home-section__title-group">
+            <h2 id="trending-heading" className="home-section__title">
+              Popular Right Now
+            </h2>
+            <p className="home-section__subtitle">
+              Most explored and active tools across the catalog.
+            </p>
+          </div>
+
+          <Link to={ROUTES.APPS} className="home-section__link">
+            <span>View all apps</span>
+            <ArrowRight size={16} />
+          </Link>
+        </header>
+
+        {isTrendingLoading && (
+          <div className="home-apps-grid" data-testid="home-trending-skeleton">
+            <Skeleton variant="rounded" height={260} />
+            <Skeleton variant="rounded" height={260} />
+            <Skeleton variant="rounded" height={260} />
+            <Skeleton variant="rounded" height={260} />
+          </div>
+        )}
+
+        {trendingError && !isTrendingLoading && (
+          <ErrorState
+            title="Popular Apps Unavailable"
+            description="Could not load trending applications at this time."
+            action={
+              <Button variant="secondary" size="sm" onClick={() => void refetchTrending()}>
+                Retry
+              </Button>
+            }
+          />
+        )}
+
+        {!isTrendingLoading && !trendingError && trendingApps.length > 0 && (
+          <div className="home-apps-grid">
+            {trendingApps.map((app, index) => (
+              <AppCard key={app.id} app={app} rank={index + 1} />
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* =========================================================================
+          4. Latest Updates Section
           ========================================================================= */}
       <section className="home-section" aria-labelledby="updates-heading">
         <header className="home-section__header">
@@ -223,7 +280,7 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* =========================================================================
-          4. Software Categories Discovery Section
+          5. Software Categories Discovery Section
           ========================================================================= */}
       <section className="home-section" aria-labelledby="categories-heading">
         <header className="home-section__header">
@@ -273,7 +330,7 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* =========================================================================
-          5. Creator Introduction (20-30% Personal Layer)
+          6. Creator Introduction (20-30% Personal Layer)
           ========================================================================= */}
       <section className="home-section" aria-labelledby="creator-heading">
         <div className="home-creator-card">
@@ -303,7 +360,7 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* =========================================================================
-          6. Community Feedback & Support Banner
+          7. Community Feedback & Support Banner
           ========================================================================= */}
       <section className="home-support-banner" aria-label="Support and Feedback">
         <div className="home-support-banner__content">
