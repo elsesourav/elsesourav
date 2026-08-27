@@ -1,0 +1,192 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // =========================================================================
+    // HELPER FUNCTIONS
+    // =========================================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isUserAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.role == 'admin' ||
+        request.auth.token.admin == true ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+      );
+    }
+
+    function isPublished() {
+      return resource.data.status == 'published' || resource.data.isPublished == true;
+    }
+
+    function isNotDeleted() {
+      return !('deletedAt' in resource.data) || resource.data.deletedAt == null;
+    }
+
+    function preventFieldModification(fields) {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(fields);
+    }
+
+    // =========================================================================
+    // USERS & USER LIBRARIES
+    // =========================================================================
+
+    match /users/{userId} {
+      // Users can read their own profile; Admin can read all users
+      allow get: if isOwner(userId) || isUserAdmin();
+      allow list: if isUserAdmin();
+
+      // On create: must be the authenticated user and cannot set role to admin
+      allow create: if isOwner(userId) &&
+        (!('role' in request.resource.data) || request.resource.data.role == 'user' || isUserAdmin());
+
+      // On update: owner cannot elevate role or change immutable audit fields
+      allow update: if (isOwner(userId) && preventFieldModification(['role', 'createdAt'])) || isUserAdmin();
+
+      // Deletions must be admin only
+      allow delete: if isUserAdmin();
+
+      // Subcollection: users/{userId}/library/{appId}
+      match /library/{appId} {
+        allow read, write: if isOwner(userId) || isUserAdmin();
+      }
+    }
+
+    // =========================================================================
+    // APPS, VERSIONS & CHANGELOGS
+    // =========================================================================
+
+    match /apps/{appId} {
+      // Public can read published, non-deleted apps. Admin can read all (drafts, archived).
+      allow get: if (isPublished() && isNotDeleted()) || isUserAdmin();
+      allow list: if isUserAdmin() || (isPublished() && isNotDeleted());
+
+      // Only admin can create, update, or delete apps
+      allow create, update, delete: if isUserAdmin();
+
+      // Subcollection: versions
+      match /versions/{versionId} {
+        allow read: if (get(/databases/$(database)/documents/apps/$(appId)).data.status == 'published' && isNotDeleted()) || isUserAdmin();
+        allow write: if isUserAdmin();
+      }
+
+      // Subcollection: changelogs
+      match /changelogs/{changelogId} {
+        allow read: if (get(/databases/$(database)/documents/apps/$(appId)).data.status == 'published' && isNotDeleted()) || isUserAdmin();
+        allow write: if isUserAdmin();
+      }
+    }
+
+    // =========================================================================
+    // CATEGORIES & TAGS
+    // =========================================================================
+
+    match /categories/{categoryId} {
+      allow get: if (resource.data.isActive == true && isNotDeleted()) || isUserAdmin();
+      allow list: if isUserAdmin() || (resource.data.isActive == true && isNotDeleted());
+      allow create, update, delete: if isUserAdmin();
+    }
+
+    match /tags/{tagId} {
+      allow read: if true;
+      allow create, update, delete: if isUserAdmin();
+    }
+
+    // =========================================================================
+    // BLOG POSTS
+    // =========================================================================
+
+    match /blogPosts/{postId} {
+      allow get: if (isPublished() && isNotDeleted()) || isUserAdmin();
+      allow list: if isUserAdmin() || (isPublished() && isNotDeleted());
+      allow create, update, delete: if isUserAdmin();
+    }
+
+    // =========================================================================
+    // HELP ARTICLES & CATEGORIES
+    // =========================================================================
+
+    match /helpCategories/{categoryId} {
+      allow read: if true;
+      allow create, update, delete: if isUserAdmin();
+    }
+
+    match /helpArticles/{articleId} {
+      allow get: if (isPublished() && isNotDeleted()) || isUserAdmin();
+      allow list: if isUserAdmin() || (isPublished() && isNotDeleted());
+      allow create, update, delete: if isUserAdmin();
+    }
+
+    // =========================================================================
+    // FEEDBACK
+    // =========================================================================
+
+    match /feedback/{feedbackId} {
+      // Public can read approved public feedback; Author can read their own; Admin can read all
+      allow get: if (resource.data.isPublic == true && resource.data.status == 'approved') ||
+                    (isAuthenticated() && resource.data.userId == request.auth.uid) ||
+                    isUserAdmin();
+      allow list: if isUserAdmin() || (resource.data.isPublic == true && resource.data.status == 'approved');
+
+      // Authenticated users or public can submit feedback with initial 'pending' status
+      allow create: if request.resource.data.status == 'pending' &&
+                       (!isAuthenticated() || request.resource.data.userId == request.auth.uid);
+
+      // Only admin can update status or delete feedback
+      allow update, delete: if isUserAdmin();
+    }
+
+    // =========================================================================
+    // SUPPORT TICKETS & MESSAGES
+    // =========================================================================
+
+    match /supportTickets/{ticketId} {
+      // Owner can read their ticket; Admin can read all
+      allow get: if (isAuthenticated() && resource.data.userId == request.auth.uid) || isUserAdmin();
+      allow list: if isUserAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+
+      // Users can create tickets for themselves; Admin can create
+      allow create: if (isAuthenticated() && request.resource.data.userId == request.auth.uid) || isUserAdmin();
+      allow update, delete: if isUserAdmin();
+
+      match /messages/{messageId} {
+        allow read: if (isAuthenticated() && get(/databases/$(database)/documents/supportTickets/$(ticketId)).data.userId == request.auth.uid) || isUserAdmin();
+        allow create: if (isAuthenticated() && (
+          get(/databases/$(database)/documents/supportTickets/$(ticketId)).data.userId == request.auth.uid ||
+          isUserAdmin()
+        ));
+        allow update, delete: if isUserAdmin();
+      }
+    }
+
+    // =========================================================================
+    // THEMES, NOTIFICATIONS, AUDIT LOGS
+    // =========================================================================
+
+    match /themes/{themeId} {
+      allow read: if resource.data.isPublic == true || isUserAdmin();
+      allow write: if isUserAdmin();
+    }
+
+    match /notifications/{notificationId} {
+      allow get, list: if (isAuthenticated() && resource.data.userId == request.auth.uid) || isUserAdmin();
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid &&
+                       preventFieldModification(['userId', 'createdAt', 'type', 'payload']);
+      allow create, delete: if isUserAdmin();
+    }
+
+    match /auditLogs/{logId} {
+      // Read & create strictly restricted to Admin; Updates and deletes blocked (immutable audit trail)
+      allow read, create: if isUserAdmin();
+      allow update, delete: if false;
+    }
+  }
+}
