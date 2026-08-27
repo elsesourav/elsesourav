@@ -132,22 +132,34 @@ service cloud.firestore {
     }
 
     // =========================================================================
-    // FEEDBACK
+    // FEEDBACK & RATINGS
     // =========================================================================
 
     match /feedback/{feedbackId} {
-      // Public can read approved public feedback; Author can read their own; Admin can read all
-      allow get: if (resource.data.isPublic == true && resource.data.status == 'approved') ||
+      // Public can read approved feedback; Author can read their own; Admin can read all
+      allow get: if resource.data.status == 'approved' ||
                     (isAuthenticated() && resource.data.userId == request.auth.uid) ||
                     isUserAdmin();
-      allow list: if isUserAdmin() || (resource.data.isPublic == true && resource.data.status == 'approved');
+      allow list: if isUserAdmin() || resource.data.status == 'approved';
 
-      // Authenticated users or public can submit feedback with initial 'pending' status
-      allow create: if request.resource.data.status == 'pending' &&
-                       (!isAuthenticated() || request.resource.data.userId == request.auth.uid);
+      // Authenticated users can submit feedback with initial 'pending' status
+      allow create: if isAuthenticated() &&
+                       request.resource.data.userId == request.auth.uid &&
+                       request.resource.data.status == 'pending';
 
-      // Only admin can update status or delete feedback
-      allow update, delete: if isUserAdmin();
+      // Author can update message/rating without altering status/userId/appId; Admin can moderate
+      allow update: if (isAuthenticated() && resource.data.userId == request.auth.uid &&
+                        preventFieldModification(['userId', 'appId', 'status', 'createdAt'])) ||
+                       isUserAdmin();
+
+      // Author or Admin can delete feedback
+      allow delete: if (isAuthenticated() && resource.data.userId == request.auth.uid) || isUserAdmin();
+    }
+
+    match /appRatings/{appId} {
+      // Public can read aggregate rating counts and distribution; Admin can manage
+      allow read: if true;
+      allow write: if isUserAdmin();
     }
 
     // =========================================================================

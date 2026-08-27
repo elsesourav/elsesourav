@@ -9,7 +9,6 @@ import type {
   SupportTicket,
   SupportTicketMessage,
 } from '@/types/support.types';
-import type { Feedback } from '@/types/feedback.types';
 import type { AuditLog } from '@/types/audit.types';
 import type { CreateAppDto, UpdateAppDto } from './app.repository';
 import type { AppStatus } from '@/types/app.types';
@@ -119,6 +118,45 @@ export interface IAnalyticsRepository {
   listEvents(appId?: string, options?: QueryOptions): PaginatedRepositoryResult<AnalyticsEvent>;
 }
 
+import type {
+  AppFeedback,
+  AppRatingAggregate,
+  FeedbackModerationStatus,
+} from '@/types/feedback.types';
+import type { SubmitFeedbackDto, UpdateFeedbackDto } from './feedback.repository';
+
+/**
+ * App Feedback & Rating Repository Contract
+ */
+export interface IFeedbackRepository {
+  getDeterministicId(userId: string, appId: string): string;
+  submitFeedback(
+    userId: string,
+    data: SubmitFeedbackDto,
+    userInfo?: { displayName?: string; photoUrl?: string }
+  ): Promise<RepositoryResult<AppFeedback>>;
+  updateFeedback(
+    userId: string,
+    appId: string,
+    data: UpdateFeedbackDto
+  ): Promise<RepositoryResult<AppFeedback>>;
+  getUserFeedback(userId: string, appId: string): Promise<RepositoryResult<AppFeedback | null>>;
+  listApprovedByApp(appId: string, options?: QueryOptions): PaginatedRepositoryResult<AppFeedback>;
+  listAllForModeration(options?: QueryOptions): PaginatedRepositoryResult<AppFeedback>;
+  moderate(
+    feedbackId: string,
+    status: FeedbackModerationStatus,
+    adminId: string
+  ): Promise<RepositoryResult<AppFeedback>>;
+  deleteFeedback(userId: string, appId: string): Promise<RepositoryResult<void>>;
+  getAppRatingAggregate(appId: string): Promise<RepositoryResult<AppRatingAggregate | null>>;
+  updateAppRatingAggregate(
+    appId: string,
+    oldRating: number | null,
+    newRating: number | null
+  ): Promise<RepositoryResult<AppRatingAggregate>>;
+}
+
 import type { AuthUser } from '@/types/auth.types';
 import type {
   CreateUserProfileDto,
@@ -201,18 +239,6 @@ export interface ISupportRepository extends IRepository<
     message: Omit<SupportTicketMessage, 'id' | 'ticketId' | 'createdAt'>
   ): RepositoryResult<SupportTicketMessage>;
   getMessages(ticketId: string): PaginatedRepositoryResult<SupportTicketMessage>;
-}
-
-/**
- * Feedback Repository Contract
- */
-export interface IFeedbackRepository extends IRepository<
-  Feedback,
-  Omit<Feedback, 'id' | 'createdAt' | 'updatedAt'>,
-  Partial<Feedback>
-> {
-  findByApp(appId: string): PaginatedRepositoryResult<Feedback>;
-  findPublic(options?: QueryOptions): PaginatedRepositoryResult<Feedback>;
 }
 
 /**

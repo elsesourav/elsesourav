@@ -6,3 +6,4 @@ export * from './useUserProfile';
 export * from './useAppPublishing';
 export * from './useAppAnalytics';
 export * from './useUserLibrary';
+export * from './useAppFeedback';
