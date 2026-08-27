@@ -5,13 +5,21 @@ import {
   collection,
   getDocs,
   deleteDoc,
+  query,
+  where,
+  orderBy,
+  limit as firestoreLimit,
+  startAfter,
+  getCountFromServer,
   type Firestore,
+  type QueryConstraint,
+  type DocumentSnapshot,
 } from 'firebase/firestore';
 import { FirestoreRepository } from './firestore.repository';
 import type { IUserRepository } from './interfaces';
 import type { User, UserLibraryItem } from '@/types/user.types';
 import type { AuthUser } from '@/types/auth.types';
-import type { RepositoryResult, PaginatedRepositoryResult } from './types';
+import type { RepositoryResult, PaginatedRepositoryResult, QueryOptions } from './types';
 import {
   createUserProfileSchema,
   updateUserProfileSchema,
@@ -229,39 +237,118 @@ export class FirestoreUserRepository
   }
 
   /**
-   * Subcollection: User Library
+   * Subcollection: User Library (/users/{userId}/library/{appId})
    */
-  public async getLibrary(userId: string): PaginatedRepositoryResult<UserLibraryItem> {
+  public async getUserLibrary(
+    userId: string,
+    options?: QueryOptions
+  ): PaginatedRepositoryResult<UserLibraryItem> {
     if (!userId) {
       return err(AppError.badRequest('User ID is required to fetch user library', 'userId'));
     }
 
     try {
-      const libraryCol = collection(this.db, 'users', userId, 'userLibrary').withConverter(
+      const libraryCol = collection(this.db, 'users', userId, 'library').withConverter(
         createFirestoreConverter<UserLibraryItem>()
       );
-      const snapshot = await getDocs(libraryCol);
-      const items = snapshot.docs.map((d) => d.data());
+
+      const constraints: QueryConstraint[] = [];
+
+      if (options?.filters && options.filters.length > 0) {
+        for (const f of options.filters) {
+          constraints.push(where(f.field, f.operator, f.value));
+        }
+      }
+
+      constraints.push(orderBy(options?.orderBy || 'addedAt', options?.orderDirection || 'desc'));
+
+      if (options?.startAfterDoc) {
+        constraints.push(startAfter(options.startAfterDoc as DocumentSnapshot));
+      }
+
+      const queryLimit = options?.limit || 50;
+      constraints.push(firestoreLimit(queryLimit + 1));
+
+      const q = query(libraryCol, ...constraints);
+      const snapshot = await getDocs(q);
+
+      const items: UserLibraryItem[] = [];
+      const hasMore = snapshot.docs.length > queryLimit;
+      const docsToProcess = hasMore ? snapshot.docs.slice(0, queryLimit) : snapshot.docs;
+
+      for (const d of docsToProcess) {
+        items.push(d.data());
+      }
+
+      const nextCursor =
+        hasMore && docsToProcess.length > 0
+          ? docsToProcess[docsToProcess.length - 1]?.id
+          : undefined;
 
       return ok({
         items,
-        hasMore: false,
+        hasMore,
+        nextCursor,
       });
     } catch (error) {
       return err(this.handleFirestoreError(error, `fetch library for user "${userId}"`));
     }
   }
 
+  public async getLibrary(userId: string): PaginatedRepositoryResult<UserLibraryItem> {
+    return this.getUserLibrary(userId);
+  }
+
+  public async isInLibrary(userId: string, appId: string): RepositoryResult<boolean> {
+    if (!userId || !appId) {
+      return err(AppError.badRequest('User ID and App ID are required', 'appId'));
+    }
+
+    try {
+      const libraryDocRef = doc(this.db, 'users', userId, 'library', appId);
+      const snapshot = await getDoc(libraryDocRef);
+      return ok(snapshot.exists());
+    } catch (error) {
+      return err(this.handleFirestoreError(error, `check app in library "${appId}"`));
+    }
+  }
+
+  public async getLibraryCount(userId: string): RepositoryResult<number> {
+    if (!userId) {
+      return err(AppError.badRequest('User ID is required', 'userId'));
+    }
+
+    try {
+      const libraryCol = collection(this.db, 'users', userId, 'library');
+      const snapshot = await getCountFromServer(libraryCol);
+      return ok(snapshot.data().count);
+    } catch {
+      // Fallback in case getCountFromServer is unavailable in emulator/mock
+      try {
+        const libraryCol = collection(this.db, 'users', userId, 'library');
+        const snapshot = await getDocs(libraryCol);
+        return ok(snapshot.size);
+      } catch (error) {
+        return err(this.handleFirestoreError(error, `get library count for "${userId}"`));
+      }
+    }
+  }
+
   public async addToLibrary(
     userId: string,
-    item: Omit<UserLibraryItem, 'id' | 'addedAt'>
+    item: {
+      appId: string;
+      isFavorite?: boolean;
+      isPinned?: boolean;
+      customNotes?: string;
+    }
   ): RepositoryResult<UserLibraryItem> {
     if (!userId || !item.appId) {
       return err(AppError.badRequest('User ID and App ID are required', 'appId'));
     }
 
     try {
-      const libraryDocRef = doc(this.db, 'users', userId, 'userLibrary', item.appId).withConverter(
+      const libraryDocRef = doc(this.db, 'users', userId, 'library', item.appId).withConverter(
         createFirestoreConverter<UserLibraryItem>()
       );
 
@@ -289,7 +376,7 @@ export class FirestoreUserRepository
     }
 
     try {
-      const libraryDocRef = doc(this.db, 'users', userId, 'userLibrary', appId);
+      const libraryDocRef = doc(this.db, 'users', userId, 'library', appId);
       await deleteDoc(libraryDocRef);
       return ok(undefined);
     } catch (error) {
@@ -303,7 +390,7 @@ export class FirestoreUserRepository
     }
 
     try {
-      const libraryDocRef = doc(this.db, 'users', userId, 'userLibrary', appId).withConverter(
+      const libraryDocRef = doc(this.db, 'users', userId, 'library', appId).withConverter(
         createFirestoreConverter<UserLibraryItem>()
       );
       const snap = await getDoc(libraryDocRef);

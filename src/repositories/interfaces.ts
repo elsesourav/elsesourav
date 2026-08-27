@@ -140,12 +140,23 @@ export interface IUserRepository extends IRepository<
   updateProfile(uid: string, data: UpdateUserProfileDto): RepositoryResult<User>;
   updatePreferences(uid: string, preferences: UpdateUserPreferencesDto): RepositoryResult<User>;
   softDelete(uid: string): RepositoryResult<User>;
+  getUserLibrary(
+    userId: string,
+    options?: QueryOptions
+  ): PaginatedRepositoryResult<UserLibraryItem>;
   getLibrary(userId: string): PaginatedRepositoryResult<UserLibraryItem>;
   addToLibrary(
     userId: string,
-    item: Omit<UserLibraryItem, 'id' | 'addedAt'>
+    item: {
+      appId: string;
+      isFavorite?: boolean;
+      isPinned?: boolean;
+      customNotes?: string;
+    }
   ): RepositoryResult<UserLibraryItem>;
   removeFromLibrary(userId: string, appId: string): RepositoryResult<void>;
+  isInLibrary(userId: string, appId: string): RepositoryResult<boolean>;
+  getLibraryCount(userId: string): RepositoryResult<number>;
   toggleFavorite(userId: string, appId: string): RepositoryResult<boolean>;
 }
 

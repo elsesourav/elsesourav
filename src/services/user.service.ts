@@ -74,7 +74,6 @@ export class UserService implements IUserService {
     notes?: string
   ): Promise<Result<UserLibraryItem, AppError>> {
     return this.userRepo.addToLibrary(uid, {
-      userId: uid,
       appId,
       isFavorite,
       isPinned: false,

@@ -5,3 +5,4 @@ export * from './useAuth';
 export * from './useUserProfile';
 export * from './useAppPublishing';
 export * from './useAppAnalytics';
+export * from './useUserLibrary';

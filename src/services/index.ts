@@ -6,3 +6,4 @@ export * from './classification.service';
 export * from './version.service';
 export * from './media.service';
 export * from './analytics.service';
+export * from './library.service';

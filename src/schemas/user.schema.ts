@@ -57,3 +57,24 @@ export const updateUserProfileSchema = z.object({
 });
 
 export const updateUserPreferencesSchema = userPreferencesSchema.partial();
+
+/**
+ * User Library Save validation schema
+ */
+export const saveToLibrarySchema = z.object({
+  appId: z.string().min(1, 'App ID is required'),
+  isFavorite: z.boolean().default(false),
+  isPinned: z.boolean().default(false),
+  customNotes: z.string().max(500, 'Notes cannot exceed 500 characters').optional(),
+});
+
+export const userLibraryItemSchema = z.object({
+  id: z.string().min(1),
+  userId: z.string().min(1),
+  appId: z.string().min(1),
+  isFavorite: z.boolean().default(false),
+  isPinned: z.boolean().default(false),
+  customNotes: z.string().max(500).optional(),
+  addedAt: z.number(),
+  lastOpenedAt: z.number().optional(),
+});
