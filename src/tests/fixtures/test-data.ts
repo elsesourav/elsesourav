@@ -1,4 +1,4 @@
-import type { User } from '@/types/user.types';
+import type { User, UserLibraryItem } from '@/types/user.types';
 import type { App } from '@/types/app.types';
 import type { Category } from '@/types/category.types';
 import type { Tag } from '@/types/tag.types';
@@ -240,6 +240,18 @@ export function createTestNotification(overrides?: Partial<Notification>): Notif
     link: '/apps/terminal-pro',
     createdAt: BASE_TIMESTAMP,
     updatedAt: BASE_TIMESTAMP,
+    ...overrides,
+  };
+}
+
+export function createTestUserLibraryItem(overrides?: Partial<UserLibraryItem>): UserLibraryItem {
+  return {
+    id: 'lib-001',
+    userId: 'test-user-id-001',
+    appId: 'app-terminal-pro',
+    isFavorite: false,
+    isPinned: false,
+    addedAt: BASE_TIMESTAMP,
     ...overrides,
   };
 }
