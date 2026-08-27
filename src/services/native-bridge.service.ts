@@ -221,6 +221,29 @@ export class NativeBridgeService {
       void CapApp.removeAllListeners();
     };
   }
+
+  /**
+   * Initializes native app lifecycle listener (foreground/background transitions).
+   */
+  public initLifecycleListener(onStateChange: (isActive: boolean) => void): () => void {
+    if (!this.isNative()) {
+      return () => {
+        // No-op on web
+      };
+    }
+
+    let isSubscribed = true;
+    void CapApp.addListener('appStateChange', (state) => {
+      if (isSubscribed) {
+        onStateChange(state.isActive);
+      }
+    });
+
+    return () => {
+      isSubscribed = false;
+    };
+  }
 }
 
 export const nativeBridge = new NativeBridgeService();
+
