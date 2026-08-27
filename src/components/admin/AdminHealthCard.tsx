@@ -6,15 +6,18 @@ import {
   XCircle,
   RefreshCw,
   Server,
+  FileText,
 } from 'lucide-react';
-import { Button, Badge } from '@/components/ui';
+import { Button, Badge, Dialog } from '@/components/ui';
 import { healthCheckService } from '@/services/health-check.service';
+import { PLATFORM_RELEASES } from '@/config/releases.config';
 import type { SystemHealthReport } from '@/types/observability.types';
 import './AdminHealthCard.css';
 
 export const AdminHealthCard: React.FC = () => {
   const [report, setReport] = useState<SystemHealthReport | null>(null);
   const [isRunning, setIsRunning] = useState(false);
+  const [isReleaseModalOpen, setIsReleaseModalOpen] = useState(false);
 
   const runDiagnostics = useCallback(async () => {
     setIsRunning(true);
@@ -92,15 +95,25 @@ export const AdminHealthCard: React.FC = () => {
           <Activity size={18} aria-hidden="true" />
           <h3 className="admin-health-card__title">System Diagnostics</h3>
         </div>
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={() => void runDiagnostics()}
-          disabled={isRunning}
-          leftIcon={<RefreshCw size={13} className={isRunning ? 'animate-spin' : undefined} />}
-        >
-          {isRunning ? 'Checking...' : 'Run Diagnostics'}
-        </Button>
+        <div className="admin-health-card__header-actions">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsReleaseModalOpen(true)}
+            leftIcon={<FileText size={13} />}
+          >
+            Changelog
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => void runDiagnostics()}
+            disabled={isRunning}
+            leftIcon={<RefreshCw size={13} className={isRunning ? 'animate-spin' : undefined} />}
+          >
+            {isRunning ? 'Checking...' : 'Diagnostics'}
+          </Button>
+        </div>
       </div>
 
       <div className="admin-health-card__summary">
@@ -169,6 +182,37 @@ export const AdminHealthCard: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Platform Release History Modal */}
+      <Dialog
+        isOpen={isReleaseModalOpen}
+        onClose={() => setIsReleaseModalOpen(false)}
+        title="Platform Release History"
+        description="Official changelog and release notes for ElseSourav platform versions."
+        size="lg"
+      >
+        <div className="admin-release-history">
+          {PLATFORM_RELEASES.map((rel) => (
+            <div key={rel.version} className="admin-release-item">
+              <div className="admin-release-header">
+                <div className="admin-release-version">
+                  <span>v{rel.version}</span>
+                  <Badge variant="accent" size="sm">
+                    {rel.title}
+                  </Badge>
+                </div>
+                <span className="admin-release-date">{rel.date}</span>
+              </div>
+              <p className="admin-release-summary">{rel.summary}</p>
+              <ul className="admin-release-highlights">
+                {rel.highlights.map((h, i) => (
+                  <li key={i}>{h}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </Dialog>
     </div>
   );
 };
