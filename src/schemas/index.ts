@@ -10,3 +10,4 @@ export * from './user.schema';
 export * from './classification.schema';
 export * from './blog.schema';
 export * from './help.schema';
+export * from './support.schema';

@@ -36,14 +36,9 @@ export { BlogPage } from './BlogPage';
 export { BlogPostPage } from './BlogPostPage';
 
 export { AboutPage } from './AboutPage';
-
-export const SupportPage: React.FC = () => (
-  <PlaceholderPage
-    title="Support & Contact"
-    description="Get in touch for bug reports, feature suggestions, or custom software inquiries."
-    badge="Support Hub"
-  />
-);
+export { SupportPage } from './SupportPage';
+export { SupportTicketsPage } from './SupportTicketsPage';
+export { SupportTicketDetailPage } from './SupportTicketDetailPage';
 
 export { HelpPage } from './HelpPage';
 export { HelpCategoryPage } from './HelpCategoryPage';
@@ -156,13 +151,7 @@ export const AdminHelpPage: React.FC = () => (
   />
 );
 
-export const AdminSupportPage: React.FC = () => (
-  <PlaceholderPage
-    title="Manage Support Tickets"
-    description="Review incoming bug reports, respond to inquiries, and resolve tickets."
-    badge="Admin - Support"
-  />
-);
+export { AdminSupportPage } from './admin/AdminSupportPage';
 
 export const AdminAnalyticsPage: React.FC = () => (
   <PlaceholderPage

@@ -15,3 +15,4 @@ export * from './blog.repository';
 export * from './blog-category.repository';
 export * from './blog-tag.repository';
 export * from './help.repository';
+export * from './support.repository';

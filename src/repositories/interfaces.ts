@@ -10,6 +10,10 @@ import type {
   ArticleHelpfulnessFeedback,
   SupportTicket,
   SupportTicketMessage,
+  SupportTicketStatus,
+  SupportTicketPriority,
+  CreateSupportTicketDto,
+  CreateSupportMessageDto,
 } from '@/types/support.types';
 import type { AuditLog } from '@/types/audit.types';
 import type { CreateAppDto, UpdateAppDto } from './app.repository';
@@ -435,19 +439,34 @@ export interface IHelpRepository {
  */
 export interface ISupportRepository extends IRepository<
   SupportTicket,
-  Omit<
-    SupportTicket,
-    'id' | 'ticketNumber' | 'messages' | 'lastMessageAt' | 'createdAt' | 'updatedAt'
-  >,
+  CreateSupportTicketDto & { userId: string; ticketNumber?: string; status?: SupportTicketStatus },
   Partial<SupportTicket>
 > {
-  findByUser(userId: string): PaginatedRepositoryResult<SupportTicket>;
+  createTicket(
+    data: CreateSupportTicketDto & { userId: string; ticketNumber?: string }
+  ): RepositoryResult<SupportTicket>;
+  getTicket(id: string): RepositoryResult<SupportTicket | null>;
+  findByUser(userId: string, options?: QueryOptions): PaginatedRepositoryResult<SupportTicket>;
+  listUserTickets(userId: string, options?: QueryOptions): PaginatedRepositoryResult<SupportTicket>;
+  listAdminTickets(options?: QueryOptions): PaginatedRepositoryResult<SupportTicket>;
   findByTicketNumber(ticketNumber: string): RepositoryResult<SupportTicket | null>;
-  addMessage(
+  updateTicketStatus(
+    id: string,
+    status: SupportTicketStatus,
+    closedAt?: number
+  ): RepositoryResult<SupportTicket>;
+  updatePriority(id: string, priority: SupportTicketPriority): RepositoryResult<SupportTicket>;
+  addMessage(data: CreateSupportMessageDto): RepositoryResult<SupportTicketMessage>;
+  listMessages(
     ticketId: string,
-    message: Omit<SupportTicketMessage, 'id' | 'ticketId' | 'createdAt'>
-  ): RepositoryResult<SupportTicketMessage>;
-  getMessages(ticketId: string): PaginatedRepositoryResult<SupportTicketMessage>;
+    options?: QueryOptions
+  ): PaginatedRepositoryResult<SupportTicketMessage>;
+  getMessages(
+    ticketId: string,
+    options?: QueryOptions
+  ): PaginatedRepositoryResult<SupportTicketMessage>;
+  closeTicket(id: string): RepositoryResult<SupportTicket>;
+  reopenTicket(id: string): RepositoryResult<SupportTicket>;
 }
 
 /**

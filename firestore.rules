@@ -198,21 +198,41 @@ service cloud.firestore {
     // =========================================================================
 
     match /supportTickets/{ticketId} {
-      // Owner can read their ticket; Admin can read all
+      // Owner can read their own ticket; Admin can read all
       allow get: if (isAuthenticated() && resource.data.userId == request.auth.uid) || isUserAdmin();
       allow list: if isUserAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
 
-      // Users can create tickets for themselves; Admin can create
-      allow create: if (isAuthenticated() && request.resource.data.userId == request.auth.uid) || isUserAdmin();
-      allow update, delete: if isUserAdmin();
+      // Users can create tickets for themselves (status must be open, priority low or normal); Admin can create any
+      allow create: if (
+        isAuthenticated() &&
+        request.resource.data.userId == request.auth.uid &&
+        request.resource.data.status == 'open' &&
+        request.resource.data.priority in ['low', 'normal']
+      ) || isUserAdmin();
+
+      // Users can only resolve/close their ticket; Admin has full update access
+      allow update: if isUserAdmin() || (
+        isAuthenticated() &&
+        resource.data.userId == request.auth.uid &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'lastMessageAt', 'updatedAt', 'closedAt', 'resolvedAt']) &&
+        request.resource.data.status in ['resolved', 'closed', 'in_progress']
+      );
+      allow delete: if isUserAdmin();
 
       match /messages/{messageId} {
+        // Owner or Admin can read thread messages
         allow read: if (isAuthenticated() && get(/databases/$(database)/documents/supportTickets/$(ticketId)).data.userId == request.auth.uid) || isUserAdmin();
-        allow create: if (isAuthenticated() && (
-          get(/databases/$(database)/documents/supportTickets/$(ticketId)).data.userId == request.auth.uid ||
-          isUserAdmin()
-        ));
-        allow update, delete: if isUserAdmin();
+
+        // User can create messages as user role; Admin can create as admin role
+        allow create: if isUserAdmin() || (
+          isAuthenticated() &&
+          get(/databases/$(database)/documents/supportTickets/$(ticketId)).data.userId == request.auth.uid &&
+          request.resource.data.senderUserId == request.auth.uid &&
+          request.resource.data.senderRole == 'user'
+        );
+
+        // Messages in thread are immutable
+        allow update, delete: if false;
       }
     }
 

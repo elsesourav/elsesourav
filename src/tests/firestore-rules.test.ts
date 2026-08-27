@@ -65,10 +65,12 @@ describe('Firestore Security Rules Specification & Verification', () => {
       expect(rulesContent).toContain('allow update, delete: if false;');
     });
 
-    it('enforces owner isolation on notifications and supportTickets', () => {
+    it('enforces owner isolation on notifications and supportTickets with immutable messages', () => {
       expect(rulesContent).toContain('match /notifications/{notificationId}');
       expect(rulesContent).toContain('match /supportTickets/{ticketId}');
       expect(rulesContent).toContain('resource.data.userId == request.auth.uid');
+      expect(rulesContent).toContain('match /messages/{messageId}');
+      expect(rulesContent).toContain('allow update, delete: if false;');
     });
   });
 

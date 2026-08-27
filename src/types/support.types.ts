@@ -4,46 +4,95 @@ import type { UserRole } from './user.types';
 export * from './help.types';
 
 /**
- * Support Ticket Priority & Status
+ * Support Ticket Status Workflow
  */
-export type TicketStatus = 'open' | 'in_progress' | 'waiting_on_user' | 'resolved' | 'closed';
+export type SupportTicketStatus =
+  'open' | 'in_progress' | 'waiting_for_user' | 'resolved' | 'closed';
 
-export type TicketPriority = 'low' | 'normal' | 'high' | 'urgent';
-
-export type TicketCategory =
-  'bug_report' | 'feature_request' | 'account' | 'app_feedback' | 'general';
+export type TicketStatus = SupportTicketStatus;
 
 /**
- * Support Ticket Message Thread Item
+ * Support Ticket Priority Levels
+ */
+export type SupportTicketPriority = 'low' | 'normal' | 'high';
+
+export type TicketPriority = SupportTicketPriority;
+
+/**
+ * Support Ticket Issue Categories
+ */
+export type SupportTicketCategory =
+  | 'app_issue'
+  | 'account'
+  | 'download'
+  | 'chrome_extension'
+  | 'android_app'
+  | 'bug_report'
+  | 'general'
+  | 'other';
+
+export type TicketCategory = SupportTicketCategory;
+
+/**
+ * Support Ticket Message Model (/supportTickets/{ticketId}/messages/{messageId})
  */
 export interface SupportTicketMessage {
   readonly id: ID;
   readonly ticketId: ID;
-  readonly senderId: ID;
-  readonly senderName: string;
+  readonly senderUserId: ID;
+  readonly senderName?: string;
   readonly senderRole: UserRole;
-  readonly content: string;
+  readonly message: string;
   readonly attachments?: readonly string[];
   readonly createdAt: Timestamp;
+  readonly updatedAt: Timestamp;
 }
 
 /**
- * Support Ticket Domain Entity
+ * Support Ticket Domain Entity (/supportTickets/{ticketId})
  */
 export interface SupportTicket {
   readonly id: ID;
   readonly ticketNumber: string;
   readonly userId: ID;
-  readonly userEmail: string;
-  readonly userName: string;
-  readonly category: TicketCategory;
-  readonly priority: TicketPriority;
-  readonly status: TicketStatus;
+  readonly userEmail?: string;
+  readonly userName?: string;
   readonly subject: string;
-  readonly appId?: ID;
-  readonly messages: readonly SupportTicketMessage[];
+  readonly description: string;
+  readonly category: SupportTicketCategory;
+  readonly priority: SupportTicketPriority;
+  readonly status: SupportTicketStatus;
+  readonly relatedAppId?: ID;
+  readonly relatedHelpArticleId?: ID;
   readonly lastMessageAt: Timestamp;
   readonly createdAt: Timestamp;
   readonly updatedAt: Timestamp;
+  readonly closedAt?: Timestamp;
   readonly resolvedAt?: Timestamp;
+}
+
+/**
+ * DTO for creating a new support ticket
+ */
+export interface CreateSupportTicketDto {
+  readonly subject: string;
+  readonly description: string;
+  readonly category: SupportTicketCategory;
+  readonly priority?: SupportTicketPriority;
+  readonly relatedAppId?: ID;
+  readonly relatedHelpArticleId?: ID;
+  readonly userEmail?: string;
+  readonly userName?: string;
+}
+
+/**
+ * DTO for creating a message in a ticket thread
+ */
+export interface CreateSupportMessageDto {
+  readonly ticketId: ID;
+  readonly senderUserId: ID;
+  readonly senderRole: UserRole;
+  readonly senderName?: string;
+  readonly message: string;
+  readonly attachments?: readonly string[];
 }

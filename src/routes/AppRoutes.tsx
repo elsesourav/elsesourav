@@ -14,6 +14,8 @@ import {
   BlogPostPage,
   AboutPage,
   SupportPage,
+  SupportTicketsPage,
+  SupportTicketDetailPage,
   HelpPage,
   HelpCategoryPage,
   HelpArticlePage,
@@ -66,6 +68,8 @@ export const AppRoutes: React.FC = () => {
         <Route element={<ProtectedRoute />}>
           <Route path={ROUTES.LIBRARY} element={<LibraryPage />} />
           <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
+          <Route path={ROUTES.SUPPORT_TICKETS} element={<SupportTicketsPage />} />
+          <Route path={ROUTES.SUPPORT_TICKET_DETAIL} element={<SupportTicketDetailPage />} />
         </Route>
 
         {/* Admin Portal Routes */}

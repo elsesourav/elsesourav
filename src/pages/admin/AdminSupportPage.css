@@ -1,0 +1,119 @@
+/* =============================================================================
+   ADMIN SUPPORT TICKETS MANAGEMENT STYLES
+   ============================================================================= */
+
+.admin-support-page {
+  width: 100%;
+  max-width: var(--container-xl, 1400px);
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-4) var(--space-16);
+}
+
+.admin-support-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+  flex-wrap: wrap;
+}
+
+.admin-support-header__title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-1) 0;
+}
+
+.admin-support-header__desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* Stats Row */
+.admin-support-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+}
+
+.admin-support-stat-card {
+  background: var(--color-surface-glass);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+}
+
+.admin-support-stat-card__label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  margin: 0 0 var(--space-1) 0;
+}
+
+.admin-support-stat-card__value {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+/* Table Container */
+.admin-support-table-container {
+  background: var(--color-surface-glass);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-support-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.admin-support-table th {
+  padding: var(--space-3-5) var(--space-4);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.admin-support-table td {
+  padding: var(--space-3-5) var(--space-4);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.admin-support-table tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-support-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.admin-ticket-link {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition: color var(--duration-fast);
+}
+
+.admin-ticket-link:hover {
+  color: var(--color-primary-400);
+}
+
+@media (max-width: 768px) {
+  .admin-support-table-container {
+    overflow-x: auto;
+  }
+}

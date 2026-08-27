@@ -11,6 +11,8 @@ export const ROUTES = {
   BLOG_POST: '/blog/:slug',
   ABOUT: '/about',
   SUPPORT: '/support',
+  SUPPORT_TICKETS: '/support/tickets',
+  SUPPORT_TICKET_DETAIL: '/support/tickets/:ticketId',
   HELP: '/help',
   HELP_CATEGORY: '/help/:categorySlug',
   HELP_ARTICLE: '/help/:categorySlug/:articleSlug',
