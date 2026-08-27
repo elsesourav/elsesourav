@@ -139,6 +139,24 @@
 }
 
 @media (max-width: 640px) {
+  .blog-page {
+    padding: var(--space-6) var(--space-3) var(--space-16);
+    gap: var(--space-8);
+  }
+
+  .blog-page__title {
+    font-size: clamp(1.85rem, 8vw, 2.5rem);
+  }
+
+  .blog-page__controls {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .blog-page__search {
+    max-width: 100%;
+  }
+
   .blog-page__grid {
     grid-template-columns: 1fr;
   }

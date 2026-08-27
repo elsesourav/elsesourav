@@ -16,3 +16,19 @@
   padding: var(--space-8) 0;
   flex: 1;
 }
+
+@media (max-width: 480px) {
+  .app-shell {
+    padding: 0 var(--space-2-5);
+  }
+
+  .app-shell__content {
+    padding: var(--space-4) 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .app-shell {
+    padding: 0 var(--space-2);
+  }
+}

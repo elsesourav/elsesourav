@@ -233,3 +233,29 @@
   color: var(--color-text-secondary);
   margin: 0;
 }
+
+@media (max-width: 640px) {
+  .ticket-detail-page {
+    padding: var(--space-6) var(--space-3) var(--space-16);
+  }
+
+  .ticket-header-card {
+    padding: var(--space-5) var(--space-4);
+  }
+
+  .ticket-header-card__title {
+    font-size: var(--font-size-xl);
+  }
+
+  .ticket-message-card {
+    padding: var(--space-4);
+  }
+
+  .ticket-composer-card {
+    padding: var(--space-4);
+  }
+
+  .ticket-composer-actions button {
+    width: 100%;
+  }
+}

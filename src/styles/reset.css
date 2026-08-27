@@ -78,9 +78,23 @@ object {
   max-width: 100%;
 }
 
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+li,
+blockquote {
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
 input,
 button,
 textarea,
 select {
   font: inherit;
+  max-width: 100%;
 }

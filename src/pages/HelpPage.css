@@ -175,4 +175,23 @@
     align-items: center;
     padding: var(--space-6);
   }
+
+  .help-support-banner__action {
+    width: 100%;
+  }
+
+  .help-support-banner__action a,
+  .help-support-banner__action button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .help-home-page {
+    padding: 0 var(--space-3) var(--space-12);
+  }
+
+  .help-support-banner {
+    padding: var(--space-5) var(--space-4);
+  }
 }

@@ -150,18 +150,20 @@ export const Header: React.FC = () => {
           />
 
           {/* Theme Toggle Dropdown */}
-          <DropdownMenu
-            items={themeMenuItems}
-            trigger={
-              <Button
-                variant="ghost"
-                size="sm"
-                className="global-header__icon-btn"
-                aria-label={`Current theme: ${themeMode}. Click to change.`}
-                leftIcon={resolvedTheme === 'dark' ? <Moon size={16} /> : <Sun size={16} />}
-              />
-            }
-          />
+          <div className="global-header__theme-toggle">
+            <DropdownMenu
+              items={themeMenuItems}
+              trigger={
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="global-header__icon-btn"
+                  aria-label={`Current theme: ${themeMode}. Click to change.`}
+                  leftIcon={resolvedTheme === 'dark' ? <Moon size={16} /> : <Sun size={16} />}
+                />
+              }
+            />
+          </div>
 
           <div className="global-header__divider" />
 

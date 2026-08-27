@@ -226,6 +226,24 @@
   }
 }
 
+@media (max-width: 480px) {
+  .app-detail__actions-row {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .app-detail__actions-row a,
+  .app-detail__actions-row button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .app-detail__support-card {
+    padding: var(--space-4);
+  }
+}
+
 /* App Detail Support Card */
 .app-detail__support-section {
   margin-top: var(--space-12);

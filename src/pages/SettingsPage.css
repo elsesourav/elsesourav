@@ -104,13 +104,19 @@
   margin-bottom: var(--space-8);
   overflow-x: auto;
   padding-bottom: 2px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.settings-tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .settings-tab-btn {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  padding: var(--space-3) var(--space-5);
+  padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   background: transparent;
   border: none;
@@ -121,6 +127,7 @@
   cursor: pointer;
   transition: all var(--motion-duration-fast) ease;
   white-space: nowrap;
+  min-height: 44px;
 }
 
 .settings-tab-btn:hover {
@@ -372,6 +379,10 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .settings-page {
+    padding: var(--space-6) var(--space-3) var(--space-16);
+  }
+
   .settings-header-card {
     flex-direction: column;
     align-items: flex-start;
@@ -388,5 +399,29 @@
 
   .settings-section-card {
     padding: var(--space-6) var(--space-4);
+  }
+}
+
+@media (max-width: 480px) {
+  .settings-header-card {
+    padding: var(--space-5) var(--space-4);
+  }
+
+  .settings-header-left {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+
+  .settings-section-card {
+    padding: var(--space-5) var(--space-3);
+  }
+
+  .settings-form-actions {
+    flex-direction: column;
+  }
+
+  .settings-form-actions button {
+    width: 100%;
   }
 }

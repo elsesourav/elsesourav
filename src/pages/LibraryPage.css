@@ -411,6 +411,10 @@
 }
 
 @media (max-width: 768px) {
+  .library-dashboard {
+    padding: var(--space-6) var(--space-3) var(--space-16);
+  }
+
   .library-welcome-card {
     flex-direction: column;
     align-items: flex-start;
@@ -422,6 +426,31 @@
   }
 
   .library-apps-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .library-welcome-card {
+    padding: var(--space-5) var(--space-4);
+  }
+
+  .library-welcome-left {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+
+  .library-welcome-actions {
+    width: 100%;
+  }
+
+  .library-welcome-actions button,
+  .library-welcome-actions a {
+    width: 100%;
+  }
+
+  .library-quick-actions {
     grid-template-columns: 1fr;
   }
 }
