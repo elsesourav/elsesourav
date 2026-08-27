@@ -46,3 +46,36 @@ export interface HelpArticle {
   readonly helpfulCount?: number;
   readonly unhelpfulCount?: number;
 }
+
+/**
+ * Privacy-conscious Help Article Feedback / Helpfulness Vote Model
+ */
+export interface ArticleHelpfulnessFeedback {
+  readonly id: ID;
+  readonly articleId: ID;
+  readonly userId?: ID;
+  readonly sessionId: string;
+  readonly helpful: boolean;
+  readonly createdAt: Timestamp;
+  readonly updatedAt: Timestamp;
+}
+
+/**
+ * DTO for Submitting Article Helpfulness
+ */
+export interface SubmitArticleHelpfulnessDto {
+  readonly articleId: ID;
+  readonly helpful: boolean;
+  readonly userId?: ID;
+  readonly sessionId: string;
+}
+
+/**
+ * Aggregate Helpfulness Statistics for an Article
+ */
+export interface ArticleHelpfulnessStats {
+  readonly articleId: ID;
+  readonly helpfulCount: number;
+  readonly notHelpfulCount: number;
+  readonly helpfulnessRatio: number; // 0 to 1
+}

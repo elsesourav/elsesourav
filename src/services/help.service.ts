@@ -2,28 +2,43 @@ import { BaseService } from './base.service';
 import type {
   IHelpCategoryRepository,
   IHelpArticleRepository,
+  IHelpArticleFeedbackRepository,
   CreateHelpCategoryDto,
   UpdateHelpCategoryDto,
   CreateHelpArticleDto,
   UpdateHelpArticleDto,
+  CreateHelpArticleFeedbackDto,
 } from '@/repositories/interfaces';
-import { helpCategoryRepository, helpArticleRepository } from '@/repositories/help.repository';
-import type { HelpCategory, HelpArticle, HelpArticleStatus } from '@/types/help.types';
+import {
+  helpCategoryRepository,
+  helpArticleRepository,
+  helpArticleFeedbackRepository,
+} from '@/repositories/help.repository';
+import type {
+  HelpCategory,
+  HelpArticle,
+  HelpArticleStatus,
+  ArticleHelpfulnessFeedback,
+  ArticleHelpfulnessStats,
+} from '@/types/help.types';
 import type { Result } from '@/types/result.types';
 import type { PaginatedResult, QueryOptions } from '@/repositories/types';
 import { AppError } from '@/lib/errors';
-import { err } from '@/lib/result';
+import { ok, err } from '@/lib/result';
 import {
   createHelpCategorySchema,
   updateHelpCategorySchema,
   createHelpArticleSchema,
   updateHelpArticleSchema,
   publishHelpArticleSchema,
+  submitArticleHelpfulnessSchema,
   type CreateHelpCategoryInput,
   type UpdateHelpCategoryInput,
   type CreateHelpArticleInput,
   type UpdateHelpArticleInput,
+  type SubmitArticleHelpfulnessInput,
 } from '@/schemas/help.schema';
+import { analyticsService } from './analytics.service';
 
 /**
  * Help Center & Knowledge Base Domain Service
@@ -31,7 +46,8 @@ import {
 export class HelpService extends BaseService {
   constructor(
     private readonly categoryRepo: IHelpCategoryRepository = helpCategoryRepository,
-    private readonly articleRepo: IHelpArticleRepository = helpArticleRepository
+    private readonly articleRepo: IHelpArticleRepository = helpArticleRepository,
+    private readonly feedbackRepo: IHelpArticleFeedbackRepository = helpArticleFeedbackRepository
   ) {
     super();
   }
@@ -350,6 +366,116 @@ export class HelpService extends BaseService {
     options?: QueryOptions
   ): Promise<Result<PaginatedResult<HelpArticle>, AppError>> {
     return this.articleRepo.searchArticles(queryText, options);
+  }
+
+  // =========================================================================
+  // Article Helpfulness & Feedback
+  // =========================================================================
+
+  public async submitHelpfulness(
+    input: SubmitArticleHelpfulnessInput
+  ): Promise<Result<ArticleHelpfulnessFeedback, AppError>> {
+    const parseResult = submitArticleHelpfulnessSchema.safeParse(input);
+    if (!parseResult.success) {
+      return err(
+        AppError.validation(
+          'Invalid helpfulness feedback payload',
+          undefined,
+          parseResult.error.flatten()
+        )
+      );
+    }
+
+    const data = parseResult.data;
+
+    // Verify Article Exists and is Published
+    const articleRes = await this.articleRepo.findById(data.articleId);
+    if (!articleRes.success) {
+      return articleRes;
+    }
+    if (!articleRes.data || articleRes.data.status !== 'published') {
+      return err(
+        AppError.notFound(
+          `Help article "${data.articleId}" not found or not published`,
+          'articleId'
+        )
+      );
+    }
+    const article = articleRes.data;
+
+    // Check duplicate vote prevention
+    const existingFeedback = await this.feedbackRepo.findByArticleAndUser(data.articleId, {
+      userId: data.userId,
+      sessionId: data.sessionId,
+    });
+    if (!existingFeedback.success) {
+      return existingFeedback;
+    }
+    if (existingFeedback.data) {
+      return err(
+        AppError.conflict('You have already submitted helpfulness feedback for this article')
+      );
+    }
+
+    const payload: CreateHelpArticleFeedbackDto = {
+      articleId: data.articleId,
+      helpful: data.helpful,
+      userId: data.userId,
+      sessionId: data.sessionId,
+    };
+
+    const createRes = await this.feedbackRepo.create(payload);
+    if (!createRes.success) {
+      return createRes;
+    }
+
+    // Atomic increment of helpfulCount or unhelpfulCount
+    await this.articleRepo.incrementHelpfulness(data.articleId, data.helpful);
+
+    // Non-blocking analytics tracking
+    void analyticsService.trackArticleHelpfulness(data.articleId, data.helpful, {
+      categoryId: article.categoryId,
+      slug: article.slug,
+      userId: data.userId,
+      sessionId: data.sessionId,
+    });
+
+    return createRes;
+  }
+
+  public async hasUserVoted(
+    articleId: string,
+    identifier: { userId?: string; sessionId: string }
+  ): Promise<Result<boolean, AppError>> {
+    const existing = await this.feedbackRepo.findByArticleAndUser(articleId, identifier);
+    if (!existing.success) {
+      return existing;
+    }
+    return ok(existing.data !== null);
+  }
+
+  public async getArticleHelpfulnessStats(
+    articleId: string
+  ): Promise<Result<ArticleHelpfulnessStats, AppError>> {
+    const articleRes = await this.articleRepo.findById(articleId);
+    if (!articleRes.success) {
+      return articleRes;
+    }
+    if (!articleRes.data) {
+      return err(AppError.notFound(`Help article "${articleId}" not found`, 'articleId'));
+    }
+
+    const helpfulCount = articleRes.data.helpfulCount ?? 0;
+    const notHelpfulCount = articleRes.data.unhelpfulCount ?? 0;
+    const total = helpfulCount + notHelpfulCount;
+    const helpfulnessRatio = total > 0 ? helpfulCount / total : 1;
+
+    return ok({
+      articleId,
+      helpfulCount,
+      notHelpfulCount,
+      helpfulnessRatio,
+    });
   }
 }
 

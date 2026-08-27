@@ -1,12 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { HelpService } from '../help.service';
-import type { IHelpCategoryRepository, IHelpArticleRepository } from '@/repositories/interfaces';
+import type {
+  IHelpCategoryRepository,
+  IHelpArticleRepository,
+  IHelpArticleFeedbackRepository,
+} from '@/repositories/interfaces';
 import type { HelpCategory, HelpArticle } from '@/types/help.types';
 import { ok } from '@/lib/result';
 
-describe('HelpService Domain Logic & QC (Prompt 36)', () => {
+describe('HelpService Domain Logic & QC', () => {
   let mockCategoryRepo: IHelpCategoryRepository;
   let mockArticleRepo: IHelpArticleRepository;
+  let mockFeedbackRepo: IHelpArticleFeedbackRepository;
   let service: HelpService;
 
   const mockCategory: HelpCategory = {
@@ -142,9 +147,28 @@ describe('HelpService Domain Logic & QC (Prompt 36)', () => {
       listFeatured: vi.fn().mockResolvedValue(ok({ items: [mockArticle], hasMore: false })),
       searchArticles: vi.fn().mockResolvedValue(ok({ items: [mockArticle], hasMore: false })),
       checkSlugUnique: vi.fn().mockResolvedValue(ok(true)),
+      incrementHelpfulness: vi.fn().mockResolvedValue(ok(undefined)),
     };
 
-    service = new HelpService(mockCategoryRepo, mockArticleRepo);
+    mockFeedbackRepo = {
+      findById: vi.fn().mockResolvedValue(ok(null)),
+      findMany: vi.fn().mockResolvedValue(ok({ items: [], hasMore: false })),
+      create: vi.fn().mockImplementation((dto) =>
+        Promise.resolve(
+          ok({
+            ...dto,
+            id: 'fb-100',
+            createdAt: Date.now(),
+          })
+        )
+      ),
+      update: vi.fn().mockResolvedValue(ok({})),
+      delete: vi.fn().mockResolvedValue(ok(undefined)),
+      findByArticleAndUser: vi.fn().mockResolvedValue(ok(null)),
+      incrementArticleHelpfulness: vi.fn().mockResolvedValue(ok(undefined)),
+    };
+
+    service = new HelpService(mockCategoryRepo, mockArticleRepo, mockFeedbackRepo);
   });
 
   // =========================================================================
@@ -321,6 +345,96 @@ describe('HelpService Domain Logic & QC (Prompt 36)', () => {
       const searchRes = await service.searchArticles('reset');
       expect(searchRes.success).toBe(true);
       expect(mockArticleRepo.searchArticles).toHaveBeenCalledWith('reset', undefined);
+    });
+
+    it('14. Submits article helpfulness feedback and increments aggregate count', async () => {
+      const result = await service.submitHelpfulness({
+        articleId: 'art-reset-password',
+        helpful: true,
+        sessionId: 'sess_123',
+      });
+
+      expect(result.success).toBe(true);
+      expect(mockFeedbackRepo.create).toHaveBeenCalledWith({
+        articleId: 'art-reset-password',
+        helpful: true,
+        userId: undefined,
+        sessionId: 'sess_123',
+      });
+      expect(mockArticleRepo.incrementHelpfulness).toHaveBeenCalledWith('art-reset-password', true);
+    });
+
+    it('15. Prevents duplicate votes from the same user or session', async () => {
+      mockFeedbackRepo.findByArticleAndUser = vi.fn().mockResolvedValue(
+        ok({
+          id: 'existing-vote',
+          articleId: 'art-reset-password',
+          sessionId: 'sess_123',
+          helpful: true,
+          createdAt: 100,
+        })
+      );
+
+      const result = await service.submitHelpfulness({
+        articleId: 'art-reset-password',
+        helpful: false,
+        sessionId: 'sess_123',
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.code).toBe('CONFLICT');
+      }
+    });
+
+    it('16. Rejects helpfulness feedback on draft or non-existent article', async () => {
+      mockArticleRepo.findById = vi.fn().mockResolvedValue(
+        ok({
+          ...mockArticle,
+          status: 'draft',
+        })
+      );
+
+      const result = await service.submitHelpfulness({
+        articleId: 'art-reset-password',
+        helpful: true,
+        sessionId: 'sess_123',
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.code).toBe('NOT_FOUND');
+      }
+    });
+
+    it('17. Calculates article helpfulness ratio and statistics correctly', async () => {
+      mockArticleRepo.findById = vi.fn().mockResolvedValue(
+        ok({
+          ...mockArticle,
+          helpfulCount: 8,
+          unhelpfulCount: 2,
+        })
+      );
+
+      const statsRes = await service.getArticleHelpfulnessStats('art-reset-password');
+      expect(statsRes.success).toBe(true);
+      if (statsRes.success) {
+        expect(statsRes.data.helpfulCount).toBe(8);
+        expect(statsRes.data.notHelpfulCount).toBe(2);
+        expect(statsRes.data.helpfulnessRatio).toBe(0.8);
+      }
+    });
+
+    it('18. Verifies hasUserVoted query abstraction', async () => {
+      mockFeedbackRepo.findByArticleAndUser = vi.fn().mockResolvedValue(ok(null));
+
+      const hasVotedFalse = await service.hasUserVoted('art-reset-password', {
+        sessionId: 'sess_new',
+      });
+      expect(hasVotedFalse.success).toBe(true);
+      if (hasVotedFalse.success) {
+        expect(hasVotedFalse.data).toBe(false);
+      }
     });
   });
 });

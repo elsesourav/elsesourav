@@ -7,6 +7,7 @@ import type {
   HelpArticle,
   HelpCategory,
   HelpArticleStatus,
+  ArticleHelpfulnessFeedback,
   SupportTicket,
   SupportTicketMessage,
 } from '@/types/support.types';
@@ -377,6 +378,29 @@ export interface IHelpArticleRepository extends IRepository<
   listFeatured(limit?: number): PaginatedRepositoryResult<HelpArticle>;
   searchArticles(queryText: string, options?: QueryOptions): PaginatedRepositoryResult<HelpArticle>;
   checkSlugUnique(slug: string, excludeId?: string): RepositoryResult<boolean>;
+  incrementHelpfulness(articleId: string, helpful: boolean): RepositoryResult<void>;
+}
+
+export type CreateHelpArticleFeedbackDto = {
+  articleId: string;
+  helpful: boolean;
+  userId?: string;
+  sessionId: string;
+};
+
+/**
+ * Help Article Feedback Repository Contract
+ */
+export interface IHelpArticleFeedbackRepository extends IRepository<
+  ArticleHelpfulnessFeedback,
+  CreateHelpArticleFeedbackDto,
+  Record<string, unknown>
+> {
+  findByArticleAndUser(
+    articleId: string,
+    identifier: { userId?: string; sessionId: string }
+  ): RepositoryResult<ArticleHelpfulnessFeedback | null>;
+  incrementArticleHelpfulness(articleId: string, helpful: boolean): RepositoryResult<void>;
 }
 
 /**
@@ -397,6 +421,13 @@ export interface IHelpRepository {
   publish(id: string): RepositoryResult<HelpArticle>;
   unpublish(id: string): RepositoryResult<HelpArticle>;
   archive(id: string): RepositoryResult<HelpArticle>;
+  submitHelpfulness(
+    data: CreateHelpArticleFeedbackDto
+  ): RepositoryResult<ArticleHelpfulnessFeedback>;
+  hasUserVoted(
+    articleId: string,
+    identifier: { userId?: string; sessionId: string }
+  ): RepositoryResult<boolean>;
 }
 
 /**

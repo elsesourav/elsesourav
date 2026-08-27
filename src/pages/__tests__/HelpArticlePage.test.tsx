@@ -76,6 +76,17 @@ describe('HelpArticlePage Component', () => {
         hasMore: false,
       })
     );
+
+    vi.spyOn(helpService, 'submitHelpfulness').mockResolvedValue(
+      ok({
+        id: 'fb-test',
+        articleId: mockPublishedArticle.id,
+        sessionId: 'sess_test',
+        helpful: true,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      })
+    );
   });
 
   it('1. Renders article title, breadcrumbs, markdown content, and category badge', async () => {

@@ -8,6 +8,7 @@ export const analyticsEventTypeSchema = z.enum([
   'library_add',
   'library_remove',
   'feedback_submit',
+  'article_helpfulness',
 ]);
 
 export const createAnalyticsEventSchema = z.object({

@@ -2,13 +2,20 @@ import { FirestoreRepository } from './firestore.repository';
 import type {
   IHelpCategoryRepository,
   IHelpArticleRepository,
+  IHelpArticleFeedbackRepository,
   IHelpRepository,
   CreateHelpCategoryDto,
   UpdateHelpCategoryDto,
   CreateHelpArticleDto,
   UpdateHelpArticleDto,
+  CreateHelpArticleFeedbackDto,
 } from './interfaces';
-import type { HelpCategory, HelpArticle, HelpArticleStatus } from '@/types/help.types';
+import type {
+  HelpCategory,
+  HelpArticle,
+  HelpArticleStatus,
+  ArticleHelpfulnessFeedback,
+} from '@/types/help.types';
 import type {
   RepositoryResult,
   PaginatedRepositoryResult,
@@ -20,16 +27,18 @@ import {
   updateHelpCategorySchema,
   createHelpArticleSchema,
   updateHelpArticleSchema,
+  submitArticleHelpfulnessSchema,
 } from '@/schemas/help.schema';
 import { ok, err } from '@/lib/result';
 import { AppError } from '@/lib/errors';
-import type { Firestore } from 'firebase/firestore';
+import { doc, updateDoc, increment, type Firestore } from 'firebase/firestore';
 
 export type {
   CreateHelpCategoryDto,
   UpdateHelpCategoryDto,
   CreateHelpArticleDto,
   UpdateHelpArticleDto,
+  CreateHelpArticleFeedbackDto,
 };
 
 /**
@@ -129,21 +138,7 @@ export class HelpArticleRepository
   }
 
   public async createDraft(data: CreateHelpArticleDto): RepositoryResult<HelpArticle> {
-    const now = Date.now();
-    const payload = {
-      ...data,
-      slug: data.slug.toLowerCase(),
-      status: 'draft' as const,
-      orderIndex: data.orderIndex ?? 0,
-      featured: data.featured ?? false,
-      viewsCount: 0,
-      helpfulCount: 0,
-      unhelpfulCount: 0,
-      createdAt: now,
-      updatedAt: now,
-    };
-
-    return this.create(payload as unknown as CreateHelpArticleDto);
+    return this.create(data);
   }
 
   public async publish(id: string): RepositoryResult<HelpArticle> {
@@ -177,8 +172,8 @@ export class HelpArticleRepository
   ): RepositoryResult<HelpArticle> {
     return this.update(id, {
       status: targetStatus,
+      archivedAt: undefined,
       updatedAt: Date.now(),
-      deletedAt: undefined,
     });
   }
 
@@ -219,8 +214,8 @@ export class HelpArticleRepository
   public async listFeatured(limit = 6): PaginatedRepositoryResult<HelpArticle> {
     return this.findMany({
       filters: [
-        { field: 'status', operator: '==', value: 'published' },
         { field: 'featured', operator: '==', value: true },
+        { field: 'status', operator: '==', value: 'published' },
       ],
       limit,
       orderBy: 'orderIndex',
@@ -232,16 +227,13 @@ export class HelpArticleRepository
     queryText: string,
     options?: QueryOptions
   ): PaginatedRepositoryResult<HelpArticle> {
-    const publishedRes = await this.listPublished({
-      limit: options?.limit ? Math.max(options.limit * 3, 30) : 50,
-    });
-
-    if (!publishedRes.success) {
-      return publishedRes;
-    }
-
     const cleanQuery = queryText.toLowerCase().trim();
     if (!cleanQuery) {
+      return this.listPublished(options);
+    }
+
+    const publishedRes = await this.listPublished({ limit: 100 });
+    if (!publishedRes.success) {
       return publishedRes;
     }
 
@@ -277,6 +269,111 @@ export class HelpArticleRepository
 
     return ok(false);
   }
+
+  public async incrementHelpfulness(articleId: string, helpful: boolean): RepositoryResult<void> {
+    const firestore = this.getFirestoreInstance();
+    if (!firestore) {
+      return err(AppError.internal('Firestore is not initialized'));
+    }
+
+    try {
+      const articleRef = doc(firestore, 'helpArticles', articleId);
+      await updateDoc(articleRef, {
+        [helpful ? 'helpfulCount' : 'unhelpfulCount']: increment(1),
+        updatedAt: Date.now(),
+      });
+      return ok(undefined);
+    } catch (error) {
+      return err(AppError.internal('Failed to update article helpfulness aggregate count', error));
+    }
+  }
+}
+
+/**
+ * Help Article Feedback Firestore Repository
+ */
+export class HelpArticleFeedbackRepository
+  extends FirestoreRepository<
+    ArticleHelpfulnessFeedback,
+    CreateHelpArticleFeedbackDto,
+    Record<string, unknown>
+  >
+  implements IHelpArticleFeedbackRepository
+{
+  constructor(getFirestoreInstance?: () => Firestore) {
+    super('helpArticleFeedback', {
+      createSchema: submitArticleHelpfulnessSchema,
+      getFirestore: getFirestoreInstance,
+    });
+  }
+
+  public async findByArticleAndUser(
+    articleId: string,
+    identifier: { userId?: string; sessionId: string }
+  ): RepositoryResult<ArticleHelpfulnessFeedback | null> {
+    if (!articleId) {
+      return err(AppError.badRequest('Article ID is required', 'articleId'));
+    }
+
+    if (identifier.userId) {
+      const userFeedback = await this.findMany({
+        filters: [
+          { field: 'articleId', operator: '==', value: articleId },
+          { field: 'userId', operator: '==', value: identifier.userId },
+        ],
+        limit: 1,
+      });
+
+      if (!userFeedback.success) {
+        return userFeedback;
+      }
+
+      if (userFeedback.data.items.length > 0) {
+        return ok(userFeedback.data.items[0] ?? null);
+      }
+    }
+
+    if (identifier.sessionId) {
+      const sessionFeedback = await this.findMany({
+        filters: [
+          { field: 'articleId', operator: '==', value: articleId },
+          { field: 'sessionId', operator: '==', value: identifier.sessionId },
+        ],
+        limit: 1,
+      });
+
+      if (!sessionFeedback.success) {
+        return sessionFeedback;
+      }
+
+      if (sessionFeedback.data.items.length > 0) {
+        return ok(sessionFeedback.data.items[0] ?? null);
+      }
+    }
+
+    return ok(null);
+  }
+
+  public async incrementArticleHelpfulness(
+    articleId: string,
+    helpful: boolean
+  ): RepositoryResult<void> {
+    const firestore = this.getFirestoreInstance();
+    if (!firestore) {
+      return err(AppError.internal('Firestore is not initialized'));
+    }
+
+    try {
+      const articleRef = doc(firestore, 'helpArticles', articleId);
+      await updateDoc(articleRef, {
+        [helpful ? 'helpfulCount' : 'unhelpfulCount']: increment(1),
+        updatedAt: Date.now(),
+      });
+      return ok(undefined);
+    } catch (error) {
+      return err(AppError.internal('Failed to update article helpfulness aggregate count', error));
+    }
+  }
 }
 
 /**
@@ -285,7 +382,8 @@ export class HelpArticleRepository
 export class HelpRepository implements IHelpRepository {
   constructor(
     private readonly categoryRepo: IHelpCategoryRepository = new HelpCategoryRepository(),
-    private readonly articleRepo: IHelpArticleRepository = new HelpArticleRepository()
+    private readonly articleRepo: IHelpArticleRepository = new HelpArticleRepository(),
+    private readonly feedbackRepo: IHelpArticleFeedbackRepository = new HelpArticleFeedbackRepository()
   ) {}
 
   public getCategoryBySlug(slug: string): RepositoryResult<HelpCategory | null> {
@@ -337,8 +435,38 @@ export class HelpRepository implements IHelpRepository {
   public archive(id: string): RepositoryResult<HelpArticle> {
     return this.articleRepo.archive(id);
   }
+
+  public async submitHelpfulness(
+    data: CreateHelpArticleFeedbackDto
+  ): RepositoryResult<ArticleHelpfulnessFeedback> {
+    const feedbackRes = await this.feedbackRepo.create(data);
+    if (!feedbackRes.success) {
+      return feedbackRes;
+    }
+
+    // Atomic increment of helpfulCount / unhelpfulCount
+    await this.feedbackRepo.incrementArticleHelpfulness(data.articleId, data.helpful);
+
+    return feedbackRes;
+  }
+
+  public async hasUserVoted(
+    articleId: string,
+    identifier: { userId?: string; sessionId: string }
+  ): RepositoryResult<boolean> {
+    const existing = await this.feedbackRepo.findByArticleAndUser(articleId, identifier);
+    if (!existing.success) {
+      return existing;
+    }
+    return ok(existing.data !== null);
+  }
 }
 
 export const helpCategoryRepository = new HelpCategoryRepository();
 export const helpArticleRepository = new HelpArticleRepository();
-export const helpRepository = new HelpRepository(helpCategoryRepository, helpArticleRepository);
+export const helpArticleFeedbackRepository = new HelpArticleFeedbackRepository();
+export const helpRepository = new HelpRepository(
+  helpCategoryRepository,
+  helpArticleRepository,
+  helpArticleFeedbackRepository
+);

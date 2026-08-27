@@ -63,3 +63,15 @@ export const publishHelpArticleSchema = z.object({
 export type CreateHelpArticleInput = z.input<typeof createHelpArticleSchema>;
 export type UpdateHelpArticleInput = z.input<typeof updateHelpArticleSchema>;
 export type PublishHelpArticleInput = z.input<typeof publishHelpArticleSchema>;
+
+/**
+ * Schema for submitting article helpfulness feedback
+ */
+export const submitArticleHelpfulnessSchema = z.object({
+  articleId: EntityIdSchema,
+  helpful: z.boolean(),
+  userId: EntityIdSchema.optional(),
+  sessionId: z.string().trim().min(1, 'Session ID is required').max(100),
+});
+
+export type SubmitArticleHelpfulnessInput = z.input<typeof submitArticleHelpfulnessSchema>;

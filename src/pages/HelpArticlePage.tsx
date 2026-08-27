@@ -4,16 +4,13 @@ import {
   ChevronRight,
   ArrowLeft,
   Clock,
-  ThumbsUp,
-  ThumbsDown,
-  CheckCircle2,
   FileQuestion,
   MessageSquareHeart,
   BookOpen,
 } from 'lucide-react';
 import { Button, Badge, Skeleton, ErrorState } from '@/components';
 import { BlogContentRenderer } from '@/components/blog';
-import { HelpArticleCard } from '@/components/help';
+import { HelpArticleCard, ArticleHelpfulness } from '@/components/help';
 import { helpService } from '@/services/help.service';
 import type { HelpCategory, HelpArticle } from '@/types/help.types';
 import { ROUTES } from '@/constants/routes';
@@ -31,7 +28,6 @@ export const HelpArticlePage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isNotFound, setIsNotFound] = useState(false);
-  const [feedbackGiven, setFeedbackGiven] = useState<'yes' | 'no' | null>(null);
 
   const loadArticleData = useCallback(async () => {
     if (!articleSlug) {
@@ -268,44 +264,7 @@ export const HelpArticlePage: React.FC = () => {
           </div>
 
           {/* Helpfulness / Feedback Section */}
-          <section className="help-feedback-card" aria-label="Article Feedback">
-            <div className="help-feedback-card__text">
-              <h3 className="help-feedback-card__title">Was this article helpful?</h3>
-              <p className="help-feedback-card__desc">
-                Your feedback helps us continuously improve our documentation.
-              </p>
-            </div>
-
-            <div className="help-feedback-card__actions">
-              {feedbackGiven ? (
-                <div className="help-feedback-card__confirmed" aria-live="polite">
-                  <CheckCircle2 size={18} className="help-feedback-icon--success" />
-                  <span>Thank you for your feedback!</span>
-                </div>
-              ) : (
-                <div className="help-feedback-buttons">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<ThumbsUp size={15} />}
-                    onClick={() => setFeedbackGiven('yes')}
-                    aria-label="Yes, this article was helpful"
-                  >
-                    Yes
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<ThumbsDown size={15} />}
-                    onClick={() => setFeedbackGiven('no')}
-                    aria-label="No, this article was not helpful"
-                  >
-                    No
-                  </Button>
-                </div>
-              )}
-            </div>
-          </section>
+          <ArticleHelpfulness article={article} />
 
           {/* Related Articles */}
           {relatedArticles.length > 0 && (

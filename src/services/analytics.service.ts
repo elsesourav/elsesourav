@@ -35,6 +35,11 @@ export interface IAnalyticsService {
   trackLibraryAdd(appId: string, userId?: string): Promise<void>;
   trackLibraryRemove(appId: string, userId?: string): Promise<void>;
   trackFeedbackSubmit(appId: string, userId?: string): Promise<void>;
+  trackArticleHelpfulness(
+    articleId: string,
+    helpful: boolean,
+    options?: { userId?: string; sessionId?: string; categoryId?: string; slug?: string }
+  ): Promise<void>;
   getAppStats(appId: string): Promise<Result<AppAnalyticsAggregate | null, AppError>>;
   listEvents(
     appId?: string,
@@ -200,6 +205,36 @@ export class AnalyticsService implements IAnalyticsService {
         this.analyticsRepo.logEvent(eventDto),
         this.analyticsRepo.incrementStats(appId, 'feedback', 1),
       ]);
+    } catch {
+      // Non-blocking
+    }
+  }
+
+  /**
+   * Non-blocking help article helpfulness tracking
+   */
+  public async trackArticleHelpfulness(
+    articleId: string,
+    helpful: boolean,
+    options?: { userId?: string; sessionId?: string; categoryId?: string; slug?: string }
+  ): Promise<void> {
+    if (!articleId) return;
+
+    try {
+      const sessionId = options?.sessionId || getAnonymousSessionId();
+      const eventDto: CreateAnalyticsEventDto = {
+        appId: options?.categoryId || articleId,
+        eventType: 'article_helpfulness',
+        userId: options?.userId,
+        sessionId,
+        metadata: {
+          articleId,
+          articleSlug: options?.slug,
+          helpful,
+        },
+      };
+
+      await Promise.allSettled([this.analyticsRepo.logEvent(eventDto)]);
     } catch {
       // Non-blocking
     }

@@ -141,7 +141,25 @@ service cloud.firestore {
     match /helpArticles/{articleId} {
       allow get: if (isPublished() && isNotDeleted()) || isUserAdmin();
       allow list: if isUserAdmin() || (isPublished() && isNotDeleted());
-      allow create, update, delete: if isUserAdmin();
+      allow create, delete: if isUserAdmin();
+      allow update: if isUserAdmin() || (
+        isPublished() &&
+        isNotDeleted() &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['helpfulCount', 'unhelpfulCount', 'updatedAt'])
+      );
+    }
+
+    match /helpArticleFeedback/{feedbackId} {
+      allow get: if isUserAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+      allow list: if isUserAdmin();
+      allow create: if (
+        request.resource.data.articleId is string &&
+        request.resource.data.sessionId is string &&
+        request.resource.data.helpful is bool &&
+        request.resource.data.createdAt is number &&
+        (!('userId' in request.resource.data) || (isAuthenticated() && request.resource.data.userId == request.auth.uid))
+      );
+      allow update, delete: if isUserAdmin();
     }
 
     // =========================================================================

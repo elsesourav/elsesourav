@@ -10,7 +10,8 @@ export type AnalyticsEventType =
   | 'external_link'
   | 'library_add'
   | 'library_remove'
-  | 'feedback_submit';
+  | 'feedback_submit'
+  | 'article_helpfulness';
 
 /**
  * Granular Event Record (Append-only /analyticsEvents)
