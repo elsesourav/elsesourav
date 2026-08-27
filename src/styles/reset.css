@@ -98,3 +98,13 @@ select {
   font: inherit;
   max-width: 100%;
 }
+
+/* Prevent unwanted mobile viewport auto-zooming on focus in iOS Safari */
+@media screen and (max-width: 768px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
