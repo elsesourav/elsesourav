@@ -181,3 +181,4 @@ npx firebase deploy --only hosting,firestore
 | [`docs/TROUBLESHOOTING.md`](file:///Users/sourav/Developer/WEB/elsesourav/docs/TROUBLESHOOTING.md) | Practical diagnostic runbook for builds, auth, permissions, and native errors |
 | [`docs/CONTRIBUTING.md`](file:///Users/sourav/Developer/WEB/elsesourav/docs/CONTRIBUTING.md) | Developer workflow, commit conventions, and pre-release quality gate |
 | [`docs/RELEASE_PROCESS.md`](file:///Users/sourav/Developer/WEB/elsesourav/docs/RELEASE_PROCESS.md) | Solo maintainer release workflow, semver bumping, and changelog updates |
+| [`docs/FINAL_LAUNCH_CHECKLIST.md`](file:///Users/sourav/Developer/WEB/elsesourav/docs/FINAL_LAUNCH_CHECKLIST.md) | Final pre-deployment, deployment, and post-deployment launch checklist |
