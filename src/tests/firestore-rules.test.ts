@@ -82,7 +82,17 @@ describe('Firestore Security Rules Specification & Verification', () => {
         auth: { uid: string; token?: { role?: string; admin?: boolean } } | null;
         resource?: { data: Record<string, unknown> };
       },
-      ruleType: 'app_read' | 'user_read' | 'user_update_role' | 'admin_write' | 'audit_log_write'
+      ruleType:
+        | 'app_read'
+        | 'user_read'
+        | 'user_update_role'
+        | 'admin_write'
+        | 'audit_log_write'
+        | 'notification_read'
+        | 'notification_write'
+        | 'ticket_read'
+        | 'ticket_write'
+        | 'library_access'
     ): boolean => {
       const isAuthenticated = request.auth !== null;
       const isOwner = (uid: string) => isAuthenticated && request.auth?.uid === uid;
@@ -112,6 +122,17 @@ describe('Firestore Security Rules Specification & Verification', () => {
         case 'audit_log_write':
           // Updates/deletes always return false
           return false;
+
+        case 'notification_read':
+        case 'notification_write':
+          return isOwner(resource?.data.userId as string) || isUserAdmin();
+
+        case 'ticket_read':
+        case 'ticket_write':
+          return isOwner(resource?.data.userId as string) || isUserAdmin();
+
+        case 'library_access':
+          return isOwner(resource?.data.userId as string) || isUserAdmin();
 
         default:
           return false;
@@ -186,6 +207,33 @@ describe('Firestore Security Rules Specification & Verification', () => {
     it('11. Audit logs cannot be updated or deleted by anyone', () => {
       const adminRequest = { auth: { uid: 'admin_1', token: { role: 'admin' } } };
       expect(evaluateRule(null, adminRequest, 'audit_log_write')).toBe(false);
+    });
+
+    it('12. USER can read own notifications but not other users notifications', () => {
+      const ownNotif = { data: { userId: 'user_123', title: 'Update' } };
+      const otherNotif = { data: { userId: 'user_999', title: 'Update' } };
+      const userRequest = { auth: { uid: 'user_123' } };
+
+      expect(evaluateRule(ownNotif, userRequest, 'notification_read')).toBe(true);
+      expect(evaluateRule(otherNotif, userRequest, 'notification_read')).toBe(false);
+    });
+
+    it('13. USER can read own support tickets but not other users tickets', () => {
+      const ownTicket = { data: { userId: 'user_123', subject: 'Issue' } };
+      const otherTicket = { data: { userId: 'user_999', subject: 'Secret Issue' } };
+      const userRequest = { auth: { uid: 'user_123' } };
+
+      expect(evaluateRule(ownTicket, userRequest, 'ticket_read')).toBe(true);
+      expect(evaluateRule(otherTicket, userRequest, 'ticket_read')).toBe(false);
+    });
+
+    it('14. USER can manage own library entries but not other users library entries', () => {
+      const ownLib = { data: { userId: 'user_123', appId: 'app_1' } };
+      const otherLib = { data: { userId: 'user_999', appId: 'app_1' } };
+      const userRequest = { auth: { uid: 'user_123' } };
+
+      expect(evaluateRule(ownLib, userRequest, 'library_access')).toBe(true);
+      expect(evaluateRule(otherLib, userRequest, 'library_access')).toBe(false);
     });
   });
 });
