@@ -48,18 +48,8 @@ export interface AppLink {
   readonly isActive: boolean;
 }
 
-/**
- * App Media Assets
- */
-export interface AppMedia {
-  readonly id: ID;
-  readonly kind: 'icon' | 'screenshot' | 'banner' | 'video_preview' | 'thumbnail';
-  readonly url: string;
-  readonly alt: string;
-  readonly width?: number;
-  readonly height?: number;
-  readonly isPrimary?: boolean;
-}
+import type { AppMedia, AppMediaType } from './media.types';
+export type { AppMedia, AppMediaType };
 
 /**
  * Bounded App Statistics Summary

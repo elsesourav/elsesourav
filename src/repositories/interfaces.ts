@@ -75,6 +75,26 @@ export interface IAppVersionRepository {
   setCurrentVersion(appId: string, versionId: string): RepositoryResult<AppVersion>;
 }
 
+import type { AppMedia, AppMediaType } from '@/types/media.types';
+import type { CreateAppMediaDto, UpdateAppMediaDto } from './media.repository';
+
+/**
+ * App Media Repository Contract (Subcollection: apps/{appId}/media/{mediaId})
+ */
+export interface IAppMediaRepository {
+  findById(appId: string, mediaId: string): RepositoryResult<AppMedia | null>;
+  listByApp(appId: string, options?: QueryOptions): PaginatedRepositoryResult<AppMedia>;
+  listByType(
+    appId: string,
+    type: AppMediaType,
+    options?: QueryOptions
+  ): PaginatedRepositoryResult<AppMedia>;
+  create(appId: string, data: CreateAppMediaDto): RepositoryResult<AppMedia>;
+  update(appId: string, mediaId: string, data: UpdateAppMediaDto): RepositoryResult<AppMedia>;
+  delete(appId: string, mediaId: string): RepositoryResult<void>;
+  reorder(appId: string, orderedMediaIds: string[]): RepositoryResult<void>;
+}
+
 import type { AuthUser } from '@/types/auth.types';
 import type {
   CreateUserProfileDto,

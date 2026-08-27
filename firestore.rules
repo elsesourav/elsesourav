@@ -83,6 +83,12 @@ service cloud.firestore {
         allow read: if (get(/databases/$(database)/documents/apps/$(appId)).data.status == 'published' && isNotDeleted()) || isUserAdmin();
         allow write: if isUserAdmin();
       }
+
+      // Subcollection: media
+      match /media/{mediaId} {
+        allow read: if (get(/databases/$(database)/documents/apps/$(appId)).data.status == 'published' && isNotDeleted()) || isUserAdmin();
+        allow write: if isUserAdmin();
+      }
     }
 
     // =========================================================================
