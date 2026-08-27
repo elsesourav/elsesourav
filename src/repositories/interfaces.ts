@@ -198,17 +198,54 @@ export interface IUserRepository extends IRepository<
   toggleFavorite(userId: string, appId: string): RepositoryResult<boolean>;
 }
 
+import type { BlogPostStatus } from '@/types/blog.types';
+
+export type CreateBlogPostDto = {
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  coverImageUrl?: string;
+  authorId?: string;
+  authorName?: string;
+  authorAvatarUrl?: string;
+  category: string;
+  tags?: readonly string[];
+  readingTime?: number;
+  readingTimeMinutes?: number;
+  seoTitle?: string;
+  seoDescription?: string;
+  canonicalUrl?: string;
+  socialImageUrl?: string;
+};
+
+export type UpdateBlogPostDto = Partial<CreateBlogPostDto> & {
+  status?: BlogPostStatus;
+  publishedAt?: number;
+  updatedAt?: number;
+  archivedAt?: number;
+  deletedAt?: number;
+};
+
 /**
  * Blog Repository Contract
  */
 export interface IBlogRepository extends IRepository<
   BlogPost,
-  Omit<BlogPost, 'id' | 'createdAt' | 'updatedAt'>,
-  Partial<BlogPost>
+  CreateBlogPostDto,
+  UpdateBlogPostDto
 > {
   findBySlug(slug: string): RepositoryResult<BlogPost | null>;
-  findPublished(options?: QueryOptions): PaginatedRepositoryResult<BlogPost>;
-  findByTag(tagSlug: string, limit?: number): PaginatedRepositoryResult<BlogPost>;
+  createDraft(data: CreateBlogPostDto): RepositoryResult<BlogPost>;
+  publish(id: string): RepositoryResult<BlogPost>;
+  unpublish(id: string): RepositoryResult<BlogPost>;
+  archive(id: string): RepositoryResult<BlogPost>;
+  restore(id: string, targetStatus?: BlogPostStatus): RepositoryResult<BlogPost>;
+  listPublished(options?: QueryOptions): PaginatedRepositoryResult<BlogPost>;
+  listLatest(limit?: number): PaginatedRepositoryResult<BlogPost>;
+  listByCategory(category: string, options?: QueryOptions): PaginatedRepositoryResult<BlogPost>;
+  listByTag(tag: string, options?: QueryOptions): PaginatedRepositoryResult<BlogPost>;
+  checkSlugUnique(slug: string, excludeId?: string): RepositoryResult<boolean>;
 }
 
 /**

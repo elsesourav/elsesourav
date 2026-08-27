@@ -11,3 +11,4 @@ export * from './media.repository';
 export * from './analytics.repository';
 export * from './feedback.repository';
 export * from './user.repository';
+export * from './blog.repository';

@@ -1,12 +1,14 @@
 import type { ID, Timestamp } from './common.types';
 
 /**
- * Blog Post Publication Status
+ * Blog Post Publication Lifecycle Status
+ * Only 'published' posts are publicly accessible.
  */
-export type BlogStatus = 'draft' | 'published' | 'archived';
+export type BlogPostStatus = 'draft' | 'published' | 'archived';
+export type BlogStatus = BlogPostStatus;
 
 /**
- * Blog Tag Entity
+ * Blog Tag Entity (Classification Taxonomy)
  */
 export interface BlogTag {
   readonly id: ID;
@@ -24,11 +26,22 @@ export interface BlogPost {
   readonly excerpt: string;
   readonly content: string;
   readonly coverImageUrl?: string;
+  readonly authorId: ID;
+  readonly authorName?: string;
+  readonly authorAvatarUrl?: string;
+  readonly category: string;
   readonly tags: readonly string[];
-  readonly status: BlogStatus;
-  readonly readingTimeMinutes: number;
-  readonly viewsCount: number;
+  readonly status: BlogPostStatus;
+  readonly readingTime?: number;
+  readonly readingTimeMinutes?: number;
+  readonly viewsCount?: number;
+  readonly seoTitle?: string;
+  readonly seoDescription?: string;
+  readonly canonicalUrl?: string;
+  readonly socialImageUrl?: string;
   readonly publishedAt?: Timestamp;
   readonly createdAt: Timestamp;
   readonly updatedAt: Timestamp;
+  readonly archivedAt?: Timestamp;
+  readonly deletedAt?: Timestamp;
 }

@@ -8,3 +8,4 @@ export * from './feedback.schema';
 export * from './category.schema';
 export * from './user.schema';
 export * from './classification.schema';
+export * from './blog.schema';

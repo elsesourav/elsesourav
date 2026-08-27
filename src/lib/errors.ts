@@ -48,6 +48,10 @@ export class AppError extends Error {
     return new AppError('NOT_FOUND', msg);
   }
 
+  public static conflict(message: string, field?: string, cause?: unknown): AppError {
+    return new AppError('CONFLICT', message, { field, cause });
+  }
+
   public static validation(message: string, field?: string, cause?: unknown): AppError {
     return new AppError('VALIDATION_ERROR', message, { field, cause });
   }
