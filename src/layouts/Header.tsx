@@ -31,6 +31,7 @@ import {
 import { useTheme } from '@/hooks/useTheme';
 import { useAuth } from '@/hooks/useAuth';
 import { SearchDialog } from '@/components/search/SearchDialog';
+import { NotificationCenter } from '@/components/notifications/NotificationCenter';
 import './Header.css';
 
 export const Header: React.FC = () => {
@@ -168,20 +169,23 @@ export const Header: React.FC = () => {
           {isLoading ? (
             <div className="global-header__auth-loading" aria-label="Loading authentication..." />
           ) : isAuthenticated ? (
-            <DropdownMenu
-              items={userMenuItems}
-              trigger={
-                <button
-                  type="button"
-                  className="global-header__user-trigger"
-                  aria-label="Open user account menu"
-                >
-                  <Avatar name={displayName} src={authUser?.photoURL || undefined} size="sm" />
-                  <span className="global-header__user-name">{displayName}</span>
-                  <ChevronDown size={14} className="global-header__user-chevron" />
-                </button>
-              }
-            />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+              <NotificationCenter />
+              <DropdownMenu
+                items={userMenuItems}
+                trigger={
+                  <button
+                    type="button"
+                    className="global-header__user-trigger"
+                    aria-label="Open user account menu"
+                  >
+                    <Avatar name={displayName} src={authUser?.photoURL || undefined} size="sm" />
+                    <span className="global-header__user-name">{displayName}</span>
+                    <ChevronDown size={14} className="global-header__user-chevron" />
+                  </button>
+                }
+              />
+            </div>
           ) : (
             <Link to={ROUTES.LOGIN}>
               <Button

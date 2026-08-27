@@ -12,3 +12,4 @@ export * from './blog.schema';
 export * from './help.schema';
 export * from './support.schema';
 export * from './auth.schema';
+export * from './notification.schema';

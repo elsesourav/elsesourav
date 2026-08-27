@@ -476,3 +476,32 @@ export interface IAuditLogRepository {
   logAction(entry: Omit<AuditLog, 'id' | 'timestamp'>): RepositoryResult<AuditLog>;
   findRecent(options?: QueryOptions): PaginatedRepositoryResult<AuditLog>;
 }
+
+import type { Notification } from '@/types/notification.types';
+import type {
+  CreateNotificationInput,
+  UpdateNotificationInput,
+} from '@/schemas/notification.schema';
+
+/**
+ * Notification Repository Contract
+ */
+export interface INotificationRepository extends IRepository<
+  Notification,
+  CreateNotificationInput,
+  UpdateNotificationInput
+> {
+  listUserNotifications(
+    userId: string,
+    options?: QueryOptions
+  ): PaginatedRepositoryResult<Notification>;
+  getUnreadCount(userId: string): RepositoryResult<number>;
+  markAsRead(userId: string, notificationId: string): RepositoryResult<Notification>;
+  markAllAsRead(userId: string): RepositoryResult<number>;
+  createForUser(data: CreateNotificationInput): RepositoryResult<Notification>;
+  subscribeToUserNotifications(
+    userId: string,
+    onUpdate: (notifications: Notification[]) => void,
+    onError?: (error: AppError) => void
+  ): () => void;
+}

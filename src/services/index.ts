@@ -12,3 +12,4 @@ export * from './app-search.service';
 export * from './blog.service';
 export * from './help.service';
 export * from './support.service';
+export * from './notification.service';

@@ -16,3 +16,4 @@ export * from './blog-category.repository';
 export * from './blog-tag.repository';
 export * from './help.repository';
 export * from './support.repository';
+export * from './notification.repository';
