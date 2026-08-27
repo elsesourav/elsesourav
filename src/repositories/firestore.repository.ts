@@ -215,6 +215,36 @@ export class FirestoreRepository<
     }
   }
 
+  public async softDelete(id: string): RepositoryResult<T> {
+    if (!id || typeof id !== 'string') {
+      return err(
+        AppError.badRequest(`Invalid id provided for ${this.collectionName} soft deletion`, 'id')
+      );
+    }
+
+    const now = Date.now();
+    return this.update(id, {
+      deletedAt: now,
+      isDeleted: true,
+      updatedAt: now,
+    } as unknown as TUpdate);
+  }
+
+  public async restoreSoftDeleted(id: string): RepositoryResult<T> {
+    if (!id || typeof id !== 'string') {
+      return err(
+        AppError.badRequest(`Invalid id provided for ${this.collectionName} restore`, 'id')
+      );
+    }
+
+    const now = Date.now();
+    return this.update(id, {
+      deletedAt: null,
+      isDeleted: false,
+      updatedAt: now,
+    } as unknown as TUpdate);
+  }
+
   protected buildQuery(options?: QueryOptions): Query<T> {
     let q: Query<T> = this.getCollectionRef();
 

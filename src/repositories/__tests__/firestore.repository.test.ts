@@ -289,5 +289,45 @@ describe('FirestoreRepository Generic Base', () => {
       expect(isOk(result)).toBe(true);
       expect(deleteDoc).toHaveBeenCalled();
     });
+
+    it('soft deletes document by setting deletedAt and isDeleted: true', async () => {
+      vi.mocked(getDoc).mockResolvedValueOnce({
+        exists: () => true,
+        data: () => ({ id: 'item-1', title: 'Active Item', count: 1, createdAt: 100, updatedAt: 100 }),
+      } as never);
+      vi.mocked(updateDoc).mockResolvedValueOnce(undefined);
+
+      const result = await repository.softDelete('item-1');
+      expect(isOk(result)).toBe(true);
+      if (isOk(result)) {
+        expect((result.data as unknown as Record<string, unknown>).isDeleted).toBe(true);
+        expect((result.data as unknown as Record<string, unknown>).deletedAt).toBeDefined();
+      }
+      expect(updateDoc).toHaveBeenCalled();
+    });
+
+    it('restores soft-deleted document by clearing deletedAt and isDeleted: false', async () => {
+      vi.mocked(getDoc).mockResolvedValueOnce({
+        exists: () => true,
+        data: () => ({
+          id: 'item-1',
+          title: 'Soft Deleted Item',
+          count: 1,
+          createdAt: 100,
+          updatedAt: 100,
+          isDeleted: true,
+          deletedAt: 150,
+        }),
+      } as never);
+      vi.mocked(updateDoc).mockResolvedValueOnce(undefined);
+
+      const result = await repository.restoreSoftDeleted('item-1');
+      expect(isOk(result)).toBe(true);
+      if (isOk(result)) {
+        expect((result.data as unknown as Record<string, unknown>).isDeleted).toBe(false);
+        expect((result.data as unknown as Record<string, unknown>).deletedAt).toBeNull();
+      }
+      expect(updateDoc).toHaveBeenCalled();
+    });
   });
 });

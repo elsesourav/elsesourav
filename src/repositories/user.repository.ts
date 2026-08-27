@@ -207,7 +207,7 @@ export class FirestoreUserRepository
   /**
    * Soft-delete a user profile by setting status to 'deleted' and setting deletedAt timestamp
    */
-  public async softDelete(uid: string): RepositoryResult<User> {
+  public override async softDelete(uid: string): RepositoryResult<User> {
     if (!uid) {
       return err(AppError.badRequest('UID is required to soft-delete profile', 'uid'));
     }
