@@ -82,34 +82,34 @@ export const SYSTEM_HELP_CATEGORIES: readonly Omit<HelpCategory, 'createdAt' | '
     id: 'help-cat-getting-started',
     name: 'Getting Started',
     slug: 'getting-started',
-    description: 'Overview of ElseSourav platform, system requirements, and account setup.',
+    description: 'Platform overview, navigation guides, and first-time visitor walkthroughs.',
     icon: 'Sparkles',
     orderIndex: 1,
+    isActive: true,
+  },
+  {
+    id: 'help-cat-apps-discovery',
+    name: 'Apps & Discovery',
+    slug: 'apps-discovery',
+    description: 'Searching the catalog, downloading binaries, changelogs, and personal library.',
+    icon: 'Grid',
+    orderIndex: 2,
     isActive: true,
   },
   {
     id: 'help-cat-account-security',
     name: 'Account & Security',
     slug: 'account-security',
-    description: 'Managing credentials, authentication, sessions, and data privacy.',
+    description: 'Registration, credential management, email verification, and privacy settings.',
     icon: 'Shield',
-    orderIndex: 2,
-    isActive: true,
-  },
-  {
-    id: 'help-cat-software-downloads',
-    name: 'Software Downloads & Installation',
-    slug: 'software-downloads',
-    description: 'Installing, updating, and verifying software packages across macOS and Windows.',
-    icon: 'Download',
     orderIndex: 3,
     isActive: true,
   },
   {
     id: 'help-cat-troubleshooting',
-    name: 'Troubleshooting & Support',
+    name: 'Support & Mobile',
     slug: 'troubleshooting',
-    description: 'Common issues, diagnostic checklists, and contacting developer support.',
+    description: 'Direct support ticketing, message replies, PWA installation, and offline limits.',
     icon: 'HelpCircle',
     orderIndex: 4,
     isActive: true,
@@ -122,35 +122,151 @@ export const SYSTEM_HELP_ARTICLES: readonly Omit<HelpArticle, 'createdAt' | 'upd
     title: 'Welcome to ElseSourav: Platform Overview',
     slug: 'welcome-platform-overview',
     categoryId: 'help-cat-getting-started',
-    excerpt: 'An introduction to ElseSourav software catalog, devlogs, and personal library.',
+    excerpt: 'An introduction to ElseSourav software catalog, devlogs, personal library, and direct support.',
     content: `# Welcome to ElseSourav
 
-ElseSourav is an independent developer and software platform publishing desktop tools, mobile utilities, web extensions, and open-source packages.
+ElseSourav is an independent software publishing hub and developer journal created by software engineer Sourav.
 
-## Core Platform Capabilities:
-- **Software Catalog**: Discover and download software created by developer Sourav.
-- **Personal Library**: Bookmark applications and sync your software collection.
-- **Developer Journal**: Read technical devlogs, architecture deep dives, and release notes.
-- **Support Center**: Submit support tickets directly to the maintainer.`,
+## What You Can Do:
+- **Discover Software**: Browse native desktop tools, terminal utilities, web extensions, and open-source packages.
+- **Direct Downloads**: Download release binaries directly for macOS, Windows, and Linux.
+- **Personal Library**: Save and organize applications to your personal cloud library.
+- **Read Devlogs**: Follow technical architecture deep-dives and engineering devlogs.
+- **Direct Support**: Open support tickets directly to the creator.`,
     status: 'published',
     orderIndex: 1,
     helpfulCount: 0,
     unhelpfulCount: 0,
   },
   {
+    id: 'help-art-first-time-guide',
+    title: 'First-Time Visitor Guide & Quick Start',
+    slug: 'first-time-visitor-guide',
+    categoryId: 'help-cat-getting-started',
+    excerpt: 'Step-by-step walkthrough on browsing the catalog, searching for tools, and saving bookmarks.',
+    content: `# First-Time Visitor Guide
+
+Getting started with ElseSourav is simple:
+
+### 1. Browse & Search
+Navigate to the [Apps Catalog](/apps) to browse by categories or use the instant search bar to find tools by keyword, tag, or platform.
+
+### 2. Inspect App Details
+Click any application card to view complete release notes, platform requirements, verified download mirrors, and screenshot previews.
+
+### 3. Create an Account (Optional)
+Creating an account allows you to bookmark software to your [Personal Library](/library) and submit direct support tickets.`,
+    status: 'published',
+    orderIndex: 2,
+    helpfulCount: 0,
+    unhelpfulCount: 0,
+  },
+  {
+    id: 'help-art-discovering-and-downloading',
+    title: 'Finding Applications & Downloading Binaries',
+    slug: 'finding-applications-and-downloads',
+    categoryId: 'help-cat-apps-discovery',
+    excerpt: 'Learn how to filter by platform, verify release changelogs, and download software safely.',
+    content: `# Finding Apps & Downloading Releases
+
+### Platform Badges
+Each application displays compatible platform badges:
+- **macOS**: DMG installers and Homebrew formulas.
+- **Windows**: MSI installers and portable binaries.
+- **Linux**: AppImage and deb packages.
+- **Web / Chrome**: Browser extensions and online applications.
+
+### Release Versions & Changelogs
+Under the **Versions** tab on any app details page, you can review historical changelogs, release notes, and download specific previous versions.`,
+    status: 'published',
+    orderIndex: 1,
+    helpfulCount: 0,
+    unhelpfulCount: 0,
+  },
+  {
+    id: 'help-art-managing-personal-library',
+    title: 'Managing Your Personal Software Library',
+    slug: 'managing-personal-library',
+    categoryId: 'help-cat-apps-discovery',
+    excerpt: 'Save applications to your account, organize your workflow, and synchronize bookmarks across devices.',
+    content: `# Personal Software Library
+
+The [Personal Library](/library) lets you collect and organize your favorite tools.
+
+### How to Save an App:
+1. Sign in to your ElseSourav account.
+2. Click the **Bookmark** icon or **Add to Library** button on any application card.
+3. Access your saved applications anytime at [/library](/library).
+
+### Removing an App:
+Click the bookmark icon again on the app card or remove it directly from your Library management view.`,
+    status: 'published',
+    orderIndex: 2,
+    helpfulCount: 0,
+    unhelpfulCount: 0,
+  },
+  {
     id: 'help-art-account-management',
-    title: 'Managing Your Profile and Account Security',
+    title: 'Account Registration, Security & Danger Zone',
     slug: 'managing-profile-and-security',
     categoryId: 'help-cat-account-security',
-    excerpt: 'How to update your profile, change passwords, and permanently delete accounts.',
-    content: `# Managing Your Account
+    excerpt: 'Manage your credentials, password reset, email verification, and permanent account deletion.',
+    content: `# Account & Security Settings
 
-You can manage your account settings at any time by navigating to [/settings](https://elsesourav.com/settings).
+Manage your account at [/settings](/settings).
 
-## Security Options:
-- **Password Changes**: Update your password under the Security tab.
-- **Email Verification**: Resend verification emails with automatic 60-second rate-limiting.
-- **Account Deletion**: Under Danger Zone, you can permanently wipe all profile data and saved bookmarks.`,
+### Security Features:
+- **Email Verification**: Trigger verification emails with automatic 60-second rate-limiting cooldown.
+- **Password Reset**: Send password reset links securely to your registered email.
+- **Session Continuity**: Authentication sessions persist safely in your browser via IndexedDB.
+
+### Danger Zone — Account Deletion:
+Under **Settings $\to$ Danger Zone**, you can permanently delete your account, wiping all profile records and saved bookmarks in compliance with GDPR and CCPA.`,
+    status: 'published',
+    orderIndex: 1,
+    helpfulCount: 0,
+    unhelpfulCount: 0,
+  },
+  {
+    id: 'help-art-customer-support',
+    title: 'Submitting Support Tickets & Message Threading',
+    slug: 'submitting-support-tickets',
+    categoryId: 'help-cat-troubleshooting',
+    excerpt: 'How to contact the developer, track ticket status, and receive message replies.',
+    content: `# Customer Support
+
+If you encounter a bug, have a feature request, or need help with a software package:
+
+### 1. Open a Ticket
+Navigate to [/support](/support) and click **Create Ticket**. Select the related application and describe your issue.
+
+### 2. Message Threading
+All responses appear in a clean conversation thread. You can post follow-up details and screenshots directly in the ticket.
+
+### 3. Privacy
+Support conversations are strictly confidential and visible only to you and the developer.`,
+    status: 'published',
+    orderIndex: 1,
+    helpfulCount: 0,
+    unhelpfulCount: 0,
+  },
+  {
+    id: 'help-art-mobile-and-offline',
+    title: 'Mobile Browsing, PWA Installation & Offline Behavior',
+    slug: 'mobile-browsing-and-offline',
+    categoryId: 'help-cat-troubleshooting',
+    excerpt: 'Using ElseSourav on smartphones, adding to home screen, and offline limitations.',
+    content: `# Mobile & Progressive Web App (PWA)
+
+ElseSourav is fully responsive and optimized for mobile devices.
+
+### Add to Home Screen (PWA):
+1. In Safari (iOS) or Chrome (Android), tap the **Share / Options** menu.
+2. Select **Add to Home Screen**.
+3. Launch ElseSourav in full-screen standalone mode.
+
+### Offline Limitations:
+The application shell and previously viewed pages are cached for fast offline viewing. Downloading new software releases and submitting support tickets require an active internet connection.`,
     status: 'published',
     orderIndex: 2,
     helpfulCount: 0,
