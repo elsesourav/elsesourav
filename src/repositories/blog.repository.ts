@@ -119,6 +119,20 @@ export class BlogRepository
     });
   }
 
+  public async listFeatured(limit = 6): PaginatedRepositoryResult<BlogPost> {
+    const filters: QueryFilter[] = [
+      { field: 'status', operator: '==', value: 'published' },
+      { field: 'isFeatured', operator: '==', value: true },
+    ];
+
+    return this.findMany({
+      filters,
+      limit,
+      orderBy: 'publishedAt',
+      orderDirection: 'desc',
+    });
+  }
+
   public async listByCategory(
     category: string,
     options?: QueryOptions

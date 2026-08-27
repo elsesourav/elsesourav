@@ -198,7 +198,59 @@ export interface IUserRepository extends IRepository<
   toggleFavorite(userId: string, appId: string): RepositoryResult<boolean>;
 }
 
-import type { BlogPostStatus } from '@/types/blog.types';
+import type { BlogPostStatus, BlogCategory, BlogTag } from '@/types/blog.types';
+
+export type CreateBlogCategoryDto = {
+  name: string;
+  slug: string;
+  description?: string;
+  icon?: string;
+  orderIndex?: number;
+  isActive?: boolean;
+};
+
+export type UpdateBlogCategoryDto = Partial<CreateBlogCategoryDto> & {
+  deletedAt?: number;
+};
+
+/**
+ * Blog Category Repository Contract
+ */
+export interface IBlogCategoryRepository extends IRepository<
+  BlogCategory,
+  CreateBlogCategoryDto,
+  UpdateBlogCategoryDto
+> {
+  findBySlug(slug: string): RepositoryResult<BlogCategory | null>;
+  findActive(options?: QueryOptions): PaginatedRepositoryResult<BlogCategory>;
+  deactivate(id: string): RepositoryResult<BlogCategory>;
+  checkSlugUnique(slug: string, excludeId?: string): RepositoryResult<boolean>;
+}
+
+export type CreateBlogTagDto = {
+  name: string;
+  slug: string;
+  description?: string;
+  isActive?: boolean;
+};
+
+export type UpdateBlogTagDto = Partial<CreateBlogTagDto> & {
+  deletedAt?: number;
+};
+
+/**
+ * Blog Tag Repository Contract
+ */
+export interface IBlogTagRepository extends IRepository<
+  BlogTag,
+  CreateBlogTagDto,
+  UpdateBlogTagDto
+> {
+  findBySlug(slug: string): RepositoryResult<BlogTag | null>;
+  findActive(options?: QueryOptions): PaginatedRepositoryResult<BlogTag>;
+  deactivate(id: string): RepositoryResult<BlogTag>;
+  checkSlugUnique(slug: string, excludeId?: string): RepositoryResult<boolean>;
+}
 
 export type CreateBlogPostDto = {
   slug: string;
@@ -210,7 +262,9 @@ export type CreateBlogPostDto = {
   authorName?: string;
   authorAvatarUrl?: string;
   category: string;
+  categoryId?: string;
   tags?: readonly string[];
+  isFeatured?: boolean;
   readingTime?: number;
   readingTimeMinutes?: number;
   seoTitle?: string;
@@ -243,6 +297,7 @@ export interface IBlogRepository extends IRepository<
   restore(id: string, targetStatus?: BlogPostStatus): RepositoryResult<BlogPost>;
   listPublished(options?: QueryOptions): PaginatedRepositoryResult<BlogPost>;
   listLatest(limit?: number): PaginatedRepositoryResult<BlogPost>;
+  listFeatured(limit?: number): PaginatedRepositoryResult<BlogPost>;
   listByCategory(category: string, options?: QueryOptions): PaginatedRepositoryResult<BlogPost>;
   listByTag(tag: string, options?: QueryOptions): PaginatedRepositoryResult<BlogPost>;
   checkSlugUnique(slug: string, excludeId?: string): RepositoryResult<boolean>;

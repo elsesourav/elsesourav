@@ -12,3 +12,5 @@ export * from './analytics.repository';
 export * from './feedback.repository';
 export * from './user.repository';
 export * from './blog.repository';
+export * from './blog-category.repository';
+export * from './blog-tag.repository';

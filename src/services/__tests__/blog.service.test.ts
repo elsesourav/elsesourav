@@ -1,7 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { BlogService, calculateReadingTime } from '../blog.service';
-import type { IBlogRepository, CreateBlogPostDto } from '@/repositories';
-import type { BlogPost } from '@/types/blog.types';
+import type {
+  IBlogRepository,
+  IBlogCategoryRepository,
+  IBlogTagRepository,
+  CreateBlogPostDto,
+  CreateBlogCategoryDto,
+  CreateBlogTagDto,
+} from '@/repositories';
+import type { BlogPost, BlogCategory, BlogTag } from '@/types/blog.types';
 import { ok } from '@/lib/result';
 
 const mockDraftPost: BlogPost = {
@@ -17,6 +24,7 @@ const mockDraftPost: BlogPost = {
   category: 'engineering',
   tags: ['performance', 'web', 'architecture'],
   status: 'draft',
+  isFeatured: false,
   readingTime: 1,
   readingTimeMinutes: 1,
   viewsCount: 0,
@@ -30,11 +38,35 @@ const mockPublishedPost: BlogPost = {
   slug: 'state-of-elsesourav-v2',
   title: 'State of ElseSourav v2 Release',
   status: 'published',
+  isFeatured: true,
   publishedAt: 1700001000000,
+};
+
+const mockCategory: BlogCategory = {
+  id: 'cat-eng',
+  name: 'Engineering',
+  slug: 'engineering',
+  description: 'Deep technical deep dives and architecture decisions.',
+  orderIndex: 0,
+  isActive: true,
+  createdAt: 1700000000000,
+  updatedAt: 1700000000000,
+};
+
+const mockTag: BlogTag = {
+  id: 'tag-perf',
+  name: 'Performance',
+  slug: 'performance',
+  description: 'Optimization techniques for sub-second page loads.',
+  isActive: true,
+  createdAt: 1700000000000,
+  updatedAt: 1700000000000,
 };
 
 describe('BlogService & Blog Data Foundation', () => {
   let mockBlogRepo: IBlogRepository;
+  let mockBlogCategoryRepo: IBlogCategoryRepository;
+  let mockBlogTagRepo: IBlogTagRepository;
   let blogService: BlogService;
 
   beforeEach(() => {
@@ -98,6 +130,12 @@ describe('BlogService & Blog Data Foundation', () => {
           hasMore: false,
         })
       ),
+      listFeatured: vi.fn().mockResolvedValue(
+        ok({
+          items: [mockPublishedPost],
+          hasMore: false,
+        })
+      ),
       listByCategory: vi.fn().mockResolvedValue(
         ok({
           items: [mockPublishedPost],
@@ -113,7 +151,31 @@ describe('BlogService & Blog Data Foundation', () => {
       checkSlugUnique: vi.fn().mockResolvedValue(ok(true)),
     };
 
-    blogService = new BlogService(mockBlogRepo);
+    mockBlogCategoryRepo = {
+      findById: vi.fn().mockResolvedValue(ok(mockCategory)),
+      findBySlug: vi.fn().mockResolvedValue(ok(mockCategory)),
+      create: vi.fn().mockImplementation((data) => ok({ ...mockCategory, ...data, id: 'cat-new' })),
+      update: vi.fn().mockImplementation((id, data) => ok({ ...mockCategory, id, ...data })),
+      delete: vi.fn().mockResolvedValue(ok(undefined)),
+      findMany: vi.fn(),
+      findActive: vi.fn().mockResolvedValue(ok({ items: [mockCategory], hasMore: false })),
+      deactivate: vi.fn().mockImplementation((id) => ok({ ...mockCategory, id, isActive: false })),
+      checkSlugUnique: vi.fn().mockResolvedValue(ok(true)),
+    };
+
+    mockBlogTagRepo = {
+      findById: vi.fn().mockResolvedValue(ok(mockTag)),
+      findBySlug: vi.fn().mockResolvedValue(ok(mockTag)),
+      create: vi.fn().mockImplementation((data) => ok({ ...mockTag, ...data, id: 'tag-new' })),
+      update: vi.fn().mockImplementation((id, data) => ok({ ...mockTag, id, ...data })),
+      delete: vi.fn().mockResolvedValue(ok(undefined)),
+      findMany: vi.fn(),
+      findActive: vi.fn().mockResolvedValue(ok({ items: [mockTag], hasMore: false })),
+      deactivate: vi.fn().mockImplementation((id) => ok({ ...mockTag, id, isActive: false })),
+      checkSlugUnique: vi.fn().mockResolvedValue(ok(true)),
+    };
+
+    blogService = new BlogService(mockBlogRepo, mockBlogCategoryRepo, mockBlogTagRepo);
   });
 
   describe('Reading Time Estimation', () => {
@@ -260,9 +322,9 @@ describe('BlogService & Blog Data Foundation', () => {
     });
 
     it('restores an archived post to draft or published', async () => {
-      const result = await blogService.restorePost('blog-3', 'draft');
+      const result = await blogService.restorePost('blog-1', 'draft');
       expect(result.success).toBe(true);
-      expect(mockBlogRepo.restore).toHaveBeenCalledWith('blog-3', 'draft');
+      expect(mockBlogRepo.restore).toHaveBeenCalledWith('blog-1', 'draft');
     });
   });
 
@@ -280,6 +342,12 @@ describe('BlogService & Blog Data Foundation', () => {
       });
     });
 
+    it('lists featured blog posts', async () => {
+      const result = await blogService.listFeaturedPosts(3);
+      expect(result.success).toBe(true);
+      expect(mockBlogRepo.listFeatured).toHaveBeenCalledWith(3);
+    });
+
     it('retrieves blog post by slug', async () => {
       const result = await blogService.getPostBySlug('crafting-fast-web-apps');
       expect(result.success).toBe(true);
@@ -292,6 +360,105 @@ describe('BlogService & Blog Data Foundation', () => {
 
       await blogService.listPostsByTag('architecture');
       expect(mockBlogRepo.listByTag).toHaveBeenCalledWith('architecture', undefined);
+    });
+  });
+
+  describe('6. Blog Categories Taxonomy Management', () => {
+    it('creates a new blog category', async () => {
+      const input: CreateBlogCategoryDto = {
+        name: 'Devlogs & Releases',
+        slug: 'devlogs-releases',
+        description: 'Changelogs and development progress updates.',
+        orderIndex: 1,
+        isActive: true,
+      };
+
+      const result = await blogService.createCategory(input);
+      expect(result.success).toBe(true);
+      expect(mockBlogCategoryRepo.create).toHaveBeenCalledWith(input);
+    });
+
+    it('rejects duplicate blog category slug', async () => {
+      vi.spyOn(mockBlogCategoryRepo, 'checkSlugUnique').mockResolvedValue(ok(false));
+
+      const result = await blogService.createCategory({
+        name: 'Engineering',
+        slug: 'engineering',
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.code).toBe('CONFLICT');
+      }
+    });
+
+    it('updates and deactivates blog category', async () => {
+      const updateResult = await blogService.updateCategory('cat-eng', {
+        name: 'Core Engineering',
+      });
+      expect(updateResult.success).toBe(true);
+      expect(mockBlogCategoryRepo.update).toHaveBeenCalledWith('cat-eng', {
+        name: 'Core Engineering',
+      });
+
+      const deactResult = await blogService.deactivateCategory('cat-eng');
+      expect(deactResult.success).toBe(true);
+      expect(mockBlogCategoryRepo.deactivate).toHaveBeenCalledWith('cat-eng');
+    });
+
+    it('lists active blog categories', async () => {
+      const result = await blogService.listActiveCategories();
+      expect(result.success).toBe(true);
+      expect(mockBlogCategoryRepo.findActive).toHaveBeenCalled();
+    });
+  });
+
+  describe('7. Blog Tags Taxonomy Management', () => {
+    it('creates a new blog tag', async () => {
+      const input: CreateBlogTagDto = {
+        name: 'TypeScript',
+        slug: 'typescript',
+        description: 'Type-safe JavaScript development.',
+        isActive: true,
+      };
+
+      const result = await blogService.createTag(input);
+      expect(result.success).toBe(true);
+      expect(mockBlogTagRepo.create).toHaveBeenCalledWith(input);
+    });
+
+    it('rejects duplicate blog tag slug', async () => {
+      vi.spyOn(mockBlogTagRepo, 'checkSlugUnique').mockResolvedValue(ok(false));
+
+      const result = await blogService.createTag({
+        name: 'Performance',
+        slug: 'performance',
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.code).toBe('CONFLICT');
+      }
+    });
+
+    it('updates and deactivates blog tag', async () => {
+      const updateResult = await blogService.updateTag('tag-perf', {
+        name: 'Web Performance',
+      });
+      expect(updateResult.success).toBe(true);
+      expect(mockBlogTagRepo.update).toHaveBeenCalledWith('tag-perf', {
+        name: 'Web Performance',
+      });
+
+      const deactResult = await blogService.deactivateTag('tag-perf');
+      expect(deactResult.success).toBe(true);
+      expect(mockBlogTagRepo.deactivate).toHaveBeenCalledWith('tag-perf');
+    });
+
+    it('lists active blog tags', async () => {
+      const result = await blogService.listActiveTags();
+      expect(result.success).toBe(true);
+      expect(mockBlogTagRepo.findActive).toHaveBeenCalled();
     });
   });
 });

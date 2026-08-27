@@ -107,8 +107,20 @@ service cloud.firestore {
     }
 
     // =========================================================================
-    // BLOG POSTS
+    // BLOG POSTS & TAXONOMY
     // =========================================================================
+
+    match /blogCategories/{categoryId} {
+      allow get: if isUserAdmin() || (resource.data.isActive == true && isNotDeleted());
+      allow list: if isUserAdmin() || (resource.data.isActive == true && isNotDeleted());
+      allow create, update, delete: if isUserAdmin();
+    }
+
+    match /blogTags/{tagId} {
+      allow get: if isUserAdmin() || (resource.data.isActive == true && isNotDeleted());
+      allow list: if isUserAdmin() || (resource.data.isActive == true && isNotDeleted());
+      allow create, update, delete: if isUserAdmin();
+    }
 
     match /blogPosts/{postId} {
       allow get: if (isPublished() && isNotDeleted()) || isUserAdmin();

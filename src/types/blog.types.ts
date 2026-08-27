@@ -8,12 +8,33 @@ export type BlogPostStatus = 'draft' | 'published' | 'archived';
 export type BlogStatus = BlogPostStatus;
 
 /**
- * Blog Tag Entity (Classification Taxonomy)
+ * Blog Category Entity (Content Classification Taxonomy)
+ */
+export interface BlogCategory {
+  readonly id: ID;
+  readonly name: string;
+  readonly slug: string;
+  readonly description?: string;
+  readonly icon?: string;
+  readonly orderIndex: number;
+  readonly isActive: boolean;
+  readonly createdAt: Timestamp;
+  readonly updatedAt: Timestamp;
+  readonly deletedAt?: Timestamp;
+}
+
+/**
+ * Blog Tag Entity (Content Classification Taxonomy)
  */
 export interface BlogTag {
   readonly id: ID;
   readonly name: string;
   readonly slug: string;
+  readonly description?: string;
+  readonly isActive: boolean;
+  readonly createdAt: Timestamp;
+  readonly updatedAt: Timestamp;
+  readonly deletedAt?: Timestamp;
 }
 
 /**
@@ -30,8 +51,10 @@ export interface BlogPost {
   readonly authorName?: string;
   readonly authorAvatarUrl?: string;
   readonly category: string;
+  readonly categoryId?: string;
   readonly tags: readonly string[];
   readonly status: BlogPostStatus;
+  readonly isFeatured?: boolean;
   readonly readingTime?: number;
   readonly readingTimeMinutes?: number;
   readonly viewsCount?: number;
