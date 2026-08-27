@@ -10,18 +10,26 @@ import { err } from '@/lib/result';
 /**
  * Standard repository contract for data access
  */
-export interface IRepository<T extends BaseEntity> {
+export interface IRepository<
+  T extends BaseEntity,
+  TCreate = Omit<T, 'id' | 'createdAt' | 'updatedAt'>,
+  TUpdate = Partial<Omit<T, 'id' | 'createdAt'>>,
+> {
   findById(id: string): RepositoryResult<T | null>;
   findMany(options?: QueryOptions): PaginatedRepositoryResult<T>;
-  create(data: Omit<T, 'id' | 'createdAt' | 'updatedAt'>): RepositoryResult<T>;
-  update(id: string, data: Partial<Omit<T, 'id' | 'createdAt'>>): RepositoryResult<T>;
+  create(data: TCreate, customId?: string): RepositoryResult<T>;
+  update(id: string, data: TUpdate): RepositoryResult<T>;
   delete(id: string): RepositoryResult<void>;
 }
 
 /**
  * Abstract Base Repository to be extended by Firestore repositories
  */
-export abstract class BaseRepository<T extends BaseEntity> implements IRepository<T> {
+export abstract class BaseRepository<
+  T extends BaseEntity,
+  TCreate = Omit<T, 'id' | 'createdAt' | 'updatedAt'>,
+  TUpdate = Partial<Omit<T, 'id' | 'createdAt'>>,
+> implements IRepository<T, TCreate, TUpdate> {
   protected readonly collectionName: string;
 
   constructor(collectionName: string) {
@@ -30,8 +38,8 @@ export abstract class BaseRepository<T extends BaseEntity> implements IRepositor
 
   abstract findById(id: string): RepositoryResult<T | null>;
   abstract findMany(options?: QueryOptions): PaginatedRepositoryResult<T>;
-  abstract create(data: Omit<T, 'id' | 'createdAt' | 'updatedAt'>): RepositoryResult<T>;
-  abstract update(id: string, data: Partial<Omit<T, 'id' | 'createdAt'>>): RepositoryResult<T>;
+  abstract create(data: TCreate, customId?: string): RepositoryResult<T>;
+  abstract update(id: string, data: TUpdate): RepositoryResult<T>;
   abstract delete(id: string): RepositoryResult<void>;
 
   protected handleFirestoreError(error: unknown, action: string): AppError {
