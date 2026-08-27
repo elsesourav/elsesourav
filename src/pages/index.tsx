@@ -17,13 +17,7 @@ export const HomePage: React.FC = () => (
   />
 );
 
-export const AppsPage: React.FC = () => (
-  <PlaceholderPage
-    title="Explore Applications"
-    description="Browse the complete catalog of published software, games, browser extensions, and developer utilities."
-    badge="Catalog"
-  />
-);
+export { AppsPage } from './AppsPage';
 
 export const AppDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
