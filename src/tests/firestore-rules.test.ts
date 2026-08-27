@@ -88,6 +88,8 @@ describe('Firestore Security Rules Specification & Verification', () => {
         | 'user_update_role'
         | 'admin_write'
         | 'audit_log_write'
+        | 'audit_log_read'
+        | 'audit_log_create'
         | 'notification_read'
         | 'notification_write'
         | 'ticket_read'
@@ -122,6 +124,10 @@ describe('Firestore Security Rules Specification & Verification', () => {
         case 'audit_log_write':
           // Updates/deletes always return false
           return false;
+
+        case 'audit_log_read':
+        case 'audit_log_create':
+          return isUserAdmin();
 
         case 'notification_read':
         case 'notification_write':
@@ -234,6 +240,25 @@ describe('Firestore Security Rules Specification & Verification', () => {
 
       expect(evaluateRule(ownLib, userRequest, 'library_access')).toBe(true);
       expect(evaluateRule(otherLib, userRequest, 'library_access')).toBe(false);
+    });
+
+    it('15. Non-admin users and visitors cannot read audit logs', () => {
+      const anonymousRequest = { auth: null };
+      const userRequest = { auth: { uid: 'user_123' } };
+
+      expect(evaluateRule(null, anonymousRequest, 'audit_log_read')).toBe(false);
+      expect(evaluateRule(null, userRequest, 'audit_log_read')).toBe(false);
+    });
+
+    it('16. Non-admin users cannot create audit logs', () => {
+      const userRequest = { auth: { uid: 'user_123' } };
+      expect(evaluateRule(null, userRequest, 'audit_log_create')).toBe(false);
+    });
+
+    it('17. Admin can read and create audit logs', () => {
+      const adminRequest = { auth: { uid: 'admin_1', token: { role: 'admin' } } };
+      expect(evaluateRule(null, adminRequest, 'audit_log_read')).toBe(true);
+      expect(evaluateRule(null, adminRequest, 'audit_log_create')).toBe(true);
     });
   });
 });

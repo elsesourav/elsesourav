@@ -100,21 +100,8 @@ export { AdminSupportPage } from './admin/AdminSupportPage';
 
 export { AdminAnalyticsPage } from './admin/AdminAnalyticsPage';
 
-export const AdminThemePage: React.FC = () => (
-  <PlaceholderPage
-    title="Theme & Design Config"
-    description="Configure active color palettes, typography tokens, and platform presets."
-    badge="Admin - Themes"
-  />
-);
-
-export const AdminAuditLogsPage: React.FC = () => (
-  <PlaceholderPage
-    title="Security Audit Trail"
-    description="Inspect immutable admin publishing actions, record updates, and permission changes."
-    badge="Admin - Audit Logs"
-  />
-);
+export { AdminThemePage } from './admin/AdminThemePage';
+export { AdminAuditLogsPage } from './admin/AdminAuditLogsPage';
 
 // =============================================================================
 // NOT FOUND (404)

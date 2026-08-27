@@ -469,11 +469,16 @@ export interface ISupportRepository extends IRepository<
   reopenTicket(id: string): RepositoryResult<SupportTicket>;
 }
 
+import type { CreateAuditLogDto } from '@/types/audit.types';
+
 /**
  * Audit Log Repository Contract (Append-Only)
  */
 export interface IAuditLogRepository {
-  logAction(entry: Omit<AuditLog, 'id' | 'timestamp'>): RepositoryResult<AuditLog>;
+  createLog(data: CreateAuditLogDto): RepositoryResult<AuditLog>;
+  getLog(id: string): RepositoryResult<AuditLog | null>;
+  listLogs(options?: QueryOptions): PaginatedRepositoryResult<AuditLog>;
+  logAction(entry: Omit<AuditLog, 'id'>): RepositoryResult<AuditLog>;
   findRecent(options?: QueryOptions): PaginatedRepositoryResult<AuditLog>;
 }
 

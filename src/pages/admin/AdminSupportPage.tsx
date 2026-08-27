@@ -102,7 +102,7 @@ export const AdminSupportPage: React.FC = () => {
 
     if (ticketsRes.success) {
       setTickets(ticketsRes.data.items);
-      setSelectedTicket((prev) => prev ?? (ticketsRes.data.items[0] ?? null));
+      setSelectedTicket((prev) => prev ?? ticketsRes.data.items[0] ?? null);
     } else {
       setError(ticketsRes.error.message);
     }
