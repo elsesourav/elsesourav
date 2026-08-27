@@ -14,7 +14,13 @@ import {
   ThumbsUp,
   RotateCcw,
 } from 'lucide-react';
-import { Badge, Button, Input, Skeleton, Dialog } from '@/components/ui';
+import {
+  Button,
+  Badge,
+  Input,
+  TableSkeleton,
+  Dialog,
+} from '@/components/ui';
 import { helpArticleRepository, helpCategoryRepository } from '@/repositories/help.repository';
 import { helpService } from '@/services/help.service';
 import type { HelpArticle, HelpCategory } from '@/types/help.types';
@@ -349,15 +355,7 @@ export const AdminHelpPage: React.FC = () => {
           {/* Articles Table */}
           <div className="admin-help-table-wrapper" role="region" aria-label="Help Articles">
             {isLoading ? (
-              <div className="admin-help-loading" aria-busy="true">
-                {[1, 2, 3, 4].map((n) => (
-                  <div key={n} className="admin-help-skeleton-row">
-                    <Skeleton variant="text" width="40%" height="20px" />
-                    <Skeleton variant="rectangular" width="80px" height="24px" />
-                    <Skeleton variant="rectangular" width="100px" height="32px" />
-                  </div>
-                ))}
-              </div>
+              <TableSkeleton rows={4} columns={6} />
             ) : filteredArticles.length === 0 ? (
               <div className="admin-help-empty">
                 <BookOpen size={42} aria-hidden="true" />

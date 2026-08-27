@@ -259,11 +259,12 @@ export const SignUpPage: React.FC = () => {
               onChange={(e) => setDisplayName(e.target.value)}
               disabled={isSubmitting}
               isInvalid={Boolean(fieldErrors.displayName)}
+              aria-describedby={fieldErrors.displayName ? 'signup-name-error' : undefined}
               autoFocus
               required
             />
             {fieldErrors.displayName && (
-              <span className="auth-field-error" role="alert">
+              <span id="signup-name-error" className="auth-field-error" role="alert">
                 {fieldErrors.displayName}
               </span>
             )}
@@ -283,10 +284,11 @@ export const SignUpPage: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               disabled={isSubmitting}
               isInvalid={Boolean(fieldErrors.email)}
+              aria-describedby={fieldErrors.email ? 'signup-email-error' : undefined}
               required
             />
             {fieldErrors.email && (
-              <span className="auth-field-error" role="alert">
+              <span id="signup-email-error" className="auth-field-error" role="alert">
                 {fieldErrors.email}
               </span>
             )}
@@ -307,6 +309,7 @@ export const SignUpPage: React.FC = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isSubmitting}
                 isInvalid={Boolean(fieldErrors.password)}
+                aria-describedby={fieldErrors.password ? 'signup-password-error' : undefined}
                 required
               />
               <button

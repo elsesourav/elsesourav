@@ -3,6 +3,10 @@ import { createRoot } from 'react-dom/client';
 import '@/styles/index.css';
 import { AppProviders } from '@/app/providers';
 import { App } from '@/App';
+import { pwaService } from '@/services/pwa.service';
+
+// Register production Service Worker
+pwaService.register();
 
 const rootElement = document.getElementById('root');
 

@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { X } from 'lucide-react';
 import { AdminSidebar } from './AdminSidebar';
 import { AdminHeader } from './AdminHeader';
+import { RouteErrorBoundary } from '@/components/feedback/RouteErrorBoundary';
 import { SEO } from '@/components';
 import './AdminLayout.css';
 
@@ -79,7 +80,9 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           isMobileOpen={isMobileMenuOpen}
         />
         <main className="admin-layout__content" id="admin-main-content">
-          {children || <Outlet />}
+          <RouteErrorBoundary featureName="Admin Console" adminMode={true}>
+            {children || <Outlet />}
+          </RouteErrorBoundary>
         </main>
       </div>
     </div>

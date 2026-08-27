@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, BookOpen, X } from 'lucide-react';
-import { Badge, Button, Input, Skeleton, EmptyState, ErrorState, SEO } from '@/components';
-import { BlogCard } from '@/components/blog';
+import { Badge, Button, Input, EmptyState, ErrorState, SEO } from '@/components';
+import { BlogCard, BlogCardSkeleton } from '@/components/blog';
 import { blogService } from '@/services/blog.service';
 import type { BlogPost, BlogCategory } from '@/types/blog.types';
 import './BlogPage.css';
@@ -233,9 +233,9 @@ export const BlogPage: React.FC = () => {
       {/* Loading Skeleton */}
       {isLoading && (
         <div className="blog-page__grid" data-testid="blog-loading-skeleton">
-          <Skeleton variant="rounded" height={360} />
-          <Skeleton variant="rounded" height={360} />
-          <Skeleton variant="rounded" height={360} />
+          <BlogCardSkeleton />
+          <BlogCardSkeleton />
+          <BlogCardSkeleton />
         </div>
       )}
 

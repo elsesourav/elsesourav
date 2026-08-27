@@ -7,14 +7,20 @@ export class AppError extends Error {
   public readonly code: ErrorCode;
   public readonly field?: string;
   public override readonly cause?: unknown;
+  public readonly isRetryable: boolean;
   public readonly timestamp: number;
 
-  constructor(code: ErrorCode, message: string, options?: { field?: string; cause?: unknown }) {
+  constructor(
+    code: ErrorCode,
+    message: string,
+    options?: { field?: string; cause?: unknown; isRetryable?: boolean }
+  ) {
     super(message, { cause: options?.cause });
     this.name = 'AppError';
     this.code = code;
     this.field = options?.field;
     this.cause = options?.cause;
+    this.isRetryable = options?.isRetryable ?? (code === 'NETWORK_ERROR' || code === 'TIMEOUT');
     this.timestamp = Date.now();
 
     // Maintain proper prototype chain
@@ -27,44 +33,49 @@ export class AppError extends Error {
       message: this.message,
       field: this.field,
       cause: this.cause,
+      isRetryable: this.isRetryable,
       timestamp: this.timestamp,
     };
   }
 
   public static badRequest(message: string, field?: string): AppError {
-    return new AppError('BAD_REQUEST', message, { field });
+    return new AppError('BAD_REQUEST', message, { field, isRetryable: false });
   }
 
   public static unauthorized(message = 'Authentication required'): AppError {
-    return new AppError('UNAUTHORIZED', message);
+    return new AppError('UNAUTHORIZED', message, { isRetryable: false });
   }
 
   public static forbidden(message = 'Access denied'): AppError {
-    return new AppError('FORBIDDEN', message);
+    return new AppError('FORBIDDEN', message, { isRetryable: false });
   }
 
   public static notFound(resource = 'Resource', id?: string): AppError {
     const msg = id ? `${resource} with id "${id}" not found` : `${resource} not found`;
-    return new AppError('NOT_FOUND', msg);
+    return new AppError('NOT_FOUND', msg, { isRetryable: false });
   }
 
   public static conflict(message: string, field?: string, cause?: unknown): AppError {
-    return new AppError('CONFLICT', message, { field, cause });
+    return new AppError('CONFLICT', message, { field, cause, isRetryable: false });
   }
 
   public static validation(message: string, field?: string, cause?: unknown): AppError {
-    return new AppError('VALIDATION_ERROR', message, { field, cause });
+    return new AppError('VALIDATION_ERROR', message, { field, cause, isRetryable: false });
   }
 
   public static configuration(message: string, cause?: unknown): AppError {
-    return new AppError('CONFIGURATION_ERROR', message, { cause });
+    return new AppError('CONFIGURATION_ERROR', message, { cause, isRetryable: false });
   }
 
   public static internal(message = 'An unexpected error occurred', cause?: unknown): AppError {
-    return new AppError('INTERNAL_ERROR', message, { cause });
+    return new AppError('INTERNAL_ERROR', message, { cause, isRetryable: false });
   }
 
   public static network(message = 'Network connection failure', cause?: unknown): AppError {
-    return new AppError('NETWORK_ERROR', message, { cause });
+    return new AppError('NETWORK_ERROR', message, { cause, isRetryable: true });
+  }
+
+  public static timeout(message = 'Operation timed out', cause?: unknown): AppError {
+    return new AppError('TIMEOUT', message, { cause, isRetryable: true });
   }
 }

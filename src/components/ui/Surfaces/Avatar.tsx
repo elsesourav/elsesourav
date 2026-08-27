@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { cn } from '@/utils/cn';
+import { isSafeImageUrl } from '@/utils/url-safety';
 
 export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl';
 export type AvatarStatus = 'online' | 'offline' | 'busy' | 'away';
 
 export interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
-  readonly src?: string;
+  readonly src?: string | null;
   readonly alt?: string;
   readonly name?: string;
   readonly size?: AvatarSize;
@@ -21,7 +22,12 @@ export const Avatar: React.FC<AvatarProps> = ({
   status,
   ...props
 }) => {
-  const [hasError, setHasError] = useState<boolean>(false);
+  const isSafe = isSafeImageUrl(src);
+  const [hasError, setHasError] = useState<boolean>(!src || !isSafe);
+
+  useEffect(() => {
+    setHasError(!src || !isSafeImageUrl(src));
+  }, [src]);
 
   const getInitials = (fullName?: string): string => {
     if (!fullName) return '?';
@@ -31,14 +37,23 @@ export const Avatar: React.FC<AvatarProps> = ({
     return (first + second).toUpperCase();
   };
 
-  const showImage = src && !hasError;
+  const showImage = src && isSafe && !hasError;
 
   return (
     <div className={cn('ui-avatar', `ui-avatar--${size}`, className)} {...props}>
       {showImage ? (
-        <img src={src} alt={alt} onError={() => setHasError(true)} className="ui-avatar__img" />
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          onError={() => setHasError(true)}
+          className="ui-avatar__img"
+        />
       ) : (
-        <span className="ui-avatar__initials">{getInitials(name || alt)}</span>
+        <span className="ui-avatar__initials" aria-hidden="true">
+          {getInitials(name || alt)}
+        </span>
       )}
       {status && (
         <span

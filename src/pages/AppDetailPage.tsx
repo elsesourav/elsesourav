@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
   Star,
@@ -17,7 +17,7 @@ import {
   BookOpen,
 } from 'lucide-react';
 import { Badge, Button, IconButton, EmptyState, ErrorState, Skeleton, SEO } from '@/components';
-import { AppCard, AppGallery, AppRatingSection, AppVersionHistory } from '@/components/apps';
+import { AppCard, AppGallery, AppRatingSection, AppVersionHistory, AppIcon } from '@/components/apps';
 import { useAppDetails } from '@/hooks/useAppDetails';
 import { useUserLibrary } from '@/hooks/useUserLibrary';
 import { useAuth } from '@/hooks/useAuth';
@@ -34,8 +34,6 @@ export const AppDetailPage: React.FC = () => {
   const { data, isLoading, error, refetch } = useAppDetails(slug);
   const { isAuthenticated, isAdmin } = useAuth();
   const { isSaved, toggleSave } = useUserLibrary();
-
-  const [imageError, setImageError] = useState(false);
 
   const app = data?.app;
   const isPublicVisitor = !isAdmin;
@@ -202,18 +200,13 @@ export const AppDetailPage: React.FC = () => {
 
       {/* Hero Header Section */}
       <header className="app-detail__hero">
-        <div className="app-detail__icon-wrapper">
-          {app.iconUrl && !imageError ? (
-            <img
-              src={app.iconUrl}
-              alt={`${app.name} icon`}
-              className="app-detail__icon"
-              onError={() => setImageError(true)}
-            />
-          ) : (
-            <span className="app-detail__icon-fallback">{app.name.charAt(0).toUpperCase()}</span>
-          )}
-        </div>
+        <AppIcon
+          iconUrl={app.iconUrl}
+          name={app.name}
+          size="2xl"
+          priority={true}
+          className="app-detail__hero-icon"
+        />
 
         <div className="app-detail__header-info">
           <div className="app-detail__title-row">

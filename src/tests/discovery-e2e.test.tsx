@@ -324,12 +324,12 @@ describe('End-to-End Public Discovery Journey (Task 14 Quality Control)', () => 
       expect(
         screen.getByRole('heading', { level: 1, name: 'Cloud Terminal Pro' })
       ).toBeInTheDocument();
+      expect(document.title).toContain('Cloud Terminal Pro');
     });
 
     expect(
       screen.getByText('Full-featured secure cloud terminal and shell environment.')
     ).toBeInTheDocument();
-    expect(document.title).toContain('Cloud Terminal Pro');
 
     appDetailRender.unmount();
 
@@ -351,9 +351,8 @@ describe('End-to-End Public Discovery Journey (Task 14 Quality Control)', () => 
     await waitFor(() => {
       const headings = screen.getAllByRole('heading', { level: 1, name: 'Zero Bloat Architecture' });
       expect(headings.length).toBeGreaterThanOrEqual(1);
+      expect(document.title).toContain('Zero Bloat Architecture');
     });
-
-    expect(document.title).toContain('Zero Bloat Architecture');
 
     blogRender.unmount();
 
@@ -375,9 +374,9 @@ describe('End-to-End Public Discovery Journey (Task 14 Quality Control)', () => 
       expect(
         screen.getByRole('heading', { level: 1, name: 'CLI Quickstart Guide' })
       ).toBeInTheDocument();
+      expect(document.title).toContain('CLI Quickstart Guide');
     });
 
-    expect(document.title).toContain('CLI Quickstart Guide');
     expect(screen.getByText('Was this article helpful?')).toBeInTheDocument();
 
     helpRender.unmount();

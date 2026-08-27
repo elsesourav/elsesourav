@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Calendar, Clock, User, ArrowUpRight, BookOpen } from 'lucide-react';
-import { Badge, Button, Spinner, EmptyState, ErrorState, SEO } from '@/components';
-import { BlogContentRenderer, BlogCard } from '@/components/blog';
+import { Badge, Button, Image, EmptyState, ErrorState, SEO } from '@/components';
+import { ArticleSkeleton } from '@/components/help';
+import { BlogCard, BlogContentRenderer } from '@/components/blog';
 import { blogService } from '@/services/blog.service';
 import type { BlogPost } from '@/types/blog.types';
 import { buildBlogPostSEO } from '@/utils/seo.utils';
@@ -60,9 +61,7 @@ export const BlogPostPage: React.FC = () => {
   if (isLoading) {
     return (
       <main className="blog-post-page" data-testid="blog-post-loading">
-        <div style={{ display: 'flex', justifyContent: 'center', padding: '120px 0' }}>
-          <Spinner size="lg" />
-        </div>
+        <ArticleSkeleton hasCoverImage />
       </main>
     );
   }
@@ -167,11 +166,15 @@ export const BlogPostPage: React.FC = () => {
         {/* Cover Media */}
         {post.coverImageUrl && (
           <div className="blog-post-cover">
-            <img
+            <Image
               src={post.coverImageUrl}
               alt={post.title}
-              className="blog-post-cover__image"
+              aspectRatio="16/9"
+              priority={true}
               loading="eager"
+              decoding="async"
+              className="blog-post-cover__image"
+              containerClassName="w-full h-full"
             />
           </div>
         )}

@@ -234,9 +234,8 @@ export class FirestoreRepository<
       q = query(q, firestoreStartAfter(options.startAfterCursor));
     }
 
-    if (options?.limit && options.limit > 0) {
-      q = query(q, firestoreLimit(options.limit));
-    }
+    const effectiveLimit = options?.limit && options.limit > 0 ? options.limit : 50;
+    q = query(q, firestoreLimit(effectiveLimit));
 
     return q;
   }

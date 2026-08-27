@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { Badge } from '@/components';
+import { AppIcon } from '@/components/apps';
 import { formatDate } from '@/utils/format';
 import { analyticsService } from '@/services/analytics.service';
 import { ROUTES } from '@/constants/routes';
@@ -23,9 +24,7 @@ export interface LatestUpdateCardProps {
   readonly onClick?: () => void;
 }
 
-export const LatestUpdateCard: React.FC<LatestUpdateCardProps> = ({ item, onClick }) => {
-  const [imageError, setImageError] = useState(false);
-
+const LatestUpdateCardComponent: React.FC<LatestUpdateCardProps> = ({ item, onClick }) => {
   const handleClick = () => {
     // Non-blocking telemetry
     void analyticsService.trackView(item.appId, {
@@ -34,7 +33,6 @@ export const LatestUpdateCard: React.FC<LatestUpdateCardProps> = ({ item, onClic
     if (onClick) onClick();
   };
 
-  const initial = item.appName.charAt(0).toUpperCase() || 'A';
   const detailUrl = `${ROUTES.APPS}/${item.appSlug}`;
 
   return (
@@ -44,19 +42,12 @@ export const LatestUpdateCard: React.FC<LatestUpdateCardProps> = ({ item, onClic
       onClick={handleClick}
       aria-label={`View ${item.appName} update: ${item.title}`}
     >
-      <div className="latest-update-card__icon-wrapper">
-        {item.iconUrl && !imageError ? (
-          <img
-            src={item.iconUrl}
-            alt={`${item.appName} icon`}
-            className="latest-update-card__icon"
-            onError={() => setImageError(true)}
-            loading="lazy"
-          />
-        ) : (
-          <span className="latest-update-card__icon-fallback">{initial}</span>
-        )}
-      </div>
+      <AppIcon
+        iconUrl={item.iconUrl}
+        name={item.appName}
+        size="lg"
+        className="latest-update-card__app-icon"
+      />
 
       <div className="latest-update-card__body">
         <div className="latest-update-card__header">
@@ -89,3 +80,5 @@ export const LatestUpdateCard: React.FC<LatestUpdateCardProps> = ({ item, onClic
     </Link>
   );
 };
+
+export const LatestUpdateCard = React.memo<LatestUpdateCardProps>(LatestUpdateCardComponent);

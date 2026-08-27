@@ -144,7 +144,7 @@ describe('Admin Categories Management (Prompt 48)', () => {
     expect(
       await screen.findByRole('heading', { level: 1, name: /Software Categories/i })
     ).toBeInTheDocument();
-    expect(screen.getByText('Developer Tools')).toBeInTheDocument();
+    expect(await screen.findByText('Developer Tools')).toBeInTheDocument();
     expect(screen.getByText('/developer-tools')).toBeInTheDocument();
     expect(screen.getByText('Utilities')).toBeInTheDocument();
     expect(screen.getByText('Deprecated')).toBeInTheDocument();

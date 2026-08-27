@@ -53,3 +53,37 @@ export function isSafeExternalUrl(url: string | null | undefined): boolean {
     return false;
   }
 }
+
+/**
+ * Strictly verifies whether a URL is a valid, secure image source.
+ * Requires HTTPS, HTTP, or relative URL paths.
+ * Strictly rejects javascript:, data:, vbscript:, file:, and control characters.
+ */
+export function isSafeImageUrl(url: string | null | undefined): boolean {
+  if (!url || typeof url !== 'string') return false;
+  const trimmed = url.trim();
+  if (trimmed.length === 0) return false;
+
+  // Check for control characters
+  const hasControlChars = [...trimmed].some((char) => {
+    const code = char.charCodeAt(0);
+    return code < 32 || code === 127;
+  });
+  if (hasControlChars) return false;
+
+  const lower = trimmed.toLowerCase();
+  if (
+    lower.startsWith('javascript:') ||
+    lower.startsWith('data:') ||
+    lower.startsWith('vbscript:') ||
+    lower.startsWith('file:')
+  ) {
+    return false;
+  }
+
+  return (
+    lower.startsWith('https://') ||
+    lower.startsWith('http://') ||
+    lower.startsWith('/')
+  );
+}

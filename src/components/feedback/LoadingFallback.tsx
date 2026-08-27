@@ -10,6 +10,8 @@ export const LoadingFallback: React.FC<LoadingFallbackProps> = ({
 }) => {
   return (
     <div
+      role="status"
+      aria-live="polite"
       style={{
         minHeight: '50vh',
         display: 'flex',

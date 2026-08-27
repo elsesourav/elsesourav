@@ -11,6 +11,7 @@ import {
   Calendar,
 } from 'lucide-react';
 import { Badge, Button, Skeleton, SEO } from '@/components';
+import { AppIcon } from '@/components/apps';
 import { GlobalSearchInput } from '@/components/search/GlobalSearchInput';
 import { globalSearchService } from '@/services/global-search.service';
 import type { GlobalSearchResult } from '@/types/search.types';
@@ -321,13 +322,12 @@ export const SearchPage: React.FC = () => {
                       aria-label={`View application ${app.title}`}
                     >
                       <div className="search-app-card__header">
-                        <div className="search-app-card__icon-wrapper">
-                          {app.iconUrl ? (
-                            <img src={app.iconUrl} alt="" className="search-app-card__icon-img" />
-                          ) : (
-                            <Package size={24} className="search-app-card__fallback-icon" />
-                          )}
-                        </div>
+                        <AppIcon
+                          iconUrl={app.iconUrl}
+                          name={app.title}
+                          size="md"
+                          className="search-app-card__app-icon"
+                        />
                         <div className="search-app-card__title-meta">
                           <h3 className="search-app-card__title">{app.title}</h3>
                           {app.category && (

@@ -6,6 +6,7 @@ import type {
 } from './types';
 import { AppError } from '@/lib/errors';
 import { err } from '@/lib/result';
+import { mapFirestoreError } from '@/lib/error-normalization';
 
 /**
  * Standard repository contract for data access
@@ -44,11 +45,7 @@ export abstract class BaseRepository<
 
   protected handleFirestoreError(error: unknown, action: string): AppError {
     if (error instanceof AppError) return error;
-    const message = error instanceof Error ? error.message : 'Database operation failed';
-    return AppError.internal(
-      `Failed to ${action} in collection "${this.collectionName}": ${message}`,
-      error
-    );
+    return mapFirestoreError(error, `in collection "${this.collectionName}" to ${action}`);
   }
 
   protected notImplemented(methodName: string): RepositoryResult<never> {

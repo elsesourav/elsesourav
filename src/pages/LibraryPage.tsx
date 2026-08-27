@@ -16,7 +16,7 @@ import {
   AlertCircle,
   Inbox,
 } from 'lucide-react';
-import { Badge, Button, Skeleton, SEO } from '@/components';
+import { Badge, Button, Skeleton, SEO, Avatar } from '@/components';
 import { AppCard } from '@/components/apps/AppCard';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserLibrary } from '@/hooks/useUserLibrary';
@@ -93,16 +93,6 @@ export const LibraryPage: React.FC = () => {
     const openStatuses: SupportTicketStatus[] = ['open', 'in_progress', 'waiting_for_user'];
     return tickets.filter((t) => openStatuses.includes(t.status)).length;
   }, [tickets]);
-
-  // Initials for avatar
-  const initials = useMemo(() => {
-    return displayName
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .substring(0, 2)
-      .toUpperCase();
-  }, [displayName]);
 
   // Status badge variant mapper
   const getTicketStatusBadge = (status: SupportTicketStatus) => {
@@ -184,20 +174,12 @@ export const LibraryPage: React.FC = () => {
       {/* 1. Welcome / Account Header Card */}
       <header className="library-welcome-card">
         <div className="library-welcome-left">
-          {user?.photoUrl || authUser?.photoURL ? (
-            <img
-              src={user?.photoUrl || authUser?.photoURL || ''}
-              alt={displayName}
-              className="library-avatar"
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none';
-              }}
-            />
-          ) : (
-            <div className="library-avatar" aria-hidden="true">
-              {initials}
-            </div>
-          )}
+          <Avatar
+            src={user?.photoUrl || authUser?.photoURL}
+            name={displayName}
+            size="xl"
+            className="library-welcome-avatar"
+          />
 
           <div>
             <div className="library-welcome-title-row">

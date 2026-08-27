@@ -199,7 +199,7 @@ describe('Admin Dashboard Shell & Overview (Prompt 46)', () => {
     expect(screen.getByText(/Platform Overview/i)).toBeInTheDocument();
 
     // Metric Cards
-    expect(screen.getByText('Published Applications')).toBeInTheDocument();
+    expect(await screen.findByText('Published Applications')).toBeInTheDocument();
     expect(screen.getByText('Draft Software Builds')).toBeInTheDocument();
     expect(screen.getByText('Blog & Devlog Posts')).toBeInTheDocument();
     expect(screen.getByText('Open Support Tickets')).toBeInTheDocument();

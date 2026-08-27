@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Copy, Check } from 'lucide-react';
-import { isSafeUrl } from '@/utils/url-safety';
+import { isSafeUrl, isSafeImageUrl } from '@/utils/url-safety';
+import { Image } from '@/components/ui';
 import './BlogContentRenderer.css';
 
 interface BlogContentRendererProps {
@@ -65,8 +66,8 @@ export const BlogCodeBlock: React.FC<{ code: string; language?: string }> = ({
  */
 function renderInlineFormatting(text: string): React.ReactNode[] {
   const nodes: React.ReactNode[] = [];
-  // Tokenizer regex matching links, images, code, bold, italic
-  const tokenRegex = /(!?\[([^\]]*)\]\(([^)]+)\))|(`([^`]+)`)|(\*\*([^*]+)\*\*)|(\*([^*]+)\*)/g;
+  // Tokenizer regex matching links, images, code, bold, italic (supports balanced single-nested parentheses in URLs)
+  const tokenRegex = /(!?\[([^\]]*)\]\(((?:[^()]+|\([^()]*\))+)\))|(`([^`]+)`)|(\*\*([^*]+)\*\*)|(\*([^*]+)\*)/g;
 
   let lastIndex = 0;
   let match: RegExpExecArray | null;
@@ -92,14 +93,16 @@ function renderInlineFormatting(text: string): React.ReactNode[] {
     if (isLinkOrImg) {
       if (fullMatch.startsWith('!')) {
         // Image
-        if (isSafeUrl(rawLinkUrl)) {
+        if (isSafeImageUrl(rawLinkUrl)) {
           nodes.push(
             <span key={`img-${keyIndex++}`} className="blog-image-wrapper">
-              <img
+              <Image
                 src={rawLinkUrl}
                 alt={linkText || 'Blog image'}
-                className="blog-image"
                 loading="lazy"
+                decoding="async"
+                className="blog-image"
+                fallbackText={`Image unavailable: ${linkText || 'Preview'}`}
               />
               {linkText && <span className="blog-image-caption">{linkText}</span>}
             </span>

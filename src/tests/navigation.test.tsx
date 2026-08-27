@@ -123,16 +123,17 @@ describe('Global Application Shell, Routing & Navigation', () => {
       ).toBeInTheDocument();
     });
 
-    it('renders Blog page when navigating to /blog', () => {
+    it('renders Blog page when navigating to /blog', async () => {
       renderWithProviders('/blog');
       expect(
-        screen.getByRole('heading', { level: 1, name: /Engineering Notes & Articles|Blog/i })
+        await screen.findByRole('heading', { level: 1, name: /Engineering Notes & Articles|Blog/i })
       ).toBeInTheDocument();
     });
 
     it('renders 404 NotFound page for invalid route paths', () => {
       renderWithProviders('/non-existent-random-route');
-      expect(screen.getByText(/Page Not Found \(404\)/i)).toBeInTheDocument();
+      expect(screen.getByRole('heading', { level: 1, name: /Page Not Found/i })).toBeInTheDocument();
+      expect(screen.getByText('404')).toBeInTheDocument();
     });
   });
 
@@ -173,14 +174,14 @@ describe('Global Application Shell, Routing & Navigation', () => {
   });
 
   describe('Route Guards: ProtectedRoute & AdminRoute', () => {
-    it('redirects unauthenticated user from /library to /login', () => {
+    it('redirects unauthenticated user from /library to /login', async () => {
       renderWithProviders('/library', { isAuthenticated: false });
       expect(
-        screen.getByRole('heading', { level: 1, name: /Sign In to (ElseSourav|Your Account)/i })
+        await screen.findByRole('heading', { level: 1, name: /Sign In to (ElseSourav|Your Account)/i })
       ).toBeInTheDocument();
     });
 
-    it('allows authenticated user to view /library', () => {
+    it('allows authenticated user to view /library', async () => {
       renderWithProviders('/library', {
         isAuthenticated: true,
         authUser: mockAuthUser,
@@ -188,7 +189,7 @@ describe('Global Application Shell, Routing & Navigation', () => {
       });
 
       expect(
-        screen.getByRole('heading', { level: 1, name: /My Software Library/i })
+        await screen.findByRole('heading', { level: 1, name: /My Software Library/i })
       ).toBeInTheDocument();
     });
 
@@ -203,7 +204,7 @@ describe('Global Application Shell, Routing & Navigation', () => {
       expect(screen.getByText(/Admin Access Required/i)).toBeInTheDocument();
     });
 
-    it('allows admin user to access /admin portal', () => {
+    it('allows admin user to access /admin portal', async () => {
       renderWithProviders('/admin', {
         isAuthenticated: true,
         isAdmin: true,
@@ -212,7 +213,7 @@ describe('Global Application Shell, Routing & Navigation', () => {
       });
 
       expect(
-        screen.getByRole('heading', { level: 1, name: /Admin Dashboard/i })
+        await screen.findByRole('heading', { level: 1, name: /Admin Dashboard/i })
       ).toBeInTheDocument();
     });
   });

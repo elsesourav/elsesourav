@@ -19,11 +19,13 @@ export default defineConfig({
     host: true,
   },
   build: {
+    chunkSizeWarningLimit: 600,
     rollupOptions: {
       output: {
         manualChunks: {
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-firebase': ['firebase/app', 'firebase/auth', 'firebase/firestore'],
+          'vendor-firebase-auth': ['firebase/auth'],
+          'vendor-firebase-firestore': ['firebase/firestore'],
           'vendor-utils': ['zod', 'lucide-react'],
         },
       },

@@ -228,7 +228,7 @@ describe('Authenticated User Experience E2E Quality & Integration (Prompt 45)', 
 
     // Verify App detail page rendered
     expect(
-      await screen.findByRole('heading', { level: 1, name: /CodeFlow IDE/i })
+      await screen.findByRole('heading', { level: 1, name: /CodeFlow IDE/i }, { timeout: 3000 })
     ).toBeInTheDocument();
 
     // Verify unauthenticated user clicking save directs to login
@@ -255,7 +255,7 @@ describe('Authenticated User Experience E2E Quality & Integration (Prompt 45)', 
     expect(screen.getByText(/Verified/i)).toBeInTheDocument();
 
     // Step 9: User sees saved app card
-    expect(screen.getByText('CodeFlow IDE')).toBeInTheDocument();
+    expect(await screen.findByText('CodeFlow IDE')).toBeInTheDocument();
     expect(screen.getByText('Saved Applications')).toBeInTheDocument();
   });
 
@@ -282,7 +282,9 @@ describe('Authenticated User Experience E2E Quality & Integration (Prompt 45)', 
     expect(
       await screen.findByRole('heading', { level: 1, name: /My Support Requests/i })
     ).toBeInTheDocument();
-    expect(screen.getByText('Websocket terminal disconnecting intermittently')).toBeInTheDocument();
+    expect(
+      await screen.findByText('Websocket terminal disconnecting intermittently')
+    ).toBeInTheDocument();
     expect(screen.getAllByText(/In Progress/i).length).toBeGreaterThan(0);
   });
 

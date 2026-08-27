@@ -1,10 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, ArrowRight, User, Compass, MessageSquareHeart } from 'lucide-react';
-import { Button, Badge, Skeleton, ErrorState, SEO } from '@/components';
-import { AppCard } from '@/components/apps';
-import { LatestUpdateCard, CategoryCard } from '@/components/home';
-import { BlogCard } from '@/components/blog';
+import { Button, Badge, ErrorState, SEO } from '@/components';
+import { AppCard, AppCardSkeleton } from '@/components/apps';
+import {
+  LatestUpdateCard,
+  LatestUpdateCardSkeleton,
+  CategoryCard,
+  CategoryCardSkeleton,
+} from '@/components/home';
+import { BlogCard, BlogCardSkeleton } from '@/components/blog';
 import {
   useFeaturedApps,
   useTrendingApps,
@@ -133,9 +138,9 @@ export const HomePage: React.FC = () => {
 
         {isFeaturedLoading && (
           <div className="home-apps-grid" data-testid="home-featured-skeleton">
-            <Skeleton variant="rounded" height={260} />
-            <Skeleton variant="rounded" height={260} />
-            <Skeleton variant="rounded" height={260} />
+            <AppCardSkeleton />
+            <AppCardSkeleton />
+            <AppCardSkeleton />
           </div>
         )}
 
@@ -182,10 +187,10 @@ export const HomePage: React.FC = () => {
 
         {isTrendingLoading && (
           <div className="home-apps-grid" data-testid="home-trending-skeleton">
-            <Skeleton variant="rounded" height={260} />
-            <Skeleton variant="rounded" height={260} />
-            <Skeleton variant="rounded" height={260} />
-            <Skeleton variant="rounded" height={260} />
+            <AppCardSkeleton />
+            <AppCardSkeleton />
+            <AppCardSkeleton />
+            <AppCardSkeleton />
           </div>
         )}
 
@@ -232,10 +237,10 @@ export const HomePage: React.FC = () => {
 
         {isLatestLoading && (
           <div className="home-updates-grid" data-testid="home-updates-skeleton">
-            <Skeleton variant="rounded" height={90} />
-            <Skeleton variant="rounded" height={90} />
-            <Skeleton variant="rounded" height={90} />
-            <Skeleton variant="rounded" height={90} />
+            <LatestUpdateCardSkeleton />
+            <LatestUpdateCardSkeleton />
+            <LatestUpdateCardSkeleton />
+            <LatestUpdateCardSkeleton />
           </div>
         )}
 
@@ -294,10 +299,10 @@ export const HomePage: React.FC = () => {
 
         {isCategoriesLoading && (
           <div className="home-categories-grid" data-testid="home-categories-skeleton">
-            <Skeleton variant="rounded" height={72} />
-            <Skeleton variant="rounded" height={72} />
-            <Skeleton variant="rounded" height={72} />
-            <Skeleton variant="rounded" height={72} />
+            <CategoryCardSkeleton />
+            <CategoryCardSkeleton />
+            <CategoryCardSkeleton />
+            <CategoryCardSkeleton />
           </div>
         )}
 
@@ -374,9 +379,9 @@ export const HomePage: React.FC = () => {
 
         {isBlogLoading && (
           <div className="home-blog-grid" data-testid="home-blog-skeleton">
-            <Skeleton variant="rounded" height={320} />
-            <Skeleton variant="rounded" height={320} />
-            <Skeleton variant="rounded" height={320} />
+            <BlogCardSkeleton />
+            <BlogCardSkeleton />
+            <BlogCardSkeleton />
           </div>
         )}
 

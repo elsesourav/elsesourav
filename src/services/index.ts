@@ -16,3 +16,5 @@ export * from './notification.service';
 export * from './audit.service';
 export * from './global-search.service';
 export * from './sitemap.service';
+export * from './error-logger.service';
+export * from './pwa.service';

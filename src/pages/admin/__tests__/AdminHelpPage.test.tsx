@@ -179,7 +179,7 @@ describe('Admin Help Management (Prompt 48)', () => {
     expect(
       await screen.findByRole('heading', { level: 1, name: /Help Center Management/i })
     ).toBeInTheDocument();
-    expect(screen.getByText('How to install Chrome Extension')).toBeInTheDocument();
+    expect(await screen.findByText('How to install Chrome Extension')).toBeInTheDocument();
     expect(screen.getByText('/install-chrome-extension')).toBeInTheDocument();
     expect(screen.getByText('Resolving WebAssembly Crash on Linux')).toBeInTheDocument();
     expect(screen.getByText(/42 helpful/i)).toBeInTheDocument();

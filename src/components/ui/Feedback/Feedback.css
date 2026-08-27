@@ -299,3 +299,18 @@
     transform: translateY(0) scale(1);
   }
 }
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .ui-skeleton--animated::after {
+    animation: none;
+    display: none;
+  }
+  .ui-spinner {
+    animation-duration: 2s;
+  }
+  .ui-toast-item {
+    animation: none;
+  }
+}
+

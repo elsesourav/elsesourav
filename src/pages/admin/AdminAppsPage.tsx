@@ -15,6 +15,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { Button, Badge, Input, Skeleton, Dialog } from '@/components/ui';
+import { AppIcon } from '@/components/apps';
 import { appRepository } from '@/repositories';
 import { appService } from '@/services/app.service';
 import type { App, AppStatus } from '@/types/app.types';
@@ -330,20 +331,12 @@ export const AdminAppsPage: React.FC = () => {
                   {/* Application Column */}
                   <td className="admin-apps-cell--main">
                     <div className="admin-apps-identity">
-                      {app.iconUrl ? (
-                        <img
-                          src={app.iconUrl}
-                          alt=""
-                          className="admin-apps-icon-img"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).style.display = 'none';
-                          }}
-                        />
-                      ) : (
-                        <div className="admin-apps-icon-fallback" aria-hidden="true">
-                          <Package size={18} />
-                        </div>
-                      )}
+                      <AppIcon
+                        iconUrl={app.iconUrl}
+                        name={app.name}
+                        size="sm"
+                        className="admin-apps-table-icon"
+                      />
                       <div className="admin-apps-meta">
                         <div className="admin-apps-name-row">
                           <Link to={`/admin/apps/${app.id}/edit`} className="admin-apps-name-link">
@@ -521,9 +514,12 @@ export const AdminAppsPage: React.FC = () => {
         {previewApp && (
           <div className="admin-apps-preview-content">
             <div className="admin-apps-preview-hero">
-              {previewApp.iconUrl && (
-                <img src={previewApp.iconUrl} alt="" className="admin-apps-preview-icon" />
-              )}
+              <AppIcon
+                iconUrl={previewApp.iconUrl}
+                name={previewApp.name}
+                size="lg"
+                className="admin-apps-preview-app-icon"
+              />
               <div>
                 <h3 className="admin-apps-preview-name">{previewApp.name}</h3>
                 <p className="admin-apps-preview-sub">{previewApp.shortDescription}</p>

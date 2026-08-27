@@ -12,6 +12,7 @@ export type ErrorCode =
   | 'VALIDATION_ERROR'
   | 'CONFIGURATION_ERROR'
   | 'NETWORK_ERROR'
+  | 'TIMEOUT'
   | 'INTERNAL_ERROR'
   | 'NOT_IMPLEMENTED';
 
@@ -20,6 +21,7 @@ export interface AppErrorDetails {
   readonly message: string;
   readonly field?: string;
   readonly cause?: unknown;
+  readonly isRetryable?: boolean;
   readonly timestamp: number;
 }
 

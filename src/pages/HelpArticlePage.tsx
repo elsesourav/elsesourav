@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { Button, Badge, Skeleton, ErrorState, SEO } from '@/components';
 import { BlogContentRenderer } from '@/components/blog';
-import { HelpArticleCard, ArticleHelpfulness } from '@/components/help';
+import { HelpArticleCard, ArticleHelpfulness, ArticleSkeleton } from '@/components/help';
 import { helpService } from '@/services/help.service';
 import type { HelpCategory, HelpArticle } from '@/types/help.types';
 import { buildHelpArticleSEO } from '@/utils/seo.utils';
@@ -81,6 +81,14 @@ export const HelpArticlePage: React.FC = () => {
   }, [loadArticleData]);
 
   const seoConfig = buildHelpArticleSEO(article);
+
+  if (isLoading) {
+    return (
+      <main className="help-article-page" role="main" data-testid="help-article-loading">
+        <ArticleSkeleton />
+      </main>
+    );
+  }
 
   if (isNotFound) {
     return (

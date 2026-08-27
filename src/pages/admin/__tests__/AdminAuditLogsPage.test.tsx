@@ -121,7 +121,7 @@ describe('Admin Audit Logs & Security Trail (Prompt 50)', () => {
       await screen.findByRole('heading', { level: 1, name: /Security & Audit Trail/i })
     ).toBeInTheDocument();
 
-    const table = screen.getByRole('region', { name: /Audit Logs Table/i });
+    const table = await screen.findByRole('region', { name: /Audit Logs Table/i });
     expect(within(table).getByText('APP_PUBLISHED')).toBeInTheDocument();
     expect(within(table).getByText('CATEGORY_CREATED')).toBeInTheDocument();
     expect(within(table).getByText('SUPPORT_STATUS_CHANGED')).toBeInTheDocument();

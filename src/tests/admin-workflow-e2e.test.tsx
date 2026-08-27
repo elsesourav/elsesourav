@@ -168,7 +168,7 @@ describe('Admin End-to-End Operational Workflow (Prompt 50)', () => {
     expect(
       await screen.findByRole('heading', { level: 1, name: /Admin Dashboard/i })
     ).toBeInTheDocument();
-    expect(screen.getByText('CodeSync Studio')).toBeInTheDocument();
+    expect(await screen.findByText('CodeSync Studio')).toBeInTheDocument();
   });
 
   it('2. Records administrative mutations through domain services with audit logs', async () => {

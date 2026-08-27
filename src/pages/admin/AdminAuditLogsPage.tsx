@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Shield, Search, User as UserIcon, AlertCircle, Eye, RefreshCw } from 'lucide-react';
-import { Badge, Button, Input, Skeleton, Dialog } from '@/components/ui';
+import { Badge, Button, Input, TableSkeleton, Dialog } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
 import { auditService } from '@/services/audit.service';
 import type { AuditLog, AuditEntityType } from '@/types/audit.types';
@@ -213,17 +213,7 @@ export const AdminAuditLogsPage: React.FC = () => {
       {/* Audit Logs Table Card */}
       <div className="admin-audit-card">
         {isLoading ? (
-          <div className="admin-audit-loading" aria-busy="true">
-            {[1, 2, 3, 4, 5].map((n) => (
-              <div key={n} className="admin-audit-row-skeleton">
-                <Skeleton variant="text" width="15%" height="20px" />
-                <Skeleton variant="rectangular" width="20%" height="24px" />
-                <Skeleton variant="text" width="25%" height="20px" />
-                <Skeleton variant="text" width="20%" height="20px" />
-                <Skeleton variant="rectangular" width="60px" height="28px" />
-              </div>
-            ))}
-          </div>
+          <TableSkeleton rows={5} columns={5} />
         ) : filteredLogs.length === 0 ? (
           <div className="admin-audit-empty">
             <Shield size={44} aria-hidden="true" />

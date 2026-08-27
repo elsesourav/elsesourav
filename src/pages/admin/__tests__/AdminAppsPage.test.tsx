@@ -171,7 +171,7 @@ describe('Admin Applications Management (Prompt 47)', () => {
     expect(
       await screen.findByRole('heading', { level: 1, name: /^Applications$/i })
     ).toBeInTheDocument();
-    expect(screen.getByText('CodeFlow IDE')).toBeInTheDocument();
+    expect(await screen.findByText('CodeFlow IDE')).toBeInTheDocument();
     expect(screen.getByText('PixelCraft Studio')).toBeInTheDocument();
     expect(screen.getByText('Legacy Terminal')).toBeInTheDocument();
 

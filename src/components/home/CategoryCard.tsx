@@ -12,7 +12,7 @@ export interface CategoryCardProps {
   readonly onClick?: () => void;
 }
 
-export const CategoryCard: React.FC<CategoryCardProps> = ({ category, onClick }) => {
+const CategoryCardComponent: React.FC<CategoryCardProps> = ({ category, onClick }) => {
   const handleClick = () => {
     // Non-blocking telemetry
     void analyticsService.trackView(category.id, {
@@ -48,3 +48,5 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({ category, onClick })
     </Link>
   );
 };
+
+export const CategoryCard = React.memo<CategoryCardProps>(CategoryCardComponent);

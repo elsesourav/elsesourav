@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
-import { Dialog, IconButton } from '@/components/ui';
+import { ChevronLeft, ChevronRight, Maximize2, ImageOff } from 'lucide-react';
+import { Dialog, IconButton, Image } from '@/components/ui';
 import type { AppMedia } from '@/types/media.types';
 import './AppGallery.css';
 
@@ -39,6 +39,7 @@ export const AppGallery: React.FC<AppGalleryProps> = ({ media, appName, classNam
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft') handlePrev();
       if (e.key === 'ArrowRight') handleNext();
+      if (e.key === 'Escape') handleCloseLightbox();
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -69,13 +70,17 @@ export const AppGallery: React.FC<AppGalleryProps> = ({ media, appName, classNam
             role="button"
             aria-label={`View screenshot ${idx + 1} of ${screenshots.length}: ${item.altText || appName}`}
           >
-            <img
+            <Image
               src={item.url}
               alt={item.altText || `${appName} screenshot ${idx + 1}`}
-              className="app-gallery__image"
+              aspectRatio="16/9"
               loading="lazy"
+              decoding="async"
+              className="app-gallery__image"
+              fallbackIcon={<ImageOff size={20} />}
+              fallbackText="Preview unavailable"
             />
-            <span className="app-gallery__zoom-badge">
+            <span className="app-gallery__zoom-badge" aria-hidden="true">
               <Maximize2 size={12} />
               <span>Zoom</span>
             </span>
@@ -93,10 +98,16 @@ export const AppGallery: React.FC<AppGalleryProps> = ({ media, appName, classNam
         {currentMedia && (
           <div className="app-gallery__lightbox">
             <div className="app-gallery__lightbox-image-wrapper">
-              <img
+              <Image
                 src={currentMedia.url}
                 alt={currentMedia.altText || `${appName} full preview`}
+                aspectRatio="16/9"
+                priority={true}
+                loading="eager"
+                decoding="async"
                 className="app-gallery__lightbox-image"
+                fallbackIcon={<ImageOff size={32} />}
+                fallbackText="Screenshot unavailable"
               />
             </div>
 

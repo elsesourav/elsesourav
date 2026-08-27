@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, Clock, BookOpen } from 'lucide-react';
-import { Badge } from '@/components';
+import { Badge, Image } from '@/components';
 import type { BlogPost } from '@/types/blog.types';
 import { formatDate } from '@/utils/format';
 import './BlogCard.css';
@@ -12,9 +12,19 @@ export interface BlogCardProps {
   className?: string;
 }
 
-export const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false, className = '' }) => {
+const BlogCardComponent: React.FC<BlogCardProps> = ({
+  post,
+  featured = false,
+  className = '',
+}) => {
   const publishedTimestamp = post.publishedAt || post.createdAt;
   const readingTime = post.readingTime || post.readingTimeMinutes || 1;
+
+  const fallbackCover = (
+    <div className="blog-card__cover-fallback" aria-hidden="true">
+      <BookOpen size={48} strokeWidth={1.5} />
+    </div>
+  );
 
   return (
     <Link
@@ -25,18 +35,16 @@ export const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false, clas
       <article className={`blog-card ${featured ? 'blog-card--featured' : ''}`}>
         {/* Cover Media */}
         <div className="blog-card__cover-wrapper">
-          {post.coverImageUrl ? (
-            <img
-              src={post.coverImageUrl}
-              alt={post.title}
-              className="blog-card__cover-image"
-              loading="lazy"
-            />
-          ) : (
-            <div className="blog-card__cover-fallback" aria-hidden="true">
-              <BookOpen size={48} strokeWidth={1.5} />
-            </div>
-          )}
+          <Image
+            src={post.coverImageUrl}
+            alt={post.title}
+            aspectRatio="16/9"
+            loading="lazy"
+            decoding="async"
+            fallback={fallbackCover}
+            className="blog-card__cover-image"
+            containerClassName="w-full h-full"
+          />
 
           <div className="blog-card__category-badge">
             <Badge variant="outline" size="sm">
@@ -81,3 +89,5 @@ export const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false, clas
     </Link>
   );
 };
+
+export const BlogCard = React.memo<BlogCardProps>(BlogCardComponent);

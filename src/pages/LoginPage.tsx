@@ -109,11 +109,12 @@ export const LoginPage: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               disabled={isSubmitting}
               isInvalid={Boolean(fieldErrors.email)}
+              aria-describedby={fieldErrors.email ? 'login-email-error' : undefined}
               autoFocus
               required
             />
             {fieldErrors.email && (
-              <span className="auth-field-error" role="alert">
+              <span id="login-email-error" className="auth-field-error" role="alert">
                 {fieldErrors.email}
               </span>
             )}
@@ -140,6 +141,7 @@ export const LoginPage: React.FC = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isSubmitting}
                 isInvalid={Boolean(fieldErrors.password)}
+                aria-describedby={fieldErrors.password ? 'login-password-error' : undefined}
                 required
               />
               <button

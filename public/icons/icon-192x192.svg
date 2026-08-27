@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <linearGradient id="pwaGrad192" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#818cf8" />
+      <stop offset="100%" stop-color="#c084fc" />
+    </linearGradient>
+    <linearGradient id="bgGrad192" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0e1526" />
+      <stop offset="100%" stop-color="#060911" />
+    </linearGradient>
+  </defs>
+  <rect width="192" height="192" rx="44" fill="url(#bgGrad192)" />
+  <rect width="188" height="188" x="2" y="2" rx="42" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2" />
+  <path d="M52 56h88v16H72v20h64v16H72v28h72v16H52z" fill="url(#pwaGrad192)" />
+</svg>

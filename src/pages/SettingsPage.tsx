@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   User as UserIcon,
@@ -16,7 +16,7 @@ import {
   ShieldAlert,
   Send,
 } from 'lucide-react';
-import { Badge, Button, Input, Skeleton, Dialog, SEO } from '@/components';
+import { Badge, Button, Input, Skeleton, Dialog, SEO, Avatar } from '@/components';
 import { useAuth } from '@/hooks/useAuth';
 import { useTheme } from '@/hooks/useTheme';
 import { userService } from '@/services/user.service';
@@ -135,17 +135,6 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ defaultTab = 'profil
     }, 1000);
     return () => clearInterval(timer);
   }, [resendCooldown]);
-
-  // Initials for avatar
-  const initials = useMemo(() => {
-    const name = displayName || email || 'User';
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .substring(0, 2)
-      .toUpperCase();
-  }, [displayName, email]);
 
   // ---------------------------------------------------------------------------
   // Profile Save
@@ -330,20 +319,12 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ defaultTab = 'profil
       <header className="settings-header-card">
         <div className="settings-header-left">
           <div className="settings-avatar-wrapper">
-            {photoUrl ? (
-              <img
-                src={photoUrl}
-                alt={displayName || 'User profile'}
-                className="settings-avatar"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none';
-                }}
-              />
-            ) : (
-              <div className="settings-avatar" aria-hidden="true">
-                {initials}
-              </div>
-            )}
+            <Avatar
+              src={photoUrl}
+              name={displayName || 'User'}
+              size="xl"
+              className="settings-user-avatar"
+            />
           </div>
           <div className="settings-user-info">
             <div className="settings-user-name-row">

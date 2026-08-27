@@ -147,11 +147,12 @@ export const ForgotPasswordPage: React.FC = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={isSubmitting}
                   isInvalid={Boolean(fieldError)}
+                  aria-describedby={fieldError ? 'forgot-email-error' : undefined}
                   autoFocus
                   required
                 />
                 {fieldError && (
-                  <span className="auth-field-error" role="alert">
+                  <span id="forgot-email-error" className="auth-field-error" role="alert">
                     {fieldError}
                   </span>
                 )}

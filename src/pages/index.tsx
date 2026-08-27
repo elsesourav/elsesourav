@@ -1,9 +1,8 @@
 import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { PlaceholderPage } from './PlaceholderPage';
-import { ErrorState, Button, SEO } from '@/components';
-import { FileQuestion, Home } from 'lucide-react';
-import { ROUTES } from '@/constants/routes';
+import { SEO } from '@/components';
+
 
 // =============================================================================
 // PUBLIC PAGES
@@ -138,32 +137,5 @@ export { AdminAnalyticsPage } from './admin/AdminAnalyticsPage';
 
 export { AdminThemePage } from './admin/AdminThemePage';
 export { AdminAuditLogsPage } from './admin/AdminAuditLogsPage';
+export { NotFoundPage } from './NotFoundPage';
 
-// =============================================================================
-// NOT FOUND (404)
-// =============================================================================
-
-export const NotFoundPage: React.FC = () => (
-  <div
-    style={{
-      minHeight: '60vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: 'var(--space-6)',
-    }}
-  >
-    <ErrorState
-      icon={<FileQuestion size={36} />}
-      title="Page Not Found (404)"
-      description="The page you requested could not be found. It may have been moved, renamed, or is temporarily unavailable."
-      action={
-        <Link to={ROUTES.HOME}>
-          <Button variant="primary" size="sm" leftIcon={<Home size={15} />}>
-            Back to Home
-          </Button>
-        </Link>
-      }
-    />
-  </div>
-);

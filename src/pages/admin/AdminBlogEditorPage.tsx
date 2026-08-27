@@ -22,7 +22,7 @@ import {
   X,
   Plus,
 } from 'lucide-react';
-import { Button, Input, Textarea, Badge, Alert, Spinner } from '@/components';
+import { Button, Input, Textarea, Badge, Alert, Spinner, Image } from '@/components';
 import { BlogContentRenderer } from '@/components/blog';
 import { blogService, calculateReadingTime } from '@/services/blog.service';
 import type { BlogCategory } from '@/types/blog.types';
@@ -753,10 +753,11 @@ export const AdminBlogEditorPage: React.FC = () => {
                   maxHeight: '140px',
                 }}
               >
-                <img
+                <Image
                   src={coverImageUrl}
                   alt="Cover preview"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  aspectRatio="16/9"
+                  loading="lazy"
                   onError={() => setErrorMessage('Invalid or unreachable cover image URL')}
                 />
               </div>

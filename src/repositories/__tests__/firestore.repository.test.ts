@@ -178,7 +178,8 @@ describe('FirestoreRepository Generic Base', () => {
       const result = await repository.findById('item-1');
       expect(isErr(result)).toBe(true);
       if (isErr(result)) {
-        expect(result.error.message).toContain('Permission denied');
+        expect(result.error.code).toBe('FORBIDDEN');
+        expect(result.error.message.toLowerCase()).toContain('permission');
       }
     });
   });

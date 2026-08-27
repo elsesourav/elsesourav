@@ -188,7 +188,7 @@ describe('Admin Analytics & Engagement Dashboard (Prompt 49)', () => {
       await screen.findByRole('heading', { level: 1, name: /Platform Analytics & Engagement/i })
     ).toBeInTheDocument();
 
-    expect(screen.getByText('2,300')).toBeInTheDocument(); // Total views: 1500 + 800
+    expect(await screen.findByText('2,300')).toBeInTheDocument(); // Total views: 1500 + 800
     expect(screen.getByText('1,270')).toBeInTheDocument(); // Total launches: 920 + 350
     expect(screen.getByText('520')).toBeInTheDocument(); // Total saves: 400 + 120
     expect(screen.getByText(/5.0 \/ 5.0/i)).toBeInTheDocument();

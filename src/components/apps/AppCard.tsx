@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Bookmark,
@@ -17,6 +17,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { analyticsService } from '@/services/analytics.service';
 import { resolveSmartAction, type SmartAction } from '@/utils/smart-action';
 import type { App } from '@/types/app.types';
+import { AppIcon } from './AppIcon';
 import './AppCard.css';
 
 export interface AppCardProps {
@@ -29,7 +30,7 @@ export interface AppCardProps {
   readonly onActionClick?: (action: SmartAction, event: React.MouseEvent) => void;
 }
 
-export const AppCard: React.FC<AppCardProps> = ({
+const AppCardComponent: React.FC<AppCardProps> = ({
   app,
   variant = 'default',
   isUnavailable = false,
@@ -41,31 +42,30 @@ export const AppCard: React.FC<AppCardProps> = ({
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const { isSaved, toggleSave } = useUserLibrary();
-  const [imageError, setImageError] = useState(false);
 
   const saved = isSaved(app.id);
   const isArchived = app.status === 'archived' || isUnavailable;
   const isFeatured = variant === 'featured' || app.isFeatured;
   const isCompact = variant === 'compact';
 
-  const action = resolveSmartAction(app);
+  const action = useMemo(() => resolveSmartAction(app), [app]);
 
   const renderActionIcon = () => {
     switch (action.iconType) {
       case 'download':
-        return <Download size={14} />;
+        return <Download size={14} aria-hidden="true" />;
       case 'chrome':
-        return <Layers size={14} />;
+        return <Layers size={14} aria-hidden="true" />;
       case 'play':
       case 'apple':
-        return <Smartphone size={14} />;
+        return <Smartphone size={14} aria-hidden="true" />;
       case 'github':
-        return <Code2 size={14} />;
+        return <Code2 size={14} aria-hidden="true" />;
       case 'external':
       case 'globe':
-        return <ExternalLink size={14} />;
+        return <ExternalLink size={14} aria-hidden="true" />;
       default:
-        return <ArrowUpRight size={14} />;
+        return <ArrowUpRight size={14} aria-hidden="true" />;
     }
   };
 
@@ -144,19 +144,13 @@ export const AppCard: React.FC<AppCardProps> = ({
       aria-label={`View ${app.name} application`}
     >
       <header className="app-card__header">
-        <div className="app-card__icon-wrapper">
-          {app.iconUrl && !imageError ? (
-            <img
-              src={app.iconUrl}
-              alt={`${app.name} icon`}
-              className="app-card__icon"
-              onError={() => setImageError(true)}
-              loading="lazy"
-            />
-          ) : (
-            <span className="app-card__icon-fallback">{app.name.charAt(0).toUpperCase()}</span>
-          )}
-        </div>
+        <AppIcon
+          iconUrl={app.iconUrl}
+          name={app.name}
+          size={isCompact ? 'md' : 'xl'}
+          priority={isFeatured}
+          className="app-card__app-icon"
+        />
 
         <div className="app-card__title-area">
           <h3 className="app-card__name">{app.name}</h3>
@@ -170,7 +164,7 @@ export const AppCard: React.FC<AppCardProps> = ({
                 className="app-card__rating"
                 aria-label={`Rating: ${rating.toFixed(1)} out of 5 stars`}
               >
-                <Star size={13} fill="#f59e0b" color="#f59e0b" />
+                <Star size={13} fill="#f59e0b" color="#f59e0b" aria-hidden="true" />
                 <span>{rating.toFixed(1)}</span>
               </span>
             )}
@@ -241,3 +235,5 @@ export const AppCard: React.FC<AppCardProps> = ({
     </article>
   );
 };
+
+export const AppCard = React.memo<AppCardProps>(AppCardComponent);

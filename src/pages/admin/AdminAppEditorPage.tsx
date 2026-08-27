@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
-  Package,
   Save,
   Send,
   Eye,
@@ -11,10 +10,10 @@ import {
   AlertCircle,
   CheckCircle2,
   Globe,
-  Image,
   Archive,
 } from 'lucide-react';
-import { Button, Badge, Input, Skeleton, Dialog } from '@/components/ui';
+import { Button, Badge, Input, Skeleton, Dialog, Image } from '@/components/ui';
+import { AppIcon } from '@/components/apps';
 import { AdminAppVersionManager } from '@/components/admin/AdminAppVersionManager';
 import { appService } from '@/services/app.service';
 import { appRepository } from '@/repositories';
@@ -737,13 +736,12 @@ export const AdminAppEditorPage: React.FC = () => {
                   App Icon URL <span className="admin-editor-required">*</span>
                 </label>
                 <div className="admin-editor-icon-input-row">
-                  {iconUrl ? (
-                    <img src={iconUrl} alt="" className="admin-editor-icon-preview" />
-                  ) : (
-                    <div className="admin-editor-icon-placeholder">
-                      <Image size={20} />
-                    </div>
-                  )}
+                  <AppIcon
+                    iconUrl={iconUrl}
+                    name={name || 'App'}
+                    size="md"
+                    className="admin-editor-icon-preview"
+                  />
                   <div style={{ flex: 1 }}>
                     <Input
                       id="app-icon-url"
@@ -796,7 +794,7 @@ export const AdminAppEditorPage: React.FC = () => {
                   <div className="admin-editor-screenshots-grid">
                     {screenshots.map((s, idx) => (
                       <div key={idx} className="admin-editor-screenshot-thumb">
-                        <img src={s} alt="" />
+                        <Image src={s} alt={`Screenshot ${idx + 1}`} aspectRatio="16/9" loading="lazy" />
                         <button
                           type="button"
                           className="admin-editor-screenshot-remove"
@@ -1118,13 +1116,12 @@ export const AdminAppEditorPage: React.FC = () => {
       >
         <div className="admin-apps-preview-content">
           <div className="admin-apps-preview-hero">
-            {iconUrl ? (
-              <img src={iconUrl} alt="" className="admin-apps-preview-icon" />
-            ) : (
-              <div className="admin-editor-icon-placeholder" style={{ width: 64, height: 64 }}>
-                <Package size={32} />
-              </div>
-            )}
+            <AppIcon
+              iconUrl={iconUrl}
+              name={name || 'App'}
+              size="lg"
+              className="admin-apps-preview-icon"
+            />
             <div>
               <h3 className="admin-apps-preview-name">{name || 'App Name'}</h3>
               <p className="admin-apps-preview-sub">

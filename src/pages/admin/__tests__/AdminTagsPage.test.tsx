@@ -138,7 +138,7 @@ describe('Admin Tags Management (Prompt 48)', () => {
     expect(
       await screen.findByRole('heading', { level: 1, name: /Discovery Tags/i })
     ).toBeInTheDocument();
-    expect(screen.getByText('#react')).toBeInTheDocument();
+    expect(await screen.findByText('#react')).toBeInTheDocument();
     expect(screen.getByText('/react')).toBeInTheDocument();
     expect(screen.getByText('#typescript')).toBeInTheDocument();
     expect(screen.getByText('#legacy')).toBeInTheDocument();
