@@ -76,14 +76,7 @@ export const SitemapPage: React.FC = () => (
 // USER PROTECTED PAGES
 // =============================================================================
 
-export const LibraryPage: React.FC = () => (
-  <PlaceholderPage
-    title="My Software Library"
-    description="Your bookmarked, pinned, and favorited applications in one quick dashboard."
-    badge="User Library"
-  />
-);
-
+export { LibraryPage } from './LibraryPage';
 export { SettingsPage } from './SettingsPage';
 
 // =============================================================================

@@ -69,8 +69,14 @@ export const AppCard: React.FC<AppCardProps> = ({
     }
   };
 
-  const handleCardClick = () => {
+  const handleCardClick = (e?: React.MouseEvent) => {
     if (isArchived) return;
+    if (
+      e &&
+      ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('a'))
+    ) {
+      return;
+    }
     navigate(`/apps/${app.slug}`);
   };
 
@@ -110,7 +116,7 @@ export const AppCard: React.FC<AppCardProps> = ({
     }
   };
 
-  const rating = ratingAverage ?? app.stats.ratingAverage ?? 5.0;
+  const rating = ratingAverage ?? app.stats?.ratingAverage ?? 5.0;
 
   const cardClasses = [
     'app-card',
@@ -125,11 +131,12 @@ export const AppCard: React.FC<AppCardProps> = ({
   return (
     <article
       className={cardClasses}
+      data-testid={`app-card-${app.slug}`}
       onClick={handleCardClick}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          handleCardClick();
+          navigate(`/apps/${app.slug}`);
         }
       }}
       tabIndex={isArchived ? -1 : 0}
@@ -195,7 +202,9 @@ export const AppCard: React.FC<AppCardProps> = ({
         </div>
       </header>
 
-      {!isCompact && <p className="app-card__description">{app.shortDescription}</p>}
+      {!isCompact && (
+        <p className="app-card__description">{app.shortDescription || app.description}</p>
+      )}
 
       {!isCompact && app.tags && app.tags.length > 0 && (
         <div className="app-card__tags" aria-label="Tags">
