@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { AuthContext } from './auth-context';
 import { authService, deriveUserProfile } from '@/services/auth.service';
+import { userService } from '@/services/user.service';
 import { isOk, isErr } from '@/lib/result';
 import { isFirebaseConfigured } from '@/firebase';
 import type {
@@ -35,12 +36,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children, defaultRol
       const unsubscribe = authService.onAuthStateChanged((nextAuthUser) => {
         setAuthUser(nextAuthUser);
         if (nextAuthUser) {
-          const profile = deriveUserProfile(nextAuthUser, defaultRole);
-          setUser(profile);
+          setUser(deriveUserProfile(nextAuthUser, defaultRole));
+          setIsLoading(false);
+
+          // Asynchronously ensure and hydrate the full Firestore profile
+          userService
+            .ensureUserProfile(nextAuthUser)
+            .then((profileResult) => {
+              if (profileResult.success) {
+                setUser(profileResult.data);
+              }
+            })
+            .catch(() => {
+              // Retain derived fallback
+            });
         } else {
           setUser(null);
+          setIsLoading(false);
         }
-        setIsLoading(false);
       });
 
       return () => {
@@ -65,6 +78,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children, defaultRol
       if (isOk(result)) {
         setAuthUser(result.data);
         setUser(deriveUserProfile(result.data, defaultRole));
+        try {
+          const profileResult = await userService.ensureUserProfile(result.data);
+          if (profileResult.success) {
+            setUser(profileResult.data);
+          }
+        } catch {
+          // Keep derived profile
+        }
       } else if (isErr(result)) {
         setError(result.error);
       }
@@ -84,6 +105,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children, defaultRol
       if (isOk(result)) {
         setAuthUser(result.data);
         setUser(deriveUserProfile(result.data, defaultRole));
+        try {
+          const profileResult = await userService.ensureUserProfile(result.data);
+          if (profileResult.success) {
+            setUser(profileResult.data);
+          }
+        } catch {
+          // Keep derived profile
+        }
       } else if (isErr(result)) {
         setError(result.error);
       }
@@ -102,6 +131,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children, defaultRol
     if (isOk(result)) {
       setAuthUser(result.data);
       setUser(deriveUserProfile(result.data, defaultRole));
+      try {
+        const profileResult = await userService.ensureUserProfile(result.data);
+        if (profileResult.success) {
+          setUser(profileResult.data);
+        }
+      } catch {
+        // Keep derived profile
+      }
     } else if (isErr(result)) {
       setError(result.error);
     }

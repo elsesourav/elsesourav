@@ -10,7 +10,7 @@ export type UserRole = 'admin' | 'user';
 /**
  * User Status
  */
-export type UserStatus = 'active' | 'suspended' | 'pending';
+export type UserStatus = 'active' | 'suspended' | 'deleted' | 'pending';
 
 /**
  * User Preferences
@@ -20,6 +20,7 @@ export interface UserPreferences {
   readonly emailNotifications: boolean;
   readonly reduceMotion: boolean;
   readonly compactView: boolean;
+  readonly language?: string;
 }
 
 /**
@@ -29,13 +30,16 @@ export interface User {
   readonly id: ID;
   readonly email: string;
   readonly displayName: string;
+  readonly username?: string;
   readonly photoUrl?: string;
+  readonly bio?: string;
   readonly role: UserRole;
   readonly status: UserStatus;
   readonly preferences: UserPreferences;
   readonly lastLoginAt?: Timestamp;
   readonly createdAt: Timestamp;
   readonly updatedAt: Timestamp;
+  readonly deletedAt?: Timestamp;
 }
 
 /**

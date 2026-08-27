@@ -5,7 +5,6 @@ import {
   type DocumentData,
   Timestamp as FirestoreTimestamp,
 } from 'firebase/firestore';
-import type { BaseEntity } from './types';
 
 /**
  * Recursively converts Firestore Timestamps to millisecond numbers
@@ -65,7 +64,7 @@ export function sanitizeForFirestore(data: Record<string, unknown>): Record<stri
 /**
  * Generic factory to create a typed FirestoreDataConverter for any domain entity
  */
-export function createFirestoreConverter<T extends BaseEntity>(): FirestoreDataConverter<T> {
+export function createFirestoreConverter<T extends { id: string }>(): FirestoreDataConverter<T> {
   return {
     toFirestore(model: T): DocumentData {
       const data = { ...model } as Record<string, unknown>;

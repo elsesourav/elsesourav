@@ -11,6 +11,7 @@ import type { AuthUser } from '@/types/auth.types';
 vi.mock('@/firebase', () => ({
   isFirebaseConfigured: vi.fn().mockReturnValue(true),
   getFirebaseAuth: vi.fn(),
+  getFirebaseFirestore: vi.fn(),
 }));
 
 const TestConsumer: React.FC = () => {

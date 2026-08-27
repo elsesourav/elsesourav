@@ -1,6 +1,6 @@
 import type { IRepository } from './base.repository';
 import type { RepositoryResult, PaginatedRepositoryResult, QueryOptions } from './types';
-import type { User, UserLibraryItem, UserPreferences } from '@/types/user.types';
+import type { User, UserLibraryItem } from '@/types/user.types';
 import type { App, AppCategory, AppPlatform } from '@/types/app.types';
 import type { BlogPost } from '@/types/blog.types';
 import type {
@@ -38,16 +38,27 @@ export interface ICategoryRepository extends IRepository<
   findActive(): PaginatedRepositoryResult<CategoryEntity>;
 }
 
+import type { AuthUser } from '@/types/auth.types';
+import type {
+  CreateUserProfileDto,
+  UpdateUserProfileDto,
+  UpdateUserPreferencesDto,
+} from './user.repository';
+
 /**
  * User Repository Contract (Users & User Library Subcollections)
  */
 export interface IUserRepository extends IRepository<
   User,
-  Omit<User, 'id' | 'createdAt' | 'updatedAt'>,
-  Partial<User>
+  CreateUserProfileDto,
+  UpdateUserProfileDto
 > {
   findByEmail(email: string): RepositoryResult<User | null>;
-  updatePreferences(userId: string, preferences: Partial<UserPreferences>): RepositoryResult<User>;
+  findByUsername(username: string): RepositoryResult<User | null>;
+  ensureProfile(authUser: AuthUser): RepositoryResult<User>;
+  updateProfile(uid: string, data: UpdateUserProfileDto): RepositoryResult<User>;
+  updatePreferences(uid: string, preferences: UpdateUserPreferencesDto): RepositoryResult<User>;
+  softDelete(uid: string): RepositoryResult<User>;
   getLibrary(userId: string): PaginatedRepositoryResult<UserLibraryItem>;
   addToLibrary(
     userId: string,
