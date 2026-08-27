@@ -15,6 +15,12 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:unit": "vitest run src/utils src/services src/repositories src/schemas src/config",
+    "test:components": "vitest run src/components",
+    "test:integration": "vitest run src/tests/*integration* src/tests/*workflow*",
+    "test:e2e": "vitest run src/tests/*e2e*",
+    "test:security": "vitest run src/tests/security-threat-scenarios.test.ts src/tests/firestore-rules.test.ts",
+    "test:a11y": "vitest run src/tests/accessibility-audit.test.tsx",
     "test:rules": "vitest run src/tests/firestore-rules.test.ts",
     "validate": "npm run typecheck && npm run lint && npm run test && npm run build"
   },
