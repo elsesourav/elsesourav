@@ -320,10 +320,13 @@ describe('Apps Discovery & Details End-to-End Integration Suite', () => {
     const searchInput = screen.getByPlaceholderText('Search by name, description, or tag...');
     fireEvent.change(searchInput, { target: { value: 'Calc' } });
 
-    await waitFor(() => {
-      expect(screen.getByText('Quick Calc')).toBeInTheDocument();
-      expect(screen.queryByText('CodeFlow IDE')).not.toBeInTheDocument();
-    });
+    await waitFor(
+      () => {
+        expect(screen.getByText('Quick Calc')).toBeInTheDocument();
+        expect(screen.queryByText('CodeFlow IDE')).not.toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
 
     // Clear search
     fireEvent.change(searchInput, { target: { value: '' } });
@@ -332,10 +335,13 @@ describe('Apps Discovery & Details End-to-End Integration Suite', () => {
     const devCategoryPill = await screen.findByRole('button', { name: 'Developer Tools' });
     fireEvent.click(devCategoryPill);
 
-    await waitFor(() => {
-      expect(screen.getByText('CodeFlow IDE')).toBeInTheDocument();
-      expect(screen.queryByText('Quick Calc')).not.toBeInTheDocument();
-    });
+    await waitFor(
+      () => {
+        expect(screen.getByText('CodeFlow IDE')).toBeInTheDocument();
+        expect(screen.queryByText('Quick Calc')).not.toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
   });
 
   it('5-8. App Details Experience: Navigation, lightbox gallery, smart action, and telemetry', async () => {

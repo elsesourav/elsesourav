@@ -3,11 +3,13 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { HomePage } from '../HomePage';
 import * as useAppsModule from '@/hooks/useApps';
+import * as useCategoriesModule from '@/hooks/useCategories';
 import * as useUserLibraryModule from '@/hooks/useUserLibrary';
 import * as useAuthModule from '@/hooks/useAuth';
 import { analyticsService } from '@/services/analytics.service';
 import { AppError } from '@/lib/errors';
 import type { App } from '@/types/app.types';
+import type { Category } from '@/types/category.types';
 
 const mockFeaturedApps: App[] = [
   {
@@ -69,9 +71,33 @@ const mockLatestApps: App[] = [
   },
 ];
 
+const mockCategories: Category[] = [
+  {
+    id: 'cat-dev',
+    slug: 'developer-tools',
+    name: 'Developer Tools',
+    description: 'IDEs, CLI utilities, debuggers',
+    orderIndex: 0,
+    isActive: true,
+    createdAt: 100,
+    updatedAt: 100,
+  },
+  {
+    id: 'cat-util',
+    slug: 'utilities',
+    name: 'Productivity & Utilities',
+    description: 'Calculators, helpers, workflows',
+    orderIndex: 1,
+    isActive: true,
+    createdAt: 100,
+    updatedAt: 100,
+  },
+];
+
 describe('HomePage Component', () => {
   const mockRefetchFeatured = vi.fn();
   const mockRefetchLatest = vi.fn();
+  const mockRefetchCategories = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -121,6 +147,13 @@ describe('HomePage Component', () => {
       isLoading: false,
       error: null,
       refetch: mockRefetchLatest,
+    });
+
+    vi.spyOn(useCategoriesModule, 'useCategories').mockReturnValue({
+      categories: mockCategories,
+      isLoading: false,
+      error: null,
+      refetch: mockRefetchCategories,
     });
   });
 
@@ -194,7 +227,31 @@ describe('HomePage Component', () => {
     });
   });
 
-  it('5. Shows loading skeletons during featured apps and latest updates loading', () => {
+  it('5. Renders dynamic categories discovery section and generates correct URL', () => {
+    render(
+      <BrowserRouter>
+        <HomePage />
+      </BrowserRouter>
+    );
+
+    expect(
+      screen.getByRole('heading', { level: 2, name: /explore by category/i })
+    ).toBeInTheDocument();
+    expect(screen.getByText('Developer Tools')).toBeInTheDocument();
+    expect(screen.getByText('IDEs, CLI utilities, debuggers')).toBeInTheDocument();
+
+    const devCatLink = screen.getByRole('link', {
+      name: /explore developer tools software category/i,
+    });
+    expect(devCatLink).toHaveAttribute('href', '/apps?category=developer-tools');
+
+    fireEvent.click(devCatLink);
+    expect(analyticsService.trackView).toHaveBeenCalledWith('cat-dev', {
+      source: 'home_category_discovery',
+    });
+  });
+
+  it('6. Shows loading skeletons during featured apps, updates, and categories loading', () => {
     vi.spyOn(useAppsModule, 'useFeaturedApps').mockReturnValue({
       apps: [],
       hasMore: false,
@@ -209,6 +266,13 @@ describe('HomePage Component', () => {
       isLoading: true,
       error: null,
       refetch: mockRefetchLatest,
+    });
+
+    vi.spyOn(useCategoriesModule, 'useCategories').mockReturnValue({
+      categories: [],
+      isLoading: true,
+      error: null,
+      refetch: mockRefetchCategories,
     });
 
     render(
@@ -219,15 +283,15 @@ describe('HomePage Component', () => {
 
     expect(screen.getByTestId('home-featured-skeleton')).toBeInTheDocument();
     expect(screen.getByTestId('home-updates-skeleton')).toBeInTheDocument();
+    expect(screen.getByTestId('home-categories-skeleton')).toBeInTheDocument();
   });
 
-  it('6. Handles featured apps error gracefully without breaking latest updates', () => {
-    vi.spyOn(useAppsModule, 'useFeaturedApps').mockReturnValue({
-      apps: [],
-      hasMore: false,
+  it('7. Handles categories error gracefully with localized retry button', () => {
+    vi.spyOn(useCategoriesModule, 'useCategories').mockReturnValue({
+      categories: [],
       isLoading: false,
-      error: AppError.internal('Failed to fetch featured'),
-      refetch: mockRefetchFeatured,
+      error: AppError.internal('Failed to load categories'),
+      refetch: mockRefetchCategories,
     });
 
     render(
@@ -236,49 +300,21 @@ describe('HomePage Component', () => {
       </BrowserRouter>
     );
 
-    expect(screen.getByText('Featured Apps Unavailable')).toBeInTheDocument();
-    expect(screen.getByText('Quick Calc')).toBeInTheDocument();
-
-    const retryBtn = screen.getByRole('button', { name: /retry/i });
-    fireEvent.click(retryBtn);
-    expect(mockRefetchFeatured).toHaveBeenCalled();
-  });
-
-  it('7. Handles latest updates error gracefully without breaking featured apps', () => {
-    vi.spyOn(useAppsModule, 'useLatestApps').mockReturnValue({
-      apps: [],
-      hasMore: false,
-      isLoading: false,
-      error: AppError.internal('Failed to fetch updates'),
-      refetch: mockRefetchLatest,
-    });
-
-    render(
-      <BrowserRouter>
-        <HomePage />
-      </BrowserRouter>
-    );
-
-    expect(screen.getByText('Latest Updates Unavailable')).toBeInTheDocument();
+    expect(screen.getByText('Categories Unavailable')).toBeInTheDocument();
     expect(screen.getByText('CodeFlow IDE')).toBeInTheDocument();
 
-    const retryBtn = screen.getByRole('button', { name: /retry/i });
-    fireEvent.click(retryBtn);
-    expect(mockRefetchLatest).toHaveBeenCalled();
+    const retryBtns = screen.getAllByRole('button', { name: /retry/i });
+    expect(retryBtns[0]).toBeDefined();
+    fireEvent.click(retryBtns[0]!);
+    expect(mockRefetchCategories).toHaveBeenCalled();
   });
 
-  it('8. Renders categories preview, creator spotlight, and support banner', () => {
+  it('8. Renders creator spotlight and support banner', () => {
     render(
       <BrowserRouter>
         <HomePage />
       </BrowserRouter>
     );
-
-    expect(
-      screen.getByRole('heading', { level: 2, name: /browse by category/i })
-    ).toBeInTheDocument();
-    expect(screen.getByText('Developer Tools')).toBeInTheDocument();
-    expect(screen.getByText('Productivity & Utilities')).toBeInTheDocument();
 
     expect(
       screen.getByRole('heading', { level: 2, name: /crafted with care by sourav/i })

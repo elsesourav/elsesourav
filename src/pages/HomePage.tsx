@@ -1,20 +1,10 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Sparkles,
-  ArrowRight,
-  User,
-  Compass,
-  Layers,
-  Wrench,
-  Globe,
-  Puzzle,
-  MessageSquareHeart,
-} from 'lucide-react';
+import { Sparkles, ArrowRight, User, Compass, MessageSquareHeart } from 'lucide-react';
 import { Button, Badge, Skeleton, ErrorState } from '@/components';
 import { AppCard } from '@/components/apps';
-import { LatestUpdateCard } from '@/components/home';
-import { useFeaturedApps, useLatestApps } from '@/hooks/useApps';
+import { LatestUpdateCard, CategoryCard } from '@/components/home';
+import { useFeaturedApps, useLatestApps, useCategories } from '@/hooks';
 import { ROUTES } from '@/constants/routes';
 import './HomePage.css';
 
@@ -32,6 +22,13 @@ export const HomePage: React.FC = () => {
     error: latestError,
     refetch: refetchLatest,
   } = useLatestApps(4);
+
+  const {
+    categories,
+    isLoading: isCategoriesLoading,
+    error: categoriesError,
+    refetch: refetchCategories,
+  } = useCategories();
 
   // Dynamic SEO & Structured Data
   useEffect(() => {
@@ -226,13 +223,13 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* =========================================================================
-          4. Software Categories Preview
+          4. Software Categories Discovery Section
           ========================================================================= */}
       <section className="home-section" aria-labelledby="categories-heading">
         <header className="home-section__header">
           <div className="home-section__title-group">
             <h2 id="categories-heading" className="home-section__title">
-              Browse by Category
+              Explore by Category
             </h2>
             <p className="home-section__subtitle">
               Explore purpose-built tools across various software categories.
@@ -245,47 +242,34 @@ export const HomePage: React.FC = () => {
           </Link>
         </header>
 
-        <div className="home-categories-grid">
-          <Link to={`${ROUTES.APPS}?category=developer-tools`} className="home-category-card">
-            <div className="home-category-card__icon">
-              <Wrench size={22} />
-            </div>
-            <div className="home-category-card__info">
-              <span className="home-category-card__name">Developer Tools</span>
-              <span className="home-category-card__desc">IDEs, CLI utilities, debuggers</span>
-            </div>
-          </Link>
+        {isCategoriesLoading && (
+          <div className="home-categories-grid" data-testid="home-categories-skeleton">
+            <Skeleton variant="rounded" height={72} />
+            <Skeleton variant="rounded" height={72} />
+            <Skeleton variant="rounded" height={72} />
+            <Skeleton variant="rounded" height={72} />
+          </div>
+        )}
 
-          <Link to={`${ROUTES.APPS}?category=utilities`} className="home-category-card">
-            <div className="home-category-card__icon">
-              <Layers size={22} />
-            </div>
-            <div className="home-category-card__info">
-              <span className="home-category-card__name">Productivity & Utilities</span>
-              <span className="home-category-card__desc">Calculators, helpers, workflows</span>
-            </div>
-          </Link>
+        {categoriesError && !isCategoriesLoading && (
+          <ErrorState
+            title="Categories Unavailable"
+            description="Could not load software categories at this time."
+            action={
+              <Button variant="secondary" size="sm" onClick={() => void refetchCategories()}>
+                Retry
+              </Button>
+            }
+          />
+        )}
 
-          <Link to={`${ROUTES.APPS}?category=web-apps`} className="home-category-card">
-            <div className="home-category-card__icon">
-              <Globe size={22} />
-            </div>
-            <div className="home-category-card__info">
-              <span className="home-category-card__name">Web Applications</span>
-              <span className="home-category-card__desc">Browser-first cloud platforms</span>
-            </div>
-          </Link>
-
-          <Link to={`${ROUTES.APPS}?category=extensions`} className="home-category-card">
-            <div className="home-category-card__icon">
-              <Puzzle size={22} />
-            </div>
-            <div className="home-category-card__info">
-              <span className="home-category-card__name">Browser Extensions</span>
-              <span className="home-category-card__desc">Chrome & Edge enhancements</span>
-            </div>
-          </Link>
-        </div>
+        {!isCategoriesLoading && !categoriesError && categories.length > 0 && (
+          <div className="home-categories-grid">
+            {categories.map((cat) => (
+              <CategoryCard key={cat.id} category={cat} />
+            ))}
+          </div>
+        )}
       </section>
 
       {/* =========================================================================
