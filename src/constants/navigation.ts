@@ -4,10 +4,10 @@ import { ROUTES } from './routes';
 export const PRIMARY_NAVIGATION: readonly NavigationItem[] = [
   { label: 'Home', path: ROUTES.HOME },
   { label: 'Apps', path: ROUTES.APPS },
-  { label: 'Categories', path: ROUTES.CATEGORIES },
   { label: 'Blog', path: ROUTES.BLOG },
-  { label: 'About', path: ROUTES.ABOUT },
+  { label: 'Help', path: ROUTES.HELP },
   { label: 'Support', path: ROUTES.SUPPORT },
+  { label: 'About', path: ROUTES.ABOUT },
 ] as const;
 
 export interface FooterNavGroup {

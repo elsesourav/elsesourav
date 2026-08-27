@@ -28,6 +28,7 @@ export const AdminSupportPage: React.FC = () => {
 
   const [tickets, setTickets] = useState<readonly SupportTicket[]>([]);
   const [activeFilter, setActiveFilter] = useState<SupportTicketStatus | 'all'>('all');
+  const [priorityFilter, setPriorityFilter] = useState<SupportTicketPriority | 'all'>('all');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -80,8 +81,9 @@ export const AdminSupportPage: React.FC = () => {
   };
 
   const filteredTickets = tickets.filter((ticket) => {
-    if (activeFilter === 'all') return true;
-    return ticket.status === activeFilter;
+    const statusMatch = activeFilter === 'all' || ticket.status === activeFilter;
+    const priorityMatch = priorityFilter === 'all' || ticket.priority === priorityFilter;
+    return statusMatch && priorityMatch;
   });
 
   const counts = {
@@ -137,21 +139,54 @@ export const AdminSupportPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Filter Tabs */}
-      <div className="support-tickets-filters" role="tablist">
-        {FILTER_TABS.map((tab) => (
-          <button
-            key={tab.value}
-            role="tab"
-            aria-selected={activeFilter === tab.value}
-            className={`support-filter-tab ${
-              activeFilter === tab.value ? 'support-filter-tab--active' : ''
-            }`}
-            onClick={() => setActiveFilter(tab.value)}
+      {/* Filter Tabs & Priority Controls */}
+      <div
+        className="support-tickets-filters"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: 'var(--space-3)',
+        }}
+      >
+        <div role="tablist" style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
+          {FILTER_TABS.map((tab) => (
+            <button
+              key={tab.value}
+              role="tab"
+              aria-selected={activeFilter === tab.value}
+              className={`support-filter-tab ${
+                activeFilter === tab.value ? 'support-filter-tab--active' : ''
+              }`}
+              onClick={() => setActiveFilter(tab.value)}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+          <label
+            htmlFor="admin-priority-filter"
+            style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}
           >
-            {tab.label}
-          </button>
-        ))}
+            Priority:
+          </label>
+          <select
+            id="admin-priority-filter"
+            aria-label="Filter tickets by priority"
+            value={priorityFilter}
+            onChange={(e) => setPriorityFilter(e.target.value as SupportTicketPriority | 'all')}
+            className="admin-support-table__select"
+            style={{ padding: '4px 8px', fontSize: 'var(--font-size-xs)' }}
+          >
+            <option value="all">All Priorities</option>
+            <option value="high">High Priority Only</option>
+            <option value="normal">Normal Priority</option>
+            <option value="low">Low Priority</option>
+          </select>
+        </div>
       </div>
 
       {/* Loading Skeleton */}

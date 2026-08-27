@@ -9,6 +9,7 @@ import {
   Menu,
   X,
   Bookmark,
+  LifeBuoy,
   Settings,
   ShieldAlert,
   LogOut,
@@ -75,6 +76,12 @@ export const Header: React.FC = () => {
       label: 'My Library',
       icon: <Bookmark size={14} />,
       onClick: () => navigate(ROUTES.LIBRARY),
+    },
+    {
+      id: 'user-tickets',
+      label: 'My Support Tickets',
+      icon: <LifeBuoy size={14} />,
+      onClick: () => navigate(ROUTES.SUPPORT_TICKETS),
     },
     {
       id: 'user-settings',
@@ -272,6 +279,16 @@ export const Header: React.FC = () => {
                       leftIcon={<Bookmark size={15} />}
                     >
                       My Library
+                    </Button>
+                  </Link>
+                  <Link to={ROUTES.SUPPORT_TICKETS} onClick={() => setIsMobileMenuOpen(false)}>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      style={{ width: '100%', justifyContent: 'flex-start' }}
+                      leftIcon={<LifeBuoy size={15} />}
+                    >
+                      My Support Tickets
                     </Button>
                   </Link>
                   <Link to={ROUTES.SETTINGS} onClick={() => setIsMobileMenuOpen(false)}>

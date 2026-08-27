@@ -13,6 +13,8 @@ import {
   RefreshCw,
   ArrowLeft,
   FileQuestion,
+  LifeBuoy,
+  BookOpen,
 } from 'lucide-react';
 import { Badge, Button, IconButton, EmptyState, ErrorState, Skeleton } from '@/components/ui';
 import { AppCard, AppGallery, AppRatingSection, AppVersionHistory } from '@/components/apps';
@@ -429,6 +431,38 @@ export const AppDetailPage: React.FC = () => {
           </div>
         </section>
       )}
+
+      {/* App Support & Help Escalation */}
+      <section
+        className="app-detail__section app-detail__support-section"
+        aria-labelledby="app-support-heading"
+      >
+        <div className="app-detail__support-card">
+          <div className="app-detail__support-content">
+            <h2 id="app-support-heading" className="app-detail__support-title">
+              Need Help with {app.name}?
+            </h2>
+            <p className="app-detail__support-desc">
+              Have a question, feedback, or encountering a technical bug with this software? Check
+              out our Knowledge Base or reach out directly to developer support.
+            </p>
+          </div>
+          <div className="app-detail__support-actions">
+            <Link to={`${ROUTES.HELP}?q=${encodeURIComponent(app.name)}`}>
+              <Button variant="secondary" size="sm" leftIcon={<BookOpen size={14} />}>
+                Help Center
+              </Button>
+            </Link>
+            <Link
+              to={`${ROUTES.SUPPORT}?ref=app&appId=${encodeURIComponent(app.id)}&appName=${encodeURIComponent(app.name)}&category=app_issue`}
+            >
+              <Button variant="glass" size="sm" leftIcon={<LifeBuoy size={14} />}>
+                Contact Support
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
     </main>
   );
 };

@@ -41,6 +41,9 @@ export const SupportPage: React.FC = () => {
   const refParam = searchParams.get('ref');
   const articleParam = searchParams.get('article');
   const titleParam = searchParams.get('title');
+  const appIdParam = searchParams.get('appId');
+  const appNameParam = searchParams.get('appName');
+  const categoryParam = searchParams.get('category');
 
   const [subject, setSubject] = useState('');
   const [category, setCategory] = useState<SupportTicketCategory>('general');
@@ -58,8 +61,17 @@ export const SupportPage: React.FC = () => {
         `I was reading the help article "${titleParam}" (${articleParam || ''}) and need assistance with:\n\n`
       );
       setCategory('general');
+    } else if (refParam === 'app' && (appNameParam || appIdParam)) {
+      const appName = appNameParam || 'Application';
+      setSubject(`Issue with app: ${appName}`);
+      setDescription(`I am experiencing an issue while using ${appName}. Details:\n\n`);
+      if (categoryParam && CATEGORY_OPTIONS.some((c) => c.value === categoryParam)) {
+        setCategory(categoryParam as SupportTicketCategory);
+      } else {
+        setCategory('app_issue');
+      }
     }
-  }, [refParam, articleParam, titleParam]);
+  }, [refParam, articleParam, titleParam, appIdParam, appNameParam, categoryParam]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,6 +109,8 @@ export const SupportPage: React.FC = () => {
         description: description.trim(),
         category,
         priority: isAdmin ? priority : 'normal',
+        relatedAppId: appIdParam || undefined,
+        relatedHelpArticleId: articleParam || undefined,
         userEmail: currentUser.email,
         userName: currentUser.name,
       },
