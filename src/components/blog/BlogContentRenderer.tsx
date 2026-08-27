@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Copy, Check } from 'lucide-react';
 import './BlogContentRenderer.css';
 
 interface BlogContentRendererProps {
@@ -31,6 +32,57 @@ export function isSafeUrl(url: string): boolean {
     trimmed.startsWith('#')
   );
 }
+
+/**
+ * Code Block subcomponent with language badge and Copy Code button
+ */
+export const BlogCodeBlock: React.FC<{ code: string; language?: string }> = ({
+  code,
+  language,
+}) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard) {
+        await navigator.clipboard.writeText(code);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }
+    } catch {
+      // Fallback
+    }
+  };
+
+  return (
+    <div className="blog-code-container">
+      <div className="blog-code-header">
+        <span className="blog-code-lang">{language || 'code'}</span>
+        <button
+          type="button"
+          className="blog-code-copy-btn"
+          onClick={() => void handleCopy()}
+          aria-label="Copy code to clipboard"
+        >
+          {copied ? (
+            <>
+              <Check size={13} className="blog-code-copied-icon" />
+              <span>Copied!</span>
+            </>
+          ) : (
+            <>
+              <Copy size={13} />
+              <span>Copy</span>
+            </>
+          )}
+        </button>
+      </div>
+      <pre className="blog-code-block">
+        <code className={language ? `language-${language}` : undefined}>{code}</code>
+      </pre>
+    </div>
+  );
+};
 
 /**
  * Parses inline formatting: bold (**), italic (*), code (`), links ([text](url))
@@ -159,11 +211,11 @@ export const BlogContentRenderer: React.FC<BlogContentRendererProps> = ({
       if (inCodeBlock) {
         // End code block
         elements.push(
-          <pre key={`pre-${elementKey++}`} className="blog-code-block">
-            <code className={codeBlockLang ? `language-${codeBlockLang}` : undefined}>
-              {codeBlockContent.join('\n')}
-            </code>
-          </pre>
+          <BlogCodeBlock
+            key={`code-block-${elementKey++}`}
+            code={codeBlockContent.join('\n')}
+            language={codeBlockLang}
+          />
         );
         inCodeBlock = false;
         codeBlockContent = [];
@@ -267,9 +319,11 @@ export const BlogContentRenderer: React.FC<BlogContentRendererProps> = ({
   flushList();
   if (inCodeBlock) {
     elements.push(
-      <pre key={`pre-${elementKey++}`} className="blog-code-block">
-        <code>{codeBlockContent.join('\n')}</code>
-      </pre>
+      <BlogCodeBlock
+        key={`code-block-${elementKey++}`}
+        code={codeBlockContent.join('\n')}
+        language={codeBlockLang}
+      />
     );
   }
 

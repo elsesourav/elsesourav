@@ -124,7 +124,7 @@ describe('Global Application Shell, Routing & Navigation', () => {
     it('renders Blog page when navigating to /blog', () => {
       renderWithProviders('/blog');
       expect(
-        screen.getByRole('heading', { level: 1, name: /Blog & Devlogs/i })
+        screen.getByRole('heading', { level: 1, name: /Engineering Notes & Articles|Blog/i })
       ).toBeInTheDocument();
     });
 

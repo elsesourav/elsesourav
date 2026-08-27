@@ -32,24 +32,8 @@ export const CategoryDetailPage: React.FC = () => {
   );
 };
 
-export const BlogPage: React.FC = () => (
-  <PlaceholderPage
-    title="Blog & Devlogs"
-    description="Engineering insights, architecture deep-dives, feature announcements, and product release updates."
-    badge="Articles"
-  />
-);
-
-export const BlogPostPage: React.FC = () => {
-  const { slug } = useParams<{ slug: string }>();
-  return (
-    <PlaceholderPage
-      title={`Article: ${slug || 'Read'}`}
-      description={`Technical article and release notes for "${slug}".`}
-      badge="Blog Post"
-    />
-  );
-};
+export { BlogPage } from './BlogPage';
+export { BlogPostPage } from './BlogPostPage';
 
 export { AboutPage } from './AboutPage';
 
