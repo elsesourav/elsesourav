@@ -12,6 +12,8 @@ export const ROUTES = {
   ABOUT: '/about',
   SUPPORT: '/support',
   HELP: '/help',
+  HELP_CATEGORY: '/help/:categorySlug',
+  HELP_ARTICLE: '/help/:categorySlug/:articleSlug',
   LOGIN: '/login',
   SIGNUP: '/signup',
   FORGOT_PASSWORD: '/forgot-password',

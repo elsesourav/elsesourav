@@ -15,6 +15,8 @@ import {
   AboutPage,
   SupportPage,
   HelpPage,
+  HelpCategoryPage,
+  HelpArticlePage,
   LoginPage,
   SignUpPage,
   ForgotPasswordPage,
@@ -51,6 +53,8 @@ export const AppRoutes: React.FC = () => {
         <Route path={ROUTES.ABOUT} element={<AboutPage />} />
         <Route path={ROUTES.SUPPORT} element={<SupportPage />} />
         <Route path={ROUTES.HELP} element={<HelpPage />} />
+        <Route path={ROUTES.HELP_CATEGORY} element={<HelpCategoryPage />} />
+        <Route path={ROUTES.HELP_ARTICLE} element={<HelpArticlePage />} />
         <Route path={ROUTES.LOGIN} element={<LoginPage />} />
         <Route path={ROUTES.SIGNUP} element={<SignUpPage />} />
         <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />

@@ -45,13 +45,9 @@ export const SupportPage: React.FC = () => (
   />
 );
 
-export const HelpPage: React.FC = () => (
-  <PlaceholderPage
-    title="Help Center & FAQs"
-    description="Frequently asked questions, installation guides, documentation, and troubleshooting resources."
-    badge="Help Center"
-  />
-);
+export { HelpPage } from './HelpPage';
+export { HelpCategoryPage } from './HelpCategoryPage';
+export { HelpArticlePage } from './HelpArticlePage';
 
 export const LoginPage: React.FC = () => (
   <PlaceholderPage
