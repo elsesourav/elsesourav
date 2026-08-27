@@ -8,6 +8,8 @@ export * from './theme.types';
 export * from './user.types';
 export * from './auth.types';
 export * from './app.types';
+export * from './category.types';
+export * from './tag.types';
 export * from './blog.types';
 export * from './support.types';
 export * from './feedback.types';

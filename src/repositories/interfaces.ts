@@ -11,7 +11,6 @@ import type {
 } from '@/types/support.types';
 import type { Feedback } from '@/types/feedback.types';
 import type { AuditLog } from '@/types/audit.types';
-import type { CategoryEntity, CreateCategoryDto, UpdateCategoryDto } from './category.repository';
 import type { CreateAppDto, UpdateAppDto } from './app.repository';
 
 /**
@@ -30,16 +29,33 @@ export interface IAppRepository extends IRepository<App, CreateAppDto, UpdateApp
   checkSlugUnique(slug: string, excludeId?: string): RepositoryResult<boolean>;
 }
 
+import type { Category } from '@/types/category.types';
+import type { Tag } from '@/types/tag.types';
+import type { CreateCategoryDto, UpdateCategoryDto } from './category.repository';
+import type { CreateTagDto, UpdateTagDto } from './tag.repository';
+
 /**
  * Category Repository Contract
  */
 export interface ICategoryRepository extends IRepository<
-  CategoryEntity,
+  Category,
   CreateCategoryDto,
   UpdateCategoryDto
 > {
-  findBySlug(slug: string): RepositoryResult<CategoryEntity | null>;
-  findActive(): PaginatedRepositoryResult<CategoryEntity>;
+  findBySlug(slug: string): RepositoryResult<Category | null>;
+  findActive(): PaginatedRepositoryResult<Category>;
+  deactivate(id: string): RepositoryResult<Category>;
+  checkSlugUnique(slug: string, excludeId?: string): RepositoryResult<boolean>;
+}
+
+/**
+ * Tag Repository Contract
+ */
+export interface ITagRepository extends IRepository<Tag, CreateTagDto, UpdateTagDto> {
+  findBySlug(slug: string): RepositoryResult<Tag | null>;
+  findActive(): PaginatedRepositoryResult<Tag>;
+  deactivate(id: string): RepositoryResult<Tag>;
+  checkSlugUnique(slug: string, excludeId?: string): RepositoryResult<boolean>;
 }
 
 import type { AuthUser } from '@/types/auth.types';

@@ -1,33 +1,32 @@
 import { FirestoreRepository } from './firestore.repository';
-import { createCategorySchema, updateCategorySchema } from '@/schemas/classification.schema';
+import { createTagSchema, updateTagSchema } from '@/schemas/classification.schema';
 import { isErr, ok, err } from '@/lib/result';
 import { AppError } from '@/lib/errors';
-import type { ICategoryRepository } from './interfaces';
-import type { Category } from '@/types/category.types';
+import type { ITagRepository } from './interfaces';
+import type { Tag } from '@/types/tag.types';
 import type { RepositoryResult, PaginatedRepositoryResult } from './types';
 import type { Result } from '@/types/result.types';
 import type { z } from 'zod';
 import type { Firestore } from 'firebase/firestore';
 
-export type CreateCategoryDto = z.infer<typeof createCategorySchema>;
-export type UpdateCategoryDto = z.infer<typeof updateCategorySchema>;
-export type CategoryEntity = Category;
+export type CreateTagDto = z.infer<typeof createTagSchema>;
+export type UpdateTagDto = z.infer<typeof updateTagSchema>;
 
-export class CategoryRepository
-  extends FirestoreRepository<Category, CreateCategoryDto, UpdateCategoryDto>
-  implements ICategoryRepository
+export class TagRepository
+  extends FirestoreRepository<Tag, CreateTagDto, UpdateTagDto>
+  implements ITagRepository
 {
   constructor(getFirestoreInstance?: () => Firestore) {
-    super('categories', {
-      createSchema: createCategorySchema,
-      updateSchema: updateCategorySchema,
+    super('tags', {
+      createSchema: createTagSchema,
+      updateSchema: updateTagSchema,
       getFirestore: getFirestoreInstance,
     });
   }
 
-  public async findBySlug(slug: string): RepositoryResult<Category | null> {
+  public async findBySlug(slug: string): RepositoryResult<Tag | null> {
     if (!slug || typeof slug !== 'string') {
-      return err(AppError.badRequest('Invalid slug provided for category lookup', 'slug'));
+      return err(AppError.badRequest('Invalid slug provided for tag lookup', 'slug'));
     }
 
     const result = await this.findMany({
@@ -66,17 +65,17 @@ export class CategoryRepository
     return ok(false);
   }
 
-  public async findActive(): PaginatedRepositoryResult<Category> {
+  public async findActive(): PaginatedRepositoryResult<Tag> {
     return this.findMany({
       filters: [{ field: 'isActive', operator: '==', value: true }],
-      orderBy: 'orderIndex',
+      orderBy: 'name',
       orderDirection: 'asc',
     });
   }
 
-  public async deactivate(id: string): RepositoryResult<Category> {
+  public async deactivate(id: string): RepositoryResult<Tag> {
     if (!id) {
-      return err(AppError.badRequest('Category ID is required for deactivation', 'id'));
+      return err(AppError.badRequest('Tag ID is required for deactivation', 'id'));
     }
 
     return this.update(id, {
@@ -85,4 +84,4 @@ export class CategoryRepository
   }
 }
 
-export const categoryRepository = new CategoryRepository();
+export const tagRepository = new TagRepository();
