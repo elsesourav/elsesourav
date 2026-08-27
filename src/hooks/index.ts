@@ -12,3 +12,4 @@ export * from './useApps';
 export * from './useAppMedia';
 export * from './useAppVersions';
 export * from './useAppDetails';
+export * from './useAppDiscovery';

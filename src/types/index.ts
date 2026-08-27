@@ -20,4 +20,5 @@ export * from './notification.types';
 export * from './audit.types';
 export * from './navigation.types';
 export * from './system.types';
+export * from './search.types';
 export * from './result.types';

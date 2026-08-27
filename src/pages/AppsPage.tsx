@@ -1,92 +1,60 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Search, Sparkles, RefreshCw, X } from 'lucide-react';
-import { Input, Select, Badge, Button, EmptyState, ErrorState } from '@/components/ui';
+import React, { useState, useEffect } from 'react';
+import { Search, Sparkles, RefreshCw, X, SlidersHorizontal } from 'lucide-react';
+import { Input, Select, Badge, Button, EmptyState, ErrorState, Drawer } from '@/components/ui';
 import { AppCard, AppCardSkeleton } from '@/components/apps';
-import { useApps } from '@/hooks/useApps';
+import { useAppDiscovery } from '@/hooks/useAppDiscovery';
 import { classificationService } from '@/services/classification.service';
 import type { Category } from '@/types/category.types';
-import type { App } from '@/types/app.types';
+import type { Tag } from '@/types/tag.types';
+import type { AppSearchSortOption } from '@/types/search.types';
 import './AppsPage.css';
 
-type SortOption = 'featured' | 'newest' | 'name' | 'rating';
-
 export const AppsPage: React.FC = () => {
-  const { apps, isLoading, error, refetch } = useApps();
+  const {
+    searchQuery,
+    selectedCategory,
+    selectedTags,
+    sortBy,
+    activeFilterCount,
+    apps,
+    totalMatches,
+    hasMore,
+    isLoading,
+    error,
+    setSearchQuery,
+    setSelectedCategory,
+    toggleTag,
+    setSortBy,
+    clearAllFilters,
+    loadMore,
+    refetch,
+  } = useAppDiscovery(12);
+
   const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [sortBy, setSortBy] = useState<SortOption>('featured');
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // SEO setup
   useEffect(() => {
     document.title = 'Explore Applications | ElseSourav';
   }, []);
 
-  // Fetch active categories
+  // Fetch active categories and tags
   useEffect(() => {
     let isMounted = true;
-    void classificationService.listActiveCategories().then((res) => {
-      if (isMounted && res.success) {
-        setCategories([...res.data.items]);
+    void Promise.all([
+      classificationService.listActiveCategories(),
+      classificationService.listActiveTags(),
+    ]).then(([catRes, tagRes]) => {
+      if (isMounted) {
+        if (catRes.success) setCategories([...catRes.data.items]);
+        if (tagRes.success) setTags([...tagRes.data.items]);
       }
     });
     return () => {
       isMounted = false;
     };
   }, []);
-
-  // Filter & sort apps
-  const filteredApps = useMemo(() => {
-    let result = [...apps];
-
-    // 1. Category Filter
-    if (selectedCategory !== 'all') {
-      result = result.filter(
-        (app) => app.primaryCategory.toLowerCase() === selectedCategory.toLowerCase()
-      );
-    }
-
-    // 2. Search Query Filter
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase().trim();
-      result = result.filter(
-        (app) =>
-          app.name.toLowerCase().includes(q) ||
-          app.shortDescription.toLowerCase().includes(q) ||
-          app.tags.some((t) => t.toLowerCase().includes(q))
-      );
-    }
-
-    // 3. Sorting
-    result.sort((a, b) => {
-      switch (sortBy) {
-        case 'featured':
-          if (a.isFeatured !== b.isFeatured) {
-            return a.isFeatured ? -1 : 1;
-          }
-          return a.sortOrder - b.sortOrder;
-        case 'newest':
-          return (b.publishedAt || b.createdAt) - (a.publishedAt || a.createdAt);
-        case 'name':
-          return a.name.localeCompare(b.name);
-        case 'rating': {
-          const ratingA = a.stats.ratingAverage ?? 5.0;
-          const ratingB = b.stats.ratingAverage ?? 5.0;
-          return ratingB - ratingA;
-        }
-        default:
-          return 0;
-      }
-    });
-
-    return result;
-  }, [apps, selectedCategory, searchQuery, sortBy]);
-
-  const handleClearFilters = () => {
-    setSelectedCategory('all');
-    setSearchQuery('');
-    setSortBy('featured');
-  };
 
   return (
     <main className="apps-page">
@@ -95,7 +63,7 @@ export const AppsPage: React.FC = () => {
           <h1 className="apps-page__title">Explore Applications</h1>
           {!isLoading && !error && (
             <Badge variant="accent" size="md">
-              {filteredApps.length} {filteredApps.length === 1 ? 'App' : 'Apps'}
+              {totalMatches} {totalMatches === 1 ? 'App' : 'Apps'}
             </Badge>
           )}
         </div>
@@ -130,18 +98,31 @@ export const AppsPage: React.FC = () => {
 
           <Select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as SortOption)}
+            onChange={(e) => setSortBy(e.target.value as AppSearchSortOption)}
             options={[
               { value: 'featured', label: 'Featured First' },
               { value: 'newest', label: 'Newest Releases' },
-              { value: 'name', label: 'Name (A to Z)' },
+              { value: 'updated', label: 'Recently Updated' },
               { value: 'rating', label: 'Highest Rated' },
+              { value: 'popularity', label: 'Most Popular' },
+              { value: 'name', label: 'Name (A to Z)' },
             ]}
             className="apps-page__sort-select"
             aria-label="Sort applications"
           />
+
+          <Button
+            variant="secondary"
+            className="apps-page__filter-toggle-btn"
+            leftIcon={<SlidersHorizontal size={16} />}
+            onClick={() => setIsDrawerOpen(true)}
+            aria-label={`Open filters drawer (${activeFilterCount} active)`}
+          >
+            Filters {activeFilterCount > 0 && `(${activeFilterCount})`}
+          </Button>
         </div>
 
+        {/* Desktop Category Filter Pills */}
         <nav className="apps-page__categories" aria-label="Filter by category">
           <button
             type="button"
@@ -163,10 +144,143 @@ export const AppsPage: React.FC = () => {
             </button>
           ))}
         </nav>
+
+        {/* Active Filters Row */}
+        {activeFilterCount > 0 && (
+          <div className="apps-page__active-filters-row" aria-label="Active filters">
+            <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>
+              Active filters:
+            </span>
+
+            {searchQuery && (
+              <span className="apps-page__filter-chip">
+                Search: "{searchQuery}"
+                <button
+                  type="button"
+                  className="apps-page__filter-chip-remove"
+                  onClick={() => setSearchQuery('')}
+                  aria-label="Remove search query filter"
+                >
+                  <X size={12} />
+                </button>
+              </span>
+            )}
+
+            {selectedCategory !== 'all' && (
+              <span className="apps-page__filter-chip">
+                Category: {selectedCategory}
+                <button
+                  type="button"
+                  className="apps-page__filter-chip-remove"
+                  onClick={() => setSelectedCategory('all')}
+                  aria-label="Remove category filter"
+                >
+                  <X size={12} />
+                </button>
+              </span>
+            )}
+
+            {selectedTags.map((tag) => (
+              <span key={tag} className="apps-page__filter-chip">
+                #{tag}
+                <button
+                  type="button"
+                  className="apps-page__filter-chip-remove"
+                  onClick={() => toggleTag(tag)}
+                  aria-label={`Remove tag #${tag} filter`}
+                >
+                  <X size={12} />
+                </button>
+              </span>
+            ))}
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearAllFilters}
+              style={{ fontSize: 'var(--font-size-xs)', padding: '2px 8px', height: 'auto' }}
+            >
+              Clear All
+            </Button>
+          </div>
+        )}
       </section>
 
+      {/* Mobile Filter Drawer */}
+      <Drawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        title="Filter Applications"
+        placement="right"
+      >
+        <div className="apps-page__drawer-content">
+          <div>
+            <h4 className="apps-page__drawer-section-title">Category</h4>
+            <div className="apps-page__drawer-categories">
+              <Button
+                variant={selectedCategory === 'all' ? 'primary' : 'secondary'}
+                size="sm"
+                onClick={() => {
+                  setSelectedCategory('all');
+                  setIsDrawerOpen(false);
+                }}
+              >
+                All Categories
+              </Button>
+              {categories.map((cat) => (
+                <Button
+                  key={cat.id}
+                  variant={selectedCategory === cat.slug ? 'primary' : 'secondary'}
+                  size="sm"
+                  onClick={() => {
+                    setSelectedCategory(cat.slug);
+                    setIsDrawerOpen(false);
+                  }}
+                >
+                  {cat.name}
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          {tags.length > 0 && (
+            <div>
+              <h4 className="apps-page__drawer-section-title">Popular Tags</h4>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
+                {tags.slice(0, 15).map((t) => {
+                  const isSelected = selectedTags.includes(t.slug);
+                  return (
+                    <button
+                      key={t.id}
+                      type="button"
+                      className={`apps-page__category-pill ${isSelected ? 'apps-page__category-pill--active' : ''}`}
+                      onClick={() => toggleTag(t.slug)}
+                    >
+                      #{t.name}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {activeFilterCount > 0 && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                clearAllFilters();
+                setIsDrawerOpen(false);
+              }}
+            >
+              Clear All Filters
+            </Button>
+          )}
+        </div>
+      </Drawer>
+
       {/* Loading State */}
-      {isLoading && (
+      {isLoading && apps.length === 0 && (
         <div className="apps-page__grid" data-testid="apps-loading-grid">
           {Array.from({ length: 6 }).map((_, idx) => (
             <AppCardSkeleton key={idx} />
@@ -193,18 +307,20 @@ export const AppsPage: React.FC = () => {
       )}
 
       {/* Empty State */}
-      {!isLoading && !error && filteredApps.length === 0 && (
+      {!isLoading && !error && apps.length === 0 && (
         <EmptyState
           icon={<Sparkles size={36} />}
           title="No Applications Found"
           description={
-            searchQuery || selectedCategory !== 'all'
-              ? `No apps match your search "${searchQuery}" or selected category.`
-              : 'No applications have been published to the catalog yet.'
+            searchQuery
+              ? `No applications match your search for "${searchQuery}".`
+              : selectedCategory !== 'all' || selectedTags.length > 0
+                ? 'No applications match the selected filters.'
+                : 'No applications have been published to the catalog yet.'
           }
           action={
-            (searchQuery || selectedCategory !== 'all') && (
-              <Button variant="secondary" size="sm" onClick={handleClearFilters}>
+            activeFilterCount > 0 && (
+              <Button variant="secondary" size="sm" onClick={clearAllFilters}>
                 Clear All Filters
               </Button>
             )
@@ -213,12 +329,26 @@ export const AppsPage: React.FC = () => {
       )}
 
       {/* Application Grid */}
-      {!isLoading && !error && filteredApps.length > 0 && (
-        <div className="apps-page__grid" data-testid="apps-grid">
-          {filteredApps.map((app: App) => (
-            <AppCard key={app.id} app={app} />
-          ))}
-        </div>
+      {!error && apps.length > 0 && (
+        <>
+          <div className="apps-page__grid" data-testid="apps-grid">
+            {apps.map((app) => (
+              <AppCard key={app.id} app={app} />
+            ))}
+          </div>
+
+          {/* Pagination / Load More */}
+          {hasMore && (
+            <div className="apps-page__pagination">
+              <Button variant="secondary" size="md" onClick={loadMore}>
+                Load More Applications
+              </Button>
+              <span className="apps-page__pagination-info">
+                Showing {apps.length} of {totalMatches} applications
+              </span>
+            </div>
+          )}
+        </>
       )}
     </main>
   );

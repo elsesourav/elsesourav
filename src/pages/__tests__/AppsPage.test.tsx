@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { AppsPage } from '../AppsPage';
-import * as useAppsModule from '@/hooks/useApps';
+import * as useAppDiscoveryModule from '@/hooks/useAppDiscovery';
 import { classificationService } from '@/services/classification.service';
 import { ok } from '@/lib/result';
 import { AppError } from '@/lib/errors';
@@ -51,8 +51,15 @@ const mockApps: App[] = [
   },
 ];
 
-describe('AppsPage Component', () => {
+describe('AppsPage Discovery Component', () => {
   const mockRefetch = vi.fn();
+  const mockSetSearchQuery = vi.fn();
+  const mockSetSelectedCategory = vi.fn();
+  const mockToggleTag = vi.fn();
+  const mockSetSortBy = vi.fn();
+  const mockSetFeaturedOnly = vi.fn();
+  const mockClearAllFilters = vi.fn();
+  const mockLoadMore = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -85,17 +92,49 @@ describe('AppsPage Component', () => {
       })
     );
 
-    vi.spyOn(useAppsModule, 'useApps').mockReturnValue({
+    vi.spyOn(classificationService, 'listActiveTags').mockResolvedValue(
+      ok({
+        items: [
+          {
+            id: 'tag-1',
+            slug: 'math',
+            name: 'math',
+            orderIndex: 0,
+            isActive: true,
+            createdAt: 100,
+            updatedAt: 100,
+          },
+        ],
+        hasMore: false,
+      })
+    );
+
+    vi.spyOn(useAppDiscoveryModule, 'useAppDiscovery').mockReturnValue({
+      searchQuery: '',
+      debouncedQuery: '',
+      selectedCategory: 'all',
+      selectedTags: [],
+      sortBy: 'featured',
+      featuredOnly: false,
+      activeFilterCount: 0,
       apps: mockApps,
+      totalMatches: mockApps.length,
       hasMore: false,
-      nextCursor: undefined,
       isLoading: false,
+      isSearching: false,
       error: null,
+      setSearchQuery: mockSetSearchQuery,
+      setSelectedCategory: mockSetSelectedCategory,
+      toggleTag: mockToggleTag,
+      setSortBy: mockSetSortBy,
+      setFeaturedOnly: mockSetFeaturedOnly,
+      clearAllFilters: mockClearAllFilters,
+      loadMore: mockLoadMore,
       refetch: mockRefetch,
     });
   });
 
-  it('renders page header, search input, sort selector, and category filters', async () => {
+  it('1. Renders page header, search input, sort selector, and category filters', async () => {
     render(
       <BrowserRouter>
         <AppsPage />
@@ -111,12 +150,28 @@ describe('AppsPage Component', () => {
     expect(await screen.findByText('Games')).toBeInTheDocument();
   });
 
-  it('renders loading skeletons when isLoading is true', () => {
-    vi.spyOn(useAppsModule, 'useApps').mockReturnValue({
+  it('2. Renders loading skeletons when isLoading is true and apps are empty', () => {
+    vi.spyOn(useAppDiscoveryModule, 'useAppDiscovery').mockReturnValue({
+      searchQuery: '',
+      debouncedQuery: '',
+      selectedCategory: 'all',
+      selectedTags: [],
+      sortBy: 'featured',
+      featuredOnly: false,
+      activeFilterCount: 0,
       apps: [],
+      totalMatches: 0,
       hasMore: false,
       isLoading: true,
+      isSearching: false,
       error: null,
+      setSearchQuery: mockSetSearchQuery,
+      setSelectedCategory: mockSetSelectedCategory,
+      toggleTag: mockToggleTag,
+      setSortBy: mockSetSortBy,
+      setFeaturedOnly: mockSetFeaturedOnly,
+      clearAllFilters: mockClearAllFilters,
+      loadMore: mockLoadMore,
       refetch: mockRefetch,
     });
 
@@ -130,7 +185,7 @@ describe('AppsPage Component', () => {
     expect(screen.getAllByTestId('app-card-skeleton')).toHaveLength(6);
   });
 
-  it('renders published apps in the grid', () => {
+  it('3. Renders published apps in the grid', () => {
     render(
       <BrowserRouter>
         <AppsPage />
@@ -141,7 +196,7 @@ describe('AppsPage Component', () => {
     expect(screen.getByText('Pixel Quest')).toBeInTheDocument();
   });
 
-  it('filters apps when typing in search input', () => {
+  it('4. Updates search query when typing in search input', () => {
     render(
       <BrowserRouter>
         <AppsPage />
@@ -151,11 +206,10 @@ describe('AppsPage Component', () => {
     const searchInput = screen.getByPlaceholderText('Search by name, description, or tag...');
     fireEvent.change(searchInput, { target: { value: 'pixel' } });
 
-    expect(screen.getByText('Pixel Quest')).toBeInTheDocument();
-    expect(screen.queryByText('CalcPro Calculator')).not.toBeInTheDocument();
+    expect(mockSetSearchQuery).toHaveBeenCalledWith('pixel');
   });
 
-  it('filters apps when selecting a category pill', async () => {
+  it('5. Filters apps when selecting a category pill', async () => {
     render(
       <BrowserRouter>
         <AppsPage />
@@ -165,35 +219,70 @@ describe('AppsPage Component', () => {
     const gamesPill = await screen.findByRole('button', { name: 'Games' });
     fireEvent.click(gamesPill);
 
-    expect(screen.getByText('Pixel Quest')).toBeInTheDocument();
-    expect(screen.queryByText('CalcPro Calculator')).not.toBeInTheDocument();
+    expect(mockSetSelectedCategory).toHaveBeenCalledWith('games');
   });
 
-  it('renders EmptyState when search returns no matches and allows clearing filters', () => {
+  it('6. Renders EmptyState when search returns no matches and allows clearing filters', () => {
+    vi.spyOn(useAppDiscoveryModule, 'useAppDiscovery').mockReturnValue({
+      searchQuery: 'nonexistent-app',
+      debouncedQuery: 'nonexistent-app',
+      selectedCategory: 'all',
+      selectedTags: [],
+      sortBy: 'featured',
+      featuredOnly: false,
+      activeFilterCount: 1,
+      apps: [],
+      totalMatches: 0,
+      hasMore: false,
+      isLoading: false,
+      isSearching: false,
+      error: null,
+      setSearchQuery: mockSetSearchQuery,
+      setSelectedCategory: mockSetSelectedCategory,
+      toggleTag: mockToggleTag,
+      setSortBy: mockSetSortBy,
+      setFeaturedOnly: mockSetFeaturedOnly,
+      clearAllFilters: mockClearAllFilters,
+      loadMore: mockLoadMore,
+      refetch: mockRefetch,
+    });
+
     render(
       <BrowserRouter>
         <AppsPage />
       </BrowserRouter>
     );
 
-    const searchInput = screen.getByPlaceholderText('Search by name, description, or tag...');
-    fireEvent.change(searchInput, { target: { value: 'nonexistent-app' } });
-
     expect(screen.getByText('No Applications Found')).toBeInTheDocument();
 
     const clearBtn = screen.getByRole('button', { name: 'Clear All Filters' });
     fireEvent.click(clearBtn);
 
-    expect(screen.getByText('CalcPro Calculator')).toBeInTheDocument();
-    expect(screen.getByText('Pixel Quest')).toBeInTheDocument();
+    expect(mockClearAllFilters).toHaveBeenCalled();
   });
 
-  it('renders ErrorState and allows retrying when an error occurs', () => {
-    vi.spyOn(useAppsModule, 'useApps').mockReturnValue({
+  it('7. Renders ErrorState and allows retrying when an error occurs', () => {
+    vi.spyOn(useAppDiscoveryModule, 'useAppDiscovery').mockReturnValue({
+      searchQuery: '',
+      debouncedQuery: '',
+      selectedCategory: 'all',
+      selectedTags: [],
+      sortBy: 'featured',
+      featuredOnly: false,
+      activeFilterCount: 0,
       apps: [],
+      totalMatches: 0,
       hasMore: false,
       isLoading: false,
+      isSearching: false,
       error: AppError.internal('Database timeout'),
+      setSearchQuery: mockSetSearchQuery,
+      setSelectedCategory: mockSetSelectedCategory,
+      toggleTag: mockToggleTag,
+      setSortBy: mockSetSortBy,
+      setFeaturedOnly: mockSetFeaturedOnly,
+      clearAllFilters: mockClearAllFilters,
+      loadMore: mockLoadMore,
       refetch: mockRefetch,
     });
 
@@ -209,5 +298,18 @@ describe('AppsPage Component', () => {
     fireEvent.click(retryBtn);
 
     expect(mockRefetch).toHaveBeenCalled();
+  });
+
+  it('8. Opens mobile filter drawer when clicking filter button', () => {
+    render(
+      <BrowserRouter>
+        <AppsPage />
+      </BrowserRouter>
+    );
+
+    const filterBtn = screen.getByLabelText(/open filters drawer/i);
+    fireEvent.click(filterBtn);
+
+    expect(screen.getByText('Filter Applications')).toBeInTheDocument();
   });
 });
