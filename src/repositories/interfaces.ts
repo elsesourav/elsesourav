@@ -12,15 +12,22 @@ import type {
 import type { Feedback } from '@/types/feedback.types';
 import type { AuditLog } from '@/types/audit.types';
 import type { CreateAppDto, UpdateAppDto } from './app.repository';
+import type { AppStatus } from '@/types/app.types';
+import type { Result } from '@/types/result.types';
+import type { AppError } from '@/lib/errors';
 
 /**
  * App Repository Contract
  */
 export interface IAppRepository extends IRepository<App, CreateAppDto, UpdateAppDto> {
   findBySlug(slug: string): RepositoryResult<App | null>;
+  createDraft(data: CreateAppDto): RepositoryResult<App>;
+  updateDraft(id: string, data: UpdateAppDto): RepositoryResult<App>;
+  validateForPublish(app: App): Result<void, AppError>;
   publish(id: string): RepositoryResult<App>;
   unpublish(id: string): RepositoryResult<App>;
   archive(id: string): RepositoryResult<App>;
+  restore(id: string, targetStatus?: AppStatus): RepositoryResult<App>;
   listPublished(options?: QueryOptions): PaginatedRepositoryResult<App>;
   listFeatured(limit?: number): PaginatedRepositoryResult<App>;
   listLatest(limit?: number): PaginatedRepositoryResult<App>;

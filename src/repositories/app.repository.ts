@@ -1,9 +1,9 @@
 import { FirestoreRepository } from './firestore.repository';
-import { createAppSchema, updateAppSchema } from '@/schemas/app.schema';
+import { createAppSchema, updateAppSchema, publishAppValidationSchema } from '@/schemas/app.schema';
 import { isErr, ok, err } from '@/lib/result';
 import { AppError } from '@/lib/errors';
 import type { IAppRepository } from './interfaces';
-import type { App } from '@/types/app.types';
+import type { App, AppStatus } from '@/types/app.types';
 import type {
   QueryOptions,
   QueryFilter,
@@ -71,15 +71,53 @@ export class FirestoreAppRepository
     return ok(false);
   }
 
+  public async createDraft(data: CreateAppDto): RepositoryResult<App> {
+    return this.create({
+      ...data,
+      status: 'draft',
+    });
+  }
+
+  public async updateDraft(id: string, data: UpdateAppDto): RepositoryResult<App> {
+    return this.update(id, data);
+  }
+
+  public validateForPublish(app: App): Result<void, AppError> {
+    const validation = publishAppValidationSchema.safeParse(app);
+    if (!validation.success) {
+      const errorDetails = validation.error.issues
+        .map((issue) => `${issue.path.join('.')}: ${issue.message}`)
+        .join('; ');
+      return err(
+        AppError.badRequest(
+          `Publication validation failed: ${errorDetails}`,
+          validation.error.issues[0]?.path.join('.')
+        )
+      );
+    }
+    return ok(undefined);
+  }
+
   public async publish(id: string): RepositoryResult<App> {
     if (!id) {
       return err(AppError.badRequest('App ID is required to publish', 'id'));
     }
 
+    const existing = await this.findById(id);
+    if (!existing.success) return existing;
+    if (!existing.data) {
+      return err(AppError.notFound(`App with ID "${id}" was not found.`));
+    }
+
+    const validation = this.validateForPublish(existing.data);
+    if (!validation.success) {
+      return err(validation.error);
+    }
+
     const now = Date.now();
     return this.update(id, {
       status: 'published',
-      publishedAt: now,
+      publishedAt: existing.data.publishedAt || now,
       updatedAt: now,
     } as unknown as UpdateAppDto);
   }
@@ -87,6 +125,12 @@ export class FirestoreAppRepository
   public async unpublish(id: string): RepositoryResult<App> {
     if (!id) {
       return err(AppError.badRequest('App ID is required to unpublish', 'id'));
+    }
+
+    const existing = await this.findById(id);
+    if (!existing.success) return existing;
+    if (!existing.data) {
+      return err(AppError.notFound(`App with ID "${id}" was not found.`));
     }
 
     const now = Date.now();
@@ -101,10 +145,41 @@ export class FirestoreAppRepository
       return err(AppError.badRequest('App ID is required to archive', 'id'));
     }
 
+    const existing = await this.findById(id);
+    if (!existing.success) return existing;
+    if (!existing.data) {
+      return err(AppError.notFound(`App with ID "${id}" was not found.`));
+    }
+
     const now = Date.now();
     return this.update(id, {
       status: 'archived',
       archivedAt: now,
+      updatedAt: now,
+    } as unknown as UpdateAppDto);
+  }
+
+  public async restore(id: string, targetStatus: AppStatus = 'draft'): RepositoryResult<App> {
+    if (!id) {
+      return err(AppError.badRequest('App ID is required to restore', 'id'));
+    }
+
+    const existing = await this.findById(id);
+    if (!existing.success) return existing;
+    if (!existing.data) {
+      return err(AppError.notFound(`App with ID "${id}" was not found.`));
+    }
+
+    if (targetStatus === 'published') {
+      const validation = this.validateForPublish(existing.data);
+      if (!validation.success) {
+        return err(validation.error);
+      }
+    }
+
+    const now = Date.now();
+    return this.update(id, {
+      status: targetStatus,
       updatedAt: now,
     } as unknown as UpdateAppDto);
   }

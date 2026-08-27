@@ -80,3 +80,29 @@ export const createAppSchema = z.object({
 });
 
 export const updateAppSchema = createAppSchema.partial();
+
+/**
+ * Strict publication validation schema enforcing all required public information
+ */
+export const publishAppValidationSchema = z.object({
+  id: z.string().min(1, 'App ID is required'),
+  name: z.string().min(1, 'App name is required for publication'),
+  slug: z
+    .string()
+    .min(2, 'Slug must be at least 2 characters')
+    .regex(/^[a-z0-9-]+$/, 'Slug must be lowercase alphanumeric and hyphens'),
+  shortDescription: z.string().min(1, 'Short description is required for publication'),
+  description: z.string().min(1, 'Full description is required for publication'),
+  primaryCategory: z.string().min(1, 'Primary category is required for publication'),
+  iconUrl: z.string().url('A valid icon URL is required for publication'),
+  platforms: z
+    .array(appPlatformSchema)
+    .min(1, 'At least one target platform is required for publication'),
+  links: z
+    .array(appLinkSchema)
+    .min(1, 'At least one platform link is required for publication')
+    .refine(
+      (links) => links.some((l) => l.isActive),
+      'At least one active platform link is required for publication'
+    ),
+});
