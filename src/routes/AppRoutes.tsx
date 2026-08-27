@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { AppLayout } from '@/layouts';
+import { AppLayout, AdminLayout } from '@/layouts';
 import { ProtectedRoute } from '@/components/routes/ProtectedRoute';
 import { AdminRoute } from '@/components/routes/AdminRoute';
 import { ROUTES } from '@/constants/routes';
@@ -30,6 +30,7 @@ import {
   AdminDashboardPage,
   AdminAppsPage,
   AdminCategoriesPage,
+  AdminTagsPage,
   AdminBlogPage,
   AdminBlogEditorPage,
   AdminHelpPage,
@@ -43,6 +44,7 @@ import {
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
+      {/* Public & Authenticated User Routes (Standard AppLayout) */}
       <Route element={<AppLayout />}>
         {/* Public Routes */}
         <Route path={ROUTES.HOME} element={<HomePage />} />
@@ -78,11 +80,19 @@ export const AppRoutes: React.FC = () => {
           <Route path={ROUTES.SUPPORT_TICKET_DETAIL} element={<SupportTicketDetailPage />} />
         </Route>
 
-        {/* Admin Portal Routes */}
-        <Route element={<AdminRoute />}>
+        {/* 404 Catch-All within AppLayout */}
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
+
+      {/* Admin Portal Routes (Dedicated AdminLayout & Authorization Guard) */}
+      <Route element={<AdminRoute />}>
+        <Route element={<AdminLayout />}>
           <Route path={ROUTES.ADMIN.ROOT} element={<AdminDashboardPage />} />
           <Route path={ROUTES.ADMIN.APPS} element={<AdminAppsPage />} />
+          <Route path={ROUTES.ADMIN.APPS_NEW} element={<AdminAppsPage />} />
+          <Route path={ROUTES.ADMIN.APPS_EDIT} element={<AdminAppsPage />} />
           <Route path={ROUTES.ADMIN.CATEGORIES} element={<AdminCategoriesPage />} />
+          <Route path={ROUTES.ADMIN.TAGS} element={<AdminTagsPage />} />
           <Route path={ROUTES.ADMIN.BLOG} element={<AdminBlogPage />} />
           <Route path={ROUTES.ADMIN.BLOG_NEW} element={<AdminBlogEditorPage />} />
           <Route path={ROUTES.ADMIN.BLOG_EDIT} element={<AdminBlogEditorPage />} />
@@ -92,9 +102,6 @@ export const AppRoutes: React.FC = () => {
           <Route path={ROUTES.ADMIN.THEME} element={<AdminThemePage />} />
           <Route path={ROUTES.ADMIN.AUDIT_LOGS} element={<AdminAuditLogsPage />} />
         </Route>
-
-        {/* 404 Catch-All */}
-        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
   );

@@ -34,7 +34,10 @@ export const ROUTES = {
   ADMIN: {
     ROOT: '/admin',
     APPS: '/admin/apps',
+    APPS_NEW: '/admin/apps/new',
+    APPS_EDIT: '/admin/apps/:id/edit',
     CATEGORIES: '/admin/categories',
+    TAGS: '/admin/tags',
     BLOG: '/admin/blog',
     BLOG_NEW: '/admin/blog/new',
     BLOG_EDIT: '/admin/blog/:id/edit',

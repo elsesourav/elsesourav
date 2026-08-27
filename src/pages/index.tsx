@@ -83,13 +83,7 @@ export { SettingsPage } from './SettingsPage';
 // ADMIN PROTECTED PAGES
 // =============================================================================
 
-export const AdminDashboardPage: React.FC = () => (
-  <PlaceholderPage
-    title="Admin Dashboard"
-    description="Publisher portal for managing apps, categories, blog posts, support tickets, and system audit logs."
-    badge="Admin Portal"
-  />
-);
+export { AdminDashboardPage } from './admin/AdminDashboardPage';
 
 export const AdminAppsPage: React.FC = () => (
   <PlaceholderPage
@@ -104,6 +98,14 @@ export const AdminCategoriesPage: React.FC = () => (
     title="Manage Categories & Taxonomy"
     description="Reorder categories, update slugs, and configure software classification."
     badge="Admin - Categories"
+  />
+);
+
+export const AdminTagsPage: React.FC = () => (
+  <PlaceholderPage
+    title="Tag Management"
+    description="Manage platform software tags, discovery keywords, and search labels."
+    badge="Admin - Tags"
   />
 );
 
