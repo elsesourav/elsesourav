@@ -14,3 +14,4 @@ export * from './useAppVersions';
 export * from './useAppDetails';
 export * from './useAppDiscovery';
 export * from './useCategories';
+export * from './useBlog';

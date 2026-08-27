@@ -6,6 +6,7 @@ import * as useAppsModule from '@/hooks/useApps';
 import * as useCategoriesModule from '@/hooks/useCategories';
 import * as useUserLibraryModule from '@/hooks/useUserLibrary';
 import * as useAuthModule from '@/hooks/useAuth';
+import * as useBlogModule from '@/hooks/useBlog';
 import { analyticsService } from '@/services/analytics.service';
 import { AppError } from '@/lib/errors';
 import type { App } from '@/types/app.types';
@@ -209,6 +210,29 @@ describe('HomePage Component', () => {
       error: null,
       refetch: mockRefetchCategories,
     });
+
+    vi.spyOn(useBlogModule, 'useLatestBlogPosts').mockReturnValue({
+      posts: [
+        {
+          id: 'b1',
+          slug: 'fast-web-architecture',
+          title: 'Fast Web Architecture in 2026',
+          excerpt: 'Building lean web applications.',
+          content: 'Content',
+          authorId: 'admin',
+          category: 'engineering',
+          tags: ['architecture'],
+          status: 'published',
+          readingTime: 2,
+          createdAt: 100,
+          updatedAt: 100,
+          publishedAt: 100,
+        },
+      ],
+      isLoading: false,
+      error: null,
+      refetch: vi.fn(),
+    });
   });
 
   it('1. Renders Hero section with headline, description, badge, and CTA buttons', () => {
@@ -410,5 +434,18 @@ describe('HomePage Component', () => {
     const jsonLd = document.getElementById('json-ld-website');
     expect(jsonLd).not.toBeNull();
     expect(jsonLd?.textContent).toContain('ElseSourav');
+  });
+
+  it('11. Renders Latest from the Blog section with published article cards', () => {
+    render(
+      <BrowserRouter>
+        <HomePage />
+      </BrowserRouter>
+    );
+
+    expect(
+      screen.getByRole('heading', { level: 2, name: /latest from the blog/i })
+    ).toBeInTheDocument();
+    expect(screen.getByText('Fast Web Architecture in 2026')).toBeInTheDocument();
   });
 });

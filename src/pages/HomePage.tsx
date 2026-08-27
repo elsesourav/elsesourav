@@ -4,7 +4,14 @@ import { Sparkles, ArrowRight, User, Compass, MessageSquareHeart } from 'lucide-
 import { Button, Badge, Skeleton, ErrorState } from '@/components';
 import { AppCard } from '@/components/apps';
 import { LatestUpdateCard, CategoryCard } from '@/components/home';
-import { useFeaturedApps, useTrendingApps, useLatestApps, useCategories } from '@/hooks';
+import { BlogCard } from '@/components/blog';
+import {
+  useFeaturedApps,
+  useTrendingApps,
+  useLatestApps,
+  useCategories,
+  useLatestBlogPosts,
+} from '@/hooks';
 import { creatorConfig } from '@/config';
 import { ROUTES } from '@/constants/routes';
 import './HomePage.css';
@@ -37,6 +44,13 @@ export const HomePage: React.FC = () => {
     error: categoriesError,
     refetch: refetchCategories,
   } = useCategories();
+
+  const {
+    posts: blogPosts,
+    isLoading: isBlogLoading,
+    error: blogError,
+    refetch: refetchBlog,
+  } = useLatestBlogPosts(3);
 
   // Dynamic SEO & Structured Data
   useEffect(() => {
@@ -354,6 +368,59 @@ export const HomePage: React.FC = () => {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* =========================================================================
+          6. Latest from the Blog (Secondary Editorial Layer)
+          ========================================================================= */}
+      <section className="home-section" aria-labelledby="home-blog-heading">
+        <header className="home-section__header">
+          <div className="home-section__title-group">
+            <Badge variant="accent" size="sm">
+              Engineering Journal
+            </Badge>
+            <h2 id="home-blog-heading" className="home-section__title">
+              Latest from the Blog
+            </h2>
+            <p className="home-section__subtitle">
+              Essays on software architecture, design principles, and release notes.
+            </p>
+          </div>
+
+          <Link to={ROUTES.BLOG} style={{ textDecoration: 'none' }}>
+            <Button variant="ghost" size="sm" rightIcon={<ArrowRight size={16} />}>
+              All Articles
+            </Button>
+          </Link>
+        </header>
+
+        {isBlogLoading && (
+          <div className="home-blog-grid" data-testid="home-blog-skeleton">
+            <Skeleton variant="rounded" height={320} />
+            <Skeleton variant="rounded" height={320} />
+            <Skeleton variant="rounded" height={320} />
+          </div>
+        )}
+
+        {blogError && !isBlogLoading && (
+          <ErrorState
+            title="Articles Unavailable"
+            description="Could not load latest articles at this time."
+            action={
+              <Button variant="secondary" size="sm" onClick={() => void refetchBlog()}>
+                Retry
+              </Button>
+            }
+          />
+        )}
+
+        {!isBlogLoading && !blogError && blogPosts.length > 0 && (
+          <div className="home-blog-grid">
+            {blogPosts.map((post) => (
+              <BlogCard key={post.id} post={post} />
+            ))}
+          </div>
+        )}
       </section>
 
       {/* =========================================================================

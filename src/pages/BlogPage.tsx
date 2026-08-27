@@ -124,7 +124,11 @@ export const BlogPage: React.FC = () => {
     }
 
     if (result.success) {
-      setPosts((prev) => [...prev, ...result.data.items]);
+      setPosts((prev) => {
+        const existingIds = new Set(prev.map((p) => p.id));
+        const newItems = result.data.items.filter((p) => !existingIds.has(p.id));
+        return [...prev, ...newItems];
+      });
       setNextCursor(result.data.nextCursor);
       setHasMore(Boolean(result.data.hasMore));
     }
