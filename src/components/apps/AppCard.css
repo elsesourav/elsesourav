@@ -224,3 +224,13 @@
 .app-card__bookmark-button--saved {
   color: var(--color-primary-400);
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .app-card,
+  .app-card:hover,
+  .app-card__bookmark-button,
+  .app-card__bookmark-button:hover {
+    transition: none !important;
+    transform: none !important;
+  }
+}

@@ -51,8 +51,50 @@ export const AppDetailPage: React.FC = () => {
 
       // Track non-blocking page view analytics
       void analyticsService.trackView(app.id);
+
+      // JSON-LD structured data for SEO rich snippets
+      const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'SoftwareApplication',
+        name: app.name,
+        description: app.shortDescription,
+        applicationCategory: app.primaryCategory,
+        operatingSystem: app.platforms.join(', '),
+        author: {
+          '@type': 'Person',
+          name: 'Sourav',
+          url: 'https://elsesourav.com',
+        },
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+          priceCurrency: 'USD',
+        },
+        aggregateRating: app.stats.ratingAverage
+          ? {
+              '@type': 'AggregateRating',
+              ratingValue: app.stats.ratingAverage.toFixed(1),
+              bestRating: '5',
+              ratingCount: data?.ratings.aggregate?.ratingCount || 1,
+            }
+          : undefined,
+      };
+
+      let scriptTag = document.getElementById('json-ld-app-data') as HTMLScriptElement | null;
+      if (!scriptTag) {
+        scriptTag = document.createElement('script');
+        scriptTag.id = 'json-ld-app-data';
+        scriptTag.type = 'application/ld+json';
+        document.head.appendChild(scriptTag);
+      }
+      scriptTag.textContent = JSON.stringify(jsonLd);
     }
-  }, [app, isUnpublished]);
+
+    return () => {
+      const tag = document.getElementById('json-ld-app-data');
+      if (tag) tag.remove();
+    };
+  }, [app, isUnpublished, data?.ratings.aggregate?.ratingCount]);
 
   const saved = app ? isSaved(app.id) : false;
   const smartAction: SmartAction | null = app ? resolveSmartAction(app) : null;

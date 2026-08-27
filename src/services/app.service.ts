@@ -8,7 +8,7 @@ import {
   type CreateAppDto,
   type UpdateAppDto,
 } from '@/repositories';
-import { err } from '@/lib/result';
+import { ok, err } from '@/lib/result';
 import { AppError as ErrorFactory } from '@/lib/errors';
 
 export type { CreateAppDto, UpdateAppDto };
@@ -36,6 +36,12 @@ export interface IAppService {
     tag: string,
     options?: QueryOptions
   ): Promise<Result<PaginatedResult<App>, AppError>>;
+  getRelatedApps(
+    appId: string,
+    category: string,
+    tags?: readonly string[],
+    limit?: number
+  ): Promise<Result<App[], AppError>>;
 }
 
 export class AppService implements IAppService {
@@ -155,6 +161,43 @@ export class AppService implements IAppService {
     options?: QueryOptions
   ): Promise<Result<PaginatedResult<App>, AppError>> {
     return this.appRepo.listByTag(tag, options);
+  }
+
+  public async getRelatedApps(
+    appId: string,
+    category: string,
+    tags?: readonly string[],
+    limit = 3
+  ): Promise<Result<App[], AppError>> {
+    // 1. Query same category published apps
+    const catResult = await this.appRepo.listByCategory(category, { limit: limit + 2 });
+    if (!catResult.success) {
+      return catResult;
+    }
+
+    const filtered = catResult.data.items.filter((a) => a.id !== appId && a.status === 'published');
+
+    // 2. If needed, supplement with tag matches
+    if (filtered.length < limit && tags && tags.length > 0) {
+      for (const tag of tags) {
+        if (filtered.length >= limit) break;
+        const tagResult = await this.appRepo.listByTag(tag, { limit });
+        if (tagResult.success) {
+          for (const item of tagResult.data.items) {
+            if (
+              item.id !== appId &&
+              item.status === 'published' &&
+              !filtered.some((existing) => existing.id === item.id)
+            ) {
+              filtered.push(item);
+              if (filtered.length >= limit) break;
+            }
+          }
+        }
+      }
+    }
+
+    return ok(filtered.slice(0, limit));
   }
 }
 

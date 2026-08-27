@@ -104,7 +104,7 @@ export function useAppDetails(slugOrId?: string): UseAppDetailsReturn {
         feedbackService.getAppRatingAggregate(appId),
         feedbackService.getApprovedReviews(appId, { limit: 10 }),
         userId ? feedbackService.getUserReview(userId, appId) : Promise.resolve(null),
-        appService.listAppsByCategory(app.primaryCategory, { limit: 4 }),
+        appService.getRelatedApps(app.id, app.primaryCategory, app.tags, 3),
         userId ? userLibraryService.isAppSaved(userId, appId) : Promise.resolve(ok(false)),
       ]);
 
@@ -118,10 +118,8 @@ export function useAppDetails(slugOrId?: string): UseAppDetailsReturn {
       const allTags = !isErr(tagsResult) ? [...tagsResult.data.items] : [];
       const appTags = allTags.filter((t) => app.tags.includes(t.slug) || app.tags.includes(t.name));
 
-      // Filter related apps to exclude current app
-      const relatedApps = !isErr(relatedAppsResult)
-        ? relatedAppsResult.data.items.filter((a) => a.id !== app.id)
-        : [];
+      // Related apps
+      const relatedApps = !isErr(relatedAppsResult) ? [...relatedAppsResult.data] : [];
 
       const compositeData: AppDetailsData = {
         app,
