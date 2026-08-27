@@ -28,6 +28,10 @@
   pointer-events: none;
 }
 
+.ui-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
 /* Button Sizes */
 .ui-btn--sm {
   font-size: var(--font-size-caption);

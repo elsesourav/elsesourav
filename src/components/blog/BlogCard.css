@@ -30,6 +30,10 @@
   box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.4);
 }
 
+.blog-card:active {
+  transform: translateY(-1px) scale(0.99);
+}
+
 .blog-card:focus-visible {
   outline: 2px solid var(--color-primary-500);
   outline-offset: 2px;

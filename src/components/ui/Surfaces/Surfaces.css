@@ -49,6 +49,10 @@
   box-shadow: var(--shadow-xl);
 }
 
+.ui-card--interactive:active {
+  transform: translateY(0) scale(0.99);
+}
+
 /* GlassCard Specific */
 .ui-glass-card--blur-sm {
   backdrop-filter: blur(var(--glass-blur-sm));
