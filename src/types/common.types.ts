@@ -7,6 +7,13 @@ export type ID = string;
 export type Timestamp = number;
 
 /**
+ * Standard Schema Evolution & Versioning Mixin
+ */
+export interface SchemaVersioned {
+  readonly schemaVersion?: number;
+}
+
+/**
  * Standard Pagination Request & Response
  */
 export interface PaginationParams {

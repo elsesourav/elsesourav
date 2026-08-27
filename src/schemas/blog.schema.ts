@@ -9,6 +9,9 @@ export const blogSlugSchema = z
     'Slug must be lowercase alphanumeric characters separated by single hyphens'
   );
 
+export const blogPostStatusSchema = z.enum(['draft', 'published', 'archived']);
+export const blogStatusSchema = blogPostStatusSchema;
+
 // =============================================================================
 // BLOG CATEGORY SCHEMAS
 // =============================================================================

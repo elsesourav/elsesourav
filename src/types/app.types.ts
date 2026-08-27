@@ -90,6 +90,7 @@ export interface App {
   readonly isFeatured: boolean;
   readonly isPinned: boolean;
   readonly sortOrder: number;
+  readonly schemaVersion?: number;
   readonly publishedAt?: Timestamp;
   readonly createdAt: Timestamp;
   readonly updatedAt: Timestamp;

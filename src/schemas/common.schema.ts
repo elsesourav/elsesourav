@@ -12,6 +12,29 @@ export const SlugSchema = z
 
 export const TimestampSchema = z.number().int().nonnegative();
 
+export const SchemaVersionSchema = z.number().int().min(1).default(1);
+
+export const FlexibleTimestampSchema = z
+  .union([
+    z.number().int().nonnegative(),
+    z.string(),
+    z.object({
+      seconds: z.number(),
+      nanoseconds: z.number().optional(),
+    }),
+  ])
+  .transform((val) => {
+    if (typeof val === 'number') return val;
+    if (typeof val === 'string') {
+      const parsed = Date.parse(val);
+      return !isNaN(parsed) ? parsed : Date.now();
+    }
+    if (typeof val === 'object' && val !== null && 'seconds' in val) {
+      return val.seconds * 1000 + Math.floor(((val as { nanoseconds?: number }).nanoseconds || 0) / 1000000);
+    }
+    return Date.now();
+  });
+
 export const EmailSchema = z.string().email('Invalid email address');
 
 export const PaginationParamsSchema = z.object({

@@ -37,6 +37,7 @@ export interface HelpArticle {
   readonly createdAt: Timestamp;
   readonly updatedAt: Timestamp;
   readonly publishedAt?: Timestamp;
+  readonly schemaVersion?: number;
   readonly archivedAt?: Timestamp;
   readonly deletedAt?: Timestamp;
   readonly seoTitle?: string;

@@ -63,6 +63,7 @@ export interface BlogPost {
   readonly canonicalUrl?: string;
   readonly socialImageUrl?: string;
   readonly publishedAt?: Timestamp;
+  readonly schemaVersion?: number;
   readonly createdAt: Timestamp;
   readonly updatedAt: Timestamp;
   readonly archivedAt?: Timestamp;
