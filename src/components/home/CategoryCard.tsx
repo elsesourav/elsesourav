@@ -1,76 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Wrench,
-  Layers,
-  Globe,
-  Puzzle,
-  Gamepad2,
-  Sparkles,
-  FlaskConical,
-  Smartphone,
-  Folder,
-  ArrowRight,
-} from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import type { Category } from '@/types/category.types';
 import { analyticsService } from '@/services/analytics.service';
 import { ROUTES } from '@/constants/routes';
+import { getCategoryIcon } from './category-icon.utils';
 import './CategoryCard.css';
 
 export interface CategoryCardProps {
   readonly category: Category;
   readonly onClick?: () => void;
-}
-
-export function getCategoryIcon(slug: string, name: string): React.ReactNode {
-  const normalized = (slug + ' ' + name).toLowerCase();
-
-  if (
-    normalized.includes('developer') ||
-    normalized.includes('dev') ||
-    normalized.includes('tool')
-  ) {
-    return <Wrench size={22} />;
-  }
-  if (normalized.includes('util') || normalized.includes('productiv')) {
-    return <Layers size={22} />;
-  }
-  if (normalized.includes('web') || normalized.includes('cloud') || normalized.includes('online')) {
-    return <Globe size={22} />;
-  }
-  if (
-    normalized.includes('extension') ||
-    normalized.includes('chrome') ||
-    normalized.includes('plugin')
-  ) {
-    return <Puzzle size={22} />;
-  }
-  if (normalized.includes('game') || normalized.includes('gaming') || normalized.includes('play')) {
-    return <Gamepad2 size={22} />;
-  }
-  if (
-    normalized.includes('ai') ||
-    normalized.includes('machine') ||
-    normalized.includes('intelligence')
-  ) {
-    return <Sparkles size={22} />;
-  }
-  if (
-    normalized.includes('experiment') ||
-    normalized.includes('lab') ||
-    normalized.includes('beta')
-  ) {
-    return <FlaskConical size={22} />;
-  }
-  if (
-    normalized.includes('mobile') ||
-    normalized.includes('android') ||
-    normalized.includes('ios')
-  ) {
-    return <Smartphone size={22} />;
-  }
-
-  return <Folder size={22} />;
 }
 
 export const CategoryCard: React.FC<CategoryCardProps> = ({ category, onClick }) => {

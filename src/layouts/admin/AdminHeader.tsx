@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Menu,
   ExternalLink,
@@ -38,6 +38,7 @@ const ROUTE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
 
 export const AdminHeader: React.FC<AdminHeaderProps> = ({ onOpenMobileMenu, isMobileOpen }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, authUser, signOut } = useAuth();
   const { themeMode, setThemeMode } = useTheme();
 
@@ -87,7 +88,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ onOpenMobileMenu, isMo
       label: 'View Public Site',
       icon: <ExternalLink size={15} aria-hidden="true" />,
       onClick: () => {
-        window.location.href = ROUTES.HOME;
+        navigate(ROUTES.HOME);
       },
     },
     {
@@ -95,7 +96,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ onOpenMobileMenu, isMo
       label: 'Account Settings',
       icon: <Settings size={15} aria-hidden="true" />,
       onClick: () => {
-        window.location.href = ROUTES.SETTINGS;
+        navigate(ROUTES.SETTINGS);
       },
     },
     {

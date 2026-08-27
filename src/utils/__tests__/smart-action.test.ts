@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { isSafeUrl, resolveSmartAction } from '../smart-action';
+import { resolveSmartAction } from '../smart-action';
+import { isSafeExternalUrl } from '../url-safety';
 import type { App, AppLink } from '@/types/app.types';
 
 const baseApp: App = {
@@ -24,22 +25,22 @@ const baseApp: App = {
 };
 
 describe('Smart Action Resolver & Security (smart-action.ts)', () => {
-  describe('isSafeUrl URL Security Validation', () => {
+  describe('isSafeExternalUrl URL Security Validation', () => {
     it('accepts valid HTTPS and HTTP URLs', () => {
-      expect(isSafeUrl('https://elsesourav.com')).toBe(true);
-      expect(isSafeUrl('https://chrome.google.com/webstore/detail/123')).toBe(true);
-      expect(isSafeUrl('http://localhost:3000')).toBe(true);
+      expect(isSafeExternalUrl('https://elsesourav.com')).toBe(true);
+      expect(isSafeExternalUrl('https://chrome.google.com/webstore/detail/123')).toBe(true);
+      expect(isSafeExternalUrl('http://localhost:3000')).toBe(true);
     });
 
     it('rejects unsafe schemes like javascript:, data:, vbscript:', () => {
-      expect(isSafeUrl('javascript:alert(1)')).toBe(false);
-      expect(isSafeUrl('data:text/html,<script>alert(1)</script>')).toBe(false);
-      expect(isSafeUrl('vbscript:msgbox("hello")')).toBe(false);
-      expect(isSafeUrl('file:///etc/passwd')).toBe(false);
-      expect(isSafeUrl('')).toBe(false);
-      expect(isSafeUrl(null)).toBe(false);
-      expect(isSafeUrl(undefined)).toBe(false);
-      expect(isSafeUrl('not a url')).toBe(false);
+      expect(isSafeExternalUrl('javascript:alert(1)')).toBe(false);
+      expect(isSafeExternalUrl('data:text/html,<script>alert(1)</script>')).toBe(false);
+      expect(isSafeExternalUrl('vbscript:msgbox("hello")')).toBe(false);
+      expect(isSafeExternalUrl('file:///etc/passwd')).toBe(false);
+      expect(isSafeExternalUrl('')).toBe(false);
+      expect(isSafeExternalUrl(null)).toBe(false);
+      expect(isSafeExternalUrl(undefined)).toBe(false);
+      expect(isSafeExternalUrl('not a url')).toBe(false);
     });
   });
 

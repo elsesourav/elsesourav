@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate, useLocation, Outlet } from 'react-router-dom';
+import { Navigate, useLocation, Outlet, Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { LoadingFallback } from '@/components/feedback/LoadingFallback';
 import { ErrorState, Button } from '@/components';
@@ -38,16 +38,11 @@ export const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
           title="Admin Access Required"
           description="This section is restricted to the platform administrator. You do not have sufficient permissions to view this portal."
           action={
-            <Button
-              variant="primary"
-              size="sm"
-              leftIcon={<Home size={15} />}
-              onClick={() => {
-                window.location.href = ROUTES.HOME;
-              }}
-            >
-              Return to Home
-            </Button>
+            <Link to={ROUTES.HOME}>
+              <Button variant="primary" size="sm" leftIcon={<Home size={15} />}>
+                Return to Home
+              </Button>
+            </Link>
           }
         />
       </div>

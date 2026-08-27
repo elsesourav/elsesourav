@@ -4,4 +4,5 @@ export {
   type LatestUpdateItem,
 } from './LatestUpdateCard';
 
-export { CategoryCard, type CategoryCardProps, getCategoryIcon } from './CategoryCard';
+export { CategoryCard, type CategoryCardProps } from './CategoryCard';
+export { getCategoryIcon } from './category-icon.utils';

@@ -1,36 +1,11 @@
 import React, { useState } from 'react';
 import { Copy, Check } from 'lucide-react';
+import { isSafeUrl } from '@/utils/url-safety';
 import './BlogContentRenderer.css';
 
 interface BlogContentRendererProps {
   content: string;
   className?: string;
-}
-
-/**
- * Checks if a URL is safe for href or src attribute.
- * Only http, https, mailto, or relative root paths are allowed.
- * Blocks javascript:, data:, vbscript:, etc.
- */
-export function isSafeUrl(url: string): boolean {
-  if (!url || typeof url !== 'string') return false;
-  const trimmed = url.trim().toLowerCase();
-
-  if (
-    trimmed.startsWith('javascript:') ||
-    trimmed.startsWith('data:') ||
-    trimmed.startsWith('vbscript:')
-  ) {
-    return false;
-  }
-
-  return (
-    trimmed.startsWith('http://') ||
-    trimmed.startsWith('https://') ||
-    trimmed.startsWith('mailto:') ||
-    trimmed.startsWith('/') ||
-    trimmed.startsWith('#')
-  );
 }
 
 /**

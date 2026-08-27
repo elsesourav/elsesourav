@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { CategoryCard, getCategoryIcon } from '../CategoryCard';
+import { CategoryCard } from '../CategoryCard';
+import { getCategoryIcon } from '../category-icon.utils';
 import { analyticsService } from '@/services/analytics.service';
 import type { Category } from '@/types/category.types';
 

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { BlogContentRenderer, isSafeUrl } from '../BlogContentRenderer';
+import { BlogContentRenderer } from '../BlogContentRenderer';
+import { isSafeUrl } from '@/utils/url-safety';
 
 describe('BlogContentRenderer & Content Safety', () => {
   it('1. isSafeUrl validates URLs securely and rejects javascript/data schemes', () => {

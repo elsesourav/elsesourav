@@ -1,4 +1,5 @@
 import type { App, AppLink, AppPlatform, AppActionType } from '@/types/app.types';
+import { isSafeExternalUrl } from './url-safety';
 
 export type SmartActionIconType =
   'external' | 'download' | 'chrome' | 'play' | 'apple' | 'github' | 'arrow' | 'globe';
@@ -15,24 +16,6 @@ export interface SmartAction {
   readonly target: '_blank' | '_self';
   readonly rel: 'noopener noreferrer' | undefined;
   readonly linkId?: string;
-}
-
-/**
- * Validates whether a given URL is safe to open in the browser.
- * Only allows HTTP and HTTPS protocols; rejects javascript:, data:, vbscript:, etc.
- */
-export function isSafeUrl(url?: string | null): boolean {
-  if (!url || typeof url !== 'string') return false;
-
-  const trimmed = url.trim();
-  if (!trimmed) return false;
-
-  try {
-    const parsed = new URL(trimmed);
-    return parsed.protocol === 'https:' || parsed.protocol === 'http:';
-  } catch {
-    return false;
-  }
 }
 
 /**
@@ -60,7 +43,7 @@ export function resolveSmartAction(app: App, linkOverride?: AppLink): SmartActio
     };
   }
 
-  const safe = isSafeUrl(activeLink.url);
+  const safe = isSafeExternalUrl(activeLink.url);
 
   // Platform to label & icon mapping
   switch (activeLink.platform) {
