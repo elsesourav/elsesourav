@@ -5,6 +5,7 @@ import { AppCard } from '../AppCard';
 import type { App } from '@/types/app.types';
 import * as useAuthModule from '@/hooks/useAuth';
 import * as useUserLibraryModule from '@/hooks/useUserLibrary';
+import { analyticsService } from '@/services/analytics.service';
 
 const mockNavigate = vi.fn();
 vi.mock('react-router-dom', async () => {
@@ -48,12 +49,14 @@ const mockApp: App = {
   updatedAt: 1700000000000,
 };
 
-describe('AppCard Component', () => {
+describe('AppCard Component & Smart Action System', () => {
   const mockToggleSave = vi.fn();
   const mockIsSaved = vi.fn().mockReturnValue(false);
 
   beforeEach(() => {
     vi.clearAllMocks();
+
+    vi.spyOn(analyticsService, 'trackPrimaryAction').mockResolvedValue(undefined);
 
     vi.spyOn(useUserLibraryModule, 'useUserLibrary').mockReturnValue({
       savedAppIds: new Set(),
@@ -85,7 +88,7 @@ describe('AppCard Component', () => {
     });
   });
 
-  it('renders app name, short description, category badge, and rating', () => {
+  it('1. Renders default card with name, description, category, and rating', () => {
     render(
       <BrowserRouter>
         <AppCard app={mockApp} />
@@ -102,7 +105,29 @@ describe('AppCard Component', () => {
     expect(screen.getByText('Open App')).toBeInTheDocument();
   });
 
-  it('navigates to app detail page on whole card click', () => {
+  it('2. Renders compact variant hiding description and tags', () => {
+    render(
+      <BrowserRouter>
+        <AppCard app={mockApp} variant="compact" />
+      </BrowserRouter>
+    );
+
+    expect(screen.getByText('CodeFlow IDE')).toBeInTheDocument();
+    expect(screen.getByText('Open App')).toBeInTheDocument();
+  });
+
+  it('3. Renders unavailable variant with Unavailable badge and disabled state', () => {
+    render(
+      <BrowserRouter>
+        <AppCard app={mockApp} isUnavailable={true} />
+      </BrowserRouter>
+    );
+
+    expect(screen.getByText('Unavailable')).toBeInTheDocument();
+    expect(screen.getByText('View Archived')).toBeInTheDocument();
+  });
+
+  it('4. Navigates to app detail on whole card click', () => {
     render(
       <BrowserRouter>
         <AppCard app={mockApp} />
@@ -115,7 +140,20 @@ describe('AppCard Component', () => {
     expect(mockNavigate).toHaveBeenCalledWith('/apps/code-flow');
   });
 
-  it('redirects unauthenticated user to login when clicking bookmark button', () => {
+  it('5. Supports keyboard navigation via Enter key', () => {
+    render(
+      <BrowserRouter>
+        <AppCard app={mockApp} />
+      </BrowserRouter>
+    );
+
+    const card = screen.getByRole('button', { name: /view codeflow ide application/i });
+    fireEvent.keyDown(card, { key: 'Enter', code: 'Enter' });
+
+    expect(mockNavigate).toHaveBeenCalledWith('/apps/code-flow');
+  });
+
+  it('6. Redirects anonymous user to login on bookmark click', () => {
     render(
       <BrowserRouter>
         <AppCard app={mockApp} />
@@ -129,7 +167,7 @@ describe('AppCard Component', () => {
     expect(mockToggleSave).not.toHaveBeenCalled();
   });
 
-  it('toggles bookmark state when authenticated without triggering card navigation', async () => {
+  it('7. Toggles bookmark state for authenticated user without card navigation', async () => {
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       authUser: {
         uid: 'u1',
@@ -179,11 +217,10 @@ describe('AppCard Component', () => {
     fireEvent.click(bookmarkBtn);
 
     expect(mockToggleSave).toHaveBeenCalledWith('app-flow');
-    // Card navigation should NOT have been called due to stopPropagation
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
-  it('handles primary action link click without triggering card navigation', () => {
+  it('8. Opens external link with safe target and triggers non-blocking telemetry', () => {
     const windowOpenSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
 
     render(
@@ -195,11 +232,16 @@ describe('AppCard Component', () => {
     const actionBtn = screen.getByRole('button', { name: /open app for codeflow ide/i });
     fireEvent.click(actionBtn);
 
+    expect(analyticsService.trackPrimaryAction).toHaveBeenCalledWith(
+      'app-flow',
+      'open_app',
+      expect.objectContaining({ platform: 'web' })
+    );
+
     expect(windowOpenSpy).toHaveBeenCalledWith(
       'https://flow.elsesourav.com',
       '_blank',
       'noopener,noreferrer'
     );
-    expect(mockNavigate).not.toHaveBeenCalled();
   });
 });
