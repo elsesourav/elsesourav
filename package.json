@@ -22,9 +22,13 @@
     "test:security": "vitest run src/tests/security-threat-scenarios.test.ts src/tests/firestore-rules.test.ts",
     "test:a11y": "vitest run src/tests/accessibility-audit.test.tsx",
     "test:rules": "vitest run src/tests/firestore-rules.test.ts",
-    "validate": "npm run typecheck && npm run lint && npm run test && npm run build"
+    "validate": "npm run typecheck && npm run lint && npm run test && npm run build",
+    "mobile:sync": "cap sync",
+    "mobile:open:android": "cap open android",
+    "mobile:open:ios": "cap open ios"
   },
   "dependencies": {
+    "@capacitor/core": "^8.5.0",
     "firebase": "^12.18.0",
     "lucide-react": "^1.16.0",
     "react": "^19.0.0",
@@ -33,6 +37,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.5.0",
     "@eslint/js": "^9.20.0",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.2",

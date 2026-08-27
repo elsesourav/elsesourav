@@ -20,4 +20,6 @@ export * from './error-logger.service';
 export * from './pwa.service';
 export * from './performance-telemetry.service';
 export * from './health-check.service';
+export * from './native-bridge.service';
+
 
