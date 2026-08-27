@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { AppRoutes } from '@/routes/AppRoutes';
@@ -99,7 +99,10 @@ describe('Global Application Shell, Routing & Navigation', () => {
 
       expect(screen.getByLabelText('ElseSourav Home')).toBeInTheDocument();
       expect(
-        screen.getByRole('heading', { level: 1, name: /ElseSourav Developer & App Platform/i })
+        screen.getByRole('heading', {
+          level: 1,
+          name: /serious software, built by someone who cares/i,
+        })
       ).toBeInTheDocument();
       expect(screen.getByText(/All rights reserved/i)).toBeInTheDocument();
     });
@@ -139,12 +142,13 @@ describe('Global Application Shell, Routing & Navigation', () => {
       const searchBtn = screen.getByLabelText(/Search apps, tools, and documentation/i);
       await user.click(searchBtn);
 
-      expect(screen.getByRole('dialog', { name: /Search ElseSourav/i })).toBeInTheDocument();
+      const dialog = screen.getByRole('dialog', { name: /Search ElseSourav/i });
+      expect(dialog).toBeInTheDocument();
 
       const searchInput = screen.getByPlaceholderText(/Search apps, tools, categories, articles/i);
       await user.type(searchInput, 'Extension');
 
-      expect(screen.getByText('Browser Extensions')).toBeInTheDocument();
+      expect(within(dialog).getByText('Browser Extensions')).toBeInTheDocument();
     });
   });
 

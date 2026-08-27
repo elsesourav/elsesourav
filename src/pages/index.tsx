@@ -9,14 +9,7 @@ import { ROUTES } from '@/constants/routes';
 // PUBLIC PAGES
 // =============================================================================
 
-export const HomePage: React.FC = () => (
-  <PlaceholderPage
-    title="ElseSourav Developer & App Platform"
-    description="Discover high-quality web applications, Chrome extensions, Android apps, developer utilities, games, and open-source software built by Sourav."
-    badge="Home"
-  />
-);
-
+export { HomePage } from './HomePage';
 export { AppsPage } from './AppsPage';
 export { AppDetailPage } from './AppDetailPage';
 
