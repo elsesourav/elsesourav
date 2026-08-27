@@ -5,6 +5,7 @@ import { Button, Badge, Skeleton, ErrorState } from '@/components';
 import { AppCard } from '@/components/apps';
 import { LatestUpdateCard, CategoryCard } from '@/components/home';
 import { useFeaturedApps, useTrendingApps, useLatestApps, useCategories } from '@/hooks';
+import { creatorConfig } from '@/config';
 import { ROUTES } from '@/constants/routes';
 import './HomePage.css';
 
@@ -335,23 +336,19 @@ export const HomePage: React.FC = () => {
       <section className="home-section" aria-labelledby="creator-heading">
         <div className="home-creator-card">
           <div className="home-creator-card__avatar" aria-hidden="true">
-            S
+            {creatorConfig.initials}
           </div>
 
           <div className="home-creator-card__info">
             <h2 id="creator-heading" className="home-creator-card__title">
-              Crafted with Care by Sourav
+              Crafted with Care by {creatorConfig.name}
             </h2>
-            <p className="home-creator-card__bio">
-              ElseSourav is an independent digital laboratory. Every application here is built
-              without bloated dependencies, intrusive tracking, or artificial paywalls — focusing on
-              speed, clean design, and long-term utility.
-            </p>
+            <p className="home-creator-card__bio">{creatorConfig.bioParagraphs[0]}</p>
 
             <div className="home-creator-card__footer">
               <Link to={ROUTES.ABOUT}>
                 <Button variant="secondary" size="sm" rightIcon={<Compass size={16} />}>
-                  Read the Creator Story
+                  About {creatorConfig.name}
                 </Button>
               </Link>
             </div>

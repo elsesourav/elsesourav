@@ -51,13 +51,7 @@ export const BlogPostPage: React.FC = () => {
   );
 };
 
-export const AboutPage: React.FC = () => (
-  <PlaceholderPage
-    title="About ElseSourav"
-    description="Learn more about Sourav, the philosophy behind the platform, and the technologies powering these apps."
-    badge="About"
-  />
-);
+export { AboutPage } from './AboutPage';
 
 export const SupportPage: React.FC = () => (
   <PlaceholderPage
