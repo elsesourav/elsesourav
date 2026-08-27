@@ -1,6 +1,7 @@
 import { FirestoreRepository } from './firestore.repository';
 import { createAppSchema, updateAppSchema } from '@/schemas/app.schema';
 import { isErr, ok } from '@/lib/result';
+import type { IAppRepository } from './interfaces';
 import type { App, AppCategory, AppPlatform } from '@/types/app.types';
 import type {
   QueryOptions,
@@ -12,19 +13,6 @@ import type { z } from 'zod';
 
 export type CreateAppDto = z.infer<typeof createAppSchema>;
 export type UpdateAppDto = z.infer<typeof updateAppSchema>;
-
-export interface IAppRepository {
-  findById(id: string): RepositoryResult<App | null>;
-  findBySlug(slug: string): RepositoryResult<App | null>;
-  findFeatured(limit?: number): PaginatedRepositoryResult<App>;
-  findByCategory(category: AppCategory, limit?: number): PaginatedRepositoryResult<App>;
-  findByPlatform(platform: AppPlatform, limit?: number): PaginatedRepositoryResult<App>;
-  findByTag(tag: string, limit?: number): PaginatedRepositoryResult<App>;
-  findPublished(options?: QueryOptions): PaginatedRepositoryResult<App>;
-  create(data: CreateAppDto, customId?: string): RepositoryResult<App>;
-  update(id: string, data: UpdateAppDto): RepositoryResult<App>;
-  delete(id: string): RepositoryResult<void>;
-}
 
 export class FirestoreAppRepository
   extends FirestoreRepository<App, CreateAppDto, UpdateAppDto>

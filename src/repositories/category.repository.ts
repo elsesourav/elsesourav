@@ -1,6 +1,7 @@
 import { FirestoreRepository } from './firestore.repository';
 import { createCategorySchema, updateCategorySchema } from '@/schemas/category.schema';
 import { isErr, ok } from '@/lib/result';
+import type { ICategoryRepository } from './interfaces';
 import type { BaseEntity, RepositoryResult, PaginatedRepositoryResult } from './types';
 import type { ID, Timestamp } from '@/types/common.types';
 import type { z } from 'zod';
@@ -19,15 +20,6 @@ export interface CategoryEntity extends BaseEntity {
 
 export type CreateCategoryDto = z.infer<typeof createCategorySchema>;
 export type UpdateCategoryDto = z.infer<typeof updateCategorySchema>;
-
-export interface ICategoryRepository {
-  findById(id: string): RepositoryResult<CategoryEntity | null>;
-  findBySlug(slug: string): RepositoryResult<CategoryEntity | null>;
-  findActive(): PaginatedRepositoryResult<CategoryEntity>;
-  create(data: CreateCategoryDto, customId?: string): RepositoryResult<CategoryEntity>;
-  update(id: string, data: UpdateCategoryDto): RepositoryResult<CategoryEntity>;
-  delete(id: string): RepositoryResult<void>;
-}
 
 export class CategoryRepository
   extends FirestoreRepository<CategoryEntity, CreateCategoryDto, UpdateCategoryDto>
