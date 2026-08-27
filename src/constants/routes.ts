@@ -29,6 +29,8 @@ export const ROUTES = {
     APPS: '/admin/apps',
     CATEGORIES: '/admin/categories',
     BLOG: '/admin/blog',
+    BLOG_NEW: '/admin/blog/new',
+    BLOG_EDIT: '/admin/blog/:id/edit',
     HELP: '/admin/help',
     SUPPORT: '/admin/support',
     ANALYTICS: '/admin/analytics',

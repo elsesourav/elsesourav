@@ -165,13 +165,8 @@ export const AdminCategoriesPage: React.FC = () => (
   />
 );
 
-export const AdminBlogPage: React.FC = () => (
-  <PlaceholderPage
-    title="Manage Blog Articles"
-    description="Write and publish devlogs, tutorials, and release announcement posts."
-    badge="Admin - Blog"
-  />
-);
+export { AdminBlogPage } from './admin/AdminBlogPage';
+export { AdminBlogEditorPage } from './admin/AdminBlogEditorPage';
 
 export const AdminHelpPage: React.FC = () => (
   <PlaceholderPage
