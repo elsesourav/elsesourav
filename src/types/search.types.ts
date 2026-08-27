@@ -25,3 +25,37 @@ export interface AppSearchResult {
 export interface IAppSearchProvider {
   searchApps(filters: AppSearchFilters): Promise<Result<AppSearchResult, AppError>>;
 }
+
+/**
+ * Global Platform Search Types
+ */
+export type GlobalSearchResultType = 'app' | 'blog_post' | 'help_article';
+
+export interface GlobalSearchResultItem {
+  readonly id: string;
+  readonly type: GlobalSearchResultType;
+  readonly title: string;
+  readonly description: string;
+  readonly destination: string;
+  readonly category?: string;
+  readonly iconUrl?: string;
+  readonly iconName?: string;
+  readonly badges?: readonly string[];
+  readonly publishedAt?: number;
+  readonly metadata?: Record<string, unknown>;
+}
+
+export interface GlobalSearchResult {
+  readonly query: string;
+  readonly apps: readonly GlobalSearchResultItem[];
+  readonly blogPosts: readonly GlobalSearchResultItem[];
+  readonly helpArticles: readonly GlobalSearchResultItem[];
+  readonly totalCount: number;
+}
+
+export interface GlobalSearchFilters {
+  readonly query: string;
+  readonly type?: GlobalSearchResultType | 'all';
+  readonly category?: string;
+  readonly limit?: number;
+}

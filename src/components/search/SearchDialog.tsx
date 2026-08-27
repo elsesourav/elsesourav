@@ -78,6 +78,12 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({ isOpen, onClose }) =
           placeholder="Search apps, tools, categories, articles..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && query.trim()) {
+              e.preventDefault();
+              handleSelect(`/search?q=${encodeURIComponent(query.trim())}`);
+            }
+          }}
           leftIcon={<Search size={16} />}
           rightIcon={
             query ? (
@@ -103,7 +109,7 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({ isOpen, onClose }) =
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
           <Text variant="muted" size="xs" weight="medium">
-            {query.trim() ? 'Search Results' : 'Quick Navigation'}
+            {query.trim() ? 'Quick Suggestions' : 'Quick Navigation'}
           </Text>
 
           {filtered.length === 0 ? (
@@ -152,6 +158,31 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({ isOpen, onClose }) =
                 </div>
               </button>
             ))
+          )}
+
+          {query.trim() && (
+            <button
+              type="button"
+              onClick={() => handleSelect(`/search?q=${encodeURIComponent(query.trim())}`)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: 'var(--space-2) var(--space-3)',
+                borderRadius: 'var(--radius-md)',
+                backgroundColor: 'rgba(99, 102, 241, 0.08)',
+                border: '1px solid rgba(99, 102, 241, 0.2)',
+                color: 'var(--color-brand-primary, #6366f1)',
+                cursor: 'pointer',
+                textAlign: 'left',
+                marginTop: 'var(--space-2)',
+                fontWeight: 'var(--font-weight-medium)',
+                fontSize: 'var(--font-size-xs)',
+              }}
+            >
+              <span>Search everything for &ldquo;{query.trim()}&rdquo;</span>
+              <ArrowRight size={13} />
+            </button>
           )}
         </div>
 

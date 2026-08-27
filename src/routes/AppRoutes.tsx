@@ -6,6 +6,7 @@ import { AdminRoute } from '@/components/routes/AdminRoute';
 import { ROUTES } from '@/constants/routes';
 import {
   HomePage,
+  SearchPage,
   AppsPage,
   AppDetailPage,
   CategoriesPage,
@@ -50,6 +51,7 @@ export const AppRoutes: React.FC = () => {
       <Route element={<AppLayout />}>
         {/* Public Routes */}
         <Route path={ROUTES.HOME} element={<HomePage />} />
+        <Route path={ROUTES.SEARCH} element={<SearchPage />} />
         <Route path={ROUTES.APPS} element={<AppsPage />} />
         <Route path={ROUTES.APP_DETAIL} element={<AppDetailPage />} />
         <Route path={ROUTES.CATEGORIES} element={<CategoriesPage />} />

@@ -3,6 +3,7 @@
  */
 export const ROUTES = {
   HOME: '/',
+  SEARCH: '/search',
   APPS: '/apps',
   APP_DETAIL: '/apps/:slug',
   CATEGORIES: '/categories',

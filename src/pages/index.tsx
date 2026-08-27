@@ -10,6 +10,7 @@ import { ROUTES } from '@/constants/routes';
 // =============================================================================
 
 export { HomePage } from './HomePage';
+export { SearchPage } from './SearchPage';
 export { AppsPage } from './AppsPage';
 export { AppDetailPage } from './AppDetailPage';
 
