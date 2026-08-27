@@ -2,15 +2,15 @@ import type { App } from '@/types/app.types';
 import type { BlogPost } from '@/types/blog.types';
 import type { HelpArticle } from '@/types/help.types';
 import type { SEOConfig } from '@/types/seo.types';
+import { siteConfig } from '@/config/site.config';
 
-export const SITE_ORIGIN = 'https://elsesourav.com';
-export const SITE_NAME = 'ElseSourav';
-export const DEFAULT_TAGLINE = 'Developer & Software Platform';
-export const DEFAULT_DESCRIPTION =
-  'ElseSourav — Developer and software platform publishing apps, games, extensions, tools, and engineering articles.';
-export const DEFAULT_OG_IMAGE = 'https://elsesourav.com/og-default.png';
+export const SITE_ORIGIN = siteConfig.siteOrigin;
+export const SITE_NAME = siteConfig.siteName;
+export const DEFAULT_TAGLINE = siteConfig.siteTagline;
+export const DEFAULT_DESCRIPTION = siteConfig.siteDescription;
+export const DEFAULT_OG_IMAGE = siteConfig.defaultOgImage;
 export const DEFAULT_LOCALE = 'en_US';
-export const TWITTER_HANDLE = '@elsesourav';
+export const TWITTER_HANDLE = siteConfig.twitterHandle;
 
 /**
  * Formats standard page titles: "<Title> | ElseSourav" or exact title

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { PlaceholderPage } from './PlaceholderPage';
-import { ErrorState, Button } from '@/components';
+import { ErrorState, Button, SEO } from '@/components';
 import { FileQuestion, Home } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
 
@@ -15,21 +15,35 @@ export { AppsPage } from './AppsPage';
 export { AppDetailPage } from './AppDetailPage';
 
 export const CategoriesPage: React.FC = () => (
-  <PlaceholderPage
-    title="Software Categories"
-    description="Browse apps categorized by platform, utilities, developer tools, games, and web extensions."
-    badge="Categories"
-  />
+  <>
+    <SEO
+      title="Software Categories"
+      description="Browse apps categorized by platform, utilities, developer tools, games, and web extensions."
+      canonicalPath="/categories"
+    />
+    <PlaceholderPage
+      title="Software Categories"
+      description="Browse apps categorized by platform, utilities, developer tools, games, and web extensions."
+      badge="Categories"
+    />
+  </>
 );
 
 export const CategoryDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   return (
-    <PlaceholderPage
-      title={`Category: ${slug || 'Browse'}`}
-      description={`Software and tools published under the "${slug}" category.`}
-      badge="Category View"
-    />
+    <>
+      <SEO
+        title={`Category: ${slug || 'Browse'}`}
+        description={`Software and tools published under the "${slug}" category.`}
+        canonicalPath={slug ? `/categories/${slug}` : '/categories'}
+      />
+      <PlaceholderPage
+        title={`Category: ${slug || 'Browse'}`}
+        description={`Software and tools published under the "${slug}" category.`}
+        badge="Category View"
+      />
+    </>
   );
 };
 
@@ -50,27 +64,48 @@ export { SignUpPage } from './SignUpPage';
 export { ForgotPasswordPage } from './ForgotPasswordPage';
 
 export const PrivacyPage: React.FC = () => (
-  <PlaceholderPage
-    title="Privacy Policy"
-    description="How your data and privacy are respected and protected on the ElseSourav platform."
-    badge="Legal"
-  />
+  <>
+    <SEO
+      title="Privacy Policy"
+      description="How your data and privacy are respected and protected on the ElseSourav platform."
+      canonicalPath="/privacy"
+    />
+    <PlaceholderPage
+      title="Privacy Policy"
+      description="How your data and privacy are respected and protected on the ElseSourav platform."
+      badge="Legal"
+    />
+  </>
 );
 
 export const TermsPage: React.FC = () => (
-  <PlaceholderPage
-    title="Terms of Service"
-    description="Terms and conditions governing use of ElseSourav software and services."
-    badge="Legal"
-  />
+  <>
+    <SEO
+      title="Terms of Service"
+      description="Terms and conditions governing use of ElseSourav software and services."
+      canonicalPath="/terms"
+    />
+    <PlaceholderPage
+      title="Terms of Service"
+      description="Terms and conditions governing use of ElseSourav software and services."
+      badge="Legal"
+    />
+  </>
 );
 
 export const SitemapPage: React.FC = () => (
-  <PlaceholderPage
-    title="Site Map"
-    description="Complete index of all public applications, categories, articles, and support links."
-    badge="Directory"
-  />
+  <>
+    <SEO
+      title="Site Map & Directory"
+      description="Complete index of all public applications, categories, articles, and support links."
+      canonicalPath="/sitemap"
+    />
+    <PlaceholderPage
+      title="Site Map"
+      description="Complete index of all public applications, categories, articles, and support links."
+      badge="Directory"
+    />
+  </>
 );
 
 // =============================================================================
