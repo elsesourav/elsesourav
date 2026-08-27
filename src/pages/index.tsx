@@ -84,14 +84,8 @@ export { SettingsPage } from './SettingsPage';
 // =============================================================================
 
 export { AdminDashboardPage } from './admin/AdminDashboardPage';
-
-export const AdminAppsPage: React.FC = () => (
-  <PlaceholderPage
-    title="Manage Applications"
-    description="Create, publish, update, and manage app versions, links, and screenshots."
-    badge="Admin - Apps"
-  />
-);
+export { AdminAppsPage } from './admin/AdminAppsPage';
+export { AdminAppEditorPage } from './admin/AdminAppEditorPage';
 
 export const AdminCategoriesPage: React.FC = () => (
   <PlaceholderPage
