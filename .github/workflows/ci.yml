@@ -7,38 +7,59 @@ on:
     branches: [main]
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  validate:
+  quality-gate:
     name: Typecheck, Lint, Test & Build
     runs-on: ubuntu-latest
+
+    env:
+      CI: true
+      NODE_ENV: test
+      VITE_APP_ENV: test
+      VITE_SITE_ORIGIN: https://elsesourav.com
+      VITE_FIREBASE_API_KEY: mock-ci-api-key
+      VITE_FIREBASE_AUTH_DOMAIN: mock-ci.firebaseapp.com
+      VITE_FIREBASE_PROJECT_ID: elsesourav-8c9ad
+      VITE_FIREBASE_APP_ID: 1:1234567890:web:abcdef123456
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js 22 with npm cache
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'npm'
 
-      - name: Install dependencies
+      - name: Deterministic dependency installation
         run: npm ci
 
-      - name: Verify TypeScript types
+      - name: TypeScript strict typecheck
         run: npm run typecheck
 
-      - name: Run ESLint
+      - name: ESLint code quality & security rules
         run: npm run lint
 
-      - name: Run Vitest test suite
+      - name: Vitest test suite (Unit, Integration & Regression)
         run: npm run test
 
-      - name: Run Firestore Security Rules tests
-        run: npm run test:rules
+      - name: Security threat scenarios & Firestore security rules
+        run: npm run test:security
 
-      - name: Build production bundle & generate sitemap
+      - name: Accessibility & WCAG audit tests
+        run: npm run test:a11y
+
+      - name: Build production bundle & sitemap
         run: npm run build
+
+      - name: Archive production build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-build-artifact
+          path: dist/
+          retention-days: 7
+          if-no-files-found: error

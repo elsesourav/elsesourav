@@ -1,0 +1,70 @@
+name: Production Deployment
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for manual release dispatch'
+        required: false
+        default: 'Manual production promotion'
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  validate-and-deploy:
+    name: Production Release Gate & Deploy
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://elsesourav.com
+
+    env:
+      CI: true
+      NODE_ENV: production
+      VITE_APP_ENV: production
+      VITE_SITE_ORIGIN: https://elsesourav.com
+      VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY || 'mock-prod-key' }}
+      VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN || 'elsesourav-8c9ad.firebaseapp.com' }}
+      VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID || 'elsesourav-8c9ad' }}
+      VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID || '1:1234567890:web:abcdef123456' }}
+      VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID || '' }}
+      VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID || '' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22 with npm cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Deterministic dependency installation
+        run: npm ci
+
+      - name: Pre-deployment quality validation
+        run: |
+          npm run typecheck
+          npm run lint
+          npm run test
+          npm run test:security
+          npm run test:a11y
+
+      - name: Build verified production bundle & sitemap
+        run: npm run build
+
+      - name: Deploy to Firebase Hosting & Rules (Live Production)
+        if: env.FIREBASE_SERVICE_ACCOUNT != ''
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ELSESOURAV }}
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ELSESOURAV }}
+          projectId: elsesourav-8c9ad
+          channelId: live

@@ -1,0 +1,61 @@
+name: Preview Deployment
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+concurrency:
+  group: preview-${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    name: Build & Deploy Preview Channel
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name == github.repository
+
+    env:
+      CI: true
+      NODE_ENV: test
+      VITE_APP_ENV: staging
+      VITE_SITE_ORIGIN: https://elsesourav.com
+      VITE_FIREBASE_API_KEY: mock-ci-api-key
+      VITE_FIREBASE_AUTH_DOMAIN: mock-ci.firebaseapp.com
+      VITE_FIREBASE_PROJECT_ID: elsesourav-8c9ad
+      VITE_FIREBASE_APP_ID: 1:1234567890:web:abcdef123456
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22 with npm cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Deterministic dependency installation
+        run: npm ci
+
+      - name: Validate code quality
+        run: |
+          npm run typecheck
+          npm run lint
+          npm run test
+          npm run test:security
+
+      - name: Build preview bundle
+        run: npm run build
+
+      - name: Deploy to Firebase Hosting Preview Channel
+        if: env.FIREBASE_SERVICE_ACCOUNT != ''
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ELSESOURAV }}
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ELSESOURAV }}
+          projectId: elsesourav-8c9ad
+          channelId: pr-${{ github.event.pull_request.number }}
+          expires: 7d
