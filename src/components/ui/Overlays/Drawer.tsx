@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useId } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { cn } from '@/utils/cn';
@@ -12,6 +12,7 @@ export interface DrawerProps {
   readonly children: React.ReactNode;
   readonly placement?: DrawerPlacement;
   readonly size?: 'sm' | 'md' | 'lg' | 'full';
+  readonly position?: 'left' | 'right' | 'bottom' | 'top'; // alias for placement
 }
 
 export const Drawer: React.FC<DrawerProps> = ({
@@ -19,9 +20,13 @@ export const Drawer: React.FC<DrawerProps> = ({
   onClose,
   title,
   children,
-  placement = 'right',
+  placement,
+  position = 'right',
   size = 'md',
 }) => {
+  const titleId = useId();
+  const activePlacement = placement || position;
+
   useEffect(() => {
     if (!isOpen) return;
 
@@ -45,15 +50,20 @@ export const Drawer: React.FC<DrawerProps> = ({
       <div
         role="dialog"
         aria-modal="true"
+        aria-labelledby={title ? titleId : undefined}
         className={cn(
           'ui-drawer-panel',
-          `ui-drawer-panel--${placement}`,
+          `ui-drawer-panel--${activePlacement}`,
           `ui-drawer-panel--${size}`
         )}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="ui-drawer__header">
-          {title && <h3 className="ui-drawer__title">{title}</h3>}
+          {title && (
+            <h3 id={titleId} className="ui-drawer__title">
+              {title}
+            </h3>
+          )}
           <button
             type="button"
             className="ui-drawer__close"

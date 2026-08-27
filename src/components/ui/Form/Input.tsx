@@ -5,6 +5,8 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
   readonly isInvalid?: boolean;
   readonly leftAdornment?: React.ReactNode;
   readonly rightAdornment?: React.ReactNode;
+  readonly leftIcon?: React.ReactNode;
+  readonly rightIcon?: React.ReactNode;
   readonly inputSize?: 'sm' | 'md' | 'lg';
 }
 
@@ -15,12 +17,17 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       isInvalid = false,
       leftAdornment,
       rightAdornment,
+      leftIcon,
+      rightIcon,
       inputSize = 'md',
       disabled,
       ...props
     },
     ref
   ) => {
+    const startAdornment = leftIcon || leftAdornment;
+    const endAdornment = rightIcon || rightAdornment;
+
     return (
       <div
         className={cn(
@@ -31,7 +38,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           className
         )}
       >
-        {leftAdornment && <span className="ui-input__adornment">{leftAdornment}</span>}
+        {startAdornment && <span className="ui-input__adornment">{startAdornment}</span>}
         <input
           ref={ref}
           disabled={disabled}
@@ -39,7 +46,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           className="ui-input"
           {...props}
         />
-        {rightAdornment && <span className="ui-input__adornment">{rightAdornment}</span>}
+        {endAdornment && <span className="ui-input__adornment">{endAdornment}</span>}
       </div>
     );
   }
