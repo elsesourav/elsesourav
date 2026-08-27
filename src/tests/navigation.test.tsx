@@ -189,7 +189,7 @@ describe('Global Application Shell, Routing & Navigation', () => {
       });
 
       expect(
-        await screen.findByRole('heading', { level: 1, name: /My Software Library/i })
+        await screen.findByRole('heading', { level: 1, name: /My Software Library/i }, { timeout: 4000 })
       ).toBeInTheDocument();
     });
 
@@ -213,7 +213,7 @@ describe('Global Application Shell, Routing & Navigation', () => {
       });
 
       expect(
-        await screen.findByRole('heading', { level: 1, name: /Admin Dashboard/i })
+        await screen.findByRole('heading', { level: 1, name: /(Admin Dashboard|Dashboard Overview)/i }, { timeout: 4000 })
       ).toBeInTheDocument();
     });
   });

@@ -32,6 +32,14 @@ coverage/
 *.tsbuildinfo
 .firebase/
 graphify-out/
+.gradle/
+android/.gradle/
+android/build/
+android/app/build/
+ios/App/Pods/
+ios/App/build/
+ios/App/App.xcworkspace/xcuserdata/
+
 
 # OS & Editor
 .DS_Store

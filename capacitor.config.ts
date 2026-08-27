@@ -1,14 +1,13 @@
 import type { CapacitorConfig } from '@capacitor/cli';
-import { mobileConfig } from './src/config/mobile.config';
 
 const config: CapacitorConfig = {
-  appId: mobileConfig.appId,
-  appName: mobileConfig.appName,
-  webDir: mobileConfig.webDir,
+  appId: 'com.elsesourav.app',
+  appName: 'ElseSourav',
+  webDir: 'dist',
   server: {
-    androidScheme: mobileConfig.server.androidScheme,
-    iosScheme: mobileConfig.server.iosScheme,
-    hostname: mobileConfig.server.hostname,
+    androidScheme: 'https',
+    iosScheme: 'https',
+    hostname: 'elsesourav.com',
   },
   plugins: {
     SplashScreen: {
