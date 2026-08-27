@@ -194,5 +194,21 @@ service cloud.firestore {
       allow read, create: if isUserAdmin();
       allow update, delete: if false;
     }
+
+    // =========================================================================
+    // ANALYTICS EVENTS & APP STATISTICS
+    // =========================================================================
+
+    match /analyticsEvents/{eventId} {
+      // Public telemetry ingestion; Reading and mutations restricted to Admin
+      allow create: if true;
+      allow read, update, delete: if isUserAdmin();
+    }
+
+    match /appStatistics/{appId} {
+      // Public can read aggregate statistics; Admin can write/manage
+      allow read: if true;
+      allow write: if isUserAdmin();
+    }
   }
 }

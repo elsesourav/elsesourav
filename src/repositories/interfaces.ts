@@ -102,6 +102,23 @@ export interface IAppMediaRepository {
   reorder(appId: string, orderedMediaIds: string[]): RepositoryResult<void>;
 }
 
+import type { AnalyticsEvent, AppAnalyticsAggregate } from '@/types/analytics.types';
+import type { CreateAnalyticsEventDto } from './analytics.repository';
+
+/**
+ * Analytics Repository Contract
+ */
+export interface IAnalyticsRepository {
+  logEvent(data: CreateAnalyticsEventDto): Promise<RepositoryResult<AnalyticsEvent>>;
+  getAppStats(appId: string): Promise<RepositoryResult<AppAnalyticsAggregate | null>>;
+  incrementStats(
+    appId: string,
+    metric: 'views' | 'actions' | 'library' | 'feedback',
+    amount?: number
+  ): Promise<RepositoryResult<void>>;
+  listEvents(appId?: string, options?: QueryOptions): PaginatedRepositoryResult<AnalyticsEvent>;
+}
+
 import type { AuthUser } from '@/types/auth.types';
 import type {
   CreateUserProfileDto,

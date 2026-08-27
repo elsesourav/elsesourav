@@ -8,4 +8,5 @@ export * from './tag.repository';
 export * from './app.repository';
 export * from './version.repository';
 export * from './media.repository';
+export * from './analytics.repository';
 export * from './user.repository';
