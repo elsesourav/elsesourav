@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   Mail,
@@ -13,7 +13,7 @@ import {
   CheckCircle2,
   MessageSquareHeart,
 } from 'lucide-react';
-import { Badge, Button, Skeleton, ErrorState } from '@/components';
+import { Badge, Button, Skeleton, ErrorState, SEO } from '@/components';
 import { AppCard } from '@/components/apps';
 import { useFeaturedApps } from '@/hooks';
 import { creatorConfig, type SocialLink, type BuildCategory } from '@/config/creator.config';
@@ -80,43 +80,6 @@ export const AboutPage: React.FC = () => {
     refetch: refetchApps,
   } = useFeaturedApps(3);
 
-  // Dynamic SEO & Structured Data
-  useEffect(() => {
-    document.title = `About ${creatorConfig.name} - Creator & Developer | ElseSourav`;
-
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute(
-        'content',
-        `Learn about ${creatorConfig.name}, the philosophy behind ElseSourav, the technologies used, and the mission to build fast, thoughtful software.`
-      );
-    }
-
-    const jsonLd = {
-      '@context': 'https://schema.org',
-      '@type': 'Person',
-      name: creatorConfig.name,
-      url: 'https://elsesourav.com/about',
-      jobTitle: creatorConfig.role,
-      sameAs: creatorConfig.socialLinks.filter((l) => l.platform !== 'email').map((l) => l.url),
-      description: creatorConfig.tagline,
-    };
-
-    let scriptTag = document.getElementById('json-ld-about-person') as HTMLScriptElement | null;
-    if (!scriptTag) {
-      scriptTag = document.createElement('script');
-      scriptTag.id = 'json-ld-about-person';
-      scriptTag.type = 'application/ld+json';
-      document.head.appendChild(scriptTag);
-    }
-    scriptTag.textContent = JSON.stringify(jsonLd);
-
-    return () => {
-      const tag = document.getElementById('json-ld-about-person');
-      if (tag) tag.remove();
-    };
-  }, []);
-
   const renderSocialIcon = (platform: SocialLink['platform']) => {
     switch (platform) {
       case 'github':
@@ -147,6 +110,22 @@ export const AboutPage: React.FC = () => {
 
   return (
     <main className="about-page">
+      <SEO
+        title={`About ${creatorConfig.name} - Creator & Developer`}
+        description={`Learn about ${creatorConfig.name}, the philosophy behind ElseSourav, the technologies used, and the mission to build fast, thoughtful software.`}
+        canonicalPath="/about"
+        structuredData={{
+          '@context': 'https://schema.org',
+          '@type': 'Person',
+          name: creatorConfig.name,
+          url: 'https://elsesourav.com/about',
+          jobTitle: creatorConfig.role,
+          sameAs: creatorConfig.socialLinks
+            .filter((l) => l.platform !== 'email')
+            .map((l) => l.url),
+          description: creatorConfig.tagline,
+        }}
+      />
       {/* =========================================================================
           1. Hero & Profile Section
           ========================================================================= */}

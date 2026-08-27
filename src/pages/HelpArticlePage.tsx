@@ -8,17 +8,17 @@ import {
   MessageSquareHeart,
   BookOpen,
 } from 'lucide-react';
-import { Button, Badge, Skeleton, ErrorState } from '@/components';
+import { Button, Badge, Skeleton, ErrorState, SEO } from '@/components';
 import { BlogContentRenderer } from '@/components/blog';
 import { HelpArticleCard, ArticleHelpfulness } from '@/components/help';
 import { helpService } from '@/services/help.service';
 import type { HelpCategory, HelpArticle } from '@/types/help.types';
+import { buildHelpArticleSEO } from '@/utils/seo.utils';
 import { ROUTES } from '@/constants/routes';
 import './HelpArticlePage.css';
 
 export const HelpArticlePage: React.FC = () => {
-  const { categorySlug, articleSlug } = useParams<{
-    categorySlug: string;
+  const { articleSlug } = useParams<{
     articleSlug: string;
   }>();
 
@@ -80,69 +80,16 @@ export const HelpArticlePage: React.FC = () => {
     void loadArticleData();
   }, [loadArticleData]);
 
-  // Dynamic SEO & Structured Data
-  useEffect(() => {
-    if (!article) return;
-
-    const pageTitle = article.seoTitle || `${article.title} — Help Center — ElseSourav`;
-    document.title = pageTitle;
-
-    const metaDesc = document.querySelector('meta[name="description"]');
-    const descriptionText =
-      article.seoDescription ||
-      article.excerpt ||
-      `Learn about ${article.title} in the ElseSourav Help Center.`;
-    if (metaDesc) {
-      metaDesc.setAttribute('content', descriptionText);
-    }
-
-    const catSlug = category ? category.slug : categorySlug || 'general';
-    let canonical = document.querySelector('link[rel="canonical"]');
-    if (!canonical) {
-      canonical = document.createElement('link');
-      canonical.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonical);
-    }
-    canonical.setAttribute('href', `https://elsesourav.com/help/${catSlug}/${article.slug}`);
-
-    // Schema.org Article Structured Data
-    const jsonLd = {
-      '@context': 'https://schema.org',
-      '@type': 'TechArticle',
-      headline: article.title,
-      description: descriptionText,
-      datePublished: new Date(article.publishedAt || article.createdAt).toISOString(),
-      dateModified: new Date(article.updatedAt).toISOString(),
-      author: {
-        '@type': 'Person',
-        name: 'Sourav',
-        url: 'https://elsesourav.com/about',
-      },
-      publisher: {
-        '@type': 'Organization',
-        name: 'ElseSourav',
-        url: 'https://elsesourav.com',
-      },
-    };
-
-    let scriptTag = document.getElementById('help-article-jsonld') as HTMLScriptElement | null;
-    if (!scriptTag) {
-      scriptTag = document.createElement('script');
-      scriptTag.id = 'help-article-jsonld';
-      scriptTag.type = 'application/ld+json';
-      document.head.appendChild(scriptTag);
-    }
-    scriptTag.textContent = JSON.stringify(jsonLd);
-
-    return () => {
-      const tag = document.getElementById('help-article-jsonld');
-      if (tag) tag.remove();
-    };
-  }, [article, category, categorySlug]);
+  const seoConfig = buildHelpArticleSEO(article);
 
   if (isNotFound) {
     return (
       <main className="help-article-page" role="main">
+        <SEO
+          title="Help Article Not Found"
+          description="The requested documentation guide could not be found."
+          noIndex
+        />
         <div className="help-not-found-card" data-testid="help-article-not-found">
           <div className="help-not-found-card__icon" aria-hidden="true">
             <FileQuestion size={40} />
@@ -171,6 +118,7 @@ export const HelpArticlePage: React.FC = () => {
 
   return (
     <main className="help-article-page" role="main">
+      <SEO {...seoConfig} />
       {/* Breadcrumbs */}
       <nav className="help-breadcrumbs" aria-label="Breadcrumb">
         <ol className="help-breadcrumbs__list">

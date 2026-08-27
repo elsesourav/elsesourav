@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { LogIn, Eye, EyeOff, AlertCircle } from 'lucide-react';
-import { Button, Input } from '@/components/ui';
+import { Button, Input, SEO } from '@/components';
 import { useAuth } from '@/hooks/useAuth';
 import { ROUTES } from '@/constants/routes';
 import { loginSchema } from '@/schemas/auth.schema';
@@ -27,29 +27,6 @@ export const LoginPage: React.FC = () => {
     (location.state as { from?: { pathname?: string; search?: string } } | null)?.from?.pathname ||
     ROUTES.LIBRARY;
   const safeRedirect = getSafeRedirectUrl(rawRedirect, ROUTES.LIBRARY);
-
-  // SEO & Robots: No-index auth pages
-  useEffect(() => {
-    document.title = 'Sign In | ElseSourav';
-
-    let metaTag = document.querySelector('meta[name="robots"]') as HTMLMetaElement | null;
-    const created = !metaTag;
-    if (!metaTag) {
-      metaTag = document.createElement('meta');
-      metaTag.name = 'robots';
-      document.head.appendChild(metaTag);
-    }
-    const previousContent = metaTag.content;
-    metaTag.content = 'noindex, nofollow';
-
-    return () => {
-      if (created && metaTag && metaTag.parentNode) {
-        metaTag.parentNode.removeChild(metaTag);
-      } else if (metaTag) {
-        metaTag.content = previousContent || '';
-      }
-    };
-  }, []);
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -91,6 +68,12 @@ export const LoginPage: React.FC = () => {
 
   return (
     <main className="auth-page" aria-labelledby="login-title">
+      <SEO
+        title="Sign In"
+        description="Sign in to your ElseSourav account to manage your applications and library."
+        canonicalPath="/login"
+        noIndex
+      />
       <div className="auth-card">
         <header className="auth-header">
           <div className="auth-logo-badge" aria-hidden="true">

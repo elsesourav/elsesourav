@@ -12,11 +12,11 @@ import {
   HelpCircle,
   Shield,
   Layers,
+  Trash2,
   AlertCircle,
   Inbox,
-  Trash2,
 } from 'lucide-react';
-import { Badge, Button, Skeleton } from '@/components/ui';
+import { Badge, Button, Skeleton, SEO } from '@/components';
 import { AppCard } from '@/components/apps/AppCard';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserLibrary } from '@/hooks/useUserLibrary';
@@ -43,29 +43,6 @@ export const LibraryPage: React.FC = () => {
     user?.displayName || authUser?.displayName || authUser?.email?.split('@')[0] || 'User';
   const email = user?.email || authUser?.email || '';
   const emailVerified = authUser?.emailVerified ?? false;
-
-  // SEO & Robots
-  useEffect(() => {
-    document.title = 'My Software Library | ElseSourav';
-
-    let metaTag = document.querySelector('meta[name="robots"]') as HTMLMetaElement | null;
-    const created = !metaTag;
-    if (!metaTag) {
-      metaTag = document.createElement('meta');
-      metaTag.name = 'robots';
-      document.head.appendChild(metaTag);
-    }
-    const previousContent = metaTag.content;
-    metaTag.content = 'noindex, nofollow';
-
-    return () => {
-      if (created && metaTag && metaTag.parentNode) {
-        metaTag.parentNode.removeChild(metaTag);
-      } else if (metaTag) {
-        metaTag.content = previousContent || '';
-      }
-    };
-  }, []);
 
   // Fetch support tickets summary
   useEffect(() => {
@@ -198,6 +175,12 @@ export const LibraryPage: React.FC = () => {
 
   return (
     <main className="library-dashboard" aria-labelledby="library-dashboard-heading">
+      <SEO
+        title="My Software Library"
+        description="Access and manage your saved applications, active tickets, and notifications."
+        canonicalPath="/library"
+        noIndex
+      />
       {/* 1. Welcome / Account Header Card */}
       <header className="library-welcome-card">
         <div className="library-welcome-left">

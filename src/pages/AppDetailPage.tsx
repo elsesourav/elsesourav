@@ -16,13 +16,14 @@ import {
   LifeBuoy,
   BookOpen,
 } from 'lucide-react';
-import { Badge, Button, IconButton, EmptyState, ErrorState, Skeleton } from '@/components/ui';
+import { Badge, Button, IconButton, EmptyState, ErrorState, Skeleton, SEO } from '@/components';
 import { AppCard, AppGallery, AppRatingSection, AppVersionHistory } from '@/components/apps';
 import { useAppDetails } from '@/hooks/useAppDetails';
 import { useUserLibrary } from '@/hooks/useUserLibrary';
 import { useAuth } from '@/hooks/useAuth';
 import { analyticsService } from '@/services/analytics.service';
 import { resolveSmartAction, type SmartAction } from '@/utils/smart-action';
+import { buildAppSEO } from '@/utils/seo.utils';
 import { ROUTES } from '@/constants/routes';
 import type { AppLink } from '@/types/app.types';
 import './AppDetailPage.css';
@@ -39,64 +40,14 @@ export const AppDetailPage: React.FC = () => {
   const app = data?.app;
   const isPublicVisitor = !isAdmin;
   const isUnpublished = app && app.status !== 'published' && isPublicVisitor;
+  const seoConfig = buildAppSEO(isUnpublished ? null : app);
 
-  // SEO dynamic updates
+  // Track non-blocking page view analytics
   useEffect(() => {
     if (app && !isUnpublished) {
-      document.title = `${app.name} - Applications | ElseSourav`;
-
-      // Set meta description
-      const metaDescription = document.querySelector('meta[name="description"]');
-      if (metaDescription) {
-        metaDescription.setAttribute('content', app.shortDescription);
-      }
-
-      // Track non-blocking page view analytics
       void analyticsService.trackView(app.id);
-
-      // JSON-LD structured data for SEO rich snippets
-      const jsonLd = {
-        '@context': 'https://schema.org',
-        '@type': 'SoftwareApplication',
-        name: app.name,
-        description: app.shortDescription,
-        applicationCategory: app.primaryCategory,
-        operatingSystem: app.platforms.join(', '),
-        author: {
-          '@type': 'Person',
-          name: 'Sourav',
-          url: 'https://elsesourav.com',
-        },
-        offers: {
-          '@type': 'Offer',
-          price: '0',
-          priceCurrency: 'USD',
-        },
-        aggregateRating: app.stats.ratingAverage
-          ? {
-              '@type': 'AggregateRating',
-              ratingValue: app.stats.ratingAverage.toFixed(1),
-              bestRating: '5',
-              ratingCount: data?.ratings.aggregate?.ratingCount || 1,
-            }
-          : undefined,
-      };
-
-      let scriptTag = document.getElementById('json-ld-app-data') as HTMLScriptElement | null;
-      if (!scriptTag) {
-        scriptTag = document.createElement('script');
-        scriptTag.id = 'json-ld-app-data';
-        scriptTag.type = 'application/ld+json';
-        document.head.appendChild(scriptTag);
-      }
-      scriptTag.textContent = JSON.stringify(jsonLd);
     }
-
-    return () => {
-      const tag = document.getElementById('json-ld-app-data');
-      if (tag) tag.remove();
-    };
-  }, [app, isUnpublished, data?.ratings.aggregate?.ratingCount]);
+  }, [app, isUnpublished]);
 
   const saved = app ? isSaved(app.id) : false;
   const smartAction: SmartAction | null = app ? resolveSmartAction(app) : null;
@@ -204,6 +155,7 @@ export const AppDetailPage: React.FC = () => {
   if (!app || isUnpublished) {
     return (
       <main className="app-detail">
+        <SEO {...seoConfig} />
         <EmptyState
           icon={<FileQuestion size={40} />}
           title="Application Not Found"
@@ -230,6 +182,7 @@ export const AppDetailPage: React.FC = () => {
 
   return (
     <main className="app-detail">
+      <SEO {...seoConfig} />
       {/* Breadcrumb back navigation */}
       <nav style={{ marginBottom: 'var(--space-6)' }} aria-label="Breadcrumb">
         <Link

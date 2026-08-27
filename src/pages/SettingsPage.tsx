@@ -16,7 +16,7 @@ import {
   ShieldAlert,
   Send,
 } from 'lucide-react';
-import { Badge, Button, Input, Skeleton, Dialog } from '@/components/ui';
+import { Badge, Button, Input, Skeleton, Dialog, SEO } from '@/components';
 import { useAuth } from '@/hooks/useAuth';
 import { useTheme } from '@/hooks/useTheme';
 import { userService } from '@/services/user.service';
@@ -50,9 +50,9 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ defaultTab = 'profil
   const [username, setUsername] = useState(user?.username || '');
   const [bio, setBio] = useState(user?.bio || '');
   const [photoUrl, setPhotoUrl] = useState(user?.photoUrl || authUser?.photoURL || '');
-  const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [profileSuccess, setProfileSuccess] = useState<string | null>(null);
   const [profileError, setProfileError] = useState<string | null>(null);
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
 
   // Preferences form state
   const [selectedTheme, setSelectedTheme] = useState<ThemeMode>(
@@ -67,7 +67,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ defaultTab = 'profil
   const [prefsSuccess, setPrefsSuccess] = useState<string | null>(null);
   const [prefsError, setPrefsError] = useState<string | null>(null);
 
-  // Security form state
+  // Password Change state
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -91,29 +91,6 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ defaultTab = 'profil
   const userId = user?.id || authUser?.uid || '';
   const email = user?.email || authUser?.email || '';
   const emailVerified = authUser?.emailVerified ?? false;
-
-  // SEO & Robots
-  useEffect(() => {
-    document.title = 'Account Settings | ElseSourav';
-
-    let metaTag = document.querySelector('meta[name="robots"]') as HTMLMetaElement | null;
-    const created = !metaTag;
-    if (!metaTag) {
-      metaTag = document.createElement('meta');
-      metaTag.name = 'robots';
-      document.head.appendChild(metaTag);
-    }
-    const previousContent = metaTag.content;
-    metaTag.content = 'noindex, nofollow';
-
-    return () => {
-      if (created && metaTag && metaTag.parentNode) {
-        metaTag.parentNode.removeChild(metaTag);
-      } else if (metaTag) {
-        metaTag.content = previousContent || '';
-      }
-    };
-  }, []);
 
   // Sync state when user profile loads
   useEffect(() => {
@@ -343,6 +320,12 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ defaultTab = 'profil
 
   return (
     <main className="settings-page" aria-labelledby="settings-main-heading">
+      <SEO
+        title="Account Settings"
+        description="Manage your profile information, application preferences, and security settings."
+        canonicalPath="/settings"
+        noIndex
+      />
       {/* Account Summary Header */}
       <header className="settings-header-card">
         <div className="settings-header-left">

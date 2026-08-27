@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, BookOpen, X } from 'lucide-react';
-import { Badge, Button, Input, Skeleton, EmptyState, ErrorState } from '@/components';
+import { Badge, Button, Input, Skeleton, EmptyState, ErrorState, SEO } from '@/components';
 import { BlogCard } from '@/components/blog';
 import { blogService } from '@/services/blog.service';
 import type { BlogPost, BlogCategory } from '@/types/blog.types';
@@ -23,30 +23,6 @@ export const BlogPage: React.FC = () => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-
-  // SEO metadata management
-  useEffect(() => {
-    document.title = 'Engineering Journal & Devlogs — ElseSourav';
-
-    let metaDesc = document.querySelector('meta[name="description"]');
-    if (!metaDesc) {
-      metaDesc = document.createElement('meta');
-      metaDesc.setAttribute('name', 'description');
-      document.head.appendChild(metaDesc);
-    }
-    metaDesc.setAttribute(
-      'content',
-      'Engineering insights, architecture deep-dives, and devlogs on building zero-bloat software by Sourav.'
-    );
-
-    let canonical = document.querySelector('link[rel="canonical"]');
-    if (!canonical) {
-      canonical = document.createElement('link');
-      canonical.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonical);
-    }
-    canonical.setAttribute('href', 'https://elsesourav.com/blog');
-  }, []);
 
   // Fetch Categories
   useEffect(() => {
@@ -168,6 +144,11 @@ export const BlogPage: React.FC = () => {
 
   return (
     <main className="blog-page">
+      <SEO
+        title="Engineering Journal & Devlogs"
+        description="Engineering insights, architecture deep-dives, and devlogs on building zero-bloat software by Sourav."
+        canonicalPath="/blog"
+      />
       {/* Editorial Header */}
       <header className="blog-page__header">
         <Badge variant="accent" size="sm">

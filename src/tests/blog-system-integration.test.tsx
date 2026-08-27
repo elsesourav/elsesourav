@@ -381,9 +381,9 @@ describe('Blog System End-to-End & Integration QC (Prompt 35)', () => {
 
     await waitFor(() => {
       expect(document.title).toContain('Building Performant Software in 2026');
-      const jsonLd = document.getElementById('blog-post-jsonld');
+      const jsonLd = document.getElementById('seo-structured-data');
       expect(jsonLd).not.toBeNull();
-      expect(jsonLd?.textContent).toContain('TechArticle');
+      expect(jsonLd?.textContent).toContain('Article');
     });
 
     // Copy code button

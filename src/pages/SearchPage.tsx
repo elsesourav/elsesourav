@@ -10,7 +10,7 @@ import {
   Tag,
   Calendar,
 } from 'lucide-react';
-import { Badge, Button, Skeleton } from '@/components/ui';
+import { Badge, Button, Skeleton, SEO } from '@/components';
 import { GlobalSearchInput } from '@/components/search/GlobalSearchInput';
 import { globalSearchService } from '@/services/global-search.service';
 import type { GlobalSearchResult } from '@/types/search.types';
@@ -115,6 +115,12 @@ export const SearchPage: React.FC = () => {
 
   return (
     <div className="search-page">
+      <SEO
+        title={queryParam.trim() ? `Search: "${queryParam}"` : 'Search Applications & Articles'}
+        description="Search across all published applications, engineering devlogs, and documentation on ElseSourav."
+        canonicalPath="/search"
+        noIndex
+      />
       {/* Search Header Banner */}
       <section className="search-header" aria-labelledby="search-header-title">
         <div className="search-header__content">

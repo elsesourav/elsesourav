@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Sparkles, RefreshCw, X, SlidersHorizontal } from 'lucide-react';
-import { Input, Select, Badge, Button, EmptyState, ErrorState, Drawer } from '@/components/ui';
+import { Input, Select, Badge, Button, EmptyState, ErrorState, Drawer, SEO } from '@/components';
 import { AppCard, AppCardSkeleton } from '@/components/apps';
 import { useAppDiscovery } from '@/hooks/useAppDiscovery';
 import { classificationService } from '@/services/classification.service';
@@ -34,11 +34,6 @@ export const AppsPage: React.FC = () => {
   const [tags, setTags] = useState<Tag[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  // SEO setup
-  useEffect(() => {
-    document.title = 'Explore Applications | ElseSourav';
-  }, []);
-
   // Fetch active categories and tags
   useEffect(() => {
     let isMounted = true;
@@ -58,6 +53,11 @@ export const AppsPage: React.FC = () => {
 
   return (
     <main className="apps-page">
+      <SEO
+        title="Explore Applications"
+        description="Browse and explore all software applications, extensions, developer utilities, and web apps published on ElseSourav."
+        canonicalPath="/apps"
+      />
       <header className="apps-page__header">
         <div className="apps-page__title-row">
           <h1 className="apps-page__title">Explore Applications</h1>

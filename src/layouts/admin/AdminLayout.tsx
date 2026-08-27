@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { X } from 'lucide-react';
 import { AdminSidebar } from './AdminSidebar';
 import { AdminHeader } from './AdminHeader';
+import { SEO } from '@/components';
 import './AdminLayout.css';
 
 export interface AdminLayoutProps {
@@ -38,6 +39,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   return (
     <div className="admin-layout">
+      <SEO title="Admin Control Center" noIndex />
       {/* Desktop Persistent Sidebar */}
       <div className="admin-layout__desktop-sidebar">
         <AdminSidebar />

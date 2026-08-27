@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Calendar, Clock, User, ArrowUpRight, BookOpen } from 'lucide-react';
-import { Badge, Button, Spinner, EmptyState, ErrorState } from '@/components';
+import { Badge, Button, Spinner, EmptyState, ErrorState, SEO } from '@/components';
 import { BlogContentRenderer, BlogCard } from '@/components/blog';
 import { blogService } from '@/services/blog.service';
 import type { BlogPost } from '@/types/blog.types';
+import { buildBlogPostSEO } from '@/utils/seo.utils';
 import { ROUTES } from '@/constants/routes';
 import { formatDate } from '@/utils/format';
 import './BlogPostPage.css';
@@ -54,70 +55,7 @@ export const BlogPostPage: React.FC = () => {
     void fetchPostAndRelated();
   }, [slug]);
 
-  // Dynamic SEO & JSON-LD Structured Data
-  useEffect(() => {
-    if (!post) return;
-
-    const pageTitle = post.seoTitle || `${post.title} — ElseSourav`;
-    document.title = pageTitle;
-
-    const metaDescription = post.seoDescription || post.excerpt;
-    let metaDescEl = document.querySelector('meta[name="description"]');
-    if (!metaDescEl) {
-      metaDescEl = document.createElement('meta');
-      metaDescEl.setAttribute('name', 'description');
-      document.head.appendChild(metaDescEl);
-    }
-    metaDescEl.setAttribute('content', metaDescription);
-
-    const canonicalUrl = post.canonicalUrl || `https://elsesourav.com/blog/${post.slug}`;
-    let canonicalEl = document.querySelector('link[rel="canonical"]');
-    if (!canonicalEl) {
-      canonicalEl = document.createElement('link');
-      canonicalEl.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonicalEl);
-    }
-    canonicalEl.setAttribute('href', canonicalUrl);
-
-    // Schema.org Article Structured Data
-    const articleLd = {
-      '@context': 'https://schema.org',
-      '@type': 'TechArticle',
-      headline: post.title,
-      description: post.excerpt,
-      image: post.coverImageUrl || 'https://elsesourav.com/og-image.png',
-      datePublished: new Date(post.publishedAt || post.createdAt).toISOString(),
-      dateModified: new Date(post.updatedAt).toISOString(),
-      author: {
-        '@type': 'Person',
-        name: post.authorName || 'Sourav',
-        url: 'https://elsesourav.com/about',
-      },
-      publisher: {
-        '@type': 'Organization',
-        name: 'ElseSourav',
-        url: 'https://elsesourav.com',
-      },
-      mainEntityOfPage: {
-        '@type': 'WebPage',
-        '@id': canonicalUrl,
-      },
-    };
-
-    let scriptEl = document.getElementById('blog-post-jsonld') as HTMLScriptElement | null;
-    if (!scriptEl) {
-      scriptEl = document.createElement('script');
-      scriptEl.id = 'blog-post-jsonld';
-      scriptEl.type = 'application/ld+json';
-      document.head.appendChild(scriptEl);
-    }
-    scriptEl.textContent = JSON.stringify(articleLd);
-
-    return () => {
-      const el = document.getElementById('blog-post-jsonld');
-      if (el) el.remove();
-    };
-  }, [post]);
+  const seoConfig = buildBlogPostSEO(post);
 
   if (isLoading) {
     return (
@@ -171,6 +109,7 @@ export const BlogPostPage: React.FC = () => {
 
   return (
     <main className="blog-post-page">
+      <SEO {...seoConfig} />
       <article className="blog-post-article">
         {/* Navigation Breadcrumb */}
         <nav className="blog-post-breadcrumb" aria-label="Breadcrumb">

@@ -11,7 +11,7 @@ import {
   LogIn,
   AlertCircle,
 } from 'lucide-react';
-import { Button } from '@/components/ui';
+import { Button, SEO } from '@/components';
 import { useAuth } from '@/hooks/useAuth';
 import { supportService } from '@/services/support.service';
 import type {
@@ -138,6 +138,12 @@ export const SupportPage: React.FC = () => {
 
   return (
     <div className="support-page">
+      <SEO
+        title="Support & Helpdesk"
+        description="Submit a support request directly to the developer, ask questions, or report issues."
+        canonicalPath="/support"
+        noIndex
+      />
       {/* Header */}
       <header className="support-header">
         <div className="support-header__badge">

@@ -9,7 +9,7 @@ import {
   CheckCircle2,
   ArrowRight,
 } from 'lucide-react';
-import { Button, Input } from '@/components/ui';
+import { Button, Input, SEO } from '@/components';
 import { useAuth } from '@/hooks/useAuth';
 import { ROUTES } from '@/constants/routes';
 import { signUpSchema } from '@/schemas/auth.schema';
@@ -48,29 +48,6 @@ export const SignUpPage: React.FC = () => {
 
   const rawRedirect = searchParams.get('redirect') || ROUTES.LIBRARY;
   const safeRedirect = getSafeRedirectUrl(rawRedirect, ROUTES.LIBRARY);
-
-  // SEO & Robots
-  useEffect(() => {
-    document.title = 'Create an Account | ElseSourav';
-
-    let metaTag = document.querySelector('meta[name="robots"]') as HTMLMetaElement | null;
-    const created = !metaTag;
-    if (!metaTag) {
-      metaTag = document.createElement('meta');
-      metaTag.name = 'robots';
-      document.head.appendChild(metaTag);
-    }
-    const previousContent = metaTag.content;
-    metaTag.content = 'noindex, nofollow';
-
-    return () => {
-      if (created && metaTag && metaTag.parentNode) {
-        metaTag.parentNode.removeChild(metaTag);
-      } else if (metaTag) {
-        metaTag.content = previousContent || '';
-      }
-    };
-  }, []);
 
   // Redirect if already authenticated prior to entering registration form
   useEffect(() => {
@@ -161,6 +138,7 @@ export const SignUpPage: React.FC = () => {
   if (isRegistered) {
     return (
       <main className="auth-page" aria-labelledby="verification-title">
+        <SEO title="Verify Email" noIndex />
         <div className="auth-card">
           <div className="auth-state-card">
             <div
@@ -240,6 +218,12 @@ export const SignUpPage: React.FC = () => {
 
   return (
     <main className="auth-page" aria-labelledby="signup-title">
+      <SEO
+        title="Create an Account"
+        description="Create your ElseSourav developer account to access your personal app library."
+        canonicalPath="/signup"
+        noIndex
+      />
       <div className="auth-card">
         <header className="auth-header">
           <div className="auth-logo-badge" aria-hidden="true">

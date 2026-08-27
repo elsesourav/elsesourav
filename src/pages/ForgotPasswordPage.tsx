@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { KeyRound, AlertCircle, ArrowLeft, Mail } from 'lucide-react';
-import { Button, Input } from '@/components/ui';
+import { Button, Input, SEO } from '@/components';
 import { useAuth } from '@/hooks/useAuth';
 import { ROUTES } from '@/constants/routes';
 import { forgotPasswordSchema } from '@/schemas/auth.schema';
@@ -17,29 +17,6 @@ export const ForgotPasswordPage: React.FC = () => {
   const [submittedEmail, setSubmittedEmail] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [fieldError, setFieldError] = useState<string | null>(null);
-
-  // SEO & Robots
-  useEffect(() => {
-    document.title = 'Reset Your Password | ElseSourav';
-
-    let metaTag = document.querySelector('meta[name="robots"]') as HTMLMetaElement | null;
-    const created = !metaTag;
-    if (!metaTag) {
-      metaTag = document.createElement('meta');
-      metaTag.name = 'robots';
-      document.head.appendChild(metaTag);
-    }
-    const previousContent = metaTag.content;
-    metaTag.content = 'noindex, nofollow';
-
-    return () => {
-      if (created && metaTag && metaTag.parentNode) {
-        metaTag.parentNode.removeChild(metaTag);
-      } else if (metaTag) {
-        metaTag.content = previousContent || '';
-      }
-    };
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,6 +52,12 @@ export const ForgotPasswordPage: React.FC = () => {
 
   return (
     <main className="auth-page" aria-labelledby="forgot-password-title">
+      <SEO
+        title="Reset Password"
+        description="Reset your ElseSourav account password securely."
+        canonicalPath="/forgot-password"
+        noIndex
+      />
       <div className="auth-card">
         {isSuccess ? (
           <div className="auth-state-card">

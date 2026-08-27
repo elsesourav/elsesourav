@@ -234,7 +234,7 @@ describe('AboutPage Component', () => {
     );
 
     expect(document.title).toContain('About Sourav - Creator & Developer | ElseSourav');
-    const jsonLd = document.getElementById('json-ld-about-person');
+    const jsonLd = document.getElementById('seo-structured-data');
     expect(jsonLd).not.toBeNull();
     expect(jsonLd?.textContent).toContain('Sourav');
   });

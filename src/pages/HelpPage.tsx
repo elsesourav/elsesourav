@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { LifeBuoy, Sparkles, MessageSquareHeart } from 'lucide-react';
-import { Button, Badge, Skeleton, ErrorState } from '@/components';
+import { Button, Badge, Skeleton, ErrorState, SEO } from '@/components';
 import { HelpCategoryCard, HelpArticleCard, HelpSearch } from '@/components/help';
 import { helpService } from '@/services/help.service';
 import type { HelpCategory, HelpArticle } from '@/types/help.types';
@@ -14,26 +14,6 @@ export const HelpPage: React.FC = () => {
   const [popularArticles, setPopularArticles] = useState<readonly HelpArticle[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    document.title = 'Help Center & Knowledge Base — ElseSourav';
-
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute(
-        'content',
-        'Find guides, FAQs, troubleshooting tips, and documentation for ElseSourav applications and utilities.'
-      );
-    }
-
-    let canonical = document.querySelector('link[rel="canonical"]');
-    if (!canonical) {
-      canonical = document.createElement('link');
-      canonical.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonical);
-    }
-    canonical.setAttribute('href', 'https://elsesourav.com/help');
-  }, []);
 
   const loadHelpData = async () => {
     setIsLoading(true);
@@ -77,6 +57,11 @@ export const HelpPage: React.FC = () => {
 
   return (
     <main className="help-home-page" role="main">
+      <SEO
+        title="Help Center & Knowledge Base"
+        description="Find guides, FAQs, troubleshooting tips, and documentation for ElseSourav applications and utilities."
+        canonicalPath="/help"
+      />
       {/* Hero Section */}
       <section className="help-hero" aria-labelledby="help-hero-title">
         <div className="help-hero__badge-wrapper">

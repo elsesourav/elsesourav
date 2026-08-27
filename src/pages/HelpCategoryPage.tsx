@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ChevronRight, ArrowLeft, Search, FileQuestion, BookOpen } from 'lucide-react';
-import { Button, Badge, Skeleton, ErrorState, Input } from '@/components';
+import { Button, Badge, Skeleton, ErrorState, Input, SEO } from '@/components';
 import { HelpArticleCard } from '@/components/help';
 import { helpService } from '@/services/help.service';
 import type { HelpCategory, HelpArticle } from '@/types/help.types';
@@ -64,26 +64,6 @@ export const HelpCategoryPage: React.FC = () => {
     void loadCategoryData();
   }, [loadCategoryData]);
 
-  // Dynamic SEO
-  useEffect(() => {
-    if (category) {
-      document.title = `${category.name} — Help Center — ElseSourav`;
-
-      const metaDesc = document.querySelector('meta[name="description"]');
-      if (metaDesc && category.description) {
-        metaDesc.setAttribute('content', category.description);
-      }
-
-      let canonical = document.querySelector('link[rel="canonical"]');
-      if (!canonical) {
-        canonical = document.createElement('link');
-        canonical.setAttribute('rel', 'canonical');
-        document.head.appendChild(canonical);
-      }
-      canonical.setAttribute('href', `https://elsesourav.com/help/${category.slug}`);
-    }
-  }, [category]);
-
   // Client-side quick filter
   const filteredArticles = useMemo(() => {
     if (!searchQuery.trim()) return articles;
@@ -99,6 +79,11 @@ export const HelpCategoryPage: React.FC = () => {
   if (isNotFound) {
     return (
       <main className="help-category-page" role="main">
+        <SEO
+          title="Category Not Found"
+          description="The requested help category does not exist or is inactive."
+          noIndex
+        />
         <div className="help-not-found-card" data-testid="help-category-not-found">
           <div className="help-not-found-card__icon" aria-hidden="true">
             <FileQuestion size={40} />
@@ -174,6 +159,11 @@ export const HelpCategoryPage: React.FC = () => {
 
       {!isLoading && !error && category && (
         <>
+          <SEO
+            title={`${category.name} Guides & Documentation`}
+            description={category.description || `Browse help guides and documentation for ${category.name}.`}
+            canonicalPath={`/help/${category.slug}`}
+          />
           {/* Category Header */}
           <header className="help-category-header">
             <div className="help-category-header__top">

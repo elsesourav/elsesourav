@@ -15,3 +15,4 @@ export * from './useAppDetails';
 export * from './useAppDiscovery';
 export * from './useCategories';
 export * from './useBlog';
+export * from './useSEO';

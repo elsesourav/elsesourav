@@ -102,9 +102,9 @@ describe('BlogPostPage Detail Component', () => {
 
     await waitFor(() => {
       expect(document.title).toContain('Crafting Fast Web Applications');
-      const jsonLd = document.getElementById('blog-post-jsonld');
+      const jsonLd = document.getElementById('seo-structured-data');
       expect(jsonLd).not.toBeNull();
-      expect(jsonLd?.textContent).toContain('TechArticle');
+      expect(jsonLd?.textContent).toContain('Article');
       expect(jsonLd?.textContent).toContain('Crafting Fast Web Applications');
     });
   });

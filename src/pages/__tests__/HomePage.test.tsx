@@ -433,7 +433,7 @@ describe('HomePage Component', () => {
     );
 
     expect(document.title).toContain('ElseSourav - Serious Software, Built by Someone Who Cares');
-    const jsonLd = document.getElementById('json-ld-website');
+    const jsonLd = document.getElementById('seo-structured-data');
     expect(jsonLd).not.toBeNull();
     expect(jsonLd?.textContent).toContain('ElseSourav');
   });

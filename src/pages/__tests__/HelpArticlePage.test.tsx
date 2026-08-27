@@ -182,9 +182,9 @@ describe('HelpArticlePage Component', () => {
     );
 
     await waitFor(() => {
-      const jsonLd = document.getElementById('help-article-jsonld');
+      const jsonLd = document.getElementById('seo-structured-data');
       expect(jsonLd).not.toBeNull();
-      expect(jsonLd?.textContent).toContain('TechArticle');
+      expect(jsonLd?.textContent).toContain('Article');
       expect(jsonLd?.textContent).toContain('How to Install ElseSourav CLI');
     });
   });

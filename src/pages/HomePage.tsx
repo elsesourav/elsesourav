@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, ArrowRight, User, Compass, MessageSquareHeart } from 'lucide-react';
-import { Button, Badge, Skeleton, ErrorState } from '@/components';
+import { Button, Badge, Skeleton, ErrorState, SEO } from '@/components';
 import { AppCard } from '@/components/apps';
 import { LatestUpdateCard, CategoryCard } from '@/components/home';
 import { BlogCard } from '@/components/blog';
@@ -52,48 +52,26 @@ export const HomePage: React.FC = () => {
     refetch: refetchBlog,
   } = useLatestBlogPosts(3);
 
-  // Dynamic SEO & Structured Data
-  useEffect(() => {
-    document.title = 'ElseSourav - Serious Software, Built by Someone Who Cares';
-
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute(
-        'content',
-        'Discover high-performance web applications, developer utilities, browser extensions, and open software built independently with care by Sourav.'
-      );
-    }
-
-    const jsonLd = {
-      '@context': 'https://schema.org',
-      '@type': 'WebSite',
-      name: 'ElseSourav',
-      url: 'https://elsesourav.com',
-      description: 'Serious software, built by someone who cares.',
-      author: {
-        '@type': 'Person',
-        name: 'Sourav',
-        url: 'https://elsesourav.com/about',
-      },
-    };
-
-    let scriptTag = document.getElementById('json-ld-website') as HTMLScriptElement | null;
-    if (!scriptTag) {
-      scriptTag = document.createElement('script');
-      scriptTag.id = 'json-ld-website';
-      scriptTag.type = 'application/ld+json';
-      document.head.appendChild(scriptTag);
-    }
-    scriptTag.textContent = JSON.stringify(jsonLd);
-
-    return () => {
-      const tag = document.getElementById('json-ld-website');
-      if (tag) tag.remove();
-    };
-  }, []);
-
   return (
     <main className="home-page">
+      <SEO
+        title="ElseSourav - Serious Software, Built by Someone Who Cares"
+        exactTitle
+        description="Discover high-performance web applications, developer utilities, browser extensions, and open software built independently with care by Sourav."
+        canonicalPath="/"
+        structuredData={{
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          name: 'ElseSourav',
+          url: 'https://elsesourav.com',
+          description: 'Serious software, built by someone who cares.',
+          author: {
+            '@type': 'Person',
+            name: 'Sourav',
+            url: 'https://elsesourav.com/about',
+          },
+        }}
+      />
       {/* =========================================================================
           1. Hero Section
           ========================================================================= */}

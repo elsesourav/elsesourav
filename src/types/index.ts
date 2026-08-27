@@ -22,3 +22,4 @@ export * from './navigation.types';
 export * from './system.types';
 export * from './search.types';
 export * from './result.types';
+export * from './seo.types';
