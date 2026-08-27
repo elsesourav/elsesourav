@@ -22,6 +22,8 @@ export const ROUTES = {
   FORGOT_PASSWORD: '/forgot-password',
   PRIVACY: '/privacy',
   TERMS: '/terms',
+  COOKIES: '/cookies',
+  ACCESSIBILITY: '/accessibility',
   SITEMAP: '/sitemap',
 
   // Authenticated User Routes

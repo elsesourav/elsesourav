@@ -62,35 +62,10 @@ export { LoginPage } from './LoginPage';
 export { SignUpPage } from './SignUpPage';
 export { ForgotPasswordPage } from './ForgotPasswordPage';
 
-export const PrivacyPage: React.FC = () => (
-  <>
-    <SEO
-      title="Privacy Policy"
-      description="How your data and privacy are respected and protected on the ElseSourav platform."
-      canonicalPath="/privacy"
-    />
-    <PlaceholderPage
-      title="Privacy Policy"
-      description="How your data and privacy are respected and protected on the ElseSourav platform."
-      badge="Legal"
-    />
-  </>
-);
-
-export const TermsPage: React.FC = () => (
-  <>
-    <SEO
-      title="Terms of Service"
-      description="Terms and conditions governing use of ElseSourav software and services."
-      canonicalPath="/terms"
-    />
-    <PlaceholderPage
-      title="Terms of Service"
-      description="Terms and conditions governing use of ElseSourav software and services."
-      badge="Legal"
-    />
-  </>
-);
+export { PrivacyPage } from './PrivacyPage';
+export { TermsPage } from './TermsPage';
+export { CookiesPage } from './CookiesPage';
+export { AccessibilityPage } from './AccessibilityPage';
 
 export const SitemapPage: React.FC = () => (
   <>

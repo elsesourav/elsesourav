@@ -39,10 +39,12 @@ export const FOOTER_NAVIGATION: readonly FooterNavGroup[] = [
     ],
   },
   {
-    title: 'Legal',
+    title: 'Legal & Policies',
     items: [
       { label: 'Privacy Policy', path: ROUTES.PRIVACY },
       { label: 'Terms of Service', path: ROUTES.TERMS },
+      { label: 'Cookie Notice', path: ROUTES.COOKIES },
+      { label: 'Accessibility', path: ROUTES.ACCESSIBILITY },
     ],
   },
 ] as const;

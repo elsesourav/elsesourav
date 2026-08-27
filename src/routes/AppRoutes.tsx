@@ -18,6 +18,8 @@ import {
   CategoryDetailPage,
   PrivacyPage,
   TermsPage,
+  CookiesPage,
+  AccessibilityPage,
   SitemapPage,
   NotFoundPage,
 } from '@/pages';
@@ -140,6 +142,8 @@ export const AppRoutes: React.FC = () => {
           <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
           <Route path={ROUTES.PRIVACY} element={<PrivacyPage />} />
           <Route path={ROUTES.TERMS} element={<TermsPage />} />
+          <Route path={ROUTES.COOKIES} element={<CookiesPage />} />
+          <Route path={ROUTES.ACCESSIBILITY} element={<AccessibilityPage />} />
           <Route path={ROUTES.SITEMAP} element={<SitemapPage />} />
 
           {/* Authenticated User Routes */}

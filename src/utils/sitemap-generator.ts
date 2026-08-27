@@ -139,6 +139,34 @@ export function buildSitemapEntries(options: BuildSitemapOptions = {}): SitemapE
     priority: 0.7,
   });
 
+  // Privacy Policy
+  entries.push({
+    loc: `${origin}/privacy`,
+    changefreq: 'monthly',
+    priority: 0.5,
+  });
+
+  // Terms of Service
+  entries.push({
+    loc: `${origin}/terms`,
+    changefreq: 'monthly',
+    priority: 0.5,
+  });
+
+  // Cookie Notice
+  entries.push({
+    loc: `${origin}/cookies`,
+    changefreq: 'monthly',
+    priority: 0.5,
+  });
+
+  // Accessibility Statement
+  entries.push({
+    loc: `${origin}/accessibility`,
+    changefreq: 'monthly',
+    priority: 0.5,
+  });
+
   // =========================================================================
   // 2. Dynamic Published Applications
   // =========================================================================

@@ -99,7 +99,7 @@ describe('SitemapService Integration & Fallback Handling', () => {
     expect(result.sitemapXml).toContain('https://elsesourav.com/blog/fast-web-apps');
     expect(result.sitemapXml).toContain('https://elsesourav.com/help/general/getting-started');
     expect(result.robotsTxt).toContain('Sitemap: https://elsesourav.com/sitemap.xml');
-    expect(result.entryCount).toBe(8); // 5 static + 1 app + 1 post + 1 article
+    expect(result.entryCount).toBe(12); // 9 static + 1 app + 1 post + 1 article
   });
 
   it('2. Gracefully handles repository query errors with fallback baseline entries', async () => {
@@ -115,12 +115,16 @@ describe('SitemapService Integration & Fallback Handling', () => {
     const result = await sitemapService.generateProductionSitemap();
 
     expect(result.success).toBe(true);
-    expect(result.entryCount).toBe(5); // 5 core public static pages
+    expect(result.entryCount).toBe(9); // 9 core public static pages (5 main + 4 legal)
     expect(result.sitemapXml).toContain('https://elsesourav.com/');
     expect(result.sitemapXml).toContain('https://elsesourav.com/apps');
     expect(result.sitemapXml).toContain('https://elsesourav.com/blog');
     expect(result.sitemapXml).toContain('https://elsesourav.com/help');
     expect(result.sitemapXml).toContain('https://elsesourav.com/about');
+    expect(result.sitemapXml).toContain('https://elsesourav.com/privacy');
+    expect(result.sitemapXml).toContain('https://elsesourav.com/terms');
+    expect(result.sitemapXml).toContain('https://elsesourav.com/cookies');
+    expect(result.sitemapXml).toContain('https://elsesourav.com/accessibility');
     expect(result.robotsTxt).toContain('Sitemap: https://elsesourav.com/sitemap.xml');
   });
 });
