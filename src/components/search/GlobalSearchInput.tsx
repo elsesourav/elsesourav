@@ -1,8 +1,24 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, X, Loader2, Package, BookOpen, HelpCircle, ArrowRight } from 'lucide-react';
+import {
+  Search,
+  X,
+  Loader2,
+  Package,
+  BookOpen,
+  HelpCircle,
+  ArrowRight,
+  History,
+  Trash2,
+} from 'lucide-react';
 import { globalSearchService } from '@/services/global-search.service';
 import type { GlobalSearchResultItem } from '@/types/search.types';
+import {
+  getRecentSearches,
+  saveRecentSearch,
+  removeRecentSearch,
+  clearRecentSearches,
+} from '@/utils/recent-searches';
 import './GlobalSearchInput.css';
 
 export interface GlobalSearchInputProps {
@@ -25,18 +41,26 @@ export const GlobalSearchInput: React.FC<GlobalSearchInputProps> = ({
   const navigate = useNavigate();
   const [query, setQuery] = useState(initialValue);
   const [suggestions, setSuggestions] = useState<readonly GlobalSearchResultItem[]>([]);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState<number>(-1);
+  const [activeAnnouncement, setActiveAnnouncement] = useState<string>('');
 
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const latestRequestIdRef = useRef<number>(0);
 
   // Synchronize initial value when prop changes
   useEffect(() => {
     setQuery(initialValue);
   }, [initialValue]);
+
+  // Load recent searches on mount
+  useEffect(() => {
+    setRecentSearches(getRecentSearches());
+  }, []);
 
   // Click outside to dismiss suggestions dropdown
   useEffect(() => {
@@ -53,16 +77,25 @@ export const GlobalSearchInput: React.FC<GlobalSearchInputProps> = ({
     };
   }, []);
 
-  // Fetch suggestions with debouncing
+  // Fetch suggestions with debouncing and stale request cancellation
   const fetchSuggestions = useCallback(async (searchQuery: string) => {
-    if (!searchQuery.trim() || searchQuery.trim().length < 2) {
+    const trimmed = searchQuery.trim();
+    if (!trimmed || trimmed.length < 2) {
       setSuggestions([]);
       setIsLoading(false);
       return;
     }
 
+    const currentRequestId = ++latestRequestIdRef.current;
     setIsLoading(true);
-    const res = await globalSearchService.getSuggestions(searchQuery.trim(), 6);
+
+    const res = await globalSearchService.getSuggestions(trimmed, 6);
+
+    // Ignore stale asynchronous response if a newer query was initiated
+    if (currentRequestId !== latestRequestIdRef.current) {
+      return;
+    }
+
     if (res.success) {
       setSuggestions(res.data);
       setIsOpen(res.data.length > 0);
@@ -85,17 +118,34 @@ export const GlobalSearchInput: React.FC<GlobalSearchInputProps> = ({
       setIsLoading(true);
       debounceTimerRef.current = setTimeout(() => {
         void fetchSuggestions(nextVal);
-      }, 300);
+      }, 250);
     } else {
       setSuggestions([]);
-      setIsOpen(false);
       setIsLoading(false);
+      // Show recent searches if query is cleared but input is active
+      if (showSuggestions && !nextVal.trim() && recentSearches.length > 0) {
+        setIsOpen(true);
+      } else {
+        setIsOpen(false);
+      }
+    }
+  };
+
+  const handleInputFocus = () => {
+    if (query.trim().length >= 2 && suggestions.length > 0) {
+      setIsOpen(true);
+    } else if (!query.trim() && recentSearches.length > 0) {
+      setIsOpen(true);
     }
   };
 
   const executeSearch = (targetQuery: string) => {
     const cleanQuery = targetQuery.trim();
     if (!cleanQuery) return;
+
+    // Save to privacy-conscious local search history
+    const updatedRecents = saveRecentSearch(cleanQuery);
+    setRecentSearches(updatedRecents);
 
     setIsOpen(false);
     setActiveIndex(-1);
@@ -118,8 +168,27 @@ export const GlobalSearchInput: React.FC<GlobalSearchInputProps> = ({
     }
   };
 
+  const handleRemoveRecent = (e: React.MouseEvent, item: string) => {
+    e.stopPropagation();
+    const updated = removeRecentSearch(item);
+    setRecentSearches(updated);
+    if (updated.length === 0) {
+      setIsOpen(false);
+    }
+  };
+
+  const handleClearAllRecents = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    clearRecentSearches();
+    setRecentSearches([]);
+    setIsOpen(false);
+  };
+
+  const isShowingRecents = !query.trim() && recentSearches.length > 0;
+  const currentNavItemsCount = isShowingRecents ? recentSearches.length : suggestions.length;
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!isOpen || suggestions.length === 0) {
+    if (!isOpen || currentNavItemsCount === 0) {
       if (e.key === 'Enter') {
         e.preventDefault();
         executeSearch(query);
@@ -128,22 +197,46 @@ export const GlobalSearchInput: React.FC<GlobalSearchInputProps> = ({
     }
 
     switch (e.key) {
-      case 'ArrowDown':
+      case 'ArrowDown': {
         e.preventDefault();
-        setActiveIndex((prev) => (prev < suggestions.length - 1 ? prev + 1 : 0));
+        const nextIdx = activeIndex < currentNavItemsCount - 1 ? activeIndex + 1 : 0;
+        setActiveIndex(nextIdx);
+        if (isShowingRecents) {
+          const target = recentSearches[nextIdx];
+          if (target) setActiveAnnouncement(`Recent search: ${target}`);
+        } else {
+          const target = suggestions[nextIdx];
+          if (target) setActiveAnnouncement(`Suggestion: ${target.title}`);
+        }
         break;
+      }
 
-      case 'ArrowUp':
+      case 'ArrowUp': {
         e.preventDefault();
-        setActiveIndex((prev) => (prev > 0 ? prev - 1 : suggestions.length - 1));
+        const prevIdx = activeIndex > 0 ? activeIndex - 1 : currentNavItemsCount - 1;
+        setActiveIndex(prevIdx);
+        if (isShowingRecents) {
+          const target = recentSearches[prevIdx];
+          if (target) setActiveAnnouncement(`Recent search: ${target}`);
+        } else {
+          const target = suggestions[prevIdx];
+          if (target) setActiveAnnouncement(`Suggestion: ${target.title}`);
+        }
         break;
+      }
 
       case 'Enter':
         e.preventDefault();
-        if (activeIndex >= 0 && suggestions[activeIndex]) {
-          const selected = suggestions[activeIndex];
-          setIsOpen(false);
-          navigate(selected.destination);
+        if (activeIndex >= 0) {
+          if (isShowingRecents && recentSearches[activeIndex]) {
+            const selectedQuery = recentSearches[activeIndex]!;
+            setQuery(selectedQuery);
+            executeSearch(selectedQuery);
+          } else if (suggestions[activeIndex]) {
+            const selected = suggestions[activeIndex]!;
+            setIsOpen(false);
+            navigate(selected.destination);
+          }
         } else {
           executeSearch(query);
         }
@@ -161,6 +254,7 @@ export const GlobalSearchInput: React.FC<GlobalSearchInputProps> = ({
   };
 
   const handleSelectSuggestion = (item: GlobalSearchResultItem) => {
+    saveRecentSearch(item.title);
     setIsOpen(false);
     navigate(item.destination);
   };
@@ -186,6 +280,11 @@ export const GlobalSearchInput: React.FC<GlobalSearchInputProps> = ({
 
   return (
     <div ref={containerRef} className={`global-search-container ${className}`}>
+      {/* Screen Reader Announcement */}
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {activeAnnouncement}
+      </div>
+
       <form
         role="search"
         onSubmit={(e) => {
@@ -202,6 +301,7 @@ export const GlobalSearchInput: React.FC<GlobalSearchInputProps> = ({
             type="search"
             value={query}
             onChange={handleInputChange}
+            onFocus={handleInputFocus}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
             autoFocus={autoFocus}
@@ -236,59 +336,127 @@ export const GlobalSearchInput: React.FC<GlobalSearchInputProps> = ({
         </div>
       </form>
 
-      {/* Suggestions Dropdown */}
-      {isOpen && suggestions.length > 0 && (
+      {/* Suggestions or Recent Searches Dropdown */}
+      {isOpen && (
         <div
           id="global-search-suggestions"
           role="listbox"
-          aria-label="Search suggestions"
+          aria-label={isShowingRecents ? 'Recent searches' : 'Search suggestions'}
           className="global-search-dropdown"
         >
-          <div className="global-search-dropdown-header">
-            <span>Quick Suggestions</span>
-          </div>
-
-          <ul className="global-search-suggestions-list">
-            {suggestions.map((item, idx) => {
-              const isSelected = activeIndex === idx;
-              return (
-                <li
-                  key={item.id}
-                  id={`global-search-item-${idx}`}
-                  role="option"
-                  aria-selected={isSelected}
-                  className={`global-search-sugg-item ${isSelected ? 'global-search-sugg-item--active' : ''}`}
-                  onClick={() => handleSelectSuggestion(item)}
+          {isShowingRecents ? (
+            /* Recent Searches Mode */
+            <>
+              <div className="global-search-dropdown-header">
+                <div className="global-search-header-group">
+                  <History size={13} aria-hidden="true" />
+                  <span>Recent Searches</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleClearAllRecents}
+                  className="global-search-clear-all"
+                  aria-label="Clear all recent searches"
                 >
-                  <div className="global-search-sugg-left">
-                    {getSuggestionIcon(item.type)}
-                    <div className="global-search-sugg-content">
-                      <span className="global-search-sugg-title">{item.title}</span>
-                      <span className="global-search-sugg-desc">{item.description}</span>
-                    </div>
-                  </div>
+                  Clear
+                </button>
+              </div>
 
-                  <div className="global-search-sugg-right">
-                    <span className="global-search-sugg-badge">
-                      {item.type === 'app' ? 'App' : item.type === 'blog_post' ? 'Blog' : 'Help'}
-                    </span>
-                    <ArrowRight size={13} className="global-search-sugg-arrow" aria-hidden="true" />
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+              <ul className="global-search-suggestions-list">
+                {recentSearches.map((term, idx) => {
+                  const isSelected = activeIndex === idx;
+                  return (
+                    <li
+                      key={term}
+                      id={`global-search-item-${idx}`}
+                      role="option"
+                      aria-selected={isSelected}
+                      className={`global-search-sugg-item ${isSelected ? 'global-search-sugg-item--active' : ''}`}
+                      onClick={() => {
+                        setQuery(term);
+                        executeSearch(term);
+                      }}
+                    >
+                      <div className="global-search-sugg-left">
+                        <History
+                          size={14}
+                          className="global-search-history-icon"
+                          aria-hidden="true"
+                        />
+                        <span className="global-search-sugg-title">{term}</span>
+                      </div>
 
-          <div className="global-search-dropdown-footer">
-            <button
-              type="button"
-              onClick={() => executeSearch(query)}
-              className="global-search-view-all-btn"
-            >
-              <span>See all results for &ldquo;{query}&rdquo;</span>
-              <ArrowRight size={14} aria-hidden="true" />
-            </button>
-          </div>
+                      <button
+                        type="button"
+                        onClick={(e) => handleRemoveRecent(e, term)}
+                        className="global-search-remove-recent-btn"
+                        aria-label={`Remove ${term} from recent searches`}
+                      >
+                        <Trash2 size={12} aria-hidden="true" />
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </>
+          ) : suggestions.length > 0 ? (
+            /* Live Search Suggestions Mode */
+            <>
+              <div className="global-search-dropdown-header">
+                <span>Top Matches</span>
+              </div>
+
+              <ul className="global-search-suggestions-list">
+                {suggestions.map((item, idx) => {
+                  const isSelected = activeIndex === idx;
+                  return (
+                    <li
+                      key={item.id}
+                      id={`global-search-item-${idx}`}
+                      role="option"
+                      aria-selected={isSelected}
+                      className={`global-search-sugg-item ${isSelected ? 'global-search-sugg-item--active' : ''}`}
+                      onClick={() => handleSelectSuggestion(item)}
+                    >
+                      <div className="global-search-sugg-left">
+                        {getSuggestionIcon(item.type)}
+                        <div className="global-search-sugg-content">
+                          <span className="global-search-sugg-title">{item.title}</span>
+                          <span className="global-search-sugg-desc">{item.description}</span>
+                        </div>
+                      </div>
+
+                      <div className="global-search-sugg-right">
+                        <span className="global-search-sugg-badge">
+                          {item.type === 'app'
+                            ? 'App'
+                            : item.type === 'blog_post'
+                              ? 'Blog'
+                              : 'Help'}
+                        </span>
+                        <ArrowRight
+                          size={13}
+                          className="global-search-sugg-arrow"
+                          aria-hidden="true"
+                        />
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+
+              <div className="global-search-dropdown-footer">
+                <button
+                  type="button"
+                  onClick={() => executeSearch(query)}
+                  className="global-search-view-all-btn"
+                >
+                  <span>See all results for &ldquo;{query}&rdquo;</span>
+                  <ArrowRight size={14} aria-hidden="true" />
+                </button>
+              </div>
+            </>
+          ) : null}
         </div>
       )}
     </div>

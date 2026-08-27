@@ -42,6 +42,9 @@ export interface GlobalSearchResultItem {
   readonly iconName?: string;
   readonly badges?: readonly string[];
   readonly publishedAt?: number;
+  readonly relevanceScore?: number;
+  readonly matchReason?:
+    'exact_title' | 'prefix_title' | 'title_contains' | 'tag_match' | 'content_match';
   readonly metadata?: Record<string, unknown>;
 }
 

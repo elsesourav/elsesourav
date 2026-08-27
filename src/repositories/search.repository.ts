@@ -10,6 +10,11 @@ import type {
 } from '@/types/search.types';
 import type { RepositoryResult } from './types';
 import { globalSearchFiltersSchema } from '@/schemas/search.schema';
+import {
+  normalizeSearchQuery,
+  extractSearchTokens,
+  calculateRelevance,
+} from '@/utils/search-relevance';
 
 export interface ISearchRepository {
   search(filters: GlobalSearchFilters): RepositoryResult<GlobalSearchResult>;
@@ -17,14 +22,28 @@ export interface ISearchRepository {
     query: string,
     limit?: number
   ): RepositoryResult<readonly GlobalSearchResultItem[]>;
+  clearCache(): void;
 }
 
+interface CacheEntry {
+  readonly timestamp: number;
+  readonly result: GlobalSearchResult;
+}
+
+const CACHE_TTL_MS = 3 * 60 * 1000; // 3 minutes
+
 export class FirestoreSearchRepository implements ISearchRepository {
+  private readonly inMemoryCache = new Map<string, CacheEntry>();
+
   constructor(
     private readonly appRepo = appRepository,
     private readonly blogRepo = blogRepository,
     private readonly helpRepo = helpArticleRepository
   ) {}
+
+  public clearCache(): void {
+    this.inMemoryCache.clear();
+  }
 
   public async search(filters: GlobalSearchFilters): RepositoryResult<GlobalSearchResult> {
     const validation = globalSearchFiltersSchema.safeParse(filters);
@@ -38,11 +57,11 @@ export class FirestoreSearchRepository implements ISearchRepository {
     }
 
     const { query: rawQuery, type = 'all', limit = 20 } = validation.data;
-    const query = rawQuery.toLowerCase().trim();
+    const normalized = normalizeSearchQuery(rawQuery);
 
-    if (!query) {
+    if (!normalized) {
       return ok({
-        query: '',
+        query: rawQuery,
         apps: [],
         blogPosts: [],
         helpArticles: [],
@@ -50,14 +69,20 @@ export class FirestoreSearchRepository implements ISearchRepository {
       });
     }
 
+    const cacheKey = `${normalized}:${type}:${limit}`;
+    const cached = this.inMemoryCache.get(cacheKey);
+    if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
+      return ok(cached.result);
+    }
+
     try {
-      const searchTokens = query.split(/\s+/).filter(Boolean);
+      const tokens = extractSearchTokens(normalized);
 
       const appsPromise =
         type === 'all' || type === 'app'
           ? this.appRepo.findMany({
               filters: [{ field: 'status', operator: '==', value: 'published' }],
-              limit: 50,
+              limit: 60,
             })
           : Promise.resolve(ok({ items: [], hasMore: false }));
 
@@ -65,7 +90,7 @@ export class FirestoreSearchRepository implements ISearchRepository {
         type === 'all' || type === 'blog_post'
           ? this.blogRepo.findMany({
               filters: [{ field: 'status', operator: '==', value: 'published' }],
-              limit: 50,
+              limit: 60,
             })
           : Promise.resolve(ok({ items: [], hasMore: false }));
 
@@ -73,7 +98,7 @@ export class FirestoreSearchRepository implements ISearchRepository {
         type === 'all' || type === 'help_article'
           ? this.helpRepo.findMany({
               filters: [{ field: 'status', operator: '==', value: 'published' }],
-              limit: 50,
+              limit: 60,
             })
           : Promise.resolve(ok({ items: [], hasMore: false }));
 
@@ -83,18 +108,22 @@ export class FirestoreSearchRepository implements ISearchRepository {
         helpPromise,
       ]);
 
-      // Filter and Map Apps (Priority 1)
+      // 1. Process & Rank Applications (Domain Priority)
       const matchedApps: GlobalSearchResultItem[] = [];
       if (appsRes.success) {
         for (const app of appsRes.data.items) {
-          // Strictly exclude draft/deleted/archived apps
           if (app.status !== 'published' || app.deletedAt) continue;
 
-          const searchText =
-            `${app.name} ${app.slug} ${app.shortDescription} ${app.description} ${app.primaryCategory} ${(app.tags || []).join(' ')}`.toLowerCase();
-          const matches = searchTokens.every((token) => searchText.includes(token));
+          const relevance = calculateRelevance(normalized, tokens, {
+            title: app.name,
+            slug: app.slug,
+            description: `${app.shortDescription} ${app.description}`,
+            category: app.primaryCategory,
+            tags: app.tags,
+            isApp: true,
+          });
 
-          if (matches) {
+          if (relevance) {
             matchedApps.push({
               id: app.id,
               type: 'app',
@@ -107,21 +136,28 @@ export class FirestoreSearchRepository implements ISearchRepository {
                 Boolean(b)
               ),
               publishedAt: app.publishedAt || app.createdAt,
+              relevanceScore: relevance.score,
+              matchReason: relevance.matchReason,
             });
           }
         }
       }
 
-      // Filter and Map Blog Posts (Priority 2)
+      // 2. Process & Rank Blog Posts
       const matchedBlogPosts: GlobalSearchResultItem[] = [];
       if (blogRes.success) {
         for (const post of blogRes.data.items) {
           if (post.status !== 'published' || post.deletedAt) continue;
 
-          const searchText = `${post.title} ${post.slug} ${post.excerpt || ''} ${post.content} ${post.category} ${(post.tags || []).join(' ')}`.toLowerCase();
-          const matches = searchTokens.every((token) => searchText.includes(token));
+          const relevance = calculateRelevance(normalized, tokens, {
+            title: post.title,
+            slug: post.slug,
+            description: `${post.excerpt || ''} ${post.content}`,
+            category: post.category,
+            tags: post.tags,
+          });
 
-          if (matches) {
+          if (relevance) {
             matchedBlogPosts.push({
               id: post.id,
               type: 'blog_post',
@@ -135,21 +171,27 @@ export class FirestoreSearchRepository implements ISearchRepository {
                 ...(post.tags || []),
               ].filter((b): b is string => Boolean(b)),
               publishedAt: post.publishedAt || post.createdAt,
+              relevanceScore: relevance.score,
+              matchReason: relevance.matchReason,
             });
           }
         }
       }
 
-      // Filter and Map Help Articles (Priority 3)
+      // 3. Process & Rank Help Articles
       const matchedHelpArticles: GlobalSearchResultItem[] = [];
       if (helpRes.success) {
         for (const article of helpRes.data.items) {
           if (article.status !== 'published' || article.deletedAt) continue;
 
-          const searchText = `${article.title} ${article.slug} ${article.excerpt || ''} ${article.content} ${article.categoryId}`.toLowerCase();
-          const matches = searchTokens.every((token) => searchText.includes(token));
+          const relevance = calculateRelevance(normalized, tokens, {
+            title: article.title,
+            slug: article.slug,
+            description: `${article.excerpt || ''} ${article.content}`,
+            category: article.categoryId,
+          });
 
-          if (matches) {
+          if (relevance) {
             matchedHelpArticles.push({
               id: article.id,
               type: 'help_article',
@@ -159,24 +201,40 @@ export class FirestoreSearchRepository implements ISearchRepository {
               category: article.categoryId,
               badges: [],
               publishedAt: article.publishedAt || article.createdAt,
+              relevanceScore: relevance.score,
+              matchReason: relevance.matchReason,
             });
           }
         }
       }
 
-      // Respect limit per section or total
-      const apps = matchedApps.slice(0, limit);
-      const blogPosts = matchedBlogPosts.slice(0, limit);
-      const helpArticles = matchedHelpArticles.slice(0, limit);
-      const totalCount = apps.length + blogPosts.length + helpArticles.length;
+      // Sort items within each bucket deterministically: relevanceScore desc, then publishedAt desc
+      const sortFn = (a: GlobalSearchResultItem, b: GlobalSearchResultItem) => {
+        const scoreDiff = (b.relevanceScore ?? 0) - (a.relevanceScore ?? 0);
+        if (scoreDiff !== 0) return scoreDiff;
+        return (b.publishedAt ?? 0) - (a.publishedAt ?? 0);
+      };
 
-      return ok({
-        query: validation.data.query,
-        apps,
-        blogPosts,
-        helpArticles,
+      const sortedApps = matchedApps.sort(sortFn).slice(0, limit);
+      const sortedBlog = matchedBlogPosts.sort(sortFn).slice(0, limit);
+      const sortedHelp = matchedHelpArticles.sort(sortFn).slice(0, limit);
+      const totalCount = sortedApps.length + sortedBlog.length + sortedHelp.length;
+
+      const finalResult: GlobalSearchResult = {
+        query: rawQuery,
+        apps: sortedApps,
+        blogPosts: sortedBlog,
+        helpArticles: sortedHelp,
         totalCount,
+      };
+
+      // Cache result in-memory
+      this.inMemoryCache.set(cacheKey, {
+        timestamp: Date.now(),
+        result: finalResult,
       });
+
+      return ok(finalResult);
     } catch (error) {
       return err(
         AppError.internal('Failed to execute global platform search', {
@@ -190,20 +248,25 @@ export class FirestoreSearchRepository implements ISearchRepository {
     rawQuery: string,
     limit = 6
   ): RepositoryResult<readonly GlobalSearchResultItem[]> {
-    const query = (rawQuery || '').trim().toLowerCase();
-    if (!query || query.length < 2) {
+    const normalized = normalizeSearchQuery(rawQuery);
+    if (!normalized || normalized.length < 2) {
       return ok([]);
     }
 
-    const searchRes = await this.search({ query, limit });
+    const searchRes = await this.search({ query: normalized, limit });
     if (!searchRes.success) {
       return err(searchRes.error);
     }
 
     const { apps, blogPosts, helpArticles } = searchRes.data;
-    // Suggested priority: Apps first, then blog, then help
-    const suggestions = [...apps, ...blogPosts, ...helpArticles].slice(0, limit);
-    return ok(suggestions);
+    // Combine all and sort globally by relevanceScore
+    const allMatches = [...apps, ...blogPosts, ...helpArticles].sort((a, b) => {
+      const scoreDiff = (b.relevanceScore ?? 0) - (a.relevanceScore ?? 0);
+      if (scoreDiff !== 0) return scoreDiff;
+      return (b.publishedAt ?? 0) - (a.publishedAt ?? 0);
+    });
+
+    return ok(allMatches.slice(0, limit));
   }
 }
 

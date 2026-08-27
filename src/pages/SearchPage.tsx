@@ -33,10 +33,10 @@ const SUGGESTED_TAGS = [
 export const SearchPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const queryParam = searchParams.get('q') || '';
-  const tabParam = (searchParams.get('tab') as SearchTab) || 'all';
+  const typeParam = searchParams.get('type') || searchParams.get('tab') || 'all';
 
   const [activeTab, setActiveTab] = useState<SearchTab>(
-    ['all', 'apps', 'blog', 'help'].includes(tabParam) ? tabParam : 'all'
+    ['all', 'apps', 'blog', 'help'].includes(typeParam) ? (typeParam as SearchTab) : 'all'
   );
   const [results, setResults] = useState<GlobalSearchResult | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -47,9 +47,11 @@ export const SearchPage: React.FC = () => {
     setActiveTab(newTab);
     const newParams = new URLSearchParams(searchParams);
     if (newTab === 'all') {
+      newParams.delete('type');
       newParams.delete('tab');
     } else {
-      newParams.set('tab', newTab);
+      newParams.set('type', newTab);
+      newParams.delete('tab');
     }
     setSearchParams(newParams, { replace: true });
   };

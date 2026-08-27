@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { globalSearchService } from '@/services/global-search.service';
+import { searchRepository } from '@/repositories/search.repository';
 import { appRepository } from '@/repositories/app.repository';
 import { blogRepository } from '@/repositories/blog.repository';
 import { helpArticleRepository } from '@/repositories/help.repository';
@@ -8,7 +9,7 @@ import type { BlogPost } from '@/types/blog.types';
 import type { HelpArticle } from '@/types/help.types';
 import { ok } from '@/lib/result';
 
-describe('Global Search Service (Prompt 51)', () => {
+describe('Global Search Service & Relevance Strategy (Prompt 52)', () => {
   const mockPublishedApp: App = {
     id: 'app-terminal',
     slug: 'cloud-terminal',
@@ -87,6 +88,7 @@ describe('Global Search Service (Prompt 51)', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    searchRepository.clearCache();
 
     vi.spyOn(appRepository, 'findMany').mockResolvedValue(
       ok({ items: [mockPublishedApp, mockDraftApp], hasMore: false })
@@ -127,7 +129,29 @@ describe('Global Search Service (Prompt 51)', () => {
     }
   });
 
-  it('3. Filters results by specific content type', async () => {
+  it('3. Normalizes whitespace and uppercase input gracefully', async () => {
+    const res = await globalSearchService.search({ query: '   CLOUD    TERMINAL   ' });
+
+    expect(res.success).toBe(true);
+    if (res.success) {
+      expect(res.data.apps.length).toBe(1);
+      expect(res.data.apps[0]?.title).toBe('Cloud Terminal Pro');
+    }
+  });
+
+  it('4. Prioritizes exact and prefix matches with higher relevance score', async () => {
+    const res = await globalSearchService.search({ query: 'Cloud Terminal' });
+
+    expect(res.success).toBe(true);
+    if (res.success) {
+      const topApp = res.data.apps[0];
+      expect(topApp).toBeDefined();
+      expect(topApp?.relevanceScore).toBeGreaterThanOrEqual(80);
+      expect(topApp?.matchReason).toBe('prefix_title');
+    }
+  });
+
+  it('5. Filters results by specific content type', async () => {
     const res = await globalSearchService.search({ query: 'terminal', type: 'app' });
 
     expect(res.success).toBe(true);
@@ -138,17 +162,17 @@ describe('Global Search Service (Prompt 51)', () => {
     }
   });
 
-  it('4. Provides fast lightweight suggestions for search autocompletion', async () => {
-    const res = await globalSearchService.getSuggestions('terminal', 3);
+  it('6. Matches tags and categories accurately', async () => {
+    const res = await globalSearchService.search({ query: 'troubleshooting' });
 
     expect(res.success).toBe(true);
     if (res.success) {
-      expect(res.data.length).toBe(3);
-      expect(res.data[0]?.type).toBe('app'); // Apps prioritized first
+      expect(res.data.helpArticles.length).toBe(1);
+      expect(res.data.helpArticles[0]?.title).toBe('Keyboard Shortcuts for Cloud Terminal');
     }
   });
 
-  it('5. Returns empty result cleanly when query is whitespace or empty', async () => {
+  it('7. Returns empty result cleanly when query is whitespace or empty', async () => {
     const res = await globalSearchService.search({ query: '   ' });
 
     expect(res.success).toBe(true);

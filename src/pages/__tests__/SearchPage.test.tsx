@@ -151,4 +151,26 @@ describe('Global Search Page & Discovery (Prompt 51)', () => {
     ).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Clear Search Query/i })).toBeInTheDocument();
   });
+
+  it('6. Supports URL type parameter to directly open specific content category tab', async () => {
+    renderWithProviders('/search?q=terminal&type=blog');
+
+    expect(
+      await screen.findByText('Building a Fast Cloud Terminal with WebSockets')
+    ).toBeInTheDocument();
+    expect(screen.queryByText('Cloud Terminal Pro')).not.toBeInTheDocument();
+  });
+
+  it('7. Handles keyboard escape key in search input gracefully', async () => {
+    const user = userEvent.setup();
+    renderWithProviders('/search');
+
+    const searchInput = screen.getByLabelText(
+      /Search apps, engineering articles, and help guides/i
+    );
+    await user.type(searchInput, 'terminal');
+    await user.keyboard('{Escape}');
+
+    expect(searchInput).toHaveValue('terminal');
+  });
 });
