@@ -7,6 +7,7 @@ import type { HelpArticle, HelpCategory } from '@/types/help.types';
 import type { SupportTicket, SupportTicketMessage } from '@/types/support.types';
 import type { AuditLog } from '@/types/audit.types';
 import type { Notification } from '@/types/notification.types';
+import type { AppVersion } from '@/types/version.types';
 
 const BASE_TIMESTAMP = 1700000000000;
 
@@ -255,3 +256,23 @@ export function createTestUserLibraryItem(overrides?: Partial<UserLibraryItem>):
     ...overrides,
   };
 }
+
+export function createTestAppVersion(overrides?: Partial<AppVersion>): AppVersion {
+  return {
+    id: 'ver-001',
+    appId: 'app-terminal-pro',
+    version: '1.2.0',
+    title: 'Version 1.2.0 - Performance & Aesthetics Update',
+    summary: 'Enhanced terminal rendering performance and added dark glass theme options.',
+    releaseNotes: '### Changes in 1.2.0\n- GPU acceleration improvements\n- Fixed tab closing shortcuts\n- Added telemetry toggles',
+    highlights: ['GPU acceleration', 'Dark glass theme', 'Keyboard customization'],
+    releaseDate: BASE_TIMESTAMP,
+    status: 'published',
+    isCurrent: true,
+    minOsVersion: 'macOS 12.0',
+    createdAt: BASE_TIMESTAMP,
+    updatedAt: BASE_TIMESTAMP,
+    ...overrides,
+  };
+}
+
