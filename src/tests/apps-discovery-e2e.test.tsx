@@ -269,6 +269,7 @@ describe('Apps Discovery & Details End-to-End Integration Suite', () => {
     vi.spyOn(feedbackService, 'getApprovedReviews').mockResolvedValue(
       ok({ items: [], hasMore: false })
     );
+    vi.spyOn(feedbackService, 'getUserReview').mockResolvedValue(ok(null));
     const mockLibraryItem: UserLibraryItem = {
       id: 'lib-1',
       userId: 'u-sourav',

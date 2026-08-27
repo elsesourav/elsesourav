@@ -44,29 +44,9 @@ export { HelpPage } from './HelpPage';
 export { HelpCategoryPage } from './HelpCategoryPage';
 export { HelpArticlePage } from './HelpArticlePage';
 
-export const LoginPage: React.FC = () => (
-  <PlaceholderPage
-    title="Sign In to Your Account"
-    description="Access your personal app library, submit reviews, and manage your account preferences."
-    badge="Authentication"
-  />
-);
-
-export const SignUpPage: React.FC = () => (
-  <PlaceholderPage
-    title="Create an Account"
-    description="Join the ElseSourav platform to pin favorite apps, receive updates, and submit feedback."
-    badge="Sign Up"
-  />
-);
-
-export const ForgotPasswordPage: React.FC = () => (
-  <PlaceholderPage
-    title="Reset Your Password"
-    description="Enter your account email address to receive password reset instructions."
-    badge="Recovery"
-  />
-);
+export { LoginPage } from './LoginPage';
+export { SignUpPage } from './SignUpPage';
+export { ForgotPasswordPage } from './ForgotPasswordPage';
 
 export const PrivacyPage: React.FC = () => (
   <PlaceholderPage

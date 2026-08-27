@@ -174,7 +174,7 @@ describe('Global Application Shell, Routing & Navigation', () => {
     it('redirects unauthenticated user from /library to /login', () => {
       renderWithProviders('/library', { isAuthenticated: false });
       expect(
-        screen.getByRole('heading', { level: 1, name: /Sign In to Your Account/i })
+        screen.getByRole('heading', { level: 1, name: /Sign In to (ElseSourav|Your Account)/i })
       ).toBeInTheDocument();
     });
 
