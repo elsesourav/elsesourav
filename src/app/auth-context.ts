@@ -27,6 +27,12 @@ export const initialAuthContextValue: AuthContextValue = {
   sendVerificationEmail: async () => {
     throw new Error('AuthProvider not mounted');
   },
+  changePassword: async () => {
+    throw new Error('AuthProvider not mounted');
+  },
+  deleteAccount: async () => {
+    throw new Error('AuthProvider not mounted');
+  },
   clearError: () => {},
 };
 

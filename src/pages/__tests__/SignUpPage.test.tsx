@@ -27,6 +27,8 @@ describe('SignUpPage Component', () => {
     signOut: vi.fn(),
     sendPasswordReset: vi.fn(),
     sendVerificationEmail: mockSendVerificationEmail,
+    changePassword: vi.fn(),
+    deleteAccount: vi.fn(),
     clearError: vi.fn(),
     ...overrides,
   });

@@ -66,6 +66,8 @@ describe('Global Application Shell, Routing & Navigation', () => {
     signOut: vi.fn().mockResolvedValue({ success: true, data: undefined }),
     sendPasswordReset: vi.fn(),
     sendVerificationEmail: vi.fn(),
+    changePassword: vi.fn(),
+    deleteAccount: vi.fn(),
     clearError: vi.fn(),
     ...overrides,
   });

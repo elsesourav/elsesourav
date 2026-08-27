@@ -84,13 +84,7 @@ export const LibraryPage: React.FC = () => (
   />
 );
 
-export const SettingsPage: React.FC = () => (
-  <PlaceholderPage
-    title="Account & Preferences"
-    description="Manage your display theme, notification alerts, and profile details."
-    badge="Settings"
-  />
-);
+export { SettingsPage } from './SettingsPage';
 
 // =============================================================================
 // ADMIN PROTECTED PAGES

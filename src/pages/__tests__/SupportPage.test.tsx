@@ -64,6 +64,8 @@ describe('SupportPage Component (Prompt 39)', () => {
       signOut: vi.fn(),
       sendPasswordReset: vi.fn(),
       sendVerificationEmail: vi.fn(),
+      changePassword: vi.fn(),
+      deleteAccount: vi.fn(),
       clearError: vi.fn(),
       error: null,
     });
@@ -150,6 +152,8 @@ describe('SupportPage Component (Prompt 39)', () => {
       signOut: vi.fn(),
       sendPasswordReset: vi.fn(),
       sendVerificationEmail: vi.fn(),
+      changePassword: vi.fn(),
+      deleteAccount: vi.fn(),
       clearError: vi.fn(),
       error: null,
     });

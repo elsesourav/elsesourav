@@ -26,6 +26,8 @@ describe('ForgotPasswordPage Component', () => {
     signOut: vi.fn(),
     sendPasswordReset: mockSendPasswordReset,
     sendVerificationEmail: vi.fn(),
+    changePassword: vi.fn(),
+    deleteAccount: vi.fn(),
     clearError: vi.fn(),
     ...overrides,
   });

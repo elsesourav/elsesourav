@@ -184,6 +184,30 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children, defaultRol
     return result;
   }, []);
 
+  const changePassword = useCallback(
+    async (currentPassword: string, newPassword: string): Promise<Result<void, AppError>> => {
+      setError(null);
+      const result = await authService.changePassword(currentPassword, newPassword);
+      if (isErr(result)) {
+        setError(result.error);
+      }
+      return result;
+    },
+    []
+  );
+
+  const deleteAccount = useCallback(async (password?: string): Promise<Result<void, AppError>> => {
+    setError(null);
+    const result = await authService.deleteAccount(password);
+    if (isOk(result)) {
+      setAuthUser(null);
+      setUser(null);
+    } else if (isErr(result)) {
+      setError(result.error);
+    }
+    return result;
+  }, []);
+
   const isAuthenticated = Boolean(authUser);
   const role: UserRole = user?.role || 'user';
   const isAdmin = role === 'admin';
@@ -203,6 +227,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children, defaultRol
       signOut,
       sendPasswordReset,
       sendVerificationEmail,
+      changePassword,
+      deleteAccount,
       clearError,
     }),
     [
@@ -219,6 +245,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children, defaultRol
       signOut,
       sendPasswordReset,
       sendVerificationEmail,
+      changePassword,
+      deleteAccount,
       clearError,
     ]
   );

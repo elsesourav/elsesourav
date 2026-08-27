@@ -68,6 +68,12 @@ export const AppRoutes: React.FC = () => {
         <Route element={<ProtectedRoute />}>
           <Route path={ROUTES.LIBRARY} element={<LibraryPage />} />
           <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
+          <Route path={ROUTES.SETTINGS_PROFILE} element={<SettingsPage defaultTab="profile" />} />
+          <Route
+            path={ROUTES.SETTINGS_PREFERENCES}
+            element={<SettingsPage defaultTab="preferences" />}
+          />
+          <Route path={ROUTES.SETTINGS_SECURITY} element={<SettingsPage defaultTab="security" />} />
           <Route path={ROUTES.SUPPORT_TICKETS} element={<SupportTicketsPage />} />
           <Route path={ROUTES.SUPPORT_TICKET_DETAIL} element={<SupportTicketDetailPage />} />
         </Route>

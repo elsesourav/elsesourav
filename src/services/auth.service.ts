@@ -7,6 +7,10 @@ import {
   sendPasswordResetEmail,
   sendEmailVerification,
   updateProfile,
+  updatePassword as firebaseUpdatePassword,
+  deleteUser as firebaseDeleteUser,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
   onAuthStateChanged as firebaseOnAuthStateChanged,
   type User as FirebaseUser,
   type Auth,
@@ -83,6 +87,8 @@ export interface IAuthService {
   signOut(): Promise<Result<void, AppError>>;
   sendPasswordReset(payload: PasswordResetPayload): Promise<Result<void, AppError>>;
   sendVerificationEmail(): Promise<Result<void, AppError>>;
+  changePassword(currentPassword: string, newPassword: string): Promise<Result<void, AppError>>;
+  deleteAccount(password?: string): Promise<Result<void, AppError>>;
   getCurrentUser(): AuthUser | null;
   onAuthStateChanged(callback: (user: AuthUser | null) => void): () => void;
 }
@@ -182,6 +188,48 @@ export class FirebaseAuthService implements IAuthService {
         );
       }
       await sendEmailVerification(currentUser);
+      return ok(undefined);
+    } catch (error) {
+      return err(mapFirebaseAuthError(error));
+    }
+  }
+
+  public async changePassword(
+    currentPassword: string,
+    newPassword: string
+  ): Promise<Result<void, AppError>> {
+    try {
+      const currentUser = this.auth.currentUser;
+      if (!currentUser || !currentUser.email) {
+        return err(AppError.unauthorized('No authenticated user session found.'));
+      }
+
+      // Reauthenticate with current password
+      const credential = EmailAuthProvider.credential(currentUser.email, currentPassword);
+      await reauthenticateWithCredential(currentUser, credential);
+
+      // Update to new password
+      await firebaseUpdatePassword(currentUser, newPassword);
+      return ok(undefined);
+    } catch (error) {
+      return err(mapFirebaseAuthError(error));
+    }
+  }
+
+  public async deleteAccount(password?: string): Promise<Result<void, AppError>> {
+    try {
+      const currentUser = this.auth.currentUser;
+      if (!currentUser) {
+        return err(AppError.unauthorized('No authenticated user session found.'));
+      }
+
+      // If password provided for email auth, reauthenticate before deletion
+      if (password && currentUser.email) {
+        const credential = EmailAuthProvider.credential(currentUser.email, password);
+        await reauthenticateWithCredential(currentUser, credential);
+      }
+
+      await firebaseDeleteUser(currentUser);
       return ok(undefined);
     } catch (error) {
       return err(mapFirebaseAuthError(error));

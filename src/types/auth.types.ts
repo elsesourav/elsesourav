@@ -65,5 +65,10 @@ export interface AuthContextValue extends AuthState {
   readonly signOut: () => Promise<Result<void, AppError>>;
   readonly sendPasswordReset: (payload: PasswordResetPayload) => Promise<Result<void, AppError>>;
   readonly sendVerificationEmail: () => Promise<Result<void, AppError>>;
+  readonly changePassword: (
+    currentPassword: string,
+    newPassword: string
+  ) => Promise<Result<void, AppError>>;
+  readonly deleteAccount: (password?: string) => Promise<Result<void, AppError>>;
   readonly clearError: () => void;
 }

@@ -299,6 +299,8 @@ describe('Apps Discovery & Details End-to-End Integration Suite', () => {
       signOut: vi.fn(),
       sendPasswordReset: vi.fn(),
       sendVerificationEmail: vi.fn(),
+      changePassword: vi.fn(),
+      deleteAccount: vi.fn(),
       clearError: vi.fn(),
     });
   });
@@ -427,6 +429,8 @@ describe('Apps Discovery & Details End-to-End Integration Suite', () => {
       signOut: vi.fn(),
       sendPasswordReset: vi.fn(),
       sendVerificationEmail: vi.fn(),
+      changePassword: vi.fn(),
+      deleteAccount: vi.fn(),
       clearError: vi.fn(),
     });
 

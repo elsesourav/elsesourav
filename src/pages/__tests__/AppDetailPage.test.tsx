@@ -189,6 +189,8 @@ describe('AppDetailPage Component', () => {
       signOut: vi.fn(),
       sendPasswordReset: vi.fn(),
       sendVerificationEmail: vi.fn(),
+      changePassword: vi.fn(),
+      deleteAccount: vi.fn(),
       clearError: vi.fn(),
     });
 

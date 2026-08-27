@@ -84,6 +84,8 @@ describe('AppCard Component & Smart Action System', () => {
       signOut: vi.fn(),
       sendPasswordReset: vi.fn(),
       sendVerificationEmail: vi.fn(),
+      changePassword: vi.fn(),
+      deleteAccount: vi.fn(),
       clearError: vi.fn(),
     });
   });
@@ -204,6 +206,8 @@ describe('AppCard Component & Smart Action System', () => {
       signOut: vi.fn(),
       sendPasswordReset: vi.fn(),
       sendVerificationEmail: vi.fn(),
+      changePassword: vi.fn(),
+      deleteAccount: vi.fn(),
       clearError: vi.fn(),
     });
 
