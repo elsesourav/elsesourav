@@ -2,40 +2,27 @@ import type { ID, Timestamp } from './common.types';
 
 /**
  * App Publication Status
+ * Normal public users can only see 'published'
  */
-export type AppStatus = 'published' | 'draft' | 'archived' | 'beta' | 'unlisted';
-
-/**
- * App Categories
- */
-export type AppCategory =
-  | 'web-apps'
-  | 'games'
-  | 'extensions'
-  | 'mobile'
-  | 'developer-tools'
-  | 'desktop'
-  | 'ai-tools'
-  | 'utilities';
-
-/**
- * App Tag Entity
- */
-export interface AppTag {
-  readonly id: ID;
-  readonly name: string;
-  readonly slug: string;
-  readonly color?: string;
-}
+export type AppStatus = 'draft' | 'published' | 'archived';
 
 /**
  * Supported Target Platforms
  */
 export type AppPlatform =
-  'web' | 'chrome' | 'android' | 'github' | 'windows' | 'macos' | 'linux' | 'pwa' | 'external';
+  | 'web'
+  | 'chrome'
+  | 'android'
+  | 'ios'
+  | 'windows'
+  | 'macos'
+  | 'linux'
+  | 'github'
+  | 'download'
+  | 'other';
 
 /**
- * Context-Aware Action Types
+ * Platform Action Types
  */
 export type AppActionType =
   | 'open_app'
@@ -46,28 +33,27 @@ export type AppActionType =
   | 'visit_website';
 
 /**
- * App Link Model (Multi-destination, platform-agnostic)
+ * Platform Link Model (Multi-destination, platform-agnostic)
  */
 export interface AppLink {
   readonly id: ID;
+  readonly appId: ID;
   readonly platform: AppPlatform;
-  readonly action: AppActionType;
-  readonly url: string;
   readonly label: string;
-  readonly isPrimary: boolean;
-  readonly version?: string;
-  readonly fileSize?: string;
-  readonly target?: '_blank' | '_self';
+  readonly url: string;
+  readonly action?: AppActionType;
+  readonly isPrimary?: boolean;
+  readonly icon?: string;
+  readonly displayOrder: number;
+  readonly isActive: boolean;
 }
 
 /**
  * App Media Assets
  */
-export type AppMediaKind = 'icon' | 'screenshot' | 'banner' | 'video_preview' | 'thumbnail';
-
 export interface AppMedia {
   readonly id: ID;
-  readonly kind: AppMediaKind;
+  readonly kind: 'icon' | 'screenshot' | 'banner' | 'video_preview' | 'thumbnail';
   readonly url: string;
   readonly alt: string;
   readonly width?: number;
@@ -76,29 +62,7 @@ export interface AppMedia {
 }
 
 /**
- * App Changelog Details
- */
-export interface AppChangelog {
-  readonly version: string;
-  readonly releaseDate: Timestamp;
-  readonly title: string;
-  readonly highlights: readonly string[];
-  readonly description?: string;
-}
-
-/**
- * App Version History
- */
-export interface AppVersion {
-  readonly version: string;
-  readonly releaseDate: Timestamp;
-  readonly changelog?: AppChangelog;
-  readonly isCurrent: boolean;
-  readonly minOsVersion?: string;
-}
-
-/**
- * App Analytics & Engagement Statistics
+ * Bounded App Statistics Summary
  */
 export interface AppStatistics {
   readonly views: number;
@@ -115,21 +79,30 @@ export interface App {
   readonly id: ID;
   readonly slug: string;
   readonly name: string;
-  readonly tagline: string;
+  readonly shortDescription: string;
   readonly description: string;
-  readonly category: AppCategory;
+  readonly iconUrl: string;
+  readonly featuredImageUrl?: string;
+  readonly screenshots: readonly string[];
+  readonly demoUrl?: string;
+  readonly videoUrl?: string;
+  readonly primaryCategory: string;
   readonly tags: readonly string[];
   readonly status: AppStatus;
   readonly platforms: readonly AppPlatform[];
   readonly links: readonly AppLink[];
-  readonly media: readonly AppMedia[];
-  readonly currentVersion: string;
-  readonly versions: readonly AppVersion[];
+  readonly currentVersion?: string;
+  readonly releaseDate?: Timestamp;
+  readonly seoTitle?: string;
+  readonly seoDescription?: string;
+  readonly socialImageUrl?: string;
   readonly stats: AppStatistics;
   readonly isFeatured: boolean;
   readonly isPinned: boolean;
   readonly sortOrder: number;
+  readonly publishedAt?: Timestamp;
   readonly createdAt: Timestamp;
   readonly updatedAt: Timestamp;
-  readonly publishedAt?: Timestamp;
+  readonly archivedAt?: Timestamp;
+  readonly deletedAt?: Timestamp;
 }

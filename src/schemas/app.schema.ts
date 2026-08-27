@@ -4,12 +4,13 @@ export const appPlatformSchema = z.enum([
   'web',
   'chrome',
   'android',
-  'github',
+  'ios',
   'windows',
   'macos',
   'linux',
-  'pwa',
-  'external',
+  'github',
+  'download',
+  'other',
 ]);
 
 export const appActionTypeSchema = z.enum([
@@ -21,39 +22,19 @@ export const appActionTypeSchema = z.enum([
   'visit_website',
 ]);
 
-export const appStatusSchema = z.enum(['published', 'draft', 'archived', 'beta', 'unlisted']);
-
-export const appCategorySchema = z.enum([
-  'web-apps',
-  'games',
-  'extensions',
-  'mobile',
-  'developer-tools',
-  'desktop',
-  'ai-tools',
-  'utilities',
-]);
+export const appStatusSchema = z.enum(['draft', 'published', 'archived']);
 
 export const appLinkSchema = z.object({
-  id: z.string(),
+  id: z.string().min(1, 'Link ID is required'),
+  appId: z.string().min(1, 'App ID is required'),
   platform: appPlatformSchema,
-  action: appActionTypeSchema,
-  url: z.string().url(),
-  label: z.string().min(1),
-  isPrimary: z.boolean(),
-  version: z.string().optional(),
-  fileSize: z.string().optional(),
-  target: z.enum(['_blank', '_self']).optional(),
-});
-
-export const appMediaSchema = z.object({
-  id: z.string(),
-  kind: z.enum(['icon', 'screenshot', 'banner', 'video_preview', 'thumbnail']),
-  url: z.string().url(),
-  alt: z.string().min(1),
-  width: z.number().positive().optional(),
-  height: z.number().positive().optional(),
+  label: z.string().min(1, 'Link label is required').max(50),
+  url: z.string().url('Invalid destination URL'),
+  action: appActionTypeSchema.optional(),
   isPrimary: z.boolean().optional(),
+  icon: z.string().optional(),
+  displayOrder: z.number().int().default(0),
+  isActive: z.boolean().default(true),
 });
 
 export const appStatisticsSchema = z.object({
@@ -67,19 +48,27 @@ export const appStatisticsSchema = z.object({
 export const createAppSchema = z.object({
   slug: z
     .string()
-    .min(2)
+    .min(2, 'Slug must be at least 2 characters')
+    .max(60, 'Slug must not exceed 60 characters')
     .regex(/^[a-z0-9-]+$/, 'Slug must only contain lowercase alphanumeric characters and hyphens'),
-  name: z.string().min(1, 'Name is required'),
-  tagline: z.string().min(1, 'Tagline is required'),
-  description: z.string().min(1, 'Description is required'),
-  category: appCategorySchema,
+  name: z.string().min(1, 'App name is required').max(100),
+  shortDescription: z.string().min(1, 'Short description is required').max(200),
+  description: z.string().min(1, 'Full description is required'),
+  iconUrl: z.string().url('Invalid icon URL'),
+  featuredImageUrl: z.string().url('Invalid featured image URL').or(z.literal('')).optional(),
+  screenshots: z.array(z.string().url('Invalid screenshot URL')).default([]),
+  demoUrl: z.string().url('Invalid demo URL').or(z.literal('')).optional(),
+  videoUrl: z.string().url('Invalid video URL').or(z.literal('')).optional(),
+  primaryCategory: z.string().min(1, 'Primary category is required'),
   tags: z.array(z.string()).default([]),
   status: appStatusSchema.default('draft'),
-  platforms: z.array(appPlatformSchema).min(1, 'At least one platform is required'),
+  platforms: z.array(appPlatformSchema).min(1, 'At least one target platform is required'),
   links: z.array(appLinkSchema).default([]),
-  media: z.array(appMediaSchema).default([]),
-  currentVersion: z.string().default('1.0.0'),
-  versions: z.array(z.any()).default([]),
+  currentVersion: z.string().optional(),
+  releaseDate: z.number().optional(),
+  seoTitle: z.string().max(70, 'SEO title should be under 70 characters').optional(),
+  seoDescription: z.string().max(160, 'SEO description should be under 160 characters').optional(),
+  socialImageUrl: z.string().url('Invalid social image URL').or(z.literal('')).optional(),
   stats: appStatisticsSchema.default({
     views: 0,
     launches: 0,
@@ -88,7 +77,6 @@ export const createAppSchema = z.object({
   isFeatured: z.boolean().default(false),
   isPinned: z.boolean().default(false),
   sortOrder: z.number().int().default(0),
-  publishedAt: z.number().optional(),
 });
 
 export const updateAppSchema = createAppSchema.partial();

@@ -1,7 +1,7 @@
 import type { IRepository } from './base.repository';
 import type { RepositoryResult, PaginatedRepositoryResult, QueryOptions } from './types';
 import type { User, UserLibraryItem } from '@/types/user.types';
-import type { App, AppCategory, AppPlatform } from '@/types/app.types';
+import type { App } from '@/types/app.types';
 import type { BlogPost } from '@/types/blog.types';
 import type {
   HelpArticle,
@@ -19,11 +19,15 @@ import type { CreateAppDto, UpdateAppDto } from './app.repository';
  */
 export interface IAppRepository extends IRepository<App, CreateAppDto, UpdateAppDto> {
   findBySlug(slug: string): RepositoryResult<App | null>;
-  findFeatured(limit?: number): PaginatedRepositoryResult<App>;
-  findByCategory(category: AppCategory, limit?: number): PaginatedRepositoryResult<App>;
-  findByPlatform(platform: AppPlatform, limit?: number): PaginatedRepositoryResult<App>;
-  findByTag(tag: string, limit?: number): PaginatedRepositoryResult<App>;
-  findPublished(options?: QueryOptions): PaginatedRepositoryResult<App>;
+  publish(id: string): RepositoryResult<App>;
+  unpublish(id: string): RepositoryResult<App>;
+  archive(id: string): RepositoryResult<App>;
+  listPublished(options?: QueryOptions): PaginatedRepositoryResult<App>;
+  listFeatured(limit?: number): PaginatedRepositoryResult<App>;
+  listLatest(limit?: number): PaginatedRepositoryResult<App>;
+  listByCategory(category: string, options?: QueryOptions): PaginatedRepositoryResult<App>;
+  listByTag(tag: string, options?: QueryOptions): PaginatedRepositoryResult<App>;
+  checkSlugUnique(slug: string, excludeId?: string): RepositoryResult<boolean>;
 }
 
 /**
