@@ -1,36 +1,7 @@
 import type { ID, Timestamp } from './common.types';
 import type { UserRole } from './user.types';
 
-/**
- * Help Center Category
- */
-export interface HelpCategory {
-  readonly id: ID;
-  readonly name: string;
-  readonly slug: string;
-  readonly description: string;
-  readonly iconName?: string;
-  readonly sortOrder: number;
-}
-
-/**
- * Help Center Knowledge Base Article
- */
-export interface HelpArticle {
-  readonly id: ID;
-  readonly slug: string;
-  readonly categoryId: ID;
-  readonly title: string;
-  readonly summary: string;
-  readonly content: string;
-  readonly tags: readonly string[];
-  readonly isPublished: boolean;
-  readonly viewsCount: number;
-  readonly helpfulCount: number;
-  readonly unhelpfulCount: number;
-  readonly createdAt: Timestamp;
-  readonly updatedAt: Timestamp;
-}
+export * from './help.types';
 
 /**
  * Support Ticket Priority & Status

@@ -48,12 +48,14 @@ describe('Firestore Security Rules Specification & Verification', () => {
       expect(rulesContent).toContain('allow read, write: if isOwner(userId) || isUserAdmin();');
     });
 
-    it('enforces admin-only writes on categories, blogPosts, blogCategories, blogTags, and helpArticles', () => {
+    it('enforces admin-only writes on categories, blogPosts, blogCategories, blogTags, helpCategories, and helpArticles', () => {
       expect(rulesContent).toContain('match /categories/{categoryId}');
       expect(rulesContent).toContain('match /blogCategories/{categoryId}');
       expect(rulesContent).toContain('match /blogTags/{tagId}');
       expect(rulesContent).toContain('match /blogPosts/{postId}');
+      expect(rulesContent).toContain('match /helpCategories/{categoryId}');
       expect(rulesContent).toContain('match /helpArticles/{articleId}');
+      expect(rulesContent).toContain('allow create, update, delete: if isUserAdmin();');
     });
 
     it('enforces immutable audit logs with admin-only access', () => {

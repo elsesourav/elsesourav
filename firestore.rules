@@ -133,7 +133,8 @@ service cloud.firestore {
     // =========================================================================
 
     match /helpCategories/{categoryId} {
-      allow read: if true;
+      allow get: if isUserAdmin() || (resource.data.isActive == true && isNotDeleted());
+      allow list: if isUserAdmin() || (resource.data.isActive == true && isNotDeleted());
       allow create, update, delete: if isUserAdmin();
     }
 

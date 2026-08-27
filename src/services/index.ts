@@ -10,3 +10,4 @@ export * from './library.service';
 export * from './feedback.service';
 export * from './app-search.service';
 export * from './blog.service';
+export * from './help.service';

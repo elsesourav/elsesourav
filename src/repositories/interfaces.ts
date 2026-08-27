@@ -6,6 +6,7 @@ import type { BlogPost } from '@/types/blog.types';
 import type {
   HelpArticle,
   HelpCategory,
+  HelpArticleStatus,
   SupportTicket,
   SupportTicketMessage,
 } from '@/types/support.types';
@@ -303,14 +304,99 @@ export interface IBlogRepository extends IRepository<
   checkSlugUnique(slug: string, excludeId?: string): RepositoryResult<boolean>;
 }
 
+export type CreateHelpCategoryDto = {
+  name: string;
+  slug: string;
+  description?: string;
+  icon?: string;
+  orderIndex: number;
+  isActive: boolean;
+};
+
+export type UpdateHelpCategoryDto = Partial<CreateHelpCategoryDto> & {
+  updatedAt?: number;
+  deletedAt?: number;
+};
+
 /**
- * Help Center Repository Contract
+ * Help Category Repository Contract
+ */
+export interface IHelpCategoryRepository extends IRepository<
+  HelpCategory,
+  CreateHelpCategoryDto,
+  UpdateHelpCategoryDto
+> {
+  findBySlug(slug: string): RepositoryResult<HelpCategory | null>;
+  listActive(options?: QueryOptions): PaginatedRepositoryResult<HelpCategory>;
+  checkSlugUnique(slug: string, excludeId?: string): RepositoryResult<boolean>;
+}
+
+export type CreateHelpArticleDto = {
+  categoryId: string;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  content: string;
+  orderIndex: number;
+  featured?: boolean;
+  seoTitle?: string;
+  seoDescription?: string;
+  socialImageUrl?: string;
+};
+
+export type UpdateHelpArticleDto = Partial<CreateHelpArticleDto> & {
+  status?: HelpArticleStatus;
+  publishedAt?: number;
+  updatedAt?: number;
+  archivedAt?: number;
+  deletedAt?: number;
+  viewsCount?: number;
+  helpfulCount?: number;
+  unhelpfulCount?: number;
+};
+
+/**
+ * Help Article Repository Contract
+ */
+export interface IHelpArticleRepository extends IRepository<
+  HelpArticle,
+  CreateHelpArticleDto,
+  UpdateHelpArticleDto
+> {
+  findBySlug(slug: string): RepositoryResult<HelpArticle | null>;
+  createDraft(data: CreateHelpArticleDto): RepositoryResult<HelpArticle>;
+  publish(id: string): RepositoryResult<HelpArticle>;
+  unpublish(id: string): RepositoryResult<HelpArticle>;
+  archive(id: string): RepositoryResult<HelpArticle>;
+  restore(id: string, targetStatus?: HelpArticleStatus): RepositoryResult<HelpArticle>;
+  listPublished(options?: QueryOptions): PaginatedRepositoryResult<HelpArticle>;
+  listByCategory(
+    categoryId: string,
+    options?: QueryOptions
+  ): PaginatedRepositoryResult<HelpArticle>;
+  listFeatured(limit?: number): PaginatedRepositoryResult<HelpArticle>;
+  searchArticles(queryText: string, options?: QueryOptions): PaginatedRepositoryResult<HelpArticle>;
+  checkSlugUnique(slug: string, excludeId?: string): RepositoryResult<boolean>;
+}
+
+/**
+ * Help Center Unified Repository Contract
  */
 export interface IHelpRepository {
-  getCategories(): PaginatedRepositoryResult<HelpCategory>;
+  getCategoryBySlug(slug: string): RepositoryResult<HelpCategory | null>;
   getArticleBySlug(slug: string): RepositoryResult<HelpArticle | null>;
-  getArticlesByCategory(categoryId: string): PaginatedRepositoryResult<HelpArticle>;
-  searchArticles(queryText: string): PaginatedRepositoryResult<HelpArticle>;
+  listCategories(options?: QueryOptions): PaginatedRepositoryResult<HelpCategory>;
+  listPublishedArticles(options?: QueryOptions): PaginatedRepositoryResult<HelpArticle>;
+  listArticlesByCategory(
+    categoryId: string,
+    options?: QueryOptions
+  ): PaginatedRepositoryResult<HelpArticle>;
+  searchArticles(queryText: string, options?: QueryOptions): PaginatedRepositoryResult<HelpArticle>;
+  createDraft(data: CreateHelpArticleDto): RepositoryResult<HelpArticle>;
+  updateDraft(id: string, data: UpdateHelpArticleDto): RepositoryResult<HelpArticle>;
+  publish(id: string): RepositoryResult<HelpArticle>;
+  unpublish(id: string): RepositoryResult<HelpArticle>;
+  archive(id: string): RepositoryResult<HelpArticle>;
 }
 
 /**
