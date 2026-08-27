@@ -18,3 +18,6 @@ export * from './global-search.service';
 export * from './sitemap.service';
 export * from './error-logger.service';
 export * from './pwa.service';
+export * from './performance-telemetry.service';
+export * from './health-check.service';
+

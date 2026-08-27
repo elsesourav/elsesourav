@@ -23,6 +23,7 @@ import type { BlogPost } from '@/types/blog.types';
 import type { SupportTicket } from '@/types/support.types';
 import { ROUTES } from '@/constants/routes';
 import { formatDate } from '@/utils/format';
+import { AdminHealthCard } from '@/components/admin/AdminHealthCard';
 import './AdminDashboardPage.css';
 
 interface DashboardMetrics {
@@ -411,6 +412,9 @@ export const AdminDashboardPage: React.FC = () => {
               </div>
             </div>
           </div>
+
+          {/* System Health Diagnostics Card */}
+          <AdminHealthCard />
         </aside>
       </div>
     </div>

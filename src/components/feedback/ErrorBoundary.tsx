@@ -40,6 +40,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         title: this.props.title,
       },
       {
+        category: 'UI_RENDER',
         isFatal: this.props.level === 'root',
         componentStack: errorInfo.componentStack || undefined,
       }

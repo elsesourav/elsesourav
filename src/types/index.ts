@@ -23,3 +23,5 @@ export * from './system.types';
 export * from './search.types';
 export * from './result.types';
 export * from './seo.types';
+export * from './observability.types';
+
