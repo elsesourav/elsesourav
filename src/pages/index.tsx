@@ -18,17 +18,7 @@ export const HomePage: React.FC = () => (
 );
 
 export { AppsPage } from './AppsPage';
-
-export const AppDetailPage: React.FC = () => {
-  const { slug } = useParams<{ slug: string }>();
-  return (
-    <PlaceholderPage
-      title={`App: ${slug || 'Detail'}`}
-      description={`Overview, platform downloads, media screenshots, and release notes for "${slug}".`}
-      badge="App Detail"
-    />
-  );
-};
+export { AppDetailPage } from './AppDetailPage';
 
 export const CategoriesPage: React.FC = () => (
   <PlaceholderPage
