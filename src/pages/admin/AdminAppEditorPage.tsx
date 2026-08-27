@@ -15,6 +15,7 @@ import {
   Archive,
 } from 'lucide-react';
 import { Button, Badge, Input, Skeleton, Dialog } from '@/components/ui';
+import { AdminAppVersionManager } from '@/components/admin/AdminAppVersionManager';
 import { appService } from '@/services/app.service';
 import { appRepository } from '@/repositories';
 import type { AppLink, AppPlatform, AppActionType, AppStatus } from '@/types/app.types';
@@ -811,6 +812,14 @@ export const AdminAppEditorPage: React.FC = () => {
               </div>
             </div>
           </section>
+
+          {/* Section 4: Releases & Version History (when editing existing app) */}
+          {isEditing && id && (
+            <AdminAppVersionManager
+              appId={id}
+              onVersionChange={(newVer) => setCurrentVersion(newVer)}
+            />
+          )}
         </div>
 
         {/* Sidebar Column: Classification, Publishing, SEO */}

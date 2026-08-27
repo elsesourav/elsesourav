@@ -42,6 +42,8 @@ export const ROUTES = {
     BLOG_NEW: '/admin/blog/new',
     BLOG_EDIT: '/admin/blog/:id/edit',
     HELP: '/admin/help',
+    HELP_NEW: '/admin/help/new',
+    HELP_EDIT: '/admin/help/:id/edit',
     SUPPORT: '/admin/support',
     ANALYTICS: '/admin/analytics',
     THEME: '/admin/theme',

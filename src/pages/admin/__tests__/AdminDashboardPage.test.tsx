@@ -246,8 +246,8 @@ describe('Admin Dashboard Shell & Overview (Prompt 46)', () => {
   it('4. Protected child routes render correctly inside AdminLayout', async () => {
     renderWithProviders('/admin/categories');
 
-    // Admin Layout header and placeholder render
-    expect(await screen.findByText(/Manage Categories & Taxonomy/i)).toBeInTheDocument();
+    // Admin Layout header and content render
+    expect(await screen.findByText(/Software Categories/i)).toBeInTheDocument();
     expect(screen.getAllByText('Categories').length).toBeGreaterThan(0);
   });
 

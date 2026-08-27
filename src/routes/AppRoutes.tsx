@@ -35,6 +35,7 @@ import {
   AdminBlogPage,
   AdminBlogEditorPage,
   AdminHelpPage,
+  AdminHelpEditorPage,
   AdminSupportPage,
   AdminAnalyticsPage,
   AdminThemePage,
@@ -98,6 +99,8 @@ export const AppRoutes: React.FC = () => {
           <Route path={ROUTES.ADMIN.BLOG_NEW} element={<AdminBlogEditorPage />} />
           <Route path={ROUTES.ADMIN.BLOG_EDIT} element={<AdminBlogEditorPage />} />
           <Route path={ROUTES.ADMIN.HELP} element={<AdminHelpPage />} />
+          <Route path={ROUTES.ADMIN.HELP_NEW} element={<AdminHelpEditorPage />} />
+          <Route path={ROUTES.ADMIN.HELP_EDIT} element={<AdminHelpEditorPage />} />
           <Route path={ROUTES.ADMIN.SUPPORT} element={<AdminSupportPage />} />
           <Route path={ROUTES.ADMIN.ANALYTICS} element={<AdminAnalyticsPage />} />
           <Route path={ROUTES.ADMIN.THEME} element={<AdminThemePage />} />

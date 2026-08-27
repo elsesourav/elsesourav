@@ -87,32 +87,14 @@ export { AdminDashboardPage } from './admin/AdminDashboardPage';
 export { AdminAppsPage } from './admin/AdminAppsPage';
 export { AdminAppEditorPage } from './admin/AdminAppEditorPage';
 
-export const AdminCategoriesPage: React.FC = () => (
-  <PlaceholderPage
-    title="Manage Categories & Taxonomy"
-    description="Reorder categories, update slugs, and configure software classification."
-    badge="Admin - Categories"
-  />
-);
-
-export const AdminTagsPage: React.FC = () => (
-  <PlaceholderPage
-    title="Tag Management"
-    description="Manage platform software tags, discovery keywords, and search labels."
-    badge="Admin - Tags"
-  />
-);
+export { AdminCategoriesPage } from './admin/AdminCategoriesPage';
+export { AdminTagsPage } from './admin/AdminTagsPage';
 
 export { AdminBlogPage } from './admin/AdminBlogPage';
 export { AdminBlogEditorPage } from './admin/AdminBlogEditorPage';
 
-export const AdminHelpPage: React.FC = () => (
-  <PlaceholderPage
-    title="Manage Help Articles"
-    description="Maintain knowledge base FAQs and troubleshooting guides."
-    badge="Admin - Help"
-  />
-);
+export { AdminHelpPage } from './admin/AdminHelpPage';
+export { AdminHelpEditorPage } from './admin/AdminHelpEditorPage';
 
 export { AdminSupportPage } from './admin/AdminSupportPage';
 
