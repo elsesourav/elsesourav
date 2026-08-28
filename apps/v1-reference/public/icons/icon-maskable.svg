@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="pwaGradMaskable" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#818cf8" />
+      <stop offset="100%" stop-color="#c084fc" />
+    </linearGradient>
+    <linearGradient id="bgGradMaskable" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0e1526" />
+      <stop offset="100%" stop-color="#060911" />
+    </linearGradient>
+  </defs>
+  <!-- Full bleed background for safe-zone maskability -->
+  <rect width="512" height="512" fill="url(#bgGradMaskable)" />
+  <!-- Center symbol strictly within 80% safe zone (inner 410px) -->
+  <path d="M156 160h200v38H202v48h146v38H202v64h162v38H156z" fill="url(#pwaGradMaskable)" />
+</svg>

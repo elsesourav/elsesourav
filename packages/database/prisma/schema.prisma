@@ -1,0 +1,276 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  CREATOR
+}
+
+enum AppStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_FOR_USER
+  RESOLVED
+  CLOSED
+}
+
+model User {
+  id               String           @id @default(uuid())
+  supabaseAuthId   String           @unique
+  email            String           @unique
+  displayName      String
+  username         String?          @unique
+  photoUrl         String?
+  bio              String?
+  role             UserRole         @default(USER)
+  preferences      Json             @default("{}")
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  deletedAt        DateTime?
+  
+  library          UserLibraryItem[]
+  supportTickets   SupportTicket[]
+  ticketMessages   TicketMessage[]
+  notifications    Notification[]
+  auditLogs        AuditLog[]
+  feedback         AppFeedback[]
+}
+
+model App {
+  id               String           @id @default(uuid())
+  slug             String           @unique
+  name             String
+  shortDescription String
+  description      String
+  iconUrl          String
+  featuredImageUrl String?
+  demoUrl          String?
+  videoUrl         String?
+  status           AppStatus        @default(DRAFT)
+  sortOrder        Int              @default(0)
+  isFeatured       Boolean          @default(false)
+  isPinned         Boolean          @default(false)
+  currentVersion   String?
+  seoTitle         String?
+  seoDescription   String?
+  publishedAt      DateTime?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  deletedAt        DateTime?
+
+  categoryId       String
+  category         Category         @relation(fields: [categoryId], references: [id])
+  tags             AppTag[]
+  links            AppLink[]
+  versions         AppVersion[]
+  libraryItems     UserLibraryItem[]
+  feedback         AppFeedback[]
+  stats            AppStat?
+}
+
+model AppLink {
+  id           String    @id @default(uuid())
+  appId        String
+  app          App       @relation(fields: [appId], references: [id], onDelete: Cascade)
+  platform     String
+  label        String
+  url          String
+  action       String?
+  isPrimary    Boolean   @default(false)
+  displayOrder Int       @default(0)
+  isActive     Boolean   @default(true)
+}
+
+model AppVersion {
+  id           String    @id @default(uuid())
+  appId        String
+  app          App       @relation(fields: [appId], references: [id], onDelete: Cascade)
+  version      String
+  releaseDate  DateTime  @default(now())
+  changelog    String
+  downloadUrl  String?
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  description String?
+  icon        String?
+  orderIndex  Int      @default(0)
+  isActive    Boolean  @default(true)
+  apps        App[]
+}
+
+model Tag {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  apps        AppTag[]
+}
+
+model AppTag {
+  appId       String
+  tagId       String
+  app         App      @relation(fields: [appId], references: [id], onDelete: Cascade)
+  tag         Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([appId, tagId])
+}
+
+model BlogPost {
+  id           String        @id @default(uuid())
+  slug         String        @unique
+  title        String
+  excerpt      String
+  content      String
+  coverImageUrl String?
+  status       AppStatus     @default(DRAFT)
+  readingTime  Int           @default(1)
+  viewsCount   Int           @default(0)
+  publishedAt  DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  deletedAt    DateTime?
+  categoryId   String?
+  category     BlogCategory? @relation(fields: [categoryId], references: [id])
+}
+
+model BlogCategory {
+  id          String     @id @default(uuid())
+  name        String
+  slug        String     @unique
+  description String?
+  posts       BlogPost[]
+}
+
+model HelpArticle {
+  id           String       @id @default(uuid())
+  categoryId   String
+  category     HelpCategory @relation(fields: [categoryId], references: [id])
+  title        String
+  slug         String       @unique
+  excerpt      String?
+  content      String
+  status       AppStatus    @default(DRAFT)
+  orderIndex   Int          @default(0)
+  helpfulCount Int          @default(0)
+  unhelpfulCount Int        @default(0)
+  publishedAt  DateTime?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model HelpCategory {
+  id          String        @id @default(uuid())
+  name        String
+  slug        String        @unique
+  description String?
+  icon        String?
+  orderIndex  Int           @default(0)
+  articles    HelpArticle[]
+}
+
+model SupportTicket {
+  id           String          @id @default(uuid())
+  ticketNumber String          @unique
+  userId       String
+  user         User            @relation(fields: [userId], references: [id])
+  subject      String
+  description  String
+  category     String
+  priority     String          @default("normal")
+  status       TicketStatus    @default(OPEN)
+  lastMessageAt DateTime       @default(now())
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  messages     TicketMessage[]
+}
+
+model TicketMessage {
+  id           String        @id @default(uuid())
+  ticketId     String
+  ticket       SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  senderUserId String
+  sender       User          @relation(fields: [senderUserId], references: [id])
+  senderRole   UserRole      @default(USER)
+  message      String
+  attachments  String[]      @default([])
+  createdAt    DateTime      @default(now())
+}
+
+model UserLibraryItem {
+  id           String    @id @default(uuid())
+  userId       String
+  appId        String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  app          App       @relation(fields: [appId], references: [id], onDelete: Cascade)
+  isFavorite   Boolean   @default(false)
+  isPinned     Boolean   @default(false)
+  customNotes  String?
+  addedAt      DateTime  @default(now())
+  lastOpenedAt DateTime?
+
+  @@unique([userId, appId])
+}
+
+model AppFeedback {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  appId       String
+  app         App      @relation(fields: [appId], references: [id], onDelete: Cascade)
+  rating      Int
+  message     String
+  status      String   @default("pending")
+  createdAt   DateTime @default(now())
+}
+
+model Notification {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String
+  title       String
+  message     String
+  linkUrl     String?
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model AuditLog {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  action       String
+  entityType   String
+  entityId     String?
+  details      Json     @default("{}")
+  ipAddress    String?
+  userAgent    String?
+  timestamp    DateTime @default(now())
+}
+
+model AppStat {
+  appId        String   @id
+  app          App      @relation(fields: [appId], references: [id], onDelete: Cascade)
+  views        Int      @default(0)
+  launches     Int      @default(0)
+  libraryAdds  Int      @default(0)
+  ratingAverage Float   @default(0.0)
+  ratingCount  Int      @default(0)
+}
