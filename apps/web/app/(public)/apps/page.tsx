@@ -1,37 +1,88 @@
-import { Card, CardHeader, CardTitle, CardDescription, Badge } from '@elsesourav/ui';
-import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
-import { ROUTES } from '@elsesourav/config';
+import { Metadata } from 'next';
+import { getPublishedApps } from '@/features/apps/queries/get-apps';
+import { AppCard } from '@/features/apps/components/AppCard';
+import { AppFilters } from '@/features/apps/components/AppFilters';
+import { AppsEmptyState } from '@/features/apps/components/AppsEmptyState';
+import { Badge } from '@elsesourav/ui';
+import type { SortDirection } from '@elsesourav/types';
 
-export const metadata = {
-  title: 'Explore Applications',
-  description: 'Catalog of developer tools, command line applications, and web software.',
+export const metadata: Metadata = {
+  title: 'Explore Applications | ElseSourav',
+  description: 'Explore the complete ecosystem of web apps, browser extensions, developer utilities, and software created by ElseSourav.',
+  openGraph: {
+    title: 'Explore Applications | ElseSourav',
+    description: 'Browse web applications, developer tools, and utilities.',
+  },
 };
 
-export default function AppsCatalogPage() {
-  return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
-      <Link href={ROUTES.HOME} className="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-white mb-6">
-        <ArrowLeft className="w-4 h-4" /> Back to Home
-      </Link>
-      <div className="flex flex-col gap-2 mb-8">
-        <h1 className="text-3xl font-bold text-white">Explore Applications</h1>
-        <p className="text-zinc-400">Discover performant developer utilities and web applications.</p>
-      </div>
+interface AppsPageProps {
+  searchParams: Promise<{
+    category?: string;
+    tag?: string;
+    search?: string;
+    sort?: string;
+  }>;
+}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card className="hover:border-zinc-700 transition-colors">
-          <CardHeader>
-            <div className="flex items-center justify-between mb-2">
-              <Badge variant="info">Developer Tools</Badge>
-              <Badge variant="outline">v1.2.0</Badge>
-            </div>
-            <CardTitle>Terminal Pro</CardTitle>
-            <CardDescription>
-              Hardware-accelerated web terminal with split panes and custom themes.
-            </CardDescription>
-          </CardHeader>
-        </Card>
+export default async function AppsPage({ searchParams }: AppsPageProps) {
+  const params = await searchParams;
+  const categorySlug = params.category || undefined;
+  const tagSlug = params.tag || undefined;
+  const search = params.search || undefined;
+
+  let sortField: 'createdAt' | 'sortOrder' | 'name' | 'publishedAt' = 'sortOrder';
+  let sortDirection: SortDirection = 'asc';
+
+  if (params.sort === 'newest') {
+    sortField = 'publishedAt';
+    sortDirection = 'desc';
+  } else if (params.sort === 'name') {
+    sortField = 'name';
+    sortDirection = 'asc';
+  }
+
+  const apps = await getPublishedApps({
+    categorySlug,
+    tagSlug,
+    search,
+    sortField,
+    sortDirection,
+    limit: 40,
+  });
+
+  const hasFilters = Boolean(categorySlug || tagSlug || search || params.sort);
+
+  return (
+    <div className="min-h-screen bg-zinc-950 text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+        {/* Header Title Section */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-100">
+              Explore Applications
+            </h1>
+            <Badge variant="info" className="text-xs px-2 py-0.5 font-medium">
+              {apps.length} {apps.length === 1 ? 'App' : 'Apps'}
+            </Badge>
+          </div>
+          <p className="text-sm text-zinc-400 max-w-2xl">
+            Browse the complete collection of web tools, developer utilities, games, and software engineered for modern workflows.
+          </p>
+        </div>
+
+        {/* Filter & Search Bar */}
+        <AppFilters />
+
+        {/* Apps Grid or Empty State */}
+        {apps.length === 0 ? (
+          <AppsEmptyState hasFilters={hasFilters} />
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {apps.map((app) => (
+              <AppCard key={app.id} app={app} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
