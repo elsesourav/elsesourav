@@ -118,12 +118,17 @@ describe('Prisma Model Mappers', () => {
       updatedAt: new Date('2026-02-02T00:00:00Z'),
       deletedAt: null,
       categoryId: 'cat-1',
-      category: { id: 'cat-1', name: 'Engineering', slug: 'engineering', description: null },
+      category: { id: 'cat-1', name: 'Engineering', slug: 'engineering', description: null, orderIndex: 0 },
+      authorId: null,
+      author: null,
+      seoTitle: null,
+      seoDescription: null,
+      tags: [],
     };
 
     const domain = mapPrismaBlogPostToDomain(prismaPost);
     expect(domain.slug).toBe('architecture-v2');
-    expect(domain.category).toBe('engineering');
+    expect(domain.category?.slug).toBe('engineering');
     expect(domain.viewsCount).toBe(150);
   });
 });

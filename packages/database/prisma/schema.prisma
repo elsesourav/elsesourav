@@ -50,6 +50,7 @@ model User {
   deletedAt        DateTime?
   
   library          UserLibraryItem[]
+  blogPosts        BlogPost[]
   supportTickets   SupportTicket[]
   ticketMessages   TicketMessage[]
   notifications    Notification[]
@@ -161,17 +162,23 @@ model BlogPost {
   status        PublishStatus @default(DRAFT)
   readingTime   Int           @default(1)
   viewsCount    Int           @default(0)
+  seoTitle      String?
+  seoDescription String?
   publishedAt   DateTime?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   deletedAt     DateTime?
 
+  authorId      String?
+  author        User?         @relation(fields: [authorId], references: [id])
   categoryId    String?
   category      BlogCategory? @relation(fields: [categoryId], references: [id])
+  tags          BlogPostTag[]
 
   @@index([status])
   @@index([publishedAt])
   @@index([categoryId])
+  @@index([authorId])
 }
 
 model BlogCategory {
@@ -179,7 +186,25 @@ model BlogCategory {
   name        String
   slug        String     @unique
   description String?
+  orderIndex  Int        @default(0)
   posts       BlogPost[]
+}
+
+model BlogTag {
+  id          String        @id @default(uuid())
+  name        String
+  slug        String        @unique
+  posts       BlogPostTag[]
+}
+
+model BlogPostTag {
+  postId      String
+  tagId       String
+  post        BlogPost      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag         BlogTag       @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+  @@index([tagId])
 }
 
 model HelpArticle {

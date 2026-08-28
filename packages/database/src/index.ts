@@ -13,3 +13,4 @@ export * from './services/user.service';
 export * from './services/app.service';
 export * from './services/app-query.service';
 export * from './services/library.service';
+export * from './services/blog.service';
