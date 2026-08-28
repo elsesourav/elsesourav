@@ -235,37 +235,40 @@ describe('Complete Critical User Journeys End-to-End Test Suite (Prompt 72)', ()
   // TASK 1 — PUBLIC DISCOVERY JOURNEY
   // ===========================================================================
   describe('Task 1: Public Discovery Journey', () => {
-    it('seamlessly navigates Homepage -> Apps -> Details -> Blog -> Help -> Support without dead ends', async () => {
+    it('1. Homepage loads with hero and primary navigation', async () => {
       const { unmount } = renderApp('/');
-
-      // 1. Homepage loads
       expect(await screen.findByRole('heading', { level: 1 })).toBeInTheDocument();
       unmount();
+    });
 
-      // 2. Apps catalog loads
+    it('2. Apps catalog loads with published applications', async () => {
       const appsRender = renderApp('/apps');
       expect(await screen.findByText('Terminal Pro')).toBeInTheDocument();
       appsRender.unmount();
+    });
 
-      // 3. App Details loads with metadata & launch links
+    it('3. App Details loads with metadata & launch links', async () => {
       const detailRender = renderApp('/apps/terminal-pro');
       expect(await screen.findByRole('heading', { level: 1, name: 'Terminal Pro' })).toBeInTheDocument();
       expect(screen.getByText(/High-performance GPU-accelerated terminal/i)).toBeInTheDocument();
       expect(screen.getByText('Open App')).toBeInTheDocument();
       detailRender.unmount();
+    });
 
-      // 4. Blog loads
+    it('4. Blog journal loads with published articles', async () => {
       const blogRender = renderApp('/blog');
       expect(await screen.findByText('Modern Web Architecture in 2026')).toBeInTheDocument();
       blogRender.unmount();
+    });
 
-      // 5. Help loads
+    it('5. Help center loads with topics and search', async () => {
       const helpRender = renderApp('/help');
       expect(await screen.findByRole('heading', { level: 1, name: /How can we help you\?/i })).toBeInTheDocument();
       expect(await screen.findByRole('link', { name: /Getting Started/i })).toBeInTheDocument();
       helpRender.unmount();
+    });
 
-      // 6. Support loads
+    it('6. Support portal loads with ticket creation form', async () => {
       const supportRender = renderApp('/support');
       expect(await screen.findByRole('heading', { level: 1, name: /How can we help you\?/i })).toBeInTheDocument();
       expect(screen.getByRole('heading', { level: 2, name: /Create Support Ticket/i })).toBeInTheDocument();
