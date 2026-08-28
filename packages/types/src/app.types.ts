@@ -68,6 +68,7 @@ export interface App {
   readonly status: AppStatus;
   readonly platforms: readonly AppPlatform[];
   readonly links: readonly AppLink[];
+  readonly versions?: readonly AppVersion[];
   readonly currentVersion?: string;
   readonly releaseDate?: Timestamp;
   readonly seoTitle?: string;

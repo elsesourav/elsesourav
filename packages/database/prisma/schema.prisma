@@ -10,11 +10,11 @@ datasource db {
 
 enum UserRole {
   USER
+  STAFF
   ADMIN
-  CREATOR
 }
 
-enum AppStatus {
+enum PublishStatus {
   DRAFT
   PUBLISHED
   ARCHIVED
@@ -26,6 +26,13 @@ enum TicketStatus {
   WAITING_FOR_USER
   RESOLVED
   CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
 }
 
 model User {
@@ -48,6 +55,9 @@ model User {
   notifications    Notification[]
   auditLogs        AuditLog[]
   feedback         AppFeedback[]
+
+  @@index([role])
+  @@index([createdAt])
 }
 
 model App {
@@ -60,7 +70,7 @@ model App {
   featuredImageUrl String?
   demoUrl          String?
   videoUrl         String?
-  status           AppStatus        @default(DRAFT)
+  status           PublishStatus    @default(DRAFT)
   sortOrder        Int              @default(0)
   isFeatured       Boolean          @default(false)
   isPinned         Boolean          @default(false)
@@ -80,6 +90,11 @@ model App {
   libraryItems     UserLibraryItem[]
   feedback         AppFeedback[]
   stats            AppStat?
+
+  @@index([status])
+  @@index([categoryId])
+  @@index([publishedAt])
+  @@index([isFeatured])
 }
 
 model AppLink {
@@ -93,6 +108,8 @@ model AppLink {
   isPrimary    Boolean   @default(false)
   displayOrder Int       @default(0)
   isActive     Boolean   @default(true)
+
+  @@index([appId])
 }
 
 model AppVersion {
@@ -103,6 +120,8 @@ model AppVersion {
   releaseDate  DateTime  @default(now())
   changelog    String
   downloadUrl  String?
+
+  @@index([appId])
 }
 
 model Category {
@@ -133,21 +152,26 @@ model AppTag {
 }
 
 model BlogPost {
-  id           String        @id @default(uuid())
-  slug         String        @unique
-  title        String
-  excerpt      String
-  content      String
+  id            String        @id @default(uuid())
+  slug          String        @unique
+  title         String
+  excerpt       String
+  content       String
   coverImageUrl String?
-  status       AppStatus     @default(DRAFT)
-  readingTime  Int           @default(1)
-  viewsCount   Int           @default(0)
-  publishedAt  DateTime?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  deletedAt    DateTime?
-  categoryId   String?
-  category     BlogCategory? @relation(fields: [categoryId], references: [id])
+  status        PublishStatus @default(DRAFT)
+  readingTime   Int           @default(1)
+  viewsCount    Int           @default(0)
+  publishedAt   DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  deletedAt     DateTime?
+
+  categoryId    String?
+  category      BlogCategory? @relation(fields: [categoryId], references: [id])
+
+  @@index([status])
+  @@index([publishedAt])
+  @@index([categoryId])
 }
 
 model BlogCategory {
@@ -159,20 +183,24 @@ model BlogCategory {
 }
 
 model HelpArticle {
-  id           String       @id @default(uuid())
-  categoryId   String
-  category     HelpCategory @relation(fields: [categoryId], references: [id])
-  title        String
-  slug         String       @unique
-  excerpt      String?
-  content      String
-  status       AppStatus    @default(DRAFT)
-  orderIndex   Int          @default(0)
-  helpfulCount Int          @default(0)
-  unhelpfulCount Int        @default(0)
-  publishedAt  DateTime?
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  id             String        @id @default(uuid())
+  categoryId     String
+  category       HelpCategory  @relation(fields: [categoryId], references: [id])
+  title          String
+  slug           String        @unique
+  excerpt        String?
+  content        String
+  status         PublishStatus @default(DRAFT)
+  orderIndex     Int           @default(0)
+  helpfulCount   Int           @default(0)
+  unhelpfulCount Int           @default(0)
+  publishedAt    DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([status])
+  @@index([categoryId])
+  @@index([orderIndex])
 }
 
 model HelpCategory {
@@ -186,19 +214,24 @@ model HelpCategory {
 }
 
 model SupportTicket {
-  id           String          @id @default(uuid())
-  ticketNumber String          @unique
-  userId       String
-  user         User            @relation(fields: [userId], references: [id])
-  subject      String
-  description  String
-  category     String
-  priority     String          @default("normal")
-  status       TicketStatus    @default(OPEN)
-  lastMessageAt DateTime       @default(now())
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @updatedAt
-  messages     TicketMessage[]
+  id            String          @id @default(uuid())
+  ticketNumber  String          @unique
+  userId        String
+  user          User            @relation(fields: [userId], references: [id])
+  subject       String
+  description   String
+  category      String
+  priority      TicketPriority  @default(MEDIUM)
+  status        TicketStatus    @default(OPEN)
+  lastMessageAt DateTime        @default(now())
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  messages      TicketMessage[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([priority])
+  @@index([lastMessageAt])
 }
 
 model TicketMessage {
@@ -211,6 +244,9 @@ model TicketMessage {
   message      String
   attachments  String[]      @default([])
   createdAt    DateTime      @default(now())
+
+  @@index([ticketId])
+  @@index([senderUserId])
 }
 
 model UserLibraryItem {
@@ -226,6 +262,8 @@ model UserLibraryItem {
   lastOpenedAt DateTime?
 
   @@unique([userId, appId])
+  @@index([userId])
+  @@index([appId])
 }
 
 model AppFeedback {
@@ -238,6 +276,9 @@ model AppFeedback {
   message     String
   status      String   @default("pending")
   createdAt   DateTime @default(now())
+
+  @@index([appId])
+  @@index([userId])
 }
 
 model Notification {
@@ -250,6 +291,9 @@ model Notification {
   linkUrl     String?
   isRead      Boolean  @default(false)
   createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([isRead])
 }
 
 model AuditLog {
@@ -263,6 +307,10 @@ model AuditLog {
   ipAddress    String?
   userAgent    String?
   timestamp    DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([timestamp])
 }
 
 model AppStat {

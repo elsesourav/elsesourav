@@ -1,6 +1,6 @@
 import type { ID, Timestamp } from './common.types';
 
-export type UserRole = 'ADMIN' | 'USER' | 'CREATOR';
+export type UserRole = 'ADMIN' | 'USER' | 'STAFF' | 'CREATOR';
 export type UserStatus = 'active' | 'suspended' | 'deleted' | 'pending';
 export type ThemeMode = 'light' | 'dark' | 'system';
 
