@@ -54,6 +54,8 @@ describe('App Read/Query Layer & Public Projections', () => {
       },
     ],
     currentVersion: '2.0.0',
+    isFeatured: true,
+    isPinned: false,
     stats: { views: 500, launches: 200, libraryAdds: 45 },
     updatedAt: 1704067200000,
   };

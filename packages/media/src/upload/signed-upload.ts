@@ -1,4 +1,4 @@
-import { createHash } from 'node:crypto';
+import crypto from 'crypto';
 import { getCloudinaryConfig } from '../cloudinary/client';
 import type { MediaUploadSignature, DirectUploadParams } from '@elsesourav/types';
 
@@ -39,7 +39,7 @@ export function generateSignedUploadParameters(
 
   // SHA-1 signature with API secret
   const stringToSign = `${serializedParams}${config.apiSecret}`;
-  const signature = createHash('sha1').update(stringToSign).digest('hex');
+  const signature = crypto.createHash('sha1').update(stringToSign).digest('hex');
 
   return {
     signature,

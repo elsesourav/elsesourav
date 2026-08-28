@@ -126,6 +126,8 @@ export interface PublicApp {
   readonly versions: readonly AppVersion[];
   readonly currentVersion?: string;
   readonly releaseDate?: Timestamp;
+  readonly isFeatured: boolean;
+  readonly isPinned: boolean;
   readonly seoTitle?: string;
   readonly seoDescription?: string;
   readonly socialImageUrl?: string;

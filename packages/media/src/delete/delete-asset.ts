@@ -1,4 +1,4 @@
-import { createHash } from 'node:crypto';
+import crypto from 'crypto';
 import { getCloudinaryConfig } from '../cloudinary/client';
 import { AppError } from '@elsesourav/types';
 
@@ -35,7 +35,7 @@ export async function deleteCloudinaryAsset(
 
   // Cloudinary destroy parameter signature
   const stringToSign = `public_id=${publicId}&timestamp=${timestamp}${config.apiSecret}`;
-  const signature = createHash('sha1').update(stringToSign).digest('hex');
+  const signature = crypto.createHash('sha1').update(stringToSign).digest('hex');
 
   const formData = new URLSearchParams({
     public_id: publicId,

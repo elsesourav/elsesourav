@@ -119,6 +119,8 @@ export function mapPrismaAppToPublicDetail(prismaApp: PrismaAppWithRelations): P
     versions: domain.versions || [],
     currentVersion: domain.currentVersion,
     releaseDate: domain.releaseDate,
+    isFeatured: domain.isFeatured,
+    isPinned: domain.isPinned,
     seoTitle: domain.seoTitle,
     seoDescription: domain.seoDescription,
     socialImageUrl: domain.socialImageUrl,
