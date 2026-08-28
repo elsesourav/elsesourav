@@ -1,11 +1,11 @@
 # Graph Report - elsesourav  (2026-08-29)
 
 ## Corpus Check
-- 682 files · ~382,354 words
+- 691 files · ~384,846 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 5684 nodes · 16975 edges · 245 communities detected
+- 5702 nodes · 16989 edges · 266 communities detected
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 429 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
@@ -39,9 +39,9 @@
 - [[_COMMUNITY_Community 26|Community 26]]
 - [[_COMMUNITY_Community 27|Community 27]]
 - [[_COMMUNITY_Community 28|Community 28]]
-- [[_COMMUNITY_Community 29|Community 29]]
 - [[_COMMUNITY_Community 30|Community 30]]
 - [[_COMMUNITY_Community 31|Community 31]]
+- [[_COMMUNITY_Community 32|Community 32]]
 - [[_COMMUNITY_Community 33|Community 33]]
 - [[_COMMUNITY_Community 34|Community 34]]
 - [[_COMMUNITY_Community 35|Community 35]]
@@ -72,6 +72,7 @@
 - [[_COMMUNITY_Community 60|Community 60]]
 - [[_COMMUNITY_Community 61|Community 61]]
 - [[_COMMUNITY_Community 62|Community 62]]
+- [[_COMMUNITY_Community 63|Community 63]]
 - [[_COMMUNITY_Community 64|Community 64]]
 - [[_COMMUNITY_Community 65|Community 65]]
 - [[_COMMUNITY_Community 66|Community 66]]
@@ -132,6 +133,7 @@
 - [[_COMMUNITY_Community 121|Community 121]]
 - [[_COMMUNITY_Community 122|Community 122]]
 - [[_COMMUNITY_Community 123|Community 123]]
+- [[_COMMUNITY_Community 124|Community 124]]
 - [[_COMMUNITY_Community 125|Community 125]]
 - [[_COMMUNITY_Community 126|Community 126]]
 - [[_COMMUNITY_Community 127|Community 127]]
@@ -143,7 +145,6 @@
 - [[_COMMUNITY_Community 133|Community 133]]
 - [[_COMMUNITY_Community 134|Community 134]]
 - [[_COMMUNITY_Community 135|Community 135]]
-- [[_COMMUNITY_Community 136|Community 136]]
 - [[_COMMUNITY_Community 137|Community 137]]
 - [[_COMMUNITY_Community 138|Community 138]]
 - [[_COMMUNITY_Community 139|Community 139]]
@@ -158,7 +159,6 @@
 - [[_COMMUNITY_Community 148|Community 148]]
 - [[_COMMUNITY_Community 149|Community 149]]
 - [[_COMMUNITY_Community 150|Community 150]]
-- [[_COMMUNITY_Community 151|Community 151]]
 - [[_COMMUNITY_Community 152|Community 152]]
 - [[_COMMUNITY_Community 153|Community 153]]
 - [[_COMMUNITY_Community 154|Community 154]]
@@ -166,9 +166,11 @@
 - [[_COMMUNITY_Community 156|Community 156]]
 - [[_COMMUNITY_Community 157|Community 157]]
 - [[_COMMUNITY_Community 158|Community 158]]
+- [[_COMMUNITY_Community 159|Community 159]]
 - [[_COMMUNITY_Community 160|Community 160]]
 - [[_COMMUNITY_Community 161|Community 161]]
 - [[_COMMUNITY_Community 162|Community 162]]
+- [[_COMMUNITY_Community 163|Community 163]]
 - [[_COMMUNITY_Community 164|Community 164]]
 - [[_COMMUNITY_Community 165|Community 165]]
 - [[_COMMUNITY_Community 166|Community 166]]
@@ -179,10 +181,13 @@
 - [[_COMMUNITY_Community 171|Community 171]]
 - [[_COMMUNITY_Community 172|Community 172]]
 - [[_COMMUNITY_Community 173|Community 173]]
+- [[_COMMUNITY_Community 174|Community 174]]
+- [[_COMMUNITY_Community 175|Community 175]]
+- [[_COMMUNITY_Community 176|Community 176]]
 - [[_COMMUNITY_Community 177|Community 177]]
 - [[_COMMUNITY_Community 178|Community 178]]
-- [[_COMMUNITY_Community 179|Community 179]]
 - [[_COMMUNITY_Community 180|Community 180]]
+- [[_COMMUNITY_Community 181|Community 181]]
 - [[_COMMUNITY_Community 182|Community 182]]
 - [[_COMMUNITY_Community 183|Community 183]]
 - [[_COMMUNITY_Community 184|Community 184]]
@@ -193,12 +198,13 @@
 - [[_COMMUNITY_Community 189|Community 189]]
 - [[_COMMUNITY_Community 190|Community 190]]
 - [[_COMMUNITY_Community 191|Community 191]]
-- [[_COMMUNITY_Community 192|Community 192]]
-- [[_COMMUNITY_Community 193|Community 193]]
-- [[_COMMUNITY_Community 194|Community 194]]
 - [[_COMMUNITY_Community 195|Community 195]]
 - [[_COMMUNITY_Community 196|Community 196]]
 - [[_COMMUNITY_Community 197|Community 197]]
+- [[_COMMUNITY_Community 198|Community 198]]
+- [[_COMMUNITY_Community 199|Community 199]]
+- [[_COMMUNITY_Community 200|Community 200]]
+- [[_COMMUNITY_Community 201|Community 201]]
 - [[_COMMUNITY_Community 202|Community 202]]
 - [[_COMMUNITY_Community 203|Community 203]]
 - [[_COMMUNITY_Community 204|Community 204]]
@@ -213,10 +219,6 @@
 - [[_COMMUNITY_Community 213|Community 213]]
 - [[_COMMUNITY_Community 214|Community 214]]
 - [[_COMMUNITY_Community 215|Community 215]]
-- [[_COMMUNITY_Community 216|Community 216]]
-- [[_COMMUNITY_Community 217|Community 217]]
-- [[_COMMUNITY_Community 218|Community 218]]
-- [[_COMMUNITY_Community 219|Community 219]]
 - [[_COMMUNITY_Community 220|Community 220]]
 - [[_COMMUNITY_Community 221|Community 221]]
 - [[_COMMUNITY_Community 222|Community 222]]
@@ -255,6 +257,25 @@
 - [[_COMMUNITY_Community 255|Community 255]]
 - [[_COMMUNITY_Community 256|Community 256]]
 - [[_COMMUNITY_Community 257|Community 257]]
+- [[_COMMUNITY_Community 258|Community 258]]
+- [[_COMMUNITY_Community 259|Community 259]]
+- [[_COMMUNITY_Community 260|Community 260]]
+- [[_COMMUNITY_Community 261|Community 261]]
+- [[_COMMUNITY_Community 262|Community 262]]
+- [[_COMMUNITY_Community 263|Community 263]]
+- [[_COMMUNITY_Community 264|Community 264]]
+- [[_COMMUNITY_Community 265|Community 265]]
+- [[_COMMUNITY_Community 266|Community 266]]
+- [[_COMMUNITY_Community 267|Community 267]]
+- [[_COMMUNITY_Community 268|Community 268]]
+- [[_COMMUNITY_Community 269|Community 269]]
+- [[_COMMUNITY_Community 270|Community 270]]
+- [[_COMMUNITY_Community 271|Community 271]]
+- [[_COMMUNITY_Community 272|Community 272]]
+- [[_COMMUNITY_Community 273|Community 273]]
+- [[_COMMUNITY_Community 274|Community 274]]
+- [[_COMMUNITY_Community 275|Community 275]]
+- [[_COMMUNITY_Community 276|Community 276]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `S()` - 177 edges
@@ -280,413 +301,453 @@
 - `checkAppSavedAction()` --calls--> `getServerSession()`  [INFERRED]
   apps/web/features/library/actions/library.actions.ts → packages/auth/src/server/session.ts
 
-## Communities (752 total, 148 thin omitted)
+## Communities (775 total, 159 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.03
-Nodes (290): a(), aa(), add(), addInst(), ae(), allMatches(), alt(), an() (+282 more)
+Nodes (224): aa(), add(), ae(), af(), allMatches(), alt(), ANY_RUNE(), ANY_RUNE_NOT_NL() (+216 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.04
-Nodes (19): c0, Ct(), de(), e0, Ga(), Gx, Hx, i0 (+11 more)
+Cohesion: 0.06
+Nodes (138): as(), Be(), bn(), br(), Ce(), Ci(), cn(), cr() (+130 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.06
-Nodes (64): M(), O(), R(), T(), Ds(), ks(), ds(), Ke() (+56 more)
+Cohesion: 0.05
+Nodes (97): aA(), aj(), aS(), Au(), Ax(), Bg(), ca(), cg() (+89 more)
 
 ### Community 3 - "Community 3"
-Cohesion: 0.06
-Nodes (137): _(), w(), Be(), bn(), br(), Ce(), Ci(), cn() (+129 more)
+Cohesion: 0.07
+Nodes (115): A(), ae(), Ao(), as(), At(), B, be(), Bn() (+107 more)
 
 ### Community 4 - "Community 4"
-Cohesion: 0.05
-Nodes (104): aj(), aS(), Au(), Ax(), Bg(), ca(), cg(), cj() (+96 more)
+Cohesion: 0.06
+Nodes (10): c0, Ct(), de(), i0, l(), N0, q0, ql() (+2 more)
 
 ### Community 5 - "Community 5"
-Cohesion: 0.07
-Nodes (93): A(), Ao(), as(), B, be(), Bn(), Bo(), br() (+85 more)
+Cohesion: 0.04
+Nodes (8): gS(), jS(), Tg, U0, wg, wp(), yj(), zS()
 
 ### Community 6 - "Community 6"
-Cohesion: 0.03
-Nodes (57): ah(), am(), ao, c(), ch(), Ci(), cm(), dm() (+49 more)
+Cohesion: 0.04
+Nodes (46): ah(), am(), ch(), cm(), dm(), Ee(), Eh(), el (+38 more)
 
 ### Community 7 - "Community 7"
 Cohesion: 0.04
-Nodes (63): aB(), As(), ba(), bh(), Bs(), ca(), di(), eB() (+55 more)
+Nodes (61): aB(), As(), ba(), bh(), Bs(), c(), ca(), da() (+53 more)
 
 ### Community 8 - "Community 8"
-Cohesion: 0.04
-Nodes (7): gS(), jS(), Tg, U0, wp(), yj(), zS()
-
-### Community 9 - "Community 9"
-Cohesion: 0.03
-Nodes (36): ac(), Bc, Bn(), df(), ei(), es(), FB(), FC() (+28 more)
-
-### Community 10 - "Community 10"
 Cohesion: 0.12
 Nodes (86): _(), A(), ae(), Ar(), at(), b(), Be(), br() (+78 more)
 
+### Community 9 - "Community 9"
+Cohesion: 0.04
+Nodes (47): ac(), an(), Au(), Bf(), Bi(), Bn(), cn(), cs() (+39 more)
+
+### Community 10 - "Community 10"
+Cohesion: 0.05
+Nodes (69): addInst(), alternate(), appendFoldedClass(), appendFoldedRange(), appendLiteral(), Bd(), Bo(), checkHeight() (+61 more)
+
 ### Community 11 - "Community 11"
-Cohesion: 0.07
-Nodes (67): alternate(), appendGroup(), calcHeight(), calcSize(), charCount(), checkHeight(), checkLimits(), checkSize() (+59 more)
+Cohesion: 0.08
+Nodes (43): appendGroup(), calcHeight(), calcSize(), charCount(), cleanClass(), get(), Hs, indexOf() (+35 more)
 
 ### Community 12 - "Community 12"
-Cohesion: 0.04
-Nodes (7): ad(), cd, Do, hi, rg, td, yd
+Cohesion: 0.05
+Nodes (15): handleSignOut(), mapFirebaseAuthError(), err(), Boolean(), handleResendVerification(), handleSubmit(), TagRepository, AuditService (+7 more)
 
 ### Community 13 - "Community 13"
 Cohesion: 0.04
-Nodes (9): err(), CategoryRepository, AuditService, execute(), validate(), FeedbackService, HelpService, SupportService (+1 more)
+Nodes (14): ok(), NotificationRepository, FirestoreUserRepository, createAuthContextValue(), createAuthContextValue(), createAuthContextValue(), createAuthContextValue(), createAuthContextValue() (+6 more)
 
 ### Community 14 - "Community 14"
-Cohesion: 0.05
-Nodes (19): ai, cs(), ee(), g(), hi(), hs(), Lo(), mt() (+11 more)
+Cohesion: 0.07
+Nodes (8): ai, dt(), gi(), Ht, Io, jt(), nr, sr
 
 ### Community 15 - "Community 15"
 Cohesion: 0.05
-Nodes (4): eo(), Ft, Sn, xf
-
-### Community 16 - "Community 16"
-Cohesion: 0.06
-Nodes (14): E(), ei(), Fo(), go(), In(), Je(), k(), ki() (+6 more)
+Nodes (5): dd, Hr(), Jf(), od, qt
 
 ### Community 17 - "Community 17"
-Cohesion: 0.05
-Nodes (35): af(), Au(), Bf(), Bi(), br, cs(), Du(), gs (+27 more)
+Cohesion: 0.07
+Nodes (23): eB(), Fs(), gB(), hg(), j(), kg(), Ku(), lB() (+15 more)
 
 ### Community 18 - "Community 18"
-Cohesion: 0.04
-Nodes (14): ok(), NotificationRepository, FirestoreUserRepository, createAuthContextValue(), createAuthContextValue(), createAuthContextValue(), createAuthContextValue(), createAuthContextValue() (+6 more)
+Cohesion: 0.05
+Nodes (17): es(), go, IC(), iE(), Km(), Lu(), mC(), me() (+9 more)
+
+### Community 19 - "Community 19"
+Cohesion: 0.06
+Nodes (10): ci(), cs(), ee(), g(), hs(), qe(), S(), u() (+2 more)
 
 ### Community 20 - "Community 20"
 Cohesion: 0.05
 Nodes (26): checkAppSavedAction(), toggleSaveAppAction(), AdminLayout(), handleSubmit(), handleOAuth(), GET(), createAuthBrowserClient(), signInWithOAuth() (+18 more)
 
 ### Community 21 - "Community 21"
-Cohesion: 0.05
-Nodes (7): Bg, cn(), ge, ng, oi(), qg, uo
+Cohesion: 0.07
+Nodes (7): _(), In(), Je(), k(), ki(), Qt(), xi
 
 ### Community 22 - "Community 22"
-Cohesion: 0.09
-Nodes (12): ds(), dt(), gi(), Ho(), Io, jn(), jt(), nr (+4 more)
+Cohesion: 0.07
+Nodes (4): ad(), cd, hi, td
 
 ### Community 23 - "Community 23"
-Cohesion: 0.06
-Nodes (9): At(), ji, Kn(), li, ls(), oe, rn(), vs() (+1 more)
+Cohesion: 0.05
+Nodes (25): ai(), BB(), Be(), Ci(), ef, ff, Fl(), Gi() (+17 more)
 
 ### Community 24 - "Community 24"
+Cohesion: 0.05
+Nodes (14): _(), al(), DB(), ec(), Fu(), ig, il(), Ol (+6 more)
+
+### Community 25 - "Community 25"
 Cohesion: 0.07
-Nodes (6): an(), Ce, I(), Ms(), Wn(), xo()
+Nodes (4): an(), Ce, Ms(), Wn()
 
 ### Community 26 - "Community 26"
-Cohesion: 0.07
-Nodes (4): Hr(), Jf(), qt, sf()
-
-### Community 27 - "Community 27"
 Cohesion: 0.06
 Nodes (3): BlogService, calculateReadingTime(), generateBlogSlug()
 
-### Community 28 - "Community 28"
-Cohesion: 0.1
-Nodes (34): appendReplacement(), appendReplacementFunc(), appendReplacementInternalJava(), appendReplacementInternalJs(), appendTail(), Ar(), asBytes(), asCharSequence() (+26 more)
-
-### Community 29 - "Community 29"
-Cohesion: 0.08
-Nodes (16): handleSignOut(), mapFirebaseAuthError(), Boolean(), handleSubmit(), handleChangePassword(), handleDeleteAccount(), handleResendVerification(), handleSavePreferences() (+8 more)
-
-### Community 30 - "Community 30"
+### Community 27 - "Community 27"
 Cohesion: 0.07
 Nodes (4): HelpArticleFeedbackRepository, HelpArticleRepository, HelpCategoryRepository, HelpRepository
 
-### Community 31 - "Community 31"
+### Community 28 - "Community 28"
 Cohesion: 0.08
 Nodes (13): handleAddHighlight(), handleConfirmArchive(), handleOpenCreateModal(), handleOpenEditModal(), handlePublishVersion(), handleRemoveHighlight(), handleSaveVersion(), handleSetCurrent() (+5 more)
 
+### Community 31 - "Community 31"
+Cohesion: 0.08
+Nodes (5): Kn(), li, ls(), vs(), Yn()
+
+### Community 32 - "Community 32"
+Cohesion: 0.06
+Nodes (6): B0, e0, qx(), ra, w0, xa()
+
 ### Community 33 - "Community 33"
-Cohesion: 0.07
-Nodes (10): fromPromise(), isErr(), isOk(), unwrapOr(), handleBookmarkToggle(), handleSecondaryLinkClick(), handleSmartActionClick(), renderSmartActionIcon() (+2 more)
+Cohesion: 0.11
+Nodes (14): Ae(), oe, ue, a(), B(), D(), e(), h() (+6 more)
 
 ### Community 34 - "Community 34"
-Cohesion: 0.07
-Nodes (3): ag, wd, xc
+Cohesion: 0.06
+Nodes (4): isErr(), FeedbackService, UserLibraryService, AppMediaService
 
 ### Community 35 - "Community 35"
-Cohesion: 0.12
-Nodes (12): Ae(), oe, ue, B(), D(), e(), h(), $l() (+4 more)
+Cohesion: 0.07
+Nodes (13): cC(), cf, gh(), hc(), hd(), Ko(), lf, ll() (+5 more)
 
 ### Community 36 - "Community 36"
 Cohesion: 0.07
-Nodes (17): ai(), BB(), Be(), ef, gB(), Gl(), ho, Iu() (+9 more)
+Nodes (3): eo(), Sn, Xr
 
 ### Community 37 - "Community 37"
-Cohesion: 0.07
-Nodes (15): CASE_ORBIT(), dr(), Fi, Fl(), He(), ii, Ir(), length() (+7 more)
+Cohesion: 0.11
+Nodes (27): canCheckPrefix(), ce, clear(), computeClosure(), context(), em, emptyOpContext(), endPos() (+19 more)
 
 ### Community 38 - "Community 38"
-Cohesion: 0.1
-Nodes (4): f0, Oi(), vr(), Ys()
+Cohesion: 0.08
+Nodes (12): E(), et, Gs(), he, ji, ks(), mi(), Mo() (+4 more)
 
 ### Community 39 - "Community 39"
 Cohesion: 0.08
-Nodes (6): mapPrismaAuthorToDomain(), mapPrismaBlogCategoryToDomain(), mapPrismaBlogPostToDomain(), mapPrismaBlogPostToListItem(), mapPrismaBlogPostToPublic(), BlogRepository
+Nodes (14): getUserFriendlyErrorMessage(), isNetworkError(), isNotFoundError(), isPermissionError(), isRetryableError(), mapFirestoreError(), normalizeError(), AppError (+6 more)
 
 ### Community 40 - "Community 40"
-Cohesion: 0.08
-Nodes (11): _(), al(), DB(), Fu(), il(), Ol, tm, ve() (+3 more)
-
-### Community 41 - "Community 41"
-Cohesion: 0.08
-Nodes (12): cC(), cf, gh(), hc(), hd(), Ko(), lf, ll() (+4 more)
-
-### Community 42 - "Community 42"
-Cohesion: 0.07
-Nodes (12): da(), _g, Ma(), ne, Oa(), qp, tp, Ua() (+4 more)
+Cohesion: 0.18
+Nodes (12): ds(), Ke(), V(), Me(), ve(), __(), i_(), v_() (+4 more)
 
 ### Community 43 - "Community 43"
 Cohesion: 0.07
 Nodes (3): Dt, inorderTraversal(), maxKey()
 
+### Community 44 - "Community 44"
+Cohesion: 0.1
+Nodes (4): f0, Oi(), vr(), Ys()
+
 ### Community 45 - "Community 45"
+Cohesion: 0.08
+Nodes (6): mapPrismaAuthorToDomain(), mapPrismaBlogCategoryToDomain(), mapPrismaBlogPostToDomain(), mapPrismaBlogPostToListItem(), mapPrismaBlogPostToPublic(), BlogRepository
+
+### Community 46 - "Community 46"
+Cohesion: 0.22
+Nodes (15): Ds(), ks(), K(), le(), M(), ce(), ee(), Z() (+7 more)
+
+### Community 47 - "Community 47"
 Cohesion: 0.34
 Nodes (19): createTestAdmin(), createTestApp(), createTestAppVersion(), createTestAuditLog(), createTestBlogPost(), createTestCategory(), createTestHelpArticle(), createTestHelpCategory() (+11 more)
 
-### Community 46 - "Community 46"
+### Community 48 - "Community 48"
 Cohesion: 0.1
 Nodes (5): convertTimestampsToMillis(), createFirestoreConverter(), sanitizeForFirestore(), FirestoreRepository, MockTimestamp
 
-### Community 47 - "Community 47"
-Cohesion: 0.14
-Nodes (3): isRed(), Mt, remove()
-
-### Community 48 - "Community 48"
-Cohesion: 0.09
-Nodes (6): ae(), F, he, L, m(), No()
-
 ### Community 49 - "Community 49"
-Cohesion: 0.1
-Nodes (11): getUserFriendlyErrorMessage(), isNetworkError(), isNotFoundError(), isPermissionError(), isRetryableError(), mapFirestoreError(), normalizeError(), AppError (+3 more)
+Cohesion: 0.15
+Nodes (27): appendReplacement(), appendReplacementFunc(), appendReplacementInternalJava(), appendReplacementInternalJs(), appendTail(), Ar(), buildReplacerArgs(), end() (+19 more)
 
 ### Community 50 - "Community 50"
-Cohesion: 0.1
-Nodes (3): bs(), Fu, mS()
+Cohesion: 0.11
+Nodes (4): ve(), p_, q_, Q()
+
+### Community 51 - "Community 51"
+Cohesion: 0.19
+Nodes (9): _e(), ke(), b_(), xs(), we(), te(), Ae(), G() (+1 more)
 
 ### Community 52 - "Community 52"
-Cohesion: 0.11
-Nodes (7): _(), D, et, Mo(), Rt(), Tt(), us()
+Cohesion: 0.17
+Nodes (3): Ot(), Ue(), xf
 
-### Community 55 - "Community 55"
+### Community 53 - "Community 53"
+Cohesion: 0.17
+Nodes (11): ce(), ne, pe(), d(), j(), w(), K(), F_() (+3 more)
+
+### Community 56 - "Community 56"
+Cohesion: 0.08
+Nodes (14): Bc, CASE_ORBIT(), Fi, ii, li(), Lr(), pc(), qf() (+6 more)
+
+### Community 57 - "Community 57"
+Cohesion: 0.1
+Nodes (4): bs(), Fu, mS(), up()
+
+### Community 59 - "Community 59"
+Cohesion: 0.11
+Nodes (9): dg(), Dx(), Ga(), Gx, Hx, Nu(), Ol(), Px (+1 more)
+
+### Community 61 - "Community 61"
+Cohesion: 0.12
+Nodes (6): ei(), J(), nt, Q(), ti(), xt()
+
+### Community 63 - "Community 63"
 Cohesion: 0.23
 Nodes (12): getFirebaseApp(), getFirebaseAuth(), getFirebaseFirestore(), getFirebaseServices(), initFirebase(), resetFirebaseServicesForTesting(), extractRawFirebaseConfig(), getEmulatorConfig() (+4 more)
 
-### Community 56 - "Community 56"
+### Community 64 - "Community 64"
 Cohesion: 0.1
 Nodes (5): mapPrismaAppToDomain(), mapPrismaAppToListItem(), mapPrismaAppToPublicDetail(), mapPrismaLibraryItemToDomain(), AppRepository
 
-### Community 58 - "Community 58"
-Cohesion: 0.14
-Nodes (5): Gn(), J(), nt, Q(), se
-
-### Community 60 - "Community 60"
+### Community 67 - "Community 67"
 Cohesion: 0.13
 Nodes (13): AppCard(), AppVersionHistory(), discoverPublishedApps(), getActiveCategories(), getActiveTags(), getPublicAppBySlug(), getPublishedApps(), generateMetadata() (+5 more)
 
-### Community 62 - "Community 62"
-Cohesion: 0.17
-Nodes (3): ni(), Ot(), Ue()
-
-### Community 68 - "Community 68"
-Cohesion: 0.16
-Nodes (5): ErrorLoggerService, inferErrorCategory(), sanitizeContext(), sanitizeUrlString(), PerformanceTelemetryService
-
 ### Community 69 - "Community 69"
+Cohesion: 0.25
+Nodes (9): M(), O(), R(), T(), Y(), A_(), w_(), pe() (+1 more)
+
+### Community 70 - "Community 70"
+Cohesion: 0.1
+Nodes (3): Bg, ng, rg
+
+### Community 76 - "Community 76"
+Cohesion: 0.18
+Nodes (5): O(), k_, p(), B(), _s()
+
+### Community 77 - "Community 77"
+Cohesion: 0.17
+Nodes (5): _(), w(), x(), o(), j
+
+### Community 79 - "Community 79"
 Cohesion: 0.14
 Nodes (3): ClassificationService, isValidSlug(), slugify()
 
-### Community 72 - "Community 72"
-Cohesion: 0.13
-Nodes (5): ListSkeleton(), Progress(), Skeleton(), Spinner(), TableSkeleton()
+### Community 81 - "Community 81"
+Cohesion: 0.16
+Nodes (5): ErrorLoggerService, inferErrorCategory(), sanitizeContext(), sanitizeUrlString(), PerformanceTelemetryService
 
-### Community 73 - "Community 73"
+### Community 83 - "Community 83"
 Cohesion: 0.14
 Nodes (3): handleVote(), AnalyticsService, getAnonymousSessionId()
 
-### Community 74 - "Community 74"
+### Community 84 - "Community 84"
+Cohesion: 0.13
+Nodes (5): ListSkeleton(), Progress(), Skeleton(), Spinner(), TableSkeleton()
+
+### Community 86 - "Community 86"
 Cohesion: 0.17
 Nodes (6): AppRatingSection(), useAppDetails(), useAppFeedback(), useAuth(), useNotifications(), useUserProfile()
 
-### Community 75 - "Community 75"
-Cohesion: 0.13
-Nodes (4): ce, Js(), Qr, wr()
+### Community 87 - "Community 87"
+Cohesion: 0.15
+Nodes (3): er(), Is, zn()
 
-### Community 76 - "Community 76"
+### Community 88 - "Community 88"
+Cohesion: 0.16
+Nodes (3): fi(), I(), se
+
+### Community 91 - "Community 91"
 Cohesion: 0.16
 Nodes (9): formatRelativeTime(), getNotificationIcon(), getNotificationIconClass(), handleClickOutside(), handleKeyDown(), handleNotificationClick(), getTicketStatusBadge(), handleNotificationClick() (+1 more)
 
-### Community 79 - "Community 79"
+### Community 93 - "Community 93"
 Cohesion: 0.12
 Nodes (5): AppDelegate, SceneDelegate, UIApplicationDelegate, UIResponder, UIWindowSceneDelegate
 
-### Community 81 - "Community 81"
+### Community 96 - "Community 96"
 Cohesion: 0.25
 Nodes (14): buildAppPayload(), handleAddLink(), handleAddScreenshot(), handleAddTag(), handleBeforeUnload(), handleConfirmArchive(), handleNameChange(), handlePublish() (+6 more)
 
-### Community 90 - "Community 90"
-Cohesion: 0.2
-Nodes (4): qe(), S(), un(), Yt
+### Community 98 - "Community 98"
+Cohesion: 0.13
+Nodes (3): os(), Vt, Z()
 
-### Community 91 - "Community 91"
+### Community 101 - "Community 101"
+Cohesion: 0.29
+Nodes (4): g_, r(), Z(), W()
+
+### Community 104 - "Community 104"
 Cohesion: 0.21
 Nodes (4): executeDatabaseSeed(), validateDatabaseIntegrity(), isSafeImageUrl(), isSafeUrl()
 
-### Community 95 - "Community 95"
+### Community 106 - "Community 106"
 Cohesion: 0.31
 Nodes (7): SitemapService, buildSitemapEntries(), escapeXml(), formatLastMod(), generateRobotsTxt(), generateSitemapXml(), getValidOrigin()
 
-### Community 99 - "Community 99"
-Cohesion: 0.26
-Nodes (4): FirestoreSearchRepository, calculateRelevance(), extractSearchTokens(), normalizeSearchQuery()
-
-### Community 101 - "Community 101"
-Cohesion: 0.18
-Nodes (3): AppCardComponent(), handleBookmarkClick(), AppIcon()
-
-### Community 102 - "Community 102"
+### Community 110 - "Community 110"
 Cohesion: 0.3
 Nodes (10): fetchCats(), fetchPost(), handleAddTag(), handleArchive(), handlePublish(), handleRemoveTag(), handleSaveDraft(), handleTitleChange() (+2 more)
 
-### Community 103 - "Community 103"
+### Community 111 - "Community 111"
+Cohesion: 0.26
+Nodes (4): FirestoreSearchRepository, calculateRelevance(), extractSearchTokens(), normalizeSearchQuery()
+
+### Community 113 - "Community 113"
+Cohesion: 0.18
+Nodes (3): AppCardComponent(), handleBookmarkClick(), AppIcon()
+
+### Community 114 - "Community 114"
 Cohesion: 0.29
 Nodes (4): Card(), CardDescription(), CardHeader(), CardTitle()
 
-### Community 112 - "Community 112"
+### Community 124 - "Community 124"
 Cohesion: 0.36
 Nodes (8): getCategoryName(), handleConfirmArchive(), handleOpenCreateCategory(), handleOpenEditCategory(), handleRestoreArticle(), handleSaveCategory(), handleToggleCategoryActive(), handleTogglePublish()
 
-### Community 115 - "Community 115"
-Cohesion: 0.58
-Nodes (5): d(), j(), w(), __(), Z_()
-
-### Community 122 - "Community 122"
-Cohesion: 0.28
-Nodes (5): BlogCodeBlock(), if(), isSafeUrl(), renderInlineFormatting(), markdownLine()
-
-### Community 123 - "Community 123"
+### Community 134 - "Community 134"
 Cohesion: 0.31
 Nodes (5): setLinkTag(), setMetaTag(), setStructuredDataTag(), useSEO(), SEO()
 
-### Community 126 - "Community 126"
-Cohesion: 0.57
-Nodes (4): O(), aA(), B(), _s()
+### Community 135 - "Community 135"
+Cohesion: 0.28
+Nodes (5): BlogCodeBlock(), if(), isSafeUrl(), renderInlineFormatting(), markdownLine()
 
-### Community 129 - "Community 129"
+### Community 143 - "Community 143"
 Cohesion: 0.43
 Nodes (6): buildAppSEO(), buildBlogPostSEO(), buildHelpArticleSEO(), formatPageTitle(), normalizeCanonicalUrl(), serializeJsonLd()
 
-### Community 133 - "Community 133"
+### Community 145 - "Community 145"
+Cohesion: 0.43
+Nodes (6): handleChangePassword(), handleDeleteAccount(), handleResendVerification(), handleSavePreferences(), handleSaveProfile(), handleTabChange()
+
+### Community 148 - "Community 148"
 Cohesion: 0.43
 Nodes (6): useApps(), useAppsByCategory(), useAppsByTag(), useFeaturedApps(), useLatestApps(), useTrendingApps()
 
-### Community 134 - "Community 134"
+### Community 149 - "Community 149"
 Cohesion: 0.29
 Nodes (3): validateClientEnv(), initializeEnvironment(), validateServerEnv()
 
-### Community 135 - "Community 135"
+### Community 150 - "Community 150"
 Cohesion: 0.38
 Nodes (3): getCloudinaryConfig(), deleteCloudinaryAsset(), generateSignedUploadParameters()
 
-### Community 137 - "Community 137"
-Cohesion: 0.57
-Nodes (3): isSafeUrl(), resolveSmartAction(), isSafeExternalUrl()
-
-### Community 138 - "Community 138"
-Cohesion: 0.33
-Nodes (3): AppLayout(), Footer(), getSocialIcon()
-
-### Community 139 - "Community 139"
-Cohesion: 0.48
-Nodes (5): handleClearTag(), handleLoadMore(), handleSelectCategory(), loadCategories(), loadFeatured()
-
-### Community 140 - "Community 140"
-Cohesion: 0.48
-Nodes (5): getAppName(), handlePriorityChange(), handleSelectTicket(), handleSendReply(), handleStatusChange()
-
-### Community 141 - "Community 141"
-Cohesion: 0.48
-Nodes (5): handleConfirmDeactivate(), handleNameChange(), handleOpenCreateModal(), handleOpenEditModal(), handleSaveCategory()
-
-### Community 142 - "Community 142"
+### Community 155 - "Community 155"
 Cohesion: 0.48
 Nodes (5): handleBeforeUnload(), handleConfirmArchive(), handlePublish(), handleSaveDraft(), handleTitleChange()
 
-### Community 143 - "Community 143"
+### Community 156 - "Community 156"
+Cohesion: 0.48
+Nodes (5): handleConfirmDeactivate(), handleNameChange(), handleOpenCreateModal(), handleOpenEditModal(), handleSaveCategory()
+
+### Community 157 - "Community 157"
 Cohesion: 0.48
 Nodes (5): handleConfirmDeactivate(), handleNameChange(), handleOpenCreateModal(), handleOpenEditModal(), handleSaveTag()
 
-### Community 149 - "Community 149"
+### Community 158 - "Community 158"
+Cohesion: 0.57
+Nodes (3): isSafeUrl(), resolveSmartAction(), isSafeExternalUrl()
+
+### Community 159 - "Community 159"
+Cohesion: 0.33
+Nodes (3): AppLayout(), Footer(), getSocialIcon()
+
+### Community 160 - "Community 160"
+Cohesion: 0.48
+Nodes (5): handleClearTag(), handleLoadMore(), handleSelectCategory(), loadCategories(), loadFeatured()
+
+### Community 161 - "Community 161"
+Cohesion: 0.48
+Nodes (5): getAppName(), handlePriorityChange(), handleSelectTicket(), handleSendReply(), handleStatusChange()
+
+### Community 162 - "Community 162"
+Cohesion: 0.47
+Nodes (3): getBlogCategories(), getBlogTags(), getPublicBlogListing()
+
+### Community 168 - "Community 168"
 Cohesion: 0.47
 Nodes (3): disconnect(), observe(), unobserve()
 
-### Community 151 - "Community 151"
-Cohesion: 0.53
-Nodes (4): FallbackWithRecovery(), forbiddenOperation(), TestFormComponent(), transientOperation()
-
-### Community 152 - "Community 152"
+### Community 169 - "Community 169"
 Cohesion: 0.67
 Nodes (4): clearRecentSearches(), getRecentSearches(), removeRecentSearch(), saveRecentSearch()
 
-### Community 155 - "Community 155"
+### Community 171 - "Community 171"
+Cohesion: 0.53
+Nodes (4): handleBookmarkToggle(), handleSecondaryLinkClick(), handleSmartActionClick(), renderSmartActionIcon()
+
+### Community 172 - "Community 172"
+Cohesion: 0.53
+Nodes (4): FallbackWithRecovery(), forbiddenOperation(), TestFormComponent(), transientOperation()
+
+### Community 174 - "Community 174"
 Cohesion: 0.53
 Nodes (4): GithubIcon(), renderBuildIcon(), renderSocialIcon(), TwitterIcon()
 
-### Community 156 - "Community 156"
+### Community 175 - "Community 175"
 Cohesion: 0.53
 Nodes (4): handleConfirmArchive(), handleRestoreApp(), handleTogglePublish(), renderStatusBadge()
 
-### Community 164 - "Community 164"
+### Community 182 - "Community 182"
 Cohesion: 0.6
 Nodes (3): formatIsoTimestamp(), isValidTimestamp(), normalizeTimestamp()
 
-### Community 165 - "Community 165"
+### Community 183 - "Community 183"
 Cohesion: 0.6
 Nodes (3): formatCompactNumber(), formatDateTime(), truncateText()
 
-### Community 168 - "Community 168"
+### Community 185 - "Community 185"
 Cohesion: 0.6
 Nodes (3): handleClickOutside(), handleKeyDown(), handleToggle()
 
-### Community 169 - "Community 169"
+### Community 186 - "Community 186"
 Cohesion: 0.7
 Nodes (3): handleCloseLightbox(), handleKeyDown(), handleOpenLightbox()
 
-### Community 170 - "Community 170"
+### Community 188 - "Community 188"
 Cohesion: 0.6
 Nodes (3): handleClear(), handleKeyDown(), handleOutsideClick()
 
-### Community 171 - "Community 171"
+### Community 189 - "Community 189"
 Cohesion: 0.7
 Nodes (3): handleSearchSubmit(), handleTabChange(), handleTagClick()
 
-### Community 172 - "Community 172"
+### Community 190 - "Community 190"
 Cohesion: 0.6
 Nodes (3): handleToggleArchive(), handleTogglePublish(), renderStatusBadge()
 
 ## Knowledge Gaps
-- **148 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **159 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `mn` connect `Community 19` to `Community 0`, `Community 32`, `Community 163`, `Community 7`, `Community 41`, `Community 9`, `Community 11`, `Community 145`, `Community 181`, `Community 117`, `Community 89`, `Community 28`, `Community 63`?**
-  _High betweenness centrality (0.032) - this node is a cross-community bridge._
-- **Why does `t()` connect `Community 61` to `Community 0`, `Community 98`, `Community 35`, `Community 4`, `Community 6`, `Community 7`, `Community 11`, `Community 43`, `Community 15`, `Community 146`, `Community 85`, `Community 25`, `Community 28`?**
-  _High betweenness centrality (0.016) - this node is a cross-community bridge._
-- **Why does `c()` connect `Community 6` to `Community 0`, `Community 32`, `Community 98`, `Community 4`, `Community 37`, `Community 7`, `Community 11`, `Community 181`, `Community 26`, `Community 28`?**
-  _High betweenness centrality (0.013) - this node is a cross-community bridge._
+- **Why does `mn` connect `Community 16` to `Community 0`, `Community 121`, `Community 35`, `Community 7`, `Community 9`, `Community 10`, `Community 78`, `Community 49`, `Community 55`, `Community 56`, `Community 153`, `Community 29`, `Community 30`?**
+  _High betweenness centrality (0.036) - this node is a cross-community bridge._
+- **Why does `err()` connect `Community 12` to `Community 13`, `Community 144`, `Community 146`, `Community 147`, `Community 26`, `Community 27`, `Community 28`, `Community 34`, `Community 39`, `Community 170`, `Community 172`, `Community 48`, `Community 58`, `Community 62`, `Community 63`, `Community 66`, `Community 79`, `Community 80`, `Community 100`, `Community 107`, `Community 108`, `Community 111`, `Community 125`?**
+  _High betweenness centrality (0.014) - this node is a cross-community bridge._
+- **Why does `c()` connect `Community 7` to `Community 0`, `Community 33`, `Community 2`, `Community 37`, `Community 6`, `Community 10`, `Community 11`, `Community 78`, `Community 15`, `Community 49`, `Community 29`?**
+  _High betweenness centrality (0.014) - this node is a cross-community bridge._
 - **Are the 144 inferred relationships involving `err()` (e.g. with `.createTicket()` and `.addMessage()`) actually correct?**
   _`err()` has 144 INFERRED edges - model-reasoned connections that need verification._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.03 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.04 - nodes in this community are weakly interconnected._
-- **Should `Community 2` be split into smaller, more focused modules?**
   _Cohesion score 0.06 - nodes in this community are weakly interconnected._
+- **Should `Community 2` be split into smaller, more focused modules?**
+  _Cohesion score 0.05 - nodes in this community are weakly interconnected._
