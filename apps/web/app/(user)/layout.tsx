@@ -1,13 +1,25 @@
 import * as React from 'react';
 import Link from 'next/link';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
+import { getServerSession } from '@elsesourav/auth';
 import { Sparkles, Bookmark, Settings, LogOut } from 'lucide-react';
 
-export default function UserLayout({
+export default async function UserLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const cookieStore = await cookies();
+  const session = await getServerSession({
+    getAll: () => cookieStore.getAll(),
+  });
+
+  if (!session) {
+    redirect('/login?next=/settings');
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-zinc-950 text-white">
       <header className="border-b border-zinc-800/80 bg-zinc-950/60 backdrop-blur-xl sticky top-0 z-50">
@@ -23,9 +35,14 @@ export default function UserLayout({
             <Link href={ROUTES.SETTINGS} className="flex items-center gap-1.5 hover:text-white transition-colors">
               <Settings className="w-4 h-4 text-zinc-400" /> Settings
             </Link>
-            <Link href={ROUTES.HOME} className="flex items-center gap-1.5 hover:text-red-400 transition-colors text-zinc-400">
-              <LogOut className="w-4 h-4" /> Sign Out
-            </Link>
+            <form action="/api/auth/logout" method="POST">
+              <button
+                type="submit"
+                className="flex items-center gap-1.5 hover:text-red-400 transition-colors text-zinc-400 text-sm"
+              >
+                <LogOut className="w-4 h-4" /> Sign Out
+              </button>
+            </form>
           </nav>
         </div>
       </header>
