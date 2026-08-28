@@ -8,3 +8,4 @@ export * from './repositories/blog.repository';
 export * from './repositories/support.repository';
 export * from './repositories/audit.repository';
 export * from './services/user.service';
+export * from './services/app.service';

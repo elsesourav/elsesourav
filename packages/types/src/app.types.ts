@@ -121,6 +121,7 @@ export interface CreateAppInput {
 
 export interface UpdateAppInput {
   readonly name?: string;
+  readonly slug?: string;
   readonly shortDescription?: string;
   readonly description?: string;
   readonly iconUrl?: string;
