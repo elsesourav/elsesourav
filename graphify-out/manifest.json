@@ -283,6 +283,10 @@
     "mtime": 1787941342.8718438,
     "hash": "6a3f014260fac500475c5a24ca749189"
   },
+  "/Users/sourav/Developer/WEB/elsesourav/packages/auth/src/__tests__/auth-ux.test.ts": {
+    "mtime": 1787941948.885015,
+    "hash": "82f509e91fa0f6f0e25c2622944eaac3"
+  },
   "/Users/sourav/Developer/WEB/elsesourav/packages/auth/src/__tests__/auth.test.ts": {
     "mtime": 1787941548.0750883,
     "hash": "101857fc366c84370c7aa72f8e558f23"
@@ -428,8 +432,8 @@
     "hash": "0e75d307e585ab5ce6d55689fccfe89a"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(user)/layout.tsx": {
-    "mtime": 1787939675.997942,
-    "hash": "81c73d12e7c4675acfe73fc0b8c08531"
+    "mtime": 1787941920.1961343,
+    "hash": "72055a36fac59bd215f0a6355cfe6d8a"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(user)/settings/page.tsx": {
     "mtime": 1787938792.4115837,
@@ -475,6 +479,10 @@
     "mtime": 1787939056.0041358,
     "hash": "a2d354d321fba01fd9cd23ee0d66579a"
   },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/api/auth/logout/route.ts": {
+    "mtime": 1787941934.159529,
+    "hash": "66b5793f91f56e9a0b534b623dd6d61c"
+  },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/api/auth/callback/route.ts": {
     "mtime": 1787941417.8563254,
     "hash": "7d3fe4d0e20487e3ab519b281e50c4f3"
@@ -492,8 +500,8 @@
     "hash": "d21367bba1d84f32ad89fcbe6e07c912"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(auth)/signup/page.tsx": {
-    "mtime": 1787938781.1657624,
-    "hash": "f3f672a9e5de4221bc31db3093473836"
+    "mtime": 1787941900.692073,
+    "hash": "314a01dcf92584a0125deaf08ea3e09f"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(auth)/forgot-password/page.tsx": {
     "mtime": 1787941425.955228,
@@ -504,12 +512,16 @@
     "hash": "98b15ad122d6f742afe4574662135d06"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(auth)/login/page.tsx": {
-    "mtime": 1787938776.1167276,
-    "hash": "502fd9d50a5cc048d02f383474d88424"
+    "mtime": 1787941895.2274702,
+    "hash": "01bc243677aac517684882df731152f3"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(auth)/auth-error/page.tsx": {
+    "mtime": 1787941984.7890751,
+    "hash": "e776ed630763b0fe193ab67421f871ec"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(admin)/layout.tsx": {
-    "mtime": 1787939684.0600657,
-    "hash": "cca551655d65d59824a9afe9acf4f35e"
+    "mtime": 1787941978.8369715,
+    "hash": "74e9cc8d713ab14a88727609263f9a8e"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(admin)/error.tsx": {
     "mtime": 1787939689.353658,
@@ -522,6 +534,18 @@
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(admin)/admin/page.tsx": {
     "mtime": 1787939045.9788744,
     "hash": "7ec623e53d29e69981fe528acdff338e"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/components/auth/LoginForm.tsx": {
+    "mtime": 1787941968.68036,
+    "hash": "b910f79a65ce6a90aab6ba844fcb6bf1"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/components/auth/SignUpForm.tsx": {
+    "mtime": 1787941973.356462,
+    "hash": "3761cbbffbc9f1b2afdb2fe27b648aba"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/components/auth/OAuthButtons.tsx": {
+    "mtime": 1787941875.4327374,
+    "hash": "0709daa4f82b05b43ea12d41931fce5a"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/v1-reference/vite.config.ts": {
     "mtime": 1787938310.121296,

@@ -13,14 +13,17 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "test": "vitest run"
   },
   "dependencies": {
     "@elsesourav/config": "workspace:*",
     "@elsesourav/types": "workspace:*",
+    "@elsesourav/validation": "workspace:*",
     "@elsesourav/utils": "workspace:*"
   },
   "devDependencies": {
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "vitest": "^3.2.7"
   }
 }

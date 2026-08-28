@@ -8,3 +8,4 @@ export * from './help.types';
 export * from './support.types';
 export * from './notification.types';
 export * from './audit.types';
+export * from './media.types';
