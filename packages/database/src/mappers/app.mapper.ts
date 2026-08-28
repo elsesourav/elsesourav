@@ -6,7 +6,14 @@ import type {
   AppVersion as PrismaAppVersion,
   AppStat as PrismaAppStat,
 } from '@prisma/client';
-import type { App as DomainApp, AppPlatform, AppActionType, AppStatus } from '@elsesourav/types';
+import type {
+  App as DomainApp,
+  AppListItem,
+  PublicApp,
+  AppPlatform,
+  AppActionType,
+  AppStatus,
+} from '@elsesourav/types';
 
 export type PrismaAppWithRelations = PrismaApp & {
   category?: Category | null;
@@ -70,5 +77,53 @@ export function mapPrismaAppToDomain(prismaApp: PrismaAppWithRelations): DomainA
     createdAt: prismaApp.createdAt.getTime(),
     updatedAt: prismaApp.updatedAt.getTime(),
     deletedAt: prismaApp.deletedAt ? prismaApp.deletedAt.getTime() : undefined,
+  };
+}
+
+export function mapPrismaAppToListItem(prismaApp: PrismaAppWithRelations): AppListItem {
+  return {
+    id: prismaApp.id,
+    slug: prismaApp.slug,
+    name: prismaApp.name,
+    shortDescription: prismaApp.shortDescription,
+    iconUrl: prismaApp.iconUrl,
+    primaryCategory: prismaApp.category?.name || 'General',
+    categorySlug: prismaApp.category?.slug || 'general',
+    platforms: (prismaApp.links?.map((l) => l.platform as AppPlatform) || ['web']) as readonly AppPlatform[],
+    isFeatured: prismaApp.isFeatured,
+    isPinned: prismaApp.isPinned,
+    currentVersion: prismaApp.currentVersion ?? undefined,
+    sortOrder: prismaApp.sortOrder,
+    publishedAt: prismaApp.publishedAt ? prismaApp.publishedAt.getTime() : undefined,
+  };
+}
+
+export function mapPrismaAppToPublicDetail(prismaApp: PrismaAppWithRelations): PublicApp {
+  const domain = mapPrismaAppToDomain(prismaApp);
+  return {
+    id: domain.id,
+    slug: domain.slug,
+    name: domain.name,
+    shortDescription: domain.shortDescription,
+    description: domain.description,
+    iconUrl: domain.iconUrl,
+    featuredImageUrl: domain.featuredImageUrl,
+    screenshots: domain.screenshots,
+    demoUrl: domain.demoUrl,
+    videoUrl: domain.videoUrl,
+    primaryCategory: prismaApp.category?.name || 'General',
+    categorySlug: prismaApp.category?.slug || 'general',
+    tags: domain.tags,
+    platforms: domain.platforms,
+    links: domain.links,
+    versions: domain.versions || [],
+    currentVersion: domain.currentVersion,
+    releaseDate: domain.releaseDate,
+    seoTitle: domain.seoTitle,
+    seoDescription: domain.seoDescription,
+    socialImageUrl: domain.socialImageUrl,
+    stats: domain.stats,
+    publishedAt: domain.publishedAt,
+    updatedAt: domain.updatedAt,
   };
 }

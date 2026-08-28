@@ -9,3 +9,4 @@ export * from './repositories/support.repository';
 export * from './repositories/audit.repository';
 export * from './services/user.service';
 export * from './services/app.service';
+export * from './services/app-query.service';

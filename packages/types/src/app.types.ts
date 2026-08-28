@@ -85,6 +85,78 @@ export interface App {
   readonly deletedAt?: Timestamp;
 }
 
+/**
+ * Lightweight public representation for catalog listings and cards
+ */
+export interface AppListItem {
+  readonly id: ID;
+  readonly slug: string;
+  readonly name: string;
+  readonly shortDescription: string;
+  readonly iconUrl: string;
+  readonly primaryCategory: string;
+  readonly categorySlug: string;
+  readonly platforms: readonly AppPlatform[];
+  readonly isFeatured: boolean;
+  readonly isPinned: boolean;
+  readonly currentVersion?: string;
+  readonly sortOrder: number;
+  readonly publishedAt?: Timestamp;
+}
+
+/**
+ * Detailed public projection for individual application presentation pages
+ */
+export interface PublicApp {
+  readonly id: ID;
+  readonly slug: string;
+  readonly name: string;
+  readonly shortDescription: string;
+  readonly description: string;
+  readonly iconUrl: string;
+  readonly featuredImageUrl?: string;
+  readonly screenshots: readonly string[];
+  readonly demoUrl?: string;
+  readonly videoUrl?: string;
+  readonly primaryCategory: string;
+  readonly categorySlug: string;
+  readonly tags: readonly string[];
+  readonly platforms: readonly AppPlatform[];
+  readonly links: readonly AppLink[];
+  readonly versions: readonly AppVersion[];
+  readonly currentVersion?: string;
+  readonly releaseDate?: Timestamp;
+  readonly seoTitle?: string;
+  readonly seoDescription?: string;
+  readonly socialImageUrl?: string;
+  readonly stats: AppStatistics;
+  readonly publishedAt?: Timestamp;
+  readonly updatedAt: Timestamp;
+}
+
+export type AppSortOption = 'newest' | 'name' | 'popularity' | 'sortOrder';
+
+export interface AppSearchFilters {
+  readonly categorySlug?: string;
+  readonly tagSlug?: string;
+  readonly platform?: AppPlatform;
+  readonly isFeatured?: boolean;
+}
+
+export interface AppSearchInput {
+  readonly query?: string;
+  readonly filters?: AppSearchFilters;
+  readonly sort?: AppSortOption;
+  readonly limit?: number;
+  readonly cursor?: string;
+}
+
+export interface AppSearchResult {
+  readonly items: readonly AppListItem[];
+  readonly totalCount: number;
+  readonly nextCursor?: string;
+}
+
 export interface Category {
   readonly id: ID;
   readonly name: string;
@@ -146,6 +218,7 @@ export interface PublishAppInput {
 export interface AppQueryOptions {
   readonly status?: AppStatus;
   readonly categoryId?: string;
+  readonly categorySlug?: string;
   readonly tagSlug?: string;
   readonly search?: string;
   readonly isFeatured?: boolean;

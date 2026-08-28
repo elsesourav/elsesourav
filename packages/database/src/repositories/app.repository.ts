@@ -1,8 +1,22 @@
 import { PrismaClient, PublishStatus, Prisma } from '@prisma/client';
 import { prisma as defaultPrisma } from '../client';
-import { mapPrismaAppToDomain, PrismaAppWithRelations } from '../mappers/app.mapper';
+import {
+  mapPrismaAppToDomain,
+  mapPrismaAppToListItem,
+  mapPrismaAppToPublicDetail,
+  PrismaAppWithRelations,
+} from '../mappers/app.mapper';
 import { AppError } from '@elsesourav/types';
-import type { App as DomainApp, AppQueryOptions, CreateAppInput, UpdateAppInput } from '@elsesourav/types';
+import type {
+  App as DomainApp,
+  AppListItem,
+  PublicApp,
+  AppQueryOptions,
+  CreateAppInput,
+  UpdateAppInput,
+  AppSearchInput,
+  AppSearchResult,
+} from '@elsesourav/types';
 
 export class AppRepository {
   constructor(private readonly prisma: PrismaClient = defaultPrisma) {}
@@ -41,9 +55,151 @@ export class AppRepository {
     }
   }
 
+  async getPublicDetailBySlug(slug: string): Promise<PublicApp | null> {
+    try {
+      const record = await this.prisma.app.findFirst({
+        where: {
+          slug: slug.trim().toLowerCase(),
+          status: PublishStatus.PUBLISHED,
+          deletedAt: null,
+        },
+        include: this.appInclude,
+      });
+      if (!record) return null;
+      return mapPrismaAppToPublicDetail(record as PrismaAppWithRelations);
+    } catch (error) {
+      throw AppError.database(`Failed to fetch public application detail: ${slug}`, error);
+    }
+  }
+
+  async listPublic(options: AppQueryOptions = {}): Promise<AppListItem[]> {
+    try {
+      const limit = Math.min(Math.max(options.limit ?? 20, 1), 50);
+
+      const where: Prisma.AppWhereInput = {
+        status: PublishStatus.PUBLISHED,
+        deletedAt: null,
+      };
+
+      if (options.categoryId) {
+        where.categoryId = options.categoryId;
+      }
+
+      if (options.categorySlug) {
+        where.category = {
+          slug: options.categorySlug.trim().toLowerCase(),
+        };
+      }
+
+      if (options.tagSlug) {
+        where.tags = {
+          some: {
+            tag: { slug: options.tagSlug.trim().toLowerCase() },
+          },
+        };
+      }
+
+      if (options.isFeatured !== undefined) {
+        where.isFeatured = options.isFeatured;
+      }
+
+      if (options.search) {
+        const sanitizedQuery = options.search.trim().slice(0, 50);
+        if (sanitizedQuery.length > 0) {
+          where.OR = [
+            { name: { contains: sanitizedQuery, mode: 'insensitive' } },
+            { shortDescription: { contains: sanitizedQuery, mode: 'insensitive' } },
+          ];
+        }
+      }
+
+      const allowedSortFields = ['createdAt', 'sortOrder', 'name', 'publishedAt'] as const;
+      const sortField = allowedSortFields.includes(options.sortField as (typeof allowedSortFields)[number])
+        ? options.sortField!
+        : 'sortOrder';
+      const sortDirection = options.sortDirection === 'desc' ? 'desc' : 'asc';
+
+      const records = await this.prisma.app.findMany({
+        where,
+        take: limit,
+        orderBy: { [sortField]: sortDirection },
+        include: {
+          category: true,
+          links: true,
+        },
+      });
+
+      return records.map((r) => mapPrismaAppToListItem(r as PrismaAppWithRelations));
+    } catch (error) {
+      throw AppError.database('Failed to query public applications list', error);
+    }
+  }
+
+  async searchPublic(input: AppSearchInput = {}): Promise<AppSearchResult> {
+    try {
+      const limit = Math.min(Math.max(input.limit ?? 20, 1), 50);
+      const where: Prisma.AppWhereInput = {
+        status: PublishStatus.PUBLISHED,
+        deletedAt: null,
+      };
+
+      if (input.query) {
+        const sanitized = input.query.trim().slice(0, 50);
+        if (sanitized.length > 0) {
+          where.OR = [
+            { name: { contains: sanitized, mode: 'insensitive' } },
+            { shortDescription: { contains: sanitized, mode: 'insensitive' } },
+            { description: { contains: sanitized, mode: 'insensitive' } },
+          ];
+        }
+      }
+
+      if (input.filters?.categorySlug) {
+        where.category = {
+          slug: input.filters.categorySlug.trim().toLowerCase(),
+        };
+      }
+
+      if (input.filters?.tagSlug) {
+        where.tags = {
+          some: {
+            tag: { slug: input.filters.tagSlug.trim().toLowerCase() },
+          },
+        };
+      }
+
+      if (input.filters?.isFeatured !== undefined) {
+        where.isFeatured = input.filters.isFeatured;
+      }
+
+      const totalCount = await this.prisma.app.count({ where });
+
+      const records = await this.prisma.app.findMany({
+        where,
+        take: limit,
+        orderBy:
+          input.sort === 'newest'
+            ? { publishedAt: 'desc' }
+            : input.sort === 'name'
+              ? { name: 'asc' }
+              : { sortOrder: 'asc' },
+        include: {
+          category: true,
+          links: true,
+        },
+      });
+
+      return {
+        items: records.map((r) => mapPrismaAppToListItem(r as PrismaAppWithRelations)),
+        totalCount,
+      };
+    } catch (error) {
+      throw AppError.database('Failed to execute public application search', error);
+    }
+  }
+
   async list(options: AppQueryOptions = {}): Promise<DomainApp[]> {
     try {
-      // Enforce safe upper bound on query limits
       const limit = Math.min(Math.max(options.limit ?? 20, 1), 50);
 
       const where: Prisma.AppWhereInput = {
@@ -82,7 +238,6 @@ export class AppRepository {
         }
       }
 
-      // Safe allow-listed sorting
       const allowedSortFields = ['createdAt', 'sortOrder', 'name', 'publishedAt'] as const;
       const sortField = allowedSortFields.includes(options.sortField as (typeof allowedSortFields)[number])
         ? options.sortField!
@@ -146,6 +301,7 @@ export class AppRepository {
         where: { id },
         data: {
           name: data.name?.trim(),
+          slug: data.slug ? data.slug.trim().toLowerCase() : undefined,
           shortDescription: data.shortDescription?.trim(),
           description: data.description?.trim(),
           iconUrl: data.iconUrl?.trim(),
@@ -177,7 +333,6 @@ export class AppRepository {
   ): Promise<DomainApp> {
     try {
       return await this.prisma.$transaction(async (tx) => {
-        // 1. Create release version
         await tx.appVersion.create({
           data: {
             appId,
@@ -187,7 +342,6 @@ export class AppRepository {
           },
         });
 
-        // 2. Update app status to PUBLISHED and record timestamp
         const updatedApp = await tx.app.update({
           where: { id: appId },
           data: {
