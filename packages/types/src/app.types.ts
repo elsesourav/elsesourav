@@ -136,29 +136,6 @@ export interface PublicApp {
   readonly updatedAt: Timestamp;
 }
 
-export type AppSortOption = 'newest' | 'name' | 'popularity' | 'sortOrder';
-
-export interface AppSearchFilters {
-  readonly categorySlug?: string;
-  readonly tagSlug?: string;
-  readonly platform?: AppPlatform;
-  readonly isFeatured?: boolean;
-}
-
-export interface AppSearchInput {
-  readonly query?: string;
-  readonly filters?: AppSearchFilters;
-  readonly sort?: AppSortOption;
-  readonly limit?: number;
-  readonly cursor?: string;
-}
-
-export interface AppSearchResult {
-  readonly items: readonly AppListItem[];
-  readonly totalCount: number;
-  readonly nextCursor?: string;
-}
-
 export interface Category {
   readonly id: ID;
   readonly name: string;

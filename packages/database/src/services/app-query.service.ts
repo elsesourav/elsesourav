@@ -7,6 +7,8 @@ import type {
   AppQueryOptions,
   AppSearchInput,
   AppSearchResult,
+  CategorySummary,
+  TagSummary,
 } from '@elsesourav/types';
 
 export class AppQueryService {
@@ -43,14 +45,40 @@ export class AppQueryService {
   }
 
   /**
-   * Executes a bounded, safe search across public applications.
+   * High-level discovery & search query combining keyword search, category, tag, and sort.
    */
-  async searchPublicApps(input: AppSearchInput = {}): Promise<AppSearchResult> {
+  async discoverApps(input: AppSearchInput = {}): Promise<AppSearchResult> {
     const validated = AppSearchSchema.safeParse(input);
     if (!validated.success) {
       throw AppError.validation(validated.error.issues[0]?.message || 'Invalid search input');
     }
 
-    return this.appRepo.searchPublic(input);
+    const normalizedInput: AppSearchInput = {
+      ...input,
+      query: (input.query || (input as { q?: string }).q || '').trim().replace(/\s+/g, ' '),
+    };
+
+    return this.appRepo.searchPublic(normalizedInput);
+  }
+
+  /**
+   * Executes a bounded, safe search across public applications.
+   */
+  async searchPublicApps(input: AppSearchInput = {}): Promise<AppSearchResult> {
+    return this.discoverApps(input);
+  }
+
+  /**
+   * Fetches active public categories with publication counts.
+   */
+  async listPublicCategories(): Promise<CategorySummary[]> {
+    return this.appRepo.listPublicCategories();
+  }
+
+  /**
+   * Fetches active public tags with published application counts.
+   */
+  async listPublicTags(): Promise<TagSummary[]> {
+    return this.appRepo.listPublicTags();
   }
 }

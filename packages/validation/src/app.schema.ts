@@ -57,23 +57,27 @@ export const UpdateAppSchema = CreateAppSchema.partial();
 export const AppSortEnum = z.enum(['newest', 'name', 'popularity', 'sortOrder']).default('sortOrder');
 
 export const AppListQuerySchema = z.object({
-  categorySlug: z.string().max(50).regex(/^[a-z0-9-]+$/, 'Invalid category slug format').optional(),
-  tagSlug: z.string().max(50).regex(/^[a-z0-9-]+$/, 'Invalid tag slug format').optional(),
+  categorySlug: z.string().max(50).regex(/^[a-z0-9-]*$/, 'Invalid category slug format').optional(),
+  tagSlug: z.string().max(50).regex(/^[a-z0-9-]*$/, 'Invalid tag slug format').optional(),
   search: z.string().max(50, 'Search query cannot exceed 50 characters').optional(),
+  q: z.string().max(50, 'Search query cannot exceed 50 characters').optional(),
   platform: AppPlatformSchema.optional(),
   isFeatured: z.boolean().optional(),
-  limit: z.number().int().min(1, 'Limit must be at least 1').max(50, 'Limit cannot exceed 50').default(20),
+  page: z.coerce.number().int().min(1, 'Page must be at least 1').default(1),
+  limit: z.coerce.number().int().min(1, 'Limit must be at least 1').max(50, 'Limit cannot exceed 50').default(20),
   cursor: z.string().optional(),
   sort: AppSortEnum.optional(),
 });
 
 export const AppSearchSchema = z.object({
   query: z.string().max(50, 'Search query cannot exceed 50 characters').optional(),
-  categorySlug: z.string().max(50).optional(),
-  tagSlug: z.string().max(50).optional(),
+  q: z.string().max(50, 'Search query cannot exceed 50 characters').optional(),
+  categorySlug: z.string().max(50).regex(/^[a-z0-9-]*$/, 'Invalid category slug').optional(),
+  tagSlug: z.string().max(50).regex(/^[a-z0-9-]*$/, 'Invalid tag slug').optional(),
   platform: AppPlatformSchema.optional(),
-  sort: AppSortEnum.optional(),
-  limit: z.number().int().min(1).max(50).default(20),
+  sort: AppSortEnum.default('sortOrder'),
+  page: z.coerce.number().int().min(1, 'Page must be at least 1').default(1),
+  limit: z.coerce.number().int().min(1, 'Limit must be at least 1').max(50, 'Limit cannot exceed 50').default(20),
 });
 
 export const AppQuerySchema = z.object({

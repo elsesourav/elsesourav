@@ -16,6 +16,8 @@ import type {
   UpdateAppInput,
   AppSearchInput,
   AppSearchResult,
+  CategorySummary,
+  TagSummary,
 } from '@elsesourav/types';
 
 export class AppRepository {
@@ -137,19 +139,23 @@ export class AppRepository {
 
   async searchPublic(input: AppSearchInput = {}): Promise<AppSearchResult> {
     try {
+      const page = Math.max(input.page ?? 1, 1);
       const limit = Math.min(Math.max(input.limit ?? 20, 1), 50);
+      const skip = (page - 1) * limit;
+
       const where: Prisma.AppWhereInput = {
         status: PublishStatus.PUBLISHED,
         deletedAt: null,
       };
 
       if (input.query) {
-        const sanitized = input.query.trim().slice(0, 50);
+        const sanitized = input.query.trim().replace(/\s+/g, ' ').slice(0, 50);
         if (sanitized.length > 0) {
           where.OR = [
             { name: { contains: sanitized, mode: 'insensitive' } },
             { shortDescription: { contains: sanitized, mode: 'insensitive' } },
             { description: { contains: sanitized, mode: 'insensitive' } },
+            { slug: { contains: sanitized, mode: 'insensitive' } },
           ];
         }
       }
@@ -168,21 +174,45 @@ export class AppRepository {
         };
       }
 
+      if (input.filters?.platform) {
+        where.links = {
+          some: {
+            platform: input.filters.platform,
+            isActive: true,
+          },
+        };
+      }
+
       if (input.filters?.isFeatured !== undefined) {
         where.isFeatured = input.filters.isFeatured;
       }
 
       const totalCount = await this.prisma.app.count({ where });
+      const totalPages = Math.ceil(totalCount / limit) || 1;
+      const hasMore = page < totalPages;
+
+      let orderBy: Prisma.AppOrderByWithRelationInput | Prisma.AppOrderByWithRelationInput[];
+      switch (input.sort) {
+        case 'newest':
+          orderBy = { publishedAt: 'desc' };
+          break;
+        case 'name':
+          orderBy = { name: 'asc' };
+          break;
+        case 'popularity':
+          orderBy = { stats: { launches: 'desc' } };
+          break;
+        case 'sortOrder':
+        default:
+          orderBy = [{ isPinned: 'desc' }, { isFeatured: 'desc' }, { sortOrder: 'asc' }];
+          break;
+      }
 
       const records = await this.prisma.app.findMany({
         where,
         take: limit,
-        orderBy:
-          input.sort === 'newest'
-            ? { publishedAt: 'desc' }
-            : input.sort === 'name'
-              ? { name: 'asc' }
-              : { sortOrder: 'asc' },
+        skip,
+        orderBy,
         include: {
           category: true,
           links: true,
@@ -192,9 +222,87 @@ export class AppRepository {
       return {
         items: records.map((r) => mapPrismaAppToListItem(r as PrismaAppWithRelations)),
         totalCount,
+        page,
+        limit,
+        totalPages,
+        hasMore,
       };
     } catch (error) {
       throw AppError.database('Failed to execute public application search', error);
+    }
+  }
+
+  async listPublicCategories(): Promise<CategorySummary[]> {
+    try {
+      const categories = await this.prisma.category.findMany({
+        where: { isActive: true },
+        orderBy: { orderIndex: 'asc' },
+        include: {
+          _count: {
+            select: {
+              apps: {
+                where: {
+                  status: PublishStatus.PUBLISHED,
+                  deletedAt: null,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      return categories.map((cat) => ({
+        id: cat.id,
+        name: cat.name,
+        slug: cat.slug,
+        description: cat.description ?? undefined,
+        orderIndex: cat.orderIndex,
+        appCount: cat._count.apps,
+      }));
+    } catch (error) {
+      throw AppError.database('Failed to query public categories', error);
+    }
+  }
+
+  async listPublicTags(): Promise<TagSummary[]> {
+    try {
+      const tags = await this.prisma.tag.findMany({
+        where: {
+          apps: {
+            some: {
+              app: {
+                status: PublishStatus.PUBLISHED,
+                deletedAt: null,
+              },
+            },
+          },
+        },
+        orderBy: { name: 'asc' },
+        take: 30,
+        include: {
+          _count: {
+            select: {
+              apps: {
+                where: {
+                  app: {
+                    status: PublishStatus.PUBLISHED,
+                    deletedAt: null,
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      return tags.map((t) => ({
+        id: t.id,
+        name: t.name,
+        slug: t.slug,
+        appCount: t._count.apps,
+      }));
+    } catch (error) {
+      throw AppError.database('Failed to query public tags', error);
     }
   }
 
