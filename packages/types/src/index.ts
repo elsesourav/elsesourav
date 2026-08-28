@@ -4,6 +4,7 @@ export * from './error.types';
 export * from './user.types';
 export * from './app.types';
 export * from './search.types';
+export * from './library.types';
 export * from './blog.types';
 export * from './help.types';
 export * from './support.types';
