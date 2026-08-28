@@ -16,6 +16,10 @@ export class UserService {
     return this.userRepo.syncUserAuth(authInput);
   }
 
+  async getUserById(id: string): Promise<User | null> {
+    return this.userRepo.findById(id);
+  }
+
   async getPublicProfile(username: string): Promise<PublicUserProfile> {
     const profile = await this.userRepo.getPublicProfile(username);
     if (!profile) {
