@@ -1,4 +1,4 @@
-import type { User, App, SupportTicket, BlogPost } from '@elsesourav/types';
+import type { User, App, SupportTicket, BlogPost, HelpCategory, HelpArticle } from '@elsesourav/types';
 
 export const mockStandardUser: User = {
   id: 'usr-standard-1',
@@ -137,6 +137,34 @@ export const mockBlogPost: BlogPost = {
   status: 'published',
   readingTime: 6,
   viewsCount: 450,
+  publishedAt: 1704067200000,
+  createdAt: 1704067200000,
+  updatedAt: 1704067200000,
+};
+
+export const mockHelpCategory: HelpCategory = {
+  id: 'help-cat-1',
+  name: 'Getting Started',
+  slug: 'getting-started',
+  description: 'Basics and onboarding guides.',
+  icon: 'compass',
+  orderIndex: 1,
+  createdAt: 1704067200000,
+  updatedAt: 1704067200000,
+  articleCount: 1,
+};
+
+export const mockHelpArticle: HelpArticle = {
+  id: 'help-art-1',
+  categoryId: 'help-cat-1',
+  title: 'Getting Started with ElseSourav',
+  slug: 'getting-started-with-elsesourav',
+  excerpt: 'Learn how to navigate and make the most of your account.',
+  content: 'Follow our step by step guide to configure your workspace...',
+  status: 'published',
+  orderIndex: 1,
+  helpfulCount: 25,
+  unhelpfulCount: 1,
   publishedAt: 1704067200000,
   createdAt: 1704067200000,
   updatedAt: 1704067200000,
