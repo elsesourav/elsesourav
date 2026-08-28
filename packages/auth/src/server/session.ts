@@ -1,0 +1,74 @@
+import { createAuthServerClient, CookieMethodsServer } from './server-client';
+import { AppError } from '@elsesourav/types';
+import type { AuthenticatedUser, AuthSession } from '../types/auth.types';
+import type { UserRole } from '@elsesourav/types';
+
+export async function getServerSession(
+  cookieStore: CookieMethodsServer,
+  supabaseUrl?: string,
+  supabaseAnonKey?: string
+): Promise<AuthSession | null> {
+  try {
+    const supabase = createAuthServerClient(cookieStore, supabaseUrl, supabaseAnonKey);
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+
+    if (error || !user) {
+      return null;
+    }
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    const role = (user.app_metadata?.['role'] as UserRole) || (user.user_metadata?.['role'] as UserRole) || 'USER';
+
+    const authenticatedUser: AuthenticatedUser = {
+      id: user.id,
+      supabaseAuthId: user.id,
+      email: user.email || '',
+      displayName: user.user_metadata?.['full_name'] || user.user_metadata?.['name'] || user.email?.split('@')[0] || 'User',
+      photoUrl: user.user_metadata?.['avatar_url'] || user.user_metadata?.['picture'],
+      role,
+      isEmailVerified: Boolean(user.email_confirmed_at),
+      provider: (user.app_metadata?.['provider'] as 'email' | 'google' | 'github') || 'email',
+      createdAt: new Date(user.created_at).getTime(),
+    };
+
+    return {
+      accessToken: session?.access_token || '',
+      refreshToken: session?.refresh_token,
+      expiresAt: session?.expires_at ? session.expires_at * 1000 : undefined,
+      user: authenticatedUser,
+    };
+  } catch {
+    return null;
+  }
+}
+
+export async function requireAuth(
+  cookieStore: CookieMethodsServer,
+  supabaseUrl?: string,
+  supabaseAnonKey?: string
+): Promise<AuthenticatedUser> {
+  const session = await getServerSession(cookieStore, supabaseUrl, supabaseAnonKey);
+  if (!session) {
+    throw AppError.unauthorized('Authentication is required to access this resource');
+  }
+  return session.user;
+}
+
+export async function requireRole(
+  cookieStore: CookieMethodsServer,
+  allowedRoles: UserRole[],
+  supabaseUrl?: string,
+  supabaseAnonKey?: string
+): Promise<AuthenticatedUser> {
+  const user = await requireAuth(cookieStore, supabaseUrl, supabaseAnonKey);
+  if (!allowedRoles.includes(user.role)) {
+    throw AppError.forbidden('You do not have required permissions to perform this operation');
+  }
+  return user;
+}

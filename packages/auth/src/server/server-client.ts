@@ -1,4 +1,5 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
 export interface CookieMethodsServer {
   getAll: () => { name: string; value: string }[] | Promise<{ name: string; value: string }[]>;
@@ -9,7 +10,7 @@ export function createAuthServerClient(
   cookieStore: CookieMethodsServer,
   supabaseUrl?: string,
   supabaseAnonKey?: string
-) {
+): SupabaseClient {
   const url = supabaseUrl || process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
   const key = supabaseAnonKey || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key';
 
@@ -23,6 +24,31 @@ export function createAuthServerClient(
           cookieStore.setAll(cookiesToSet);
         }
       },
+    },
+  });
+}
+
+/**
+ * Creates an elevated administrative Supabase client using the private service role key.
+ * Strictly forbidden from browser/client-side execution.
+ */
+export function createAuthAdminClient(
+  supabaseUrl?: string,
+  serviceRoleKey?: string
+): SupabaseClient {
+  const url = supabaseUrl || process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = serviceRoleKey || process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url || !key) {
+    throw new Error(
+      '[ElseSourav Auth Security] Cannot initialize Admin Supabase Client: Missing SUPABASE_SERVICE_ROLE_KEY or URL'
+    );
+  }
+
+  return createClient(url, key, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
     },
   });
 }
