@@ -4,7 +4,8 @@ import Image from 'next/image';
 import { Badge, Button } from '@elsesourav/ui';
 import { getAppIconUrl } from '@elsesourav/media';
 import type { PublicApp, AppLink } from '@elsesourav/types';
-import { Sparkles, ArrowUpRight, Bookmark, ArrowLeft, Globe, Terminal, Apple, Smartphone, Compass } from 'lucide-react';
+import { Sparkles, ArrowUpRight, ArrowLeft, Globe } from 'lucide-react';
+import { SaveAppButton } from './SaveAppButton';
 
 interface AppDetailHeroProps {
   app: PublicApp;
@@ -108,15 +109,7 @@ export function AppDetailHero({ app }: AppDetailHeroProps) {
               </a>
             )}
 
-            <Link href="/login">
-              <Button
-                variant="secondary"
-                className="border-zinc-800 bg-zinc-800/80 text-zinc-300 hover:text-white text-sm gap-1.5"
-                title="Save to Library"
-              >
-                <Bookmark className="w-4 h-4 text-indigo-400" /> Save to Library
-              </Button>
-            </Link>
+            <SaveAppButton appId={app.id} appSlug={app.slug} />
           </div>
         </div>
       </div>

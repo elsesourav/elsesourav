@@ -163,13 +163,17 @@
     "mtime": 1787943287.9252164,
     "hash": "723c8574c225a120b071d8536ef7c808"
   },
+  "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/__tests__/app-detail-ui.test.ts": {
+    "mtime": 1787943511.8072472,
+    "hash": "58bc5eeb8a55ae94c47f067372ea1cf9"
+  },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/__tests__/database.test.ts": {
     "mtime": 1787940922.8716447,
     "hash": "53082223840305b0cb529e21a630307b"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/__tests__/app-queries.test.ts": {
-    "mtime": 1787943142.8919852,
-    "hash": "eeec5453b5684baece3dd4e8540dc4f5"
+    "mtime": 1787943515.938111,
+    "hash": "b3507d2485abd3a493eb16fca973feb5"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/__tests__/security-authorization.test.ts": {
     "mtime": 1787941211.6519158,
@@ -192,8 +196,8 @@
     "hash": "ffd2d15f1e191acfb4f10621f38d5fcf"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/mappers/app.mapper.ts": {
-    "mtime": 1787943107.2566364,
-    "hash": "77cdc428156ace2d57142f0b75168a8f"
+    "mtime": 1787943484.3614862,
+    "hash": "cb3fe49307a22e333a67eb0e7e2fdd32"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/services/app.service.ts": {
     "mtime": 1787942676.0280685,
@@ -224,8 +228,8 @@
     "hash": "7928783351ff878f8e0232271216cc1e"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/types/src/app.types.ts": {
-    "mtime": 1787943087.120151,
-    "hash": "41971ade00e4969bd2ca55009ee41c45"
+    "mtime": 1787943480.1246214,
+    "hash": "1e5a32d61f4c9bff50a513f6cea649b8"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/types/src/media.types.ts": {
     "mtime": 1787942101.2913485,
@@ -412,8 +416,8 @@
     "hash": "9fd87f6000939010637d78932ef130d0"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/media/src/delete/delete-asset.ts": {
-    "mtime": 1787942152.5966434,
-    "hash": "d337488a950e843dbe47104f14d8b01b"
+    "mtime": 1787943571.8501148,
+    "hash": "c1189c77459092eb1768e9b4a4c238de"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/media/src/cloudinary/client.ts": {
     "mtime": 1787942134.134947,
@@ -428,8 +432,8 @@
     "hash": "1fc8956572b5cb983d9b0a1647e48f8e"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/media/src/upload/signed-upload.ts": {
-    "mtime": 1787942580.5295851,
-    "hash": "974941ae57d1c6465156b66cdec62b7f"
+    "mtime": 1787943566.1123707,
+    "hash": "56dc9cd41b48c510a9e42cf3179bde5c"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/postcss.config.mjs": {
     "mtime": 1787938724.151593,
@@ -523,6 +527,14 @@
     "mtime": 1787943276.6064527,
     "hash": "7ab8d28380592d87c2017fbcc8af7fe8"
   },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(public)/apps/[slug]/loading.tsx": {
+    "mtime": 1787943446.7395267,
+    "hash": "e992b652dddf1870c023872804858f70"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(public)/apps/[slug]/page.tsx": {
+    "mtime": 1787943440.7974958,
+    "hash": "4d41935814c9f3fc4b0fc0920ee19bdb"
+  },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(public)/design-system/page.tsx": {
     "mtime": 1787940373.7190948,
     "hash": "1a06781c063b643c34072226016bffe3"
@@ -591,6 +603,18 @@
     "mtime": 1787943135.1756396,
     "hash": "f56e55ac0047ebb8cdfe837f73f7dc1c"
   },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/apps/components/AppDetailHero.tsx": {
+    "mtime": 1787943415.914178,
+    "hash": "96b21bfc4dc1734aa97062142af4acd7"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/apps/components/AppDetailLinks.tsx": {
+    "mtime": 1787943488.4173238,
+    "hash": "c3f9d07b724ff728af001dfe70abafc4"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/apps/components/AppScreenshotGallery.tsx": {
+    "mtime": 1787943421.9859357,
+    "hash": "9a770330f03dfc7d32a3ad72ef1658c2"
+  },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/apps/components/AppFilters.tsx": {
     "mtime": 1787943269.0061972,
     "hash": "12ce4d30504c6f745921d1f13429c22b"
@@ -606,6 +630,10 @@
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/apps/components/AppCardSkeleton.tsx": {
     "mtime": 1787943249.4178717,
     "hash": "eb92e6ae090600f046aa541b853e73fc"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/apps/components/AppVersionHistory.tsx": {
+    "mtime": 1787943428.1136186,
+    "hash": "d3f7a20783ee3e9bb164881ed186e8fe"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/components/auth/LoginForm.tsx": {
     "mtime": 1787941968.68036,
