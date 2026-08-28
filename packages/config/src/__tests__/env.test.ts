@@ -1,7 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { validateClientEnv, validateServerEnv } from '../env';
-import { SITE_CONFIG } from '../site';
-import { ROUTES } from '../routes';
+import {
+  validateClientEnv,
+  validateServerEnv,
+  initializeEnvironment,
+  sanitizeEnvForDisplay,
+  SITE_CONFIG,
+  ROUTES,
+} from '../index';
 
 describe('Environment Validation Configuration', () => {
   it('validates client environment variables with valid inputs', () => {
@@ -10,37 +15,72 @@ describe('Environment Validation Configuration', () => {
       NEXT_PUBLIC_SUPABASE_URL: 'https://project.supabase.co',
       NEXT_PUBLIC_SUPABASE_ANON_KEY: 'mock-anon-key',
       NEXT_PUBLIC_ENABLE_ANALYTICS: 'true',
+      NEXT_PUBLIC_ENABLE_ADMIN_PORTAL: 'true',
     };
 
     const parsed = validateClientEnv(validEnv);
     expect(parsed.NEXT_PUBLIC_SITE_URL).toBe('https://elsesourav.com');
     expect(parsed.NEXT_PUBLIC_ENABLE_ANALYTICS).toBe(true);
+    expect(parsed.NEXT_PUBLIC_ENABLE_ADMIN_PORTAL).toBe(true);
   });
 
-  it('fails gracefully when client environment variable is invalid without printing secrets', () => {
+  it('fails gracefully when client environment variable has invalid URL', () => {
     const invalidEnv = {
       NEXT_PUBLIC_SITE_URL: 'not-a-valid-url',
     };
 
-    expect(() => validateClientEnv(invalidEnv)).toThrowError(/NEXT_PUBLIC_SITE_URL must be a valid URL/);
+    expect(() => validateClientEnv(invalidEnv)).toThrowError(/NEXT_PUBLIC_SITE_URL must be a valid absolute URL/);
   });
 
   it('validates server environment variables with valid inputs', () => {
     const validServerEnv = {
       DATABASE_URL: 'postgresql://user:pass@localhost:5432/db',
-      NODE_ENV: 'development',
+      DIRECT_URL: 'postgresql://user:pass@localhost:5432/db',
+      SUPABASE_SERVICE_ROLE_KEY: 'mock-service-role-key',
+      NODE_ENV: 'production',
     };
 
     const parsed = validateServerEnv(validServerEnv);
-    expect(parsed.NODE_ENV).toBe('development');
+    expect(parsed.NODE_ENV).toBe('production');
+    expect(parsed.DATABASE_URL).toBe('postgresql://user:pass@localhost:5432/db');
   });
 
-  it('fails gracefully when server environment is invalid', () => {
+  it('fails gracefully when server environment has invalid NODE_ENV', () => {
     const invalidServerEnv = {
       NODE_ENV: 'invalid_mode',
     };
 
-    expect(() => validateServerEnv(invalidServerEnv)).toThrowError(/Server environment variables validation failed/);
+    expect(() => validateServerEnv(invalidServerEnv)).toThrowError(/Invalid server environment configuration/);
+  });
+
+  it('bootstraps application environment flags accurately', () => {
+    const env = initializeEnvironment(
+      {
+        NODE_ENV: 'test',
+        NEXT_PUBLIC_SITE_URL: 'https://elsesourav.com',
+      },
+      true
+    );
+
+    expect(env.isTest).toBe(true);
+    expect(env.isProduction).toBe(false);
+    expect(env.isDevelopment).toBe(false);
+    expect(env.client.NEXT_PUBLIC_SITE_URL).toBe('https://elsesourav.com');
+  });
+
+  it('redacts sensitive credentials in display logs', () => {
+    const raw = {
+      DATABASE_URL: 'postgresql://postgres:secretpassword@localhost:5432/db',
+      SUPABASE_SERVICE_ROLE_KEY: 'ey1234567890supersecret',
+      CLOUDINARY_API_SECRET: 'mysecret',
+      NEXT_PUBLIC_SITE_URL: 'https://elsesourav.com',
+    };
+
+    const sanitized = sanitizeEnvForDisplay(raw);
+    expect(sanitized.DATABASE_URL).toBe('[REDACTED]');
+    expect(sanitized.SUPABASE_SERVICE_ROLE_KEY).toBe('[REDACTED]');
+    expect(sanitized.CLOUDINARY_API_SECRET).toBe('[REDACTED]');
+    expect(sanitized.NEXT_PUBLIC_SITE_URL).toBe('https://elsesourav.com');
   });
 });
 
