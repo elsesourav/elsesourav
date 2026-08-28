@@ -167,6 +167,10 @@
     "mtime": 1787942689.0038335,
     "hash": "eeb21000f43b528bc26f5ed4d9d81bd9"
   },
+  "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/__tests__/help-listing-ui.test.ts": {
+    "mtime": 1787946338.068625,
+    "hash": "e5060374c55205db806bbe9f5cd3c275"
+  },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/__tests__/app-listing-ui.test.ts": {
     "mtime": 1787943287.9252164,
     "hash": "723c8574c225a120b071d8536ef7c808"
@@ -671,9 +675,21 @@
     "mtime": 1787940373.7190948,
     "hash": "1a06781c063b643c34072226016bffe3"
   },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(public)/help/error.tsx": {
+    "mtime": 1787946329.0720327,
+    "hash": "ef8c3f195a48dbb43c46f24cc6b0d335"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(public)/help/loading.tsx": {
+    "mtime": 1787946322.4435203,
+    "hash": "0997d434c745fa5afd8da33fccfecc15"
+  },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(public)/help/page.tsx": {
-    "mtime": 1787939056.0041358,
-    "hash": "a2d354d321fba01fd9cd23ee0d66579a"
+    "mtime": 1787946310.501006,
+    "hash": "77aae2475848acbe87c5ebc5e7bb7b93"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(public)/help/[categorySlug]/page.tsx": {
+    "mtime": 1787946369.236142,
+    "hash": "00cfcba1d277b58d29436827d8df7319"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/api/auth/logout/route.ts": {
     "mtime": 1787941934.159529,
@@ -858,6 +874,34 @@
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/apps/components/AppVersionHistory.tsx": {
     "mtime": 1787943428.1136186,
     "hash": "d3f7a20783ee3e9bb164881ed186e8fe"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/help/queries/get-help.ts": {
+    "mtime": 1787946258.2428215,
+    "hash": "80220b912927cd5637233a2b65c37b0c"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/help/components/HelpEmptyState.tsx": {
+    "mtime": 1787946287.48817,
+    "hash": "8c569436cefb51ec5a2f73478524594e"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/help/components/HelpSupportCTA.tsx": {
+    "mtime": 1787946293.753881,
+    "hash": "326fbb6bf2a5bd3af95daeeae8ea59eb"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/help/components/HelpSearchBar.tsx": {
+    "mtime": 1787946265.015207,
+    "hash": "62f069ee25edad8f9f16641ef344b563"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/help/components/HelpArticleCard.tsx": {
+    "mtime": 1787946273.3488152,
+    "hash": "bc4809d35632292d8e5cf59028586eaa"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/help/components/HelpSkeleton.tsx": {
+    "mtime": 1787946299.29275,
+    "hash": "9c735fc44363c27969e7f4bb449a80cd"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/help/components/HelpCategoryCard.tsx": {
+    "mtime": 1787946279.2516694,
+    "hash": "19bc2e1b4a7a1c550029b7d219e5efe4"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/components/auth/LoginForm.tsx": {
     "mtime": 1787941968.68036,
