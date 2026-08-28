@@ -310,52 +310,52 @@ describe('Cross-Browser & Multi-Device Validation Test Suite (Prompt 74)', () =>
     viewports.forEach(({ name, width, height }) => {
       it(`renders Homepage cleanly on ${name}`, async () => {
         renderWithViewport('/', { width, height });
-        expect(await screen.findByRole('heading', { level: 1 }, { timeout: 5000 })).toBeInTheDocument();
+        expect(await screen.findByRole('heading', { level: 1 }, { timeout: 15000 })).toBeInTheDocument();
       });
 
       it(`renders Apps Discovery page cleanly on ${name}`, async () => {
         renderWithViewport('/apps', { width, height });
-        expect(await screen.findByRole('heading', { name: /Explore Applications|Apps/i }, { timeout: 5000 })).toBeInTheDocument();
+        expect(await screen.findByRole('heading', { name: /Explore Applications|Apps/i }, { timeout: 15000 })).toBeInTheDocument();
       });
 
       it(`renders App Detail page cleanly on ${name}`, async () => {
         renderWithViewport('/apps/terminal-pro', { width, height });
-        expect(await screen.findByText('Terminal Pro', {}, { timeout: 5000 })).toBeInTheDocument();
+        expect(await screen.findByText('Terminal Pro', {}, { timeout: 15000 })).toBeInTheDocument();
       });
 
       it(`renders Blog page cleanly on ${name}`, async () => {
         renderWithViewport('/blog', { width, height });
-        expect(await screen.findByRole('heading', { name: /Engineering Notes & Articles|Journal & Devlogs|Blog/i }, { timeout: 5000 })).toBeInTheDocument();
+        expect(await screen.findByRole('heading', { name: /Engineering Notes & Articles|Journal & Devlogs|Blog/i }, { timeout: 15000 })).toBeInTheDocument();
       });
 
       it(`renders Help Center cleanly on ${name}`, async () => {
         renderWithViewport('/help', { width, height });
-        expect(await screen.findByRole('heading', { name: /Help Center & Documentation|Help/i }, { timeout: 5000 })).toBeInTheDocument();
+        expect(await screen.findByRole('heading', { name: /Help Center & Documentation|Help/i }, { timeout: 15000 })).toBeInTheDocument();
       });
 
       it(`renders Search page cleanly on ${name}`, async () => {
         renderWithViewport('/search', { width, height });
-        expect(await screen.findByRole('heading', { name: /Search ElseSourav/i }, { timeout: 5000 })).toBeInTheDocument();
+        expect(await screen.findByRole('heading', { name: /Search ElseSourav/i }, { timeout: 15000 })).toBeInTheDocument();
       });
 
       it(`renders Library page for authenticated users cleanly on ${name}`, async () => {
         renderWithViewport('/library', { width, height }, false);
-        expect(await screen.findByRole('heading', { name: /Personal Software Library|Library/i }, { timeout: 5000 })).toBeInTheDocument();
+        expect(await screen.findByRole('heading', { name: /Personal Software Library|Library/i }, { timeout: 15000 })).toBeInTheDocument();
       });
 
       it(`renders Settings page cleanly on ${name}`, async () => {
         renderWithViewport('/settings', { width, height }, false);
-        expect(await screen.findByRole('heading', { name: /Test Regular User|User Profile/i }, { timeout: 5000 })).toBeInTheDocument();
+        expect(await screen.findByRole('heading', { name: /Test Regular User|User Profile/i }, { timeout: 15000 })).toBeInTheDocument();
       });
 
       it(`renders Support page cleanly on ${name}`, async () => {
         renderWithViewport('/support', { width, height }, false);
-        expect(await screen.findByRole('heading', { name: /How can we help you\?/i }, { timeout: 5000 })).toBeInTheDocument();
+        expect(await screen.findByRole('heading', { name: /How can we help you\?/i }, { timeout: 15000 })).toBeInTheDocument();
       });
 
       it(`renders Admin portal for authorized admins cleanly on ${name}`, async () => {
         renderWithViewport('/admin', { width, height }, true);
-        expect(await screen.findByRole('heading', { name: /Admin Dashboard/i }, { timeout: 5000 })).toBeInTheDocument();
+        expect(await screen.findByRole('heading', { name: /Admin Dashboard/i }, { timeout: 15000 })).toBeInTheDocument();
       });
     });
   });

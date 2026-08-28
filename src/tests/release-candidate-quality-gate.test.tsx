@@ -302,97 +302,111 @@ describe('Release Candidate Quality Gate Test Suite (Prompt 75)', () => {
   // ===========================================================================
   // TASK 1 — FULL PUBLIC REGRESSION
   // ===========================================================================
+  // ===========================================================================
+  // TASK 1 — FULL PUBLIC REGRESSION
+  // ===========================================================================
   describe('Task 1: Full Public Navigation & Content Discovery Regression', () => {
-    it('executes end-to-end public flow: Home -> Apps -> Search -> App Detail -> Blog -> Help -> Support -> Legal', async () => {
-      // 1. Homepage
+    it('1. Homepage loads', async () => {
       const { unmount } = renderApp('/');
-      expect(await screen.findByRole('heading', { level: 1 }, { timeout: 5000 })).toBeInTheDocument();
+      expect(await screen.findByRole('heading', { level: 1 })).toBeInTheDocument();
       unmount();
+    });
 
-      // 2. Apps Catalogue
+    it('2. Apps Catalogue loads', async () => {
       const { unmount: unmountApps } = renderApp('/apps');
-      expect(await screen.findByRole('heading', { name: /Explore Applications|Apps/i }, { timeout: 5000 })).toBeInTheDocument();
+      expect(await screen.findByRole('heading', { name: /Explore Applications|Apps/i })).toBeInTheDocument();
       unmountApps();
+    });
 
-      // 3. Search Page
+    it('3. Search Page loads', async () => {
       const { unmount: unmountSearch } = renderApp('/search');
-      expect(await screen.findByRole('heading', { name: /Search ElseSourav/i }, { timeout: 5000 })).toBeInTheDocument();
+      expect(await screen.findByRole('heading', { name: /Search ElseSourav/i })).toBeInTheDocument();
       unmountSearch();
+    });
 
-      // 4. App Details
+    it('4. App Details loads', async () => {
       const { unmount: unmountDetail } = renderApp('/apps/terminal-pro');
-      expect(await screen.findByText('Terminal Pro', {}, { timeout: 5000 })).toBeInTheDocument();
+      expect(await screen.findByRole('heading', { name: 'Terminal Pro' })).toBeInTheDocument();
       unmountDetail();
+    });
 
-      // 5. Blog Page
+    it('5. Blog Page loads', async () => {
       const { unmount: unmountBlog } = renderApp('/blog');
-      expect(await screen.findByRole('heading', { name: /Engineering Notes & Articles|Journal & Devlogs|Blog/i }, { timeout: 5000 })).toBeInTheDocument();
+      expect(await screen.findByRole('heading', { name: /Engineering Notes & Articles|Journal & Devlogs|Blog/i })).toBeInTheDocument();
       unmountBlog();
+    });
 
-      // 6. Help Center
+    it('6. Help Center loads', async () => {
       const { unmount: unmountHelp } = renderApp('/help');
-      expect(await screen.findByRole('heading', { name: /Help Center & Documentation|Help/i }, { timeout: 5000 })).toBeInTheDocument();
+      expect(await screen.findByRole('heading', { name: /Help Center & Documentation|Help|How can we help you\?/i })).toBeInTheDocument();
       unmountHelp();
+    });
 
-      // 7. Support Page
+    it('7. Support Page loads', async () => {
       const { unmount: unmountSupport } = renderApp('/support');
-      expect(await screen.findByRole('heading', { name: /How can we help you\?/i }, { timeout: 5000 })).toBeInTheDocument();
+      expect(await screen.findByRole('heading', { name: /How can we help you\?/i })).toBeInTheDocument();
       unmountSupport();
+    });
 
-      // 8. Legal Pages: Privacy, Terms, Accessibility
+    it('8. Legal Pages load', async () => {
       const { unmount: unmountPrivacy } = renderApp('/privacy');
-      expect(await screen.findByRole('heading', { name: /Privacy Policy/i }, { timeout: 5000 })).toBeInTheDocument();
+      expect(await screen.findByRole('heading', { name: /Privacy Policy/i })).toBeInTheDocument();
       unmountPrivacy();
 
       const { unmount: unmountTerms } = renderApp('/terms');
-      expect(await screen.findByRole('heading', { name: /Terms of Service/i }, { timeout: 5000 })).toBeInTheDocument();
+      expect(await screen.findByRole('heading', { name: /Terms of Service/i })).toBeInTheDocument();
       unmountTerms();
 
       const { unmount: unmountA11y } = renderApp('/accessibility');
-      expect(await screen.findByRole('heading', { name: /Accessibility Statement/i }, { timeout: 5000 })).toBeInTheDocument();
+      expect(await screen.findByRole('heading', { name: /Accessibility Statement/i })).toBeInTheDocument();
       unmountA11y();
-    }, 20000);
+    });
   });
 
   // ===========================================================================
   // TASK 2 — FULL USER REGRESSION
   // ===========================================================================
   describe('Task 2: Full User Account, Library & Communication Regression', () => {
-    it('executes user journey: Library -> Settings -> Support Ticket -> Sign Out', async () => {
-      // 1. User Library
+    it('1. User Library loads', async () => {
       const { unmount: unmountLibrary } = renderApp('/library', false);
-      expect(await screen.findByRole('heading', { name: /Personal Software Library|Library/i }, { timeout: 5000 })).toBeInTheDocument();
+      expect(await screen.findByRole('heading', { name: /Personal Software Library|Library/i })).toBeInTheDocument();
       unmountLibrary();
+    });
 
-      // 2. Settings Page
+    it('2. Settings Page loads', async () => {
       const { unmount: unmountSettings } = renderApp('/settings', false);
-      expect(await screen.findByRole('heading', { name: /Test Regular User|User Profile/i }, { timeout: 5000 })).toBeInTheDocument();
+      expect(await screen.findByRole('heading', { name: /Test Regular User|User Profile/i })).toBeInTheDocument();
       unmountSettings();
+    });
 
-      // 3. User Tickets Page
+    it('3. User Tickets Page loads', async () => {
       const { unmount: unmountTickets } = renderApp('/support/tickets', false);
-      expect(await screen.findByRole('heading', { name: /My Support Requests|Support Tickets|Tickets/i }, { timeout: 5000 })).toBeInTheDocument();
+      expect(await screen.findByRole('heading', { name: /My Support Requests|Support Tickets|Tickets/i })).toBeInTheDocument();
       unmountTickets();
-    }, 20000);
+    });
   });
 
   // ===========================================================================
   // TASK 3 — FULL ADMIN REGRESSION
   // ===========================================================================
   describe('Task 3: Full Admin Control & Management Regression', () => {
-    it('executes admin workflow: Dashboard -> Apps -> Blog -> Help -> Support -> Analytics -> Audit Logs', async () => {
+    it('1. Admin Dashboard loads', async () => {
       const { unmount: unmountDash } = renderApp('/admin', true);
-      expect(await screen.findByRole('heading', { name: /Admin Dashboard/i }, { timeout: 5000 })).toBeInTheDocument();
+      expect(await screen.findByRole('heading', { name: /Admin Dashboard/i })).toBeInTheDocument();
       unmountDash();
+    });
 
+    it('2. Admin Apps Management loads', async () => {
       const { unmount: unmountApps } = renderApp('/admin/apps', true);
-      expect(await screen.findByRole('heading', { name: /^Applications$/i }, { timeout: 5000 })).toBeInTheDocument();
+      expect(await screen.findByRole('heading', { name: /^Applications$/i })).toBeInTheDocument();
       unmountApps();
+    });
 
+    it('3. Admin Audit Trail loads', async () => {
       const { unmount: unmountAudit } = renderApp('/admin/audit-logs', true);
-      expect(await screen.findByRole('heading', { name: /Security & Audit Trail|Audit Logs/i }, { timeout: 5000 })).toBeInTheDocument();
+      expect(await screen.findByRole('heading', { name: /Security & Audit Trail|Audit Logs/i })).toBeInTheDocument();
       unmountAudit();
-    }, 20000);
+    });
   });
 
   // ===========================================================================

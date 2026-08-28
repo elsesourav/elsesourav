@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, within, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { AppRoutes } from '@/routes/AppRoutes';
@@ -165,11 +165,10 @@ describe('Admin Application Editor (Prompt 47)', () => {
   });
 
   it('2. Auto-generates slug from app name and allows manual edit', async () => {
-    const user = userEvent.setup();
     renderWithProviders('/admin/apps/new');
 
     const nameInput = await screen.findByLabelText(/Application Name/i);
-    await user.type(nameInput, 'Nebula Graph Studio');
+    fireEvent.change(nameInput, { target: { value: 'Nebula Graph Studio' } });
 
     const slugInput = screen.getByLabelText(/URL Slug/i);
     expect(slugInput).toHaveValue('nebula-graph-studio');
@@ -204,7 +203,7 @@ describe('Admin Application Editor (Prompt 47)', () => {
     ).toBeInTheDocument();
 
     const urlInput = screen.getByLabelText(/Destination URL/i);
-    await user.type(urlInput, 'https://nebula.elsesourav.com');
+    fireEvent.change(urlInput, { target: { value: 'https://nebula.elsesourav.com' } });
 
     const submitBtn = within(screen.getByRole('dialog')).getByRole('button', {
       name: /^Add Link$/i,
@@ -236,7 +235,7 @@ describe('Admin Application Editor (Prompt 47)', () => {
     renderWithProviders('/admin/apps/new');
 
     const nameInput = await screen.findByLabelText(/Application Name/i);
-    await user.type(nameInput, 'Nebula Graph');
+    fireEvent.change(nameInput, { target: { value: 'Nebula Graph' } });
 
     const saveDraftBtn = screen.getByRole('button', { name: /Save Draft/i });
     await user.click(saveDraftBtn);
