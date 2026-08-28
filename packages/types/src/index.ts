@@ -1,5 +1,6 @@
 export * from './common.types';
 export * from './result.types';
+export * from './error.types';
 export * from './user.types';
 export * from './app.types';
 export * from './blog.types';
