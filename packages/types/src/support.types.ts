@@ -36,3 +36,24 @@ export interface SupportTicket {
   readonly createdAt: Timestamp;
   readonly updatedAt: Timestamp;
 }
+
+export interface CreateSupportTicketInput {
+  readonly userId: string;
+  readonly subject: string;
+  readonly description: string;
+  readonly category: string;
+  readonly priority?: SupportTicketPriority;
+}
+
+export interface AddSupportMessageInput {
+  readonly ticketId: string;
+  readonly senderUserId: string;
+  readonly senderRole: UserRole;
+  readonly message: string;
+  readonly attachments?: readonly string[];
+}
+
+export interface UpdateTicketStatusInput {
+  readonly ticketId: string;
+  readonly status: SupportTicketStatus;
+}

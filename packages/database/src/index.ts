@@ -5,4 +5,5 @@ export * from './mappers/blog.mapper';
 export * from './repositories/app.repository';
 export * from './repositories/user.repository';
 export * from './repositories/blog.repository';
+export * from './repositories/support.repository';
 export * from './repositories/audit.repository';

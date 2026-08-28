@@ -34,6 +34,38 @@ export const AppLinkSchema = z.object({
   isActive: z.boolean().default(true),
 });
 
+export const CreateAppSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters').max(100),
+  slug: z.string().min(2).regex(/^[a-z0-9-]+$/, 'Slug can only contain lowercase letters, numbers, and hyphens'),
+  shortDescription: z.string().min(10).max(250),
+  description: z.string().min(20),
+  iconUrl: z.string().url(),
+  featuredImageUrl: z.string().url().optional(),
+  categoryId: z.string().min(1),
+  tagIds: z.array(z.string()).optional(),
+  demoUrl: z.string().url().optional(),
+  videoUrl: z.string().url().optional(),
+  isFeatured: z.boolean().default(false),
+  isPinned: z.boolean().default(false),
+  sortOrder: z.number().int().default(0),
+  seoTitle: z.string().max(100).optional(),
+  seoDescription: z.string().max(300).optional(),
+});
+
+export const UpdateAppSchema = CreateAppSchema.partial();
+
+export const AppQuerySchema = z.object({
+  status: z.enum(['draft', 'published', 'archived']).optional(),
+  categoryId: z.string().optional(),
+  tagSlug: z.string().optional(),
+  search: z.string().max(50).optional(),
+  isFeatured: z.boolean().optional(),
+  limit: z.number().int().min(1).max(50).default(20),
+  cursor: z.string().optional(),
+  sortField: z.enum(['createdAt', 'sortOrder', 'name', 'publishedAt']).default('sortOrder'),
+  sortDirection: z.enum(['asc', 'desc']).default('asc'),
+});
+
 export const AppSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(100),
   slug: z.string().min(2).regex(/^[a-z0-9-]+$/, 'Slug can only contain lowercase letters, numbers, and hyphens'),
@@ -56,4 +88,7 @@ export const AppSchema = z.object({
 });
 
 export type AppInput = z.infer<typeof AppSchema>;
+export type CreateAppSchemaInput = z.infer<typeof CreateAppSchema>;
+export type UpdateAppSchemaInput = z.infer<typeof UpdateAppSchema>;
+export type AppQuerySchemaInput = z.infer<typeof AppQuerySchema>;
 export type AppLinkInput = z.infer<typeof AppLinkSchema>;

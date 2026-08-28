@@ -1,4 +1,4 @@
-import type { ID, Timestamp } from './common.types';
+import type { ID, Timestamp, SortDirection } from './common.types';
 
 export type AppStatus = 'draft' | 'published' | 'archived';
 
@@ -99,4 +99,57 @@ export interface Tag {
   readonly id: ID;
   readonly name: string;
   readonly slug: string;
+}
+
+export interface CreateAppInput {
+  readonly name: string;
+  readonly slug: string;
+  readonly shortDescription: string;
+  readonly description: string;
+  readonly iconUrl: string;
+  readonly featuredImageUrl?: string;
+  readonly categoryId: string;
+  readonly tagIds?: readonly string[];
+  readonly demoUrl?: string;
+  readonly videoUrl?: string;
+  readonly isFeatured?: boolean;
+  readonly isPinned?: boolean;
+  readonly sortOrder?: number;
+  readonly seoTitle?: string;
+  readonly seoDescription?: string;
+}
+
+export interface UpdateAppInput {
+  readonly name?: string;
+  readonly shortDescription?: string;
+  readonly description?: string;
+  readonly iconUrl?: string;
+  readonly featuredImageUrl?: string;
+  readonly categoryId?: string;
+  readonly tagIds?: readonly string[];
+  readonly demoUrl?: string;
+  readonly videoUrl?: string;
+  readonly isFeatured?: boolean;
+  readonly isPinned?: boolean;
+  readonly sortOrder?: number;
+  readonly seoTitle?: string;
+  readonly seoDescription?: string;
+}
+
+export interface PublishAppInput {
+  readonly appId: string;
+  readonly version: string;
+  readonly changelog: string;
+}
+
+export interface AppQueryOptions {
+  readonly status?: AppStatus;
+  readonly categoryId?: string;
+  readonly tagSlug?: string;
+  readonly search?: string;
+  readonly isFeatured?: boolean;
+  readonly limit?: number;
+  readonly cursor?: string;
+  readonly sortField?: 'createdAt' | 'sortOrder' | 'name' | 'publishedAt';
+  readonly sortDirection?: SortDirection;
 }
