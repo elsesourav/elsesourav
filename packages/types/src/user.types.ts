@@ -29,6 +29,43 @@ export interface User {
   readonly deletedAt?: Timestamp;
 }
 
+export interface PublicUserProfile {
+  readonly id: ID;
+  readonly displayName: string;
+  readonly username?: string;
+  readonly photoUrl?: string;
+  readonly bio?: string;
+  readonly role: UserRole;
+  readonly createdAt: Timestamp;
+}
+
+export interface SyncUserAuthInput {
+  readonly supabaseAuthId: string;
+  readonly email: string;
+  readonly displayName?: string;
+  readonly photoUrl?: string;
+}
+
+export interface UpdateProfileInput {
+  readonly displayName?: string;
+  readonly username?: string;
+  readonly bio?: string;
+  readonly photoUrl?: string;
+}
+
+export interface UpdatePreferencesInput {
+  readonly theme?: ThemeMode;
+  readonly emailNotifications?: boolean;
+  readonly reduceMotion?: boolean;
+  readonly compactView?: boolean;
+  readonly language?: string;
+}
+
+export interface DeleteAccountInput {
+  readonly confirmation: string; // Must match "DELETE MY ACCOUNT"
+  readonly reason?: string;
+}
+
 export interface UserLibraryItem {
   readonly id: ID;
   readonly userId: ID;

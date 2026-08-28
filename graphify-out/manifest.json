@@ -28,8 +28,8 @@
     "hash": "13d5a68155a989d1c59d7d6ffa9b5792"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/ui/src/components/card.tsx": {
-    "mtime": 1787938558.9110837,
-    "hash": "ee9462c49d6dd30d9105555dbb227dd8"
+    "mtime": 1787941522.988081,
+    "hash": "22ac67e4747b0313b79c4fb4a90e2588"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/ui/src/components/empty-state.tsx": {
     "mtime": 1787940087.1065242,
@@ -255,21 +255,37 @@
     "mtime": 1787940606.4876363,
     "hash": "ddd15f5459d473e2d6b39429b247dc2a"
   },
-  "/Users/sourav/Developer/WEB/elsesourav/packages/auth/src/middleware.ts": {
-    "mtime": 1787938615.0782337,
-    "hash": "d9e1aa07c2774344cb68e8a129a8ef1f"
-  },
-  "/Users/sourav/Developer/WEB/elsesourav/packages/auth/src/client.ts": {
-    "mtime": 1787938606.0110543,
-    "hash": "1e51ad3bf623c661577d62168db2e8f7"
-  },
   "/Users/sourav/Developer/WEB/elsesourav/packages/auth/src/index.ts": {
-    "mtime": 1787938620.071712,
-    "hash": "32a874f80de7f9df7a7bcf2ac12c34f5"
+    "mtime": 1787941407.5642917,
+    "hash": "cbb21a803a01e8db77ddd67d56c81b79"
   },
-  "/Users/sourav/Developer/WEB/elsesourav/packages/auth/src/server.ts": {
-    "mtime": 1787938933.1857047,
-    "hash": "b45626622a8ace0ebd6d8368cb90e8a7"
+  "/Users/sourav/Developer/WEB/elsesourav/packages/auth/src/types/auth.types.ts": {
+    "mtime": 1787941323.040374,
+    "hash": "3ef6f4d783d95466b331a63f20972d88"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/packages/auth/src/security/redirect.ts": {
+    "mtime": 1787941328.3560655,
+    "hash": "4bffb45052ee62ece2147db3ec8037cc"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/packages/auth/src/server/session.ts": {
+    "mtime": 1787941349.0550587,
+    "hash": "c0a6658380083b0768fb3a9fd927d585"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/packages/auth/src/server/server-client.ts": {
+    "mtime": 1787941342.8718438,
+    "hash": "6a3f014260fac500475c5a24ca749189"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/packages/auth/src/__tests__/auth.test.ts": {
+    "mtime": 1787941548.0750883,
+    "hash": "101857fc366c84370c7aa72f8e558f23"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/packages/auth/src/errors/auth-errors.ts": {
+    "mtime": 1787941485.342046,
+    "hash": "347b01c6012362340da772dcd66558ca"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/packages/auth/src/client/browser-client.ts": {
+    "mtime": 1787941337.7515883,
+    "hash": "da9e6f0b8a7706220b300ac742143dad"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/utils/src/slug.ts": {
     "mtime": 1787938479.7771153,
@@ -336,8 +352,8 @@
     "hash": "6128022f484aecfcc4d8f17523016b28"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/validation/src/auth.schema.ts": {
-    "mtime": 1787938424.0536234,
-    "hash": "53a61c4a0ec6b083b9d33de650579445"
+    "mtime": 1787941480.15748,
+    "hash": "51a743a0eae6a1d2e265deb745f6276a"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/validation/src/__tests__/validation.test.ts": {
     "mtime": 1787939902.261627,
@@ -451,6 +467,10 @@
     "mtime": 1787939056.0041358,
     "hash": "a2d354d321fba01fd9cd23ee0d66579a"
   },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/api/auth/callback/route.ts": {
+    "mtime": 1787941417.8563254,
+    "hash": "7d3fe4d0e20487e3ab519b281e50c4f3"
+  },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/api/health/route.ts": {
     "mtime": 1787938804.2524042,
     "hash": "061ad1acf59fe6d5b946164910872c13"
@@ -459,9 +479,21 @@
     "mtime": 1787939670.3838253,
     "hash": "1ca3a9ec0ff92605e94f07496a42605b"
   },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(auth)/verify/page.tsx": {
+    "mtime": 1787941527.9076552,
+    "hash": "d21367bba1d84f32ad89fcbe6e07c912"
+  },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(auth)/signup/page.tsx": {
     "mtime": 1787938781.1657624,
     "hash": "f3f672a9e5de4221bc31db3093473836"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(auth)/forgot-password/page.tsx": {
+    "mtime": 1787941425.955228,
+    "hash": "3eadb9ddff959b3e52b20f0030053ac6"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(auth)/reset-password/page.tsx": {
+    "mtime": 1787941431.0145278,
+    "hash": "98b15ad122d6f742afe4574662135d06"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(auth)/login/page.tsx": {
     "mtime": 1787938776.1167276,
