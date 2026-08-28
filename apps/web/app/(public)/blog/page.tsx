@@ -1,37 +1,124 @@
-import { Card, CardHeader, CardTitle, CardDescription, Badge } from '@elsesourav/ui';
-import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
-import { ROUTES } from '@elsesourav/config';
+import { Metadata } from 'next';
+import { getPublicBlogListing, getBlogCategories, getBlogTags } from '@/features/blog/queries/get-blog';
+import { BlogCard } from '@/features/blog/components/BlogCard';
+import { BlogDiscoveryBar } from '@/features/blog/components/BlogDiscoveryBar';
+import { BlogPagination } from '@/features/blog/components/BlogPagination';
+import { BlogEmptyState } from '@/features/blog/components/BlogEmptyState';
+import { Badge } from '@elsesourav/ui';
 
-export const metadata = {
-  title: 'Engineering Journal & Devlogs',
-  description: 'Technical notes, benchmarks, and architecture walkthroughs.',
+export const metadata: Metadata = {
+  title: 'Engineering Journal & Articles | ElseSourav',
+  description: 'Technical articles, architectural deep dives, software benchmarks, and release devlogs by ElseSourav.',
+  openGraph: {
+    title: 'Engineering Journal & Articles | ElseSourav',
+    description: 'Technical articles, architectural deep dives, and software benchmarks by ElseSourav.',
+    type: 'website',
+  },
 };
 
-export default function BlogPage() {
-  return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
-      <Link href={ROUTES.HOME} className="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-white mb-6">
-        <ArrowLeft className="w-4 h-4" /> Back to Home
-      </Link>
-      <div className="flex flex-col gap-2 mb-8">
-        <h1 className="text-3xl font-bold text-white">Engineering Journal</h1>
-        <p className="text-zinc-400">Deep-dive notes on distributed systems, performance, and architecture.</p>
-      </div>
+interface BlogPageProps {
+  searchParams: Promise<{
+    q?: string;
+    search?: string;
+    category?: string;
+    tag?: string;
+    page?: string;
+  }>;
+}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="hover:border-zinc-700 transition-colors">
-          <CardHeader>
-            <div className="flex items-center justify-between mb-2">
-              <Badge variant="info">Architecture</Badge>
-              <span className="text-xs text-zinc-500">5 min read</span>
+export default async function BlogPage({ searchParams }: BlogPageProps) {
+  const params = await searchParams;
+  const query = (params.q || params.search || '').trim();
+  const categorySlug = params.category || undefined;
+  const tagSlug = params.tag || undefined;
+  const page = parseInt(params.page || '1', 10) || 1;
+
+  // Parallel server data fetching
+  const [categories, tags, listingResult] = await Promise.all([
+    getBlogCategories(),
+    getBlogTags(),
+    getPublicBlogListing({
+      query: query || undefined,
+      categorySlug,
+      tagSlug,
+      page,
+      limit: 9,
+    }),
+  ]);
+
+  const hasFilters = Boolean(categorySlug || tagSlug || query);
+  const posts = listingResult.items;
+
+  // JSON-LD structured data for blog
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: 'ElseSourav Engineering Journal',
+    description: 'Technical articles, software benchmarks, and architecture walkthroughs.',
+    url: 'https://elsesourav.com/blog',
+    blogPost: posts.map((post) => ({
+      '@type': 'BlogPosting',
+      headline: post.title,
+      description: post.excerpt,
+      url: `https://elsesourav.com/blog/${post.slug}`,
+      datePublished: post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined,
+      author: {
+        '@type': 'Person',
+        name: post.author.displayName,
+      },
+    })),
+  };
+
+  return (
+    <div className="min-h-screen bg-zinc-950 text-white">
+      {/* Schema.org Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+        {/* Header Section */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-100">
+              Engineering Journal
+            </h1>
+            <Badge variant="info" className="text-xs px-2.5 py-0.5 font-medium">
+              {listingResult.totalCount} {listingResult.totalCount === 1 ? 'Article' : 'Articles'}
+            </Badge>
+          </div>
+          <p className="text-sm text-zinc-400 max-w-2xl">
+            Deep-dive notes on web architecture, software systems, performance benchmarks, and release logs.
+          </p>
+        </div>
+
+        {/* Discovery & Search Bar */}
+        <BlogDiscoveryBar categories={categories} tags={tags} />
+
+        {/* Blog Post Grid or Empty State */}
+        {posts.length === 0 ? (
+          <BlogEmptyState hasFilters={hasFilters} />
+        ) : (
+          <div className="space-y-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {posts.map((post, idx) => (
+                <BlogCard
+                  key={post.id}
+                  post={post}
+                  isFeatured={idx === 0 && page === 1 && !hasFilters}
+                />
+              ))}
             </div>
-            <CardTitle>Modern Web Architecture in 2026</CardTitle>
-            <CardDescription>
-              A deep dive into Next.js 15, Turborepo modular monoliths, and PostgreSQL performance.
-            </CardDescription>
-          </CardHeader>
-        </Card>
+
+            {/* Pagination Controls */}
+            <BlogPagination
+              currentPage={listingResult.page}
+              totalPages={listingResult.totalPages}
+              totalMatches={listingResult.totalCount}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
