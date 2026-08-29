@@ -7,3 +7,4 @@ export * from './help.schema';
 export * from './support.schema';
 export * from './media.schema';
 export * from './notification.schema';
+export * from './audit.schema';
