@@ -80,7 +80,7 @@ When designing ElseSourav, we needed to scale past client-side bundler bottlenec
   },
   category: fixtureBlogCategoryArch,
   tags: [fixtureBlogTagNextjs, fixtureBlogTagTurbo],
-  coverImageUrl: 'https://res.cloudinary.com/elsesourav/image/upload/v2/banners/v2-arch-banner.png',
+  coverImageUrl: 'https://res.cloudinary.com/elsesourav/image/upload/v2/banners/arch-banner.png',
   status: 'published',
   readingTime: 6,
   viewsCount: 1420,
@@ -97,7 +97,7 @@ export const fixtureBlogPostZeroTrust: BlogPost = {
     'How we enforce multi-tenant authorization guards across server actions, API routes, and database triggers.',
   content: `## Defense in Depth
 
-Role-based access control cannot rely solely on frontend navigation routing. In ElseSourav V2, authorization is asserted at three distinct structural layers:
+Role-based access control cannot rely solely on frontend navigation routing. In ElseSourav, authorization is asserted at three distinct structural layers:
 
 1. **Server Layout Level**: Server components redirect non-privileged sessions before rendering layout children.
 2. **Domain Service Level**: Every service method independently validates caller claims.

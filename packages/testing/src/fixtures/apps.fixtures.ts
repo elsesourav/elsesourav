@@ -369,12 +369,43 @@ export const fixtureAppArchived: App = {
   archivedAt: 1704067200000,
 };
 
+export const fixtureAppMinimal: App = {
+  id: 'app-minimal-hash',
+  slug: 'quickhash-mini',
+  name: 'QuickHash Mini',
+  shortDescription: 'Lightweight client-side cryptographic hashing utility.',
+  description: 'Fast client-side hashing utility without network calls.',
+  iconUrl: '',
+  screenshots: [],
+  primaryCategory: 'Developer Tools',
+  categoryId: 'cat-dev-tools',
+  tags: [],
+  status: 'published',
+  platforms: ['web'],
+  links: [],
+  currentVersion: '1.0.0',
+  stats: { views: 450, launches: 310, libraryAdds: 88 },
+  isFeatured: false,
+  isPinned: false,
+  sortOrder: 6,
+  publishedAt: 1704067200000,
+  createdAt: 1704067200000,
+  updatedAt: 1704067200000,
+};
+
 export const fixturePublishedApps: readonly App[] = [
   fixtureAppTerminalPro,
   fixtureAppPaletteStudio,
   fixtureAppFocusFlow,
   fixtureAppDevDock,
   fixtureAppRegexLens,
+  fixtureAppMinimal,
+];
+
+export const fixtureAllApps: readonly App[] = [
+  ...fixturePublishedApps,
+  fixtureAppDraft,
+  fixtureAppArchived,
 ];
 
 export const fixtureAppListItems: readonly AppListItem[] = fixturePublishedApps.map((app) =>

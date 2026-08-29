@@ -46,7 +46,7 @@ describe('UI Stabilization Phase 09 — Full User-Flow QA Validation', () => {
   describe('2. App Discovery & Detail Journey', () => {
     it('executes: Catalog search → category filter → sorting → app detail page', async () => {
       const catalog = createPopulatedAppsCatalogScenario();
-      expect(catalog.searchResult.items.length).toBe(5);
+      expect(catalog.searchResult.items.length).toBe(6);
 
       // Filter by category
       const searchResult = await mockService.discoverPublishedApps({
@@ -182,7 +182,7 @@ describe('UI Stabilization Phase 09 — Full User-Flow QA Validation', () => {
   describe('9. Administrative Control Flow', () => {
     it('executes: Admin dashboard metrics → content management overview', () => {
       const adminScenario = createAdminControlScenario();
-      expect(adminScenario.stats.totalApps).toBe(5);
+      expect(adminScenario.stats.totalApps).toBe(6);
       expect(adminScenario.stats.totalBlogPosts).toBe(3);
       expect(adminScenario.auditLogs.length).toBeGreaterThan(0);
       expect(adminScenario.users.length).toBe(fixtureUsersList.length);

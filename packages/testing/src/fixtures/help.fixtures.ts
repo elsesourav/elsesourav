@@ -117,6 +117,22 @@ If Terminal Pro fails to initialize:
   updatedAt: 1704067200000,
 };
 
+export const fixtureHelpArticleDraft: HelpArticle = {
+  id: 'hart-draft-dns',
+  categoryId: 'hcat-troubleshooting',
+  category: fixtureHelpCategories[2],
+  title: 'Configuring Custom Domains & DNS Settings (Draft)',
+  slug: 'configuring-custom-domains',
+  excerpt: 'Step-by-step DNS record configuration for custom domains.',
+  content: '# Custom Domain Routing (Draft)\n\nDraft setup guide for domain management.',
+  status: 'draft',
+  orderIndex: 2,
+  helpfulCount: 0,
+  unhelpfulCount: 0,
+  createdAt: 1704067200000,
+  updatedAt: 1704067200000,
+};
+
 export const fixtureHelpArticles: readonly HelpArticle[] = [
   fixtureHelpArticleGettingStarted,
   fixtureHelpArticleSecurity,

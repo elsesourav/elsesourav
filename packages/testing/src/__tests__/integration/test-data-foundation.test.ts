@@ -89,11 +89,12 @@ describe('Test-Data Foundation Suite', () => {
       expect(publicApp.stats.ratingAverage).toBeGreaterThan(0);
     });
 
-    it('provides 5 published developer tools in predefined fixtures', () => {
-      expect(fixturePublishedApps.length).toBe(5);
+    it('provides published, minimal, draft, and archived developer tools in predefined fixtures', () => {
+      expect(fixturePublishedApps.length).toBe(6);
       expect(fixtureAppTerminalPro.slug).toBe('terminal-pro');
       expect(fixtureAppTerminalPro.platforms).toContain('web');
       expect(fixtureAppTerminalPro.links.length).toBeGreaterThan(0);
+      expect(fixturePublishedApps.some((a) => a.slug === 'quickhash-mini')).toBe(true);
     });
   });
 
@@ -176,7 +177,7 @@ describe('Test-Data Foundation Suite', () => {
       const populated = createPopulatedAppsCatalogScenario();
 
       expect(empty.searchResult.items.length).toBe(0);
-      expect(populated.searchResult.items.length).toBe(5);
+      expect(populated.searchResult.items.length).toBe(6);
     });
 
     it('builds large paginated catalog scenario with 30 items across 3 pages', () => {
@@ -197,7 +198,7 @@ describe('Test-Data Foundation Suite', () => {
       expect(emptyDashboard.libraryItems.length).toBe(0);
       expect(activeDashboard.libraryItems.length).toBe(3);
       expect(activeDashboard.unreadNotificationCount).toBe(2);
-      expect(admin.stats.totalApps).toBe(5);
+      expect(admin.stats.totalApps).toBe(6);
     });
   });
 
@@ -218,7 +219,7 @@ describe('Test-Data Foundation Suite', () => {
       const search = await service.discoverPublishedApps({ query: 'terminal' });
       const categories = await service.getCategories();
 
-      expect(allApps.totalCount).toBe(5);
+      expect(allApps.totalCount).toBe(6);
       expect(search.items.length).toBe(1);
       expect(search.items[0]?.slug).toBe('terminal-pro');
       expect(categories.length).toBe(5);

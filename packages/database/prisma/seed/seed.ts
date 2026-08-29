@@ -694,6 +694,107 @@ expect(/^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$/.test('user@example.com')).toBe
     },
   });
 
+  // App 6: QuickHash Mini (Minimal, no documentation, no images fallback)
+  await prisma.app.upsert({
+    where: { slug: 'quickhash-mini' },
+    update: {},
+    create: {
+      name: 'QuickHash Mini',
+      slug: 'quickhash-mini',
+      shortDescription: 'Lightweight client-side cryptographic hashing utility.',
+      description:
+        'Generate SHA-256, SHA-512, MD5, and HMAC signatures directly in your browser with zero network requests.',
+      documentationMd: null, // Tests empty/null documentation rendering
+      iconUrl: 'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=200&q=80',
+      featuredImageUrl: null, // Tests missing featured banner fallback
+      demoUrl: 'https://hash.elsesourav.com',
+      status: PublishStatus.PUBLISHED,
+      isFeatured: false,
+      isPinned: false,
+      currentVersion: '1.0.0',
+      seoTitle: 'QuickHash Mini — Fast Client Hash Utility | ElseSourav',
+      seoDescription: 'Fast client-side hashing utility without network calls.',
+      publishedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+      categoryId: catUtilities.id,
+      tags: {
+        create: [{ tagId: tagWeb.id }, { tagId: tagTypeScript.id }],
+      },
+      links: {
+        create: [
+          {
+            platform: 'web',
+            label: 'Open QuickHash',
+            url: 'https://hash.elsesourav.com',
+            action: 'open_app',
+            isPrimary: true,
+            displayOrder: 0,
+          },
+        ],
+      },
+      versions: {
+        create: [
+          {
+            version: '1.0.0',
+            changelog: 'Initial lightweight crypto hashing tool release.',
+          },
+        ],
+      },
+      stats: {
+        create: {
+          views: 450,
+          launches: 310,
+          libraryAdds: 88,
+          ratingAverage: 4.6,
+          ratingCount: 12,
+        },
+      },
+    },
+  });
+
+  // App 7: CloudPulse Monitor (Draft state)
+  await prisma.app.upsert({
+    where: { slug: 'cloudpulse-monitor' },
+    update: {},
+    create: {
+      name: 'CloudPulse Monitor',
+      slug: 'cloudpulse-monitor',
+      shortDescription: 'Serverless heartbeat and health monitoring dashboard.',
+      description:
+        'Continuous uptime tracking and latency heatmaps for edge functions and global endpoints.',
+      documentationMd: '## CloudPulse Setup Guide\n\nDraft documentation for upcoming release.',
+      iconUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80',
+      status: PublishStatus.DRAFT,
+      isFeatured: false,
+      isPinned: false,
+      currentVersion: '0.1.0-alpha',
+      categoryId: catDevOps.id,
+      tags: {
+        create: [{ tagId: tagCloud.id }],
+      },
+    },
+  });
+
+  // App 8: Legacy CodeDiff (Archived state)
+  await prisma.app.upsert({
+    where: { slug: 'legacy-codediff' },
+    update: {},
+    create: {
+      name: 'Legacy CodeDiff',
+      slug: 'legacy-codediff',
+      shortDescription: 'Legacy Git diff analyzer and patch generation tool.',
+      description:
+        'Deprecated text diff engine previously used for patch reviews. Retained for historical verification.',
+      documentationMd: '## Deprecation Notice\n\nThis application is archived.',
+      iconUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=200&q=80',
+      status: PublishStatus.ARCHIVED,
+      isFeatured: false,
+      isPinned: false,
+      currentVersion: '0.9.4',
+      categoryId: catDevTools.id,
+    },
+  });
+
   // ===========================================================================
   // 5. SEED BLOG (Categories, Tags, and Posts)
   // ===========================================================================
@@ -850,6 +951,26 @@ Building a world-class user interface requires balancing modern aesthetics (like
     },
   });
 
+  // Post 4 (Draft state)
+  await prisma.blogPost.upsert({
+    where: { slug: 'upcoming-web-performance-trends' },
+    update: {},
+    create: {
+      title: 'Upcoming Trends in Web Performance & Edge Computing (Draft)',
+      slug: 'upcoming-web-performance-trends',
+      excerpt:
+        'A preview of emerging compiler optimizations, WASM runtime integrations, and streaming HTML architectures.',
+      content: `## The Next Wave of Web Performance
+      
+Draft article discussing streaming compilation, baseline browser feature support, and zero-JS interactive islands.`,
+      status: PublishStatus.DRAFT,
+      readingTime: 3,
+      viewsCount: 0,
+      authorId: adminUser.id,
+      categoryId: blogCatEng.id,
+    },
+  });
+
   // ===========================================================================
   // 6. SEED HELP CENTER (Categories & Technical Articles)
   // ===========================================================================
@@ -967,6 +1088,26 @@ We treat security and data ownership as core principles.
       publishedAt: new Date(),
       orderIndex: 2,
       helpfulCount: 29,
+      unhelpfulCount: 0,
+      authorId: adminUser.id,
+    },
+  });
+
+  // Help Article 4 (Draft state)
+  await prisma.helpArticle.upsert({
+    where: { slug: 'configuring-custom-domains' },
+    update: {},
+    create: {
+      categoryId: helpCatTools.id,
+      title: 'Configuring Custom Domains & DNS Settings (Draft)',
+      slug: 'configuring-custom-domains',
+      excerpt: 'Step-by-step DNS record configuration for connecting custom domains to web apps.',
+      content: `# Custom Domain Routing (Draft)
+
+Instructions on mapping CNAME and A records to ElseSourav web tools.`,
+      status: PublishStatus.DRAFT,
+      orderIndex: 3,
+      helpfulCount: 0,
       unhelpfulCount: 0,
       authorId: adminUser.id,
     },
