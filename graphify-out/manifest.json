@@ -132,8 +132,8 @@
     "hash": "8fbb8f60bedc18e9ba33e3f01be22beb"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/index.ts": {
-    "mtime": 1787946119.3896494,
-    "hash": "daffa99c12f61d38fc2ad641664c3de5"
+    "mtime": 1787946694.0014963,
+    "hash": "21990b367feba7ac3779c4a99d13cf29"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/repositories/audit.repository.ts": {
     "mtime": 1787940915.054331,
@@ -144,8 +144,8 @@
     "hash": "b444845818a4e4ca6b4d3f4dda6b5365"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/repositories/support.repository.ts": {
-    "mtime": 1787941119.2109432,
-    "hash": "f7f5f56451b598b45a2e7ffd7d04b052"
+    "mtime": 1787975959.8201225,
+    "hash": "b46d8d716a44d3889d9e9fe4decab087"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/repositories/library.repository.ts": {
     "mtime": 1787944413.4337838,
@@ -203,6 +203,10 @@
     "mtime": 1787944508.2099433,
     "hash": "396e8fcf2e43d885655399e4f988c9ee"
   },
+  "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/__tests__/support-domain.test.ts": {
+    "mtime": 1787976102.8094223,
+    "hash": "024697e163042a5d7171c716cc2baee7"
+  },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/__tests__/security-authorization.test.ts": {
     "mtime": 1787941211.6519158,
     "hash": "4f869a4bc5108cf1b815fa94dbef8e9c"
@@ -239,6 +243,10 @@
     "mtime": 1787946090.8654547,
     "hash": "49f9b6407da0d092250e373b926ec0f5"
   },
+  "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/mappers/support.mapper.ts": {
+    "mtime": 1787946662.8163495,
+    "hash": "34ac39e4a77c8427b751dbe4acbbd0eb"
+  },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/mappers/user.mapper.ts": {
     "mtime": 1787940906.4583967,
     "hash": "ffd2d15f1e191acfb4f10621f38d5fcf"
@@ -250,6 +258,10 @@
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/services/app.service.ts": {
     "mtime": 1787942676.0280685,
     "hash": "b08acca97fbe9427ae20df03e1184bb4"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/services/support.service.ts": {
+    "mtime": 1787946683.4973588,
+    "hash": "f236a31cbda67ea87236124959b3eec2"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/services/user.service.ts": {
     "mtime": 1787944752.8462634,
@@ -276,8 +288,8 @@
     "hash": "08c37425b606f236bd0920c841477185"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/types/src/support.types.ts": {
-    "mtime": 1787941101.231087,
-    "hash": "46a764eebfb8c8d34266ddc112f82876"
+    "mtime": 1787975892.853918,
+    "hash": "baf91563c816c279a133302d466400c1"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/types/src/help.types.ts": {
     "mtime": 1787946073.6239076,
@@ -436,8 +448,8 @@
     "hash": "a855ce7c63bdfae7ad6241b231a4b1c0"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/testing/src/fixtures/mock-data.ts": {
-    "mtime": 1787946145.8624954,
-    "hash": "aa1373e9b8174f790852259e77cf70a3"
+    "mtime": 1787975903.74553,
+    "hash": "96fa27e8c263d85bd7260487d4c26179"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/validation/src/user.schema.ts": {
     "mtime": 1787941715.4039583,
@@ -460,8 +472,8 @@
     "hash": "99bad9690e8b31b44f387c54105df41d"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/validation/src/support.schema.ts": {
-    "mtime": 1787938447.7717383,
-    "hash": "c407cd4708c2bc528bfab3afb4be390a"
+    "mtime": 1787946656.7729583,
+    "hash": "113f16ca06ccb4c6811142be7f89ab72"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/validation/src/index.ts": {
     "mtime": 1787944401.7823765,
@@ -600,8 +612,12 @@
     "hash": "19711ad48efd330a8c4e6cd207e1eb30"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(user)/support/tickets/page.tsx": {
-    "mtime": 1787944966.2972155,
-    "hash": "6d331c9d45ef4b312d46c7a4263d0a24"
+    "mtime": 1787975716.4775996,
+    "hash": "83efe3e00081468662e43d92c1a670a5"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(user)/support/tickets/[id]/page.tsx": {
+    "mtime": 1787975731.8046782,
+    "hash": "b95f0af7bc4c9bf414db5727ce4ca5bd"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(user)/notifications/loading.tsx": {
     "mtime": 1787945003.9421194,
@@ -648,8 +664,8 @@
     "hash": "a058fa4711363170da345b14540325ff"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(public)/support/page.tsx": {
-    "mtime": 1787938766.7752235,
-    "hash": "9bdd484f3fef8b0b34616b23913fed0d"
+    "mtime": 1787975757.0950274,
+    "hash": "84f96f1ea708a65e1ed4f3b200bb1762"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(public)/apps/error.tsx": {
     "mtime": 1787943673.6190102,
@@ -838,6 +854,26 @@
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/dashboard/components/DashboardOverview.tsx": {
     "mtime": 1787944980.8533645,
     "hash": "4b7cefe9426b25101ec26a4f5abc103e"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/support/queries/get-support.ts": {
+    "mtime": 1787975992.4689908,
+    "hash": "890163201dd9e21717d96f43aeb65aac"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/support/components/CreateTicketForm.tsx": {
+    "mtime": 1787946723.748703,
+    "hash": "e1a2b09b34778c7d240618a885b911a8"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/support/components/SupportTicketList.tsx": {
+    "mtime": 1787976014.0283144,
+    "hash": "7b736d1e634230f764817a8bf11c2812"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/support/components/SupportTicketDetailView.tsx": {
+    "mtime": 1787976019.3443751,
+    "hash": "bb208ffcc8ab2205c5ea99a1603d3f65"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/support/actions/support-actions.ts": {
+    "mtime": 1787976003.2777061,
+    "hash": "63c652cba7f24cebc3c47442392aa2b7"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/apps/queries/get-apps.ts": {
     "mtime": 1787944234.8589997,

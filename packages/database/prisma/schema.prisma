@@ -318,18 +318,22 @@ model AppFeedback {
 }
 
 model Notification {
-  id          String   @id @default(uuid())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type        String
-  title       String
-  message     String
-  linkUrl     String?
-  isRead      Boolean  @default(false)
-  createdAt   DateTime @default(now())
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  title     String
+  message   String
+  linkUrl   String?
+  isRead    Boolean   @default(false)
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@index([userId])
   @@index([isRead])
+  @@index([userId, isRead])
+  @@index([createdAt])
 }
 
 model AuditLog {
