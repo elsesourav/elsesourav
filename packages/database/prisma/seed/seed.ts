@@ -9,8 +9,7 @@ const rootDir = path.resolve(__dirname, '../../../../');
 dotenv.config({ path: path.join(rootDir, '.env.local') });
 dotenv.config({ path: path.join(rootDir, '.env') });
 
-import { PublishStatus, TicketPriority, TicketStatus, UserRole } from '@prisma/client';
-import { prisma } from '../../src/client';
+import { PublishStatus, TicketPriority, TicketStatus, UserRole, prisma } from '../../src/index';
 
 async function main() {
   console.info('🌱 Seeding ElseSourav Database with rich realistic test records...');

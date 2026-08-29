@@ -8,9 +8,8 @@ const rootDir = path.resolve(__dirname, '../../../../');
 
 dotenv.config({ path: path.join(rootDir, '.env') });
 
-import { UserRole } from '@prisma/client';
-import { createAuthAdminClient } from '../../../auth/src/server/server-client';
-import { prisma } from '../../src/client';
+import { createAuthAdminClient } from '@elsesourav/auth';
+import { UserRole, prisma } from '../../src/index';
 
 async function createAdmin() {
   const email = process.argv[2] || 'admin@elsesourav.com';
