@@ -22,9 +22,16 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,md,json}\""
   },
   "devDependencies": {
+    "@eslint/js": "^9.20.0",
+    "eslint": "^9.20.1",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^15.15.0",
     "prettier": "^3.5.1",
     "turbo": "^2.4.4",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.24.0",
+    "@types/node": "^22.13.4"
   },
   "pnpm": {
     "overrides": {

@@ -1,8 +1,16 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "rootDir": "src",
-    "outDir": "dist"
+    "outDir": "dist",
+    "paths": {
+      "@elsesourav/auth": ["../auth/src/index.ts"],
+      "@elsesourav/config": ["../config/src/index.ts"],
+      "@elsesourav/media": ["../media/src/index.ts"],
+      "@elsesourav/types": ["../types/src/index.ts"],
+      "@elsesourav/ui": ["../ui/src/index.ts"],
+      "@elsesourav/utils": ["../utils/src/index.ts"],
+      "@elsesourav/validation": ["../validation/src/index.ts"]
+    }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "prisma/**/*", "prisma.config.ts"]
 }

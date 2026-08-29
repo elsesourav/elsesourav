@@ -9,7 +9,7 @@ const rootDir = path.resolve(__dirname, '../../../../');
 dotenv.config({ path: path.join(rootDir, '.env.local') });
 dotenv.config({ path: path.join(rootDir, '.env') });
 
-import { prisma } from '../../src/client';
+import { prisma } from '../../src/index';
 
 async function updateImages() {
   console.info('🖼️ Updating all media URLs in PostgreSQL with verified live images...');
