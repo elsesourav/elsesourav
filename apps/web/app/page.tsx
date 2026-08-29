@@ -15,24 +15,30 @@ import {
   BookOpen,
   ArrowRight,
   CheckCircle2,
-  Terminal,
-  Megaphone,
   Layers,
   Compass,
   Code2,
+  Megaphone,
+  LifeBuoy,
+  HelpCircle,
+  Activity,
+  FileText,
+  Laptop,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: {
-    absolute: `${SITE_CONFIG.name} — ${SITE_CONFIG.tagline}`,
+    absolute: `${SITE_CONFIG.name} — Personal Software Studio & Digital Archive`,
   },
-  description: SITE_CONFIG.description,
+  description:
+    'The personal software studio and digital archive of Sourav. Discover independent applications, developer tools, and engineering field notes.',
   alternates: {
     canonical: SITE_CONFIG.url,
   },
   openGraph: {
-    title: `${SITE_CONFIG.name} — ${SITE_CONFIG.tagline}`,
-    description: SITE_CONFIG.description,
+    title: `${SITE_CONFIG.name} — Personal Software Studio & Digital Archive`,
+    description:
+      'The personal software studio and digital archive of Sourav. Discover independent applications, developer tools, and engineering field notes.',
     url: SITE_CONFIG.url,
     siteName: SITE_CONFIG.name,
     locale: 'en_US',
@@ -40,8 +46,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${SITE_CONFIG.name} — ${SITE_CONFIG.tagline}`,
-    description: SITE_CONFIG.description,
+    title: `${SITE_CONFIG.name} — Personal Software Studio & Digital Archive`,
+    description:
+      'The personal software studio and digital archive of Sourav. Discover independent applications, developer tools, and engineering field notes.',
   },
 };
 
@@ -125,7 +132,7 @@ export default async function HomePage() {
       {/* Optional Dynamic Announcement Banner */}
       {identity.homepage.announcementBanner && (
         <div className="bg-indigo-950/80 border-b border-indigo-500/30 px-4 py-2 text-center text-xs text-indigo-200 flex items-center justify-center gap-2">
-          <Megaphone className="w-3.5 h-3.5 text-indigo-400" />
+          <Megaphone className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
           <span>{identity.homepage.announcementBanner}</span>
         </div>
       )}
@@ -135,7 +142,7 @@ export default async function HomePage() {
 
       {/* Main Content Landmark */}
       <main id="main-content" className="flex-1">
-        {/* 1. Hero Section: Editorial First-Viewport Narrative */}
+        {/* 1. Hero Section: Personal Creator Studio & Digital Archive */}
         <Section spacing="lg" className="relative pt-8 sm:pt-12 lg:pt-16 pb-16 sm:pb-20 lg:pb-24">
           <div
             aria-hidden="true"
@@ -146,75 +153,119 @@ export default async function HomePage() {
 
           <Container size="lg">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-              {/* Left Column: Headline, Narrative, & Primary Exploration CTAs */}
+              {/* Left Column: Creator Introduction & Direct Studio Narrative */}
               <div className="lg:col-span-7 space-y-6 text-left">
-                {identity.homepage.heroBadge && (
-                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-indigo-500/30 bg-indigo-950/40 text-xs text-indigo-300 font-medium shadow-sm">
-                    <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-                    <span>{identity.homepage.heroBadge}</span>
-                  </div>
-                )}
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-indigo-500/30 bg-indigo-950/40 text-xs text-indigo-300 font-medium shadow-sm">
+                  <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>Independent Software Studio & Archive</span>
+                </div>
 
                 <h1 className="text-display font-extrabold tracking-tight text-white leading-[1.08]">
-                  {identity.homepage.heroHeadline}
+                  I&apos;m {identity.creator.name}. I design and build independent software, developer tools, and digital experiences.
                 </h1>
 
                 <p className="text-body sm:text-lg text-zinc-400 leading-relaxed max-w-xl">
-                  {identity.homepage.heroSubtitle}
+                  {SITE_CONFIG.name} is my personal studio and workshop—a living collection of software, engineering field notes, and creative experiments built with a focus on craft, speed, and privacy.
                 </p>
 
                 <ActionGroup className="pt-2">
                   <Link href={ROUTES.APPS}>
                     <Button size="lg" className="gap-2 shadow-xl shadow-indigo-600/25 px-6 font-semibold min-h-[44px]">
-                      <Terminal className="w-4 h-4" />
-                      <span>{identity.homepage.primaryCtaLabel} {appsResult.totalCount > 0 ? `(${appsResult.totalCount})` : ''}</span>
+                      <Layers className="w-4 h-4" />
+                      <span>Explore Applications {appsResult.totalCount > 0 ? `(${appsResult.totalCount})` : ''}</span>
                     </Button>
                   </Link>
                   <Link href={ROUTES.BLOG}>
                     <Button variant="secondary" size="lg" className="gap-2 px-6 min-h-[44px]">
                       <BookOpen className="w-4 h-4" />
-                      <span>{identity.homepage.secondaryCtaLabel}</span>
+                      <span>Read Engineering Notes</span>
                     </Button>
                   </Link>
                 </ActionGroup>
 
-                {/* Status & Scale Indicators */}
-                <div className="pt-3 flex flex-wrap items-center gap-4 text-xs text-zinc-500">
+                {/* Subtle Real-Data Scale Indicators */}
+                <div className="pt-3 flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-zinc-500">
                   <span className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-zinc-400">Independent Software Platform</span>
+                    <span className="text-zinc-400">Independent Studio</span>
                   </span>
                   <span>•</span>
-                  <span>{appsResult.totalCount} Applications</span>
+                  <span>{appsResult.totalCount} {appsResult.totalCount === 1 ? 'Application' : 'Applications'}</span>
+                  <span>•</span>
+                  <span>{blogResult.totalCount} {blogResult.totalCount === 1 ? 'Note' : 'Field Notes'}</span>
                   <span>•</span>
                   <span>By {identity.creator.name}</span>
                 </div>
               </div>
 
-              {/* Right Column: Visual Showcase Preview Panel (Glassmorphism 2.0) */}
+              {/* Right Column: Studio Field Notes & Archival Overview Panel */}
               <div className="lg:col-span-5">
                 <div className="relative rounded-3xl border border-zinc-800/80 bg-zinc-900/60 backdrop-blur-xl p-6 sm:p-7 shadow-2xl space-y-6 hover:border-zinc-700/80 transition-all duration-300">
-                  {/* Window Bar */}
+                  {/* Studio Status Header */}
                   <div className="flex items-center justify-between pb-3 border-b border-zinc-800/70 text-xs text-zinc-400">
                     <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full bg-rose-500/80" />
-                      <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-                      <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                      <span className="ml-2 font-mono text-[11px] text-zinc-400">{identity.site.name.toLowerCase()}://hub</span>
+                      <div className="w-2.5 h-2.5 rounded-full bg-indigo-500/80" />
+                      <span className="font-mono text-xs font-semibold text-zinc-200 uppercase tracking-wider">
+                        Studio Index & Archive
+                      </span>
                     </div>
-                    <span className="text-[11px] font-mono text-indigo-400 bg-indigo-950/60 border border-indigo-800/40 px-2 py-0.5 rounded-md">
-                      live
+                    <span className="text-[11px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/40 px-2 py-0.5 rounded-md flex items-center gap-1">
+                      <Activity className="w-3 h-3" />
+                      <span>Active Build</span>
                     </span>
                   </div>
 
-                  {/* Spotlight Preview: First Featured App or Studio Summary */}
+                  {/* Real Metrics Grid */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="p-3.5 rounded-2xl bg-zinc-950/60 border border-zinc-800/80 space-y-1">
+                      <div className="flex items-center justify-between text-xs text-zinc-500 font-mono">
+                        <span>APPS</span>
+                        <Laptop className="w-3.5 h-3.5 text-indigo-400" />
+                      </div>
+                      <div className="text-2xl font-bold font-mono text-white">
+                        {appsResult.totalCount < 10 ? `0${appsResult.totalCount}` : appsResult.totalCount}
+                      </div>
+                      <div className="text-[11px] text-zinc-400">Published Tools</div>
+                    </div>
+
+                    <div className="p-3.5 rounded-2xl bg-zinc-950/60 border border-zinc-800/80 space-y-1">
+                      <div className="flex items-center justify-between text-xs text-zinc-500 font-mono">
+                        <span>NOTES</span>
+                        <FileText className="w-3.5 h-3.5 text-cyan-400" />
+                      </div>
+                      <div className="text-2xl font-bold font-mono text-white">
+                        {blogResult.totalCount < 10 ? `0${blogResult.totalCount}` : blogResult.totalCount}
+                      </div>
+                      <div className="text-[11px] text-zinc-400">Devlog Articles</div>
+                    </div>
+
+                    <div className="p-3.5 rounded-2xl bg-zinc-950/60 border border-zinc-800/80 space-y-1">
+                      <div className="flex items-center justify-between text-xs text-zinc-500 font-mono">
+                        <span>CREATOR</span>
+                        <Compass className="w-3.5 h-3.5 text-amber-400" />
+                      </div>
+                      <div className="text-2xl font-bold font-mono text-white">01</div>
+                      <div className="text-[11px] text-zinc-400">Direct Craft & Focus</div>
+                    </div>
+
+                    <div className="p-3.5 rounded-2xl bg-zinc-950/60 border border-zinc-800/80 space-y-1">
+                      <div className="flex items-center justify-between text-xs text-zinc-500 font-mono">
+                        <span>LAB</span>
+                        <Code2 className="w-3.5 h-3.5 text-purple-400" />
+                      </div>
+                      <div className="text-2xl font-bold font-mono text-white">∞</div >
+                      <div className="text-[11px] text-zinc-400">Ideas in Progress</div>
+                    </div>
+                  </div>
+
+                  {/* Spotlight Preview: Flagship Work */}
                   {primaryFeaturedApp ? (
-                    <div className="space-y-3 p-4 rounded-2xl border border-zinc-800 bg-zinc-950/70">
+                    <div className="p-4 rounded-2xl border border-zinc-800 bg-zinc-950/70 space-y-3">
                       <div className="flex items-center justify-between text-xs">
                         <span className="text-indigo-400 font-medium font-mono text-[11px] uppercase tracking-wider">
-                          Featured Utility
+                          Flagship Utility
                         </span>
-                        <span className="text-zinc-500 text-[11px]">v{primaryFeaturedApp.currentVersion || '1.0'}</span>
+                        <span className="text-zinc-500 text-[11px] font-mono">v{primaryFeaturedApp.currentVersion || '1.0'}</span>
                       </div>
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl bg-indigo-950/80 border border-indigo-800/60 flex items-center justify-center text-indigo-400 shrink-0">
@@ -235,28 +286,26 @@ export default async function HomePage() {
                     </div>
                   ) : null}
 
-                  {/* Ecosystem Quick Links */}
+                  {/* Studio Index Fast Links */}
                   <div className="grid grid-cols-2 gap-3 pt-1">
                     <Link
                       href={ROUTES.APPS}
-                      className="p-3.5 rounded-xl border border-zinc-800/60 bg-zinc-950/50 hover:bg-zinc-800/50 transition-colors group"
+                      className="p-3 rounded-xl border border-zinc-800/60 bg-zinc-950/50 hover:bg-zinc-800/50 transition-colors group"
                     >
                       <div className="flex items-center gap-2 text-xs font-semibold text-zinc-200 group-hover:text-white">
                         <Layers className="w-4 h-4 text-indigo-400" />
-                        <span>Apps Index</span>
+                        <span>Apps Archive</span>
                       </div>
-                      <p className="text-[11px] text-zinc-500 mt-1">Tools & Software</p>
                     </Link>
 
                     <Link
                       href={ROUTES.BLOG}
-                      className="p-3.5 rounded-xl border border-zinc-800/60 bg-zinc-950/50 hover:bg-zinc-800/50 transition-colors group"
+                      className="p-3 rounded-xl border border-zinc-800/60 bg-zinc-950/50 hover:bg-zinc-800/50 transition-colors group"
                     >
                       <div className="flex items-center gap-2 text-xs font-semibold text-zinc-200 group-hover:text-white">
                         <Compass className="w-4 h-4 text-cyan-400" />
-                        <span>Journal</span>
+                        <span>Field Notes</span>
                       </div>
-                      <p className="text-[11px] text-zinc-500 mt-1">Insights & Ideas</p>
                     </Link>
                   </div>
                 </div>
@@ -265,15 +314,15 @@ export default async function HomePage() {
           </Container>
         </Section>
 
-        {/* 2. Selected Applications Section */}
+        {/* 2. Selected Work / Applications Section */}
         {featuredApps.length > 0 && (
           <Section spacing="md" surface="subtle">
             <Container size="lg">
               <SectionHeader
                 align="split"
-                caption="Software Index"
-                title={identity.homepage.appsTitle}
-                description={identity.homepage.appsSubtitle}
+                caption="Selected Work"
+                title={identity.homepage.appsTitle || 'Software Crafted with Purpose'}
+                description={identity.homepage.appsSubtitle || 'A curated collection of desktop utilities, web apps, and developer tools built for daily workflows.'}
                 actions={
                   <Link
                     href={ROUTES.APPS}
@@ -324,9 +373,9 @@ export default async function HomePage() {
             <Container size="lg">
               <SectionHeader
                 align="split"
-                caption="Writing & Ideas"
-                title={identity.homepage.blogTitle}
-                description={identity.homepage.blogSubtitle}
+                caption="Field Notes & Devlogs"
+                title={identity.homepage.blogTitle || 'Engineering Notes & Insights'}
+                description={identity.homepage.blogSubtitle || 'Reflections on software architecture, interface design, monorepos, and digital craft.'}
                 actions={
                   <Link
                     href={ROUTES.BLOG}
@@ -506,7 +555,7 @@ export default async function HomePage() {
                       size="sm"
                       className="border-zinc-800 text-xs gap-1.5 text-zinc-300 hover:text-white"
                     >
-                      <span>Read About {identity.creator.name} & Mission</span>
+                      <span>Read About {identity.creator.name} & Studio Mission</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </Button>
                   </Link>
@@ -527,6 +576,104 @@ export default async function HomePage() {
                   </div>
                 ))}
               </div>
+            </div>
+          </Container>
+        </Section>
+
+        {/* 5. Explore Studio Pathways */}
+        <Section spacing="lg">
+          <Container size="lg">
+            <SectionHeader
+              align="center"
+              caption="Studio Pathways"
+              title="Explore the ElseSourav Archive"
+              description="Discover software tools, read architectural writings, or get in touch directly."
+            />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              <Link
+                href={ROUTES.APPS}
+                className="p-5 rounded-3xl border border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-indigo-500/40 transition-all duration-200 group flex flex-col justify-between"
+              >
+                <div className="space-y-2">
+                  <div className="w-9 h-9 rounded-xl bg-indigo-950/60 border border-indigo-800/40 flex items-center justify-center text-indigo-400 group-hover:scale-105 transition-transform">
+                    <Layers className="w-4 h-4" />
+                  </div>
+                  <h4 className="font-semibold text-sm text-zinc-100 group-hover:text-indigo-300 transition-colors">
+                    Applications Catalog
+                  </h4>
+                  <p className="text-xs text-zinc-400 leading-relaxed">
+                    Explore standalone desktop and web utilities built for everyday productivity.
+                  </p>
+                </div>
+                <div className="pt-4 flex items-center text-xs text-indigo-400 font-medium gap-1">
+                  <span>Browse apps</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+
+              <Link
+                href={ROUTES.BLOG}
+                className="p-5 rounded-3xl border border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-cyan-500/40 transition-all duration-200 group flex flex-col justify-between"
+              >
+                <div className="space-y-2">
+                  <div className="w-9 h-9 rounded-xl bg-cyan-950/60 border border-cyan-800/40 flex items-center justify-center text-cyan-400 group-hover:scale-105 transition-transform">
+                    <BookOpen className="w-4 h-4" />
+                  </div>
+                  <h4 className="font-semibold text-sm text-zinc-100 group-hover:text-cyan-300 transition-colors">
+                    Engineering Devlogs
+                  </h4>
+                  <p className="text-xs text-zinc-400 leading-relaxed">
+                    Deep dives into software architecture, monorepos, and creative engineering.
+                  </p>
+                </div>
+                <div className="pt-4 flex items-center text-xs text-cyan-400 font-medium gap-1">
+                  <span>Read devlogs</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+
+              <Link
+                href={ROUTES.HELP}
+                className="p-5 rounded-3xl border border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-purple-500/40 transition-all duration-200 group flex flex-col justify-between"
+              >
+                <div className="space-y-2">
+                  <div className="w-9 h-9 rounded-xl bg-purple-950/60 border border-purple-800/40 flex items-center justify-center text-purple-400 group-hover:scale-105 transition-transform">
+                    <HelpCircle className="w-4 h-4" />
+                  </div>
+                  <h4 className="font-semibold text-sm text-zinc-100 group-hover:text-purple-300 transition-colors">
+                    Documentation & Guides
+                  </h4>
+                  <p className="text-xs text-zinc-400 leading-relaxed">
+                    Step-by-step setup guides, feature walkthroughs, and troubleshooting tips.
+                  </p>
+                </div>
+                <div className="pt-4 flex items-center text-xs text-purple-400 font-medium gap-1">
+                  <span>Open help desk</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+
+              <Link
+                href={ROUTES.SUPPORT}
+                className="p-5 rounded-3xl border border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-emerald-500/40 transition-all duration-200 group flex flex-col justify-between"
+              >
+                <div className="space-y-2">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-950/60 border border-emerald-800/40 flex items-center justify-center text-emerald-400 group-hover:scale-105 transition-transform">
+                    <LifeBuoy className="w-4 h-4" />
+                  </div>
+                  <h4 className="font-semibold text-sm text-zinc-100 group-hover:text-emerald-300 transition-colors">
+                    Support Desk
+                  </h4>
+                  <p className="text-xs text-zinc-400 leading-relaxed">
+                    Have feedback or found a bug? Submit a ticket directly to the studio.
+                  </p>
+                </div>
+                <div className="pt-4 flex items-center text-xs text-emerald-400 font-medium gap-1">
+                  <span>Contact support</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
             </div>
           </Container>
         </Section>
