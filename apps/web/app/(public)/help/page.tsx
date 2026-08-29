@@ -8,7 +8,7 @@ import { HelpCategoryCard } from '@/features/help/components/HelpCategoryCard';
 import { HelpArticleCard } from '@/features/help/components/HelpArticleCard';
 import { HelpEmptyState } from '@/features/help/components/HelpEmptyState';
 import { HelpSupportCTA } from '@/features/help/components/HelpSupportCTA';
-import { Badge } from '@elsesourav/ui';
+import { PageShell, Badge } from '@elsesourav/ui';
 import { SITE_CONFIG } from '@elsesourav/config';
 import { LifeBuoy, Sparkles } from 'lucide-react';
 
@@ -29,7 +29,7 @@ export async function generateMetadata({ searchParams }: HelpPageProps): Promise
 
   const description =
     'Guides, FAQs, troubleshooting advice, and documentation for ElseSourav web tools and developer software.';
-  const canonicalUrl = 'https://elsesourav.com/help';
+  const canonicalUrl = `${SITE_CONFIG.url}/help`;
 
   return {
     title,
@@ -47,7 +47,7 @@ export async function generateMetadata({ searchParams }: HelpPageProps): Promise
           follow: true,
         },
     openGraph: {
-      title: `${title} | ElseSourav`,
+      title: `${title} | ${SITE_CONFIG.name}`,
       description,
       url: canonicalUrl,
       siteName: SITE_CONFIG.name,
@@ -55,7 +55,7 @@ export async function generateMetadata({ searchParams }: HelpPageProps): Promise
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${title} | ElseSourav`,
+      title: `${title} | ${SITE_CONFIG.name}`,
       description,
     },
   };
@@ -69,11 +69,11 @@ export default async function HelpPage({ searchParams }: HelpPageProps) {
   if (searchQuery) {
     const searchResult = await searchPublicHelpArticles({ query: searchQuery, limit: 20 });
     return (
-      <div className="min-h-screen bg-zinc-950 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
+      <PageShell size="lg" glow>
+        <div className="space-y-10">
           {/* Header & Search Bar */}
           <div className="text-center space-y-4 max-w-3xl mx-auto">
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-100">
+            <h1 className="text-2xl sm:text-4xl font-extrabold text-zinc-100 tracking-tight">
               Help Center Search
             </h1>
             <HelpSearchBar />
@@ -87,7 +87,7 @@ export default async function HelpPage({ searchParams }: HelpPageProps) {
                   Search results for &ldquo;
                   <span className="text-zinc-200 font-semibold">{searchQuery}</span>&rdquo;
                 </span>
-                <Badge variant="info" className="text-xs px-2 py-0.5">
+                <Badge variant="primary" className="text-xs px-2 py-0.5">
                   {searchResult.totalCount} {searchResult.totalCount === 1 ? 'guide' : 'guides'}
                 </Badge>
               </div>
@@ -106,7 +106,7 @@ export default async function HelpPage({ searchParams }: HelpPageProps) {
 
           <HelpSupportCTA />
         </div>
-      </div>
+      </PageShell>
     );
   }
 
@@ -120,26 +120,26 @@ export default async function HelpPage({ searchParams }: HelpPageProps) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    name: 'ElseSourav Help Center & Documentation',
+    name: `${SITE_CONFIG.name} Help Center & Documentation`,
     description: 'Documentation, guides, and troubleshooting for ElseSourav software.',
-    url: 'https://elsesourav.com/help',
+    url: `${SITE_CONFIG.url}/help`,
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <PageShell size="lg" glow>
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+      <div className="space-y-16">
         {/* Hero Section */}
         <section
           className="text-center space-y-5 max-w-3xl mx-auto pt-4"
           aria-labelledby="help-hero-title"
         >
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-950/60 border border-indigo-500/30 text-indigo-400 text-xs font-medium">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-indigo-950/60 border border-indigo-500/30 text-indigo-400 text-xs font-medium">
             <LifeBuoy className="w-3.5 h-3.5" />
             <span>Help Center & Knowledge Base</span>
           </div>
@@ -201,9 +201,9 @@ export default async function HelpPage({ searchParams }: HelpPageProps) {
           </section>
         )}
 
-        {/* Support CTA */}
+        {/* Support Escalation CTA */}
         <HelpSupportCTA />
       </div>
-    </div>
+    </PageShell>
   );
 }

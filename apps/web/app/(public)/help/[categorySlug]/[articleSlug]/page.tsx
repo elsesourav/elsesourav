@@ -10,6 +10,7 @@ import { BlogContentRenderer } from '@/features/blog/components/BlogContentRende
 import { HelpArticleFeedback } from '@/features/help/components/HelpArticleFeedback';
 import { RelatedHelpArticles } from '@/features/help/components/RelatedHelpArticles';
 import { HelpSupportCTA } from '@/features/help/components/HelpSupportCTA';
+import { PageShell } from '@elsesourav/ui';
 
 interface HelpArticlePageProps {
   params: Promise<{
@@ -39,7 +40,7 @@ export async function generateMetadata({ params }: HelpArticlePageProps): Promis
   const canonicalUrl = `${SITE_CONFIG.url}/help/${categorySlug}/${article.slug}`;
 
   return {
-    title,
+    title: `${title} — Help & Documentation`,
     description,
     alternates: {
       canonical: canonicalUrl,
@@ -137,20 +138,20 @@ export default async function HelpArticlePage({ params }: HelpArticlePageProps) 
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <PageShell size="lg" glow>
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+      <div className="space-y-12">
         {/* Article Header */}
         <HelpArticleHeader article={article} categorySlug={categorySlug} />
 
         {/* Article Body */}
         <main className="max-w-4xl mx-auto space-y-10">
-          <div className="rounded-3xl border border-zinc-800/60 bg-zinc-900/20 p-6 sm:p-10 backdrop-blur-sm">
+          <div className="rounded-3xl border border-zinc-800/60 bg-zinc-900/20 p-6 sm:p-10 backdrop-blur-sm shadow-xl">
             <BlogContentRenderer content={article.content} />
           </div>
 
@@ -168,6 +169,6 @@ export default async function HelpArticlePage({ params }: HelpArticlePageProps) 
         {/* Support CTA */}
         <HelpSupportCTA />
       </div>
-    </div>
+    </PageShell>
   );
 }

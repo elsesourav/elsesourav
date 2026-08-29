@@ -6,7 +6,8 @@ import { HelpSearchBar } from '@/features/help/components/HelpSearchBar';
 import { HelpArticleCard } from '@/features/help/components/HelpArticleCard';
 import { HelpEmptyState } from '@/features/help/components/HelpEmptyState';
 import { HelpSupportCTA } from '@/features/help/components/HelpSupportCTA';
-import { Badge } from '@elsesourav/ui';
+import { PageShell, Badge } from '@elsesourav/ui';
+import { SITE_CONFIG } from '@elsesourav/config';
 import { ChevronRight, Folder } from 'lucide-react';
 
 interface HelpCategoryPageProps {
@@ -34,7 +35,7 @@ export async function generateMetadata({ params }: HelpCategoryPageProps): Promi
   const description =
     category.description ||
     `Browse documentation, tutorials, and troubleshooting guides for ${category.name}.`;
-  const canonicalUrl = `https://elsesourav.com/help/${category.slug}`;
+  const canonicalUrl = `${SITE_CONFIG.url}/help/${category.slug}`;
 
   return {
     title,
@@ -43,15 +44,15 @@ export async function generateMetadata({ params }: HelpCategoryPageProps): Promi
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: `${title} | ElseSourav`,
+      title: `${title} | ${SITE_CONFIG.name}`,
       description,
       url: canonicalUrl,
-      siteName: 'ElseSourav',
+      siteName: SITE_CONFIG.name,
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${title} | ElseSourav`,
+      title: `${title} | ${SITE_CONFIG.name}`,
       description,
     },
   };
@@ -65,7 +66,7 @@ export default async function HelpCategoryPage({ params }: HelpCategoryPageProps
     notFound();
   }
 
-  const categoryUrl = `https://elsesourav.com/help/${category.slug}`;
+  const categoryUrl = `${SITE_CONFIG.url}/help/${category.slug}`;
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -81,7 +82,7 @@ export default async function HelpCategoryPage({ params }: HelpCategoryPageProps
             '@type': 'ListItem',
             position: idx + 1,
             name: art.title,
-            url: `https://elsesourav.com/help/${category.slug}/${art.slug}`,
+            url: `${SITE_CONFIG.url}/help/${category.slug}/${art.slug}`,
           })),
         },
       },
@@ -93,13 +94,13 @@ export default async function HelpCategoryPage({ params }: HelpCategoryPageProps
             '@type': 'ListItem',
             position: 1,
             name: 'Home',
-            item: 'https://elsesourav.com',
+            item: SITE_CONFIG.url,
           },
           {
             '@type': 'ListItem',
             position: 2,
             name: 'Help Center',
-            item: 'https://elsesourav.com/help',
+            item: `${SITE_CONFIG.url}/help`,
           },
           {
             '@type': 'ListItem',
@@ -113,12 +114,12 @@ export default async function HelpCategoryPage({ params }: HelpCategoryPageProps
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <PageShell size="lg" glow>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+      <div className="space-y-12">
         {/* Navigation & Breadcrumbs */}
         <div className="space-y-4">
           <nav className="flex items-center gap-2 text-xs text-zinc-400" aria-label="Breadcrumb">
@@ -138,14 +139,14 @@ export default async function HelpCategoryPage({ params }: HelpCategoryPageProps
                 <h1 className="text-2xl sm:text-4xl font-extrabold text-zinc-100 tracking-tight">
                   {category.name}
                 </h1>
-                <Badge variant="info" className="text-xs px-2.5 py-0.5">
+                <Badge variant="primary" className="text-xs px-2.5 py-0.5">
                   {category.articles.length}{' '}
                   {category.articles.length === 1 ? 'Article' : 'Articles'}
                 </Badge>
               </div>
 
               {category.description && (
-                <p className="text-sm text-zinc-400 max-w-2xl pl-13">{category.description}</p>
+                <p className="text-sm text-zinc-400 max-w-2xl">{category.description}</p>
               )}
             </div>
 
@@ -174,6 +175,6 @@ export default async function HelpCategoryPage({ params }: HelpCategoryPageProps
         {/* Support CTA */}
         <HelpSupportCTA />
       </div>
-    </div>
+    </PageShell>
   );
 }
