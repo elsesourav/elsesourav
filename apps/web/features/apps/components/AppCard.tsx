@@ -53,8 +53,8 @@ export function AppCard({ app, index, featured = false }: AppCardProps) {
                 )}
                 <span className="text-zinc-400 font-medium">{app.primaryCategory}</span>
               </div>
-              <span className="text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-full text-[10px] font-medium flex items-center gap-1 border border-amber-400/20">
-                <Sparkles className="w-2.5 h-2.5 fill-current" /> Flagship Work
+              <span className="text-indigo-300 bg-indigo-950/60 px-2.5 py-0.5 rounded-full text-[10px] font-medium font-mono flex items-center gap-1 border border-indigo-800/40">
+                <Sparkles className="w-2.5 h-2.5 text-indigo-400" /> Selected Project
               </span>
             </div>
 
