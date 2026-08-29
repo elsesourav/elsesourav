@@ -28,7 +28,7 @@ async function main() {
       email: 'elsesourav.auth@gmail.com',
       displayName: 'Sourav (ElseSourav)',
       username: 'elsesourav',
-      photoUrl: 'https://res.cloudinary.com/diqw2sjl8/image/upload/v1/avatars/elsesourav.png',
+      photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80',
       bio: 'Full-stack software architect, open-source enthusiast, creator of ElseSourav platform & developer utilities.',
       role: UserRole.ADMIN,
       preferences: { theme: 'dark', emailNotifications: true, reducedMotion: false },
@@ -43,7 +43,7 @@ async function main() {
       email: 'alex.chen@elsesourav.com',
       displayName: 'Alex Chen',
       username: 'alexchen',
-      photoUrl: 'https://res.cloudinary.com/diqw2sjl8/image/upload/v1/avatars/alex.png',
+      photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80',
       bio: 'Staff systems engineer & developer tooling advocate.',
       role: UserRole.STAFF,
       preferences: { theme: 'dark', emailNotifications: true },
@@ -58,7 +58,7 @@ async function main() {
       email: 'sarah.c@example.com',
       displayName: 'Sarah Connor',
       username: 'sarahconnor',
-      photoUrl: 'https://res.cloudinary.com/diqw2sjl8/image/upload/v1/avatars/sarah.png',
+      photoUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80',
       bio: 'Frontend engineer specializing in React 19, WebGL, and design systems.',
       role: UserRole.USER,
       preferences: { theme: 'dark', emailNotifications: false },
@@ -73,7 +73,7 @@ async function main() {
       email: 'david.m@example.com',
       displayName: 'David Miller',
       username: 'davidm',
-      photoUrl: 'https://res.cloudinary.com/diqw2sjl8/image/upload/v1/avatars/david.png',
+      photoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80',
       bio: 'DevOps enthusiast and backend cloud infrastructure developer.',
       role: UserRole.USER,
       preferences: { theme: 'dark', emailNotifications: true },
@@ -88,7 +88,7 @@ async function main() {
       email: 'elena.r@example.com',
       displayName: 'Elena Rostova',
       username: 'elenar',
-      photoUrl: 'https://res.cloudinary.com/diqw2sjl8/image/upload/v1/avatars/elena.png',
+      photoUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80',
       bio: 'Product designer & creative coder passionate about typography and UI accessibility.',
       role: UserRole.USER,
       preferences: { theme: 'dark', emailNotifications: true },
@@ -211,9 +211,9 @@ async function main() {
       shortDescription: 'Hardware-accelerated web terminal emulator with multiplexing.',
       description:
         'A cutting-edge WebGL-powered terminal emulator supporting split panes, custom themes, SSH tunnels, and lightning-fast rendering.',
-      iconUrl: 'https://res.cloudinary.com/diqw2sjl8/image/upload/v1/apps/terminal-pro-icon.png',
+      iconUrl: 'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=200&q=80',
       featuredImageUrl:
-        'https://res.cloudinary.com/diqw2sjl8/image/upload/v1/apps/terminal-pro-banner.png',
+        'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=1200&q=80',
       demoUrl: 'https://terminal.elsesourav.com',
       status: PublishStatus.PUBLISHED,
       isFeatured: true,
@@ -283,9 +283,9 @@ async function main() {
       shortDescription: 'Professional color palette generator and WCAG contrast analyzer.',
       description:
         'Generate harmonious color systems, test WCAG 2.1 AA/AAA accessibility contrast in real-time, and export directly to Tailwind CSS and CSS variables.',
-      iconUrl: 'https://res.cloudinary.com/diqw2sjl8/image/upload/v1/apps/palette-studio-icon.png',
+      iconUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=200&q=80',
       featuredImageUrl:
-        'https://res.cloudinary.com/diqw2sjl8/image/upload/v1/apps/palette-studio-banner.png',
+        'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&q=80',
       demoUrl: 'https://palette.elsesourav.com',
       status: PublishStatus.PUBLISHED,
       isFeatured: true,
@@ -354,9 +354,9 @@ async function main() {
       shortDescription: 'Adaptive Pomodoro focus timer with deep git commit telemetry.',
       description:
         'Stay in the zone with smart interval timing, ambient soundscapes, task sprint tracking, and GitHub commit streak integrations.',
-      iconUrl: 'https://res.cloudinary.com/diqw2sjl8/image/upload/v1/apps/focusflow-icon.png',
+      iconUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=200&q=80',
       featuredImageUrl:
-        'https://res.cloudinary.com/diqw2sjl8/image/upload/v1/apps/focusflow-banner.png',
+        'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=80',
       demoUrl: 'https://focus.elsesourav.com',
       status: PublishStatus.PUBLISHED,
       isFeatured: false,
@@ -412,9 +412,9 @@ async function main() {
       shortDescription: 'Local container & microservice orchestrator for development.',
       description:
         'Manage Docker containers, PostgreSQL databases, and local server instances from a single unified web dashboard.',
-      iconUrl: 'https://res.cloudinary.com/diqw2sjl8/image/upload/v1/apps/devdock-icon.png',
+      iconUrl: 'https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=200&q=80',
       featuredImageUrl:
-        'https://res.cloudinary.com/diqw2sjl8/image/upload/v1/apps/devdock-banner.png',
+        'https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=1200&q=80',
       demoUrl: 'https://devdock.elsesourav.com',
       status: PublishStatus.PUBLISHED,
       isFeatured: true,
@@ -469,9 +469,9 @@ async function main() {
       shortDescription: 'Visual regular expression debugger and syntax tree analyzer.',
       description:
         'Break down complex regular expressions into understandable visual state machines with real-time match highlighting and unit tests.',
-      iconUrl: 'https://res.cloudinary.com/diqw2sjl8/image/upload/v1/apps/regexlens-icon.png',
+      iconUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=200&q=80',
       featuredImageUrl:
-        'https://res.cloudinary.com/diqw2sjl8/image/upload/v1/apps/regexlens-banner.png',
+        'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&q=80',
       demoUrl: 'https://regex.elsesourav.com',
       status: PublishStatus.PUBLISHED,
       isFeatured: false,
@@ -597,7 +597,7 @@ Client UI -> Server Actions -> Domain Services -> Repositories -> Prisma
 
 The result is a lightning-fast ecosystem that boots in under 100ms with full WCAG AA compliance.`,
       coverImageUrl:
-        'https://res.cloudinary.com/diqw2sjl8/image/upload/v1/blog/v2-architecture.png',
+        'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80',
       status: PublishStatus.PUBLISHED,
       readingTime: 6,
       viewsCount: 1420,
@@ -635,7 +635,7 @@ if (!isOwner && !isAdmin) {
 }
 \`\`\``,
       coverImageUrl:
-        'https://res.cloudinary.com/diqw2sjl8/image/upload/v1/blog/security-zero-trust.png',
+        'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1200&q=80',
       status: PublishStatus.PUBLISHED,
       readingTime: 5,
       viewsCount: 980,
@@ -663,7 +663,7 @@ Building a world-class user interface requires balancing modern aesthetics (like
 - **Contrast Ratios**: Body text exceeding 7:1 ratio on deep zinc backgrounds.
 - **Focus Rings**: High-visibility \`ring-2 ring-indigo-500\` with contrast offsets.
 - **Reduced Motion**: Respecting \`prefers-reduced-motion\` for transition smoothness.`,
-      coverImageUrl: 'https://res.cloudinary.com/diqw2sjl8/image/upload/v1/blog/design-tokens.png',
+      coverImageUrl: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=1200&q=80',
       status: PublishStatus.PUBLISHED,
       readingTime: 4,
       viewsCount: 840,
