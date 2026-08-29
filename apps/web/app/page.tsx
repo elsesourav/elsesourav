@@ -279,17 +279,41 @@ export default async function HomePage() {
                     href={ROUTES.APPS}
                     className="text-sm font-medium text-indigo-400 hover:text-indigo-300 flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded p-1"
                   >
-                    <span>Browse full catalog</span>
+                    <span>Browse full catalog ({appsResult.totalCount})</span>
                     <ArrowRight className="w-4 h-4" />
                   </Link>
                 }
               />
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {featuredApps.map((app) => (
-                  <AppCard key={app.id} app={app} />
-                ))}
-              </div>
+              {featuredApps.length >= 3 ? (
+                <div className="space-y-6">
+                  {/* Top Tier: Flagship Featured Work + 2 Supporting Archival Cards */}
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+                    <div className="lg:col-span-7">
+                      <AppCard app={featuredApps[0]!} index={0} featured={true} />
+                    </div>
+                    <div className="lg:col-span-5 flex flex-col gap-6">
+                      <AppCard app={featuredApps[1]!} index={1} />
+                      <AppCard app={featuredApps[2]!} index={2} />
+                    </div>
+                  </div>
+
+                  {/* Optional Remaining Tier */}
+                  {featuredApps.length > 3 && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
+                      {featuredApps.slice(3).map((app, idx) => (
+                        <AppCard key={app.id} app={app} index={idx + 3} />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {featuredApps.map((app, idx) => (
+                    <AppCard key={app.id} app={app} index={idx} />
+                  ))}
+                </div>
+              )}
             </Container>
           </Section>
         )}

@@ -73,4 +73,13 @@ describe('Public Apps Listing Integration', () => {
 
     expect(result).toHaveLength(0);
   });
+
+  it('verifies archival card properties on published apps', () => {
+    const flagship = mockApps[0]!;
+    expect(flagship.isFeatured).toBe(true);
+    expect(flagship.currentVersion).toBe('2.0.0');
+    expect(flagship.platforms).toContain('web');
+    expect(flagship.platforms).toContain('macos');
+    expect(flagship.primaryCategory).toBe('Developer Tools');
+  });
 });

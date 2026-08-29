@@ -4,66 +4,159 @@ import Image from 'next/image';
 import { Card, Badge } from '@elsesourav/ui';
 import { getAppIconUrl } from '@elsesourav/media';
 import type { AppListItem, AppPlatform } from '@elsesourav/types';
-import { Sparkles, Globe, Compass, Smartphone, Apple, Terminal } from 'lucide-react';
+import { Sparkles, Globe, Compass, Smartphone, Apple, Terminal, ArrowRight } from 'lucide-react';
 
-interface AppCardProps {
+export interface AppCardProps {
   app: AppListItem;
+  index?: number;
+  featured?: boolean;
 }
 
 function PlatformIcon({ platform }: { platform: AppPlatform }) {
   switch (platform) {
     case 'web':
-      return <Globe className="w-3 h-3" />;
+      return <Globe className="w-3.5 h-3.5" />;
     case 'chrome':
-      return <Compass className="w-3 h-3" />;
+      return <Compass className="w-3.5 h-3.5" />;
     case 'android':
     case 'ios':
-      return <Smartphone className="w-3 h-3" />;
+      return <Smartphone className="w-3.5 h-3.5" />;
     case 'macos':
-      return <Apple className="w-3 h-3" />;
+      return <Apple className="w-3.5 h-3.5" />;
     case 'github':
     case 'linux':
     case 'windows':
     default:
-      return <Terminal className="w-3 h-3" />;
+      return <Terminal className="w-3.5 h-3.5" />;
   }
 }
 
-export function AppCard({ app }: AppCardProps) {
+export function AppCard({ app, index, featured = false }: AppCardProps) {
   const iconUrl = app.iconUrl ? getAppIconUrl(app.iconUrl, 96) : null;
+  const formattedIndex = typeof index === 'number' ? String(index + 1).padStart(2, '0') : null;
+
+  if (featured) {
+    return (
+      <Link href={`/apps/${app.slug}`} className="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-3xl">
+        <Card className="h-full border-zinc-800/90 bg-gradient-to-br from-zinc-900/90 to-zinc-950/90 hover:border-indigo-500/60 p-6 sm:p-8 rounded-3xl transition-all duration-300 flex flex-col justify-between backdrop-blur-md group-hover:shadow-2xl group-hover:shadow-indigo-500/10 relative overflow-hidden">
+          {/* Subtle Ambient Accent */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-2xl pointer-events-none -mr-16 -mt-16 group-hover:bg-indigo-500/10 transition-colors" />
+
+          <div className="space-y-4 relative z-10">
+            {/* Top metadata index bar */}
+            <div className="flex items-center justify-between text-xs pb-3 border-b border-zinc-800/80">
+              <div className="flex items-center gap-2">
+                {formattedIndex && (
+                  <span className="font-mono text-indigo-400 font-bold text-xs bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-800/40">
+                    {formattedIndex}
+                  </span>
+                )}
+                <span className="text-zinc-400 font-medium">{app.primaryCategory}</span>
+              </div>
+              <span className="text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-full text-[10px] font-medium flex items-center gap-1 border border-amber-400/20">
+                <Sparkles className="w-2.5 h-2.5 fill-current" /> Flagship Work
+              </span>
+            </div>
+
+            {/* Icon + Title */}
+            <div className="flex items-start gap-4 pt-1">
+              <div className="relative w-14 h-14 rounded-2xl overflow-hidden bg-zinc-800/90 border border-zinc-700/60 shrink-0 flex items-center justify-center shadow-md">
+                {iconUrl ? (
+                  <Image
+                    src={iconUrl}
+                    alt={`${app.name} icon`}
+                    width={56}
+                    height={56}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                ) : (
+                  <Sparkles className="w-7 h-7 text-indigo-400" />
+                )}
+              </div>
+
+              <div className="min-w-0 flex-1">
+                <h3 className="font-bold text-lg sm:text-xl text-white group-hover:text-indigo-200 transition-colors truncate">
+                  {app.name}
+                </h3>
+                {app.currentVersion && (
+                  <span className="text-xs text-zinc-500 font-mono">v{app.currentVersion}</span>
+                )}
+              </div>
+            </div>
+
+            {/* Description */}
+            <p className="text-sm text-zinc-400 line-clamp-3 leading-relaxed">
+              {app.shortDescription}
+            </p>
+          </div>
+
+          {/* Footer Bar */}
+          <div className="flex items-center justify-between pt-4 mt-6 border-t border-zinc-800/80 text-xs text-zinc-400 relative z-10">
+            <div className="flex items-center gap-2">
+              {app.platforms.slice(0, 4).map((platform) => (
+                <span
+                  key={platform}
+                  title={platform.toUpperCase()}
+                  className="w-6 h-6 rounded-lg bg-zinc-800/80 flex items-center justify-center text-zinc-400 group-hover:text-zinc-200 transition-colors"
+                >
+                  <PlatformIcon platform={platform} />
+                </span>
+              ))}
+            </div>
+
+            <span className="text-indigo-400 font-medium flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+              <span>Inspect Application</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </span>
+          </div>
+        </Card>
+      </Link>
+    );
+  }
 
   return (
-    <Link href={`/apps/${app.slug}`} className="group block h-full focus:outline-none">
-      <Card className="h-full border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-indigo-500/50 p-5 rounded-2xl transition-all duration-300 flex flex-col justify-between backdrop-blur-sm group-hover:shadow-xl group-hover:shadow-indigo-500/10 group-focus-visible:ring-2 group-focus-visible:ring-indigo-500">
+    <Link href={`/apps/${app.slug}`} className="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-2xl">
+      <Card className="h-full border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-indigo-500/50 p-5 rounded-2xl transition-all duration-300 flex flex-col justify-between backdrop-blur-sm group-hover:shadow-xl group-hover:shadow-indigo-500/10">
         <div className="space-y-3">
-          {/* Header row with icon, title, and category */}
-          <div className="flex items-start gap-3.5">
-            <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-zinc-800/80 border border-zinc-700/50 shrink-0 flex items-center justify-center">
+          {/* Header row with index, icon, title, and category */}
+          <div className="flex items-center justify-between text-xs pb-2 border-b border-zinc-800/60">
+            <div className="flex items-center gap-2">
+              {formattedIndex && (
+                <span className="font-mono text-zinc-500 font-medium text-[11px]">
+                  {formattedIndex}
+                </span>
+              )}
+              <span className="text-zinc-400 text-xs font-medium">{app.primaryCategory}</span>
+            </div>
+            {app.isFeatured && (
+              <span className="shrink-0 text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded text-[10px] font-medium flex items-center gap-1 border border-amber-400/20">
+                <Sparkles className="w-2.5 h-2.5 fill-current" /> Featured
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-start gap-3.5 pt-1">
+            <div className="relative w-11 h-11 rounded-xl overflow-hidden bg-zinc-800/80 border border-zinc-700/50 shrink-0 flex items-center justify-center">
               {iconUrl ? (
                 <Image
                   src={iconUrl}
                   alt={`${app.name} icon`}
-                  width={48}
-                  height={48}
+                  width={44}
+                  height={44}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               ) : (
-                <Sparkles className="w-6 h-6 text-indigo-400" />
+                <Sparkles className="w-5 h-5 text-indigo-400" />
               )}
             </div>
 
             <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-1.5 justify-between">
-                <h3 className="font-semibold text-base text-zinc-100 group-hover:text-white transition-colors truncate">
-                  {app.name}
-                </h3>
-                {app.isFeatured && (
-                  <span className="shrink-0 text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded text-[10px] font-medium flex items-center gap-1 border border-amber-400/20">
-                    <Sparkles className="w-2.5 h-2.5 fill-current" /> Featured
-                  </span>
-                )}
-              </div>
-              <span className="text-xs text-zinc-400 font-medium">{app.primaryCategory}</span>
+              <h3 className="font-semibold text-base text-zinc-100 group-hover:text-white transition-colors truncate">
+                {app.name}
+              </h3>
+              {app.currentVersion && (
+                <span className="text-[11px] text-zinc-500 font-mono">v{app.currentVersion}</span>
+              )}
             </div>
           </div>
 
@@ -87,14 +180,10 @@ export function AppCard({ app }: AppCardProps) {
             ))}
           </div>
 
-          {app.currentVersion && (
-            <Badge
-              variant="outline"
-              className="text-[10px] px-1.5 py-0 text-zinc-400 border-zinc-800 font-mono"
-            >
-              v{app.currentVersion}
-            </Badge>
-          )}
+          <span className="text-zinc-400 group-hover:text-indigo-400 font-medium flex items-center gap-1 text-[11px] group-hover:translate-x-0.5 transition-transform">
+            <span>Explore</span>
+            <ArrowRight className="w-3 h-3" />
+          </span>
         </div>
       </Card>
     </Link>
