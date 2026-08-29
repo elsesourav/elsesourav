@@ -132,4 +132,13 @@ describe('Public Apps Listing Integration', () => {
       })
     );
   });
+
+  it('validates archival index row presentation fields for published apps', () => {
+    const item = mockApps[1]!;
+    expect(item.name).toBe('Focus Timer');
+    expect(item.shortDescription).toBe('Minimalist Pomodoro timer');
+    expect(item.primaryCategory).toBe('Productivity');
+    expect(item.platforms).toEqual(['web']);
+    expect(item.currentVersion).toBe('1.2.0');
+  });
 });
