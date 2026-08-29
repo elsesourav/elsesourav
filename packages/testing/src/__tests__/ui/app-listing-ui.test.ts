@@ -95,4 +95,41 @@ describe('Public Apps Listing Integration', () => {
       expect.objectContaining({ sortField: 'publishedAt', sortDirection: 'desc' })
     );
   });
+
+  it('performs unified discovery query with search, category, platform, and pagination', async () => {
+    const mockRepo = {
+      searchPublic: vi.fn().mockResolvedValue({
+        items: [mockApps[0]],
+        totalCount: 1,
+        page: 1,
+        limit: 12,
+        totalPages: 1,
+        hasMore: false,
+      }),
+    } as unknown as AppRepository;
+
+    const queryService = new AppQueryService(mockRepo);
+    const result = await queryService.discoverApps({
+      query: 'terminal',
+      filters: {
+        categorySlug: 'dev-tools',
+        platform: 'macos',
+      },
+      sort: 'popularity',
+      page: 1,
+      limit: 12,
+    });
+
+    expect(result.totalCount).toBe(1);
+    expect(result.items[0]?.name).toBe('Terminal Pro');
+    expect(mockRepo.searchPublic).toHaveBeenCalledWith(
+      expect.objectContaining({
+        query: 'terminal',
+        filters: expect.objectContaining({
+          categorySlug: 'dev-tools',
+          platform: 'macos',
+        }),
+      })
+    );
+  });
 });

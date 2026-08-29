@@ -3,8 +3,8 @@
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Input, Button } from '@elsesourav/ui';
-import type { CategorySummary, TagSummary } from '@elsesourav/types';
-import { Search, X, SlidersHorizontal, Sparkles } from 'lucide-react';
+import type { CategorySummary, TagSummary, AppPlatform } from '@elsesourav/types';
+import { Search, X, SlidersHorizontal, Layers, Laptop } from 'lucide-react';
 
 interface AppDiscoveryBarProps {
   categories?: readonly CategorySummary[];
@@ -17,6 +17,7 @@ export function AppDiscoveryBar({ categories = [], tags = [] }: AppDiscoveryBarP
 
   const currentCategory = searchParams.get('category') || '';
   const currentTag = searchParams.get('tag') || '';
+  const currentPlatform = searchParams.get('platform') || '';
   const currentSearch = searchParams.get('q') || searchParams.get('search') || '';
   const currentSort = searchParams.get('sort') || 'sortOrder';
 
@@ -52,21 +53,25 @@ export function AppDiscoveryBar({ categories = [], tags = [] }: AppDiscoveryBarP
   };
 
   const hasActiveFilters = Boolean(
-    currentCategory || currentTag || currentSearch || (currentSort && currentSort !== 'sortOrder')
+    currentCategory ||
+      currentTag ||
+      currentPlatform ||
+      currentSearch ||
+      (currentSort && currentSort !== 'sortOrder')
   );
 
   return (
     <div className="space-y-4 w-full" aria-label="Search and Discovery Controls">
-      {/* Search Input and Sort Select Bar */}
+      {/* Search Input, Platform, and Sort Select Bar */}
       <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
         <form onSubmit={handleSearchSubmit} className="relative flex-1 max-w-md">
           <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <Input
             type="text"
-            placeholder="Search apps by name, description, keyword..."
+            placeholder="Search applications, tags, keywords..."
             value={searchVal}
             onChange={(e) => setSearchVal(e.target.value)}
-            className="pl-9 pr-8 bg-zinc-900/60 border-zinc-800 text-sm focus:border-indigo-500 text-zinc-100 rounded-xl"
+            className="pl-9 pr-8 bg-zinc-900/60 border-zinc-800 text-sm focus:border-indigo-500 text-zinc-100 rounded-xl min-h-[42px]"
             aria-label="Search applications"
           />
           {searchVal && (
@@ -76,7 +81,7 @@ export function AppDiscoveryBar({ categories = [], tags = [] }: AppDiscoveryBarP
                 setSearchVal('');
                 updateFilters({ q: null });
               }}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 p-1"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 p-1 rounded-md"
               aria-label="Clear search query"
             >
               <X className="w-3.5 h-3.5" />
@@ -84,23 +89,44 @@ export function AppDiscoveryBar({ categories = [], tags = [] }: AppDiscoveryBarP
           )}
         </form>
 
-        <div className="flex items-center gap-2">
-          <SlidersHorizontal className="w-3.5 h-3.5 text-zinc-500 hidden sm:block" />
-          <select
-            value={currentSort}
-            onChange={(e) => updateFilters({ sort: e.target.value })}
-            className="bg-zinc-900/80 border border-zinc-800 text-zinc-300 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-indigo-500"
-            aria-label="Sort applications"
-          >
-            <option value="sortOrder">Featured & Ranked</option>
-            <option value="newest">Newest Releases</option>
-            <option value="name">Name (A-Z)</option>
-            <option value="popularity">Most Popular</option>
-          </select>
+        <div className="flex items-center gap-2.5">
+          {/* Platform Filter Select */}
+          <div className="flex items-center gap-1.5">
+            <Laptop className="w-3.5 h-3.5 text-zinc-500 hidden md:block" />
+            <select
+              value={currentPlatform}
+              onChange={(e) => updateFilters({ platform: e.target.value || null })}
+              className="bg-zinc-900/80 border border-zinc-800 text-zinc-300 text-xs rounded-xl px-3 py-2 min-h-[42px] focus:outline-none focus:border-indigo-500"
+              aria-label="Filter by platform"
+            >
+              <option value="">All Platforms</option>
+              <option value="web">Web Browser</option>
+              <option value="macos">macOS</option>
+              <option value="linux">Linux</option>
+              <option value="windows">Windows</option>
+              <option value="chrome">Chrome Extension</option>
+            </select>
+          </div>
+
+          {/* Sort Select */}
+          <div className="flex items-center gap-1.5">
+            <SlidersHorizontal className="w-3.5 h-3.5 text-zinc-500 hidden md:block" />
+            <select
+              value={currentSort}
+              onChange={(e) => updateFilters({ sort: e.target.value })}
+              className="bg-zinc-900/80 border border-zinc-800 text-zinc-300 text-xs rounded-xl px-3 py-2 min-h-[42px] focus:outline-none focus:border-indigo-500"
+              aria-label="Sort applications"
+            >
+              <option value="sortOrder">Featured & Ranked</option>
+              <option value="newest">Newest Releases</option>
+              <option value="name">Alphabetical (A-Z)</option>
+              <option value="popularity">Most Popular</option>
+            </select>
+          </div>
         </div>
       </div>
 
-      {/* Category Filter Pills */}
+      {/* Category Filter Carousel */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
         <button
           type="button"
@@ -164,10 +190,10 @@ export function AppDiscoveryBar({ categories = [], tags = [] }: AppDiscoveryBarP
         </div>
       )}
 
-      {/* Active Filter Badges */}
+      {/* Active Filter Badges Strip */}
       {hasActiveFilters && (
         <div className="flex flex-wrap items-center gap-2 pt-1 text-xs" aria-label="Active filters">
-          <span className="text-zinc-500 text-[11px]">Active:</span>
+          <span className="text-zinc-500 text-[11px]">Active Filters:</span>
 
           {currentSearch && (
             <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-zinc-800/80 text-zinc-300 border border-zinc-700/60">
@@ -175,7 +201,7 @@ export function AppDiscoveryBar({ categories = [], tags = [] }: AppDiscoveryBarP
               <button
                 type="button"
                 onClick={() => updateFilters({ q: null })}
-                className="hover:text-white"
+                className="hover:text-white ml-0.5"
                 aria-label="Remove search filter"
               >
                 <X className="w-3 h-3" />
@@ -189,8 +215,22 @@ export function AppDiscoveryBar({ categories = [], tags = [] }: AppDiscoveryBarP
               <button
                 type="button"
                 onClick={() => updateFilters({ category: null })}
-                className="hover:text-white"
+                className="hover:text-white ml-0.5"
                 aria-label="Remove category filter"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </span>
+          )}
+
+          {currentPlatform && (
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-zinc-800/80 text-zinc-300 border border-zinc-700/60">
+              <span>Platform: {currentPlatform}</span>
+              <button
+                type="button"
+                onClick={() => updateFilters({ platform: null })}
+                className="hover:text-white ml-0.5"
+                aria-label="Remove platform filter"
               >
                 <X className="w-3 h-3" />
               </button>
@@ -203,7 +243,7 @@ export function AppDiscoveryBar({ categories = [], tags = [] }: AppDiscoveryBarP
               <button
                 type="button"
                 onClick={() => updateFilters({ tag: null })}
-                className="hover:text-white"
+                className="hover:text-white ml-0.5"
                 aria-label="Remove tag filter"
               >
                 <X className="w-3 h-3" />

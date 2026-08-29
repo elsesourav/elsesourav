@@ -10,7 +10,7 @@ import { AppPagination } from '@/features/apps/components/AppPagination';
 import { AppsEmptyState } from '@/features/apps/components/AppsEmptyState';
 import { PageShell, PageHeader, Badge } from '@elsesourav/ui';
 import { SITE_CONFIG } from '@elsesourav/config';
-import type { AppSortOption } from '@elsesourav/types';
+import type { AppSortOption, AppPlatform } from '@elsesourav/types';
 
 interface AppsPageProps {
   searchParams: Promise<{
@@ -18,6 +18,7 @@ interface AppsPageProps {
     search?: string;
     category?: string;
     tag?: string;
+    platform?: string;
     sort?: string;
     page?: string;
   }>;
@@ -27,13 +28,16 @@ export async function generateMetadata({ searchParams }: AppsPageProps): Promise
   const params = await searchParams;
   const query = (params.q || params.search || '').trim();
   const category = params.category;
-  const hasFilterOrQuery = Boolean(query || category || params.tag || params.page);
+  const platform = params.platform;
+  const hasFilterOrQuery = Boolean(query || category || platform || params.tag || params.page);
 
   const title = query
     ? `Search: "${query}" in Applications`
     : category
       ? `${category.charAt(0).toUpperCase() + category.slice(1)} Applications`
-      : 'Explore Applications';
+      : platform
+        ? `${platform.toUpperCase()} Software & Tools`
+        : 'Explore Applications';
 
   const description =
     'Explore the complete ecosystem of web apps, browser extensions, developer utilities, and software created by ElseSourav.';
@@ -74,6 +78,7 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
   const query = (params.q || params.search || '').trim();
   const categorySlug = params.category || undefined;
   const tagSlug = params.tag || undefined;
+  const platform = (params.platform as AppPlatform) || undefined;
   const page = parseInt(params.page || '1', 10) || 1;
   const sort = (params.sort as AppSortOption) || 'sortOrder';
 
@@ -86,6 +91,7 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
       filters: {
         categorySlug,
         tagSlug,
+        platform,
       },
       sort,
       page,
@@ -94,7 +100,7 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
   ]);
 
   const hasFilters = Boolean(
-    categorySlug || tagSlug || query || (params.sort && params.sort !== 'sortOrder')
+    categorySlug || tagSlug || platform || query || (params.sort && params.sort !== 'sortOrder')
   );
 
   const jsonLd = {
@@ -139,7 +145,7 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
           description="Browse the complete catalog of web applications, developer workstations, extensions, and open-source utilities built for speed, utility, and reliable execution."
         />
 
-        {/* Discovery, Search & Filtering Controls */}
+        {/* Discovery, Search, Category & Platform Controls */}
         <AppDiscoveryBar categories={categories} tags={tags} />
 
         {/* Applications Catalog Grid or Empty State */}
