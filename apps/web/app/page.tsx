@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import { getServerSession } from '@elsesourav/auth';
-import { Button, Badge, Section, SectionHeader, ActionGroup, Container } from '@elsesourav/ui';
+import { Button, Section, SectionHeader, ActionGroup, Container } from '@elsesourav/ui';
 import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
 import { SiteService } from '@elsesourav/database';
 import { discoverPublishedApps } from '@/features/apps/queries/get-apps';
@@ -534,9 +534,9 @@ export default async function HomePage() {
         {/* 4. Creator Context & Guiding Philosophy */}
         <Section spacing="lg" surface="subtle">
           <Container size="lg">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              {/* Creator Intro */}
-              <div className="lg:col-span-5 space-y-4">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+              {/* Left Column: Creator Statement & Narrative */}
+              <div className="lg:col-span-5 space-y-5">
                 <div className="flex items-center gap-3">
                   {identity.creator.avatarUrl ? (
                     <div className="w-12 h-12 rounded-2xl bg-indigo-950/60 border border-indigo-500/40 overflow-hidden shrink-0 shadow-md">
@@ -547,14 +547,24 @@ export default async function HomePage() {
                       />
                     </div>
                   ) : null}
-                  <Badge variant="outline" className="text-xs border-zinc-700 text-zinc-400">
-                    Creator & Philosophy
-                  </Badge>
+                  <div>
+                    <div className="text-xs font-mono text-indigo-400 font-semibold uppercase tracking-wider">
+                      How I Build
+                    </div>
+                    <div className="text-xs text-zinc-400">
+                      {identity.creator.name} · {identity.creator.title}
+                    </div>
+                  </div>
                 </div>
-                <h2 className="text-h2 font-bold tracking-tight text-white">
-                  Built with purpose & strong fundamentals
+
+                <h2 className="text-h2 font-bold tracking-tight text-white leading-snug">
+                  I care about software that is understandable, useful, fast, and considerate.
                 </h2>
-                <p className="text-body text-zinc-400 leading-relaxed">{identity.creator.shortBio}</p>
+
+                <p className="text-body text-zinc-400 leading-relaxed">
+                  {identity.creator.shortBio || identity.creator.positioning}
+                </p>
+
                 <div className="pt-2">
                   <Link href={ROUTES.ABOUT}>
                     <Button
@@ -562,26 +572,34 @@ export default async function HomePage() {
                       size="sm"
                       className="border-zinc-800 text-xs gap-1.5 text-zinc-300 hover:text-white"
                     >
-                      <span>Read About {identity.creator.name} & Studio Mission</span>
+                      <span>Read the complete studio mission & bio</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </Button>
                   </Link>
                 </div>
               </div>
 
-              {/* Core Principles Grid */}
+              {/* Right Column: Ordered Principles Grid */}
               <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {identity.creator.principles.map((principle: string, idx: number) => (
-                  <div
-                    key={idx}
-                    className="p-4 rounded-2xl border border-zinc-800/80 bg-zinc-900/40 flex items-start gap-3 shadow-sm"
-                  >
-                    <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
-                    <span className="text-xs text-zinc-300 font-medium leading-relaxed">
-                      {principle}
-                    </span>
-                  </div>
-                ))}
+                {identity.creator.principles.map((principle: string, idx: number) => {
+                  const formattedIdx = String(idx + 1).padStart(2, '0');
+                  return (
+                    <div
+                      key={idx}
+                      className="p-5 rounded-2xl border border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/70 hover:border-zinc-700/80 transition-colors space-y-2 shadow-sm"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-xs font-bold text-indigo-400/90 bg-indigo-950/60 border border-indigo-800/40 px-2 py-0.5 rounded">
+                          {formattedIdx}
+                        </span>
+                        <CheckCircle2 className="w-3.5 h-3.5 text-zinc-600" />
+                      </div>
+                      <p className="text-sm text-zinc-200 font-medium leading-snug">
+                        {principle}
+                      </p>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </Container>
