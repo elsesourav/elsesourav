@@ -160,8 +160,8 @@
     "hash": "77c2070e8bf4e1c0ec7507124f5bba82"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/repositories/user.repository.ts": {
-    "mtime": 1787941637.2460723,
-    "hash": "e2bf3dc8dfe4606f97a68c881b077c4c"
+    "mtime": 1787979063.2000892,
+    "hash": "88b1af226a57f29f2bd1b0a89081572b"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/repositories/notification.repository.ts": {
     "mtime": 1787976320.9328775,
@@ -243,6 +243,10 @@
     "mtime": 1787946510.1509461,
     "hash": "a2480c795983a8037940b8d8887a5a04"
   },
+  "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/__tests__/admin-users-domain.test.ts": {
+    "mtime": 1787979132.4021645,
+    "hash": "1c1e2004f31666cedd606fb2e3d32428"
+  },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/__tests__/app-search.test.ts": {
     "mtime": 1787944263.8877118,
     "hash": "4beace138bb8e5bbf56d295e6b6ed342"
@@ -296,8 +300,8 @@
     "hash": "ca2f5b501893649120c54742690b1329"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/services/user.service.ts": {
-    "mtime": 1787944752.8462634,
-    "hash": "f96e559e712471fe7f8b55d4b0d9aa54"
+    "mtime": 1787979072.962102,
+    "hash": "93838208b835984d44cacc412c046dfc"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/services/library.service.ts": {
     "mtime": 1787944419.5387113,
@@ -376,8 +380,8 @@
     "hash": "72f76bb9bf4298f1720c51b18acabe6f"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/types/src/user.types.ts": {
-    "mtime": 1787941616.5342143,
-    "hash": "8a0b106b800c58d1597ab059f7655ecc"
+    "mtime": 1787979029.121179,
+    "hash": "b71361d4f367f9208959a577eeb82495"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/types/src/__tests__/error.types.test.ts": {
     "mtime": 1787939879.4132726,
@@ -492,8 +496,8 @@
     "hash": "96fa27e8c263d85bd7260487d4c26179"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/validation/src/user.schema.ts": {
-    "mtime": 1787941715.4039583,
-    "hash": "6b325b8e8f741fe92500c21d593c1b41"
+    "mtime": 1787979041.9422684,
+    "hash": "a6ca8ca5139195755cd7c79e380b6f8d"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/validation/src/app.schema.ts": {
     "mtime": 1787977982.498202,
@@ -839,6 +843,14 @@
     "mtime": 1787978736.1741333,
     "hash": "e186ac6b44d1e796152282b300c3c92d"
   },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(admin)/admin/users/page.tsx": {
+    "mtime": 1787979114.4662414,
+    "hash": "c778fb239b1bce19a9a2702b58a16ded"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(admin)/admin/users/[id]/page.tsx": {
+    "mtime": 1787979120.5108178,
+    "hash": "149ea8519b1be4207f4b050e34539b4c"
+  },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(admin)/admin/apps/page.tsx": {
     "mtime": 1787978067.799013,
     "hash": "0c2124983c9f3ec14a1d1306483cb9f0"
@@ -914,6 +926,22 @@
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/support/actions/admin-support-actions.ts": {
     "mtime": 1787978858.586409,
     "hash": "b9193c9dbc6139b99339bc72052338c5"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/users/queries/get-admin-users.ts": {
+    "mtime": 1787979079.4698737,
+    "hash": "04cf3c46351b3a649bcac0227e979633"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/users/components/AdminUserDetailView.tsx": {
+    "mtime": 1787979107.6315703,
+    "hash": "23c6bad7cf73062936e9ff048b8ac210"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/users/components/AdminUsersTable.tsx": {
+    "mtime": 1787979094.8869784,
+    "hash": "3cec9d145bcccaea642c2a9ed6d639a0"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/users/actions/admin-users-actions.ts": {
+    "mtime": 1787979085.661541,
+    "hash": "a3892da2321cba9d5d7ce0b2ac4bd6b4"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/apps/queries/get-admin-apps.ts": {
     "mtime": 1787978021.7190073,

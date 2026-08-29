@@ -4,6 +4,8 @@ export type MediaType = 'avatar' | 'app_icon' | 'app_screenshot' | 'blog_cover' 
 
 export type MediaFolder = 'users' | 'apps' | 'blog' | 'help' | 'general';
 
+export type MediaDomain = 'apps' | 'blog' | 'help' | 'users' | 'support' | 'general';
+
 export interface MediaAsset {
   readonly id: ID;
   readonly publicId: string;
@@ -42,4 +44,35 @@ export interface DirectUploadParams {
   readonly mediaType: MediaType;
   readonly ownerUserId?: string;
   readonly customPublicId?: string;
+}
+
+export interface AdminMediaReference {
+  readonly resourceType: 'App' | 'BlogPost' | 'HelpArticle' | 'User' | 'SupportTicket';
+  readonly resourceId: string;
+  readonly resourceName: string;
+  readonly fieldName: string;
+}
+
+export interface AdminMediaItem {
+  readonly id: string;
+  readonly publicId: string;
+  readonly secureUrl: string;
+  readonly domain: MediaDomain;
+  readonly format?: string;
+  readonly width?: number;
+  readonly height?: number;
+  readonly bytes?: number;
+  readonly createdAt: Timestamp;
+  readonly isReferenced: boolean;
+  readonly references: readonly AdminMediaReference[];
+}
+
+export interface AdminMediaListResult {
+  readonly items: readonly AdminMediaItem[];
+  readonly total: number;
+  readonly page: number;
+  readonly limit: number;
+  readonly totalPages: number;
+  readonly totalReferenced: number;
+  readonly totalOrphans: number;
 }

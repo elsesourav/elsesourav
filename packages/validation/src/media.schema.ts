@@ -34,6 +34,16 @@ export const MediaFolderEnum = z.enum([
   'general',
 ]);
 
+export const MediaDomainEnum = z.enum([
+  'all',
+  'apps',
+  'blog',
+  'help',
+  'users',
+  'support',
+  'general',
+]);
+
 export const MediaSignatureRequestSchema = z.object({
   mediaType: MediaTypeEnum,
   folder: MediaFolderEnum,
@@ -55,5 +65,20 @@ export const MediaTransformationSchema = z.object({
   dpr: z.union([z.literal('auto'), z.literal(1), z.literal(2), z.literal(3)]).optional(),
 });
 
+export const AdminDeleteMediaSchema = z.object({
+  publicId: z.string().min(1, 'Public ID is required'),
+  force: z.boolean().optional().default(false),
+});
+
+export const AdminMediaFilterSchema = z.object({
+  domain: MediaDomainEnum.optional().default('all'),
+  status: z.enum(['all', 'referenced', 'orphan']).optional().default('all'),
+  search: z.string().max(100).optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(24),
+});
+
 export type MediaSignatureRequestInput = z.infer<typeof MediaSignatureRequestSchema>;
 export type MediaTransformationInput = z.infer<typeof MediaTransformationSchema>;
+export type AdminDeleteMediaInput = z.infer<typeof AdminDeleteMediaSchema>;
+export type AdminMediaFilterInput = z.infer<typeof AdminMediaFilterSchema>;

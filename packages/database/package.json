@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@elsesourav/config": "workspace:*",
+    "@elsesourav/media": "workspace:*",
     "@elsesourav/types": "workspace:*",
     "@elsesourav/validation": "workspace:*",
     "@prisma/client": "^6.4.1"

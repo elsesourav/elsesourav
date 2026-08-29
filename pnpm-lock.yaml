@@ -217,6 +217,9 @@ importers:
       '@elsesourav/config':
         specifier: workspace:*
         version: link:../config
+      '@elsesourav/media':
+        specifier: workspace:*
+        version: link:../media
       '@elsesourav/types':
         specifier: workspace:*
         version: link:../types
