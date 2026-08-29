@@ -38,3 +38,4 @@ export * from './components/pagination';
 // Data Display
 export * from './components/table';
 export * from './components/stat';
+export * from './components/markdown-renderer';
