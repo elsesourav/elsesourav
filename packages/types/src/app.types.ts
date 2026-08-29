@@ -64,6 +64,7 @@ export interface App {
   readonly demoUrl?: string;
   readonly videoUrl?: string;
   readonly primaryCategory: string;
+  readonly categoryId?: string;
   readonly tags: readonly string[];
   readonly status: AppStatus;
   readonly platforms: readonly AppPlatform[];

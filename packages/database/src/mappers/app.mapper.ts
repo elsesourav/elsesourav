@@ -36,6 +36,7 @@ export function mapPrismaAppToDomain(prismaApp: PrismaAppWithRelations): DomainA
     demoUrl: prismaApp.demoUrl ?? undefined,
     videoUrl: prismaApp.videoUrl ?? undefined,
     primaryCategory: prismaApp.category?.slug || 'other',
+    categoryId: prismaApp.categoryId,
     tags: prismaApp.tags?.map((t) => t.tag.slug) || [],
     platforms: (prismaApp.links?.map((l) => l.platform as AppPlatform) || ['web']) as readonly AppPlatform[],
     links:

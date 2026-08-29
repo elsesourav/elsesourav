@@ -39,9 +39,9 @@ export const CreateAppSchema = z.object({
   slug: z.string().min(2).regex(/^[a-z0-9-]+$/, 'Slug can only contain lowercase letters, numbers, and hyphens'),
   shortDescription: z.string().min(10).max(250),
   description: z.string().min(20),
-  iconUrl: z.string().url(),
+  iconUrl: z.string().url('Please provide a valid icon URL'),
   featuredImageUrl: z.string().url().optional(),
-  categoryId: z.string().min(1),
+  categoryId: z.string().min(1, 'Please select a category'),
   tagIds: z.array(z.string()).optional(),
   demoUrl: z.string().url().optional(),
   videoUrl: z.string().url().optional(),
@@ -53,6 +53,31 @@ export const CreateAppSchema = z.object({
 });
 
 export const UpdateAppSchema = CreateAppSchema.partial();
+
+export const PublishAppSchema = z.object({
+  version: z.string().min(1, 'Version is required (e.g. 1.0.0)'),
+  changelog: z.string().min(3, 'Changelog is required'),
+  downloadUrl: z.string().url().optional().or(z.literal('')),
+});
+
+export const AdminSaveAppSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().min(2, 'Name must be at least 2 characters').max(100),
+  slug: z.string().min(2).regex(/^[a-z0-9-]+$/, 'Slug can only contain lowercase letters, numbers, and hyphens'),
+  shortDescription: z.string().min(10, 'Short description must be at least 10 characters').max(250),
+  description: z.string().min(20, 'Description must be at least 20 characters'),
+  iconUrl: z.string().url('Please provide a valid icon URL'),
+  featuredImageUrl: z.string().url().optional().or(z.literal('')),
+  demoUrl: z.string().url().optional().or(z.literal('')),
+  videoUrl: z.string().url().optional().or(z.literal('')),
+  categoryId: z.string().min(1, 'Please select a category'),
+  status: z.enum(['draft', 'published', 'archived', 'DRAFT', 'PUBLISHED', 'ARCHIVED']).default('draft'),
+  isFeatured: z.boolean().default(false),
+  isPinned: z.boolean().default(false),
+  sortOrder: z.coerce.number().int().default(0),
+  seoTitle: z.string().max(100).optional().or(z.literal('')),
+  seoDescription: z.string().max(300).optional().or(z.literal('')),
+});
 
 export const AppSortEnum = z.enum(['newest', 'name', 'popularity', 'sortOrder']).default('sortOrder');
 
@@ -116,6 +141,8 @@ export const AppSchema = z.object({
 export type AppInput = z.infer<typeof AppSchema>;
 export type CreateAppSchemaInput = z.infer<typeof CreateAppSchema>;
 export type UpdateAppSchemaInput = z.infer<typeof UpdateAppSchema>;
+export type PublishAppSchemaInput = z.infer<typeof PublishAppSchema>;
+export type AdminSaveAppSchemaInput = z.infer<typeof AdminSaveAppSchema>;
 export type AppListQuerySchemaInput = z.infer<typeof AppListQuerySchema>;
 export type AppSearchSchemaInput = z.infer<typeof AppSearchSchema>;
 export type AppQuerySchemaInput = z.infer<typeof AppQuerySchema>;

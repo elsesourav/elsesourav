@@ -467,6 +467,43 @@ export class AppRepository {
     }
   }
 
+  async softDelete(id: string): Promise<void> {
+    try {
+      await this.prisma.app.update({
+        where: { id },
+        data: {
+          deletedAt: new Date(),
+          status: PublishStatus.ARCHIVED,
+        },
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+        throw AppError.notFound('Application');
+      }
+      throw AppError.database(`Failed to soft-delete application: ${id}`, error);
+    }
+  }
+
+  async updateStatus(id: string, status: PublishStatus): Promise<DomainApp> {
+    try {
+      const record = await this.prisma.app.update({
+        where: { id },
+        data: {
+          status,
+          ...(status === PublishStatus.PUBLISHED ? { publishedAt: new Date() } : {}),
+        },
+        include: this.appInclude,
+      });
+
+      return mapPrismaAppToDomain(record as PrismaAppWithRelations);
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+        throw AppError.notFound('Application');
+      }
+      throw AppError.database(`Failed to update status for application: ${id}`, error);
+    }
+  }
+
   async countPublished(): Promise<number> {
     try {
       return await this.prisma.app.count({

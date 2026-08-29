@@ -1,11 +1,14 @@
 import { AppRepository } from '../repositories/app.repository';
 import { AppError } from '@elsesourav/types';
+import { PublishStatus } from '@prisma/client';
 import type {
   App,
   UserRole,
   CreateAppInput,
   UpdateAppInput,
   AppQueryOptions,
+  CategorySummary,
+  TagSummary,
 } from '@elsesourav/types';
 
 export class AppService {
@@ -34,6 +37,15 @@ export class AppService {
     return app;
   }
 
+  async getAdminAppById(callerRole: UserRole, id: string): Promise<App> {
+    this.requireAdminOrStaff(callerRole);
+    const app = await this.appRepo.findById(id);
+    if (!app || app.deletedAt) {
+      throw AppError.notFound(`Application '${id}'`);
+    }
+    return app;
+  }
+
   async listPublishedApps(options: AppQueryOptions = {}): Promise<App[]> {
     return this.appRepo.list({
       ...options,
@@ -44,6 +56,14 @@ export class AppService {
   async listAdminApps(callerRole: UserRole, options: AppQueryOptions = {}): Promise<App[]> {
     this.requireAdminOrStaff(callerRole);
     return this.appRepo.list(options);
+  }
+
+  async listCategories(): Promise<CategorySummary[]> {
+    return this.appRepo.listPublicCategories();
+  }
+
+  async listTags(): Promise<TagSummary[]> {
+    return this.appRepo.listPublicTags();
   }
 
   async createApp(callerRole: UserRole, input: CreateAppInput): Promise<App> {
@@ -113,9 +133,17 @@ export class AppService {
       throw AppError.notFound('Application');
     }
 
-    return this.appRepo.update(appId, {
-      name: app.name,
-      // Status update will be reflected via repository update
-    });
+    return this.appRepo.updateStatus(appId, PublishStatus.ARCHIVED);
+  }
+
+  async deleteApp(callerRole: UserRole, appId: string): Promise<void> {
+    this.requireAdminOrStaff(callerRole);
+
+    const app = await this.appRepo.findById(appId);
+    if (!app) {
+      throw AppError.notFound('Application');
+    }
+
+    return this.appRepo.softDelete(appId);
   }
 }
