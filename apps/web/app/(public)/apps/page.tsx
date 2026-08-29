@@ -8,7 +8,7 @@ import { AppCard } from '@/features/apps/components/AppCard';
 import { AppDiscoveryBar } from '@/features/apps/components/AppDiscoveryBar';
 import { AppPagination } from '@/features/apps/components/AppPagination';
 import { AppsEmptyState } from '@/features/apps/components/AppsEmptyState';
-import { Badge } from '@elsesourav/ui';
+import { PageShell, PageHeader, Badge } from '@elsesourav/ui';
 import { SITE_CONFIG } from '@elsesourav/config';
 import type { AppSortOption } from '@elsesourav/types';
 
@@ -120,51 +120,54 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <PageShell size="lg" glow>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
-        {/* Header Title Section */}
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-100">
-              Explore Applications
-            </h1>
-            <Badge variant="info" className="text-xs px-2.5 py-0.5 font-medium">
-              {searchResult.totalCount} {searchResult.totalCount === 1 ? 'App' : 'Apps'}
-            </Badge>
-          </div>
-          <p className="text-sm text-zinc-400 max-w-2xl">
-            Browse the complete catalog of web applications, browser extensions, developer
-            utilities, and software created by ElseSourav.
-          </p>
-        </div>
 
-        {/* Discovery & Search Bar */}
+      <div className="space-y-8">
+        {/* Page Header */}
+        <PageHeader
+          eyebrow="Software Studio & Index"
+          badge={
+            <Badge variant="primary" className="text-xs px-2.5 py-0.5 font-medium">
+              {searchResult.totalCount} {searchResult.totalCount === 1 ? 'Application' : 'Applications'}
+            </Badge>
+          }
+          title="Applications & Developer Utilities"
+          description="Browse the complete catalog of web applications, developer workstations, extensions, and open-source utilities built for speed, utility, and reliable execution."
+        />
+
+        {/* Discovery, Search & Filtering Controls */}
         <AppDiscoveryBar categories={categories} tags={tags} />
 
-        {/* Apps Grid or Empty State */}
+        {/* Applications Catalog Grid or Empty State */}
         {searchResult.items.length === 0 ? (
           <AppsEmptyState hasFilters={hasFilters} />
         ) : (
           <div className="space-y-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {searchResult.items.map((app) => (
-                <AppCard key={app.id} app={app} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {searchResult.items.map((app, idx) => (
+                <AppCard
+                  key={app.id}
+                  app={app}
+                  index={(searchResult.page - 1) * 12 + idx}
+                />
               ))}
             </div>
 
             {/* Pagination Controls */}
-            <AppPagination
-              currentPage={searchResult.page}
-              totalPages={searchResult.totalPages}
-              totalMatches={searchResult.totalCount}
-            />
+            {searchResult.totalPages > 1 && (
+              <AppPagination
+                currentPage={searchResult.page}
+                totalPages={searchResult.totalPages}
+                totalMatches={searchResult.totalCount}
+              />
+            )}
           </div>
         )}
       </div>
-    </div>
+    </PageShell>
   );
 }

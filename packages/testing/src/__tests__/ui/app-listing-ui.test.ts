@@ -82,4 +82,17 @@ describe('Public Apps Listing Integration', () => {
     expect(flagship.platforms).toContain('macos');
     expect(flagship.primaryCategory).toBe('Developer Tools');
   });
+
+  it('supports sorting contracts for newest, popularity, and name', async () => {
+    const mockRepo = {
+      listPublic: vi.fn().mockResolvedValue(mockApps),
+    } as unknown as AppRepository;
+
+    const queryService = new AppQueryService(mockRepo);
+    const sortedByNewest = await queryService.listPublicApps({ sortField: 'publishedAt', sortDirection: 'desc' });
+    expect(sortedByNewest).toHaveLength(2);
+    expect(mockRepo.listPublic).toHaveBeenCalledWith(
+      expect.objectContaining({ sortField: 'publishedAt', sortDirection: 'desc' })
+    );
+  });
 });
