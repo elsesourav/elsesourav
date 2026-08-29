@@ -63,11 +63,11 @@ All colors are exposed as HSL CSS custom properties in `globals.css` and mapped 
 
 To avoid visual flatness while preserving restraint, interfaces are composed across 5 distinct elevation layers:
 
-1. **Canvas (`--background`)**: Deep `#09090b` viewport foundation.
-2. **Subtle Inset (`.surface-subtle`)**: Embedded code blocks, secondary toolbars, table headers.
-3. **Solid Surface (`.surface-solid`)**: Standard content cards, data tables, sidebars.
-4. **Elevated Surface (`.surface-elevated`)**: Dropdown menus, tooltips, flyout panels.
-5. **Glass 2.0 Surface (`.surface-glass`)**: Sticky navigation bars, hero floating cards, modals.
+1. **Level 0 (Canvas — `--background`)**: Deep `#09090b` viewport foundation (`.depth-0`).
+2. **Level 1 (Subtle Inset — `.surface-subtle`)**: Embedded code blocks, secondary toolbars, table headers (`.depth-1`).
+3. **Level 2 (Solid Surface — `.surface-solid` / `.surface-elevated`)**: Standard content cards, data tables, sidebars (`.depth-2`).
+4. **Level 3 (Overlays — `.surface-overlay`)**: Dropdown menus, tooltips, flyout panels, dialogs (`.depth-3`).
+5. **Level 4 (Focused — `.depth-4`)**: Active selection, brand halo ring.
 
 ### Glassmorphism 2.0 Rules:
 - **Maximum 2 glass elements per viewport**: Sticky header + 1 featured container.
@@ -106,7 +106,7 @@ All primitives are exported from `@elsesourav/ui`:
 | | `Switch` | `label?: string`, `checked?: boolean`, `onChange?: (checked: boolean) => void` |
 | | `RadioGroup`, `RadioGroupItem` | `value?: string`, `onChange?: (val: string) => void`, `name?: string` |
 | | `FormField` | `label?: string`, `required?: boolean`, `error?: string`, `description?: string` |
-| **Surfaces** | `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter` | `variant: 'default' \| 'solid' \| 'subtle' \| 'elevated' \| 'glass' \| 'interactive'` |
+| **Surfaces** | `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter` | `variant: 'default' \| 'solid' \| 'subtle' \| 'elevated' \| 'glass' \| 'interactive'`, `depth?: 0 \| 1 \| 2 \| 3 \| 4` |
 | | `GlassSurface` | `blur: 'sm' \| 'md' \| 'lg' \| 'xl'`, `intensity: 'subtle' \| 'medium' \| 'high'`, `interactive?: boolean` |
 | **Feedback** | `Skeleton` | Pulsing placeholder block |
 | | `Spinner` | `size: 'sm' \| 'md' \| 'lg'` |
@@ -125,3 +125,20 @@ All primitives are exported from `@elsesourav/ui`:
 | | `StatCard` | `label: string`, `value: string \| number`, `change?: string`, `changeType?: 'positive' \| 'negative' \| 'neutral'` |
 | | `MarkdownRenderer` | GFM parser, syntax-highlighted code blocks, copy actions, safe links, responsive tables |
 | | `AdminMarkdownEditor` | Write/Preview tabs, quick-insert toolbar, GFM cheatsheet, word/character count |
+
+---
+
+## 7. Motion & Interaction Design System
+
+Motion is functional and communicative, not decorative:
+
+| Interaction | Duration Token | Easing Token | Visual Effect |
+|---|---|---|---|
+| **Button / Control Press** | `--duration-fast` (150ms) | `--ease-smooth` | `active:scale-[0.98]` tactile press |
+| **Surface Hover** | `--duration-fast` (150ms) | `--ease-smooth` | Border illumination + subtle background lift |
+| **Dialog Entrance** | `--duration-smooth` (250ms) | `--ease-smooth` | Zoom from 96% to 100% + fade-in |
+| **Drawer Slide-in** | `--duration-smooth` (250ms) | `--ease-smooth` | Slide horizontally from right/left edge |
+| **Dropdown / Tooltip Reveal** | `--duration-fast` (150ms) | `--ease-smooth` | Zoom from 95% to 100% + fade-in |
+| **Toast Notification Entry** | `--duration-smooth` (250ms) | `--ease-smooth` | Slide up from bottom right + fade-in |
+| **Tab Panel Switch** | `--duration-fast` (150ms) | `--ease-smooth` | Instant switch with active pill background motion |
+| **Copy Action Confirmation** | `--duration-fast` (150ms) | `--ease-smooth` | Icon transform from Copy to Check with emerald accent |
