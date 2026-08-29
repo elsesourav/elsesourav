@@ -72,7 +72,7 @@ describe('Prisma Model Mappers', () => {
     const domain = mapPrismaAppToDomain(prismaApp);
     expect(domain.id).toBe('app-1');
     expect(domain.slug).toBe('terminal-pro');
-    expect(domain.primaryCategory).toBe('dev-tools');
+    expect(domain.primaryCategory).toBe('Developer Tools');
     expect(domain.tags).toContain('cli');
     expect(domain.status).toBe('published');
     expect(domain.currentVersion).toBe('2.1.0');
