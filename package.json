@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
+    "start": "pnpm --filter @elsesourav/web start",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
