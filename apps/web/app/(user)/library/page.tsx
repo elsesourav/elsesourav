@@ -2,20 +2,24 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { getUserLibraryData } from '@/features/library/queries/get-library';
 import { UserLibraryView } from '@/features/library/components/UserLibraryView';
-import { Badge } from '@elsesourav/ui';
-import { ArrowLeft, Bookmark } from 'lucide-react';
+import { PageShell, PageHeader, Badge } from '@elsesourav/ui';
+import { ArrowLeft } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'My Library | ElseSourav',
   description: 'Manage and launch your saved web applications, developer utilities, and tools.',
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default async function LibraryPage() {
   const data = await getUserLibraryData();
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+    <PageShell size="lg" glow>
+      <div className="space-y-8 max-w-7xl mx-auto">
         {/* Navigation Breadcrumb */}
         <Link
           href="/apps"
@@ -26,27 +30,20 @@ export default async function LibraryPage() {
         </Link>
 
         {/* Page Header */}
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
-              <Bookmark className="w-5 h-5" />
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-100 tracking-tight">
-              My Application Library
-            </h1>
-            <Badge variant="info" className="text-xs px-2 py-0.5 font-medium">
+        <PageHeader
+          eyebrow="Personal Workspace"
+          badge={
+            <Badge variant="primary" className="text-xs px-2.5 py-0.5 font-medium">
               {data.totalCount} {data.totalCount === 1 ? 'App' : 'Apps'}
             </Badge>
-          </div>
-          <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl">
-            Quickly launch and manage software, utilities, and tools you have bookmarked for your
-            workflows.
-          </p>
-        </div>
+          }
+          title="My Application Library"
+          description="Quickly launch and manage software, utilities, and tools you have bookmarked for your workflows."
+        />
 
         {/* User Library Content View */}
         <UserLibraryView initialItems={data.items} totalCount={data.totalCount} />
       </div>
-    </div>
+    </PageShell>
   );
 }
