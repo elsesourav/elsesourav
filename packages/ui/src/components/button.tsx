@@ -68,3 +68,20 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 
 Button.displayName = 'Button';
+
+export interface IconButtonProps extends Omit<ButtonProps, 'children'> {
+  icon: React.ReactNode;
+  'aria-label': string;
+}
+
+export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
+  ({ icon, className, size = 'icon', ...props }, ref) => {
+    return (
+      <Button ref={ref} size={size} className={cn('p-2', className)} {...props}>
+        {icon}
+      </Button>
+    );
+  }
+);
+
+IconButton.displayName = 'IconButton';

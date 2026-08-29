@@ -88,9 +88,40 @@ To avoid visual flatness while preserving restraint, interfaces are composed acr
 
 ---
 
-## 6. Accessibility & Motion Guidelines
+## 6. Complete UI Primitives Directory
 
-- **Focus Rings**: High-contrast `focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950`.
-- **Keyboard Navigation**: All interactive elements support Enter / Space activation and Esc dismissal.
-- **Reduced Motion**: All animations and transitions collapse to `0.01ms` when `@media (prefers-reduced-motion: reduce)` is active.
-- **Semantic HTML**: Proper heading tags (`h1`-`h6`), `<button>` (never non-interactive `<div onClick>`), `<article>`, `<section>`, `aria-label`, and `aria-busy` states.
+All primitives are exported from `@elsesourav/ui`:
+
+| Category | Component(s) | Primary Props / Variants |
+|---|---|---|
+| **Foundation** | `Button`, `IconButton` | `variant: 'primary' \| 'secondary' \| 'outline' \| 'ghost' \| 'danger'`, `size: 'sm' \| 'md' \| 'lg' \| 'icon'`, `loading?: boolean` |
+| | `Badge` | `variant: 'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'error' \| 'info' \| 'outline'`, `size: 'sm' \| 'md'` |
+| | `Avatar` | `src?: string`, `alt: string`, `fallback: string`, `size?: 'sm' \| 'md' \| 'lg'` |
+| | `Separator` | `orientation?: 'horizontal' \| 'vertical'` |
+| **Forms** | `Label` | `htmlFor?: string`, `required?: boolean` |
+| | `Input` | `type?: string`, `error?: string`, `placeholder?: string` |
+| | `Textarea` | `error?: string`, `rows?: number` |
+| | `Select` | `options?: SelectOption[]`, `error?: string` |
+| | `Checkbox` | `label?: string`, `description?: string`, `checked?: boolean` |
+| | `Switch` | `label?: string`, `checked?: boolean`, `onChange?: (checked: boolean) => void` |
+| | `RadioGroup`, `RadioGroupItem` | `value?: string`, `onChange?: (val: string) => void`, `name?: string` |
+| | `FormField` | `label?: string`, `required?: boolean`, `error?: string`, `description?: string` |
+| **Surfaces** | `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter` | `variant: 'default' \| 'solid' \| 'subtle' \| 'elevated' \| 'glass' \| 'interactive'` |
+| | `GlassSurface` | `blur: 'sm' \| 'md' \| 'lg' \| 'xl'`, `intensity: 'subtle' \| 'medium' \| 'high'`, `interactive?: boolean` |
+| **Feedback** | `Skeleton` | Pulsing placeholder block |
+| | `Spinner` | `size: 'sm' \| 'md' \| 'lg'` |
+| | `Alert`, `AlertTitle`, `AlertDescription` | `variant: 'info' \| 'success' \| 'warning' \| 'error'` |
+| | `ToastProvider`, `useToast` | Lightweight accessible toast dispatch (`success`, `error`, `info`) |
+| | `EmptyState` | `icon?: LucideIcon`, `title: string`, `description: string`, `action?: ReactNode` |
+| | `ErrorState` | `title?: string`, `description?: string`, `onRetry?: () => void` |
+| **Overlays** | `Dialog`, `DialogContent`, `DialogHeader`, `DialogTitle`, `DialogDescription`, `DialogFooter` | `open: boolean`, `onOpenChange: (open: boolean) => void`, `onClose?: () => void` |
+| | `Drawer`, `DrawerHeader` | `open: boolean`, `onOpenChange: (open: boolean) => void`, `position: 'left' \| 'right'` |
+| | `DropdownMenu`, `DropdownMenuTrigger`, `DropdownMenuContent`, `DropdownMenuItem`, `DropdownMenuSeparator` | Accessible zero-dependency dropdown overlay |
+| | `Tooltip` | `content: ReactNode`, `side: 'top' \| 'bottom' \| 'left' \| 'right'` |
+| **Navigation** | `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent` | `defaultValue?: string`, `value?: string`, `onValueChange?: (val: string) => void` |
+| | `Breadcrumb`, `BreadcrumbItem`, `BreadcrumbSeparator` | Accessible breadcrumb navigation |
+| | `Pagination` | `currentPage: number`, `totalPages: number`, `onPageChange: (page: number) => void` |
+| **Data & Content** | `Table`, `TableHeader`, `TableBody`, `TableRow`, `TableHead`, `TableCell`, `TableCaption` | Responsive horizontal overflow table container |
+| | `StatCard` | `label: string`, `value: string \| number`, `change?: string`, `changeType?: 'positive' \| 'negative' \| 'neutral'` |
+| | `MarkdownRenderer` | GFM parser, syntax-highlighted code blocks, copy actions, safe links, responsive tables |
+| | `AdminMarkdownEditor` | Write/Preview tabs, quick-insert toolbar, GFM cheatsheet, word/character count |

@@ -3,6 +3,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import {
   Button,
+  IconButton,
   Badge,
   Avatar,
   Input,
@@ -10,6 +11,8 @@ import {
   Select,
   Checkbox,
   Switch,
+  RadioGroup,
+  RadioGroupItem,
   FormField,
   Card,
   CardTitle,
@@ -21,6 +24,13 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  Tooltip,
+  ToastProvider,
+  useToast,
   Tabs,
   TabsList,
   TabsTrigger,
@@ -34,15 +44,30 @@ import {
   StatCard,
   Pagination,
 } from '@elsesourav/ui';
+import { Plus } from 'lucide-react';
 
 describe('Button & Foundation Primitives', () => {
-  it('renders Button correctly and handles click event', () => {
+  it('renders Button and IconButton correctly and handles click event', () => {
     const handleClick = vi.fn();
-    render(<Button onClick={handleClick}>Click Me</Button>);
+    render(
+      <div>
+        <Button onClick={handleClick}>Click Me</Button>
+        <IconButton
+          icon={<Plus className="w-4 h-4" />}
+          aria-label="Add Item"
+          onClick={handleClick}
+        />
+      </div>
+    );
     const button = screen.getByRole('button', { name: /click me/i });
     expect(button).toBeDefined();
     fireEvent.click(button);
     expect(handleClick).toHaveBeenCalledTimes(1);
+
+    const iconBtn = screen.getByRole('button', { name: /add item/i });
+    expect(iconBtn).toBeDefined();
+    fireEvent.click(iconBtn);
+    expect(handleClick).toHaveBeenCalledTimes(2);
   });
 
   it('renders loading state with disabled button', () => {
@@ -228,5 +253,95 @@ describe('Navigation & Data Display Components', () => {
     const nextBtn = screen.getByRole('button', { name: /go to next page/i });
     fireEvent.click(nextBtn);
     expect(handlePageChange).toHaveBeenCalledWith(3);
+  });
+
+  it('renders RadioGroup and handles selection change', () => {
+    const handleChange = vi.fn();
+    render(
+      <RadioGroup defaultValue="dark" onChange={handleChange}>
+        <RadioGroupItem value="light" label="Light Theme" />
+        <RadioGroupItem value="dark" label="Dark Theme" />
+      </RadioGroup>
+    );
+
+    expect(screen.getByText('Light Theme')).toBeDefined();
+    expect(screen.getByText('Dark Theme')).toBeDefined();
+
+    const lightRadio = screen.getByRole('radio', { name: /light theme/i });
+    fireEvent.click(lightRadio);
+    expect(handleChange).toHaveBeenCalledWith('light');
+  });
+
+  it('renders DropdownMenu and handles item selection', () => {
+    const handleAction = vi.fn();
+    render(
+      <DropdownMenu>
+        <DropdownMenuTrigger>Options</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem onClick={handleAction}>Edit Profile</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+
+    const trigger = screen.getByRole('button', { name: 'Options' });
+    expect(screen.queryByRole('menuitem', { name: 'Edit Profile' })).toBeNull();
+
+    fireEvent.click(trigger);
+    const item = screen.getByRole('menuitem', { name: 'Edit Profile' });
+    expect(item).toBeDefined();
+
+    fireEvent.click(item);
+    expect(handleAction).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole('menuitem', { name: 'Edit Profile' })).toBeNull();
+  });
+
+  it('renders Tooltip on focus and hover', () => {
+    render(
+      <Tooltip content="Helper info">
+        <button type="button">Hover Me</button>
+      </Tooltip>
+    );
+
+    const trigger = screen.getByRole('button', { name: 'Hover Me' });
+    expect(screen.queryByRole('tooltip')).toBeNull();
+
+    fireEvent.mouseEnter(trigger.parentElement!);
+    expect(screen.getByRole('tooltip')).toBeDefined();
+    expect(screen.getByText('Helper info')).toBeDefined();
+
+    fireEvent.mouseLeave(trigger.parentElement!);
+    expect(screen.queryByRole('tooltip')).toBeNull();
+  });
+
+  it('provides Toast notification triggers through useToast hook', () => {
+    function ToastTestComponent() {
+      const { addToast } = useToast();
+      return (
+        <button
+          type="button"
+          onClick={() =>
+            addToast({
+              title: 'Settings Saved',
+              description: 'Profile updated successfully.',
+              type: 'success',
+            })
+          }
+        >
+          Trigger Toast
+        </button>
+      );
+    }
+
+    render(
+      <ToastProvider>
+        <ToastTestComponent />
+      </ToastProvider>
+    );
+
+    const triggerBtn = screen.getByRole('button', { name: 'Trigger Toast' });
+    fireEvent.click(triggerBtn);
+
+    expect(screen.getByText('Settings Saved')).toBeDefined();
+    expect(screen.getByText('Profile updated successfully.')).toBeDefined();
   });
 });
