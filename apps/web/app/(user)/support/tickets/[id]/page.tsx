@@ -4,6 +4,7 @@ import { cookies } from 'next/headers';
 import { getServerSession } from '@elsesourav/auth';
 import { getUserSupportTicketDetail } from '@/features/support/queries/get-support';
 import { SupportTicketDetailView } from '@/features/support/components/SupportTicketDetailView';
+import { PageShell } from '@elsesourav/ui';
 
 interface TicketDetailPageProps {
   params: Promise<{
@@ -19,12 +20,20 @@ export async function generateMetadata({ params }: TicketDetailPageProps): Promi
     return {
       title: 'Ticket Not Found | ElseSourav Support',
       description: 'The requested support ticket does not exist or access is unauthorized.',
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
   return {
     title: `${ticket.ticketNumber}: ${ticket.subject} | ElseSourav Support`,
     description: `Support conversation for ticket ${ticket.ticketNumber}.`,
+    robots: {
+      index: false,
+      follow: false,
+    },
   };
 }
 
@@ -47,8 +56,10 @@ export default async function UserTicketDetailPage({ params }: TicketDetailPageP
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <SupportTicketDetailView ticket={ticket} />
-    </div>
+    <PageShell size="lg" glow>
+      <div className="max-w-4xl mx-auto">
+        <SupportTicketDetailView ticket={ticket} />
+      </div>
+    </PageShell>
   );
 }
