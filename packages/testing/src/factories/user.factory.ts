@@ -1,8 +1,6 @@
 import type {
   User,
   UserPreferences,
-  UserRole,
-  UserStatus,
   PublicUserProfile,
   AdminUserListItem,
   AdminUserDetail,

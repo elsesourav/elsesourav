@@ -1,4 +1,4 @@
-import type { App, BlogPost, User, SupportTicket } from '@elsesourav/types';
+import type { App, User, SupportTicket } from '@elsesourav/types';
 
 /**
  * Edge Case Fixtures to rigorously test UI bounds, truncation, and international character safety.

@@ -15,7 +15,7 @@ import type {
   BlogQueryInput,
 } from '@elsesourav/types';
 import { fixturePublishedApps, fixturePublicApps, fixtureCategories, fixtureTags } from '../fixtures/apps.fixtures';
-import { fixtureBlogPosts, fixtureBlogCategories, fixtureBlogTags } from '../fixtures/blog.fixtures';
+import { fixtureBlogPosts } from '../fixtures/blog.fixtures';
 import { fixtureHelpCategories, fixtureHelpArticles } from '../fixtures/help.fixtures';
 import { fixtureSupportTicketsList } from '../fixtures/support.fixtures';
 import { fixtureUserLibraryItems } from '../fixtures/library.fixtures';

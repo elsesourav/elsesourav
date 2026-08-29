@@ -6,7 +6,7 @@ import { getPublicBlogListing } from '@/features/blog/queries/get-blog';
 import { AppCard } from '@/features/apps/components/AppCard';
 import Link from 'next/link';
 import { PublicHeader } from '@/components/navigation/PublicHeader';
-import { Sparkles, Terminal, BookOpen, LifeBuoy, ArrowRight, Layers, Cpu, ShieldCheck } from 'lucide-react';
+import { Sparkles, BookOpen, LifeBuoy, ArrowRight, Layers, Cpu, ShieldCheck } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: {
@@ -31,15 +31,17 @@ export const metadata: Metadata = {
   },
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   // Query live featured apps and latest blogs from Supabase PostgreSQL
   const [appsResult, blogResult] = await Promise.all([
-    discoverPublishedApps({ limit: 6, sort: 'popularity' }),
-    getPublicBlogListing({ limit: 3 }),
+    discoverPublishedApps({ limit: 6, sort: 'popularity' }).catch(() => ({ items: [], totalCount: 0 })),
+    getPublicBlogListing({ limit: 3 }).catch(() => ({ items: [], totalCount: 0, page: 1, totalPages: 1 })),
   ]);
 
-  const featuredApps = appsResult.items;
-  const recentPosts = blogResult.items;
+  const featuredApps = appsResult.items || [];
+  const recentPosts = blogResult.items || [];
 
   const jsonLd = {
     '@context': 'https://schema.org',
