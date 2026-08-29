@@ -132,7 +132,7 @@ export function DesignSystemClient() {
             <Badge variant="success">Active / Live</Badge>
             <Badge variant="warning">Pending Review</Badge>
             <Badge variant="info">New Release</Badge>
-            <Badge variant="outline">v2.0.0</Badge>
+            <Badge variant="outline">v1.4.0</Badge>
           </div>
         </Card>
       </section>
