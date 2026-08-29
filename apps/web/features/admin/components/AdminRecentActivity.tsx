@@ -40,7 +40,9 @@ export function AdminRecentActivity({ activities }: AdminRecentActivityProps) {
       <Card className="p-8 text-center rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl">
         <Activity className="w-8 h-8 text-zinc-500 mx-auto mb-2" />
         <h4 className="text-sm font-semibold text-zinc-200">No recent activity</h4>
-        <p className="text-xs text-zinc-500 mt-1">Platform operations and tickets will appear here.</p>
+        <p className="text-xs text-zinc-500 mt-1">
+          Platform operations and tickets will appear here.
+        </p>
       </Card>
     );
   }

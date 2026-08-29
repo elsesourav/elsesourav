@@ -16,7 +16,8 @@ export function HelpSupportCTA() {
               Still have questions or need technical support?
             </h3>
             <p className="text-xs text-zinc-400 max-w-xl leading-relaxed">
-              If you can't find what you are looking for in our documentation, submit a support ticket and our engineering team will assist you.
+              If you can't find what you are looking for in our documentation, submit a support
+              ticket and our engineering team will assist you.
             </p>
           </div>
         </div>

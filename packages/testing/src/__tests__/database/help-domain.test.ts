@@ -185,7 +185,9 @@ describe('Help Center Domain Service, Lifecycle & Security', () => {
   });
 
   it('normalizes slugs cleanly across special characters and spaces', () => {
-    expect(generateHelpSlug('How to use ElseSourav Terminal Pro?')).toBe('how-to-use-elsesourav-terminal-pro');
+    expect(generateHelpSlug('How to use ElseSourav Terminal Pro?')).toBe(
+      'how-to-use-elsesourav-terminal-pro'
+    );
     expect(generateHelpSlug('  Multi---space & Symbols ## !!  ')).toBe('multi-space-symbols');
   });
 });

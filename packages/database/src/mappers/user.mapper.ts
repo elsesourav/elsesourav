@@ -1,5 +1,9 @@
 import type { User as PrismaUser, UserRole as PrismaRole } from '@prisma/client';
-import type { User as DomainUser, UserRole as DomainRole, UserPreferences } from '@elsesourav/types';
+import type {
+  User as DomainUser,
+  UserRole as DomainRole,
+  UserPreferences,
+} from '@elsesourav/types';
 
 export function mapPrismaUserToDomain(prismaUser: PrismaUser): DomainUser {
   const defaultPrefs: UserPreferences = {

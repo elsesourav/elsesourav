@@ -66,9 +66,7 @@ export function mapPrismaSupportTicketToDetail(
   forAdmin: boolean = false
 ): SupportTicketDetail {
   const rawMessages = ticket.messages || [];
-  const visibleMessages = forAdmin
-    ? rawMessages
-    : rawMessages.filter((m) => !m.isInternalNote);
+  const visibleMessages = forAdmin ? rawMessages : rawMessages.filter((m) => !m.isInternalNote);
 
   return {
     id: ticket.id,

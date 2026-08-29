@@ -1,6 +1,9 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getPublicHelpArticleBySlug, getRelatedHelpArticles } from '@/features/help/queries/get-help-article';
+import {
+  getPublicHelpArticleBySlug,
+  getRelatedHelpArticles,
+} from '@/features/help/queries/get-help-article';
 import { HelpArticleHeader } from '@/features/help/components/HelpArticleHeader';
 import { BlogContentRenderer } from '@/features/blog/components/BlogContentRenderer';
 import { HelpArticleFeedback } from '@/features/help/components/HelpArticleFeedback';
@@ -30,7 +33,8 @@ export async function generateMetadata({ params }: HelpArticlePageProps): Promis
   }
 
   const title = article.seoTitle || article.title;
-  const description = article.seoDescription || article.excerpt || `Read the official guide on ${article.title}.`;
+  const description =
+    article.seoDescription || article.excerpt || `Read the official guide on ${article.title}.`;
   const canonicalUrl = `https://elsesourav.com/help/${categorySlug}/${article.slug}`;
 
   return {
@@ -75,7 +79,9 @@ export default async function HelpArticlePage({ params }: HelpArticlePageProps) 
         '@id': `${articleUrl}/#article`,
         headline: article.title,
         description: article.excerpt,
-        datePublished: article.publishedAt ? new Date(article.publishedAt).toISOString() : undefined,
+        datePublished: article.publishedAt
+          ? new Date(article.publishedAt).toISOString()
+          : undefined,
         dateModified: new Date(article.updatedAt).toISOString(),
         author: article.author
           ? {

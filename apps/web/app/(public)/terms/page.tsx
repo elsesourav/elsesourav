@@ -6,7 +6,8 @@ import { FileText, ArrowLeft, CheckCircle2, Scale, Terminal } from 'lucide-react
 
 export const metadata: Metadata = {
   title: 'Terms of Service',
-  description: 'Terms and conditions governing the use of ElseSourav applications, software products, and web services.',
+  description:
+    'Terms and conditions governing the use of ElseSourav applications, software products, and web services.',
   alternates: {
     canonical: 'https://elsesourav.com/terms',
   },
@@ -61,7 +62,8 @@ export default function TermsPage() {
             Terms of Service
           </h1>
           <p className="text-sm text-zinc-400">
-            Last revised: August 29, 2026. Please read these terms carefully before accessing ElseSourav.
+            Last revised: August 29, 2026. Please read these terms carefully before accessing
+            ElseSourav.
           </p>
         </div>
 
@@ -72,7 +74,9 @@ export default function TermsPage() {
               <FileText className="w-5 h-5 text-indigo-400" /> 1. Acceptance of Terms
             </h2>
             <p className="text-sm text-zinc-300 leading-relaxed">
-              By accessing or using ElseSourav tools, software applications, or technical documentation, you agree to be bound by these Terms of Service. If you disagree with any part, you may not access our services.
+              By accessing or using ElseSourav tools, software applications, or technical
+              documentation, you agree to be bound by these Terms of Service. If you disagree with
+              any part, you may not access our services.
             </p>
           </section>
 
@@ -81,7 +85,9 @@ export default function TermsPage() {
               <Terminal className="w-5 h-5 text-cyan-400" /> 2. Software Licensing & Permitted Use
             </h2>
             <p className="text-sm text-zinc-300 leading-relaxed">
-              ElseSourav grants you a personal, non-exclusive, revocable license to access our web applications and documentation in accordance with their designated license models (open source or proprietary).
+              ElseSourav grants you a personal, non-exclusive, revocable license to access our web
+              applications and documentation in accordance with their designated license models
+              (open source or proprietary).
             </p>
           </section>
 
@@ -90,14 +96,16 @@ export default function TermsPage() {
               <CheckCircle2 className="w-5 h-5 text-emerald-400" /> 3. User Conduct & Security
             </h2>
             <p className="text-sm text-zinc-300 leading-relaxed">
-              You agree not to exploit vulnerabilities, attempt unauthorized privilege escalation, reverse engineer closed-source modules, or disrupt server infrastructure.
+              You agree not to exploit vulnerabilities, attempt unauthorized privilege escalation,
+              reverse engineer closed-source modules, or disrupt server infrastructure.
             </p>
           </section>
 
           <section className="space-y-3">
             <h2 className="text-lg font-bold text-zinc-100">4. Disclaimer of Warranties</h2>
             <p className="text-sm text-zinc-300 leading-relaxed">
-              The services and applications are provided on an &ldquo;AS IS&rdquo; and &ldquo;AS AVAILABLE&rdquo; basis without warranties of any kind, either express or implied.
+              The services and applications are provided on an &ldquo;AS IS&rdquo; and &ldquo;AS
+              AVAILABLE&rdquo; basis without warranties of any kind, either express or implied.
             </p>
           </section>
         </Card>

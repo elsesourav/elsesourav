@@ -4,10 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Card, Badge, Button, Input } from '@elsesourav/ui';
 import type { BlogPost, BlogCategory } from '@elsesourav/types';
-import {
-  archiveBlogPostAction,
-  deleteBlogPostAction,
-} from '../actions/admin-blog-actions';
+import { archiveBlogPostAction, deleteBlogPostAction } from '../actions/admin-blog-actions';
 import {
   FileText,
   Search,
@@ -64,9 +61,7 @@ export function AdminBlogTable({ initialPosts, categories }: AdminBlogTableProps
   const handleArchive = async (postId: string) => {
     try {
       await archiveBlogPostAction(postId);
-      setPosts((prev) =>
-        prev.map((p) => (p.id === postId ? { ...p, status: 'archived' } : p))
-      );
+      setPosts((prev) => prev.map((p) => (p.id === postId ? { ...p, status: 'archived' } : p)));
     } catch {
       // Non-blocking
     }
@@ -149,7 +144,8 @@ export function AdminBlogTable({ initialPosts, categories }: AdminBlogTableProps
             <FileText className="w-10 h-10 text-zinc-600 mx-auto" />
             <h4 className="text-sm font-semibold text-zinc-300">No articles found</h4>
             <p className="text-xs text-zinc-500 max-w-xs mx-auto">
-              No devlogs or articles match your selected filters. Create a new article to publish updates.
+              No devlogs or articles match your selected filters. Create a new article to publish
+              updates.
             </p>
           </div>
         ) : (
@@ -174,10 +170,7 @@ export function AdminBlogTable({ initialPosts, categories }: AdminBlogTableProps
                   });
 
                   return (
-                    <tr
-                      key={post.id}
-                      className="hover:bg-zinc-800/30 transition-colors group"
-                    >
+                    <tr key={post.id} className="hover:bg-zinc-800/30 transition-colors group">
                       {/* Title & Slug */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-3">

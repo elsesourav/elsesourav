@@ -82,9 +82,7 @@ describe('App Read/Query Layer & Public Projections', () => {
 
       const queryService = new AppQueryService(mockRepo);
 
-      await expect(
-        queryService.listPublicApps({ limit: 999999 })
-      ).rejects.toThrowError(AppError);
+      await expect(queryService.listPublicApps({ limit: 999999 })).rejects.toThrowError(AppError);
     });
 
     it('rejects invalid category slugs with path traversal attempts', async () => {
@@ -121,9 +119,9 @@ describe('App Read/Query Layer & Public Projections', () => {
 
       const queryService = new AppQueryService(mockRepo);
 
-      await expect(
-        queryService.getPublicAppDetail('non-existent-slug')
-      ).rejects.toThrowError(AppError);
+      await expect(queryService.getPublicAppDetail('non-existent-slug')).rejects.toThrowError(
+        AppError
+      );
     });
 
     it('rejects invalid slug formats before querying database', async () => {
@@ -133,9 +131,9 @@ describe('App Read/Query Layer & Public Projections', () => {
 
       const queryService = new AppQueryService(mockRepo);
 
-      await expect(
-        queryService.getPublicAppDetail('Invalid_Slug!@#')
-      ).rejects.toThrowError(AppError);
+      await expect(queryService.getPublicAppDetail('Invalid_Slug!@#')).rejects.toThrowError(
+        AppError
+      );
     });
   });
 

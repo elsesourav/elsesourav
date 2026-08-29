@@ -4,15 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription, Badge, Button } from '@elsesourav/ui';
 import type { User } from '@elsesourav/types';
-import {
-  Shield,
-  Key,
-  Mail,
-  CheckCircle2,
-  Lock,
-  LogOut,
-  Globe,
-} from 'lucide-react';
+import { Shield, Key, Mail, CheckCircle2, Lock, LogOut, Globe } from 'lucide-react';
 
 interface SecuritySectionProps {
   user: User;
@@ -40,7 +32,10 @@ export function SecuritySection({ user }: SecuritySectionProps) {
               <span className="text-xs font-semibold text-zinc-200">Email Address</span>
             </div>
             {user.status === 'active' && (
-              <Badge variant="success" className="text-[10px] bg-emerald-950/60 text-emerald-300 border-emerald-500/30 gap-1">
+              <Badge
+                variant="success"
+                className="text-[10px] bg-emerald-950/60 text-emerald-300 border-emerald-500/30 gap-1"
+              >
                 <CheckCircle2 className="w-2.5 h-2.5" /> Active Account
               </Badge>
             )}
@@ -76,7 +71,9 @@ export function SecuritySection({ user }: SecuritySectionProps) {
         <div className="p-4 rounded-2xl bg-zinc-950/40 border border-zinc-800/60 space-y-3">
           <div className="flex items-center gap-2">
             <Globe className="w-4 h-4 text-zinc-400" />
-            <span className="text-xs font-semibold text-zinc-200">Authentication Infrastructure</span>
+            <span className="text-xs font-semibold text-zinc-200">
+              Authentication Infrastructure
+            </span>
           </div>
 
           <div className="flex items-center gap-2">
@@ -85,7 +82,8 @@ export function SecuritySection({ user }: SecuritySectionProps) {
             </Badge>
           </div>
           <p className="text-[11px] text-zinc-500">
-            Authentication is securely managed by Supabase Auth with encrypted tokens and session cookies.
+            Authentication is securely managed by Supabase Auth with encrypted tokens and session
+            cookies.
           </p>
         </div>
 

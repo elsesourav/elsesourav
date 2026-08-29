@@ -100,10 +100,7 @@ export async function updatePreferencesAction(data: {
   }
 }
 
-export async function deleteAccountAction(data: {
-  confirmation: string;
-  reason?: string;
-}) {
+export async function deleteAccountAction(data: { confirmation: string; reason?: string }) {
   const user = await getSessionUser();
   if (!user?.id) {
     return { success: false, error: 'Unauthorized' };

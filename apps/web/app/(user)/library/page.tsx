@@ -39,7 +39,8 @@ export default async function LibraryPage() {
             </Badge>
           </div>
           <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl">
-            Quickly launch and manage software, utilities, and tools you have bookmarked for your workflows.
+            Quickly launch and manage software, utilities, and tools you have bookmarked for your
+            workflows.
           </p>
         </div>
 

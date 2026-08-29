@@ -44,7 +44,9 @@ export function AppScreenshotGallery({ appName, screenshots }: AppScreenshotGall
           <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between pointer-events-none">
             <button
               type="button"
-              onClick={() => setSelectedIndex((prev) => (prev > 0 ? prev - 1 : screenshots.length - 1))}
+              onClick={() =>
+                setSelectedIndex((prev) => (prev > 0 ? prev - 1 : screenshots.length - 1))
+              }
               className="pointer-events-auto w-10 h-10 rounded-full bg-zinc-900/80 border border-zinc-700/80 text-white flex items-center justify-center hover:bg-zinc-800 shadow-xl transition-all"
               aria-label="Previous screenshot"
             >
@@ -52,7 +54,9 @@ export function AppScreenshotGallery({ appName, screenshots }: AppScreenshotGall
             </button>
             <button
               type="button"
-              onClick={() => setSelectedIndex((prev) => (prev < screenshots.length - 1 ? prev + 1 : 0))}
+              onClick={() =>
+                setSelectedIndex((prev) => (prev < screenshots.length - 1 ? prev + 1 : 0))
+              }
               className="pointer-events-auto w-10 h-10 rounded-full bg-zinc-900/80 border border-zinc-700/80 text-white flex items-center justify-center hover:bg-zinc-800 shadow-xl transition-all"
               aria-label="Next screenshot"
             >
@@ -74,7 +78,9 @@ export function AppScreenshotGallery({ appName, screenshots }: AppScreenshotGall
                 type="button"
                 onClick={() => setSelectedIndex(idx)}
                 className={`relative w-28 aspect-video rounded-lg overflow-hidden border-2 transition-all shrink-0 ${
-                  isSelected ? 'border-indigo-500 ring-2 ring-indigo-500/20' : 'border-zinc-800 opacity-60 hover:opacity-100'
+                  isSelected
+                    ? 'border-indigo-500 ring-2 ring-indigo-500/20'
+                    : 'border-zinc-800 opacity-60 hover:opacity-100'
                 }`}
                 aria-label={`View screenshot ${idx + 1}`}
               >

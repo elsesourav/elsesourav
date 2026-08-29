@@ -92,13 +92,9 @@ describe('Admin Security Boundary, Role Authorization & Telemetry Service', () =
 
     const service = new AdminService(mockRepo);
 
-    await expect(
-      service.getDashboardStats(mockNormalUserContext)
-    ).rejects.toThrowError(AppError);
+    await expect(service.getDashboardStats(mockNormalUserContext)).rejects.toThrowError(AppError);
 
-    await expect(
-      service.getRecentActivities(mockNormalUserContext)
-    ).rejects.toThrowError(AppError);
+    await expect(service.getRecentActivities(mockNormalUserContext)).rejects.toThrowError(AppError);
 
     expect(mockRepo.getDashboardMetrics).not.toHaveBeenCalled();
     expect(mockRepo.getRecentActivity).not.toHaveBeenCalled();
@@ -110,9 +106,7 @@ describe('Admin Security Boundary, Role Authorization & Telemetry Service', () =
 
     const invalidContext = { id: '', email: '', role: 'USER' } as AdminContext;
 
-    await expect(
-      service.getDashboardStats(invalidContext)
-    ).rejects.toThrowError(AppError);
+    await expect(service.getDashboardStats(invalidContext)).rejects.toThrowError(AppError);
   });
 
   // ==========================================
@@ -122,8 +116,12 @@ describe('Admin Security Boundary, Role Authorization & Telemetry Service', () =
     it('allows reading and writing dynamic site configuration key-values', async () => {
       const mockPrisma = {
         siteSetting: {
-          findUnique: vi.fn().mockResolvedValue({ key: 'announcement_banner', value: 'Welcome to ElseSourav' }),
-          upsert: vi.fn().mockResolvedValue({ key: 'announcement_banner', value: 'New release is live' }),
+          findUnique: vi
+            .fn()
+            .mockResolvedValue({ key: 'announcement_banner', value: 'Welcome to ElseSourav' }),
+          upsert: vi
+            .fn()
+            .mockResolvedValue({ key: 'announcement_banner', value: 'New release is live' }),
           findMany: vi.fn().mockResolvedValue([
             { key: 'announcement_banner', value: 'Welcome to ElseSourav' },
             { key: 'maintenance_mode', value: 'false' },
@@ -136,11 +134,25 @@ describe('Admin Security Boundary, Role Authorization & Telemetry Service', () =
       const val = await repo.getSetting('announcement_banner');
       expect(val).toBe('Welcome to ElseSourav');
 
-      await repo.upsertSetting('announcement_banner', 'New release is live', 'Hero banner message', 'admin-1');
+      await repo.upsertSetting(
+        'announcement_banner',
+        'New release is live',
+        'Hero banner message',
+        'admin-1'
+      );
       expect(mockPrisma.siteSetting.upsert).toHaveBeenCalledWith({
         where: { key: 'announcement_banner' },
-        update: { value: 'New release is live', description: 'Hero banner message', updatedBy: 'admin-1' },
-        create: { key: 'announcement_banner', value: 'New release is live', description: 'Hero banner message', updatedBy: 'admin-1' },
+        update: {
+          value: 'New release is live',
+          description: 'Hero banner message',
+          updatedBy: 'admin-1',
+        },
+        create: {
+          key: 'announcement_banner',
+          value: 'New release is live',
+          description: 'Hero banner message',
+          updatedBy: 'admin-1',
+        },
       });
 
       const all = await repo.getAllSettings();

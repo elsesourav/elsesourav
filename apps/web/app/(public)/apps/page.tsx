@@ -1,5 +1,9 @@
 import { Metadata } from 'next';
-import { discoverPublishedApps, getActiveCategories, getActiveTags } from '@/features/apps/queries/get-apps';
+import {
+  discoverPublishedApps,
+  getActiveCategories,
+  getActiveTags,
+} from '@/features/apps/queries/get-apps';
 import { AppCard } from '@/features/apps/components/AppCard';
 import { AppDiscoveryBar } from '@/features/apps/components/AppDiscoveryBar';
 import { AppPagination } from '@/features/apps/components/AppPagination';
@@ -31,7 +35,8 @@ export async function generateMetadata({ searchParams }: AppsPageProps): Promise
       ? `${category.charAt(0).toUpperCase() + category.slice(1)} Applications`
       : 'Explore Applications';
 
-  const description = 'Explore the complete ecosystem of web apps, browser extensions, developer utilities, and software created by ElseSourav.';
+  const description =
+    'Explore the complete ecosystem of web apps, browser extensions, developer utilities, and software created by ElseSourav.';
   const canonicalUrl = 'https://elsesourav.com/apps';
 
   return {
@@ -88,7 +93,9 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
     }),
   ]);
 
-  const hasFilters = Boolean(categorySlug || tagSlug || query || (params.sort && params.sort !== 'sortOrder'));
+  const hasFilters = Boolean(
+    categorySlug || tagSlug || query || (params.sort && params.sort !== 'sortOrder')
+  );
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -130,7 +137,8 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
             </Badge>
           </div>
           <p className="text-sm text-zinc-400 max-w-2xl">
-            Browse the complete catalog of web applications, browser extensions, developer utilities, and software created by ElseSourav.
+            Browse the complete catalog of web applications, browser extensions, developer
+            utilities, and software created by ElseSourav.
           </p>
         </div>
 

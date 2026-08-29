@@ -21,9 +21,7 @@ export const ServerEnvSchema = z.object({
     .string()
     .min(1, 'CLOUDINARY_API_SECRET is required for server upload signatures')
     .optional(),
-  NODE_ENV: z
-    .enum(['development', 'staging', 'production', 'test'])
-    .default('development'),
+  NODE_ENV: z.enum(['development', 'staging', 'production', 'test']).default('development'),
 });
 
 export type ServerEnv = z.infer<typeof ServerEnvSchema>;

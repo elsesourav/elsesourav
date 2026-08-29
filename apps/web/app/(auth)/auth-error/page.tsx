@@ -1,6 +1,14 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, Button } from '@elsesourav/ui';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+  Button,
+} from '@elsesourav/ui';
 import { AlertTriangle } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -22,7 +30,8 @@ export default function AuthErrorPage() {
       </CardHeader>
       <CardContent>
         <p className="text-xs text-zinc-500">
-          This could happen if the session expired, the authorization code was already consumed, or permissions were cancelled.
+          This could happen if the session expired, the authorization code was already consumed, or
+          permissions were cancelled.
         </p>
       </CardContent>
       <CardFooter className="flex justify-center gap-3 border-t border-zinc-800/50 pt-4">
@@ -32,9 +41,7 @@ export default function AuthErrorPage() {
           </Button>
         </Link>
         <Link href="/support">
-          <Button className="bg-indigo-600 hover:bg-indigo-500 text-white">
-            Get Support
-          </Button>
+          <Button className="bg-indigo-600 hover:bg-indigo-500 text-white">Get Support</Button>
         </Link>
       </CardFooter>
     </Card>

@@ -14,7 +14,9 @@ export function resetSupportFactoryCounter(): void {
   messageCounter = 1;
 }
 
-export function createTicketMessage(overrides?: Partial<SupportTicketMessage>): SupportTicketMessage {
+export function createTicketMessage(
+  overrides?: Partial<SupportTicketMessage>
+): SupportTicketMessage {
   const index = messageCounter++;
   return {
     id: overrides?.id || `msg-test-${index}`,
@@ -23,7 +25,8 @@ export function createTicketMessage(overrides?: Partial<SupportTicketMessage>): 
     senderName: overrides?.senderName || 'Developer Member',
     senderPhotoUrl: overrides?.senderPhotoUrl,
     senderRole: overrides?.senderRole || 'USER',
-    message: overrides?.message || `This is reply message #${index} regarding the issue diagnostics.`,
+    message:
+      overrides?.message || `This is reply message #${index} regarding the issue diagnostics.`,
     attachments: overrides?.attachments || [],
     isInternalNote: overrides?.isInternalNote ?? false,
     createdAt: overrides?.createdAt ?? 1704067200000 + index * 60000,

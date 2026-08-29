@@ -4,18 +4,30 @@ export const BlogSlugSchema = z
   .string()
   .min(3, 'Slug must be at least 3 characters')
   .max(100, 'Slug cannot exceed 100 characters')
-  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must consist of lowercase alphanumeric words separated by single hyphens');
+  .regex(
+    /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+    'Slug must consist of lowercase alphanumeric words separated by single hyphens'
+  );
 
 export const CreateBlogPostSchema = z.object({
-  title: z.string().min(5, 'Title must be at least 5 characters').max(150, 'Title cannot exceed 150 characters'),
+  title: z
+    .string()
+    .min(5, 'Title must be at least 5 characters')
+    .max(150, 'Title cannot exceed 150 characters'),
   slug: BlogSlugSchema.optional(),
-  excerpt: z.string().min(10, 'Excerpt must be at least 10 characters').max(300, 'Excerpt cannot exceed 300 characters'),
+  excerpt: z
+    .string()
+    .min(10, 'Excerpt must be at least 10 characters')
+    .max(300, 'Excerpt cannot exceed 300 characters'),
   content: z.string().min(50, 'Content must contain at least 50 characters'),
   coverImageUrl: z.string().url('Cover image must be a valid URL').optional().or(z.literal('')),
   categoryId: z.string().min(1, 'Category ID is required').optional(),
   tagIds: z.array(z.string()).optional().default([]),
   seoTitle: z.string().max(70, 'SEO title should not exceed 70 characters').optional(),
-  seoDescription: z.string().max(160, 'SEO description should not exceed 160 characters').optional(),
+  seoDescription: z
+    .string()
+    .max(160, 'SEO description should not exceed 160 characters')
+    .optional(),
   readingTime: z.number().int().min(1).optional(),
 });
 
@@ -31,7 +43,9 @@ export const AdminSaveBlogSchema = z.object({
   content: z.string().min(50, 'Content must contain at least 50 characters'),
   coverImageUrl: z.string().url('Cover image must be a valid URL').optional().or(z.literal('')),
   categoryId: z.string().min(1, 'Category is required'),
-  status: z.enum(['draft', 'published', 'archived', 'DRAFT', 'PUBLISHED', 'ARCHIVED']).default('draft'),
+  status: z
+    .enum(['draft', 'published', 'archived', 'DRAFT', 'PUBLISHED', 'ARCHIVED'])
+    .default('draft'),
   seoTitle: z.string().max(70).optional().or(z.literal('')),
   seoDescription: z.string().max(160).optional().or(z.literal('')),
 });

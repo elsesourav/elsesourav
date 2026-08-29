@@ -9,7 +9,8 @@ describe('Help Article Reader Query, Feedback & Isolation Tests', () => {
     slug: 'quickstart-guide',
     title: 'Quickstart Guide to ElseSourav',
     excerpt: 'Step-by-step onboarding for ElseSourav apps.',
-    content: '## Step 1: Account Creation\n\nNavigate to `/signup` and enter your credentials.\n\n```bash\ncurl -I https://elsesourav.com/api/health\n```',
+    content:
+      '## Step 1: Account Creation\n\nNavigate to `/signup` and enter your credentials.\n\n```bash\ncurl -I https://elsesourav.com/api/health\n```',
     category: {
       id: 'cat-getting-started',
       name: 'Getting Started',
@@ -70,11 +71,19 @@ describe('Help Article Reader Query, Feedback & Isolation Tests', () => {
     } as unknown as HelpRepository;
 
     const service = new HelpService(mockRepo);
-    const related = await service.getRelatedArticles('art-getting-started-1', 'cat-getting-started', 3);
+    const related = await service.getRelatedArticles(
+      'art-getting-started-1',
+      'cat-getting-started',
+      3
+    );
 
     expect(related).toHaveLength(1);
     expect(related[0]?.slug).toBe('account-security');
-    expect(mockRepo.findRelatedArticles).toHaveBeenCalledWith('art-getting-started-1', 'cat-getting-started', 3);
+    expect(mockRepo.findRelatedArticles).toHaveBeenCalledWith(
+      'art-getting-started-1',
+      'cat-getting-started',
+      3
+    );
   });
 
   it('records helpfulness votes successfully', async () => {

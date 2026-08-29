@@ -19,7 +19,11 @@ describe('Validation Schemas Contract Test', () => {
   });
 
   it('validates SignUp credentials correctly', () => {
-    const valid = { email: 'user@elsesourav.com', password: 'securepassword123', displayName: 'Sourav' };
+    const valid = {
+      email: 'user@elsesourav.com',
+      password: 'securepassword123',
+      displayName: 'Sourav',
+    };
     expect(SignUpSchema.safeParse(valid).success).toBe(true);
   });
 
@@ -42,7 +46,8 @@ describe('Validation Schemas Contract Test', () => {
       title: 'Modern Architecture in 2026',
       slug: 'modern-architecture-2026',
       excerpt: 'A deep exploration into Turborepo and Next.js 15 App Router architecture.',
-      content: 'Detailed breakdown of system architecture and performance characteristics in web software.',
+      content:
+        'Detailed breakdown of system architecture and performance characteristics in web software.',
       category: 'architecture',
     };
 

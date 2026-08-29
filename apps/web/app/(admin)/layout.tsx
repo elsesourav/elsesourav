@@ -18,11 +18,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
   const session = await getServerSession({
     getAll: () => cookieStore.getAll(),

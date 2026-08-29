@@ -25,7 +25,8 @@ export default function HelpError({
         <div className="space-y-2">
           <h2 className="text-xl font-bold text-zinc-100">Unable to load help documentation</h2>
           <p className="text-xs text-zinc-400 leading-relaxed">
-            We encountered a problem while retrieving knowledge base articles. Please try refreshing.
+            We encountered a problem while retrieving knowledge base articles. Please try
+            refreshing.
           </p>
         </div>
 

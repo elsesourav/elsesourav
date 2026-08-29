@@ -1,7 +1,10 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getPublicBlogPostBySlug, getRelatedBlogPosts } from '@/features/blog/queries/get-blog-post';
+import {
+  getPublicBlogPostBySlug,
+  getRelatedBlogPosts,
+} from '@/features/blog/queries/get-blog-post';
 import { BlogArticleHeader } from '@/features/blog/components/BlogArticleHeader';
 import { BlogContentRenderer } from '@/features/blog/components/BlogContentRenderer';
 import { RelatedPosts } from '@/features/blog/components/RelatedPosts';
@@ -86,7 +89,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         author: {
           '@type': 'Person',
           name: post.author.displayName,
-          url: post.author.username ? `https://elsesourav.com/u/${post.author.username}` : undefined,
+          url: post.author.username
+            ? `https://elsesourav.com/u/${post.author.username}`
+            : undefined,
         },
         publisher: {
           '@type': 'Organization',

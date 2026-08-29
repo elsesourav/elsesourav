@@ -15,11 +15,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function UserLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function UserLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
   const session = await getServerSession({
     getAll: () => cookieStore.getAll(),
@@ -34,7 +30,10 @@ export default async function UserLayout({
       <header className="border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-xl sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
           <div className="flex items-center gap-6">
-            <Link href="/dashboard" className="flex items-center gap-2 font-bold text-base text-white tracking-tight">
+            <Link
+              href="/dashboard"
+              className="flex items-center gap-2 font-bold text-base text-white tracking-tight"
+            >
               <Sparkles className="w-5 h-5 text-indigo-400" />
               <span>ElseSourav</span>
             </Link>

@@ -3,7 +3,7 @@
 **Project**: ElseSourav Monorepo V2  
 **Package**: `@elsesourav/testing`  
 **Date**: August 29, 2026  
-**Status**: COMPLETE — READY FOR UI DATA-BINDING VALIDATION  
+**Status**: COMPLETE — READY FOR UI DATA-BINDING VALIDATION
 
 ---
 
@@ -58,7 +58,12 @@ packages/testing/src/
 Factories provide full TypeScript type safety matching `@elsesourav/types` and allow targeted field overrides:
 
 ```typescript
-import { createApp, createUser, createSupportTicket, createTicketMessage } from '@elsesourav/testing';
+import {
+  createApp,
+  createUser,
+  createSupportTicket,
+  createTicketMessage,
+} from '@elsesourav/testing';
 
 // Create a custom app with specific tags
 const customApp = createApp({
@@ -89,16 +94,16 @@ const customTicket = createSupportTicket({
 
 ## 3. UI Scenarios Mapped to Prompt 01 Problem Inventory
 
-| Prompt 01 Audit Area | Test Scenario / Fixture | Verification Objective |
-| :--- | :--- | :--- |
-| **Catalog Empty States** | `createEmptyAppsCatalogScenario()` | Verifies `AppsEmptyState` renders with filter reset action |
-| **Catalog Pagination** | `createLargePaginatedAppsCatalogScenario(30, 2, 12)` | Verifies `AppPagination` displays correct pages (3 pages) & next/prev navigation |
-| **Long Text & Truncation** | `fixtureLongTextApp` | Validates `line-clamp-2` and card boundary wrapping on 320px/375px screens |
-| **Zero-State Metrics** | `fixtureZeroStatsApp` | Validates default badge rendering when views/ratings are 0 |
-| **Unicode & Special Chars** | `fixtureUnicodeUser`, `fixtureLongTextApp` | Tests UTF-8, umlauts, emojis, and international script rendering |
-| **Multi-Turn Chat History** | `fixtureMultiTurnTicket` | Verifies timeline scroll container with 12 messages and internal staff notes |
-| **Library Management** | `createActiveUserDashboardScenario()` | Tests pinned bookmark badges and favorite action toggles |
-| **Notification Center** | `fixtureNotificationsList` | Verifies unread counter (2 unread) and mark-as-read optimistic UI |
+| Prompt 01 Audit Area        | Test Scenario / Fixture                              | Verification Objective                                                           |
+| :-------------------------- | :--------------------------------------------------- | :------------------------------------------------------------------------------- |
+| **Catalog Empty States**    | `createEmptyAppsCatalogScenario()`                   | Verifies `AppsEmptyState` renders with filter reset action                       |
+| **Catalog Pagination**      | `createLargePaginatedAppsCatalogScenario(30, 2, 12)` | Verifies `AppPagination` displays correct pages (3 pages) & next/prev navigation |
+| **Long Text & Truncation**  | `fixtureLongTextApp`                                 | Validates `line-clamp-2` and card boundary wrapping on 320px/375px screens       |
+| **Zero-State Metrics**      | `fixtureZeroStatsApp`                                | Validates default badge rendering when views/ratings are 0                       |
+| **Unicode & Special Chars** | `fixtureUnicodeUser`, `fixtureLongTextApp`           | Tests UTF-8, umlauts, emojis, and international script rendering                 |
+| **Multi-Turn Chat History** | `fixtureMultiTurnTicket`                             | Verifies timeline scroll container with 12 messages and internal staff notes     |
+| **Library Management**      | `createActiveUserDashboardScenario()`                | Tests pinned bookmark badges and favorite action toggles                         |
+| **Notification Center**     | `fixtureNotificationsList`                           | Verifies unread counter (2 unread) and mark-as-read optimistic UI                |
 
 ---
 
@@ -117,6 +122,7 @@ beforeEach(() => {
 ---
 
 ## 5. Privacy & Security Invariants
+
 - **No real email addresses or names** — all entities use `@example.test` and simulated identities.
 - **No real passwords or OAuth credentials** are ever stored in test code.
 - **No live Cloudinary uploads** — mock assets point to deterministic fixture paths.

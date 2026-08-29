@@ -1,6 +1,7 @@
 import type { ID, Timestamp } from './common.types';
 
-export type MediaType = 'avatar' | 'app_icon' | 'app_screenshot' | 'blog_cover' | 'help_image' | 'generic';
+export type MediaType =
+  'avatar' | 'app_icon' | 'app_screenshot' | 'blog_cover' | 'help_image' | 'generic';
 
 export type MediaFolder = 'users' | 'apps' | 'blog' | 'help' | 'general';
 
@@ -47,7 +48,8 @@ export interface DirectUploadParams {
 }
 
 export interface AdminMediaReference {
-  readonly resourceType: 'App' | 'BlogPost' | 'HelpArticle' | 'User' | 'SupportTicket';
+  readonly resourceType:
+    'App' | 'BlogPost' | 'HelpArticle' | 'User' | 'SupportTicket' | 'SiteSetting' | 'DirectUpload';
   readonly resourceId: string;
   readonly resourceName: string;
   readonly fieldName: string;

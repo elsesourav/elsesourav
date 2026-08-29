@@ -109,9 +109,11 @@ export function BlogDiscoveryBar({ categories = [], tags = [] }: BlogDiscoveryBa
             >
               <span>{cat.name}</span>
               {cat.postCount !== undefined && cat.postCount > 0 && (
-                <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                  isActive ? 'bg-indigo-800 text-indigo-100' : 'bg-zinc-800 text-zinc-400'
-                }`}>
+                <span
+                  className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                    isActive ? 'bg-indigo-800 text-indigo-100' : 'bg-zinc-800 text-zinc-400'
+                  }`}
+                >
                   {cat.postCount}
                 </span>
               )}

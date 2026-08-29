@@ -67,10 +67,18 @@ describe('Server-Side Security & Resource Ownership Boundaries', () => {
 
     const repo = new SupportRepository(mockPrisma as unknown as PrismaClient);
 
-    const staffAccess = await repo.findByIdAndVerifyOwnership('ticket-123', 'usr-staff-99', 'STAFF');
+    const staffAccess = await repo.findByIdAndVerifyOwnership(
+      'ticket-123',
+      'usr-staff-99',
+      'STAFF'
+    );
     expect(staffAccess.id).toBe('ticket-123');
 
-    const adminAccess = await repo.findByIdAndVerifyOwnership('ticket-123', 'usr-admin-01', 'ADMIN');
+    const adminAccess = await repo.findByIdAndVerifyOwnership(
+      'ticket-123',
+      'usr-admin-01',
+      'ADMIN'
+    );
     expect(adminAccess.id).toBe('ticket-123');
   });
 

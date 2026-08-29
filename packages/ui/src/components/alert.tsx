@@ -6,12 +6,7 @@ export interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: 'info' | 'success' | 'warning' | 'error';
 }
 
-export function Alert({
-  className,
-  variant = 'info',
-  children,
-  ...props
-}: AlertProps) {
+export function Alert({ className, variant = 'info', children, ...props }: AlertProps) {
   const variants = {
     info: 'bg-indigo-950/40 border-indigo-800/60 text-indigo-200',
     success: 'bg-emerald-950/40 border-emerald-800/60 text-emerald-200',
@@ -44,11 +39,10 @@ export function Alert({
   );
 }
 
-export function AlertTitle({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h5 className={cn('font-semibold leading-none tracking-tight mb-1', className)} {...props} />;
+export function AlertTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
+  return (
+    <h5 className={cn('font-semibold leading-none tracking-tight mb-1', className)} {...props} />
+  );
 }
 
 export function AlertDescription({

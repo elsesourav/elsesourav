@@ -34,19 +34,29 @@ export function BlogPagination({ currentPage, totalPages, totalMatches }: BlogPa
     >
       <div className="text-xs text-zinc-400">
         Page <span className="font-semibold text-zinc-200">{currentPage}</span> of{' '}
-        <span className="font-semibold text-zinc-200">{totalPages}</span> ({totalMatches} total articles)
+        <span className="font-semibold text-zinc-200">{totalPages}</span> ({totalMatches} total
+        articles)
       </div>
 
       <div className="flex items-center gap-1.5">
         {/* Previous Page */}
         {currentPage > 1 ? (
           <Link href={createPageUrl(currentPage - 1)} aria-label="Go to previous page">
-            <Button variant="outline" size="sm" className="h-8 px-2.5 text-xs border-zinc-800 hover:bg-zinc-800 text-zinc-300">
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-8 px-2.5 text-xs border-zinc-800 hover:bg-zinc-800 text-zinc-300"
+            >
               <ChevronLeft className="w-3.5 h-3.5 mr-1" /> Prev
             </Button>
           </Link>
         ) : (
-          <Button variant="outline" size="sm" disabled className="h-8 px-2.5 text-xs border-zinc-800/50 text-zinc-600 cursor-not-allowed">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled
+            className="h-8 px-2.5 text-xs border-zinc-800/50 text-zinc-600 cursor-not-allowed"
+          >
             <ChevronLeft className="w-3.5 h-3.5 mr-1" /> Prev
           </Button>
         )}
@@ -82,12 +92,21 @@ export function BlogPagination({ currentPage, totalPages, totalMatches }: BlogPa
         {/* Next Page */}
         {currentPage < totalPages ? (
           <Link href={createPageUrl(currentPage + 1)} aria-label="Go to next page">
-            <Button variant="outline" size="sm" className="h-8 px-2.5 text-xs border-zinc-800 hover:bg-zinc-800 text-zinc-300">
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-8 px-2.5 text-xs border-zinc-800 hover:bg-zinc-800 text-zinc-300"
+            >
               Next <ChevronRight className="w-3.5 h-3.5 ml-1" />
             </Button>
           </Link>
         ) : (
-          <Button variant="outline" size="sm" disabled className="h-8 px-2.5 text-xs border-zinc-800/50 text-zinc-600 cursor-not-allowed">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled
+            className="h-8 px-2.5 text-xs border-zinc-800/50 text-zinc-600 cursor-not-allowed"
+          >
             Next <ChevronRight className="w-3.5 h-3.5 ml-1" />
           </Button>
         )}

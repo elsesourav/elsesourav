@@ -30,6 +30,7 @@ pnpm build
 ```
 
 This ensures:
+
 1. `pnpm typecheck`: TypeScript strict typecheck (0 errors allowed).
 2. `pnpm lint`: ESLint check with zero warnings.
 3. `pnpm test`: Vitest full test matrix across all 9 packages.

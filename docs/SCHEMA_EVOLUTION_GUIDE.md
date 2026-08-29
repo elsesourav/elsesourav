@@ -32,25 +32,31 @@ When evolving a Firestore document schema (e.g., splitting a field, renaming a p
 ```
 
 ### Phase 1: Deploy Dual-Read Application Code
+
 Update the Zod schema and repository parser to accept both old and new formats using `.transform()` or `.optional()` fallbacks:
+
 ```ts
 // Example: Moving from string 'author' to object 'author: { id, name }'
 export const authorFieldSchema = z.union([
   z.string().transform((name) => ({ id: 'legacy-author', name })),
-  z.object({ id: z.string(), name: z.string() })
+  z.object({ id: z.string(), name: z.string() }),
 ]);
 ```
 
 ### Phase 2: Deploy New Schema Writes
+
 Update the admin creation and editing flows to persist documents according to `schemaVersion: 2`. All new and updated documents will immediately write the latest format.
 
 ### Phase 3: Run Deterministic Background Backfill (Optional)
+
 For historical documents, write an idempotent batch script using `db:validate` and Firestore Batched Writes (500 docs/batch) to backfill legacy documents.
 
 ### Phase 4: Switch to Strict Schema Reads
+
 Increment `schemaVersion` requirement and verify via `npm run db:validate` that 0 documents remain on legacy schemas.
 
 ### Phase 5: Remove Legacy Fallbacks
+
 Clean up deprecated schema unions and fallback transformers in the next platform release.
 
 ---
@@ -70,6 +76,7 @@ To eliminate bugs caused by mixing JS `Date`, Firestore `Timestamp`, ISO 8601 st
 Public resource identifiers (`/apps/:slug`, `/blog/:slug`, `/help/:category/:slug`) represent permanent URLs indexed by search engines and shared by users.
 
 ### Invariants:
+
 - **Format**: Lowercase kebab-case matching `/^[a-z0-9]+(?:-[a-z0-9]+)*$/`.
 - **Immutability**: Slugs must NOT automatically regenerate when an admin edits the title of an existing published application or article.
 - **Uniqueness**: Enforced across collections before creation via `validateDatabaseIntegrity()`.

@@ -29,7 +29,9 @@ describe('Environment Validation Configuration', () => {
       NEXT_PUBLIC_SITE_URL: 'not-a-valid-url',
     };
 
-    expect(() => validateClientEnv(invalidEnv)).toThrowError(/NEXT_PUBLIC_SITE_URL must be a valid absolute URL/);
+    expect(() => validateClientEnv(invalidEnv)).toThrowError(
+      /NEXT_PUBLIC_SITE_URL must be a valid absolute URL/
+    );
   });
 
   it('validates server environment variables with valid inputs', () => {
@@ -50,7 +52,9 @@ describe('Environment Validation Configuration', () => {
       NODE_ENV: 'invalid_mode',
     };
 
-    expect(() => validateServerEnv(invalidServerEnv)).toThrowError(/Invalid server environment configuration/);
+    expect(() => validateServerEnv(invalidServerEnv)).toThrowError(
+      /Invalid server environment configuration/
+    );
   });
 
   it('bootstraps application environment flags accurately', () => {
@@ -96,7 +100,9 @@ describe('Environment Validation Configuration', () => {
 
     // ClientEnv type and object must not contain server secret properties
     expect((clientEnv as unknown as Record<string, unknown>).DATABASE_URL).toBeUndefined();
-    expect((clientEnv as unknown as Record<string, unknown>).SUPABASE_SERVICE_ROLE_KEY).toBeUndefined();
+    expect(
+      (clientEnv as unknown as Record<string, unknown>).SUPABASE_SERVICE_ROLE_KEY
+    ).toBeUndefined();
     expect(clientEnv.NEXT_PUBLIC_SITE_URL).toBe('https://elsesourav.com');
   });
 });

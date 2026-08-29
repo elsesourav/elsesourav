@@ -1,7 +1,7 @@
-import { describe, it, expect, vi } from 'vitest';
-import { MediaService, MediaRepository } from '@elsesourav/database';
-import { AppError } from '@elsesourav/types';
+import { MediaRepository, MediaService, PrismaClient } from '@elsesourav/database';
 import type { AdminMediaReference } from '@elsesourav/types';
+import { AppError } from '@elsesourav/types';
+import { describe, expect, it, vi } from 'vitest';
 
 vi.mock('@elsesourav/media', () => ({
   deleteCloudinaryAsset: vi.fn().mockResolvedValue(true),
@@ -30,7 +30,8 @@ describe('Admin Media Library & Reference Protection Security', () => {
             {
               id: 'elsesourav/apps/terminal_icon',
               publicId: 'elsesourav/apps/terminal_icon',
-              secureUrl: 'https://res.cloudinary.com/demo/image/upload/v1/elsesourav/apps/terminal_icon.png',
+              secureUrl:
+                'https://res.cloudinary.com/demo/image/upload/v1/elsesourav/apps/terminal_icon.png',
               domain: 'apps',
               createdAt: Date.now(),
               isReferenced: true,
@@ -150,6 +151,54 @@ describe('Admin Media Library & Reference Protection Security', () => {
       await expect(
         service.deleteMediaAdmin('user-1', 'USER', 'elsesourav/general/test')
       ).rejects.toThrowError(AppError);
+    });
+  });
+
+  describe('Media Repository Direct Upload Registry & Categories', () => {
+    it('records direct uploads into media_library_items_json setting', async () => {
+      const mockPrisma = {
+        siteSetting: {
+          findUnique: vi.fn().mockResolvedValue({
+            key: 'media_library_items_json',
+            value: JSON.stringify([
+              {
+                url: 'https://example.com/old.png',
+                publicId: 'old',
+                domain: 'general',
+                title: 'Old',
+                createdAt: 123,
+              },
+            ]),
+          }),
+          upsert: vi.fn().mockResolvedValue({}),
+        },
+        auditLog: {
+          create: vi.fn().mockResolvedValue({}),
+        },
+      } as unknown as PrismaClient;
+
+      const repo = new MediaRepository(mockPrisma);
+      await repo.recordUploadedAsset('admin-1', {
+        url: 'https://example.com/new-avatar.png',
+        publicId: 'users/new-avatar',
+        domain: 'users',
+        title: 'New Avatar',
+        bytes: 1024,
+      });
+
+      expect(mockPrisma.siteSetting.upsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { key: 'media_library_items_json' },
+        })
+      );
+      expect(mockPrisma.auditLog.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            action: 'MEDIA_ASSET_UPLOADED',
+            entityId: 'users/new-avatar',
+          }),
+        })
+      );
     });
   });
 });

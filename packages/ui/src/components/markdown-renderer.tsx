@@ -118,8 +118,7 @@ export function renderInlineMarkdown(text: string): React.ReactNode[] {
         // Safe Markdown Link (XSS Protected)
         const isSafe = isSafeUrl(rawLinkUrl);
         if (isSafe) {
-          const isExternal =
-            rawLinkUrl.startsWith('http://') || rawLinkUrl.startsWith('https://');
+          const isExternal = rawLinkUrl.startsWith('http://') || rawLinkUrl.startsWith('https://');
           nodes.push(
             <a
               key={`link-${keyIndex++}`}
@@ -264,9 +263,7 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
 
       // 3. Horizontal Rules
       if (line.trim() === '---' || line.trim() === '***') {
-        result.push(
-          <hr key={`hr-${blockIndex++}`} className="my-8 border-border-subtle" />
-        );
+        result.push(<hr key={`hr-${blockIndex++}`} className="my-8 border-border-subtle" />);
         i++;
         continue;
       }
@@ -338,10 +335,7 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
                 </thead>
                 <tbody className="divide-y divide-border-subtle text-zinc-300">
                   {dataRows.map((row, rIdx) => (
-                    <tr
-                      key={rIdx}
-                      className="hover:bg-surface-elevated/40 transition-colors"
-                    >
+                    <tr key={rIdx} className="hover:bg-surface-elevated/40 transition-colors">
                       {row.map((cell, cIdx) => (
                         <td key={cIdx} className="px-4 py-2.5">
                           {renderInlineMarkdown(cell)}
@@ -361,10 +355,7 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
       if (line.startsWith('- ') || line.startsWith('* ')) {
         const listItems: string[] = [line.slice(2)];
         i++;
-        while (
-          i < lines.length &&
-          (lines[i]?.startsWith('- ') || lines[i]?.startsWith('* '))
-        ) {
+        while (i < lines.length && (lines[i]?.startsWith('- ') || lines[i]?.startsWith('* '))) {
           listItems.push(lines[i]!.slice(2));
           i++;
         }
@@ -459,9 +450,5 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
     return result;
   }, [content]);
 
-  return (
-    <article className={`prose-zinc max-w-none text-zinc-300 ${className}`}>
-      {blocks}
-    </article>
-  );
+  return <article className={`prose-zinc max-w-none text-zinc-300 ${className}`}>{blocks}</article>;
 }

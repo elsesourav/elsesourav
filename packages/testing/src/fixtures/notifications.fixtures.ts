@@ -5,7 +5,8 @@ export const fixtureNotificationUnreadAppRelease: NotificationItem = {
   userId: 'usr-standard-1',
   type: 'APP_UPDATE',
   title: 'Terminal Pro v2.1.0 Released',
-  message: 'WebGPU acceleration and multiplexed split panes are now available in your terminal emulator.',
+  message:
+    'WebGPU acceleration and multiplexed split panes are now available in your terminal emulator.',
   linkUrl: '/apps/terminal-pro',
   isRead: false,
   createdAt: 1704067200000,

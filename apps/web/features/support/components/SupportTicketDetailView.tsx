@@ -30,31 +30,46 @@ function getStatusBadge(status: SupportTicketStatus) {
   switch (status) {
     case 'open':
       return (
-        <Badge variant="info" className="text-[10px] bg-sky-950/60 text-sky-300 border border-sky-500/30">
+        <Badge
+          variant="info"
+          className="text-[10px] bg-sky-950/60 text-sky-300 border border-sky-500/30"
+        >
           Open
         </Badge>
       );
     case 'in_progress':
       return (
-        <Badge variant="warning" className="text-[10px] bg-amber-950/60 text-amber-300 border border-amber-500/30">
+        <Badge
+          variant="warning"
+          className="text-[10px] bg-amber-950/60 text-amber-300 border border-amber-500/30"
+        >
           In Progress
         </Badge>
       );
     case 'waiting_for_user':
       return (
-        <Badge variant="warning" className="text-[10px] bg-purple-950/60 text-purple-300 border border-purple-500/30">
+        <Badge
+          variant="warning"
+          className="text-[10px] bg-purple-950/60 text-purple-300 border border-purple-500/30"
+        >
           Waiting on You
         </Badge>
       );
     case 'resolved':
       return (
-        <Badge variant="success" className="text-[10px] bg-emerald-950/60 text-emerald-300 border border-emerald-500/30">
+        <Badge
+          variant="success"
+          className="text-[10px] bg-emerald-950/60 text-emerald-300 border border-emerald-500/30"
+        >
           Resolved
         </Badge>
       );
     case 'closed':
       return (
-        <Badge variant="default" className="text-[10px] bg-zinc-800 text-zinc-400 border border-zinc-700">
+        <Badge
+          variant="default"
+          className="text-[10px] bg-zinc-800 text-zinc-400 border border-zinc-700"
+        >
           Closed
         </Badge>
       );
@@ -232,7 +247,10 @@ export function SupportTicketDetailView({ ticket }: SupportTicketDetailViewProps
                     </span>
 
                     {isStaff && (
-                      <Badge variant="info" className="text-[9px] px-1.5 py-0.2 bg-indigo-900/80 text-indigo-200">
+                      <Badge
+                        variant="info"
+                        className="text-[9px] px-1.5 py-0.2 bg-indigo-900/80 text-indigo-200"
+                      >
                         Staff
                       </Badge>
                     )}
@@ -275,9 +293,7 @@ export function SupportTicketDetailView({ ticket }: SupportTicketDetailViewProps
             />
 
             <div className="flex items-center justify-between text-xs">
-              <span className="text-[11px] text-zinc-500">
-                {replyText.length}/2000 characters
-              </span>
+              <span className="text-[11px] text-zinc-500">{replyText.length}/2000 characters</span>
 
               <Button
                 type="submit"

@@ -1,4 +1,4 @@
-import type { ID, Timestamp, SortDirection } from './common.types';
+import type { ID, SortDirection, Timestamp } from './common.types';
 
 export type AppStatus = 'draft' | 'published' | 'archived';
 
@@ -58,6 +58,7 @@ export interface App {
   readonly name: string;
   readonly shortDescription: string;
   readonly description: string;
+  readonly documentationMd?: string;
   readonly iconUrl: string;
   readonly featuredImageUrl?: string;
   readonly screenshots: readonly string[];
@@ -114,6 +115,7 @@ export interface PublicApp {
   readonly name: string;
   readonly shortDescription: string;
   readonly description: string;
+  readonly documentationMd?: string;
   readonly iconUrl: string;
   readonly featuredImageUrl?: string;
   readonly screenshots: readonly string[];
@@ -158,6 +160,7 @@ export interface CreateAppInput {
   readonly slug: string;
   readonly shortDescription: string;
   readonly description: string;
+  readonly documentationMd?: string;
   readonly iconUrl: string;
   readonly featuredImageUrl?: string;
   readonly categoryId: string;
@@ -176,6 +179,7 @@ export interface UpdateAppInput {
   readonly slug?: string;
   readonly shortDescription?: string;
   readonly description?: string;
+  readonly documentationMd?: string;
   readonly iconUrl?: string;
   readonly featuredImageUrl?: string;
   readonly categoryId?: string;

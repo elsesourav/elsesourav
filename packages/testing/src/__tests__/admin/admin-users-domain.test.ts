@@ -1,11 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { UserService, UserRepository } from '@elsesourav/database';
 import { AppError } from '@elsesourav/types';
-import type {
-  User,
-  AdminUserListItem,
-  AdminUserDetail,
-} from '@elsesourav/types';
+import type { User, AdminUserListItem, AdminUserDetail } from '@elsesourav/types';
 
 describe('Admin User Management & Role Authorization Security', () => {
   const mockUser: User = {
@@ -113,9 +109,9 @@ describe('Admin User Management & Role Authorization Security', () => {
 
       const service = new UserService(mockRepo);
 
-      await expect(
-        service.getUserDetailAdmin('USER', 'user-target-1')
-      ).rejects.toThrowError(AppError);
+      await expect(service.getUserDetailAdmin('USER', 'user-target-1')).rejects.toThrowError(
+        AppError
+      );
     });
   });
 
@@ -139,11 +135,7 @@ describe('Admin User Management & Role Authorization Security', () => {
       );
 
       expect(updated.role).toBe('STAFF');
-      expect(mockRepo.updateRole).toHaveBeenCalledWith(
-        'user-target-1',
-        'STAFF',
-        'admin-1'
-      );
+      expect(mockRepo.updateRole).toHaveBeenCalledWith('user-target-1', 'STAFF', 'admin-1');
     });
 
     it('strictly forbids STAFF and normal USER from modifying user roles', async () => {

@@ -120,8 +120,7 @@ export function renderInlineMarkdown(text: string): React.ReactNode[] {
         // Safe Markdown Link (XSS Protected)
         const isSafe = isSafeUrl(rawLinkUrl);
         if (isSafe) {
-          const isExternal =
-            rawLinkUrl.startsWith('http://') || rawLinkUrl.startsWith('https://');
+          const isExternal = rawLinkUrl.startsWith('http://') || rawLinkUrl.startsWith('https://');
           nodes.push(
             <a
               key={`link-${keyIndex++}`}
@@ -266,9 +265,7 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
 
       // 3. Horizontal Rules
       if (line.trim() === '---' || line.trim() === '***') {
-        result.push(
-          <hr key={`hr-${blockIndex++}`} className="my-8 border-border-subtle" />
-        );
+        result.push(<hr key={`hr-${blockIndex++}`} className="my-8 border-border-subtle" />);
         i++;
         continue;
       }
@@ -310,11 +307,12 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
         }
 
         if (tableLines.length >= 2) {
-          const headerRow = tableLines[0]
-            ?.split('|')
-            .slice(1, -1)
-            .map((c) => c.trim()) || [];
-          
+          const headerRow =
+            tableLines[0]
+              ?.split('|')
+              .slice(1, -1)
+              .map((c) => c.trim()) || [];
+
           // Ignore separator row (index 1) if it contains dashes
           const dataRows = tableLines.slice(2).map((row) =>
             row
@@ -360,10 +358,7 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
       if (line.startsWith('- ') || line.startsWith('* ')) {
         const listItems: string[] = [line.slice(2)];
         i++;
-        while (
-          i < lines.length &&
-          (lines[i]?.startsWith('- ') || lines[i]?.startsWith('* '))
-        ) {
+        while (i < lines.length && (lines[i]?.startsWith('- ') || lines[i]?.startsWith('* '))) {
           listItems.push(lines[i]!.slice(2));
           i++;
         }
@@ -458,9 +453,5 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
     return result;
   }, [content]);
 
-  return (
-    <article className={`prose-zinc max-w-none text-zinc-300 ${className}`}>
-      {blocks}
-    </article>
-  );
+  return <article className={`prose-zinc max-w-none text-zinc-300 ${className}`}>{blocks}</article>;
 }

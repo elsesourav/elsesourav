@@ -134,10 +134,7 @@ export function AdminSupportTable({ initialTickets }: AdminSupportTableProps) {
                   });
 
                   return (
-                    <tr
-                      key={ticket.id}
-                      className="hover:bg-zinc-800/30 transition-colors group"
-                    >
+                    <tr key={ticket.id} className="hover:bg-zinc-800/30 transition-colors group">
                       {/* Ticket Number */}
                       <td className="py-3.5 px-4 font-mono font-bold text-indigo-400">
                         #{ticket.ticketNumber}
@@ -182,7 +179,10 @@ export function AdminSupportTable({ initialTickets }: AdminSupportTableProps) {
                             In Progress
                           </Badge>
                         ) : ticket.status === 'waiting_for_user' ? (
-                          <Badge variant="outline" className="text-[10px] uppercase font-mono border-amber-500/40 text-amber-300">
+                          <Badge
+                            variant="outline"
+                            className="text-[10px] uppercase font-mono border-amber-500/40 text-amber-300"
+                          >
                             Waiting
                           </Badge>
                         ) : ticket.status === 'resolved' ? (

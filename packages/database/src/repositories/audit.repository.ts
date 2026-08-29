@@ -193,19 +193,18 @@ export class AuditRepository {
   async getSummaryMetrics(): Promise<AuditSummaryMetrics> {
     const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
-    const [totalLogs, logsLast24Hours, securityAlertsCount, actorsGroup] =
-      await Promise.all([
-        this.prisma.auditLog.count(),
-        this.prisma.auditLog.count({
-          where: { timestamp: { gte: oneDayAgo } },
-        }),
-        this.prisma.auditLog.count({
-          where: { action: { startsWith: 'SECURITY_' } },
-        }),
-        this.prisma.auditLog.groupBy({
-          by: ['userId'],
-        }),
-      ]);
+    const [totalLogs, logsLast24Hours, securityAlertsCount, actorsGroup] = await Promise.all([
+      this.prisma.auditLog.count(),
+      this.prisma.auditLog.count({
+        where: { timestamp: { gte: oneDayAgo } },
+      }),
+      this.prisma.auditLog.count({
+        where: { action: { startsWith: 'SECURITY_' } },
+      }),
+      this.prisma.auditLog.groupBy({
+        by: ['userId'],
+      }),
+    ]);
 
     return {
       totalLogs,

@@ -1,10 +1,11 @@
 'use client';
 
-import * as React from 'react';
-import { Card, CardHeader, CardTitle, CardDescription, Button, Input } from '@elsesourav/ui';
+import { ImageInputWithLibrary } from '@/features/admin/media/components/ImageInputWithLibrary';
 import type { User } from '@elsesourav/types';
+import { Button, Card, CardDescription, CardHeader, CardTitle, Input } from '@elsesourav/ui';
+import { AlertCircle, CheckCircle2, Loader2, Save, User as UserIcon } from 'lucide-react';
+import * as React from 'react';
 import { updateProfileFormAction } from '../actions/account-actions';
-import { User as UserIcon, CheckCircle2, AlertCircle, Loader2, Sparkles } from 'lucide-react';
 
 interface ProfileFormProps {
   user: User;
@@ -72,34 +73,17 @@ export function ProfileForm({ user }: ProfileFormProps) {
           </div>
         )}
 
-        {/* Avatar Preview & Photo URL */}
-        <div className="space-y-2">
-          <label className="block text-xs font-semibold text-zinc-300">Profile Photo</label>
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center text-indigo-400 font-bold text-lg overflow-hidden shrink-0">
-              {photoUrl ? (
-                <img
-                  src={photoUrl}
-                  alt={displayName}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <span>{displayName.slice(0, 2).toUpperCase() || 'U'}</span>
-              )}
-            </div>
-            <div className="flex-1 min-w-0">
-              <Input
-                type="url"
-                value={photoUrl}
-                onChange={(e) => setPhotoUrl(e.target.value)}
-                placeholder="https://res.cloudinary.com/..."
-                className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100"
-              />
-              <p className="text-[11px] text-zinc-500 mt-1">
-                Enter a Cloudinary or direct image URL for your avatar.
-              </p>
-            </div>
-          </div>
+        {/* Profile Photo & Avatar with Library Picker */}
+        <div className="p-4 rounded-2xl bg-zinc-950/40 border border-zinc-800/80 space-y-2">
+          <ImageInputWithLibrary
+            label="Profile Photo & Avatar"
+            value={photoUrl}
+            onChange={setPhotoUrl}
+            folder="users"
+            defaultCategory="users"
+            previewShape="circle"
+            placeholder="Avatar image URL or upload/select from library"
+          />
         </div>
 
         {/* Display Name */}
@@ -120,9 +104,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
 
         {/* Username */}
         <div className="space-y-1.5">
-          <label className="block text-xs font-semibold text-zinc-300">
-            Username
-          </label>
+          <label className="block text-xs font-semibold text-zinc-300">Username</label>
           <div className="flex items-center rounded-xl bg-zinc-950/60 border border-zinc-800 focus-within:border-indigo-500 px-3">
             <span className="text-xs text-zinc-500 select-none">@</span>
             <input
@@ -170,7 +152,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
               </>
             ) : (
               <>
-                <Sparkles className="w-3.5 h-3.5" />
+                <Save className="w-3.5 h-3.5" />
                 <span>Save Profile Changes</span>
               </>
             )}

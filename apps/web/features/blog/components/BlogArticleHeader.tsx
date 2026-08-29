@@ -37,7 +37,10 @@ export function BlogArticleHeader({ post, postUrl }: BlogArticleHeaderProps) {
       {post.category && (
         <div>
           <Link href={`/blog?category=${post.category.slug}`}>
-            <Badge variant="info" className="text-xs px-2.5 py-0.5 hover:bg-indigo-900/60 transition-colors">
+            <Badge
+              variant="info"
+              className="text-xs px-2.5 py-0.5 hover:bg-indigo-900/60 transition-colors"
+            >
               {post.category.name}
             </Badge>
           </Link>
@@ -73,9 +76,7 @@ export function BlogArticleHeader({ post, postUrl }: BlogArticleHeaderProps) {
             )}
           </div>
           <div>
-            <div className="font-semibold text-xs text-zinc-200">
-              {post.author.displayName}
-            </div>
+            <div className="font-semibold text-xs text-zinc-200">{post.author.displayName}</div>
             <div className="flex items-center gap-2 text-[11px] text-zinc-400">
               <span className="flex items-center gap-1">
                 <Calendar className="w-3 h-3 text-zinc-500" />

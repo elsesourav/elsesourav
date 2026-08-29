@@ -13,9 +13,9 @@ interface SettingsTabsProps {
 }
 
 export function SettingsTabs({ user }: SettingsTabsProps) {
-  const [activeTab, setActiveTab] = React.useState<'profile' | 'preferences' | 'security' | 'danger'>(
-    'profile'
-  );
+  const [activeTab, setActiveTab] = React.useState<
+    'profile' | 'preferences' | 'security' | 'danger'
+  >('profile');
 
   return (
     <div className="space-y-8">

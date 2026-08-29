@@ -68,7 +68,9 @@ export function DesignSystemClient() {
             <Sparkles className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-white tracking-tight">Design System & Component Library</h1>
+            <h1 className="text-3xl font-bold text-white tracking-tight">
+              Design System & Component Library
+            </h1>
             <p className="text-sm text-zinc-400 mt-0.5">
               Production-grade, accessible, and responsive UI primitives built for ElseSourav.
             </p>
@@ -82,10 +84,32 @@ export function DesignSystemClient() {
       <section className="space-y-4">
         <h2 className="text-xl font-bold text-white">1. Metric & Telemetry Cards</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <StatCard label="Total Applications" value="24" change="+3 this month" changeType="positive" icon={Terminal} />
-          <StatCard label="Monthly Active Users" value="18.2K" change="+12.4%" changeType="positive" icon={Activity} />
-          <StatCard label="Support Queue" value="3 Open" change="-2 resolved" changeType="positive" />
-          <StatCard label="System Health" value="99.98%" change="Operational" changeType="neutral" />
+          <StatCard
+            label="Total Applications"
+            value="24"
+            change="+3 this month"
+            changeType="positive"
+            icon={Terminal}
+          />
+          <StatCard
+            label="Monthly Active Users"
+            value="18.2K"
+            change="+12.4%"
+            changeType="positive"
+            icon={Activity}
+          />
+          <StatCard
+            label="Support Queue"
+            value="3 Open"
+            change="-2 resolved"
+            changeType="positive"
+          />
+          <StatCard
+            label="System Health"
+            value="99.98%"
+            change="Operational"
+            changeType="neutral"
+          />
         </div>
       </section>
 
@@ -98,17 +122,22 @@ export function DesignSystemClient() {
               <Layers className="w-4 h-4" /> Glassmorphic Surface Container
             </div>
             <p className="text-sm text-zinc-300">
-              Hardware-accelerated backdrop blur with variable light intensities for dark modern aesthetics.
+              Hardware-accelerated backdrop blur with variable light intensities for dark modern
+              aesthetics.
             </p>
           </GlassSurface>
 
           <Card>
             <CardHeader>
               <CardTitle>Standard Card Layout</CardTitle>
-              <CardDescription>Clean bordered container with semantic header, content, and footer.</CardDescription>
+              <CardDescription>
+                Clean bordered container with semantic header, content, and footer.
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-xs text-zinc-400">Tokens defined via centralized semantic CSS properties.</p>
+              <p className="text-xs text-zinc-400">
+                Tokens defined via centralized semantic CSS properties.
+              </p>
             </CardContent>
           </Card>
         </div>
@@ -124,7 +153,9 @@ export function DesignSystemClient() {
             <Button variant="outline">Outline Action</Button>
             <Button variant="ghost">Ghost Action</Button>
             <Button variant="danger">Danger Action</Button>
-            <Button variant="primary" loading>Processing</Button>
+            <Button variant="primary" loading>
+              Processing
+            </Button>
           </div>
           <Separator />
           <div className="flex flex-wrap items-center gap-3">
@@ -164,7 +195,10 @@ export function DesignSystemClient() {
 
             <div className="space-y-4">
               <Checkbox label="Subscribe to Devlog newsletters" defaultChecked />
-              <Checkbox label="Allow analytics telemetry for performance optimization" defaultChecked />
+              <Checkbox
+                label="Allow analytics telemetry for performance optimization"
+                defaultChecked
+              />
             </div>
 
             <div>
@@ -185,11 +219,15 @@ export function DesignSystemClient() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Alert variant="info">
             <AlertTitle>System Notice</AlertTitle>
-            <AlertDescription>The ElseSourav API gateway is running on Next.js 15 App Router.</AlertDescription>
+            <AlertDescription>
+              The ElseSourav API gateway is running on Next.js 15 App Router.
+            </AlertDescription>
           </Alert>
           <Alert variant="success">
             <AlertTitle>Database Connected</AlertTitle>
-            <AlertDescription>PostgreSQL connection pool initialized with 0 latency spikes.</AlertDescription>
+            <AlertDescription>
+              PostgreSQL connection pool initialized with 0 latency spikes.
+            </AlertDescription>
           </Alert>
         </div>
 
@@ -224,13 +262,17 @@ export function DesignSystemClient() {
               <TableCell className="font-medium text-white">Terminal Pro</TableCell>
               <TableCell>Developer Tools</TableCell>
               <TableCell>v2.1.0</TableCell>
-              <TableCell><Badge variant="success">Published</Badge></TableCell>
+              <TableCell>
+                <Badge variant="success">Published</Badge>
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell className="font-medium text-white">Focus Keeper</TableCell>
               <TableCell>Productivity</TableCell>
               <TableCell>v1.4.2</TableCell>
-              <TableCell><Badge variant="info">Updated</Badge></TableCell>
+              <TableCell>
+                <Badge variant="info">Updated</Badge>
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -246,14 +288,29 @@ export function DesignSystemClient() {
               <TabsTrigger value="devlogs">Engineering Devlogs</TabsTrigger>
               <TabsTrigger value="documentation">Documentation</TabsTrigger>
             </TabsList>
-            <TabsContent value="catalog" className="p-4 rounded-lg bg-zinc-900/40 border border-zinc-800/60">
-              <p className="text-sm text-zinc-300">Catalog of standalone web and desktop productivity tools.</p>
+            <TabsContent
+              value="catalog"
+              className="p-4 rounded-lg bg-zinc-900/40 border border-zinc-800/60"
+            >
+              <p className="text-sm text-zinc-300">
+                Catalog of standalone web and desktop productivity tools.
+              </p>
             </TabsContent>
-            <TabsContent value="devlogs" className="p-4 rounded-lg bg-zinc-900/40 border border-zinc-800/60">
-              <p className="text-sm text-zinc-300">Deep-dive technical architectural articles and benchmarks.</p>
+            <TabsContent
+              value="devlogs"
+              className="p-4 rounded-lg bg-zinc-900/40 border border-zinc-800/60"
+            >
+              <p className="text-sm text-zinc-300">
+                Deep-dive technical architectural articles and benchmarks.
+              </p>
             </TabsContent>
-            <TabsContent value="documentation" className="p-4 rounded-lg bg-zinc-900/40 border border-zinc-800/60">
-              <p className="text-sm text-zinc-300">API references and deployment guides for developers.</p>
+            <TabsContent
+              value="documentation"
+              className="p-4 rounded-lg bg-zinc-900/40 border border-zinc-800/60"
+            >
+              <p className="text-sm text-zinc-300">
+                API references and deployment guides for developers.
+              </p>
             </TabsContent>
           </Tabs>
 
@@ -277,8 +334,12 @@ export function DesignSystemClient() {
             All 11 workspace packages have passed static typechecking, linting, and automated tests.
           </div>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setDialogOpen(false)}>Cancel</Button>
-            <Button variant="primary" onClick={() => setDialogOpen(false)}>Confirm Promotion</Button>
+            <Button variant="ghost" onClick={() => setDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={() => setDialogOpen(false)}>
+              Confirm Promotion
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

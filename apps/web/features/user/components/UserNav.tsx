@@ -3,7 +3,18 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Bookmark, User, Bell, LifeBuoy, Settings, Menu, X, LogOut, Shield } from 'lucide-react';
+import {
+  LayoutDashboard,
+  Bookmark,
+  User,
+  Bell,
+  LifeBuoy,
+  Settings,
+  Menu,
+  X,
+  LogOut,
+  Shield,
+} from 'lucide-react';
 import type { AuthenticatedUser } from '@elsesourav/auth';
 
 interface UserNavProps {
@@ -70,8 +81,12 @@ export function UserNav({ user }: UserNavProps) {
       {mobileMenuOpen && (
         <div className="md:hidden fixed inset-x-0 top-16 bg-zinc-950/95 border-b border-zinc-800/80 p-4 space-y-2 backdrop-blur-xl z-50">
           <div className="pb-2 mb-2 border-b border-zinc-800 flex items-center justify-between text-xs text-zinc-400">
-            <span>Signed in as <strong className="text-zinc-200">{user.email}</strong></span>
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 font-mono">{user.role}</span>
+            <span>
+              Signed in as <strong className="text-zinc-200">{user.email}</strong>
+            </span>
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 font-mono">
+              {user.role}
+            </span>
           </div>
 
           <div className="grid grid-cols-2 gap-2">

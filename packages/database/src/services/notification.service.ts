@@ -12,10 +12,7 @@ export class NotificationService {
   /**
    * Retrieves notifications and unread count for the authenticated user
    */
-  async getUserNotifications(
-    userId: string,
-    limit: number = 30
-  ): Promise<NotificationListResult> {
+  async getUserNotifications(userId: string, limit: number = 30): Promise<NotificationListResult> {
     if (!userId) {
       throw AppError.unauthorized('User must be authenticated to view notifications.');
     }

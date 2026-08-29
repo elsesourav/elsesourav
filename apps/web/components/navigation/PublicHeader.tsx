@@ -39,7 +39,10 @@ export function PublicHeader() {
     <header className="border-b border-zinc-800/80 bg-zinc-950/70 backdrop-blur-xl sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand Logo */}
-        <Link href={ROUTES.HOME} className="flex items-center gap-2 font-bold text-base sm:text-lg text-white group">
+        <Link
+          href={ROUTES.HOME}
+          className="flex items-center gap-2 font-bold text-base sm:text-lg text-white group"
+        >
           <Sparkles className="w-5 h-5 text-indigo-400 group-hover:scale-110 transition-transform" />
           <span>{SITE_CONFIG.name}</span>
         </Link>
@@ -65,10 +68,14 @@ export function PublicHeader() {
         {/* Desktop Auth CTAs */}
         <div className="hidden md:flex items-center gap-3">
           <Link href={ROUTES.LOGIN}>
-            <Button variant="ghost" size="sm">Sign In</Button>
+            <Button variant="ghost" size="sm">
+              Sign In
+            </Button>
           </Link>
           <Link href={ROUTES.SIGNUP}>
-            <Button variant="primary" size="sm">Get Started</Button>
+            <Button variant="primary" size="sm">
+              Get Started
+            </Button>
           </Link>
         </div>
 
@@ -113,12 +120,19 @@ export function PublicHeader() {
           {/* Mobile Auth Actions */}
           <div className="pt-6 border-t border-zinc-800/80 space-y-3">
             <Link href={ROUTES.SIGNUP} className="block">
-              <Button size="lg" className="w-full justify-center bg-indigo-600 hover:bg-indigo-500 text-white font-semibold">
+              <Button
+                size="lg"
+                className="w-full justify-center bg-indigo-600 hover:bg-indigo-500 text-white font-semibold"
+              >
                 Get Started
               </Button>
             </Link>
             <Link href={ROUTES.LOGIN} className="block">
-              <Button variant="outline" size="lg" className="w-full justify-center border-zinc-700 text-zinc-200 hover:bg-zinc-900">
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full justify-center border-zinc-700 text-zinc-200 hover:bg-zinc-900"
+              >
                 Sign In
               </Button>
             </Link>

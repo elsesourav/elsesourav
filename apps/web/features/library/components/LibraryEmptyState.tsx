@@ -13,7 +13,8 @@ export function LibraryEmptyState() {
       <div className="space-y-1.5">
         <h3 className="text-lg font-bold text-zinc-100">Your library is empty</h3>
         <p className="text-xs text-zinc-400 max-w-xs mx-auto leading-relaxed">
-          Bookmark web applications, developer utilities, and browser extensions to quickly access them here anytime.
+          Bookmark web applications, developer utilities, and browser extensions to quickly access
+          them here anytime.
         </p>
       </div>
 

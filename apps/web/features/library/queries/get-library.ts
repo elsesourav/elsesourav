@@ -11,7 +11,10 @@ export interface UserLibraryPageData extends UserLibraryResult {
   userId?: string;
 }
 
-export async function getUserLibraryData(options?: { page?: number; limit?: number }): Promise<UserLibraryPageData> {
+export async function getUserLibraryData(options?: {
+  page?: number;
+  limit?: number;
+}): Promise<UserLibraryPageData> {
   const cookieStore = await cookies();
   const session = await getServerSession(cookieStore);
 

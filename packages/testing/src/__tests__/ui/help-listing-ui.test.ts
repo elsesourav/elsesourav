@@ -1,10 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { HelpService, HelpRepository } from '@elsesourav/database';
 import { AppError } from '@elsesourav/types';
-import type {
-  HelpCategoryWithArticles,
-  HelpSearchResult,
-} from '@elsesourav/types';
+import type { HelpCategoryWithArticles, HelpSearchResult } from '@elsesourav/types';
 
 describe('Help Center Listing, Category Discovery & Search UI Pipeline', () => {
   const mockCategoryWithArticles: HelpCategoryWithArticles = {

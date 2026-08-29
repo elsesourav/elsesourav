@@ -27,7 +27,8 @@ export const fixtureHelpCategories: readonly HelpCategory[] = [
     id: 'hcat-troubleshooting',
     name: 'Troubleshooting & Support',
     slug: 'troubleshooting-and-support',
-    description: 'Diagnostic guides for browser extensions, WebSocket proxy connections, and tickets.',
+    description:
+      'Diagnostic guides for browser extensions, WebSocket proxy connections, and tickets.',
     icon: 'wrench',
     orderIndex: 3,
     articleCount: 1,

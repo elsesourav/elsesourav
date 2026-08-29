@@ -1,15 +1,8 @@
 import { PrismaClient, Prisma, PublishStatus } from '@prisma/client';
 import { prisma as defaultPrisma } from '../client';
-import {
-  mapPrismaLibraryItemToDomain,
-  PrismaLibraryItemWithApp,
-} from '../mappers/library.mapper';
+import { mapPrismaLibraryItemToDomain, PrismaLibraryItemWithApp } from '../mappers/library.mapper';
 import { AppError } from '@elsesourav/types';
-import type {
-  LibraryItem,
-  SaveAppInput,
-  UserLibraryResult,
-} from '@elsesourav/types';
+import type { LibraryItem, SaveAppInput, UserLibraryResult } from '@elsesourav/types';
 
 export class LibraryRepository {
   constructor(private readonly prisma: PrismaClient = defaultPrisma) {}
@@ -169,7 +162,9 @@ export class LibraryRepository {
       });
 
       return {
-        items: records.map((r) => mapPrismaLibraryItemToDomain(r as unknown as PrismaLibraryItemWithApp)),
+        items: records.map((r) =>
+          mapPrismaLibraryItemToDomain(r as unknown as PrismaLibraryItemWithApp)
+        ),
         totalCount,
       };
     } catch (error) {

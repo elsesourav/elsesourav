@@ -1,6 +1,6 @@
+import dotenv from 'dotenv';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import dotenv from 'dotenv';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -9,6 +9,7 @@ const rootDir = path.resolve(__dirname, '../../../../');
 dotenv.config({ path: path.join(rootDir, '.env.local') });
 dotenv.config({ path: path.join(rootDir, '.env') });
 
+import { CREATOR_CONFIG } from '@elsesourav/config';
 import { PublishStatus, TicketPriority, TicketStatus, UserRole, prisma } from '../../src/index';
 
 async function main() {
@@ -210,9 +211,42 @@ async function main() {
       shortDescription: 'Hardware-accelerated web terminal emulator with multiplexing.',
       description:
         'A cutting-edge WebGL-powered terminal emulator supporting split panes, custom themes, SSH tunnels, and lightning-fast rendering.',
+      documentationMd: `## Getting Started
+
+Terminal Pro runs entirely in your browser using a **WebGL 2.0** rendering engine. No installation required.
+
+### Quick Start
+
+1. Visit [terminal.elsesourav.com](https://terminal.elsesourav.com)
+2. Click **New Session** to open your first terminal pane
+3. Use \`Ctrl+Shift+D\` to split horizontally, \`Ctrl+Shift+R\` to split vertically
+
+### SSH Tunnel Setup
+
+\`\`\`bash
+# Connect to a remote host
+terminalpro connect user@host.example.com --port 22
+\`\`\`
+
+### Keyboard Shortcuts
+
+| Action | Shortcut |
+|---|---|
+| New pane | \`Ctrl+Shift+N\` |
+| Close pane | \`Ctrl+W\` |
+| Switch pane | \`Alt+Arrow\` |
+| Full screen | \`F11\` |
+
+### Custom Themes
+
+Drop a \`.terminalpro.json\` config file in your home directory to apply custom color schemes. See the [theme gallery](https://terminal.elsesourav.com/themes) for community presets.
+
+### Changelog
+
+**v2.1.0** — Upgraded to Next.js 15, WebGL 2.0 rendering engine, dynamic tab splits  
+**v2.0.0** — Complete architecture redesign with TypeScript and zero-latency WebSocket stream`,
       iconUrl: 'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=200&q=80',
-      featuredImageUrl:
-        'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=1200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=1200&q=80',
       demoUrl: 'https://terminal.elsesourav.com',
       status: PublishStatus.PUBLISHED,
       isFeatured: true,
@@ -282,9 +316,40 @@ async function main() {
       shortDescription: 'Professional color palette generator and WCAG contrast analyzer.',
       description:
         'Generate harmonious color systems, test WCAG 2.1 AA/AAA accessibility contrast in real-time, and export directly to Tailwind CSS and CSS variables.',
+      documentationMd: `## Overview
+
+Palette Studio is a professional-grade color system designer built for designers and frontend engineers.
+
+### Generating a Palette
+
+1. Enter a base hex color (e.g. \`#6366f1\`)
+2. Choose a harmony rule: **Analogous**, **Complementary**, **Triadic**, or **Split-Complementary**
+3. Click **Generate** — Palette Studio produces a 10-shade scale
+
+### WCAG Contrast Checker
+
+Every color pair is checked against **WCAG 2.1 AA** (4.5:1) and **AAA** (7:1) ratios in real-time.
+
+\`\`\`
+Background: #1e1e2e  →  Foreground: #cdd6f4
+Contrast ratio: 12.4:1  ✅ AAA PASS
+\`\`\`
+
+### Export Formats
+
+| Format | Command |
+|---|---|
+| Tailwind CSS | Click **Export → Tailwind** |
+| CSS Variables | Click **Export → CSS Vars** |
+| JSON tokens | Click **Export → Design Tokens** |
+
+### Changelog
+
+**v1.4.0** — Figma plugin integration and batch export  
+**v1.3.0** — APCA contrast algorithm support  
+**v1.0.0** — Initial public release`,
       iconUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=200&q=80',
-      featuredImageUrl:
-        'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&q=80',
       demoUrl: 'https://palette.elsesourav.com',
       status: PublishStatus.PUBLISHED,
       isFeatured: true,
@@ -353,9 +418,42 @@ async function main() {
       shortDescription: 'Adaptive Pomodoro focus timer with deep git commit telemetry.',
       description:
         'Stay in the zone with smart interval timing, ambient soundscapes, task sprint tracking, and GitHub commit streak integrations.',
+      documentationMd: `## How FocusFlow Works
+
+FocusFlow uses the **Pomodoro Technique** with adaptive interval tuning based on your completion rate.
+
+### Default Intervals
+
+- **Focus block**: 25 minutes
+- **Short break**: 5 minutes
+- **Long break**: 15 minutes (every 4 cycles)
+
+### GitHub Integration
+
+Connect your GitHub account to track commit streaks alongside your focus sessions:
+
+1. Go to **Settings → Integrations**
+2. Click **Connect GitHub**
+3. Authorize the \`focusflow-bot\` OAuth app
+
+Your commit count for the day appears in the focus dashboard.
+
+### Ambient Soundscapes
+
+Built-in tracks: **Rain**, **White Noise**, **Café**, **Forest**, **Lo-Fi Beats**.
+Custom audio URLs are supported via **Settings → Audio → Custom URL**.
+
+### PWA Offline Mode
+
+FocusFlow works offline as a Progressive Web App. Install it from the browser address bar on Chrome or Edge.
+
+### Changelog
+
+**v1.2.0** — Offline PWA support, customizable ambient audio tracks  
+**v1.1.0** — GitHub commit streak dashboard  
+**v1.0.0** — Initial release`,
       iconUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=200&q=80',
-      featuredImageUrl:
-        'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=80',
       demoUrl: 'https://focus.elsesourav.com',
       status: PublishStatus.PUBLISHED,
       isFeatured: false,
@@ -411,9 +509,51 @@ async function main() {
       shortDescription: 'Local container & microservice orchestrator for development.',
       description:
         'Manage Docker containers, PostgreSQL databases, and local server instances from a single unified web dashboard.',
+      documentationMd: `## DevDock Overview
+
+DevDock is a local web dashboard for managing your development infrastructure — Docker containers, databases, and microservices — without touching the command line.
+
+### Prerequisites
+
+- Docker Desktop 4.x or Docker Engine 24+
+- Node.js 20+
+
+### Installation
+
+\`\`\`bash
+npx @elsesourav/devdock@latest init
+# Starts the dashboard at http://localhost:4200
+\`\`\`
+
+### Dashboard Panels
+
+| Panel | Description |
+|---|---|
+| **Containers** | Start, stop, and inspect running containers |
+| **Databases** | Browse PostgreSQL and Redis instances |
+| **Logs** | Stream live container logs with regex filtering |
+| **Network** | Inspect port bindings and service mesh |
+
+### Config File
+
+\`\`\`yaml
+# devdock.yml
+services:
+  - name: api
+    image: node:20-alpine
+    port: 3000
+  - name: db
+    image: postgres:16
+    port: 5432
+\`\`\`
+
+### Changelog
+
+**v3.0.0** — Multi-profile environments and real-time log streaming  
+**v2.0.0** — PostgreSQL browser with query runner  
+**v1.0.0** — Initial Docker dashboard`,
       iconUrl: 'https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=200&q=80',
-      featuredImageUrl:
-        'https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=1200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=1200&q=80',
       demoUrl: 'https://devdock.elsesourav.com',
       status: PublishStatus.PUBLISHED,
       isFeatured: true,
@@ -468,9 +608,48 @@ async function main() {
       shortDescription: 'Visual regular expression debugger and syntax tree analyzer.',
       description:
         'Break down complex regular expressions into understandable visual state machines with real-time match highlighting and unit tests.',
+      documentationMd: `## What is RegexLens?
+
+RegexLens transforms your regular expressions into interactive visual **state machine diagrams** with real-time match highlighting.
+
+### Basic Usage
+
+1. Paste your regex into the **Pattern** field
+2. Enter test strings in the **Input** panel
+3. Matching groups are highlighted with distinct colors
+
+### Supported Engines
+
+- JavaScript (ECMAScript 2024)
+- Python (re module)
+- PCRE2
+- Rust (regex crate)
+
+Switch engines using the dropdown in the top toolbar.
+
+### Visualizer Modes
+
+| Mode | Description |
+|---|---|
+| **NFA** | Non-deterministic finite automaton diagram |
+| **Railroad** | Readable railroad track diagram |
+| **Match Tree** | Captures and groups hierarchy |
+
+### Unit Test Generator
+
+Click **Generate Tests** to produce Jest/Pytest assertions for your current regex and test strings.
+
+\`\`\`js
+// Generated test
+expect(/^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$/.test('user@example.com')).toBe(true);
+\`\`\`
+
+### Changelog
+
+**v1.1.0** — ECMAScript 2024 named capture group visualization  
+**v1.0.0** — Initial release with NFA and railroad diagrams`,
       iconUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=200&q=80',
-      featuredImageUrl:
-        'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&q=80',
       demoUrl: 'https://regex.elsesourav.com',
       status: PublishStatus.PUBLISHED,
       isFeatured: false,
@@ -595,8 +774,7 @@ Client UI -> Server Actions -> Domain Services -> Repositories -> Prisma
 \`\`\`
 
 The result is a lightning-fast ecosystem that boots in under 100ms with full WCAG AA compliance.`,
-      coverImageUrl:
-        'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80',
+      coverImageUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80',
       status: PublishStatus.PUBLISHED,
       readingTime: 6,
       viewsCount: 1420,
@@ -633,8 +811,7 @@ if (!isOwner && !isAdmin) {
   throw AppError.forbidden('Access denied.');
 }
 \`\`\``,
-      coverImageUrl:
-        'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1200&q=80',
+      coverImageUrl: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1200&q=80',
       status: PublishStatus.PUBLISHED,
       readingTime: 5,
       viewsCount: 980,
@@ -1065,6 +1242,310 @@ We treat security and data ownership as core principles.
     skipDuplicates: true,
   });
 
+  // ===========================================================================
+  // 10. SEED SITE SETTINGS (All known keys with dev defaults)
+  // ===========================================================================
+  console.info('  → Seeding Site Settings...');
+
+  const siteSettings: Array<{ key: string; value: string; description: string }> = [
+    // Site Identity
+    {
+      key: 'site_name',
+      value: 'ElseSourav',
+      description: 'Primary site name displayed in browser title and header.',
+    },
+    {
+      key: 'site_tagline',
+      value: 'Software, Tools & Ideas',
+      description: 'Short tagline shown in the site header and metadata.',
+    },
+    {
+      key: 'site_description',
+      value:
+        'ElseSourav is the personal platform of Sourav, featuring software, applications, developer tools, technical writing, experiments, and ideas.',
+      description: 'Meta description for SEO and social sharing.',
+    },
+    // Homepage Hero
+    {
+      key: 'hero_badge',
+      value: 'Software & Digital Tools by Sourav',
+      description: 'Small badge label shown above the hero headline.',
+    },
+    {
+      key: 'hero_headline',
+      value: 'Thoughtful software, practical tools, & engineering ideas.',
+      description: 'Primary hero headline on the homepage.',
+    },
+    {
+      key: 'hero_subtitle',
+      value:
+        'Building thoughtful software, useful tools, and digital experiences with a focus on usability, performance, accessibility, and engineering quality.',
+      description: 'Subtitle paragraph beneath the hero headline.',
+    },
+    {
+      key: 'primary_cta_label',
+      value: 'Explore Applications',
+      description: 'Label for the primary call-to-action button on the homepage.',
+    },
+    {
+      key: 'secondary_cta_label',
+      value: 'Read Engineering Notes',
+      description: 'Label for the secondary CTA button linking to the blog.',
+    },
+    {
+      key: 'announcement_banner',
+      value: '',
+      description:
+        'Optional announcement banner shown at the top of the homepage. Leave empty to hide.',
+    },
+    {
+      key: 'homepage_apps_title',
+      value: 'Featured Software & Tools',
+      description: 'Heading for the featured applications section on the homepage.',
+    },
+    {
+      key: 'homepage_apps_subtitle',
+      value: 'Practical utilities and digital tools crafted for real workflows.',
+      description: 'Subtitle for the featured applications section on the homepage.',
+    },
+    {
+      key: 'homepage_blog_title',
+      value: 'Technical Writing & Exploration',
+      description: 'Heading for the recent engineering notes section on the homepage.',
+    },
+    {
+      key: 'homepage_blog_subtitle',
+      value: 'Deep-dives on software design, performance, and architecture lessons.',
+      description: 'Subtitle for the recent engineering notes section on the homepage.',
+    },
+    {
+      key: 'site_logo_url',
+      value: '',
+      description: 'Site brand logo or icon URL.',
+    },
+    {
+      key: 'site_og_image_url',
+      value: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&q=80',
+      description: 'OpenGraph banner image for social sharing.',
+    },
+    {
+      key: 'site_keywords',
+      value: 'software, developer tools, typescript, web performance, engineering',
+      description: 'SEO keywords separated by commas.',
+    },
+    {
+      key: 'site_status_badge',
+      value: '● All Systems Operational',
+      description: 'System operational status badge.',
+    },
+    {
+      key: 'footer_copyright',
+      value: '© 2026 ElseSourav. All rights reserved.',
+      description: 'Copyright notice shown across public page footers.',
+    },
+    {
+      key: 'footer_text',
+      value: 'Software, Tools & Ideas — Built with purpose.',
+      description: 'Mission statement or tagline shown in public footers.',
+    },
+    {
+      key: 'footer_status_text',
+      value: '● All Systems Operational',
+      description: 'Operational status badge shown in footer.',
+    },
+    {
+      key: 'footer_show_socials',
+      value: 'true',
+      description: 'Toggle to show or hide social links in footer.',
+    },
+    {
+      key: 'footer_show_back_to_top',
+      value: 'true',
+      description: 'Toggle to show or hide back-to-top button in footer.',
+    },
+    {
+      key: 'footer_links_json',
+      value: JSON.stringify([
+        {
+          id: 'foot-1',
+          label: 'Status',
+          url: 'https://status.elsesourav.com',
+          isExternal: true,
+          priority: 0,
+          isActive: true,
+        },
+      ]),
+      description: 'Dynamic JSON array of custom footer navigation links.',
+    },
+    // Creator Identity
+    {
+      key: 'creator_name',
+      value: 'Sourav',
+      description: 'Creator display name used across public pages.',
+    },
+    {
+      key: 'creator_title',
+      value: 'Software Engineer & Creator',
+      description: 'Professional title shown on the About page.',
+    },
+    {
+      key: 'creator_role',
+      value: 'Independent Software Creator',
+      description: 'Role description used in structured data and admin display.',
+    },
+    {
+      key: 'creator_location',
+      value: 'Remote',
+      description: 'Location shown on the About page.',
+    },
+    {
+      key: 'creator_avatar_url',
+      value: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80',
+      description: 'Profile photo / avatar URL for the creator.',
+    },
+    {
+      key: 'creator_short_bio',
+      value:
+        'Software engineer and independent creator building practical software, developer tools, and thoughtful web experiences.',
+      description: 'One-line bio shown on the homepage creator section.',
+    },
+    {
+      key: 'creator_long_bio',
+      value:
+        "I'm Sourav, a software engineer and independent creator. ElseSourav is my personal space for building, sharing, and exploring software, tools, applications, and ideas. I care about creating useful experiences that are thoughtfully designed, accessible, performant, and built with strong engineering fundamentals.",
+      description: 'Long-form bio shown on the About page. Supports Markdown.',
+    },
+    {
+      key: 'creator_principles_json',
+      value: JSON.stringify(CREATOR_CONFIG.principles),
+      description: 'JSON array of creator engineering and design principles.',
+    },
+    {
+      key: 'creator_focus_json',
+      value: JSON.stringify(CREATOR_CONFIG.focus),
+      description: 'JSON array of creator focus badges and specializations.',
+    },
+    // Social & Contact (Legacy + Dynamic Priority Links JSON)
+    {
+      key: 'github_url',
+      value: 'https://github.com/elsesourav',
+      description: 'GitHub profile URL.',
+    },
+    {
+      key: 'twitter_url',
+      value: 'https://twitter.com/elsesourav',
+      description: 'Twitter / X profile URL.',
+    },
+    {
+      key: 'contact_email',
+      value: 'contact@elsesourav.com',
+      description: 'Primary contact email address.',
+    },
+    {
+      key: 'support_url',
+      value: 'https://elsesourav.com/support',
+      description: 'URL to the public support page.',
+    },
+    {
+      key: 'social_links_json',
+      value: JSON.stringify([
+        {
+          id: 'link-1',
+          label: 'GitHub',
+          url: 'https://github.com/elsesourav',
+          platform: 'github',
+          priority: 0,
+          isActive: true,
+        },
+        {
+          id: 'link-2',
+          label: 'Twitter / X',
+          url: 'https://twitter.com/elsesourav',
+          platform: 'twitter',
+          priority: 1,
+          isActive: true,
+        },
+        {
+          id: 'link-3',
+          label: 'Discord Community',
+          url: 'https://discord.gg/elsesourav',
+          platform: 'discord',
+          priority: 2,
+          isActive: true,
+        },
+      ]),
+      description: 'Dynamic JSON array of prioritized site links and social channels.',
+    },
+    {
+      key: 'contact_methods_json',
+      value: JSON.stringify([
+        {
+          id: 'contact-1',
+          label: 'Primary Inquiries',
+          value: 'contact@elsesourav.com',
+          type: 'email',
+          description: 'Direct communication for technical discussions & collaborations',
+          priority: 0,
+          isActive: true,
+        },
+        {
+          id: 'contact-2',
+          label: 'Support Desk',
+          value: 'https://elsesourav.com/support',
+          type: 'support_desk',
+          description: 'Issue tracker and support tickets',
+          priority: 1,
+          isActive: true,
+        },
+        {
+          id: 'contact-3',
+          label: 'Telegram Direct',
+          value: 'https://t.me/elsesourav',
+          type: 'telegram',
+          description: 'Fast response for urgent requests',
+          priority: 2,
+          isActive: true,
+        },
+      ]),
+      description: 'Dynamic JSON array of direct contact methods and support channels.',
+    },
+    {
+      key: 'media_library_items_json',
+      value: JSON.stringify([
+        {
+          url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80',
+          publicId: 'users/creator-avatar-portrait',
+          domain: 'users',
+          title: 'Creator Portrait (Default)',
+          createdAt: Date.now(),
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80',
+          publicId: 'blog/code-terminal-banner',
+          domain: 'blog',
+          title: 'Code Terminal Dark Banner',
+          createdAt: Date.now(),
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80',
+          publicId: 'apps/dev-workspace-showcase',
+          domain: 'apps',
+          title: 'Developer Workspace',
+          createdAt: Date.now(),
+        },
+      ]),
+      description: 'Media Library asset registry and direct uploads.',
+    },
+  ];
+
+  for (const setting of siteSettings) {
+    await prisma.siteSetting.upsert({
+      where: { key: setting.key },
+      update: { value: setting.value, description: setting.description },
+      create: { key: setting.key, value: setting.value, description: setting.description },
+    });
+  }
+
   console.info('===========================================================');
   console.info('✅ Successfully seeded ElseSourav database!');
   console.info('  • Users: 5 (1 Admin, 1 Staff, 3 Users)');
@@ -1073,6 +1554,7 @@ We treat security and data ownership as core principles.
   console.info(
     '  • Applications: 5 Full Dev Tools (Terminal Pro, Palette Studio, FocusFlow, DevDock, RegexLens)'
   );
+  console.info('  • App documentationMd: 5 Markdown documentation blocks');
   console.info('  • Blog Posts: 3 Comprehensive Technical Articles');
   console.info('  • Help Guides: 3 Structured Documentation Guides');
   console.info('  • Support Tickets: 3 Tickets with full message threads and internal notes');
@@ -1080,6 +1562,7 @@ We treat security and data ownership as core principles.
   console.info('  • Notifications: 4 Notification entries');
   console.info('  • App Feedback: 4 Reviews with ratings');
   console.info('  • Audit Logs: 4 Security and administration audit entries');
+  console.info('  • Site Settings: 27 keys seeded with dev defaults');
   console.info('===========================================================');
 }
 

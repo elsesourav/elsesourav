@@ -1,10 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { prisma as defaultPrisma } from '../client';
 import { mapPrismaNotificationToDomain } from '../mappers/notification.mapper';
-import type {
-  NotificationItem,
-  CreateNotificationInput,
-} from '@elsesourav/types';
+import type { NotificationItem, CreateNotificationInput } from '@elsesourav/types';
 
 export class NotificationRepository {
   constructor(private readonly prisma: PrismaClient = defaultPrisma) {}
@@ -12,10 +9,7 @@ export class NotificationRepository {
   /**
    * Retrieves notifications for a specific user
    */
-  async findUserNotifications(
-    userId: string,
-    limit: number = 30
-  ): Promise<NotificationItem[]> {
+  async findUserNotifications(userId: string, limit: number = 30): Promise<NotificationItem[]> {
     const boundedLimit = Math.min(Math.max(limit, 1), 100);
     const records = await this.prisma.notification.findMany({
       where: { userId },
@@ -41,10 +35,7 @@ export class NotificationRepository {
   /**
    * Finds notification by ID scoped to owner user
    */
-  async findByIdAndOwner(
-    notificationId: string,
-    userId: string
-  ): Promise<NotificationItem | null> {
+  async findByIdAndOwner(notificationId: string, userId: string): Promise<NotificationItem | null> {
     const record = await this.prisma.notification.findFirst({
       where: {
         id: notificationId,

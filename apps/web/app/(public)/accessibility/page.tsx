@@ -6,7 +6,8 @@ import { Eye, ArrowLeft, CheckCircle, Keyboard, Contrast } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Accessibility Statement',
-  description: 'ElseSourav commitment to digital accessibility, inclusive design standards, WCAG 2.1 AA conformance, and screen reader compatibility.',
+  description:
+    'ElseSourav commitment to digital accessibility, inclusive design standards, WCAG 2.1 AA conformance, and screen reader compatibility.',
   alternates: {
     canonical: 'https://elsesourav.com/accessibility',
   },
@@ -61,7 +62,8 @@ export default function AccessibilityPage() {
             Accessibility Statement
           </h1>
           <p className="text-sm text-zinc-400">
-            Our ongoing commitment to ensuring digital accessibility for all developers, users, and assistive technologies.
+            Our ongoing commitment to ensuring digital accessibility for all developers, users, and
+            assistive technologies.
           </p>
         </div>
 
@@ -72,16 +74,22 @@ export default function AccessibilityPage() {
               <CheckCircle className="w-5 h-5 text-emerald-400" /> 1. Conformance Standards
             </h2>
             <p className="text-sm text-zinc-300 leading-relaxed">
-              ElseSourav is committed to making our applications accessible to people with disabilities. We continually improve the user experience and apply relevant accessibility standards, striving to adhere to the Web Content Accessibility Guidelines (WCAG) 2.1 Level AA.
+              ElseSourav is committed to making our applications accessible to people with
+              disabilities. We continually improve the user experience and apply relevant
+              accessibility standards, striving to adhere to the Web Content Accessibility
+              Guidelines (WCAG) 2.1 Level AA.
             </p>
           </section>
 
           <section className="space-y-3">
             <h2 className="text-lg font-bold text-zinc-100 flex items-center gap-2">
-              <Keyboard className="w-5 h-5 text-indigo-400" /> 2. Keyboard & Screen Reader Navigation
+              <Keyboard className="w-5 h-5 text-indigo-400" /> 2. Keyboard & Screen Reader
+              Navigation
             </h2>
             <p className="text-sm text-zinc-300 leading-relaxed">
-              All core interactive components—including navigation menus, dialogs, form controls, search bars, and application cards—are engineered with proper ARIA attributes, semantic HTML landmarks, and full keyboard focus indicators.
+              All core interactive components—including navigation menus, dialogs, form controls,
+              search bars, and application cards—are engineered with proper ARIA attributes,
+              semantic HTML landmarks, and full keyboard focus indicators.
             </p>
           </section>
 
@@ -90,14 +98,24 @@ export default function AccessibilityPage() {
               <Contrast className="w-5 h-5 text-cyan-400" /> 3. High Contrast & Motion Preferences
             </h2>
             <p className="text-sm text-zinc-300 leading-relaxed">
-              Our design tokens adhere to strict contrast ratios across dark mode surfaces. Hardware-accelerated animations respect the <code className="text-xs bg-zinc-800 px-1.5 py-0.5 rounded text-zinc-200">prefers-reduced-motion</code> media query to prevent discomfort for sensitive users.
+              Our design tokens adhere to strict contrast ratios across dark mode surfaces.
+              Hardware-accelerated animations respect the{' '}
+              <code className="text-xs bg-zinc-800 px-1.5 py-0.5 rounded text-zinc-200">
+                prefers-reduced-motion
+              </code>{' '}
+              media query to prevent discomfort for sensitive users.
             </p>
           </section>
 
           <section className="space-y-3">
             <h2 className="text-lg font-bold text-zinc-100">4. Feedback & Support</h2>
             <p className="text-sm text-zinc-300 leading-relaxed">
-              If you encounter an accessibility barrier or require assistance, please reach out to our team via the <Link href={ROUTES.SUPPORT} className="text-indigo-400 hover:underline">Support Portal</Link>.
+              If you encounter an accessibility barrier or require assistance, please reach out to
+              our team via the{' '}
+              <Link href={ROUTES.SUPPORT} className="text-indigo-400 hover:underline">
+                Support Portal
+              </Link>
+              .
             </p>
           </section>
         </Card>

@@ -22,9 +22,11 @@ export function BlogCard({ post, isFeatured = false }: BlogCardProps) {
     : 'Recently';
 
   return (
-    <Card className={`group flex flex-col justify-between overflow-hidden rounded-2xl border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-zinc-700/80 transition-all backdrop-blur-sm ${
-      isFeatured ? 'sm:col-span-2 lg:col-span-3 lg:flex-row' : ''
-    }`}>
+    <Card
+      className={`group flex flex-col justify-between overflow-hidden rounded-2xl border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-zinc-700/80 transition-all backdrop-blur-sm ${
+        isFeatured ? 'sm:col-span-2 lg:col-span-3 lg:flex-row' : ''
+      }`}
+    >
       {/* Cover Image Container */}
       <Link
         href={`/blog/${post.slug}`}
@@ -37,19 +39,28 @@ export function BlogCard({ post, isFeatured = false }: BlogCardProps) {
             src={coverUrl}
             alt={post.title}
             fill
-            sizes={isFeatured ? '(max-width: 1024px) 100vw, 50vw' : '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'}
+            sizes={
+              isFeatured
+                ? '(max-width: 1024px) 100vw, 50vw'
+                : '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+            }
             className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-indigo-950/40 via-zinc-900 to-zinc-950 p-6 text-zinc-600">
             <BookOpen className="w-10 h-10 text-indigo-500/40 mb-2" />
-            <span className="text-xs font-mono uppercase tracking-widest text-zinc-500">ElseSourav Article</span>
+            <span className="text-xs font-mono uppercase tracking-widest text-zinc-500">
+              ElseSourav Article
+            </span>
           </div>
         )}
 
         {post.category && (
           <div className="absolute top-3 left-3 z-10">
-            <Badge variant="info" className="text-[10px] px-2 py-0.5 shadow-md backdrop-blur-md bg-zinc-950/80">
+            <Badge
+              variant="info"
+              className="text-[10px] px-2 py-0.5 shadow-md backdrop-blur-md bg-zinc-950/80"
+            >
               {post.category.name}
             </Badge>
           </div>
@@ -73,18 +84,25 @@ export function BlogCard({ post, isFeatured = false }: BlogCardProps) {
           </div>
 
           {/* Title */}
-          <Link href={`/blog/${post.slug}`} className="block group-hover:text-indigo-300 transition-colors">
-            <h3 className={`font-bold text-zinc-100 line-clamp-2 tracking-tight ${
-              isFeatured ? 'text-xl sm:text-2xl' : 'text-base sm:text-lg'
-            }`}>
+          <Link
+            href={`/blog/${post.slug}`}
+            className="block group-hover:text-indigo-300 transition-colors"
+          >
+            <h3
+              className={`font-bold text-zinc-100 line-clamp-2 tracking-tight ${
+                isFeatured ? 'text-xl sm:text-2xl' : 'text-base sm:text-lg'
+              }`}
+            >
               {post.title}
             </h3>
           </Link>
 
           {/* Excerpt */}
-          <p className={`text-xs text-zinc-400 leading-relaxed ${
-            isFeatured ? 'line-clamp-3 sm:line-clamp-4' : 'line-clamp-2'
-          }`}>
+          <p
+            className={`text-xs text-zinc-400 leading-relaxed ${
+              isFeatured ? 'line-clamp-3 sm:line-clamp-4' : 'line-clamp-2'
+            }`}
+          >
             {post.excerpt}
           </p>
         </div>
@@ -95,7 +113,9 @@ export function BlogCard({ post, isFeatured = false }: BlogCardProps) {
             <div className="w-6 h-6 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-[10px] font-bold text-zinc-300 shrink-0">
               {post.author.displayName.slice(0, 1).toUpperCase()}
             </div>
-            <span className="text-xs text-zinc-300 truncate font-medium">{post.author.displayName}</span>
+            <span className="text-xs text-zinc-300 truncate font-medium">
+              {post.author.displayName}
+            </span>
           </div>
 
           <Link

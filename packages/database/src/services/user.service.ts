@@ -86,7 +86,9 @@ export class UserService {
     }
 
     if (confirmation !== 'DELETE MY ACCOUNT') {
-      throw AppError.validation('Invalid confirmation phrase. Please type "DELETE MY ACCOUNT" exactly');
+      throw AppError.validation(
+        'Invalid confirmation phrase. Please type "DELETE MY ACCOUNT" exactly'
+      );
     }
 
     return this.userRepo.softDeleteUserTransaction(targetUserId, reason);
@@ -129,10 +131,7 @@ export class UserService {
   /**
    * Retrieves full user administration detail including support & library statistics
    */
-  async getUserDetailAdmin(
-    callerRole: UserRole,
-    userId: string
-  ): Promise<AdminUserDetail> {
+  async getUserDetailAdmin(callerRole: UserRole, userId: string): Promise<AdminUserDetail> {
     this.verifyAdmin(callerRole);
 
     const detail = await this.userRepo.findUserDetailAdmin(userId);
@@ -163,7 +162,9 @@ export class UserService {
     if (targetUser.role === 'ADMIN' && newRole !== 'ADMIN') {
       const adminCount = await this.userRepo.countAdmins();
       if (adminCount <= 1) {
-        throw AppError.validation('Cannot demote the sole system administrator. Add another admin first.');
+        throw AppError.validation(
+          'Cannot demote the sole system administrator. Add another admin first.'
+        );
       }
     }
 
@@ -182,7 +183,9 @@ export class UserService {
     this.verifySuperAdmin(callerRole);
 
     if (callerUserId === targetUserId) {
-      throw AppError.validation('Administrators cannot delete their own account via the Admin workspace.');
+      throw AppError.validation(
+        'Administrators cannot delete their own account via the Admin workspace.'
+      );
     }
 
     const targetUser = await this.userRepo.findById(targetUserId);

@@ -1,6 +1,13 @@
 import type { MetadataRoute } from 'next';
 import { SITE_CONFIG } from '@elsesourav/config';
-import { AppRepository, AppQueryService, BlogRepository, BlogService, HelpRepository, HelpService } from '@elsesourav/database';
+import {
+  AppRepository,
+  AppQueryService,
+  BlogRepository,
+  BlogService,
+  HelpRepository,
+  HelpService,
+} from '@elsesourav/database';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 3600; // revalidate hourly

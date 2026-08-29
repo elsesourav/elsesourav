@@ -8,7 +8,7 @@ import { AppVersionHistory } from '@/features/apps/components/AppVersionHistory'
 import { AppCard } from '@/features/apps/components/AppCard';
 import { BlogContentRenderer } from '@/features/blog/components/BlogContentRenderer';
 import { Card } from '@elsesourav/ui';
-import { Sparkles, FileText } from 'lucide-react';
+import { Sparkles, FileText, BookOpen } from 'lucide-react';
 
 interface AppDetailPageProps {
   params: Promise<{
@@ -34,7 +34,9 @@ export async function generateMetadata({ params }: AppDetailPageProps): Promise<
         url: canonicalUrl,
         siteName: 'ElseSourav',
         type: 'website',
-        images: app.featuredImageUrl ? [{ url: app.featuredImageUrl, width: 1200, height: 630, alt: app.name }] : undefined,
+        images: app.featuredImageUrl
+          ? [{ url: app.featuredImageUrl, width: 1200, height: 630, alt: app.name }]
+          : undefined,
       },
       twitter: {
         card: 'summary_large_image',
@@ -148,6 +150,18 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
             <BlogContentRenderer content={app.description} />
           </Card>
         </div>
+
+        {/* Long-Form Technical Documentation & Guides */}
+        {app.documentationMd && (
+          <div className="space-y-4">
+            <h2 className="text-lg font-bold text-zinc-100 flex items-center gap-2">
+              <BookOpen className="w-5 h-5 text-indigo-400" /> Documentation & Guide
+            </h2>
+            <Card className="p-6 sm:p-8 rounded-2xl border-zinc-800/80 bg-zinc-900/30">
+              <BlogContentRenderer content={app.documentationMd} />
+            </Card>
+          </div>
+        )}
 
         {/* Platform Downloads & Links */}
         <AppDetailLinks links={app.links} />

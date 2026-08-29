@@ -17,15 +17,12 @@ export default async function AdminUsersPage() {
           User & Identity Management
         </h1>
         <p className="text-xs sm:text-sm text-zinc-400">
-          Manage registered user accounts, role authorizations, account lifecycles, and support metrics.
+          Manage registered user accounts, role authorizations, account lifecycles, and support
+          metrics.
         </p>
       </div>
 
-      <AdminUsersTable
-        initialUsers={users}
-        total={total}
-        totalPages={totalPages}
-      />
+      <AdminUsersTable initialUsers={users} total={total} totalPages={totalPages} />
     </div>
   );
 }

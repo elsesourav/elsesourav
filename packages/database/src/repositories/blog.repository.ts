@@ -95,7 +95,9 @@ export class BlogRepository {
       ]);
 
       const totalPages = Math.ceil(totalCount / limit);
-      const items = records.map((r) => mapPrismaBlogPostToListItem(r as unknown as PrismaBlogWithRelations));
+      const items = records.map((r) =>
+        mapPrismaBlogPostToListItem(r as unknown as PrismaBlogWithRelations)
+      );
 
       return {
         items,
@@ -110,7 +112,11 @@ export class BlogRepository {
     }
   }
 
-  async findRelatedPosts(postId: string, categoryId?: string, limit: number = 3): Promise<BlogPostListItem[]> {
+  async findRelatedPosts(
+    postId: string,
+    categoryId?: string,
+    limit: number = 3
+  ): Promise<BlogPostListItem[]> {
     try {
       const records = await this.prisma.blogPost.findMany({
         where: {
@@ -124,13 +130,19 @@ export class BlogRepository {
         include: this.postInclude,
       });
 
-      return records.map((r) => mapPrismaBlogPostToListItem(r as unknown as PrismaBlogWithRelations));
+      return records.map((r) =>
+        mapPrismaBlogPostToListItem(r as unknown as PrismaBlogWithRelations)
+      );
     } catch (error) {
       throw AppError.database('Failed to fetch related blog posts', error);
     }
   }
 
-  async createPost(data: CreateBlogPostInput, authorId: string, slug: string): Promise<DomainBlogPost> {
+  async createPost(
+    data: CreateBlogPostInput,
+    authorId: string,
+    slug: string
+  ): Promise<DomainBlogPost> {
     try {
       const record = await this.prisma.blogPost.create({
         data: {
@@ -143,13 +155,15 @@ export class BlogRepository {
           categoryId: data.categoryId || null,
           seoTitle: data.seoTitle || null,
           seoDescription: data.seoDescription || null,
-          readingTime: data.readingTime || Math.max(1, Math.ceil(data.content.split(/\s+/).length / 200)),
+          readingTime:
+            data.readingTime || Math.max(1, Math.ceil(data.content.split(/\s+/).length / 200)),
           status: PublishStatus.DRAFT,
-          tags: data.tagIds && data.tagIds.length > 0
-            ? {
-                create: data.tagIds.map((tagId) => ({ tagId })),
-              }
-            : undefined,
+          tags:
+            data.tagIds && data.tagIds.length > 0
+              ? {
+                  create: data.tagIds.map((tagId) => ({ tagId })),
+                }
+              : undefined,
         },
         include: this.postInclude,
       });
@@ -215,12 +229,14 @@ export class BlogRepository {
     }
   }
 
-  async listAdminPosts(options: {
-    status?: PublishStatus;
-    categorySlug?: string;
-    search?: string;
-    limit?: number;
-  } = {}): Promise<DomainBlogPost[]> {
+  async listAdminPosts(
+    options: {
+      status?: PublishStatus;
+      categorySlug?: string;
+      search?: string;
+      limit?: number;
+    } = {}
+  ): Promise<DomainBlogPost[]> {
     try {
       const limit = Math.min(Math.max(options.limit ?? 50, 1), 100);
       const where: Prisma.BlogPostWhereInput = { deletedAt: null };

@@ -165,7 +165,8 @@ describe('Full System QA and Regression Test Suite', () => {
           slug: 'v2-release-notes',
           title: 'V2 Release Notes',
           status: 'published',
-          content: 'This is a detailed and comprehensive blog post regarding ElseSourav V2 launch and features.',
+          content:
+            'This is a detailed and comprehensive blog post regarding ElseSourav V2 launch and features.',
         }),
         incrementViews: vi.fn().mockResolvedValue(undefined),
       } as unknown as BlogRepository;
@@ -176,7 +177,8 @@ describe('Full System QA and Regression Test Suite', () => {
         title: 'V2 Release Notes',
         slug: 'v2-release-notes',
         excerpt: 'Summary of V2 updates',
-        content: 'This is a detailed and comprehensive blog post regarding ElseSourav V2 launch and features.',
+        content:
+          'This is a detailed and comprehensive blog post regarding ElseSourav V2 launch and features.',
       });
       expect(created.status).toBe('draft');
 
@@ -256,12 +258,16 @@ describe('Full System QA and Regression Test Suite', () => {
       // 1. User fetch
       const userView = await supportService.getTicketDetail('user-1', 'USER', 'ticket-1');
       expect(userView.messages.length).toBe(1);
-      expect(userView.messages.some((m: { isInternalNote?: boolean }) => Boolean(m.isInternalNote))).toBe(false);
+      expect(
+        userView.messages.some((m: { isInternalNote?: boolean }) => Boolean(m.isInternalNote))
+      ).toBe(false);
 
       // 2. Admin fetch
       const adminView = await supportService.getTicketDetail('admin-1', 'ADMIN', 'ticket-1');
       expect(adminView.messages.length).toBe(2);
-      expect(adminView.messages.some((m: { isInternalNote?: boolean }) => Boolean(m.isInternalNote))).toBe(true);
+      expect(
+        adminView.messages.some((m: { isInternalNote?: boolean }) => Boolean(m.isInternalNote))
+      ).toBe(true);
     });
   });
 
@@ -326,9 +332,16 @@ describe('Full System QA and Regression Test Suite', () => {
   describe('Task 14: Cloudinary Media Reference Integrity & Deletion Safety', () => {
     it('rejects deletion of media assets currently referenced by active apps or blog posts', async () => {
       const mockMediaRepo = {
-        checkAssetReferences: vi.fn().mockResolvedValue([
-          { resourceType: 'App', resourceId: 'app-terminal-1', resourceName: 'Terminal Pro', field: 'iconUrl' },
-        ]),
+        checkAssetReferences: vi
+          .fn()
+          .mockResolvedValue([
+            {
+              resourceType: 'App',
+              resourceId: 'app-terminal-1',
+              resourceName: 'Terminal Pro',
+              field: 'iconUrl',
+            },
+          ]),
         logMediaAudit: vi.fn(),
       } as unknown as MediaRepository;
 
@@ -346,7 +359,12 @@ describe('Full System QA and Regression Test Suite', () => {
       } as unknown as MediaRepository;
 
       const mediaService = new MediaService(mockMediaRepo);
-      const result = await mediaService.deleteMediaAdmin('admin-1', 'ADMIN', 'elsesourav/icons/unused-icon', false);
+      const result = await mediaService.deleteMediaAdmin(
+        'admin-1',
+        'ADMIN',
+        'elsesourav/icons/unused-icon',
+        false
+      );
 
       expect(result.success).toBe(true);
       expect(result.referencesCount).toBe(0);

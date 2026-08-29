@@ -106,9 +106,7 @@ export function CreateTicketForm({ onSuccess, onCancel }: CreateTicketFormProps)
 
       {/* Priority Selection */}
       <div className="space-y-1.5">
-        <label className="block text-xs font-semibold text-zinc-300">
-          Priority Level
-        </label>
+        <label className="block text-xs font-semibold text-zinc-300">Priority Level</label>
         <select
           value={priority}
           onChange={(e) => setPriority(e.target.value)}

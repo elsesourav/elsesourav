@@ -25,9 +25,7 @@ const SENSITIVE_PATTERNS = [
 /**
  * Strips all sensitive data, passwords, secrets, and auth tokens from audit metadata
  */
-export function sanitizeAuditDetails(
-  details?: Record<string, unknown>
-): Record<string, unknown> {
+export function sanitizeAuditDetails(details?: Record<string, unknown>): Record<string, unknown> {
   if (!details || typeof details !== 'object') return {};
 
   const clean: Record<string, unknown> = {};

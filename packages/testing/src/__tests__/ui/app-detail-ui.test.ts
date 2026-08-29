@@ -93,7 +93,9 @@ describe('Public App Details Integration & Related Apps', () => {
     const queryService = new AppQueryService(mockRepo);
     const related = await queryService.listPublicApps({ categorySlug: 'dev-tools', limit: 4 });
 
-    const filtered = related.filter((item: { id: string; slug: string }) => item.id !== 'app-1').slice(0, 3);
+    const filtered = related
+      .filter((item: { id: string; slug: string }) => item.id !== 'app-1')
+      .slice(0, 3);
     expect(filtered).toHaveLength(1);
     expect(filtered[0]?.slug).toBe('regex-engine');
   });

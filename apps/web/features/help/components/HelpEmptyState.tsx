@@ -20,8 +20,8 @@ export function HelpEmptyState({ query, categoryName }: HelpEmptyStateProps) {
           {query
             ? `No guides found for "${query}"`
             : categoryName
-            ? `No articles in ${categoryName} yet`
-            : 'No articles published yet'}
+              ? `No articles in ${categoryName} yet`
+              : 'No articles published yet'}
         </h3>
         <p className="text-xs text-zinc-400 max-w-xs mx-auto leading-relaxed">
           {query
@@ -33,13 +33,20 @@ export function HelpEmptyState({ query, categoryName }: HelpEmptyStateProps) {
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
         {query && (
           <Link href="/help">
-            <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-300 text-xs gap-1.5">
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-zinc-700 text-zinc-300 text-xs gap-1.5"
+            >
               <RotateCcw className="w-3.5 h-3.5" /> Clear Search
             </Button>
           </Link>
         )}
         <Link href="/support">
-          <Button size="sm" className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs gap-1.5">
+          <Button
+            size="sm"
+            className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs gap-1.5"
+          >
             <MessageSquare className="w-3.5 h-3.5" /> Contact Support
           </Button>
         </Link>

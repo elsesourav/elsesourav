@@ -52,7 +52,11 @@ export function createPopulatedAppsCatalogScenario(): AppsCatalogScenarioData {
   };
 }
 
-export function createLargePaginatedAppsCatalogScenario(total = 30, page = 1, limit = 12): AppsCatalogScenarioData {
+export function createLargePaginatedAppsCatalogScenario(
+  total = 30,
+  page = 1,
+  limit = 12
+): AppsCatalogScenarioData {
   const allItems: AppListItem[] = Array.from({ length: total }).map((_, i) => {
     const app = createApp({
       id: `app-page-${i + 1}`,

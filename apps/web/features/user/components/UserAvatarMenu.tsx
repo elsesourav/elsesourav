@@ -51,7 +51,9 @@ export function UserAvatarMenu({ user }: UserAvatarMenuProps) {
       {open && (
         <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-zinc-900 border border-zinc-800 shadow-2xl p-2 z-50 text-xs space-y-1 backdrop-blur-xl">
           <div className="px-3 py-2 border-b border-zinc-800/80">
-            <p className="font-semibold text-zinc-100 truncate">{user.displayName || 'ElseSourav Member'}</p>
+            <p className="font-semibold text-zinc-100 truncate">
+              {user.displayName || 'ElseSourav Member'}
+            </p>
             <p className="text-[11px] text-zinc-400 truncate">{user.email}</p>
           </div>
 

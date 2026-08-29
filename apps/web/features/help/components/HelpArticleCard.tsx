@@ -14,7 +14,10 @@ export function HelpArticleCard({ article }: HelpArticleCardProps) {
       <Card className="p-5 rounded-2xl border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-zinc-700/80 transition-all backdrop-blur-sm h-full flex flex-col justify-between space-y-3">
         <div className="space-y-2">
           <div className="flex items-center justify-between gap-2">
-            <Badge variant="info" className="text-[10px] px-2 py-0.5 bg-indigo-950/60 text-indigo-300 border border-indigo-500/20">
+            <Badge
+              variant="info"
+              className="text-[10px] px-2 py-0.5 bg-indigo-950/60 text-indigo-300 border border-indigo-500/20"
+            >
               {article.categoryName}
             </Badge>
             <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-indigo-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />

@@ -37,10 +37,7 @@ export default function AppDetailError({ error, reset }: AppDetailErrorProps) {
             <RefreshCw className="w-3.5 h-3.5" /> Try again
           </Button>
           <Link href="/apps">
-            <Button
-              variant="outline"
-              className="border-zinc-700 text-zinc-300 text-xs gap-1.5"
-            >
+            <Button variant="outline" className="border-zinc-700 text-zinc-300 text-xs gap-1.5">
               <ArrowLeft className="w-3.5 h-3.5" /> Back to catalog
             </Button>
           </Link>

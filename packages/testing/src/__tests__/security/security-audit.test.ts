@@ -34,11 +34,32 @@ describe('Comprehensive Security Hardening & Audit Test Suite', () => {
             status: 'OPEN',
             messages: forAdmin
               ? [
-                  { id: 'm1', ticketId: 'ticket-target', authorId: 'staff-1', message: 'Public response', isInternalNote: false, createdAt: new Date() },
-                  { id: 'm2', ticketId: 'ticket-target', authorId: 'staff-1', message: 'INTERNAL AUDIT NOTE', isInternalNote: true, createdAt: new Date() },
+                  {
+                    id: 'm1',
+                    ticketId: 'ticket-target',
+                    authorId: 'staff-1',
+                    message: 'Public response',
+                    isInternalNote: false,
+                    createdAt: new Date(),
+                  },
+                  {
+                    id: 'm2',
+                    ticketId: 'ticket-target',
+                    authorId: 'staff-1',
+                    message: 'INTERNAL AUDIT NOTE',
+                    isInternalNote: true,
+                    createdAt: new Date(),
+                  },
                 ]
               : [
-                  { id: 'm1', ticketId: 'ticket-target', authorId: 'staff-1', message: 'Public response', isInternalNote: false, createdAt: new Date() },
+                  {
+                    id: 'm1',
+                    ticketId: 'ticket-target',
+                    authorId: 'staff-1',
+                    message: 'Public response',
+                    isInternalNote: false,
+                    createdAt: new Date(),
+                  },
                 ],
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -53,14 +74,26 @@ describe('Comprehensive Security Hardening & Audit Test Suite', () => {
       ).rejects.toThrow(/permission/i);
 
       // Legitimate ticket owner can read, but internal notes are stripped
-      const ownerTicket = await supportService.getTicketDetail('user-victim', 'USER' as UserRole, 'ticket-target');
+      const ownerTicket = await supportService.getTicketDetail(
+        'user-victim',
+        'USER' as UserRole,
+        'ticket-target'
+      );
       expect(ownerTicket.messages).toHaveLength(1);
-      expect(ownerTicket.messages.some((m: { isInternalNote?: boolean }) => Boolean(m.isInternalNote))).toBe(false);
+      expect(
+        ownerTicket.messages.some((m: { isInternalNote?: boolean }) => Boolean(m.isInternalNote))
+      ).toBe(false);
 
       // Staff/Admin can view full details with internal notes
-      const adminTicket = await supportService.getTicketDetail('user-admin', 'ADMIN' as UserRole, 'ticket-target');
+      const adminTicket = await supportService.getTicketDetail(
+        'user-admin',
+        'ADMIN' as UserRole,
+        'ticket-target'
+      );
       expect(adminTicket.messages).toHaveLength(2);
-      expect(adminTicket.messages.some((m: { isInternalNote?: boolean }) => Boolean(m.isInternalNote))).toBe(true);
+      expect(
+        adminTicket.messages.some((m: { isInternalNote?: boolean }) => Boolean(m.isInternalNote))
+      ).toBe(true);
     });
 
     it('UserService: prevents horizontal profile modification and vertical role escalation', async () => {
@@ -88,13 +121,22 @@ describe('Comprehensive Security Hardening & Audit Test Suite', () => {
 
     it('LibraryService & NotificationService: enforces authenticated user isolation', async () => {
       const mockLibRepo: Partial<LibraryRepository> = {
-        saveApp: vi.fn().mockResolvedValue({ id: 'lib-1', userId: 'user-1', appId: 'app-1', createdAt: new Date() }),
+        saveApp: vi
+          .fn()
+          .mockResolvedValue({
+            id: 'lib-1',
+            userId: 'user-1',
+            appId: 'app-1',
+            createdAt: new Date(),
+          }),
         unsaveApp: vi.fn().mockResolvedValue(undefined),
       };
       const libService = new LibraryService(mockLibRepo as LibraryRepository);
 
       // Unauthenticated access fails
-      await expect(libService.saveApp(undefined, { appId: 'app-1' })).rejects.toThrow(/authentication required/i);
+      await expect(libService.saveApp(undefined, { appId: 'app-1' })).rejects.toThrow(
+        /authentication required/i
+      );
       await expect(libService.unsaveApp('', 'app-1')).rejects.toThrow(/authentication required/i);
 
       const mockNotifRepo: Partial<NotificationRepository> = {

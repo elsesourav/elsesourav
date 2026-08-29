@@ -1,5 +1,9 @@
 import type { BlogQueryResult, BlogCategory, BlogTag } from '@elsesourav/types';
-import { fixtureBlogPostListItems, fixtureBlogCategories, fixtureBlogTags } from '../fixtures/blog.fixtures';
+import {
+  fixtureBlogPostListItems,
+  fixtureBlogCategories,
+  fixtureBlogTags,
+} from '../fixtures/blog.fixtures';
 
 export interface BlogCatalogScenarioData {
   readonly categories: readonly BlogCategory[];

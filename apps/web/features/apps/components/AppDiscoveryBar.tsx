@@ -129,7 +129,9 @@ export function AppDiscoveryBar({ categories = [], tags = [] }: AppDiscoveryBarP
             >
               <span>{cat.name}</span>
               {cat.appCount !== undefined && cat.appCount > 0 && (
-                <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${isActive ? 'bg-indigo-800 text-indigo-100' : 'bg-zinc-800 text-zinc-400'}`}>
+                <span
+                  className={`text-[10px] px-1.5 py-0.2 rounded-full ${isActive ? 'bg-indigo-800 text-indigo-100' : 'bg-zinc-800 text-zinc-400'}`}
+                >
                   {cat.appCount}
                 </span>
               )}

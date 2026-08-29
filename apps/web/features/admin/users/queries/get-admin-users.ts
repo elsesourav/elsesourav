@@ -11,13 +11,15 @@ export interface AdminUsersListData {
   totalPages: number;
 }
 
-export async function getAdminUsersList(options: {
-  role?: UserRole | 'all';
-  status?: string;
-  search?: string;
-  page?: number;
-  limit?: number;
-} = {}): Promise<AdminUsersListData> {
+export async function getAdminUsersList(
+  options: {
+    role?: UserRole | 'all';
+    status?: string;
+    search?: string;
+    page?: number;
+    limit?: number;
+  } = {}
+): Promise<AdminUsersListData> {
   const context = await requireAdmin();
   return userService.listUsersAdmin(context.role, options);
 }

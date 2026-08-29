@@ -10,7 +10,10 @@ import type {
 import { fixturePublishedApps } from '../fixtures/apps.fixtures';
 import { fixtureBlogPosts } from '../fixtures/blog.fixtures';
 import { fixtureUsersList } from '../fixtures/users.fixtures';
-import { fixtureSupportTicketsList, fixtureSupportTicketListItems } from '../fixtures/support.fixtures';
+import {
+  fixtureSupportTicketsList,
+  fixtureSupportTicketListItems,
+} from '../fixtures/support.fixtures';
 import { fixtureAuditLogs } from '../fixtures/audit.fixtures';
 import { fixtureMediaAssets } from '../fixtures/media.fixtures';
 import { createAdminUserListItem } from '../factories/user.factory';
@@ -35,7 +38,9 @@ export function createAdminControlScenario(): AdminControlScenarioData {
       publishedBlogPosts: fixtureBlogPosts.filter((p) => p.status === 'published').length,
       totalHelpArticles: 3,
       totalTickets: fixtureSupportTicketsList.length,
-      openTickets: fixtureSupportTicketsList.filter((t) => t.status === 'open' || t.status === 'in_progress').length,
+      openTickets: fixtureSupportTicketsList.filter(
+        (t) => t.status === 'open' || t.status === 'in_progress'
+      ).length,
       totalUsers: fixtureUsersList.length,
     },
     users: fixtureUsersList.map((u) => createAdminUserListItem(u)),

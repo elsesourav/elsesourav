@@ -1,6 +1,14 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, Button } from '@elsesourav/ui';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+  Button,
+} from '@elsesourav/ui';
 import { MailCheck } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -17,12 +25,14 @@ export default function VerifyEmailPage() {
         </div>
         <CardTitle className="text-2xl font-bold text-zinc-100">Check Your Email</CardTitle>
         <CardDescription className="text-zinc-400 max-w-sm">
-          We have sent a verification link to your email address. Please click the link to confirm your account.
+          We have sent a verification link to your email address. Please click the link to confirm
+          your account.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <p className="text-xs text-zinc-500">
-          Did not receive the email? Check your spam folder or wait a few minutes before requesting another.
+          Did not receive the email? Check your spam folder or wait a few minutes before requesting
+          another.
         </p>
       </CardContent>
       <CardFooter className="flex justify-center border-t border-zinc-800/50 pt-4">

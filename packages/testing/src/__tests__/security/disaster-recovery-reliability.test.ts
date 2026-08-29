@@ -17,7 +17,9 @@ describe('Disaster Recovery & Reliability Test Suite (Prompt 47)', () => {
   describe('Task 2 & Task 24 — Database Outage & Error Normalization', () => {
     it('AppQueryService: maps unexpected database crashes to AppError without exposing raw stacks', async () => {
       const mockRepo: Partial<AppRepository> = {
-        getPublicDetailBySlug: vi.fn().mockRejectedValue(new Error('Connection terminated unexpectedly')),
+        getPublicDetailBySlug: vi
+          .fn()
+          .mockRejectedValue(new Error('Connection terminated unexpectedly')),
       };
       const appQueryService = new AppQueryService(mockRepo as AppRepository);
 

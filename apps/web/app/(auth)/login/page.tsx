@@ -1,6 +1,13 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@elsesourav/ui';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from '@elsesourav/ui';
 import { LoginForm } from '@/components/auth/LoginForm';
 
 export const metadata: Metadata = {
@@ -23,7 +30,10 @@ export default function LoginPage() {
       <CardFooter className="flex justify-center border-t border-zinc-800/50 pt-4">
         <p className="text-sm text-zinc-400">
           Do not have an account?{' '}
-          <Link href="/signup" className="text-indigo-400 hover:text-indigo-300 font-medium hover:underline">
+          <Link
+            href="/signup"
+            className="text-indigo-400 hover:text-indigo-300 font-medium hover:underline"
+          >
             Create an account
           </Link>
         </p>

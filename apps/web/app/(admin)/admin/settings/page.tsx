@@ -6,7 +6,8 @@ import { AdminSettingsForm } from '@/features/admin/settings/components/AdminSet
 
 export const metadata: Metadata = {
   title: 'Portal & Content Configuration | Admin',
-  description: 'Manage dynamic website identity, creator bio, and homepage copy without code changes.',
+  description:
+    'Manage dynamic website identity, creator bio, and homepage copy without code changes.',
 };
 
 export const dynamic = 'force-dynamic';
@@ -23,7 +24,8 @@ export default async function AdminSettingsPage() {
     site_tagline: dbSettings['site_tagline'] || SITE_CONFIG.tagline,
     site_description: dbSettings['site_description'] || SITE_CONFIG.description,
     hero_badge: dbSettings['hero_badge'] || `Software & Digital Tools by ${CREATOR_CONFIG.name}`,
-    hero_headline: dbSettings['hero_headline'] || 'Thoughtful software, practical tools, & engineering ideas.',
+    hero_headline:
+      dbSettings['hero_headline'] || 'Thoughtful software, practical tools, & engineering ideas.',
     hero_subtitle: dbSettings['hero_subtitle'] || CREATOR_CONFIG.positioning,
     primary_cta_label: dbSettings['primary_cta_label'] || 'Explore Applications',
     secondary_cta_label: dbSettings['secondary_cta_label'] || 'Read Engineering Notes',

@@ -36,7 +36,9 @@ export const AdminSaveHelpSchema = z.object({
   slug: HelpSlugSchema.optional(),
   excerpt: z.string().max(250).optional().or(z.literal('')),
   content: z.string().min(20, 'Content must be at least 20 characters'),
-  status: z.enum(['draft', 'published', 'archived', 'DRAFT', 'PUBLISHED', 'ARCHIVED']).default('draft'),
+  status: z
+    .enum(['draft', 'published', 'archived', 'DRAFT', 'PUBLISHED', 'ARCHIVED'])
+    .default('draft'),
   orderIndex: z.coerce.number().int().default(0),
   seoTitle: z.string().max(100).optional().or(z.literal('')),
   seoDescription: z.string().max(200).optional().or(z.literal('')),

@@ -30,7 +30,9 @@ describe('Auth UX & Security Guard Tests', () => {
 
   it('translates network or timeout failures into clean messages', () => {
     const error = AuthError.fromSupabase({ message: 'Failed to fetch' });
-    expect(error.message).toBe('Authentication failed. Please check your credentials and try again.');
+    expect(error.message).toBe(
+      'Authentication failed. Please check your credentials and try again.'
+    );
     expect(error.status).toBe(401);
   });
 });

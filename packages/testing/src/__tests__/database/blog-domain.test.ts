@@ -142,7 +142,11 @@ describe('Blog Domain Service, Lifecycle & Security', () => {
       } as unknown as BlogRepository;
 
       const service = new BlogService(mockRepo);
-      const result = await service.listPublicPosts({ categorySlug: 'engineering', page: 1, limit: 10 });
+      const result = await service.listPublicPosts({
+        categorySlug: 'engineering',
+        page: 1,
+        limit: 10,
+      });
 
       expect(result.totalCount).toBe(1);
       expect(result.items[0]?.title).toBe('Next.js 15 Deep Dive');

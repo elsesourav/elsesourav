@@ -12,7 +12,9 @@ export async function getPublicHelpCategories(): Promise<HelpCategoryWithArticle
   return helpService.listPublicCategories();
 }
 
-export async function getHelpCategoryBySlug(slug: string): Promise<HelpCategoryWithArticles | null> {
+export async function getHelpCategoryBySlug(
+  slug: string
+): Promise<HelpCategoryWithArticles | null> {
   try {
     return await helpService.getCategoryBySlug(slug);
   } catch {

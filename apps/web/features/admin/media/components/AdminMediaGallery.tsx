@@ -1,33 +1,35 @@
 'use client';
 
-import * as React from 'react';
-import Link from 'next/link';
-import { Card, Badge, Input, Button } from '@elsesourav/ui';
-import type { AdminMediaItem, AdminMediaListResult, MediaDomain, MediaFolder, MediaType } from '@elsesourav/types';
+import type {
+  AdminMediaItem,
+  AdminMediaListResult,
+  MediaDomain,
+  MediaFolder,
+  MediaType,
+} from '@elsesourav/types';
+import { Badge, Button, Card, Input } from '@elsesourav/ui';
 import {
-  adminGetUploadSignatureAction,
-  adminDeleteMediaAction,
-} from '../actions/admin-media-actions';
-import {
-  Image as ImageIcon,
-  Search,
-  Upload,
-  ExternalLink,
-  Copy,
-  Check,
-  Trash2,
-  AlertTriangle,
-  Info,
-  CheckCircle2,
   AlertCircle,
-  Loader2,
-  X,
-  Layers,
+  AlertTriangle,
+  Check,
+  CheckCircle2,
+  Copy,
+  ExternalLink,
   FileText,
-  Package,
-  Users,
+  Image as ImageIcon,
+  Info,
+  Layers,
   LifeBuoy,
+  Loader2,
+  Package,
+  Search,
+  Trash2,
+  Upload,
+  Users,
+  X,
 } from 'lucide-react';
+import * as React from 'react';
+import { adminDeleteMediaAction, adminUploadImageFileAction } from '../actions/admin-media-actions';
 
 interface AdminMediaGalleryProps {
   initialData: AdminMediaListResult;
@@ -61,9 +63,7 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
         const q = search.toLowerCase();
         const matchesPublicId = item.publicId.toLowerCase().includes(q);
         const matchesUrl = item.secureUrl.toLowerCase().includes(q);
-        const matchesRef = item.references.some((r) =>
-          r.resourceName.toLowerCase().includes(q)
-        );
+        const matchesRef = item.references.some((r) => r.resourceName.toLowerCase().includes(q));
         if (!matchesPublicId && !matchesUrl && !matchesRef) return false;
       }
 
@@ -97,7 +97,9 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
       return handleDeleteAsset(asset, true);
     }
 
-    if (!window.confirm(`Are you sure you want to delete asset "${asset.publicId}" from Cloudinary storage?`)) {
+    if (
+      !window.confirm(`Are you sure you want to delete asset "${asset.publicId}" from storage?`)
+    ) {
       return;
     }
 
@@ -109,7 +111,7 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
       if (res.success) {
         setItems((prev) => prev.filter((i) => i.publicId !== asset.publicId));
         setSelectedAsset(null);
-        setActionSuccess(`Asset "${asset.publicId}" successfully deleted from storage.`);
+        setActionSuccess(`Asset "${asset.publicId}" successfully deleted.`);
         setTimeout(() => setActionSuccess(null), 4000);
       } else {
         setDeleteError(res.error || 'Failed to delete asset');
@@ -127,55 +129,29 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
 
     setIsUploading(true);
     setUploadError(null);
-    setUploadProgress(10);
+    setUploadProgress(20);
 
     try {
-      // Step 1: Obtain signed signature from server
-      const sigRes = await adminGetUploadSignatureAction(uploadFolder, uploadType);
-      if (!sigRes.success || !sigRes.data) {
-        throw new Error(sigRes.error || 'Failed to generate signed upload signature');
-      }
-
-      setUploadProgress(30);
-
-      // Step 2: Upload directly to Cloudinary API
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('api_key', sigRes.data.apiKey);
-      formData.append('timestamp', sigRes.data.timestamp.toString());
-      formData.append('signature', sigRes.data.signature);
-      formData.append('folder', sigRes.data.folder);
-      if (sigRes.data.publicId) {
-        formData.append('public_id', sigRes.data.publicId);
+      formData.append('folder', uploadFolder);
+
+      setUploadProgress(50);
+      const res = await adminUploadImageFileAction(formData);
+
+      if (!res.success || !res.url) {
+        throw new Error(res.error || 'Upload failed');
       }
 
-      setUploadProgress(60);
-
-      const uploadRes = await fetch(
-        `https://api.cloudinary.com/v1_1/${sigRes.data.cloudName}/image/upload`,
-        {
-          method: 'POST',
-          body: formData,
-        }
-      );
-
-      if (!uploadRes.ok) {
-        const errText = await uploadRes.text();
-        throw new Error(`Cloudinary upload failed: ${errText}`);
-      }
-
-      const uploaded = await uploadRes.json();
       setUploadProgress(100);
 
       const newItem: AdminMediaItem = {
-        id: uploaded.public_id,
-        publicId: uploaded.public_id,
-        secureUrl: uploaded.secure_url,
+        id: res.publicId || file.name,
+        publicId: res.publicId || file.name,
+        secureUrl: res.url,
         domain: uploadFolder as MediaDomain,
-        format: uploaded.format,
-        width: uploaded.width,
-        height: uploaded.height,
-        bytes: uploaded.bytes,
+        format: file.type.split('/')[1] || 'image',
+        bytes: file.size,
         createdAt: Date.now(),
         isReferenced: false,
         references: [],
@@ -183,7 +159,7 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
 
       setItems((prev) => [newItem, ...prev]);
       setIsUploadOpen(false);
-      setActionSuccess(`Asset uploaded successfully to ${uploaded.public_id}!`);
+      setActionSuccess(`Asset uploaded successfully to ${res.publicId || file.name}!`);
       setTimeout(() => setActionSuccess(null), 4000);
     } catch (err) {
       setUploadError(err instanceof Error ? err.message : 'Failed to upload asset');
@@ -244,7 +220,9 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
               <AlertTriangle className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-xs text-zinc-400 block font-medium">Unreferenced / Orphans</span>
+              <span className="text-xs text-zinc-400 block font-medium">
+                Unreferenced / Orphans
+              </span>
               <span className="text-xl font-bold font-mono text-amber-300">
                 {initialData.totalOrphans}
               </span>
@@ -318,7 +296,7 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
           <ImageIcon className="w-10 h-10 text-zinc-600 mx-auto" />
           <h4 className="text-sm font-semibold text-zinc-300">No media assets found</h4>
           <p className="text-xs text-zinc-500 max-w-xs mx-auto">
-            No Cloudinary assets match your search and filter criteria.
+            No media assets match your search and filter criteria.
           </p>
         </Card>
       ) : (
@@ -356,7 +334,10 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
                         Used ({asset.references.length})
                       </Badge>
                     ) : (
-                      <Badge variant="outline" className="text-[9px] py-0 px-1 border-amber-500/40 text-amber-300 bg-amber-950/60 font-mono">
+                      <Badge
+                        variant="outline"
+                        className="text-[9px] py-0 px-1 border-amber-500/40 text-amber-300 bg-amber-950/60 font-mono"
+                      >
                         Unused
                       </Badge>
                     )}
@@ -365,7 +346,10 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
 
                 {/* Footer Metadata & Actions */}
                 <div className="p-2.5 space-y-2 bg-zinc-900/80 border-t border-zinc-800/60">
-                  <div className="truncate font-mono text-[10px] text-zinc-300 font-semibold" title={asset.publicId}>
+                  <div
+                    className="truncate font-mono text-[10px] text-zinc-300 font-semibold"
+                    title={asset.publicId}
+                  >
                     {asset.publicId.split('/').pop() || asset.publicId}
                   </div>
 
@@ -396,7 +380,7 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
                       type="button"
                       onClick={() => handleDeleteAsset(asset)}
                       className="p-1 rounded-lg hover:bg-rose-950/60 text-zinc-400 hover:text-rose-400 transition-colors"
-                      title="Delete from Cloudinary"
+                      title="Delete from Media Storage"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -463,8 +447,10 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
               {/* Usage & Reference Information */}
               <div className="space-y-4 text-xs">
                 <div className="space-y-1">
-                  <span className="text-zinc-500 block text-[11px]">Cloudinary Public ID</span>
-                  <span className="font-mono text-zinc-200 break-all">{selectedAsset.publicId}</span>
+                  <span className="text-zinc-500 block text-[11px]">Media Asset ID</span>
+                  <span className="font-mono text-zinc-200 break-all">
+                    {selectedAsset.publicId}
+                  </span>
                 </div>
 
                 <div className="space-y-2">
@@ -475,7 +461,8 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
 
                   {selectedAsset.references.length === 0 ? (
                     <div className="p-3 rounded-xl bg-amber-950/20 border border-amber-500/20 text-amber-300 text-[11px]">
-                      No active database resources currently reference this asset. It is an unreferenced orphan.
+                      No active database resources currently reference this asset. It is an
+                      unreferenced orphan.
                     </div>
                   ) : (
                     <div className="space-y-2 max-h-48 overflow-y-auto">
@@ -543,7 +530,7 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
             <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
               <div className="flex items-center gap-2">
                 <Upload className="w-4 h-4 text-indigo-400" />
-                <h3 className="text-sm font-bold text-zinc-100">Upload to Cloudinary</h3>
+                <h3 className="text-sm font-bold text-zinc-100">Upload to Media Library</h3>
               </div>
               <button
                 type="button"
@@ -610,7 +597,7 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
               {isUploading && (
                 <div className="space-y-2 pt-2">
                   <div className="flex justify-between text-[11px] text-zinc-400">
-                    <span>Direct Uploading to Cloudinary...</span>
+                    <span>Direct Uploading to Media Library...</span>
                     <span>{uploadProgress}%</span>
                   </div>
                   <div className="h-1.5 w-full bg-zinc-800 rounded-full overflow-hidden">

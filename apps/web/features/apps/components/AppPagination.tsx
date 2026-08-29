@@ -38,7 +38,8 @@ export function AppPagination({ currentPage, totalPages, totalMatches }: AppPagi
     >
       <span className="text-xs text-zinc-500 order-2 sm:order-1">
         Showing page <span className="text-zinc-300 font-medium">{currentPage}</span> of{' '}
-        <span className="text-zinc-300 font-medium">{totalPages}</span> ({totalMatches} total results)
+        <span className="text-zinc-300 font-medium">{totalPages}</span> ({totalMatches} total
+        results)
       </span>
 
       <div className="flex items-center gap-2 order-1 sm:order-2">

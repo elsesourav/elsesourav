@@ -1,6 +1,13 @@
 import { describe, it, expect, vi } from 'vitest';
 import { SITE_CONFIG } from '@elsesourav/config';
-import { AppRepository, AppQueryService, BlogRepository, BlogService, HelpRepository, HelpService } from '@elsesourav/database';
+import {
+  AppRepository,
+  AppQueryService,
+  BlogRepository,
+  BlogService,
+  HelpRepository,
+  HelpService,
+} from '@elsesourav/database';
 
 describe('SEO, Sitemap, and Discoverability Boundary Verification', () => {
   it('should verify SITE_CONFIG canonical URL base is HTTPS and production-ready', () => {

@@ -13,7 +13,10 @@ export function RelatedPosts({ posts }: RelatedPostsProps) {
   }
 
   return (
-    <section className="space-y-6 pt-12 border-t border-zinc-800/80 max-w-4xl mx-auto" aria-labelledby="related-articles-heading">
+    <section
+      className="space-y-6 pt-12 border-t border-zinc-800/80 max-w-4xl mx-auto"
+      aria-labelledby="related-articles-heading"
+    >
       <div className="flex items-center gap-2">
         <Sparkles className="w-5 h-5 text-indigo-400" />
         <h2 id="related-articles-heading" className="text-xl font-bold text-zinc-100">

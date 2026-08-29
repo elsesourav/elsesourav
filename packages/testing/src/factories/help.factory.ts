@@ -12,7 +12,9 @@ export function createHelpCategory(overrides?: Partial<HelpCategory>): HelpCateg
     id: overrides?.id || `help-cat-${index}`,
     name: overrides?.name || 'Getting Started',
     slug: overrides?.slug || 'getting-started',
-    description: overrides?.description || 'Essential guides for workspace configuration and developer shortcuts.',
+    description:
+      overrides?.description ||
+      'Essential guides for workspace configuration and developer shortcuts.',
     icon: overrides?.icon || 'compass',
     orderIndex: index,
     articleCount: overrides?.articleCount ?? 3,

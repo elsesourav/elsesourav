@@ -5,7 +5,8 @@ import { SettingsTabs } from '@/features/account/components/SettingsTabs';
 
 export const metadata: Metadata = {
   title: 'Account Settings | ElseSourav',
-  description: 'Manage your profile, public identity, security credentials, and application preferences.',
+  description:
+    'Manage your profile, public identity, security credentials, and application preferences.',
 };
 
 export default async function SettingsPage() {

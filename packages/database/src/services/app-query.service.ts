@@ -20,7 +20,9 @@ export class AppQueryService {
   async listPublicApps(options: AppQueryOptions = {}): Promise<AppListItem[]> {
     const validated = AppListQuerySchema.safeParse(options);
     if (!validated.success) {
-      throw AppError.validation(validated.error.issues[0]?.message || 'Invalid application query parameters');
+      throw AppError.validation(
+        validated.error.issues[0]?.message || 'Invalid application query parameters'
+      );
     }
 
     return this.appRepo.listPublic(options);

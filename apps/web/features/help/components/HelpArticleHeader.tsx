@@ -19,12 +19,18 @@ export function HelpArticleHeader({ article, categorySlug }: HelpArticleHeaderPr
   return (
     <header className="space-y-6 max-w-4xl mx-auto">
       {/* Breadcrumb Navigation */}
-      <nav className="flex items-center gap-2 text-xs text-zinc-400 overflow-x-auto no-scrollbar" aria-label="Breadcrumb">
+      <nav
+        className="flex items-center gap-2 text-xs text-zinc-400 overflow-x-auto no-scrollbar"
+        aria-label="Breadcrumb"
+      >
         <Link href="/help" className="hover:text-white transition-colors shrink-0">
           Help Center
         </Link>
         <ChevronRight className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
-        <Link href={`/help/${categorySlug}`} className="hover:text-white transition-colors shrink-0">
+        <Link
+          href={`/help/${categorySlug}`}
+          className="hover:text-white transition-colors shrink-0"
+        >
           {article.category.name}
         </Link>
         <ChevronRight className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
@@ -34,7 +40,10 @@ export function HelpArticleHeader({ article, categorySlug }: HelpArticleHeaderPr
       {/* Category Pill */}
       <div>
         <Link href={`/help/${categorySlug}`}>
-          <Badge variant="info" className="text-xs px-2.5 py-0.5 hover:bg-indigo-900/60 transition-colors">
+          <Badge
+            variant="info"
+            className="text-xs px-2.5 py-0.5 hover:bg-indigo-900/60 transition-colors"
+          >
             {article.category.name}
           </Badge>
         </Link>

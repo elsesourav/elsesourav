@@ -35,7 +35,10 @@ export default async function NotificationsPage() {
               Notifications
             </h1>
             {notificationData.unreadCount > 0 && (
-              <Badge variant="info" className="text-xs px-2 py-0.5 bg-indigo-950/60 text-indigo-300 border border-indigo-500/30">
+              <Badge
+                variant="info"
+                className="text-xs px-2 py-0.5 bg-indigo-950/60 text-indigo-300 border border-indigo-500/30"
+              >
                 {notificationData.unreadCount} unread
               </Badge>
             )}
@@ -46,7 +49,11 @@ export default async function NotificationsPage() {
         </div>
 
         <Link href="/settings">
-          <Button variant="ghost" size="sm" className="text-xs text-zinc-400 hover:text-zinc-200 gap-1.5 self-start sm:self-auto">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-xs text-zinc-400 hover:text-zinc-200 gap-1.5 self-start sm:self-auto"
+          >
             <Settings className="w-3.5 h-3.5" /> Preferences
           </Button>
         </Link>

@@ -16,12 +16,8 @@ import {
   fixtureAdminUser,
   fixtureUsersList,
 } from '../../fixtures/users.fixtures';
-import {
-  fixtureTicketMessagesOpen,
-} from '../../fixtures/support.fixtures';
-import {
-  fixtureUserLibraryItems,
-} from '../../fixtures/library.fixtures';
+import { fixtureTicketMessagesOpen } from '../../fixtures/support.fixtures';
+import { fixtureUserLibraryItems } from '../../fixtures/library.fixtures';
 
 describe('UI Stabilization Phase 09 — Full User-Flow QA Validation', () => {
   const mockService = new MockQueryService();
@@ -114,7 +110,9 @@ describe('UI Stabilization Phase 09 — Full User-Flow QA Validation', () => {
 
       const post = await mockService.getBlogPostBySlug('architecture-insights');
       expect(post).toBeDefined();
-      expect(post?.title).toBe('ElseSourav Architecture: Scaling with Turborepo and Next.js 15 App Router');
+      expect(post?.title).toBe(
+        'ElseSourav Architecture: Scaling with Turborepo and Next.js 15 App Router'
+      );
       expect(post?.tags.map((t) => t.slug)).toContain('nextjs-15');
       expect(post?.content).toContain('## Architectural Motivation');
     });

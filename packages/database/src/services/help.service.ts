@@ -215,10 +215,7 @@ export class HelpService {
   /**
    * Deletes a Help Article (ADMIN only)
    */
-  async deleteArticle(
-    callerRole: UserRole | string | undefined,
-    id: string
-  ): Promise<void> {
+  async deleteArticle(callerRole: UserRole | string | undefined, id: string): Promise<void> {
     this.verifyAdmin(callerRole);
     return this.helpRepo.deleteArticle(id);
   }

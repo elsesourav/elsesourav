@@ -4,15 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Card } from '@elsesourav/ui';
 import type { AdminDashboardStats } from '@elsesourav/types';
-import {
-  Package,
-  FileText,
-  BookOpen,
-  LifeBuoy,
-  Users,
-  ArrowUpRight,
-  Sparkles,
-} from 'lucide-react';
+import { Package, FileText, BookOpen, LifeBuoy, Users, ArrowUpRight, Sparkles } from 'lucide-react';
 
 interface AdminStatsGridProps {
   stats: AdminDashboardStats;

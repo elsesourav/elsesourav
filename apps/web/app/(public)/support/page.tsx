@@ -9,7 +9,8 @@ import { LifeBuoy, Headphones, MessageSquare, ArrowRight, Lock } from 'lucide-re
 
 export const metadata: Metadata = {
   title: 'Engineering & Technical Support',
-  description: 'Submit an issue, bug report, or technical question to the ElseSourav engineering team.',
+  description:
+    'Submit an issue, bug report, or technical question to the ElseSourav engineering team.',
   alternates: {
     canonical: 'https://elsesourav.com/support',
   },
@@ -67,13 +68,18 @@ export default async function SupportPage() {
           </h1>
 
           <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-            Submit a bug report, troubleshooting inquiry, or account assistance request directly to our developer team.
+            Submit a bug report, troubleshooting inquiry, or account assistance request directly to
+            our developer team.
           </p>
 
           {isAuthenticated && (
             <div className="pt-2">
               <Link href="/support/tickets">
-                <Button variant="outline" size="sm" className="border-zinc-800 text-zinc-300 text-xs gap-1.5">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-zinc-800 text-zinc-300 text-xs gap-1.5"
+                >
                   <MessageSquare className="w-3.5 h-3.5" /> View My Existing Tickets
                 </Button>
               </Link>
@@ -103,7 +109,8 @@ export default async function SupportPage() {
               <div className="space-y-1.5">
                 <h2 className="text-lg font-bold text-zinc-100">Sign in to Submit a Ticket</h2>
                 <p className="text-xs text-zinc-400 max-w-sm mx-auto leading-relaxed">
-                  Support tickets are linked directly to your authenticated user account so you can track responses and maintain conversation history.
+                  Support tickets are linked directly to your authenticated user account so you can
+                  track responses and maintain conversation history.
                 </p>
               </div>
 
@@ -115,7 +122,10 @@ export default async function SupportPage() {
                   </Button>
                 </Link>
                 <Link href="/help" className="w-full sm:w-auto">
-                  <Button variant="outline" className="w-full sm:w-auto border-zinc-800 hover:bg-zinc-800 text-zinc-300 text-xs gap-1.5">
+                  <Button
+                    variant="outline"
+                    className="w-full sm:w-auto border-zinc-800 hover:bg-zinc-800 text-zinc-300 text-xs gap-1.5"
+                  >
                     <LifeBuoy className="w-3.5 h-3.5" /> Browse Help Center
                   </Button>
                 </Link>
@@ -139,7 +149,11 @@ export default async function SupportPage() {
           </div>
 
           <Link href="/help" className="shrink-0">
-            <Button variant="outline" size="sm" className="text-xs border-zinc-800 text-zinc-300 gap-1">
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs border-zinc-800 text-zinc-300 gap-1"
+            >
               <span>Help Center</span>
               <ArrowRight className="w-3 h-3" />
             </Button>

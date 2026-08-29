@@ -1,4 +1,10 @@
-import type { BlogPost, BlogPostListItem, BlogCategory, BlogTag, BlogAuthor } from '@elsesourav/types';
+import type {
+  BlogPost,
+  BlogPostListItem,
+  BlogCategory,
+  BlogTag,
+  BlogAuthor,
+} from '@elsesourav/types';
 
 let blogCounter = 1;
 
@@ -50,7 +56,10 @@ export function createBlogPost(overrides?: Partial<BlogPost>): BlogPost {
     authorId: overrides?.authorId || 'usr-admin-1',
     author: overrides?.author || defaultBlogAuthor,
     category: overrides?.category || createBlogCategory(),
-    tags: overrides?.tags || [createBlogTag({ name: 'Turborepo', slug: 'turborepo' }), createBlogTag()],
+    tags: overrides?.tags || [
+      createBlogTag({ name: 'Turborepo', slug: 'turborepo' }),
+      createBlogTag(),
+    ],
     coverImageUrl: overrides?.coverImageUrl,
     status: overrides?.status || 'published',
     readingTime: overrides?.readingTime ?? 5,

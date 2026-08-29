@@ -37,7 +37,17 @@ export class AppError extends Error {
     super(message);
     this.name = 'AppError';
     this.code = code;
-    this.status = options.status ?? (code === 'NOT_FOUND_ERROR' ? 404 : code === 'VALIDATION_ERROR' ? 400 : code === 'AUTHENTICATION_ERROR' ? 401 : code === 'AUTHORIZATION_ERROR' ? 403 : 500);
+    this.status =
+      options.status ??
+      (code === 'NOT_FOUND_ERROR'
+        ? 404
+        : code === 'VALIDATION_ERROR'
+          ? 400
+          : code === 'AUTHENTICATION_ERROR'
+            ? 401
+            : code === 'AUTHORIZATION_ERROR'
+              ? 403
+              : 500);
     this.isRetryable = options.isRetryable ?? false;
     this.details = options.details;
     this.timestamp = Date.now();
@@ -78,11 +88,15 @@ export class AppError extends Error {
   }
 
   public static external(service: string, message: string, cause?: unknown): AppError {
-    return new AppError('EXTERNAL_SERVICE_ERROR', `External service [${service}] failed: ${message}`, {
-      status: 502,
-      isRetryable: true,
-      cause,
-    });
+    return new AppError(
+      'EXTERNAL_SERVICE_ERROR',
+      `External service [${service}] failed: ${message}`,
+      {
+        status: 502,
+        isRetryable: true,
+        cause,
+      }
+    );
   }
 
   public static unknown(message = 'An unexpected error occurred', cause?: unknown): AppError {

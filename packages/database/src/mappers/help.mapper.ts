@@ -24,7 +24,9 @@ export type PrismaHelpCategoryWithArticles = PrismaHelpCategory & {
   };
 };
 
-export function mapPrismaHelpAuthorToDomain(author?: PrismaUser | null): HelpArticleAuthor | undefined {
+export function mapPrismaHelpAuthorToDomain(
+  author?: PrismaUser | null
+): HelpArticleAuthor | undefined {
   if (!author) return undefined;
   return {
     id: author.id,

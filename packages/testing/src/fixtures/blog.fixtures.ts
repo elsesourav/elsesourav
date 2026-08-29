@@ -28,10 +28,26 @@ export const fixtureBlogCategories: readonly BlogCategory[] = [
   fixtureBlogCategoryUx,
 ];
 
-export const fixtureBlogTagNextjs: BlogTag = { id: 'btag-nextjs', name: 'Next.js 15', slug: 'nextjs-15' };
-export const fixtureBlogTagTurbo: BlogTag = { id: 'btag-turbo', name: 'Turborepo', slug: 'turborepo' };
-export const fixtureBlogTagRbac: BlogTag = { id: 'btag-rbac', name: 'Zero-Trust RBAC', slug: 'zero-trust-rbac' };
-export const fixtureBlogTagTokens: BlogTag = { id: 'btag-tokens', name: 'CSS Tokens', slug: 'css-tokens' };
+export const fixtureBlogTagNextjs: BlogTag = {
+  id: 'btag-nextjs',
+  name: 'Next.js 15',
+  slug: 'nextjs-15',
+};
+export const fixtureBlogTagTurbo: BlogTag = {
+  id: 'btag-turbo',
+  name: 'Turborepo',
+  slug: 'turborepo',
+};
+export const fixtureBlogTagRbac: BlogTag = {
+  id: 'btag-rbac',
+  name: 'Zero-Trust RBAC',
+  slug: 'zero-trust-rbac',
+};
+export const fixtureBlogTagTokens: BlogTag = {
+  id: 'btag-tokens',
+  name: 'CSS Tokens',
+  slug: 'css-tokens',
+};
 
 export const fixtureBlogTags: readonly BlogTag[] = [
   fixtureBlogTagNextjs,

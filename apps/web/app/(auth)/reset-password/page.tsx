@@ -1,5 +1,14 @@
 import { Metadata } from 'next';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, Input, Button, Label } from '@elsesourav/ui';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  Input,
+  Button,
+  Label,
+} from '@elsesourav/ui';
 
 export const metadata: Metadata = {
   title: 'Set New Password | ElseSourav',
@@ -41,7 +50,10 @@ export default function ResetPasswordPage() {
               className="bg-zinc-950/50 border-zinc-800 text-zinc-100"
             />
           </div>
-          <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium">
+          <Button
+            type="submit"
+            className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium"
+          >
             Update Password
           </Button>
         </form>

@@ -1,6 +1,16 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, Input, Button, Label } from '@elsesourav/ui';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+  Input,
+  Button,
+  Label,
+} from '@elsesourav/ui';
 
 export const metadata: Metadata = {
   title: 'Forgot Password | ElseSourav',
@@ -30,7 +40,10 @@ export default function ForgotPasswordPage() {
               className="bg-zinc-950/50 border-zinc-800 text-zinc-100"
             />
           </div>
-          <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium">
+          <Button
+            type="submit"
+            className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium"
+          >
             Send Reset Link
           </Button>
         </form>
@@ -38,7 +51,10 @@ export default function ForgotPasswordPage() {
       <CardFooter className="flex justify-center border-t border-zinc-800/50 pt-4">
         <p className="text-sm text-zinc-400">
           Remember your password?{' '}
-          <Link href="/login" className="text-indigo-400 hover:text-indigo-300 font-medium hover:underline">
+          <Link
+            href="/login"
+            className="text-indigo-400 hover:text-indigo-300 font-medium hover:underline"
+          >
             Sign In
           </Link>
         </p>

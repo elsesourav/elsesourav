@@ -59,7 +59,9 @@ export class BlogService {
   async listPublicPosts(options: BlogQueryInput = {}): Promise<BlogQueryResult> {
     const validated = BlogQuerySchema.safeParse(options);
     if (!validated.success) {
-      throw AppError.validation(validated.error.issues[0]?.message || 'Invalid blog query parameters');
+      throw AppError.validation(
+        validated.error.issues[0]?.message || 'Invalid blog query parameters'
+      );
     }
 
     return this.blogRepo.findPublicPosts(validated.data);
@@ -88,7 +90,11 @@ export class BlogService {
     });
   }
 
-  async getRelatedPosts(postId: string, categoryId?: string, limit: number = 3): Promise<BlogPostListItem[]> {
+  async getRelatedPosts(
+    postId: string,
+    categoryId?: string,
+    limit: number = 3
+  ): Promise<BlogPostListItem[]> {
     if (!postId) return [];
     return this.blogRepo.findRelatedPosts(postId, categoryId, limit);
   }
@@ -140,10 +146,7 @@ export class BlogService {
     return this.blogRepo.updatePost(id, validated.data);
   }
 
-  async publishBlogPost(
-    callerRole: UserRole | undefined,
-    id: string
-  ): Promise<DomainBlogPost> {
+  async publishBlogPost(callerRole: UserRole | undefined, id: string): Promise<DomainBlogPost> {
     this.verifyAdmin(callerRole);
 
     if (!id || typeof id !== 'string') {
@@ -153,10 +156,7 @@ export class BlogService {
     return this.blogRepo.publishPost(id);
   }
 
-  async archiveBlogPost(
-    callerRole: UserRole | undefined,
-    id: string
-  ): Promise<DomainBlogPost> {
+  async archiveBlogPost(callerRole: UserRole | undefined, id: string): Promise<DomainBlogPost> {
     this.verifyAdmin(callerRole);
 
     if (!id || typeof id !== 'string') {
@@ -166,10 +166,7 @@ export class BlogService {
     return this.blogRepo.archivePost(id);
   }
 
-  async deleteBlogPost(
-    callerRole: UserRole | undefined,
-    id: string
-  ): Promise<void> {
+  async deleteBlogPost(callerRole: UserRole | undefined, id: string): Promise<void> {
     this.verifyAdmin(callerRole);
 
     if (!id || typeof id !== 'string') {

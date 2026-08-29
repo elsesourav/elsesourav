@@ -28,13 +28,20 @@ export class AuthError extends AppError {
     if (msg.includes('password should be at least')) {
       return new AuthError('Password does not meet minimum security requirements.');
     }
-    if (msg.includes('jwt expired') || msg.includes('session expired') || msg.includes('auth session missing')) {
+    if (
+      msg.includes('jwt expired') ||
+      msg.includes('session expired') ||
+      msg.includes('auth session missing')
+    ) {
       return new AuthError('Your session has expired. Please sign in again.');
     }
     if (msg.includes('rate limit') || msg.includes('too many requests')) {
       return new AuthError('Too many sign-in attempts. Please try again in a few minutes.');
     }
 
-    return new AuthError('Authentication failed. Please check your credentials and try again.', error);
+    return new AuthError(
+      'Authentication failed. Please check your credentials and try again.',
+      error
+    );
   }
 }

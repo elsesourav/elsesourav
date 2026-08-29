@@ -4,8 +4,10 @@
  */
 
 const DANGEROUS_TAGS_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
-const DANGEROUS_ATTRIBUTES_REGEX = /\s*(on\w+|javascript:|data:text\/html)\s*=\s*(?:'[^']*'|"[^"]*"|[^\s>]+)/gi;
-const IFRAME_OBJECT_REGEX = /<(iframe|object|embed|applet|meta|link|style)\b[^<]*(?:(?!<\/\1>)<[^<]*)*<\/\1>/gi;
+const DANGEROUS_ATTRIBUTES_REGEX =
+  /\s*(on\w+|javascript:|data:text\/html)\s*=\s*(?:'[^']*'|"[^"]*"|[^\s>]+)/gi;
+const IFRAME_OBJECT_REGEX =
+  /<(iframe|object|embed|applet|meta|link|style)\b[^<]*(?:(?!<\/\1>)<[^<]*)*<\/\1>/gi;
 const SELF_CLOSING_DANGEROUS = /<(meta|link|base)[^>]*\/?>/gi;
 
 /**
@@ -43,7 +45,9 @@ export function sanitizePlainText(text: string): string {
   }
 
   // 1. Remove dangerous executable script and style content entirely
-  let clean = text.replace(DANGEROUS_TAGS_REGEX, '').replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '');
+  let clean = text
+    .replace(DANGEROUS_TAGS_REGEX, '')
+    .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '');
 
   // 2. Remove all remaining HTML tags
   clean = clean.replace(/<[^>]*>/g, '');
@@ -53,4 +57,3 @@ export function sanitizePlainText(text: string): string {
 
   return clean;
 }
-

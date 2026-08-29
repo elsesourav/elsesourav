@@ -196,7 +196,8 @@ export class SupportRepository {
         data: {
           ticketId: data.ticketId,
           senderUserId: data.senderUserId,
-          senderRole: data.senderRole === 'ADMIN' ? 'ADMIN' : data.senderRole === 'STAFF' ? 'STAFF' : 'USER',
+          senderRole:
+            data.senderRole === 'ADMIN' ? 'ADMIN' : data.senderRole === 'STAFF' ? 'STAFF' : 'USER',
           message: data.message.trim(),
           attachments: data.attachments ? [...data.attachments] : [],
           isInternalNote: data.isInternalNote ?? false,
@@ -222,10 +223,7 @@ export class SupportRepository {
   /**
    * Updates ticket status
    */
-  async updateTicketStatus(
-    ticketId: string,
-    status: SupportTicketStatus
-  ): Promise<void> {
+  async updateTicketStatus(ticketId: string, status: SupportTicketStatus): Promise<void> {
     const prismaStatus = parsePrismaStatus(status);
     await this.prisma.supportTicket.update({
       where: { id: ticketId },
@@ -246,7 +244,8 @@ export class SupportRepository {
         }
       | number = 50
   ): Promise<SupportTicketListItem[]> {
-    const limit = typeof options === 'number' ? options : Math.min(Math.max(options.limit ?? 50, 1), 100);
+    const limit =
+      typeof options === 'number' ? options : Math.min(Math.max(options.limit ?? 50, 1), 100);
     const where: Prisma.SupportTicketWhereInput = {};
 
     if (typeof options === 'object') {

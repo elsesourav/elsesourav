@@ -26,6 +26,7 @@ Every view in ElseSourav is governed by this standard formulation:
 ### 2.1 Public Tier
 
 #### `GET /` — Ecosystem Landing & Showcase
+
 - **Purpose**: Showcase the breadth and craftsmanship of ElseSourav's developer platform and latest engineering insights.
 - **Audience**: Engineers, technical recruiters, developers, and open-source contributors.
 - **User Problem**: "Who is Sourav, what software does he build, and why should I care?"
@@ -43,6 +44,7 @@ Every view in ElseSourav is governed by this standard formulation:
 ---
 
 #### `GET /apps` — Applications & Utilities Discovery
+
 - **Purpose**: Provide a fast, searchable, and filtered index of all published developer utilities, terminals, and software tools.
 - **Audience**: Developers looking for high-performance productivity tools.
 - **User Problem**: "What tools are available, what platforms do they support, and how can I try them?"
@@ -59,6 +61,7 @@ Every view in ElseSourav is governed by this standard formulation:
 ---
 
 #### `GET /apps/[slug]` — Software Detail & Manifest
+
 - **Purpose**: Present comprehensive documentation, live demo links, version history changelogs, and architecture notes for a specific tool.
 - **Audience**: Developers evaluating, downloading, or launching a specific software tool.
 - **User Problem**: "How does this tool work, where is the source, and is it actively maintained?"
@@ -75,6 +78,7 @@ Every view in ElseSourav is governed by this standard formulation:
 ---
 
 #### `GET /blog` — Engineering Devlog Archive
+
 - **Purpose**: Curate technical articles, system architecture breakdowns, benchmark studies, and security write-ups.
 - **Audience**: Software engineers seeking in-depth technical reading.
 - **User Problem**: "What technical decisions, challenges, and insights have been explored in this ecosystem?"
@@ -91,6 +95,7 @@ Every view in ElseSourav is governed by this standard formulation:
 ---
 
 #### `GET /help` — Technical Knowledge Base & Guides
+
 - **Purpose**: Resolve user onboarding, platform configuration, and troubleshooting questions quickly.
 - **Audience**: Users experiencing technical issues or seeking API documentation.
 - **User Problem**: "How do I configure, troubleshoot, or integrate this platform?"
@@ -109,6 +114,7 @@ Every view in ElseSourav is governed by this standard formulation:
 ### 2.2 Authenticated User Tier
 
 #### `GET /library` — Personal Tool Launchpad
+
 - **Purpose**: Provide a fast, personalized dashboard of the user's bookmarked applications, customized notes, and quick launch triggers.
 - **Audience**: Logged-in active developers.
 - **User Problem**: "Where are my frequently used tools and personal launch shortcuts?"
@@ -125,6 +131,7 @@ Every view in ElseSourav is governed by this standard formulation:
 ---
 
 #### `GET /settings` — Account & Security Preferences
+
 - **Purpose**: Manage profile details, authentication credentials, theme preference, and notification channels.
 - **Audience**: Authenticated users updating account configuration.
 - **User Problem**: "How do I change my password, update my email notifications, or edit my developer profile?"
@@ -142,6 +149,7 @@ Every view in ElseSourav is governed by this standard formulation:
 ### 2.3 Administrative Tier
 
 #### `GET /admin` — Central Command & Operational Telemetry
+
 - **Purpose**: Provide administrative oversight over application health, content publishing, support ticket queues, and user activity.
 - **Audience**: Platform administrators and staff moderators.
 - **User Problem**: "What requires my immediate attention today (tickets, drafts, security alerts)?"
@@ -158,6 +166,7 @@ Every view in ElseSourav is governed by this standard formulation:
 ---
 
 #### `GET /admin/apps` & `/admin/blog` — Content Management Workflows
+
 - **Purpose**: Author, edit, schedule, publish, and delete software catalog items and engineering devlogs.
 - **Audience**: Administrative content editors.
 - **User Problem**: "How do I create or update an app/article with full SEO and media metadata?"
@@ -187,4 +196,4 @@ User Settings │ Form Hierarchy │ Vertical    │ None        │ Focus rings
 Admin Portal  │ High Density   │ Data Tables │ Forbidden   │ Instant (0ms)    │ 7:1 AAA
 ```
 
-*This framework governs all visual and functional decisions. When implementing new features, reference the specific canvas above.*
+_This framework governs all visual and functional decisions. When implementing new features, reference the specific canvas above._

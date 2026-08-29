@@ -7,18 +7,14 @@ interface AdminTicketDetailPageProps {
   params: Promise<{ id: string }>;
 }
 
-export async function generateMetadata({
-  params,
-}: AdminTicketDetailPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: AdminTicketDetailPageProps): Promise<Metadata> {
   const { id } = await params;
   return {
     title: `Support Ticket (${id}) | Admin Portal`,
   };
 }
 
-export default async function AdminTicketDetailPage({
-  params,
-}: AdminTicketDetailPageProps) {
+export default async function AdminTicketDetailPage({ params }: AdminTicketDetailPageProps) {
   const { id } = await params;
 
   try {

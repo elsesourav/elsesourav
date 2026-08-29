@@ -2,11 +2,7 @@
 
 import * as React from 'react';
 import { Card, Badge, Input } from '@elsesourav/ui';
-import type {
-  AuditLog,
-  AuditListResult,
-  AuditSummaryMetrics,
-} from '@elsesourav/types';
+import type { AuditLog, AuditListResult, AuditSummaryMetrics } from '@elsesourav/types';
 import {
   ShieldAlert,
   History,
@@ -64,7 +60,10 @@ export function AdminAuditTable({ initialLogs, summary }: AdminAuditTableProps) 
   const getActionBadge = (action: string) => {
     if (action.startsWith('SECURITY_') || action.includes('DELETED')) {
       return (
-        <Badge variant="outline" className="border-rose-500/40 text-rose-300 bg-rose-950/60 font-mono text-[10px]">
+        <Badge
+          variant="outline"
+          className="border-rose-500/40 text-rose-300 bg-rose-950/60 font-mono text-[10px]"
+        >
           {action}
         </Badge>
       );
@@ -78,7 +77,10 @@ export function AdminAuditTable({ initialLogs, summary }: AdminAuditTableProps) 
     }
     if (action.includes('ROLE') || action.includes('STATUS') || action.includes('ARCHIVED')) {
       return (
-        <Badge variant="outline" className="border-amber-500/40 text-amber-300 bg-amber-950/60 font-mono text-[10px]">
+        <Badge
+          variant="outline"
+          className="border-amber-500/40 text-amber-300 bg-amber-950/60 font-mono text-[10px]"
+        >
           {action}
         </Badge>
       );
@@ -101,9 +103,7 @@ export function AdminAuditTable({ initialLogs, summary }: AdminAuditTableProps) 
             </div>
             <div>
               <span className="text-xs text-zinc-400 block font-medium">Total Audit Logs</span>
-              <span className="text-xl font-bold font-mono text-zinc-100">
-                {summary.totalLogs}
-              </span>
+              <span className="text-xl font-bold font-mono text-zinc-100">{summary.totalLogs}</span>
             </div>
           </div>
         </Card>
@@ -182,7 +182,9 @@ export function AdminAuditTable({ initialLogs, summary }: AdminAuditTableProps) 
             <option value="HELP_PUBLISHED">HELP_PUBLISHED</option>
             <option value="SUPPORT_STATUS_CHANGED">SUPPORT_STATUS_CHANGED</option>
             <option value="MEDIA_DELETED">MEDIA_DELETED</option>
-            <option value="SECURITY_UNAUTHORIZED_ACCESS_ATTEMPT">SECURITY_UNAUTHORIZED_ACCESS_ATTEMPT</option>
+            <option value="SECURITY_UNAUTHORIZED_ACCESS_ATTEMPT">
+              SECURITY_UNAUTHORIZED_ACCESS_ATTEMPT
+            </option>
           </select>
 
           {/* Resource Filter */}
@@ -358,7 +360,9 @@ export function AdminAuditTable({ initialLogs, summary }: AdminAuditTableProps) 
               </div>
 
               <div className="space-y-1">
-                <span className="text-zinc-400 block font-medium">Sanitized Audit Payload (JSON)</span>
+                <span className="text-zinc-400 block font-medium">
+                  Sanitized Audit Payload (JSON)
+                </span>
                 <pre className="p-3.5 rounded-xl bg-zinc-950 border border-zinc-800 font-mono text-[11px] text-zinc-300 overflow-x-auto max-h-64">
                   {JSON.stringify(inspectingLog.details || {}, null, 2)}
                 </pre>

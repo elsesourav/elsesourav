@@ -13,7 +13,12 @@ describe('User Identity & Profile Architecture', () => {
     photoUrl: 'https://elsesourav.com/avatar.png',
     bio: 'Software engineer & indie hacker',
     role: UserRole.USER,
-    preferences: { theme: 'dark', emailNotifications: true, reduceMotion: false, compactView: false },
+    preferences: {
+      theme: 'dark',
+      emailNotifications: true,
+      reduceMotion: false,
+      compactView: false,
+    },
     createdAt: new Date('2026-01-01T00:00:00Z'),
     updatedAt: new Date('2026-01-01T00:00:00Z'),
     deletedAt: null,
@@ -124,7 +129,12 @@ describe('User Identity & Profile Architecture', () => {
     ).rejects.toThrowError(AppError);
 
     // Valid confirmation
-    await service.requestAccountDeletion('usr-123', 'usr-123', 'DELETE MY ACCOUNT', 'Leaving service');
+    await service.requestAccountDeletion(
+      'usr-123',
+      'usr-123',
+      'DELETE MY ACCOUNT',
+      'Leaving service'
+    );
     expect(mockRepo.softDeleteUserTransaction).toHaveBeenCalledWith('usr-123', 'Leaving service');
   });
 });

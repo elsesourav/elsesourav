@@ -109,10 +109,7 @@ describe('Cloudinary Media Storage Architecture', () => {
 
     it('rejects deletion of assets outside elsesourav workspace', async () => {
       await expect(
-        deleteCloudinaryAsset(
-          { publicId: 'external_workspace/image.png' },
-          mockConfig
-        )
+        deleteCloudinaryAsset({ publicId: 'external_workspace/image.png' }, mockConfig)
       ).rejects.toThrowError(AppError);
     });
 

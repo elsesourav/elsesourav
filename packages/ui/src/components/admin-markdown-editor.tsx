@@ -50,10 +50,7 @@ export function AdminMarkdownEditor({
     const selectedText = previousText.substring(start, end);
 
     const replacement = `${before}${selectedText || 'text'}${after}`;
-    const nextValue =
-      previousText.substring(0, start) +
-      replacement +
-      previousText.substring(end);
+    const nextValue = previousText.substring(0, start) + replacement + previousText.substring(end);
 
     onChange(nextValue);
 
@@ -244,9 +241,7 @@ export function AdminMarkdownEditor({
             <button
               type="button"
               onClick={() =>
-                insertSnippet(
-                  '| Column 1 | Column 2 |\n| :--- | :--- |\n| Value 1 | Value 2 |\n'
-                )
+                insertSnippet('| Column 1 | Column 2 |\n| :--- | :--- |\n| Value 1 | Value 2 |\n')
               }
               className="p-1.5 hover:bg-zinc-800 hover:text-white rounded transition-colors"
               title="Table"

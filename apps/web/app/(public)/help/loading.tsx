@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { HelpCategorySkeleton, HelpArticleCardSkeleton } from '@/features/help/components/HelpSkeleton';
+import {
+  HelpCategorySkeleton,
+  HelpArticleCardSkeleton,
+} from '@/features/help/components/HelpSkeleton';
 import { Skeleton } from '@elsesourav/ui';
 
 export default function HelpLoading() {

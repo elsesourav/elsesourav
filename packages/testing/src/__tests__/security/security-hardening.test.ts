@@ -93,9 +93,9 @@ describe('Security Hardening Test Suite (Prompt 37)', () => {
         })
       ).rejects.toThrow(/privileges/i);
 
-      await expect(
-        appService.deleteApp('USER' as UserRole, 'app-123')
-      ).rejects.toThrow(/privileges/i);
+      await expect(appService.deleteApp('USER' as UserRole, 'app-123')).rejects.toThrow(
+        /privileges/i
+      );
     });
 
     it('BlogService: forbids normal users from creating, updating or deleting articles', async () => {
@@ -114,9 +114,9 @@ describe('Security Hardening Test Suite (Prompt 37)', () => {
         })
       ).rejects.toThrow(/privileges/i);
 
-      await expect(
-        blogService.deleteBlogPost('USER' as UserRole, 'post-123')
-      ).rejects.toThrow(/privileges/i);
+      await expect(blogService.deleteBlogPost('USER' as UserRole, 'post-123')).rejects.toThrow(
+        /privileges/i
+      );
     });
 
     it('HelpService: forbids normal users from mutating help knowledge base', async () => {
@@ -135,9 +135,9 @@ describe('Security Hardening Test Suite (Prompt 37)', () => {
         })
       ).rejects.toThrow(/privileges/i);
 
-      await expect(
-        helpService.deleteArticle('USER' as UserRole, 'art-123')
-      ).rejects.toThrow(/privileges/i);
+      await expect(helpService.deleteArticle('USER' as UserRole, 'art-123')).rejects.toThrow(
+        /privileges/i
+      );
     });
 
     it('SupportService: prevents normal users from viewing all tickets or internal notes', async () => {
@@ -181,9 +181,9 @@ describe('Security Hardening Test Suite (Prompt 37)', () => {
       const supportService = new SupportService(mockRepo as SupportRepository);
 
       // Normal user cannot list all tickets
-      await expect(
-        supportService.getAllTicketsAdmin('USER' as UserRole)
-      ).rejects.toThrow(/privileges/i);
+      await expect(supportService.getAllTicketsAdmin('USER' as UserRole)).rejects.toThrow(
+        /privileges/i
+      );
 
       // Normal user reading another user ticket
       await expect(
@@ -191,10 +191,16 @@ describe('Security Hardening Test Suite (Prompt 37)', () => {
       ).rejects.toThrow(/permission/i);
 
       // Ticket owner reading ticket: internal notes MUST be stripped
-      const ticketForOwner = await supportService.getTicketDetail('user-other', 'USER' as UserRole, 'ticket-1');
+      const ticketForOwner = await supportService.getTicketDetail(
+        'user-other',
+        'USER' as UserRole,
+        'ticket-1'
+      );
       expect(ticketForOwner.messages).toHaveLength(1);
       expect(ticketForOwner.messages[0]?.message).toBe('Public reply');
-      expect(ticketForOwner.messages.some((m: { isInternalNote?: boolean }) => Boolean(m.isInternalNote))).toBe(false);
+      expect(
+        ticketForOwner.messages.some((m: { isInternalNote?: boolean }) => Boolean(m.isInternalNote))
+      ).toBe(false);
     });
 
     it('UserService: prevents privilege escalation and unauthorized account tampering', async () => {

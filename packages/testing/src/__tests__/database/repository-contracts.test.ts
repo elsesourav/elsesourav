@@ -32,7 +32,10 @@ describe('AppRepository Contracts & Query Protections', () => {
     const repo = new AppRepository(mockPrisma as unknown as PrismaClient);
 
     // Requesting invalid sortField should fallback to 'sortOrder'
-    await repo.list({ sortField: 'malicious_sql_field' as unknown as 'createdAt', sortDirection: 'desc' });
+    await repo.list({
+      sortField: 'malicious_sql_field' as unknown as 'createdAt',
+      sortDirection: 'desc',
+    });
 
     expect(mockPrisma.app.findMany).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -91,7 +94,9 @@ describe('AppRepository Contracts & Query Protections', () => {
     };
 
     const mockPrisma = {
-      $transaction: vi.fn().mockImplementation(async (cb: (tx: typeof mockTx) => Promise<unknown>) => cb(mockTx)),
+      $transaction: vi
+        .fn()
+        .mockImplementation(async (cb: (tx: typeof mockTx) => Promise<unknown>) => cb(mockTx)),
     };
 
     const repo = new AppRepository(mockPrisma as unknown as PrismaClient);
@@ -136,7 +141,9 @@ describe('UserRepository Transactions & Audit Trail', () => {
     };
 
     const mockPrisma = {
-      $transaction: vi.fn().mockImplementation(async (cb: (tx: typeof mockTx) => Promise<unknown>) => cb(mockTx)),
+      $transaction: vi
+        .fn()
+        .mockImplementation(async (cb: (tx: typeof mockTx) => Promise<unknown>) => cb(mockTx)),
     };
 
     const repo = new UserRepository(mockPrisma as unknown as PrismaClient);

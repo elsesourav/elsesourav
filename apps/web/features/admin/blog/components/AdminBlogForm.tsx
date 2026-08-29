@@ -25,6 +25,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { AdminMarkdownEditor } from '@/features/admin/components/AdminMarkdownEditor';
+import { ImageInputWithLibrary } from '@/features/admin/media/components/ImageInputWithLibrary';
 
 interface AdminBlogFormProps {
   post?: BlogPost;
@@ -292,17 +293,16 @@ export function AdminBlogForm({ post, categories }: AdminBlogFormProps) {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Cover Image URL */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-zinc-300">Cover Banner Image URL</label>
-              <Input
-                type="url"
-                value={coverImageUrl}
-                onChange={(e) => setCoverImageUrl(e.target.value)}
-                placeholder="https://res.cloudinary.com/..."
-                className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100"
-              />
-            </div>
+            {/* Cover Image */}
+            <ImageInputWithLibrary
+              label="Cover Banner Image"
+              value={coverImageUrl}
+              onChange={setCoverImageUrl}
+              folder="blog"
+              defaultCategory="blog"
+              previewShape="banner"
+              placeholder="Cover image URL or select from library"
+            />
 
             {/* Category Dropdown */}
             <div className="space-y-1.5">

@@ -28,7 +28,11 @@ export function BlogEmptyState({ hasFilters = false }: BlogEmptyStateProps) {
       {hasFilters && (
         <div className="pt-2">
           <Link href="/blog">
-            <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-300 text-xs gap-1.5">
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-zinc-700 text-zinc-300 text-xs gap-1.5"
+            >
               <RotateCcw className="w-3.5 h-3.5" /> Clear All Filters
             </Button>
           </Link>

@@ -82,7 +82,9 @@ export function DangerZone() {
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-zinc-100">Delete Account Confirmation</h3>
-                  <p className="text-xs text-zinc-400">This action is permanent and cannot be undone.</p>
+                  <p className="text-xs text-zinc-400">
+                    This action is permanent and cannot be undone.
+                  </p>
                 </div>
               </div>
 
@@ -108,7 +110,9 @@ export function DangerZone() {
 
                 <div className="space-y-1.5">
                   <label className="block font-semibold text-zinc-300">
-                    Type <span className="font-mono text-rose-400 select-all">DELETE MY ACCOUNT</span> to confirm
+                    Type{' '}
+                    <span className="font-mono text-rose-400 select-all">DELETE MY ACCOUNT</span> to
+                    confirm
                   </label>
                   <Input
                     type="text"

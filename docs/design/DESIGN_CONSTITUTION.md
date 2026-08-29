@@ -9,12 +9,14 @@
 ## 1. Product Identity & Baseline
 
 ### 1.1 Product Identity
+
 The public product identity is formally and exclusively:
 $$\mathbf{ElseSourav}$$
 
 ElseSourav is a handcrafted personal platform, software ecosystem, and engineering notebook created by Sourav. It is not an enterprise template, not an AI-generated clone, and not a generic SaaS aggregator.
 
 ### 1.2 The Global Version Naming Mandate
+
 - **Rule**: Never present the product as "ElseSourav V1", "ElseSourav V2", "Version 1", "Version 2", "V2 platform", "V2 UI", or "New V2".
 - **Scope**: Public pages, User portal, and Admin portal.
 - **Permitted Technical Usages**: Limited strictly to internal developer docs (`docs/*`), Git commits, package versions (`package.json`), and SemVer application release tags (`v1.4.0`).
@@ -31,6 +33,7 @@ ElseSourav is a handcrafted personal platform, software ecosystem, and engineeri
 ElseSourav intentionally rejects the homogenized, generic aesthetic of AI-generated SaaS templates, cookie-cutter component libraries, and formulaic portfolio themes. The interface must communicate craft, intentionality, and a distinct human perspective.
 
 **Priorities**:
+
 - **Authenticity & Personality**: A clear point of view rooted in engineering craft, developer ergonomics, and modern web standards.
 - **Intentional Composition**: Layouts designed around actual content shape, not generic rectangular placeholders.
 - **Meaningful Content**: Real devlogs, genuine benchmark telemetry, verifiable software releases, and authored perspectives.
@@ -38,6 +41,7 @@ ElseSourav intentionally rejects the homogenized, generic aesthetic of AI-genera
 - **Thoughtful Details**: Tactile borders, subtle radial glows, custom-crafted micro-interactions, and informative empty states.
 
 **Negative Constraints**:
+
 - Do **NOT** add visual novelty merely to appear modern or trendy.
 - Do **NOT** use unmotivated floating 3D shapes, meaningless gradient mesh blobs, or faux-cyberpunk neon outlines.
 
@@ -49,6 +53,7 @@ ElseSourav intentionally rejects the homogenized, generic aesthetic of AI-genera
 Design follows purpose. No screen, component, or interaction is designed in isolation. Always understand **WHY** before deciding **WHAT** to build.
 
 **Mandatory 7-Point Canvas for Every Significant Page & Feature**:
+
 1. **Purpose**: Why does this page or feature exist?
 2. **Audience**: Who is using it (first-time visitor, logged-in developer, support seeker, admin)?
 3. **User Problem**: What specific friction or question is being resolved?
@@ -66,10 +71,10 @@ Use asymmetrical and organic composition where it improves storytelling, visual 
 
 **Selective Application Matrix**:
 
-| Category | Appropriate Routes / Sections | Composition Strategy |
-| :--- | :--- | :--- |
-| **Apply Organically** | • Homepage Hero & Spotlight<br>• About Page Storytelling<br>• Featured Work Showcase<br>• Devlog Editorial Headers | • Asymmetric column splits (`1.618fr 1fr`, `2fr 1fr`)<br>• Staggered focal points and alternating anchors<br>• Deliberate whitespace breathing rooms |
-| **Strict Layouts (No Forced Organic)** | • Search Results & Filters<br>• User Settings & Forms<br>• Support Ticket Threads<br>• Help Workflows & Documentation<br>• Admin Data Tables & Metrics | • Predictable column alignments<br>• Strict tab order and uniform spacing<br>• Optimized for rapid ocular scanning |
+| Category                               | Appropriate Routes / Sections                                                                                                                          | Composition Strategy                                                                                                                                 |
+| :------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Apply Organically**                  | • Homepage Hero & Spotlight<br>• About Page Storytelling<br>• Featured Work Showcase<br>• Devlog Editorial Headers                                     | • Asymmetric column splits (`1.618fr 1fr`, `2fr 1fr`)<br>• Staggered focal points and alternating anchors<br>• Deliberate whitespace breathing rooms |
+| **Strict Layouts (No Forced Organic)** | • Search Results & Filters<br>• User Settings & Forms<br>• Support Ticket Threads<br>• Help Workflows & Documentation<br>• Admin Data Tables & Metrics | • Predictable column alignments<br>• Strict tab order and uniform spacing<br>• Optimized for rapid ocular scanning                                   |
 
 ---
 
@@ -79,12 +84,14 @@ Use asymmetrical and organic composition where it improves storytelling, visual 
 Motion must communicate something meaningful. Avoid decorative animation with no functional purpose.
 
 **Functional Motion Triggers**:
+
 - **Transitions & Navigation**: Communicating where the user arrived from and spatial continuity.
 - **Hierarchy & Orientation**: Guiding attention from primary headlines to interactive calls to action.
 - **Feedback & State Changes**: Tactile acknowledgement upon button clicks, switch flips, accordions, and form submissions.
 - **Storytelling**: Controlled scroll-driven reveals on narrative editorial sections.
 
 **Strict Motion Constraints**:
+
 - Transform **only** compositor properties (`transform`, `opacity`). Never animate layout dimensions (`width`, `height`, `top`, `margin`).
 - Enforce standard timing tokens: `--duration-fast` (`150ms`), `--duration-normal` (`250ms`), `--duration-slow` (`400ms`).
 - Strictly respect `@media (prefers-reduced-motion: reduce)` by disabling non-essential motion.
@@ -97,6 +104,7 @@ Motion must communicate something meaningful. Avoid decorative animation with no
 Use translucent and frosted surfaces selectively. Glass should provide depth, hierarchy, layering, and emphasis.
 
 **Rules of Restraint**:
+
 - **Solid Surfaces First**: The vast majority of containers, cards, and body wells use solid, high-contrast tokens (`--surface`, `--surface-elevated`).
 - **Where Glass is Permitted**:
   1. Sticky top navigation bar (frosted backdrop blur over scrolling content).
@@ -117,13 +125,14 @@ Use translucent and frosted surfaces selectively. Glass should provide depth, hi
 ElseSourav is a structured archive of engineering artifacts, software tools, devlogs, and documentation. Use structured information presentation with strong typography, metadata, indexing, and appropriate grids/tables.
 
 **Application Across Domains**:
+
 - **Apps Catalog**: Categorized by platform (Web, CLI, Desktop, Extensions), version status, and domain tags.
 - **Blog Archive**: Chronological index with estimated reading times, category taxonomy, and tag wayfinding.
 - **Help Center**: Structured hierarchy (Category $\rightarrow$ Article) with cross-linked solutions.
 - **User Library**: Fast, bookmarkable personal collection with favorite toggles and launch history.
 - **Admin Directory**: Comprehensive, searchable data listings with explicit column sorting, pagination, and filter queries.
 
-*Rule: Do not turn every interface into a table. Use structured cards, metadata badges, and clean list items where appropriate.*
+_Rule: Do not turn every interface into a table. Use structured cards, metadata badges, and clean list items where appropriate._
 
 ---
 
@@ -133,6 +142,7 @@ ElseSourav is a structured archive of engineering artifacts, software tools, dev
 Interactive elements must communicate state clearly and immediately. Do not animate interactions merely for decoration.
 
 **Supported Interaction States**:
+
 - **Hover**: Subtle elevation and border brightness lift.
 - **Focus**: High-visibility contrast focus ring (`focus-visible:ring-2 focus-visible:ring-primary`).
 - **Pressed**: Tactile depression (`scale(0.98)`).
@@ -152,6 +162,7 @@ Interactive elements must communicate state clearly and immediately. Do not anim
 Accessibility is mandatory infrastructure, not an afterthought.
 
 **Non-Negotiable Standards**:
+
 - **Semantic HTML**: Strictly sequential headings (`h1` $\rightarrow$ `h2` $\rightarrow$ `h3`). Exactly one `<h1>` per view.
 - **Keyboard Navigation**: 100% of interactive elements reachable via `Tab` and executable via `Enter` or `Space`.
 - **Visible Focus**: Clear focus indicators on all interactive targets.
@@ -168,6 +179,7 @@ Accessibility is mandatory infrastructure, not an afterthought.
 AI assists with implementation, analysis, refactoring, testing, brainstorming, and optimization. Human and product judgment remains strictly in control.
 
 **Strict Boundaries**:
+
 - AI must **NOT** invent:
   - personal identity
   - professional history
@@ -185,6 +197,7 @@ AI assists with implementation, analysis, refactoring, testing, brainstorming, a
 Every visual decision must consider loading performance, client JavaScript bundle size, image size, animation cost, dependency cost, Server Components, data fetching, and mobile performance. Beauty must not come at the cost of unnecessary performance problems.
 
 **Performance Budgets**:
+
 - **Core Web Vitals Thresholds**:
   - **LCP** (Largest Contentful Paint) $< 1.2\text{s}$
   - **INP** (Interaction to Next Paint) $< 100\text{ms}$

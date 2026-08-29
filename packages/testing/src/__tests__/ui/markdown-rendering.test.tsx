@@ -1,10 +1,7 @@
 import * as React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render, fireEvent } from '@testing-library/react';
-import {
-  MarkdownRenderer,
-  renderInlineMarkdown,
-} from '@elsesourav/ui';
+import { MarkdownRenderer, renderInlineMarkdown } from '@elsesourav/ui';
 
 describe('Shared Markdown Rendering Architecture (@elsesourav/ui)', () => {
   describe('1. Inline Formatting & Security Sanitization', () => {
@@ -42,7 +39,9 @@ describe('Shared Markdown Rendering Architecture (@elsesourav/ui)', () => {
     });
 
     it('sanitizes and disallows dangerous data: and vbscript: URLs', () => {
-      const nodes = renderInlineMarkdown('[Data Exploit](data:text/html,<script>alert(1)</script>)');
+      const nodes = renderInlineMarkdown(
+        '[Data Exploit](data:text/html,<script>alert(1)</script>)'
+      );
       const { container } = render(<div>{nodes}</div>);
 
       expect(container.querySelector('a')).toBeNull();
@@ -90,7 +89,9 @@ describe('Shared Markdown Rendering Architecture (@elsesourav/ui)', () => {
 
       const blockquote = container.querySelector('blockquote');
       expect(blockquote).toBeDefined();
-      expect(blockquote?.textContent).toContain('Important Note: Always validate server actions with Zod.');
+      expect(blockquote?.textContent).toContain(
+        'Important Note: Always validate server actions with Zod.'
+      );
     });
 
     it('renders fenced code block and supports copy-to-clipboard action', async () => {
@@ -108,7 +109,9 @@ describe('Shared Markdown Rendering Architecture (@elsesourav/ui)', () => {
       const { container } = render(<MarkdownRenderer content={markdown} />);
       const pre = container.querySelector('pre');
       const codeElement = container.querySelector('code');
-      const copyButton = container.querySelector('button[aria-label="Copy code snippet to clipboard"]');
+      const copyButton = container.querySelector(
+        'button[aria-label="Copy code snippet to clipboard"]'
+      );
 
       expect(pre).toBeDefined();
       expect(codeElement?.textContent).toBe(code);
@@ -149,7 +152,7 @@ describe('Shared Markdown Rendering Architecture (@elsesourav/ui)', () => {
       const { container: c1 } = render(<MarkdownRenderer content="" />);
       expect(c1.textContent).toBe('');
 
-      const { container: c2 } = render(<MarkdownRenderer content={"\n\n\n   \n"} />);
+      const { container: c2 } = render(<MarkdownRenderer content={'\n\n\n   \n'} />);
       expect(c2.querySelector('p')).toBeNull();
     });
 

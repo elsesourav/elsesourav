@@ -4,10 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Card, Badge, Button, Input } from '@elsesourav/ui';
 import type { HelpArticle, HelpCategoryWithArticles } from '@elsesourav/types';
-import {
-  archiveHelpArticleAction,
-  deleteHelpArticleAction,
-} from '../actions/admin-help-actions';
+import { archiveHelpArticleAction, deleteHelpArticleAction } from '../actions/admin-help-actions';
 import {
   HelpCircle,
   Search,
@@ -128,7 +125,8 @@ export function AdminHelpTable({ initialArticles, categories }: AdminHelpTablePr
             <HelpCircle className="w-10 h-10 text-zinc-600 mx-auto" />
             <h4 className="text-sm font-semibold text-zinc-300">No help articles found</h4>
             <p className="text-xs text-zinc-500 max-w-xs mx-auto">
-              No knowledge base articles match your selected filters. Create documentation articles to assist users.
+              No knowledge base articles match your selected filters. Create documentation articles
+              to assist users.
             </p>
           </div>
         ) : (
@@ -150,10 +148,7 @@ export function AdminHelpTable({ initialArticles, categories }: AdminHelpTablePr
                     categories.find((c) => c.id === article.categoryId)?.name || 'General';
 
                   return (
-                    <tr
-                      key={article.id}
-                      className="hover:bg-zinc-800/30 transition-colors group"
-                    >
+                    <tr key={article.id} className="hover:bg-zinc-800/30 transition-colors group">
                       {/* Title & Slug */}
                       <td className="py-3.5 px-4">
                         <div className="min-w-0">

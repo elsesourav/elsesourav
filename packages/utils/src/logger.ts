@@ -74,7 +74,12 @@ export const logger = {
     }
   },
 
-  error(message: string, error?: unknown, context?: Record<string, unknown>, requestId?: string): void {
+  error(
+    message: string,
+    error?: unknown,
+    context?: Record<string, unknown>,
+    requestId?: string
+  ): void {
     const errorDetails =
       error instanceof Error
         ? {

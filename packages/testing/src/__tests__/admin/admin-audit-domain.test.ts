@@ -1,9 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import {
-  AuditService,
-  AuditRepository,
-  sanitizeAuditDetails,
-} from '@elsesourav/database';
+import { AuditService, AuditRepository, sanitizeAuditDetails } from '@elsesourav/database';
 import { AppError } from '@elsesourav/types';
 
 describe('Audit Domain & Observability Security Tests', () => {

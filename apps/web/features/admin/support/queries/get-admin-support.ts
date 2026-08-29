@@ -9,12 +9,14 @@ import type {
 const supportRepo = new SupportRepository();
 const supportService = new SupportService(supportRepo);
 
-export async function getAdminTicketsList(options: {
-  status?: SupportTicketStatus;
-  category?: string;
-  search?: string;
-  limit?: number;
-} = {}): Promise<SupportTicketListItem[]> {
+export async function getAdminTicketsList(
+  options: {
+    status?: SupportTicketStatus;
+    category?: string;
+    search?: string;
+    limit?: number;
+  } = {}
+): Promise<SupportTicketListItem[]> {
   const context = await requireAdmin();
   return supportService.getAllTicketsAdmin(context.role, options);
 }

@@ -1,11 +1,7 @@
 import { MediaRepository } from '../repositories/media.repository';
 import { deleteCloudinaryAsset } from '@elsesourav/media';
 import { AppError } from '@elsesourav/types';
-import type {
-  AdminMediaListResult,
-  AdminMediaReference,
-  UserRole,
-} from '@elsesourav/types';
+import type { AdminMediaListResult, AdminMediaReference, UserRole } from '@elsesourav/types';
 
 export class MediaService {
   constructor(private readonly mediaRepo: MediaRepository) {}
@@ -18,7 +14,9 @@ export class MediaService {
 
   private verifySuperAdmin(callerRole?: UserRole | string): void {
     if (callerRole !== 'ADMIN') {
-      throw AppError.forbidden('Super Administrator privileges are required for destructive media deletion.');
+      throw AppError.forbidden(
+        'Super Administrator privileges are required for destructive media deletion.'
+      );
     }
   }
 
@@ -38,11 +36,10 @@ export class MediaService {
     this.verifyAdmin(callerRole);
 
     const limit = Math.min(Math.max(options.limit ?? 24, 1), 100);
-    const { items, total, totalReferenced, totalOrphans } =
-      await this.mediaRepo.listAdminMedia({
-        ...options,
-        limit,
-      });
+    const { items, total, totalReferenced, totalOrphans } = await this.mediaRepo.listAdminMedia({
+      ...options,
+      limit,
+    });
 
     const totalPages = Math.ceil(total / limit) || 1;
     const page = Math.max(options.page ?? 1, 1);
@@ -61,10 +58,7 @@ export class MediaService {
   /**
    * Checks whether a media asset is actively referenced by any application resources
    */
-  async checkMediaUsage(
-    callerRole: UserRole,
-    publicId: string
-  ): Promise<AdminMediaReference[]> {
+  async checkMediaUsage(callerRole: UserRole, publicId: string): Promise<AdminMediaReference[]> {
     this.verifyAdmin(callerRole);
     return this.mediaRepo.checkAssetReferences(publicId);
   }

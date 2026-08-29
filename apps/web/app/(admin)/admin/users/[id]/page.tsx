@@ -7,18 +7,14 @@ interface AdminUserDetailPageProps {
   params: Promise<{ id: string }>;
 }
 
-export async function generateMetadata({
-  params,
-}: AdminUserDetailPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: AdminUserDetailPageProps): Promise<Metadata> {
   const { id } = await params;
   return {
     title: `User Detail (${id}) | Admin Portal`,
   };
 }
 
-export default async function AdminUserDetailPage({
-  params,
-}: AdminUserDetailPageProps) {
+export default async function AdminUserDetailPage({ params }: AdminUserDetailPageProps) {
   const { id } = await params;
 
   try {

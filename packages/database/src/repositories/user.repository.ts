@@ -44,7 +44,10 @@ export class UserRepository {
 
       return mapPrismaUserToDomain(user);
     } catch (error) {
-      throw AppError.database(`Failed to synchronize user auth identity: ${input.supabaseAuthId}`, error);
+      throw AppError.database(
+        `Failed to synchronize user auth identity: ${input.supabaseAuthId}`,
+        error
+      );
     }
   }
 
@@ -134,7 +137,10 @@ export class UserRepository {
     }
   }
 
-  async updatePreferences(userId: string, preferences: UpdatePreferencesInput): Promise<DomainUser> {
+  async updatePreferences(
+    userId: string,
+    preferences: UpdatePreferencesInput
+  ): Promise<DomainUser> {
     try {
       const existing = await this.findById(userId);
       if (!existing) {
@@ -185,7 +191,10 @@ export class UserRepository {
     }
   }
 
-  async softDeleteUserTransaction(userId: string, reason = 'User requested account closure'): Promise<void> {
+  async softDeleteUserTransaction(
+    userId: string,
+    reason = 'User requested account closure'
+  ): Promise<void> {
     try {
       await this.prisma.$transaction(async (tx) => {
         await tx.user.update({
@@ -235,13 +244,15 @@ export class UserRepository {
     }
   }
 
-  async findAllUsersAdmin(options: {
-    role?: DomainRole | 'all';
-    status?: string;
-    search?: string;
-    page?: number;
-    limit?: number;
-  } = {}): Promise<{ users: AdminUserListItem[]; total: number }> {
+  async findAllUsersAdmin(
+    options: {
+      role?: DomainRole | 'all';
+      status?: string;
+      search?: string;
+      page?: number;
+      limit?: number;
+    } = {}
+  ): Promise<{ users: AdminUserListItem[]; total: number }> {
     const page = Math.max(options.page ?? 1, 1);
     const limit = Math.min(Math.max(options.limit ?? 20, 1), 100);
     const skip = (page - 1) * limit;
@@ -333,7 +344,11 @@ export class UserRepository {
     };
   }
 
-  async adminDeleteUser(userId: string, adminUserId: string, reason = 'Admin initiated account termination'): Promise<void> {
+  async adminDeleteUser(
+    userId: string,
+    adminUserId: string,
+    reason = 'Admin initiated account termination'
+  ): Promise<void> {
     try {
       await this.prisma.$transaction(async (tx) => {
         await tx.user.update({

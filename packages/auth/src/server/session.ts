@@ -24,14 +24,19 @@ export async function getServerSession(
     } = await supabase.auth.getSession();
 
     const validRoles: UserRole[] = ['USER', 'ADMIN', 'STAFF'];
-    const rawRole = (user.app_metadata?.['role'] || user.user_metadata?.['role']) as UserRole | undefined;
+    const rawRole = (user.app_metadata?.['role'] || user.user_metadata?.['role']) as
+      UserRole | undefined;
     const role: UserRole = rawRole && validRoles.includes(rawRole) ? rawRole : 'USER';
 
     const authenticatedUser: AuthenticatedUser = {
       id: user.id,
       supabaseAuthId: user.id,
       email: user.email || '',
-      displayName: user.user_metadata?.['full_name'] || user.user_metadata?.['name'] || user.email?.split('@')[0] || 'User',
+      displayName:
+        user.user_metadata?.['full_name'] ||
+        user.user_metadata?.['name'] ||
+        user.email?.split('@')[0] ||
+        'User',
       photoUrl: user.user_metadata?.['avatar_url'] || user.user_metadata?.['picture'],
       role,
       isEmailVerified: Boolean(user.email_confirmed_at),

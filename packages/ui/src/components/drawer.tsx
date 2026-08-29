@@ -32,7 +32,12 @@ export function Drawer({ open, onOpenChange, position = 'right', children }: Dra
         onClick={() => onOpenChange(false)}
       />
       {/* Slide-over panel */}
-      <div className={cn('fixed inset-y-0 flex max-w-full', position === 'right' ? 'right-0' : 'left-0')}>
+      <div
+        className={cn(
+          'fixed inset-y-0 flex max-w-full',
+          position === 'right' ? 'right-0' : 'left-0'
+        )}
+      >
         <div className="w-screen max-w-md bg-zinc-950 border-l border-zinc-800 p-6 shadow-2xl flex flex-col justify-between animate-in slide-in-from-right duration-300">
           {children}
         </div>
@@ -48,7 +53,10 @@ export function DrawerHeader({
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & { onClose?: () => void }) {
   return (
-    <div className={cn('flex items-center justify-between pb-4 border-b border-zinc-800', className)} {...props}>
+    <div
+      className={cn('flex items-center justify-between pb-4 border-b border-zinc-800', className)}
+      {...props}
+    >
       <div>{children}</div>
       {onClose && (
         <button

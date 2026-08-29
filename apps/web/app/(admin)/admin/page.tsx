@@ -8,7 +8,8 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Admin Control Center | ElseSourav',
-  description: 'Administrative overview, platform telemetry, application catalog, and support desk.',
+  description:
+    'Administrative overview, platform telemetry, application catalog, and support desk.',
 };
 
 export default async function AdminDashboardPage() {
@@ -34,7 +35,10 @@ export default async function AdminDashboardPage() {
 
         <div className="flex items-center gap-2.5 self-start sm:self-auto">
           <Link href="/admin/apps">
-            <Button size="sm" className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs gap-1.5 shadow-lg shadow-indigo-600/20">
+            <Button
+              size="sm"
+              className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs gap-1.5 shadow-lg shadow-indigo-600/20"
+            >
               <Sparkles className="w-3.5 h-3.5" />
               <span>Manage Apps</span>
             </Button>

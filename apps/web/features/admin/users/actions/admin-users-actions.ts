@@ -2,10 +2,7 @@
 
 import { UserRepository, UserService } from '@elsesourav/database';
 import { requireAdmin } from '../../guards/require-admin';
-import {
-  AdminDeleteUserSchema,
-  AdminUpdateUserRoleSchema,
-} from '@elsesourav/validation';
+import { AdminDeleteUserSchema, AdminUpdateUserRoleSchema } from '@elsesourav/validation';
 import type { UserRole } from '@elsesourav/types';
 import { revalidatePath } from 'next/cache';
 

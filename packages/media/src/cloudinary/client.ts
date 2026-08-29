@@ -7,7 +7,10 @@ export interface CloudinaryConfig {
 }
 
 export function getCloudinaryConfig(overrides?: Partial<CloudinaryConfig>): CloudinaryConfig {
-  const cloudName = overrides?.cloudName || process.env.CLOUDINARY_CLOUD_NAME || process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+  const cloudName =
+    overrides?.cloudName ||
+    process.env.CLOUDINARY_CLOUD_NAME ||
+    process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
   const apiKey = overrides?.apiKey || process.env.CLOUDINARY_API_KEY;
   const apiSecret = overrides?.apiSecret || process.env.CLOUDINARY_API_SECRET;
 
@@ -16,7 +19,10 @@ export function getCloudinaryConfig(overrides?: Partial<CloudinaryConfig>): Clou
   }
 
   if (!apiKey || !apiSecret) {
-    throw AppError.external('Cloudinary', 'Cloudinary API credentials (API key or API secret) are missing on the server');
+    throw AppError.external(
+      'Cloudinary',
+      'Cloudinary API credentials (API key or API secret) are missing on the server'
+    );
   }
 
   return {

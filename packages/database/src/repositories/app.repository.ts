@@ -116,7 +116,9 @@ export class AppRepository {
       }
 
       const allowedSortFields = ['createdAt', 'sortOrder', 'name', 'publishedAt'] as const;
-      const sortField = allowedSortFields.includes(options.sortField as (typeof allowedSortFields)[number])
+      const sortField = allowedSortFields.includes(
+        options.sortField as (typeof allowedSortFields)[number]
+      )
         ? options.sortField!
         : 'sortOrder';
       const sortDirection = options.sortDirection === 'desc' ? 'desc' : 'asc';
@@ -347,7 +349,9 @@ export class AppRepository {
       }
 
       const allowedSortFields = ['createdAt', 'sortOrder', 'name', 'publishedAt'] as const;
-      const sortField = allowedSortFields.includes(options.sortField as (typeof allowedSortFields)[number])
+      const sortField = allowedSortFields.includes(
+        options.sortField as (typeof allowedSortFields)[number]
+      )
         ? options.sortField!
         : 'sortOrder';
       const sortDirection = options.sortDirection === 'desc' ? 'desc' : 'asc';
@@ -373,6 +377,7 @@ export class AppRepository {
           slug: data.slug.trim().toLowerCase(),
           shortDescription: data.shortDescription.trim(),
           description: data.description.trim(),
+          documentationMd: data.documentationMd?.trim() || null,
           iconUrl: data.iconUrl.trim(),
           featuredImageUrl: data.featuredImageUrl,
           demoUrl: data.demoUrl,
@@ -412,6 +417,8 @@ export class AppRepository {
           slug: data.slug ? data.slug.trim().toLowerCase() : undefined,
           shortDescription: data.shortDescription?.trim(),
           description: data.description?.trim(),
+          documentationMd:
+            data.documentationMd !== undefined ? data.documentationMd.trim() || null : undefined,
           iconUrl: data.iconUrl?.trim(),
           featuredImageUrl: data.featuredImageUrl,
           demoUrl: data.demoUrl,
@@ -463,7 +470,10 @@ export class AppRepository {
         return mapPrismaAppToDomain(updatedApp as PrismaAppWithRelations);
       });
     } catch (error) {
-      throw AppError.database(`Failed to execute atomic publish transaction for app: ${appId}`, error);
+      throw AppError.database(
+        `Failed to execute atomic publish transaction for app: ${appId}`,
+        error
+      );
     }
   }
 

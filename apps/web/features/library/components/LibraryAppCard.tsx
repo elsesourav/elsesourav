@@ -77,15 +77,17 @@ export function LibraryAppCard({ item, onRemove }: LibraryAppCardProps) {
         </div>
 
         {/* Short Description */}
-        <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
-          {app.shortDescription}
-        </p>
+        <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">{app.shortDescription}</p>
       </div>
 
       {/* Footer Actions */}
       <div className="flex items-center justify-between pt-3 mt-3 border-t border-zinc-800/60">
         <Link href={`/apps/${app.slug}`}>
-          <Button variant="ghost" size="sm" className="text-xs text-indigo-400 hover:text-indigo-300 gap-1 p-0 h-auto">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-xs text-indigo-400 hover:text-indigo-300 gap-1 p-0 h-auto"
+          >
             <span>Open App</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </Button>

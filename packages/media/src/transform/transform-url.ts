@@ -8,7 +8,10 @@ export function buildCloudinaryUrl(
   if (!publicIdOrUrl) return '';
 
   // Return clean URL if already full external URL and not a cloudinary URL
-  if (publicIdOrUrl.startsWith('http://') || (publicIdOrUrl.startsWith('https://') && !publicIdOrUrl.includes('res.cloudinary.com'))) {
+  if (
+    publicIdOrUrl.startsWith('http://') ||
+    (publicIdOrUrl.startsWith('https://') && !publicIdOrUrl.includes('res.cloudinary.com'))
+  ) {
     return publicIdOrUrl;
   }
 
@@ -26,7 +29,9 @@ export function buildCloudinaryUrl(
       const remainder = publicIdOrUrl.substring(uploadIndex + 8);
       // Strip any existing transformations (e.g. v123/ or w_100/v123/)
       const parts = remainder.split('/');
-      const versionIndex = parts.findIndex((part) => part.startsWith('v') && /^\d+$/.test(part.substring(1)));
+      const versionIndex = parts.findIndex(
+        (part) => part.startsWith('v') && /^\d+$/.test(part.substring(1))
+      );
       if (versionIndex !== -1) {
         publicId = parts.slice(versionIndex + 1).join('/');
       } else {

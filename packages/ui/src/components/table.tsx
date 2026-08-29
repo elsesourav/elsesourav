@@ -9,8 +9,19 @@ export function Table({ className, ...props }: React.TableHTMLAttributes<HTMLTab
   );
 }
 
-export function TableHeader({ className, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) {
-  return <thead className={cn('[&_tr]:border-b [&_tr]:border-zinc-800 bg-zinc-900/40 text-xs font-semibold text-zinc-400', className)} {...props} />;
+export function TableHeader({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLTableSectionElement>) {
+  return (
+    <thead
+      className={cn(
+        '[&_tr]:border-b [&_tr]:border-zinc-800 bg-zinc-900/40 text-xs font-semibold text-zinc-400',
+        className
+      )}
+      {...props}
+    />
+  );
 }
 
 export function TableBody({ className, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) {
@@ -42,9 +53,17 @@ export function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTa
 }
 
 export function TableCell({ className, ...props }: React.TdHTMLAttributes<HTMLTableCellElement>) {
-  return <td className={cn('p-4 align-middle text-zinc-300 [&:has([role=checkbox])]:pr-0', className)} {...props} />;
+  return (
+    <td
+      className={cn('p-4 align-middle text-zinc-300 [&:has([role=checkbox])]:pr-0', className)}
+      {...props}
+    />
+  );
 }
 
-export function TableCaption({ className, ...props }: React.HTMLAttributes<HTMLTableCaptionElement>) {
+export function TableCaption({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLTableCaptionElement>) {
   return <caption className={cn('mt-4 text-xs text-zinc-500', className)} {...props} />;
 }

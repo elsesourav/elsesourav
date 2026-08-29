@@ -1,11 +1,7 @@
 import { LibraryRepository } from '../repositories/library.repository';
 import { AppError } from '@elsesourav/types';
 import { SaveAppSchema, LibraryQuerySchema } from '@elsesourav/validation';
-import type {
-  SaveAppInput,
-  SaveAppResult,
-  UserLibraryResult,
-} from '@elsesourav/types';
+import type { SaveAppInput, SaveAppResult, UserLibraryResult } from '@elsesourav/types';
 
 export class LibraryService {
   constructor(private readonly libraryRepo: LibraryRepository) {}
@@ -21,7 +17,9 @@ export class LibraryService {
     const userId = this.verifyAuthenticatedUser(callerUserId);
     const validated = SaveAppSchema.safeParse(input);
     if (!validated.success) {
-      throw AppError.validation(validated.error.issues[0]?.message || 'Invalid library save parameters');
+      throw AppError.validation(
+        validated.error.issues[0]?.message || 'Invalid library save parameters'
+      );
     }
 
     const item = await this.libraryRepo.saveApp(userId, input);
@@ -63,7 +61,9 @@ export class LibraryService {
     const userId = this.verifyAuthenticatedUser(callerUserId);
     const validated = LibraryQuerySchema.safeParse(options);
     if (!validated.success) {
-      throw AppError.validation(validated.error.issues[0]?.message || 'Invalid library query parameters');
+      throw AppError.validation(
+        validated.error.issues[0]?.message || 'Invalid library query parameters'
+      );
     }
 
     return this.libraryRepo.getUserLibrary(userId, options);

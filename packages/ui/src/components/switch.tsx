@@ -3,8 +3,10 @@
 import * as React from 'react';
 import { cn } from '../lib/utils';
 
-export interface SwitchProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onChange'> {
+export interface SwitchProps extends Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  'onChange'
+> {
   checked?: boolean;
   defaultChecked?: boolean;
   onCheckedChange?: (checked: boolean) => void;
@@ -50,7 +52,10 @@ export function Switch({
             <label
               htmlFor={switchId}
               onClick={toggle}
-              className={cn('font-medium text-zinc-200 cursor-pointer', disabled && 'opacity-50 cursor-not-allowed')}
+              className={cn(
+                'font-medium text-zinc-200 cursor-pointer',
+                disabled && 'opacity-50 cursor-not-allowed'
+              )}
             >
               {label}
             </label>

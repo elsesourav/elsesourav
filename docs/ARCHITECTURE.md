@@ -71,6 +71,7 @@ src/
 ## 3. State Management & Authentication Flow
 
 ### A. State Architecture
+
 - **Global Contexts**: Lightweight React Contexts manage global, long-lived UI state:
   - `AuthContext`: Tracks current Firebase Auth state, profile claims, and admin role status.
   - `ThemeContext`: Controls light/dark/system theme tokens.
@@ -78,6 +79,7 @@ src/
 - **Local State**: Page-level data fetching uses standard React hooks (`useState`, `useEffect`) with graceful loading skeletons and error boundaries.
 
 ### B. Authentication & Session Continuity
+
 - Firebase Web SDK manages token refreshes and persists user sessions in the browser's **IndexedDB**.
 - Client credentials and passwords never touch application code.
 - Protected routes evaluate authorization state through route guards:

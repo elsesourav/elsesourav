@@ -18,7 +18,8 @@ export const fixtureMediaAssets: readonly MediaAsset[] = [
   {
     id: 'media-2',
     publicId: 'v2/banners/terminal-pro-hero',
-    secureUrl: 'https://res.cloudinary.com/elsesourav/image/upload/v2/banners/terminal-pro-hero.png',
+    secureUrl:
+      'https://res.cloudinary.com/elsesourav/image/upload/v2/banners/terminal-pro-hero.png',
     mediaType: 'app_screenshot',
     folder: 'apps',
     format: 'png',

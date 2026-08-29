@@ -2,11 +2,7 @@ import type { ID, Timestamp } from './common.types';
 import type { UserRole } from './user.types';
 
 export type SupportTicketStatus =
-  | 'open'
-  | 'in_progress'
-  | 'waiting_for_user'
-  | 'resolved'
-  | 'closed';
+  'open' | 'in_progress' | 'waiting_for_user' | 'resolved' | 'closed';
 
 export type TicketStatus = SupportTicketStatus;
 
@@ -15,13 +11,7 @@ export type SupportTicketPriority = 'low' | 'medium' | 'high' | 'urgent' | 'norm
 export type TicketPriority = SupportTicketPriority;
 
 export type SupportTicketCategory =
-  | 'account'
-  | 'app_issue'
-  | 'bug_report'
-  | 'billing'
-  | 'feature_request'
-  | 'general'
-  | 'other';
+  'account' | 'app_issue' | 'bug_report' | 'billing' | 'feature_request' | 'general' | 'other';
 
 export type TicketCategory = SupportTicketCategory;
 

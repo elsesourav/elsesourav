@@ -19,7 +19,11 @@ export function Pagination({
   if (totalPages <= 1) return null;
 
   return (
-    <nav aria-label="Pagination" className={cn('flex items-center justify-center gap-2 py-4', className)} {...props}>
+    <nav
+      aria-label="Pagination"
+      className={cn('flex items-center justify-center gap-2 py-4', className)}
+      {...props}
+    >
       <Button
         variant="ghost"
         size="sm"

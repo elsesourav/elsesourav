@@ -126,7 +126,8 @@ export const fixtureMultiTurnTicket: SupportTicket = {
     senderName: i % 2 === 0 ? 'Alex Rivers' : 'Jordan Taylor',
     senderRole: i % 2 === 0 ? 'USER' : 'STAFF',
     message: `Message #${i + 1}: Diagnostic check round ${Math.floor(i / 2) + 1}. Observed frame latency of ${20 + i * 5}ms under simulated throttling.`,
-    attachments: i === 5 ? ['https://res.cloudinary.com/elsesourav/image/upload/v2/debug/trace.json'] : [],
+    attachments:
+      i === 5 ? ['https://res.cloudinary.com/elsesourav/image/upload/v2/debug/trace.json'] : [],
     isInternalNote: i === 7,
     createdAt: 1704067200000 + i * 300000,
   })),

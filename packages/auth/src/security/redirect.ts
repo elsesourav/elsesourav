@@ -5,10 +5,7 @@ const DANGEROUS_PREFIX_REGEX = /^[\u0000-\u001F\u007F-\u009F\s]*(javascript|data
  * Validates and sanitizes a requested redirect URL to prevent open redirect vulnerabilities.
  * Only relative application paths (starting with '/' and not '//') are permitted.
  */
-export function sanitizeRedirectUrl(
-  candidateUrl?: string | null,
-  fallbackUrl = '/'
-): string {
+export function sanitizeRedirectUrl(candidateUrl?: string | null, fallbackUrl = '/'): string {
   if (!candidateUrl || typeof candidateUrl !== 'string') {
     return fallbackUrl;
   }
@@ -35,4 +32,3 @@ export function sanitizeRedirectUrl(
   // Reject external domains, arbitrary origins, or unparseable URLs
   return fallbackUrl;
 }
-

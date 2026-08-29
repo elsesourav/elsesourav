@@ -64,7 +64,11 @@ describe('UI Component State Matrix & Edge Cases', () => {
 
     it('handles disabled state and prevents click execution', () => {
       const handleClick = vi.fn();
-      render(<Button disabled onClick={handleClick}>Disabled</Button>);
+      render(
+        <Button disabled onClick={handleClick}>
+          Disabled
+        </Button>
+      );
       const button = screen.getByRole('button', { name: 'Disabled' });
 
       expect(button.getAttribute('disabled')).not.toBeNull();
@@ -300,7 +304,9 @@ describe('UI Component State Matrix & Edge Cases', () => {
     });
 
     it('disables previous button on first page and next button on last page', () => {
-      const { rerender } = render(<Pagination currentPage={1} totalPages={5} onPageChange={() => {}} />);
+      const { rerender } = render(
+        <Pagination currentPage={1} totalPages={5} onPageChange={() => {}} />
+      );
       const prevBtn = screen.getByRole('button', { name: /previous/i });
       expect(prevBtn.getAttribute('disabled')).not.toBeNull();
 
@@ -310,7 +316,9 @@ describe('UI Component State Matrix & Edge Cases', () => {
     });
 
     it('returns null when totalPages <= 1', () => {
-      const { container } = render(<Pagination currentPage={1} totalPages={1} onPageChange={() => {}} />);
+      const { container } = render(
+        <Pagination currentPage={1} totalPages={1} onPageChange={() => {}} />
+      );
       expect(container.firstChild).toBeNull();
     });
   });

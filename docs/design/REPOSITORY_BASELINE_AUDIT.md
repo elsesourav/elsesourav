@@ -32,22 +32,25 @@ elsesourav/
 ## 2. Real Current State Audit
 
 ### A. Working Architecture
+
 - **Full-Stack Next.js 15 App Router**: Server-first rendering with React Server Components for public listings and client components for interactive filters and forms.
 - **Data Access Layer**: Clean repository pattern in `@elsesourav/database` (`AppRepository`, `BlogRepository`, `HelpRepository`, `SupportRepository`, `UserRepository`, `AuditRepository`, `MediaRepository`, `LibraryRepository`).
 - **Security & RBAC**: Zero-trust server-side layout guards (`requireAdmin`, `requireAuth`) protecting `(admin)` and `(user)` routes.
 - **Markdown Pipeline**: Universal `MarkdownRenderer` in `@elsesourav/ui` with GFM table support, syntax-highlighted code blocks, copy-to-clipboard, task checklists, and XSS URL sanitization (`isSafeUrl`).
 
 ### B. UI Components & Design System (`@elsesourav/ui`)
+
 - **27 Verified Primitives**:
-  - *Foundation*: `Button`, `Badge`, `Avatar`, `Separator`
-  - *Forms*: `Label`, `Input`, `Textarea`, `Select`, `Checkbox`, `Switch`, `FormField`
-  - *Surfaces*: `Card`, `GlassSurface`
-  - *Feedback*: `Skeleton`, `Spinner`, `Alert`, `EmptyState`, `ErrorState`
-  - *Overlays*: `Dialog`, `Drawer`
-  - *Navigation*: `Tabs`, `Breadcrumb`, `Pagination`
-  - *Data Display & Editing*: `Table`, `StatCard`, `MarkdownRenderer`, `AdminMarkdownEditor`
+  - _Foundation_: `Button`, `Badge`, `Avatar`, `Separator`
+  - _Forms_: `Label`, `Input`, `Textarea`, `Select`, `Checkbox`, `Switch`, `FormField`
+  - _Surfaces_: `Card`, `GlassSurface`
+  - _Feedback_: `Skeleton`, `Spinner`, `Alert`, `EmptyState`, `ErrorState`
+  - _Overlays_: `Dialog`, `Drawer`
+  - _Navigation_: `Tabs`, `Breadcrumb`, `Pagination`
+  - _Data Display & Editing_: `Table`, `StatCard`, `MarkdownRenderer`, `AdminMarkdownEditor`
 
 ### C. Theme & Token Architecture
+
 - **Centralized CSS Custom Properties (`globals.css`)**:
   - Semantic Surfaces: `--background`, `--surface`, `--surface-subtle`, `--surface-elevated`, `--surface-overlay`
   - Foreground & Accents: `--foreground`, `--muted-foreground`, `--border`, `--border-subtle`, `--primary`
@@ -62,6 +65,7 @@ elsesourav/
 > **Baseline Directive**: There is no legacy production data that must be preserved. The database serves as a development baseline.
 
 ### A. Active Relational Models (16 Models in PostgreSQL)
+
 1. `User` (Authentication, role, preferences, profile)
 2. `App` (Catalog software tools, categories, metadata, SemVer versions)
 3. `AppLink` (Direct platform download & web links)
@@ -82,6 +86,7 @@ elsesourav/
 18. `AppStat` (Telemetry views, launches, ratings)
 
 ### B. Canonical Storage Rules
+
 - **Canonical Markdown Storage**: `BlogPost.content`, `HelpArticle.content`, `App.description`, and `AppVersion.changelog` store raw plain Markdown.
 - **Never Store Rendered HTML**: Storing HTML in database columns is strictly prohibited to guarantee safety and portability.
 
@@ -89,7 +94,7 @@ elsesourav/
 
 ## 4. Product Identity & Version Presentation Rules
 
-- **Universal Public Identity**: **ElseSourav** (Tagline: *Software, Tools & Ideas*).
+- **Universal Public Identity**: **ElseSourav** (Tagline: _Software, Tools & Ideas_).
 - **Prohibited Public Branding**: Mentions of "V1", "V2", "Version 1.0", "Version 2.0", "New V2 platform" in public headers, titles, cards, or user onboarding are eliminated.
 - **Permitted Technical Usages**: SemVer application release tags (`v1.4.0`) and internal git/turborepo package versions.
 
@@ -100,11 +105,11 @@ elsesourav/
 - **Value-First Principle**: "Why this exists" comes before "what technology powers it."
 - **No Implementation Show-Off**: Framework buzzwords (e.g. Next.js 15, PostgreSQL, Zero-Trust RBAC, client bundle claims) are removed from the public homepage hero.
 - **Homepage Structure**:
-  1. *Hero*: Identity, positioning, dual calls to action.
-  2. *Selected Work*: Featured applications & utilities.
-  3. *Writing & Exploration*: Latest engineering articles.
-  4. *Creator Context*: Sourav's background and 6 guiding principles.
-  5. *Navigation Footer*: Direct links to catalog, blog, docs, about, and support.
+  1. _Hero_: Identity, positioning, dual calls to action.
+  2. _Selected Work_: Featured applications & utilities.
+  3. _Writing & Exploration_: Latest engineering articles.
+  4. _Creator Context_: Sourav's background and 6 guiding principles.
+  5. _Navigation Footer_: Direct links to catalog, blog, docs, about, and support.
 
 ---
 
@@ -118,9 +123,9 @@ elsesourav/
 
 ## 7. Quality & Verification Health
 
-| Quality Gate | Status | Evidence |
-| :--- | :--- | :--- |
-| **Prisma Schema** | **PASS** | Validated via `prisma validate` |
-| **Monorepo Typecheck** | **PASS** | `0 errors` across all 10 packages |
-| **Unit & Domain Tests** | **PASS** | `329/329 passing` (41 test suites) |
-| **Next.js Production Build**| **PASS** | `38/38` static & dynamic routes compiled |
+| Quality Gate                 | Status   | Evidence                                 |
+| :--------------------------- | :------- | :--------------------------------------- |
+| **Prisma Schema**            | **PASS** | Validated via `prisma validate`          |
+| **Monorepo Typecheck**       | **PASS** | `0 errors` across all 10 packages        |
+| **Unit & Domain Tests**      | **PASS** | `329/329 passing` (41 test suites)       |
+| **Next.js Production Build** | **PASS** | `38/38` static & dynamic routes compiled |

@@ -20,7 +20,10 @@ export async function getRelatedHelpArticles(
   return helpService.getRelatedArticles(articleId, categoryId, limit);
 }
 
-export async function submitHelpVote(articleId: string, isHelpful: boolean): Promise<{ success: boolean }> {
+export async function submitHelpVote(
+  articleId: string,
+  isHelpful: boolean
+): Promise<{ success: boolean }> {
   try {
     await helpService.voteHelpful(articleId, isHelpful);
     return { success: true };

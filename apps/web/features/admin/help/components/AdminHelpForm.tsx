@@ -39,7 +39,9 @@ export function AdminHelpForm({ article, categories }: AdminHelpFormProps) {
   const [slug, setSlug] = React.useState(article?.slug || '');
   const [excerpt, setExcerpt] = React.useState(article?.excerpt || '');
   const [content, setContent] = React.useState(article?.content || '');
-  const [categoryId, setCategoryId] = React.useState(article?.categoryId || categories[0]?.id || '');
+  const [categoryId, setCategoryId] = React.useState(
+    article?.categoryId || categories[0]?.id || ''
+  );
   const [orderIndex, setOrderIndex] = React.useState(article?.orderIndex ?? 0);
   const [status, setStatus] = React.useState<'draft' | 'published' | 'archived'>(
     (article?.status as 'draft' | 'published' | 'archived') || 'draft'
@@ -276,7 +278,9 @@ export function AdminHelpForm({ article, categories }: AdminHelpFormProps) {
 
             {/* Order Index */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-zinc-300">Display Order Index</label>
+              <label className="block text-xs font-semibold text-zinc-300">
+                Display Order Index
+              </label>
               <Input
                 type="number"
                 value={orderIndex}

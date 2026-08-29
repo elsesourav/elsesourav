@@ -1,4 +1,11 @@
-import type { User, App, SupportTicket, BlogPost, HelpCategory, HelpArticle } from '@elsesourav/types';
+import type {
+  User,
+  App,
+  SupportTicket,
+  BlogPost,
+  HelpCategory,
+  HelpArticle,
+} from '@elsesourav/types';
 
 export const mockStandardUser: User = {
   id: 'usr-standard-1',

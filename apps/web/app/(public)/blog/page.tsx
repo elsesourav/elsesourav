@@ -1,5 +1,9 @@
 import { Metadata } from 'next';
-import { getPublicBlogListing, getBlogCategories, getBlogTags } from '@/features/blog/queries/get-blog';
+import {
+  getPublicBlogListing,
+  getBlogCategories,
+  getBlogTags,
+} from '@/features/blog/queries/get-blog';
 import { BlogCard } from '@/features/blog/components/BlogCard';
 import { BlogDiscoveryBar } from '@/features/blog/components/BlogDiscoveryBar';
 import { BlogPagination } from '@/features/blog/components/BlogPagination';
@@ -32,7 +36,8 @@ export async function generateMetadata({ searchParams }: BlogPageProps): Promise
         ? `#${tag} Engineering Notes`
         : 'Engineering Journal & Articles';
 
-  const description = 'Technical articles, architectural deep dives, software benchmarks, and release devlogs by ElseSourav.';
+  const description =
+    'Technical articles, architectural deep dives, software benchmarks, and release devlogs by ElseSourav.';
   const canonicalUrl = 'https://elsesourav.com/blog';
 
   return {
@@ -128,7 +133,8 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
             </Badge>
           </div>
           <p className="text-sm text-zinc-400 max-w-2xl">
-            Deep-dive notes on web architecture, software systems, performance benchmarks, and release logs.
+            Deep-dive notes on web architecture, software systems, performance benchmarks, and
+            release logs.
           </p>
         </div>
 

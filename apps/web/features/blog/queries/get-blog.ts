@@ -1,10 +1,5 @@
 import { BlogRepository, BlogService } from '@elsesourav/database';
-import type {
-  BlogCategory,
-  BlogTag,
-  BlogQueryInput,
-  BlogQueryResult,
-} from '@elsesourav/types';
+import type { BlogCategory, BlogTag, BlogQueryInput, BlogQueryResult } from '@elsesourav/types';
 
 const blogRepo = new BlogRepository();
 const blogService = new BlogService(blogRepo);

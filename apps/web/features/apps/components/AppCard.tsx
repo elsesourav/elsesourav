@@ -63,9 +63,7 @@ export function AppCard({ app }: AppCardProps) {
                   </span>
                 )}
               </div>
-              <span className="text-xs text-zinc-400 font-medium">
-                {app.primaryCategory}
-              </span>
+              <span className="text-xs text-zinc-400 font-medium">{app.primaryCategory}</span>
             </div>
           </div>
 
@@ -90,7 +88,10 @@ export function AppCard({ app }: AppCardProps) {
           </div>
 
           {app.currentVersion && (
-            <Badge variant="outline" className="text-[10px] px-1.5 py-0 text-zinc-400 border-zinc-800 font-mono">
+            <Badge
+              variant="outline"
+              className="text-[10px] px-1.5 py-0 text-zinc-400 border-zinc-800 font-mono"
+            >
               v{app.currentVersion}
             </Badge>
           )}

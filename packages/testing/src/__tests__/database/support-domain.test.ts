@@ -2,10 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { SupportService, SupportRepository } from '@elsesourav/database';
 import { AppError } from '@elsesourav/types';
 import { generateTicketNumber } from '@elsesourav/validation';
-import type {
-  SupportTicketListItem,
-  SupportTicketDetail,
-} from '@elsesourav/types';
+import type { SupportTicketListItem, SupportTicketDetail } from '@elsesourav/types';
 
 describe('Support Domain Service, Ownership & Security Lifecycle', () => {
   const mockUserTicket: SupportTicketDetail = {
@@ -110,9 +107,9 @@ describe('Support Domain Service, Ownership & Security Lifecycle', () => {
 
     const service = new SupportService(mockRepo);
 
-    await expect(
-      service.getTicketDetail('usr-bob', 'USER', 'ticket-101')
-    ).rejects.toThrowError(AppError);
+    await expect(service.getTicketDetail('usr-bob', 'USER', 'ticket-101')).rejects.toThrowError(
+      AppError
+    );
   });
 
   it('allows ADMIN to view any ticket including internal notes', async () => {

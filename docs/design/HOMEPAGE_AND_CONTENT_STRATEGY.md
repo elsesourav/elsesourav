@@ -1,7 +1,7 @@
 # ElseSourav Homepage & Professional Content Strategy
 
 > **Authoritative Specification**: `apps/web/app/page.tsx`, `apps/web/app/(public)/about/page.tsx`, `packages/config/src/site.ts`  
-> **Core Principle**: Communicate value before implementation details. *"Why this exists"* comes before *"what technology powers it."*
+> **Core Principle**: Communicate value before implementation details. _"Why this exists"_ comes before _"what technology powers it."_
 
 ---
 
@@ -65,14 +65,14 @@ The ElseSourav homepage must immediately answer the five universal visitor quest
 
 Technical architecture should be placed where it provides utility to users, not as generic homepage marketing buzzwords:
 
-| Context | Appropriate Technical Depth | Prohibited Content |
-| :--- | :--- | :--- |
-| **Homepage (`/`)** | High-level value, usability, performance benefits, and direct navigation. | Generic tech-stack cards ("Built with Next.js 15, PostgreSQL, Supabase, RBAC"). |
-| **App Detail (`/apps/[slug]`)** | Supported platforms, system requirements, runtime engine, changelogs, architecture notes for that specific tool. | Irrelevant global monorepo implementation details. |
-| **About (`/about`)** | Engineering philosophy, personal principles, focus areas, and authentic background. | Fabricated milestones or framework hype. |
-| **Blog (`/blog/[slug]`)** | Deep code examples, benchmarks, distributed systems designs, and post-mortems. | Fluffy marketing copy without technical substance. |
-| **Help (`/help/*`)** | Task-oriented terminal commands, troubleshooting steps, and installation scripts. | Abstract theory that doesn't solve user problems. |
-| **Design System (`/design-system`)**| Semantic tokens, CSS variables, accessibility contrast ratios, component states. | Unimplemented UI ideas. |
+| Context                              | Appropriate Technical Depth                                                                                      | Prohibited Content                                                              |
+| :----------------------------------- | :--------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------ |
+| **Homepage (`/`)**                   | High-level value, usability, performance benefits, and direct navigation.                                        | Generic tech-stack cards ("Built with Next.js 15, PostgreSQL, Supabase, RBAC"). |
+| **App Detail (`/apps/[slug]`)**      | Supported platforms, system requirements, runtime engine, changelogs, architecture notes for that specific tool. | Irrelevant global monorepo implementation details.                              |
+| **About (`/about`)**                 | Engineering philosophy, personal principles, focus areas, and authentic background.                              | Fabricated milestones or framework hype.                                        |
+| **Blog (`/blog/[slug]`)**            | Deep code examples, benchmarks, distributed systems designs, and post-mortems.                                   | Fluffy marketing copy without technical substance.                              |
+| **Help (`/help/*`)**                 | Task-oriented terminal commands, troubleshooting steps, and installation scripts.                                | Abstract theory that doesn't solve user problems.                               |
+| **Design System (`/design-system`)** | Semantic tokens, CSS variables, accessibility contrast ratios, component states.                                 | Unimplemented UI ideas.                                                         |
 
 ---
 
@@ -83,12 +83,12 @@ The About page (`/about`) is designed around verified creator identity:
 1. **Creator Title & Role**: Software Engineer & Independent Creator (`CREATOR_CONFIG.identity`).
 2. **Authentic Biography**: Sourav's personal journey, passion for ergonomics, and rationale behind building ElseSourav.
 3. **Guiding Principles**:
-   - *Build for real users*
-   - *Design with purpose*
-   - *Keep interfaces accessible*
-   - *Prefer simplicity over unnecessary complexity*
-   - *Treat performance as part of the product*
-   - *Use technology as a tool, not the identity*
+   - _Build for real users_
+   - _Design with purpose_
+   - _Keep interfaces accessible_
+   - _Prefer simplicity over unnecessary complexity_
+   - _Treat performance as part of the product_
+   - _Use technology as a tool, not the identity_
 4. **Direct Inquiries & Socials**: Verified links to GitHub, Twitter/X, and the Support Desk.
 
 ---

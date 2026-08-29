@@ -4,14 +4,16 @@ import * as React from 'react';
 import { cn } from '../lib/utils';
 import { Check } from 'lucide-react';
 
-export interface CheckboxProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
+export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
   label?: React.ReactNode;
   description?: React.ReactNode;
 }
 
 export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
-  ({ className, label, description, checked, defaultChecked, onChange, id, disabled, ...props }, ref) => {
+  (
+    { className, label, description, checked, defaultChecked, onChange, id, disabled, ...props },
+    ref
+  ) => {
     const generatedId = React.useId();
     const inputId = id || generatedId;
     const [isChecked, setIsChecked] = React.useState(Boolean(checked || defaultChecked));
@@ -60,7 +62,10 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
             {label && (
               <label
                 htmlFor={inputId}
-                className={cn('font-medium text-zinc-200 cursor-pointer', disabled && 'opacity-50 cursor-not-allowed')}
+                className={cn(
+                  'font-medium text-zinc-200 cursor-pointer',
+                  disabled && 'opacity-50 cursor-not-allowed'
+                )}
               >
                 {label}
               </label>

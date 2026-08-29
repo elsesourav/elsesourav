@@ -27,13 +27,18 @@ export function AppVersionHistory({ versions }: AppVersionHistoryProps) {
           });
 
           return (
-            <Card key={ver.id} className="p-4 rounded-xl border-zinc-800/80 bg-zinc-900/30 space-y-2">
+            <Card
+              key={ver.id}
+              className="p-4 rounded-xl border-zinc-800/80 bg-zinc-900/30 space-y-2"
+            >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Badge variant={idx === 0 ? 'success' : 'outline'} className="text-xs font-mono">
                     v{ver.version}
                   </Badge>
-                  {idx === 0 && <span className="text-[10px] text-emerald-400 font-medium">Latest Release</span>}
+                  {idx === 0 && (
+                    <span className="text-[10px] text-emerald-400 font-medium">Latest Release</span>
+                  )}
                 </div>
                 <span className="text-xs text-zinc-500 flex items-center gap-1">
                   <Calendar className="w-3.5 h-3.5" /> {formattedDate}

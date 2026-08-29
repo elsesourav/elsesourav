@@ -21,11 +21,7 @@ interface AdminUsersTableProps {
   totalPages: number;
 }
 
-export function AdminUsersTable({
-  initialUsers,
-  total,
-  totalPages,
-}: AdminUsersTableProps) {
+export function AdminUsersTable({ initialUsers, total, totalPages }: AdminUsersTableProps) {
   const [users] = React.useState(initialUsers);
   const [search, setSearch] = React.useState('');
   const [selectedRole, setSelectedRole] = React.useState<string>('all');
@@ -60,19 +56,28 @@ export function AdminUsersTable({
     switch (role) {
       case 'ADMIN':
         return (
-          <Badge variant="outline" className="text-[10px] uppercase font-mono border-purple-500/50 text-purple-300 bg-purple-950/20">
+          <Badge
+            variant="outline"
+            className="text-[10px] uppercase font-mono border-purple-500/50 text-purple-300 bg-purple-950/20"
+          >
             Admin
           </Badge>
         );
       case 'STAFF':
         return (
-          <Badge variant="outline" className="text-[10px] uppercase font-mono border-indigo-500/50 text-indigo-300 bg-indigo-950/20">
+          <Badge
+            variant="outline"
+            className="text-[10px] uppercase font-mono border-indigo-500/50 text-indigo-300 bg-indigo-950/20"
+          >
             Staff
           </Badge>
         );
       default:
         return (
-          <Badge variant="outline" className="text-[10px] uppercase font-mono border-zinc-700 text-zinc-400">
+          <Badge
+            variant="outline"
+            className="text-[10px] uppercase font-mono border-zinc-700 text-zinc-400"
+          >
             User
           </Badge>
         );
@@ -161,10 +166,7 @@ export function AdminUsersTable({
                   });
 
                   return (
-                    <tr
-                      key={user.id}
-                      className="hover:bg-zinc-800/30 transition-colors group"
-                    >
+                    <tr key={user.id} className="hover:bg-zinc-800/30 transition-colors group">
                       {/* User Avatar & Name */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-3">
@@ -205,7 +207,10 @@ export function AdminUsersTable({
                             Active
                           </Badge>
                         ) : (
-                          <Badge variant="outline" className="text-[10px] uppercase font-mono border-rose-500/40 text-rose-300">
+                          <Badge
+                            variant="outline"
+                            className="text-[10px] uppercase font-mono border-rose-500/40 text-rose-300"
+                          >
                             Deleted
                           </Badge>
                         )}

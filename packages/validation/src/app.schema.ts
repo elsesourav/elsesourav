@@ -36,9 +36,13 @@ export const AppLinkSchema = z.object({
 
 export const CreateAppSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(100),
-  slug: z.string().min(2).regex(/^[a-z0-9-]+$/, 'Slug can only contain lowercase letters, numbers, and hyphens'),
+  slug: z
+    .string()
+    .min(2)
+    .regex(/^[a-z0-9-]+$/, 'Slug can only contain lowercase letters, numbers, and hyphens'),
   shortDescription: z.string().min(10).max(250),
   description: z.string().min(20),
+  documentationMd: z.string().optional(),
   iconUrl: z.string().url('Please provide a valid icon URL'),
   featuredImageUrl: z.string().url().optional(),
   categoryId: z.string().min(1, 'Please select a category'),
@@ -63,15 +67,21 @@ export const PublishAppSchema = z.object({
 export const AdminSaveAppSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(2, 'Name must be at least 2 characters').max(100),
-  slug: z.string().min(2).regex(/^[a-z0-9-]+$/, 'Slug can only contain lowercase letters, numbers, and hyphens'),
+  slug: z
+    .string()
+    .min(2)
+    .regex(/^[a-z0-9-]+$/, 'Slug can only contain lowercase letters, numbers, and hyphens'),
   shortDescription: z.string().min(10, 'Short description must be at least 10 characters').max(250),
   description: z.string().min(20, 'Description must be at least 20 characters'),
+  documentationMd: z.string().optional().or(z.literal('')),
   iconUrl: z.string().url('Please provide a valid icon URL'),
   featuredImageUrl: z.string().url().optional().or(z.literal('')),
   demoUrl: z.string().url().optional().or(z.literal('')),
   videoUrl: z.string().url().optional().or(z.literal('')),
   categoryId: z.string().min(1, 'Please select a category'),
-  status: z.enum(['draft', 'published', 'archived', 'DRAFT', 'PUBLISHED', 'ARCHIVED']).default('draft'),
+  status: z
+    .enum(['draft', 'published', 'archived', 'DRAFT', 'PUBLISHED', 'ARCHIVED'])
+    .default('draft'),
   isFeatured: z.boolean().default(false),
   isPinned: z.boolean().default(false),
   sortOrder: z.coerce.number().int().default(0),
@@ -79,17 +89,32 @@ export const AdminSaveAppSchema = z.object({
   seoDescription: z.string().max(300).optional().or(z.literal('')),
 });
 
-export const AppSortEnum = z.enum(['newest', 'name', 'popularity', 'sortOrder']).default('sortOrder');
+export const AppSortEnum = z
+  .enum(['newest', 'name', 'popularity', 'sortOrder'])
+  .default('sortOrder');
 
 export const AppListQuerySchema = z.object({
-  categorySlug: z.string().max(50).regex(/^[a-z0-9-]*$/, 'Invalid category slug format').optional(),
-  tagSlug: z.string().max(50).regex(/^[a-z0-9-]*$/, 'Invalid tag slug format').optional(),
+  categorySlug: z
+    .string()
+    .max(50)
+    .regex(/^[a-z0-9-]*$/, 'Invalid category slug format')
+    .optional(),
+  tagSlug: z
+    .string()
+    .max(50)
+    .regex(/^[a-z0-9-]*$/, 'Invalid tag slug format')
+    .optional(),
   search: z.string().max(50, 'Search query cannot exceed 50 characters').optional(),
   q: z.string().max(50, 'Search query cannot exceed 50 characters').optional(),
   platform: AppPlatformSchema.optional(),
   isFeatured: z.boolean().optional(),
   page: z.coerce.number().int().min(1, 'Page must be at least 1').default(1),
-  limit: z.coerce.number().int().min(1, 'Limit must be at least 1').max(50, 'Limit cannot exceed 50').default(20),
+  limit: z.coerce
+    .number()
+    .int()
+    .min(1, 'Limit must be at least 1')
+    .max(50, 'Limit cannot exceed 50')
+    .default(20),
   cursor: z.string().optional(),
   sort: AppSortEnum.optional(),
 });
@@ -97,12 +122,25 @@ export const AppListQuerySchema = z.object({
 export const AppSearchSchema = z.object({
   query: z.string().max(50, 'Search query cannot exceed 50 characters').optional(),
   q: z.string().max(50, 'Search query cannot exceed 50 characters').optional(),
-  categorySlug: z.string().max(50).regex(/^[a-z0-9-]*$/, 'Invalid category slug').optional(),
-  tagSlug: z.string().max(50).regex(/^[a-z0-9-]*$/, 'Invalid tag slug').optional(),
+  categorySlug: z
+    .string()
+    .max(50)
+    .regex(/^[a-z0-9-]*$/, 'Invalid category slug')
+    .optional(),
+  tagSlug: z
+    .string()
+    .max(50)
+    .regex(/^[a-z0-9-]*$/, 'Invalid tag slug')
+    .optional(),
   platform: AppPlatformSchema.optional(),
   sort: AppSortEnum.default('sortOrder'),
   page: z.coerce.number().int().min(1, 'Page must be at least 1').default(1),
-  limit: z.coerce.number().int().min(1, 'Limit must be at least 1').max(50, 'Limit cannot exceed 50').default(20),
+  limit: z.coerce
+    .number()
+    .int()
+    .min(1, 'Limit must be at least 1')
+    .max(50, 'Limit cannot exceed 50')
+    .default(20),
 });
 
 export const AppQuerySchema = z.object({
@@ -119,7 +157,10 @@ export const AppQuerySchema = z.object({
 
 export const AppSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(100),
-  slug: z.string().min(2).regex(/^[a-z0-9-]+$/, 'Slug can only contain lowercase letters, numbers, and hyphens'),
+  slug: z
+    .string()
+    .min(2)
+    .regex(/^[a-z0-9-]+$/, 'Slug can only contain lowercase letters, numbers, and hyphens'),
   shortDescription: z.string().min(10).max(250),
   description: z.string().min(20),
   iconUrl: z.string().url(),

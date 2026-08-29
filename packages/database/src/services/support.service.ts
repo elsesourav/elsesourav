@@ -120,11 +120,7 @@ export class SupportService {
   /**
    * Closes a support ticket
    */
-  async closeTicket(
-    callerUserId: string,
-    callerRole: UserRole,
-    ticketId: string
-  ): Promise<void> {
+  async closeTicket(callerUserId: string, callerRole: UserRole, ticketId: string): Promise<void> {
     await this.getTicketDetail(callerUserId, callerRole, ticketId);
     await this.supportRepo.updateTicketStatus(ticketId, 'closed');
   }
@@ -132,11 +128,7 @@ export class SupportService {
   /**
    * Reopens a support ticket
    */
-  async reopenTicket(
-    callerUserId: string,
-    callerRole: UserRole,
-    ticketId: string
-  ): Promise<void> {
+  async reopenTicket(callerUserId: string, callerRole: UserRole, ticketId: string): Promise<void> {
     await this.getTicketDetail(callerUserId, callerRole, ticketId);
     await this.supportRepo.updateTicketStatus(ticketId, 'open');
   }

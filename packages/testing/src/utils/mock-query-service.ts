@@ -14,7 +14,12 @@ import type {
   AppSearchInput,
   BlogQueryInput,
 } from '@elsesourav/types';
-import { fixturePublishedApps, fixturePublicApps, fixtureCategories, fixtureTags } from '../fixtures/apps.fixtures';
+import {
+  fixturePublishedApps,
+  fixturePublicApps,
+  fixtureCategories,
+  fixtureTags,
+} from '../fixtures/apps.fixtures';
 import { fixtureBlogPosts } from '../fixtures/blog.fixtures';
 import { fixtureHelpCategories, fixtureHelpArticles } from '../fixtures/help.fixtures';
 import { fixtureSupportTicketsList } from '../fixtures/support.fixtures';
@@ -49,7 +54,9 @@ export class MockQueryService {
     if (input.filters?.categorySlug) {
       const cat = fixtureCategories.find((c) => c.slug === input.filters?.categorySlug);
       if (cat) {
-        filtered = filtered.filter((a) => a.primaryCategory === cat.name || a.categoryId === cat.id);
+        filtered = filtered.filter(
+          (a) => a.primaryCategory === cat.name || a.categoryId === cat.id
+        );
       }
     }
 
@@ -98,7 +105,9 @@ export class MockQueryService {
 
     if (input.query) {
       const q = input.query.toLowerCase();
-      filtered = filtered.filter((p) => p.title.toLowerCase().includes(q) || p.excerpt.toLowerCase().includes(q));
+      filtered = filtered.filter(
+        (p) => p.title.toLowerCase().includes(q) || p.excerpt.toLowerCase().includes(q)
+      );
     }
 
     const page = input.page || 1;

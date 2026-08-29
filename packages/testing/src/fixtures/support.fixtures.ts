@@ -32,7 +32,8 @@ export const fixtureTicketMessagesOpen: readonly SupportTicketMessage[] = [
     senderUserId: 'usr-staff-1',
     senderName: 'Jordan Taylor',
     senderRole: 'STAFF',
-    message: 'Internal Note: Checked proxy logs; proxy rejected Origin due to trailing slash mismatch.',
+    message:
+      'Internal Note: Checked proxy logs; proxy rejected Origin due to trailing slash mismatch.',
     attachments: [],
     isInternalNote: true,
     createdAt: 1704071400000,
@@ -46,7 +47,8 @@ export const fixtureTicketWithAttachment: SupportTicket = {
   userEmail: 'developer@example.test',
   userName: 'Alex Rivers',
   subject: 'Palette Studio OKLCH Export formatting error',
-  description: 'When exporting to Tailwind V4 CSS format, hex values are generated without alpha channel.',
+  description:
+    'When exporting to Tailwind V4 CSS format, hex values are generated without alpha channel.',
   category: 'Bug Report',
   priority: 'high',
   status: 'in_progress',
@@ -57,8 +59,11 @@ export const fixtureTicketWithAttachment: SupportTicket = {
       senderUserId: 'usr-standard-1',
       senderName: 'Alex Rivers',
       senderRole: 'USER',
-      message: 'Here is the exported tailwind.config.js snippet showing the malformed color definitions.',
-      attachments: ['https://res.cloudinary.com/elsesourav/image/upload/v2/debug/tailwind-export-sample.txt'],
+      message:
+        'Here is the exported tailwind.config.js snippet showing the malformed color definitions.',
+      attachments: [
+        'https://res.cloudinary.com/elsesourav/image/upload/v2/debug/tailwind-export-sample.txt',
+      ],
       isInternalNote: false,
       createdAt: 1704153600000,
     },
@@ -115,7 +120,8 @@ export const fixtureTicketOpen: SupportTicket = {
   userEmail: 'developer@example.test',
   userName: 'Alex Rivers',
   subject: 'Cannot connect to web terminal WebSocket',
-  description: 'Observed intermittent connection dropouts when executing long-running builds through web terminal proxy.',
+  description:
+    'Observed intermittent connection dropouts when executing long-running builds through web terminal proxy.',
   category: 'Technical Support',
   priority: 'medium',
   status: 'open',
@@ -131,6 +137,5 @@ export const fixtureSupportTicketsList: readonly SupportTicket[] = [
   fixtureTicketResolved,
 ];
 
-export const fixtureSupportTicketListItems: readonly SupportTicketListItem[] = fixtureSupportTicketsList.map((t) =>
-  createSupportTicketListItem(t)
-);
+export const fixtureSupportTicketListItems: readonly SupportTicketListItem[] =
+  fixtureSupportTicketsList.map((t) => createSupportTicketListItem(t));

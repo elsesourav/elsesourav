@@ -1,6 +1,7 @@
 const SAFE_PROTOCOLS = new Set(['http:', 'https:', 'mailto:', 'tel:']);
 // eslint-disable-next-line no-control-regex
-const DANGEROUS_PROTOCOL_REGEX = /^[\u0000-\u001F\u007F-\u009F\s]*(javascript|data|vbscript|blob):/i;
+const DANGEROUS_PROTOCOL_REGEX =
+  /^[\u0000-\u001F\u007F-\u009F\s]*(javascript|data|vbscript|blob):/i;
 
 export function isSafeUrl(url: string | null | undefined): boolean {
   if (!url || typeof url !== 'string') return false;
@@ -55,4 +56,3 @@ export function getSafeRedirectUrl(url: string | null | undefined, fallback = '/
   }
   return fallback;
 }
-

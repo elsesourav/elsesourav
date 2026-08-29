@@ -46,11 +46,7 @@ export function Tabs({
   );
 }
 
-export function TabsList({
-  className,
-  children,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+export function TabsList({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       role="tablist"
@@ -69,12 +65,7 @@ export interface TabsTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonE
   value: string;
 }
 
-export function TabsTrigger({
-  value,
-  className,
-  children,
-  ...props
-}: TabsTriggerProps) {
+export function TabsTrigger({ value, className, children, ...props }: TabsTriggerProps) {
   const context = React.useContext(TabsContext);
   if (!context) throw new Error('TabsTrigger must be used within Tabs');
 
@@ -104,12 +95,7 @@ export interface TabsContentProps extends React.HTMLAttributes<HTMLDivElement> {
   value: string;
 }
 
-export function TabsContent({
-  value,
-  className,
-  children,
-  ...props
-}: TabsContentProps) {
+export function TabsContent({ value, className, children, ...props }: TabsContentProps) {
   const context = React.useContext(TabsContext);
   if (!context) throw new Error('TabsContent must be used within Tabs');
 
@@ -119,7 +105,10 @@ export function TabsContent({
     <div
       role="tabpanel"
       tabIndex={0}
-      className={cn('mt-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500', className)}
+      className={cn(
+        'mt-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500',
+        className
+      )}
       {...props}
     >
       {children}

@@ -88,6 +88,7 @@ elsesourav/
 ```
 
 ### Strict Architectural Invariants:
+
 1. **No Direct Database Access in UI**: UI components (`apps/web/app/**`) MUST NOT import `@prisma/client` or initialize database connections.
 2. **Server-Only Secrets**: Cloudinary API Secret, Supabase Service Role Key, and PostgreSQL `DATABASE_URL` are strictly forbidden from having `NEXT_PUBLIC_` prefixes.
 3. **Zero `any`**: TypeScript strict compilation enforced across all packages (`noImplicitAny`, `strictNullChecks`, `noUncheckedIndexedAccess`).
@@ -96,14 +97,14 @@ elsesourav/
 
 ## 3. Server vs. Client Component Rules
 
-| Category | Default Paradigm | Examples | When to Use Client (`'use client'`) |
-| :--- | :--- | :--- | :--- |
-| **Catalog & Showcase** | Server Component | `HomePage`, `AppsPage`, `AppDetailPage`, `BlogPage` | Instant filter dropdowns, search inputs, modal triggers |
-| **Markdown Content** | Server Component | `BlogPostPage`, `HelpArticlePage` | Interactive syntax copying, helpfulness rating button |
-| **Authentication Forms** | Client Component | `LoginForm`, `SignUpForm`, `ForgotPasswordForm` | Form state, client-side validation errors, OAuth redirects |
-| **Interactive Modals** | Client Component | `GlobalSearchModal`, `LivePreviewModal` | Keyboard shortcuts (`Cmd+K`), focus trapping |
-| **Admin Management Tables**| Server / Client Split | Server loads data; Client manages sort/pagination | Batch action selectors, inline status toggles, deletion dialogs |
-| **Live Support Chat** | Client Component | `SupportThreadLive` | Real-time websocket subscriptions / polling updates |
+| Category                    | Default Paradigm      | Examples                                            | When to Use Client (`'use client'`)                             |
+| :-------------------------- | :-------------------- | :-------------------------------------------------- | :-------------------------------------------------------------- |
+| **Catalog & Showcase**      | Server Component      | `HomePage`, `AppsPage`, `AppDetailPage`, `BlogPage` | Instant filter dropdowns, search inputs, modal triggers         |
+| **Markdown Content**        | Server Component      | `BlogPostPage`, `HelpArticlePage`                   | Interactive syntax copying, helpfulness rating button           |
+| **Authentication Forms**    | Client Component      | `LoginForm`, `SignUpForm`, `ForgotPasswordForm`     | Form state, client-side validation errors, OAuth redirects      |
+| **Interactive Modals**      | Client Component      | `GlobalSearchModal`, `LivePreviewModal`             | Keyboard shortcuts (`Cmd+K`), focus trapping                    |
+| **Admin Management Tables** | Server / Client Split | Server loads data; Client manages sort/pagination   | Batch action selectors, inline status toggles, deletion dialogs |
+| **Live Support Chat**       | Client Component      | `SupportThreadLive`                                 | Real-time websocket subscriptions / polling updates             |
 
 ---
 
@@ -122,18 +123,18 @@ elsesourav/
 
 ## 5. Naming Standards & File Conventions
 
-| Entity | Convention | Example |
-| :--- | :--- | :--- |
-| **Folder Names** | kebab-case | `app-details/`, `support-tickets/` |
-| **Component Files** | PascalCase | `AppCard.tsx`, `HeroShowcase.tsx` |
-| **Hook Files** | camelCase with `use` prefix | `useDebounce.ts`, `useTheme.ts` |
-| **Service Files** | camelCase with `.service.ts` | `app.service.ts`, `support.service.ts` |
-| **Repository Files** | camelCase with `.repository.ts`| `app.repository.ts`, `user.repository.ts` |
-| **Schema Files** | camelCase with `.schema.ts` | `app.schema.ts`, `auth.schema.ts` |
-| **Type Files** | camelCase with `.types.ts` | `app.types.ts`, `user.types.ts` |
-| **Server Actions** | camelCase with `.action.ts` | `publish-app.action.ts`, `create-ticket.action.ts` |
-| **Unit Test Files** | camelCase with `.test.ts(x)` | `search-score.test.ts`, `AppCard.test.tsx` |
-| **E2E Test Files** | kebab-case with `.spec.ts` | `public-discovery.spec.ts`, `auth-flow.spec.ts` |
+| Entity               | Convention                      | Example                                            |
+| :------------------- | :------------------------------ | :------------------------------------------------- |
+| **Folder Names**     | kebab-case                      | `app-details/`, `support-tickets/`                 |
+| **Component Files**  | PascalCase                      | `AppCard.tsx`, `HeroShowcase.tsx`                  |
+| **Hook Files**       | camelCase with `use` prefix     | `useDebounce.ts`, `useTheme.ts`                    |
+| **Service Files**    | camelCase with `.service.ts`    | `app.service.ts`, `support.service.ts`             |
+| **Repository Files** | camelCase with `.repository.ts` | `app.repository.ts`, `user.repository.ts`          |
+| **Schema Files**     | camelCase with `.schema.ts`     | `app.schema.ts`, `auth.schema.ts`                  |
+| **Type Files**       | camelCase with `.types.ts`      | `app.types.ts`, `user.types.ts`                    |
+| **Server Actions**   | camelCase with `.action.ts`     | `publish-app.action.ts`, `create-ticket.action.ts` |
+| **Unit Test Files**  | camelCase with `.test.ts(x)`    | `search-score.test.ts`, `AppCard.test.tsx`         |
+| **E2E Test Files**   | kebab-case with `.spec.ts`      | `public-discovery.spec.ts`, `auth-flow.spec.ts`    |
 
 ---
 
@@ -163,4 +164,4 @@ elsesourav/
 └───────────────────┴────────────────────────────────────┘
 ```
 
-*Violations of this dependency matrix will be blocked via ESLint `no-restricted-imports` rules.*
+_Violations of this dependency matrix will be blocked via ESLint `no-restricted-imports` rules._

@@ -216,13 +216,7 @@ describe('Navigation & Data Display Components', () => {
 
   it('renders Pagination and handles page switching', () => {
     const handlePageChange = vi.fn();
-    render(
-      <Pagination
-        currentPage={2}
-        totalPages={5}
-        onPageChange={handlePageChange}
-      />
-    );
+    render(<Pagination currentPage={2} totalPages={5} onPageChange={handlePageChange} />);
     expect(screen.getByRole('navigation', { name: /pagination/i })).toBeDefined();
     expect(screen.getByText('2')).toBeDefined();
     expect(screen.getByText('5')).toBeDefined();

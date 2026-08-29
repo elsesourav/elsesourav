@@ -51,7 +51,9 @@ export function AppFilters() {
     updateFilters({ search: searchVal.trim() || null });
   };
 
-  const hasActiveFilters = Boolean(currentCategory || currentSearch || (currentSort && currentSort !== 'sortOrder'));
+  const hasActiveFilters = Boolean(
+    currentCategory || currentSearch || (currentSort && currentSort !== 'sortOrder')
+  );
 
   return (
     <div className="space-y-4 w-full">

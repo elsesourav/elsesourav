@@ -41,6 +41,49 @@ export interface AdminNavigationItem {
   readonly isExact?: boolean;
 }
 
+export type SiteLinkPlatform =
+  | 'github'
+  | 'twitter'
+  | 'linkedin'
+  | 'youtube'
+  | 'discord'
+  | 'telegram'
+  | 'bluesky'
+  | 'email'
+  | 'website'
+  | 'other';
+
+export interface SiteLinkItem {
+  readonly id: string;
+  readonly label: string;
+  readonly url: string;
+  readonly platform: SiteLinkPlatform;
+  readonly priority: number;
+  readonly isActive: boolean;
+}
+
+export type SiteContactMethodType =
+  'email' | 'support_desk' | 'telegram' | 'discord' | 'calendar' | 'phone' | 'matrix' | 'other';
+
+export interface SiteContactItem {
+  readonly id: string;
+  readonly label: string;
+  readonly value: string;
+  readonly type: SiteContactMethodType;
+  readonly description?: string;
+  readonly priority: number;
+  readonly isActive: boolean;
+}
+
+export interface SiteFooterLink {
+  readonly id: string;
+  readonly label: string;
+  readonly url: string;
+  readonly isExternal?: boolean;
+  readonly priority: number;
+  readonly isActive: boolean;
+}
+
 export interface SiteSetting {
   readonly key: string;
   readonly value: string;

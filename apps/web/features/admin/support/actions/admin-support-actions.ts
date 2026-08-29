@@ -7,10 +7,7 @@ import {
   NotificationService,
 } from '@elsesourav/database';
 import { requireAdmin } from '../../guards/require-admin';
-import {
-  AddTicketMessageSchema,
-  UpdateTicketStatusSchema,
-} from '@elsesourav/validation';
+import { AddTicketMessageSchema, UpdateTicketStatusSchema } from '@elsesourav/validation';
 import type { SupportTicketStatus } from '@elsesourav/types';
 import { revalidatePath } from 'next/cache';
 
@@ -53,11 +50,7 @@ export async function adminReplyTicketAction(
 
     // If this is a public reply to the user (not an internal note), send a notification
     if (!isInternalNote) {
-      const ticket = await supportService.getTicketDetail(
-        context.id,
-        context.role,
-        ticketId
-      );
+      const ticket = await supportService.getTicketDetail(context.id, context.role, ticketId);
 
       if (ticket.userId && ticket.userId !== context.id) {
         await notificationService.sendNotification({
@@ -87,10 +80,7 @@ export async function adminReplyTicketAction(
   }
 }
 
-export async function adminUpdateTicketStatusAction(
-  ticketId: string,
-  status: SupportTicketStatus
-) {
+export async function adminUpdateTicketStatusAction(ticketId: string, status: SupportTicketStatus) {
   const context = await requireAdmin();
 
   const parsed = UpdateTicketStatusSchema.safeParse({
@@ -109,11 +99,7 @@ export async function adminUpdateTicketStatusAction(
     await supportService.updateTicketStatusAdmin(context.role, ticketId, parsed.data.status);
 
     // Notify ticket owner
-    const ticket = await supportService.getTicketDetail(
-      context.id,
-      context.role,
-      ticketId
-    );
+    const ticket = await supportService.getTicketDetail(context.id, context.role, ticketId);
 
     if (ticket.userId && ticket.userId !== context.id) {
       await notificationService.sendNotification({

@@ -21,7 +21,10 @@ export const UsernameSchema = z
   .string()
   .min(3, 'Username must be at least 3 characters long')
   .max(30, 'Username cannot exceed 30 characters')
-  .regex(/^[a-z0-9_-]+$/, 'Username can only contain lowercase letters, numbers, hyphens, and underscores')
+  .regex(
+    /^[a-z0-9_-]+$/,
+    'Username can only contain lowercase letters, numbers, hyphens, and underscores'
+  )
   .refine(
     (val) => !RESERVED_USERNAMES.includes(val.toLowerCase() as (typeof RESERVED_USERNAMES)[number]),
     { message: 'This username is reserved and cannot be claimed' }

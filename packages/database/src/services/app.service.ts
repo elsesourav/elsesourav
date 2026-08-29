@@ -115,7 +115,9 @@ export class AppService {
 
     // Strict completeness validation before public exposure
     if (!app.name || !app.slug || !app.description || !app.iconUrl || !app.primaryCategory) {
-      throw AppError.validation('Cannot publish application: required fields (name, slug, description, iconUrl, category) are missing');
+      throw AppError.validation(
+        'Cannot publish application: required fields (name, slug, description, iconUrl, category) are missing'
+      );
     }
 
     if (!versionData.version || !versionData.changelog) {

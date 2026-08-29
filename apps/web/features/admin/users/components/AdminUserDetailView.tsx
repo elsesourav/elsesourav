@@ -5,10 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Card, Badge, Button } from '@elsesourav/ui';
 import type { AdminUserDetail, UserRole } from '@elsesourav/types';
-import {
-  adminUpdateUserRoleAction,
-  adminDeleteUserAction,
-} from '../actions/admin-users-actions';
+import { adminUpdateUserRoleAction, adminDeleteUserAction } from '../actions/admin-users-actions';
 import {
   Users,
   ArrowLeft,
@@ -44,7 +41,11 @@ export function AdminUserDetailView({ user: initialUser }: AdminUserDetailViewPr
     e.preventDefault();
     if (selectedRole === user.role) return;
 
-    if (!window.confirm(`Are you sure you want to change this user's role from ${user.role} to ${selectedRole}?`)) {
+    if (
+      !window.confirm(
+        `Are you sure you want to change this user's role from ${user.role} to ${selectedRole}?`
+      )
+    ) {
       return;
     }
 
@@ -136,15 +137,24 @@ export function AdminUserDetailView({ user: initialUser }: AdminUserDetailViewPr
                   {user.displayName}
                 </h1>
                 {user.role === 'ADMIN' ? (
-                  <Badge variant="outline" className="text-[10px] uppercase font-mono border-purple-500/50 text-purple-300 bg-purple-950/20">
+                  <Badge
+                    variant="outline"
+                    className="text-[10px] uppercase font-mono border-purple-500/50 text-purple-300 bg-purple-950/20"
+                  >
                     Admin
                   </Badge>
                 ) : user.role === 'STAFF' ? (
-                  <Badge variant="outline" className="text-[10px] uppercase font-mono border-indigo-500/50 text-indigo-300 bg-indigo-950/20">
+                  <Badge
+                    variant="outline"
+                    className="text-[10px] uppercase font-mono border-indigo-500/50 text-indigo-300 bg-indigo-950/20"
+                  >
                     Staff
                   </Badge>
                 ) : (
-                  <Badge variant="outline" className="text-[10px] uppercase font-mono border-zinc-700 text-zinc-400">
+                  <Badge
+                    variant="outline"
+                    className="text-[10px] uppercase font-mono border-zinc-700 text-zinc-400"
+                  >
                     User
                   </Badge>
                 )}
@@ -153,7 +163,10 @@ export function AdminUserDetailView({ user: initialUser }: AdminUserDetailViewPr
                     Active
                   </Badge>
                 ) : (
-                  <Badge variant="outline" className="text-[10px] uppercase font-mono border-rose-500/40 text-rose-300">
+                  <Badge
+                    variant="outline"
+                    className="text-[10px] uppercase font-mono border-rose-500/40 text-rose-300"
+                  >
                     Deleted
                   </Badge>
                 )}
@@ -225,7 +238,8 @@ export function AdminUserDetailView({ user: initialUser }: AdminUserDetailViewPr
             </div>
 
             <p className="text-xs text-zinc-400">
-              Update this user's application permissions. Only Super Administrators can modify roles.
+              Update this user's application permissions. Only Super Administrators can modify
+              roles.
             </p>
 
             <form onSubmit={handleRoleChange} className="flex items-center gap-3">

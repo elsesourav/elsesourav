@@ -1,25 +1,25 @@
 'use client';
 
-import * as React from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Badge, Button } from '@elsesourav/ui';
 import { ROUTES } from '@elsesourav/config';
 import type { AdminContext } from '@elsesourav/types';
+import { Badge, Button } from '@elsesourav/ui';
 import {
-  Shield,
   Activity,
-  Package,
-  FileText,
-  LifeBuoy,
-  Users,
-  Image,
-  Sliders,
   ArrowLeft,
   BookOpen,
+  FileText,
+  Image,
+  LifeBuoy,
   Menu,
+  Package,
+  Shield,
+  Sliders,
+  Users,
   X,
 } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import * as React from 'react';
 
 interface AdminMobileNavProps {
   context: AdminContext;
@@ -32,7 +32,7 @@ const NAV_ITEMS = [
   { href: '/admin/help', label: 'Help Articles', icon: BookOpen },
   { href: '/admin/support', label: 'Support Queue', icon: LifeBuoy },
   { href: '/admin/users', label: 'User Directory', icon: Users },
-  { href: '/admin/media', label: 'Cloudinary Media', icon: Image },
+  { href: '/admin/media', label: 'Media Library', icon: Image },
   { href: '/admin/settings', label: 'Portal Config', icon: Sliders },
 ];
 

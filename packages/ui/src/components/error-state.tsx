@@ -22,7 +22,13 @@ export function ErrorState({
   ...props
 }: ErrorStateProps) {
   return (
-    <Card className={cn('text-center py-12 px-6 border-red-900/40 bg-zinc-950/80 flex flex-col items-center justify-center', className)} {...props}>
+    <Card
+      className={cn(
+        'text-center py-12 px-6 border-red-900/40 bg-zinc-950/80 flex flex-col items-center justify-center',
+        className
+      )}
+      {...props}
+    >
       <CardHeader className="flex flex-col items-center p-0">
         <div className="w-12 h-12 rounded-full bg-red-950/60 border border-red-800 flex items-center justify-center mb-4">
           <AlertCircle className="w-6 h-6 text-red-400" />

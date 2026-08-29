@@ -77,7 +77,9 @@ describe('Blog Article Reader Query & Projection Tests', () => {
 
     const service = new BlogService(mockRepo);
 
-    await expect(service.getPublicPostBySlug('unpublished-draft-slug')).rejects.toThrowError(AppError);
+    await expect(service.getPublicPostBySlug('unpublished-draft-slug')).rejects.toThrowError(
+      AppError
+    );
   });
 
   it('fetches up to 3 related blog posts from the same category', async () => {

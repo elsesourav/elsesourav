@@ -76,7 +76,8 @@ export class RateLimiter {
     record.timestamps = record.timestamps.filter((ts) => ts > windowStart);
 
     const count = record.timestamps.length;
-    const resetAt = record.timestamps.length > 0 ? record.timestamps[0]! + this.windowMs : now + this.windowMs;
+    const resetAt =
+      record.timestamps.length > 0 ? record.timestamps[0]! + this.windowMs : now + this.windowMs;
     const retryAfterSeconds = Math.max(0, Math.ceil((resetAt - now) / 1000));
 
     if (count >= this.max) {
@@ -120,7 +121,8 @@ export class RateLimiter {
 
     const validTimestamps = record.timestamps.filter((ts) => ts > windowStart);
     const count = validTimestamps.length;
-    const resetAt = validTimestamps.length > 0 ? validTimestamps[0]! + this.windowMs : now + this.windowMs;
+    const resetAt =
+      validTimestamps.length > 0 ? validTimestamps[0]! + this.windowMs : now + this.windowMs;
     const retryAfterSeconds = Math.max(0, Math.ceil((resetAt - now) / 1000));
 
     return {
@@ -224,4 +226,3 @@ export function checkRateLimit(
   }
   return limiter.consume(key);
 }
-

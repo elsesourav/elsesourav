@@ -4,7 +4,15 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Card, Badge, Button } from '@elsesourav/ui';
 import type { SupportTicketListItem, SupportTicketStatus } from '@elsesourav/types';
-import { Headphones, MessageSquare, Plus, Clock, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import {
+  Headphones,
+  MessageSquare,
+  Plus,
+  Clock,
+  ArrowRight,
+  CheckCircle2,
+  AlertCircle,
+} from 'lucide-react';
 
 interface SupportTicketListProps {
   tickets: readonly SupportTicketListItem[];
@@ -15,31 +23,46 @@ function getStatusBadge(status: SupportTicketStatus) {
   switch (status) {
     case 'open':
       return (
-        <Badge variant="info" className="text-[10px] bg-sky-950/60 text-sky-300 border border-sky-500/30">
+        <Badge
+          variant="info"
+          className="text-[10px] bg-sky-950/60 text-sky-300 border border-sky-500/30"
+        >
           Open
         </Badge>
       );
     case 'in_progress':
       return (
-        <Badge variant="warning" className="text-[10px] bg-amber-950/60 text-amber-300 border border-amber-500/30">
+        <Badge
+          variant="warning"
+          className="text-[10px] bg-amber-950/60 text-amber-300 border border-amber-500/30"
+        >
           In Progress
         </Badge>
       );
     case 'waiting_for_user':
       return (
-        <Badge variant="warning" className="text-[10px] bg-purple-950/60 text-purple-300 border border-purple-500/30">
+        <Badge
+          variant="warning"
+          className="text-[10px] bg-purple-950/60 text-purple-300 border border-purple-500/30"
+        >
           Waiting on You
         </Badge>
       );
     case 'resolved':
       return (
-        <Badge variant="success" className="text-[10px] bg-emerald-950/60 text-emerald-300 border border-emerald-500/30">
+        <Badge
+          variant="success"
+          className="text-[10px] bg-emerald-950/60 text-emerald-300 border border-emerald-500/30"
+        >
           Resolved
         </Badge>
       );
     case 'closed':
       return (
-        <Badge variant="default" className="text-[10px] bg-zinc-800 text-zinc-400 border border-zinc-700">
+        <Badge
+          variant="default"
+          className="text-[10px] bg-zinc-800 text-zinc-400 border border-zinc-700"
+        >
           Closed
         </Badge>
       );
@@ -86,7 +109,8 @@ export function SupportTicketList({ tickets, onOpenCreateModal }: SupportTicketL
                 : 'text-zinc-400 hover:text-zinc-200'
             }`}
           >
-            Active ({tickets.filter((t) => t.status !== 'closed' && t.status !== 'resolved').length})
+            Active ({tickets.filter((t) => t.status !== 'closed' && t.status !== 'resolved').length}
+            )
           </button>
           <button
             type="button"
@@ -97,7 +121,8 @@ export function SupportTicketList({ tickets, onOpenCreateModal }: SupportTicketL
                 : 'text-zinc-400 hover:text-zinc-200'
             }`}
           >
-            Resolved ({tickets.filter((t) => t.status === 'closed' || t.status === 'resolved').length})
+            Resolved (
+            {tickets.filter((t) => t.status === 'closed' || t.status === 'resolved').length})
           </button>
         </div>
 

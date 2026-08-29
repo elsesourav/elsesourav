@@ -10,10 +10,12 @@ export interface AdminHelpListData {
   categories: HelpCategoryWithArticles[];
 }
 
-export async function getAdminHelpList(options: {
-  categorySlug?: string;
-  search?: string;
-} = {}): Promise<AdminHelpListData> {
+export async function getAdminHelpList(
+  options: {
+    categorySlug?: string;
+    search?: string;
+  } = {}
+): Promise<AdminHelpListData> {
   const context = await requireAdmin();
 
   const [articles, categories] = await Promise.all([

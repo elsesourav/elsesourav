@@ -65,11 +65,14 @@ export function createApp(overrides?: Partial<App>): App {
     id,
     slug,
     name,
-    shortDescription: overrides?.shortDescription || `A versatile developer tool for engineering workflows (${name}).`,
+    shortDescription:
+      overrides?.shortDescription ||
+      `A versatile developer tool for engineering workflows (${name}).`,
     description:
       overrides?.description ||
       `Comprehensive documentation and runtime features for ${name}. Designed for high throughput and low-latency interaction.`,
-    iconUrl: overrides?.iconUrl || 'https://res.cloudinary.com/elsesourav/image/upload/v2/icons/tool.png',
+    iconUrl:
+      overrides?.iconUrl || 'https://res.cloudinary.com/elsesourav/image/upload/v2/icons/tool.png',
     featuredImageUrl: overrides?.featuredImageUrl,
     screenshots: overrides?.screenshots || [
       'https://res.cloudinary.com/elsesourav/image/upload/v2/screenshots/screenshot-1.png',
@@ -82,7 +85,12 @@ export function createApp(overrides?: Partial<App>): App {
     status: overrides?.status || 'published',
     platforms: overrides?.platforms || ['web', 'macos', 'linux'],
     links: overrides?.links || [
-      createAppLink({ appId: id, platform: 'web', label: `Launch ${name}`, url: `https://${slug}.test` }),
+      createAppLink({
+        appId: id,
+        platform: 'web',
+        label: `Launch ${name}`,
+        url: `https://${slug}.test`,
+      }),
     ],
     versions: overrides?.versions || [createAppVersion({ appId: id, version: '1.0.0' })],
     currentVersion: overrides?.currentVersion || '1.0.0',
@@ -157,7 +165,8 @@ export function createCategory(overrides?: Partial<Category>): Category {
     id: overrides?.id || `cat-${index}`,
     name: overrides?.name || 'Developer Tools',
     slug: overrides?.slug || 'developer-tools',
-    description: overrides?.description || 'Utilities, command line tools, and web development software.',
+    description:
+      overrides?.description || 'Utilities, command line tools, and web development software.',
     icon: overrides?.icon || 'terminal',
     orderIndex: index,
     isActive: overrides?.isActive ?? true,

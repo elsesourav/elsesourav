@@ -8,8 +8,10 @@ export function createAuthBrowserClient(
   supabaseUrl?: string,
   supabaseAnonKey?: string
 ): SupabaseClient {
-  const url = supabaseUrl || process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
-  const key = supabaseAnonKey || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key';
+  const url =
+    supabaseUrl || process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
+  const key =
+    supabaseAnonKey || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key';
 
   return createBrowserClient(url, key);
 }
@@ -19,7 +21,8 @@ export async function signInWithOAuth(
   options: OAuthSignInOptions
 ): Promise<{ url: string | null; error: AuthError | null }> {
   try {
-    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://elsesourav.com';
+    const origin =
+      typeof window !== 'undefined' ? window.location.origin : 'https://elsesourav.com';
     const safeRedirect = sanitizeRedirectUrl(options.redirectTo, '/');
     const redirectToUrl = `${origin}/api/auth/callback?next=${encodeURIComponent(safeRedirect)}`;
 

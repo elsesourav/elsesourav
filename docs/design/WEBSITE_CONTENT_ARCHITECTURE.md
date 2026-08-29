@@ -39,18 +39,18 @@
 
 Every piece of content across the platform is classified into a strict semantic type:
 
-| Type | Definition | Storage & Validation | Examples |
-| :--- | :--- | :--- | :--- |
-| **`STRUCTURED`** | Relational objects with nested keys | Relational DB tables / JSON | App versions, category hierarchies |
-| **`SHORT TEXT`** | Single-line strings ($\le 255\text{ char}$) | VarChar / String column | Titles, slugs, badges, CTA labels |
-| **`LONG TEXT`** | Multi-line plain text summary | Text column (no HTML) | Excerpts, short bios, descriptions |
-| **`MARKDOWN`** | Rich formatted body copy | Raw plain Markdown in DB | Article body, help guide, app docs |
-| **`MEDIA`** | Optimized asset references | Cloudinary URL + Secure Public ID | Screenshots, cover banners, avatars |
-| **`URL`** | Validated external or internal links| HTTPS URL with scheme validation | GitHub repo, download links |
-| **`BOOLEAN`** | Binary flags | Boolean column | `isFeatured`, `isArchived`, `isRead` |
-| **`NUMBER`** | Integers / Floats | Integer / Decimal | Reading time, order index, file size |
-| **`ENUM`** | Fixed domain choices | Prisma enum | `TicketStatus`, `PublishStatus`, `Role` |
-| **`RELATION`** | Foreign-key constraints | Relational foreign keys | `categoryId`, `authorId`, `appId` |
+| Type             | Definition                                  | Storage & Validation              | Examples                                |
+| :--------------- | :------------------------------------------ | :-------------------------------- | :-------------------------------------- |
+| **`STRUCTURED`** | Relational objects with nested keys         | Relational DB tables / JSON       | App versions, category hierarchies      |
+| **`SHORT TEXT`** | Single-line strings ($\le 255\text{ char}$) | VarChar / String column           | Titles, slugs, badges, CTA labels       |
+| **`LONG TEXT`**  | Multi-line plain text summary               | Text column (no HTML)             | Excerpts, short bios, descriptions      |
+| **`MARKDOWN`**   | Rich formatted body copy                    | Raw plain Markdown in DB          | Article body, help guide, app docs      |
+| **`MEDIA`**      | Optimized asset references                  | Cloudinary URL + Secure Public ID | Screenshots, cover banners, avatars     |
+| **`URL`**        | Validated external or internal links        | HTTPS URL with scheme validation  | GitHub repo, download links             |
+| **`BOOLEAN`**    | Binary flags                                | Boolean column                    | `isFeatured`, `isArchived`, `isRead`    |
+| **`NUMBER`**     | Integers / Floats                           | Integer / Decimal                 | Reading time, order index, file size    |
+| **`ENUM`**       | Fixed domain choices                        | Prisma enum                       | `TicketStatus`, `PublishStatus`, `Role` |
+| **`RELATION`**   | Foreign-key constraints                     | Relational foreign keys           | `categoryId`, `authorId`, `appId`       |
 
 ---
 
@@ -59,23 +59,27 @@ Every piece of content across the platform is classified into a strict semantic 
 The following content is dynamically editable via the administrative portal without requiring code redeployments:
 
 ### 3.1 Software Applications (`App`, `AppLink`, `AppVersion`)
+
 - **Identity**: `name`, `slug`, `tagline`, `category` (`RELATION`), `tags` (`RELATION[]`).
 - **Media**: `iconUrl` (`MEDIA`), `featuredImageUrl` (`MEDIA`), gallery screenshots (`MEDIA[]`).
 - **Documentation**: `description` (`MARKDOWN`) rendered via `MarkdownRenderer`.
 - **Distribution & SemVer**: `version` (`SHORT TEXT`), `changelog` (`MARKDOWN`), `downloadUrl` (`URL`), `webUrl` (`URL`), `githubUrl` (`URL`), `isFeatured` (`BOOLEAN`), `status` (`ENUM`).
 
 ### 3.2 Engineering Devlogs (`BlogPost`, `BlogCategory`, `BlogTag`)
+
 - **Editorial**: `title`, `slug`, `excerpt` (`LONG TEXT`), `coverImageUrl` (`MEDIA`), `category` (`RELATION`), `tags` (`RELATION[]`).
 - **Body Content**: `content` (`MARKDOWN`) with syntax highlighting, copy blocks, GFM tables, and math equations.
 - **Publishing Lifecycle**: `status` (`ENUM`: `draft`, `published`, `archived`), `publishedAt` (Timestamp), `readingTime` (`NUMBER`).
 - **SEO Override**: `seoTitle`, `seoDescription`.
 
 ### 3.3 Knowledge Base & Documentation (`HelpArticle`, `HelpCategory`)
+
 - **Structure**: `title`, `slug`, `category` (`RELATION`), `orderIndex` (`NUMBER`).
 - **Documentation Body**: `content` (`MARKDOWN`) with code examples, task checklists, terminal commands.
 - **SEO & Status**: `status` (`ENUM`), `seoTitle`, `seoDescription`.
 
 ### 3.4 Support & Customer Communication (`SupportTicket`, `TicketMessage`)
+
 - **Inquiries**: `ticketNumber`, `subject`, `priority` (`ENUM`), `status` (`ENUM`).
 - **Messages**: `content` (`LONG TEXT`), `isInternal` (`BOOLEAN`), `attachments` (`MEDIA[]`).
 

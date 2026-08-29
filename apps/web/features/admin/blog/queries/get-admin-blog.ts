@@ -11,11 +11,13 @@ export interface AdminBlogListData {
   tags: BlogTag[];
 }
 
-export async function getAdminBlogList(options: {
-  status?: 'draft' | 'published' | 'archived';
-  categorySlug?: string;
-  search?: string;
-} = {}): Promise<AdminBlogListData> {
+export async function getAdminBlogList(
+  options: {
+    status?: 'draft' | 'published' | 'archived';
+    categorySlug?: string;
+    search?: string;
+  } = {}
+): Promise<AdminBlogListData> {
   const context = await requireAdmin();
 
   const [posts, categories, tags] = await Promise.all([

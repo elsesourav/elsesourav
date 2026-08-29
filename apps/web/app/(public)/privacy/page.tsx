@@ -6,7 +6,8 @@ import { Shield, ArrowLeft, Lock, Eye, Database } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
-  description: 'Understand how ElseSourav handles data, security, and privacy across our developer tools and web ecosystem.',
+  description:
+    'Understand how ElseSourav handles data, security, and privacy across our developer tools and web ecosystem.',
   alternates: {
     canonical: 'https://elsesourav.com/privacy',
   },
@@ -61,7 +62,8 @@ export default function PrivacyPage() {
             Privacy Policy
           </h1>
           <p className="text-sm text-zinc-400">
-            Last revised: August 29, 2026. Effective for all ElseSourav applications, services, and web tools.
+            Last revised: August 29, 2026. Effective for all ElseSourav applications, services, and
+            web tools.
           </p>
         </div>
 
@@ -73,7 +75,10 @@ export default function PrivacyPage() {
                 <Lock className="w-5 h-5 text-indigo-400" /> 1. Commitment to User Privacy
               </h2>
               <p className="text-sm text-zinc-300 leading-relaxed">
-                ElseSourav (&ldquo;we&rdquo;, &ldquo;our&rdquo;, or &ldquo;platform&rdquo;) develops high-performance developer software, web applications, and technical content. We prioritize minimal data collection, transparency, and strict protection of your information.
+                ElseSourav (&ldquo;we&rdquo;, &ldquo;our&rdquo;, or &ldquo;platform&rdquo;) develops
+                high-performance developer software, web applications, and technical content. We
+                prioritize minimal data collection, transparency, and strict protection of your
+                information.
               </p>
             </section>
 
@@ -82,9 +87,19 @@ export default function PrivacyPage() {
                 <Eye className="w-5 h-5 text-cyan-400" /> 2. Information We Collect
               </h2>
               <ul className="text-sm text-zinc-300 space-y-2 list-disc list-inside">
-                <li><strong className="text-zinc-100">Account Information:</strong> When you register via Supabase Auth, we store your email, username, and authentication identifiers.</li>
-                <li><strong className="text-zinc-100">Support Interactions:</strong> Inquiries, tickets, and feedback submitted through our support desk.</li>
-                <li><strong className="text-zinc-100">Anonymous Telemetry:</strong> Aggregated, non-identifiable usage statistics to optimize low-latency performance and diagnose errors.</li>
+                <li>
+                  <strong className="text-zinc-100">Account Information:</strong> When you register
+                  via Supabase Auth, we store your email, username, and authentication identifiers.
+                </li>
+                <li>
+                  <strong className="text-zinc-100">Support Interactions:</strong> Inquiries,
+                  tickets, and feedback submitted through our support desk.
+                </li>
+                <li>
+                  <strong className="text-zinc-100">Anonymous Telemetry:</strong> Aggregated,
+                  non-identifiable usage statistics to optimize low-latency performance and diagnose
+                  errors.
+                </li>
               </ul>
             </section>
 
@@ -93,14 +108,22 @@ export default function PrivacyPage() {
                 <Database className="w-5 h-5 text-emerald-400" /> 3. Data Storage & Security
               </h2>
               <p className="text-sm text-zinc-300 leading-relaxed">
-                Your data is stored in PostgreSQL databases protected by role-based access controls (RBAC) and row-level security (RLS). We never sell, monetize, or transfer your personal data to third-party advertising networks.
+                Your data is stored in PostgreSQL databases protected by role-based access controls
+                (RBAC) and row-level security (RLS). We never sell, monetize, or transfer your
+                personal data to third-party advertising networks.
               </p>
             </section>
 
             <section className="space-y-3">
               <h2 className="text-lg font-bold text-zinc-100">4. Your Rights & Account Deletion</h2>
               <p className="text-sm text-zinc-300 leading-relaxed">
-                You retain full ownership of your data. You may update your profile information, manage communication preferences, or request full account deletion at any time via your <Link href={ROUTES.SETTINGS} className="text-indigo-400 hover:underline">Account Settings</Link>.
+                You retain full ownership of your data. You may update your profile information,
+                manage communication preferences, or request full account deletion at any time via
+                your{' '}
+                <Link href={ROUTES.SETTINGS} className="text-indigo-400 hover:underline">
+                  Account Settings
+                </Link>
+                .
               </p>
             </section>
           </Card>

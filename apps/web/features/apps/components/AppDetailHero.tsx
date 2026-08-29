@@ -58,7 +58,10 @@ export function AppDetailHero({ app }: AppDetailHeroProps) {
               )}
 
               {app.currentVersion && (
-                <Badge variant="outline" className="text-xs px-2 py-0.5 text-zinc-400 border-zinc-800 font-mono">
+                <Badge
+                  variant="outline"
+                  className="text-xs px-2 py-0.5 text-zinc-400 border-zinc-800 font-mono"
+                >
                   v{app.currentVersion}
                 </Badge>
               )}
@@ -81,9 +84,7 @@ export function AppDetailHero({ app }: AppDetailHeroProps) {
             </div>
           </div>
 
-          <p className="text-sm text-zinc-300 leading-relaxed max-w-3xl">
-            {app.shortDescription}
-          </p>
+          <p className="text-sm text-zinc-300 leading-relaxed max-w-3xl">{app.shortDescription}</p>
 
           {/* Action Buttons */}
           <div className="flex flex-wrap items-center gap-3 pt-2">
@@ -103,7 +104,10 @@ export function AppDetailHero({ app }: AppDetailHeroProps) {
 
             {app.demoUrl && app.demoUrl !== primaryLink?.url && (
               <a href={app.demoUrl} target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 text-sm gap-1.5">
+                <Button
+                  variant="outline"
+                  className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 text-sm gap-1.5"
+                >
                   <Globe className="w-4 h-4" /> Live Demo
                 </Button>
               </a>

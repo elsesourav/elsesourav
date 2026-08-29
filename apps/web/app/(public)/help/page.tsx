@@ -1,5 +1,8 @@
 import { Metadata } from 'next';
-import { getPublicHelpCategories, searchPublicHelpArticles } from '@/features/help/queries/get-help';
+import {
+  getPublicHelpCategories,
+  searchPublicHelpArticles,
+} from '@/features/help/queries/get-help';
 import { HelpSearchBar } from '@/features/help/components/HelpSearchBar';
 import { HelpCategoryCard } from '@/features/help/components/HelpCategoryCard';
 import { HelpArticleCard } from '@/features/help/components/HelpArticleCard';
@@ -24,7 +27,8 @@ export async function generateMetadata({ searchParams }: HelpPageProps): Promise
     ? `Search: "${searchQuery}" in Help Center`
     : 'Help Center & Documentation';
 
-  const description = 'Guides, FAQs, troubleshooting advice, and documentation for ElseSourav web tools and developer software.';
+  const description =
+    'Guides, FAQs, troubleshooting advice, and documentation for ElseSourav web tools and developer software.';
   const canonicalUrl = 'https://elsesourav.com/help';
 
   return {
@@ -80,7 +84,8 @@ export default async function HelpPage({ searchParams }: HelpPageProps) {
             <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
               <div className="flex items-center gap-2">
                 <span className="text-sm text-zinc-400">
-                  Search results for &ldquo;<span className="text-zinc-200 font-semibold">{searchQuery}</span>&rdquo;
+                  Search results for &ldquo;
+                  <span className="text-zinc-200 font-semibold">{searchQuery}</span>&rdquo;
                 </span>
                 <Badge variant="info" className="text-xs px-2 py-0.5">
                   {searchResult.totalCount} {searchResult.totalCount === 1 ? 'guide' : 'guides'}
@@ -130,18 +135,25 @@ export default async function HelpPage({ searchParams }: HelpPageProps) {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
         {/* Hero Section */}
-        <section className="text-center space-y-5 max-w-3xl mx-auto pt-4" aria-labelledby="help-hero-title">
+        <section
+          className="text-center space-y-5 max-w-3xl mx-auto pt-4"
+          aria-labelledby="help-hero-title"
+        >
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-950/60 border border-indigo-500/30 text-indigo-400 text-xs font-medium">
             <LifeBuoy className="w-3.5 h-3.5" />
             <span>Help Center & Knowledge Base</span>
           </div>
 
-          <h1 id="help-hero-title" className="text-3xl sm:text-5xl font-extrabold tracking-tight text-zinc-100">
+          <h1
+            id="help-hero-title"
+            className="text-3xl sm:text-5xl font-extrabold tracking-tight text-zinc-100"
+          >
             How can we help you?
           </h1>
 
           <p className="text-sm sm:text-base text-zinc-400 max-w-xl mx-auto leading-relaxed">
-            Guides, FAQs, troubleshooting advice, and step-by-step documentation for ElseSourav tools.
+            Guides, FAQs, troubleshooting advice, and step-by-step documentation for ElseSourav
+            tools.
           </p>
 
           <div className="pt-2">

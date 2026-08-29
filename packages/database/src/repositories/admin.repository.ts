@@ -29,11 +29,7 @@ export class AdminRepository {
         this.prisma.supportTicket.count({
           where: {
             status: {
-              in: [
-                TicketStatus.OPEN,
-                TicketStatus.IN_PROGRESS,
-                TicketStatus.WAITING_FOR_USER,
-              ],
+              in: [TicketStatus.OPEN, TicketStatus.IN_PROGRESS, TicketStatus.WAITING_FOR_USER],
             },
           },
         }),
@@ -107,7 +103,8 @@ export class AdminRepository {
           timestamp: t.updatedAt.getTime(),
           link: `/admin/support`,
           status: t.status,
-          badgeVariant: (t.status === TicketStatus.RESOLVED ? 'success' : 'warning') as 'success' | 'warning',
+          badgeVariant: (t.status === TicketStatus.RESOLVED ? 'success' : 'warning') as
+            'success' | 'warning',
         })),
         ...recentApps.map((a) => ({
           id: `app-${a.id}`,
@@ -117,7 +114,8 @@ export class AdminRepository {
           timestamp: a.updatedAt.getTime(),
           link: `/admin/apps`,
           status: a.status,
-          badgeVariant: (a.status === PublishStatus.PUBLISHED ? 'success' : 'info') as 'success' | 'info',
+          badgeVariant: (a.status === PublishStatus.PUBLISHED ? 'success' : 'info') as
+            'success' | 'info',
         })),
         ...recentBlogs.map((b) => ({
           id: `blog-${b.id}`,
@@ -127,13 +125,12 @@ export class AdminRepository {
           timestamp: b.updatedAt.getTime(),
           link: `/admin/blog`,
           status: b.status,
-          badgeVariant: (b.status === PublishStatus.PUBLISHED ? 'success' : 'outline') as 'success' | 'outline',
+          badgeVariant: (b.status === PublishStatus.PUBLISHED ? 'success' : 'outline') as
+            'success' | 'outline',
         })),
       ];
 
-      return items
-        .sort((a, b) => b.timestamp - a.timestamp)
-        .slice(0, limit);
+      return items.sort((a, b) => b.timestamp - a.timestamp).slice(0, limit);
     } catch (error) {
       throw AppError.database('Failed to fetch admin recent activity', error);
     }

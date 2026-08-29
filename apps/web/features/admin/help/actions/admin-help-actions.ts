@@ -2,10 +2,7 @@
 
 import { HelpRepository, HelpService } from '@elsesourav/database';
 import { requireAdmin } from '../../guards/require-admin';
-import {
-  AdminSaveHelpSchema,
-  type AdminSaveHelpSchemaInput,
-} from '@elsesourav/validation';
+import { AdminSaveHelpSchema, type AdminSaveHelpSchemaInput } from '@elsesourav/validation';
 import { revalidatePath } from 'next/cache';
 
 const helpRepo = new HelpRepository();
@@ -23,20 +20,16 @@ export async function createHelpArticleAction(data: AdminSaveHelpSchemaInput) {
   }
 
   try {
-    const article = await helpService.createArticle(
-      context.id,
-      context.role,
-      {
-        categoryId: parsed.data.categoryId,
-        title: parsed.data.title,
-        slug: parsed.data.slug,
-        excerpt: parsed.data.excerpt || undefined,
-        content: parsed.data.content,
-        orderIndex: parsed.data.orderIndex,
-        seoTitle: parsed.data.seoTitle || undefined,
-        seoDescription: parsed.data.seoDescription || undefined,
-      }
-    );
+    const article = await helpService.createArticle(context.id, context.role, {
+      categoryId: parsed.data.categoryId,
+      title: parsed.data.title,
+      slug: parsed.data.slug,
+      excerpt: parsed.data.excerpt || undefined,
+      content: parsed.data.content,
+      orderIndex: parsed.data.orderIndex,
+      seoTitle: parsed.data.seoTitle || undefined,
+      seoDescription: parsed.data.seoDescription || undefined,
+    });
 
     revalidatePath('/admin/help');
     revalidatePath('/admin');

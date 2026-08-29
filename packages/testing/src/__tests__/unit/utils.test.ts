@@ -67,7 +67,8 @@ describe('Search Scoring & Formatting Utilities', () => {
 describe('Sanitization Utilities', () => {
   it('strips dangerous script tags and event handlers', async () => {
     const { sanitizeHtml, sanitizePlainText } = await import('@elsesourav/utils');
-    const dirty = '<p>Hello <script>alert("xss")</script><span onclick="stealCookies()">World</span></p>';
+    const dirty =
+      '<p>Hello <script>alert("xss")</script><span onclick="stealCookies()">World</span></p>';
     const cleaned = sanitizeHtml(dirty);
     expect(cleaned).not.toContain('<script>');
     expect(cleaned).not.toContain('onclick');
@@ -99,4 +100,3 @@ describe('Rate Limiter Utilities', () => {
     limiter.destroy();
   });
 });
-

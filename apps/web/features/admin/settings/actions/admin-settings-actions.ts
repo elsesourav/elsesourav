@@ -1,16 +1,24 @@
 'use server';
 
 import { AdminRepository } from '@elsesourav/database';
-import { requireAdmin } from '../../guards/require-admin';
+import { parseKnownSettings } from '@elsesourav/validation';
 import { revalidatePath } from 'next/cache';
+import { requireAdmin } from '../../guards/require-admin';
 
 const adminRepo = new AdminRepository();
 
 export async function updateSiteSettingsAction(settings: Record<string, string>) {
   const context = await requireAdmin();
 
+  let parsed: Record<string, string>;
   try {
-    for (const [key, value] of Object.entries(settings)) {
+    parsed = parseKnownSettings(settings) as Record<string, string>;
+  } catch {
+    return { success: false, error: 'One or more setting values are invalid.' };
+  }
+
+  try {
+    for (const [key, value] of Object.entries(parsed)) {
       if (typeof key === 'string' && typeof value === 'string') {
         await adminRepo.upsertSetting(
           key,
@@ -29,9 +37,7 @@ export async function updateSiteSettingsAction(settings: Record<string, string>)
     revalidatePath('/blog');
     revalidatePath('/help');
 
-    return {
-      success: true,
-    };
+    return { success: true };
   } catch (error) {
     return {
       success: false,

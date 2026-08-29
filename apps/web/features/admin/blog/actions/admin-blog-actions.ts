@@ -2,10 +2,7 @@
 
 import { BlogRepository, BlogService } from '@elsesourav/database';
 import { requireAdmin } from '../../guards/require-admin';
-import {
-  AdminSaveBlogSchema,
-  type AdminSaveBlogSchemaInput,
-} from '@elsesourav/validation';
+import { AdminSaveBlogSchema, type AdminSaveBlogSchemaInput } from '@elsesourav/validation';
 import { revalidatePath } from 'next/cache';
 
 const blogRepo = new BlogRepository();
@@ -23,20 +20,16 @@ export async function createBlogPostAction(data: AdminSaveBlogSchemaInput) {
   }
 
   try {
-    const post = await blogService.createBlogPost(
-      context.id,
-      context.role,
-      {
-        title: parsed.data.title,
-        slug: parsed.data.slug,
-        excerpt: parsed.data.excerpt,
-        content: parsed.data.content,
-        coverImageUrl: parsed.data.coverImageUrl || undefined,
-        categoryId: parsed.data.categoryId,
-        seoTitle: parsed.data.seoTitle || undefined,
-        seoDescription: parsed.data.seoDescription || undefined,
-      }
-    );
+    const post = await blogService.createBlogPost(context.id, context.role, {
+      title: parsed.data.title,
+      slug: parsed.data.slug,
+      excerpt: parsed.data.excerpt,
+      content: parsed.data.content,
+      coverImageUrl: parsed.data.coverImageUrl || undefined,
+      categoryId: parsed.data.categoryId,
+      seoTitle: parsed.data.seoTitle || undefined,
+      seoDescription: parsed.data.seoDescription || undefined,
+    });
 
     revalidatePath('/admin/blog');
     revalidatePath('/admin');
@@ -77,7 +70,7 @@ export async function updateBlogPostAction(postId: string, data: AdminSaveBlogSc
       categoryId: parsed.data.categoryId,
       seoTitle: parsed.data.seoTitle || undefined,
       seoDescription: parsed.data.seoDescription || undefined,
-      status: (parsed.data.status.toLowerCase() as 'draft' | 'published' | 'archived'),
+      status: parsed.data.status.toLowerCase() as 'draft' | 'published' | 'archived',
     });
 
     revalidatePath('/admin/blog');

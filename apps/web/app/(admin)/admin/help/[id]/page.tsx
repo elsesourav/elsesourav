@@ -7,9 +7,7 @@ interface EditAdminHelpPageProps {
   params: Promise<{ id: string }>;
 }
 
-export async function generateMetadata({
-  params,
-}: EditAdminHelpPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: EditAdminHelpPageProps): Promise<Metadata> {
   const { id } = await params;
   return {
     title: `Edit Help Article (${id}) | Admin Portal`,

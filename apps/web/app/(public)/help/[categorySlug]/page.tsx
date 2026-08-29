@@ -31,7 +31,9 @@ export async function generateMetadata({ params }: HelpCategoryPageProps): Promi
   }
 
   const title = `${category.name} Guides & Documentation`;
-  const description = category.description || `Browse documentation, tutorials, and troubleshooting guides for ${category.name}.`;
+  const description =
+    category.description ||
+    `Browse documentation, tutorials, and troubleshooting guides for ${category.name}.`;
   const canonicalUrl = `https://elsesourav.com/help/${category.slug}`;
 
   return {
@@ -137,19 +139,21 @@ export default async function HelpCategoryPage({ params }: HelpCategoryPageProps
                   {category.name}
                 </h1>
                 <Badge variant="info" className="text-xs px-2.5 py-0.5">
-                  {category.articles.length} {category.articles.length === 1 ? 'Article' : 'Articles'}
+                  {category.articles.length}{' '}
+                  {category.articles.length === 1 ? 'Article' : 'Articles'}
                 </Badge>
               </div>
 
               {category.description && (
-                <p className="text-sm text-zinc-400 max-w-2xl pl-13">
-                  {category.description}
-                </p>
+                <p className="text-sm text-zinc-400 max-w-2xl pl-13">{category.description}</p>
               )}
             </div>
 
             <div className="w-full sm:w-80">
-              <HelpSearchBar categorySlug={category.slug} placeholder={`Search in ${category.name}...`} />
+              <HelpSearchBar
+                categorySlug={category.slug}
+                placeholder={`Search in ${category.name}...`}
+              />
             </div>
           </div>
         </div>

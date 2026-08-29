@@ -92,9 +92,7 @@ describe('Notification Domain Service, Ownership & Isolation Lifecycle', () => {
 
     const service = new NotificationService(mockRepo);
 
-    await expect(
-      service.markAsRead('usr-bob', 'notif-101')
-    ).rejects.toThrowError(AppError);
+    await expect(service.markAsRead('usr-bob', 'notif-101')).rejects.toThrowError(AppError);
 
     expect(mockRepo.markAsRead).toHaveBeenCalledWith('notif-101', 'usr-bob');
   });
@@ -133,9 +131,7 @@ describe('Notification Domain Service, Ownership & Isolation Lifecycle', () => {
 
     const service = new NotificationService(mockRepo);
 
-    await expect(
-      service.deleteNotification('usr-bob', 'notif-101')
-    ).rejects.toThrowError(AppError);
+    await expect(service.deleteNotification('usr-bob', 'notif-101')).rejects.toThrowError(AppError);
 
     expect(mockRepo.deleteNotification).toHaveBeenCalledWith('notif-101', 'usr-bob');
   });

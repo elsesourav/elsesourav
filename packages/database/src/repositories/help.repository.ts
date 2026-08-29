@@ -1,5 +1,5 @@
-import { prisma } from '../client';
-import { PublishStatus, Prisma } from '@prisma/client';
+import { PrismaClient, PublishStatus, Prisma } from '@prisma/client';
+import { prisma as defaultPrisma } from '../client';
 import {
   mapPrismaHelpCategoryToDomain,
   mapPrismaHelpArticleToListItem,
@@ -21,11 +21,13 @@ import type {
 } from '@elsesourav/types';
 
 export class HelpRepository {
+  constructor(private readonly prisma: PrismaClient = defaultPrisma) {}
+
   /**
    * Lists all public categories with published article counts and previews
    */
   async findPublicCategories(): Promise<HelpCategoryWithArticles[]> {
-    const categories = await prisma.helpCategory.findMany({
+    const categories = await this.prisma.helpCategory.findMany({
       orderBy: { orderIndex: 'asc' },
       include: {
         articles: {
@@ -51,7 +53,7 @@ export class HelpRepository {
    * Finds a category by slug with all its published articles
    */
   async findCategoryBySlug(slug: string): Promise<HelpCategoryWithArticles | null> {
-    const category = await prisma.helpCategory.findUnique({
+    const category = await this.prisma.helpCategory.findUnique({
       where: { slug },
       include: {
         articles: {
@@ -79,7 +81,7 @@ export class HelpRepository {
    * Finds a published article by slug
    */
   async findArticleBySlug(slug: string): Promise<PublicHelpArticle | null> {
-    const article = await prisma.helpArticle.findFirst({
+    const article = await this.prisma.helpArticle.findFirst({
       where: {
         slug,
         status: PublishStatus.PUBLISHED,
@@ -122,7 +124,7 @@ export class HelpRepository {
     }
 
     const [articles, totalCount] = await Promise.all([
-      prisma.helpArticle.findMany({
+      this.prisma.helpArticle.findMany({
         where: whereClause,
         orderBy: { orderIndex: 'asc' },
         take: limit,
@@ -130,7 +132,7 @@ export class HelpRepository {
           category: true,
         },
       }),
-      prisma.helpArticle.count({ where: whereClause }),
+      this.prisma.helpArticle.count({ where: whereClause }),
     ]);
 
     return {
@@ -148,7 +150,7 @@ export class HelpRepository {
     categoryId: string,
     limit: number = 3
   ): Promise<HelpArticleListItem[]> {
-    const articles = await prisma.helpArticle.findMany({
+    const articles = await this.prisma.helpArticle.findMany({
       where: {
         categoryId,
         id: { not: articleId },
@@ -168,11 +170,8 @@ export class HelpRepository {
   /**
    * Creates a new Help Category
    */
-  async createCategory(
-    data: CreateHelpCategoryInput,
-    slug: string
-  ): Promise<DomainHelpCategory> {
-    const category = await prisma.helpCategory.create({
+  async createCategory(data: CreateHelpCategoryInput, slug: string): Promise<DomainHelpCategory> {
+    const category = await this.prisma.helpCategory.create({
       data: {
         name: data.name,
         slug,
@@ -188,11 +187,8 @@ export class HelpRepository {
   /**
    * Updates an existing Help Category
    */
-  async updateCategory(
-    id: string,
-    data: UpdateHelpCategoryInput
-  ): Promise<DomainHelpCategory> {
-    const category = await prisma.helpCategory.update({
+  async updateCategory(id: string, data: UpdateHelpCategoryInput): Promise<DomainHelpCategory> {
+    const category = await this.prisma.helpCategory.update({
       where: { id },
       data: {
         ...(data.name && { name: data.name }),
@@ -214,7 +210,7 @@ export class HelpRepository {
     slug: string,
     authorId?: string
   ): Promise<DomainHelpArticle> {
-    const article = await prisma.helpArticle.create({
+    const article = await this.prisma.helpArticle.create({
       data: {
         categoryId: data.categoryId,
         title: data.title,
@@ -239,11 +235,8 @@ export class HelpRepository {
   /**
    * Updates an existing Help Article
    */
-  async updateArticle(
-    id: string,
-    data: UpdateHelpArticleInput
-  ): Promise<DomainHelpArticle> {
-    const article = await prisma.helpArticle.update({
+  async updateArticle(id: string, data: UpdateHelpArticleInput): Promise<DomainHelpArticle> {
+    const article = await this.prisma.helpArticle.update({
       where: { id },
       data: {
         ...(data.categoryId && { categoryId: data.categoryId }),
@@ -268,7 +261,7 @@ export class HelpRepository {
    * Publishes a Help Article
    */
   async publishArticle(id: string): Promise<DomainHelpArticle> {
-    const article = await prisma.helpArticle.update({
+    const article = await this.prisma.helpArticle.update({
       where: { id },
       data: {
         status: PublishStatus.PUBLISHED,
@@ -287,7 +280,7 @@ export class HelpRepository {
    * Archives a Help Article
    */
   async archiveArticle(id: string): Promise<DomainHelpArticle> {
-    const article = await prisma.helpArticle.update({
+    const article = await this.prisma.helpArticle.update({
       where: { id },
       data: {
         status: PublishStatus.ARCHIVED,
@@ -302,7 +295,7 @@ export class HelpRepository {
   }
 
   async findArticleById(id: string): Promise<DomainHelpArticle | null> {
-    const article = await prisma.helpArticle.findUnique({
+    const article = await this.prisma.helpArticle.findUnique({
       where: { id },
       include: {
         category: true,
@@ -313,11 +306,13 @@ export class HelpRepository {
     return mapPrismaHelpArticleToDomain(article);
   }
 
-  async listAdminArticles(options: {
-    categorySlug?: string;
-    search?: string;
-    limit?: number;
-  } = {}): Promise<DomainHelpArticle[]> {
+  async listAdminArticles(
+    options: {
+      categorySlug?: string;
+      search?: string;
+      limit?: number;
+    } = {}
+  ): Promise<DomainHelpArticle[]> {
     const limit = Math.min(Math.max(options.limit ?? 50, 1), 100);
     const where: Prisma.HelpArticleWhereInput = { deletedAt: null };
 
@@ -333,7 +328,7 @@ export class HelpRepository {
       ];
     }
 
-    const records = await prisma.helpArticle.findMany({
+    const records = await this.prisma.helpArticle.findMany({
       where,
       take: limit,
       orderBy: [{ category: { orderIndex: 'asc' } }, { orderIndex: 'asc' }],
@@ -347,7 +342,7 @@ export class HelpRepository {
   }
 
   async deleteArticle(id: string): Promise<void> {
-    await prisma.helpArticle.update({
+    await this.prisma.helpArticle.update({
       where: { id },
       data: {
         deletedAt: new Date(),
@@ -360,7 +355,7 @@ export class HelpRepository {
    * Increments helpfulness votes
    */
   async voteHelpful(articleId: string, isHelpful: boolean): Promise<void> {
-    await prisma.helpArticle.update({
+    await this.prisma.helpArticle.update({
       where: { id: articleId },
       data: {
         helpfulCount: isHelpful ? { increment: 1 } : undefined,

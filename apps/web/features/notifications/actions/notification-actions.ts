@@ -3,10 +3,7 @@
 import { NotificationRepository, NotificationService } from '@elsesourav/database';
 import { getServerSession } from '@elsesourav/auth';
 import { cookies } from 'next/headers';
-import {
-  MarkNotificationReadSchema,
-  DeleteNotificationSchema,
-} from '@elsesourav/validation';
+import { MarkNotificationReadSchema, DeleteNotificationSchema } from '@elsesourav/validation';
 import { revalidatePath } from 'next/cache';
 
 const notificationRepo = new NotificationRepository();

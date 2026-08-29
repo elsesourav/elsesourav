@@ -21,6 +21,7 @@ export type PrismaAppWithRelations = PrismaApp & {
   links?: PrismaAppLink[];
   versions?: PrismaAppVersion[];
   stats?: PrismaAppStat | null;
+  documentationMd?: string | null;
 };
 
 export function mapPrismaAppToDomain(prismaApp: PrismaAppWithRelations): DomainApp {
@@ -38,7 +39,9 @@ export function mapPrismaAppToDomain(prismaApp: PrismaAppWithRelations): DomainA
     primaryCategory: prismaApp.category?.name || 'General',
     categoryId: prismaApp.categoryId,
     tags: prismaApp.tags?.map((t) => t.tag.slug) || [],
-    platforms: (prismaApp.links?.map((l) => l.platform as AppPlatform) || ['web']) as readonly AppPlatform[],
+    platforms: (prismaApp.links?.map((l) => l.platform as AppPlatform) || [
+      'web',
+    ]) as readonly AppPlatform[],
     links:
       prismaApp.links?.map((l) => ({
         id: l.id,
@@ -60,6 +63,7 @@ export function mapPrismaAppToDomain(prismaApp: PrismaAppWithRelations): DomainA
         changelog: v.changelog,
         downloadUrl: v.downloadUrl ?? undefined,
       })) || [],
+    documentationMd: prismaApp.documentationMd ?? undefined,
     status: prismaApp.status.toLowerCase() as AppStatus,
     isFeatured: prismaApp.isFeatured,
     isPinned: prismaApp.isPinned,
@@ -90,7 +94,9 @@ export function mapPrismaAppToListItem(prismaApp: PrismaAppWithRelations): AppLi
     iconUrl: prismaApp.iconUrl,
     primaryCategory: prismaApp.category?.name || 'General',
     categorySlug: prismaApp.category?.slug || 'general',
-    platforms: (prismaApp.links?.map((l) => l.platform as AppPlatform) || ['web']) as readonly AppPlatform[],
+    platforms: (prismaApp.links?.map((l) => l.platform as AppPlatform) || [
+      'web',
+    ]) as readonly AppPlatform[],
     isFeatured: prismaApp.isFeatured,
     isPinned: prismaApp.isPinned,
     currentVersion: prismaApp.currentVersion ?? undefined,
@@ -120,6 +126,7 @@ export function mapPrismaAppToPublicDetail(prismaApp: PrismaAppWithRelations): P
     versions: domain.versions || [],
     currentVersion: domain.currentVersion,
     releaseDate: domain.releaseDate,
+    documentationMd: domain.documentationMd,
     isFeatured: domain.isFeatured,
     isPinned: domain.isPinned,
     seoTitle: domain.seoTitle,

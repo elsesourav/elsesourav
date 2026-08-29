@@ -9,7 +9,9 @@ import { AdminMarkdownEditor } from '@elsesourav/ui';
 
 // Mock next/image
 vi.mock('next/image', () => ({
-  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} alt={props.alt || ''} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => (
+    <img {...props} alt={props.alt || ''} />
+  ),
 }));
 
 describe('Admin Content Management — Markdown Editor & Live Preview', () => {
@@ -18,11 +20,7 @@ describe('Admin Content Management — Markdown Editor & Live Preview', () => {
     const markdown = '## Release 1.0\nNew developer terminal features enabled.';
 
     const { container } = render(
-      <AdminMarkdownEditor
-        label="Changelog Notes"
-        value={markdown}
-        onChange={handleChange}
-      />
+      <AdminMarkdownEditor label="Changelog Notes" value={markdown} onChange={handleChange} />
     );
 
     expect(screen.getByText('Changelog Notes')).toBeDefined();
@@ -34,13 +32,7 @@ describe('Admin Content Management — Markdown Editor & Live Preview', () => {
     const handleChange = vi.fn();
     const markdown = '### Subsystem Architecture\n- Zero-trust RBAC\n- Next.js 15';
 
-    render(
-      <AdminMarkdownEditor
-        label="Article Body"
-        value={markdown}
-        onChange={handleChange}
-      />
-    );
+    render(<AdminMarkdownEditor label="Article Body" value={markdown} onChange={handleChange} />);
 
     // Initial state is 'Write' mode with textarea
     const textarea = screen.getByRole('textbox') as HTMLTextAreaElement;
@@ -60,13 +52,7 @@ describe('Admin Content Management — Markdown Editor & Live Preview', () => {
 
   it('toggles the Markdown syntax cheat-sheet reference guide', () => {
     const handleChange = vi.fn();
-    render(
-      <AdminMarkdownEditor
-        label="Guide Content"
-        value=""
-        onChange={handleChange}
-      />
-    );
+    render(<AdminMarkdownEditor label="Guide Content" value="" onChange={handleChange} />);
 
     const guideBtn = screen.getByRole('button', { name: /guide/i });
     expect(screen.queryByText(/Markdown Syntax Reference/i)).toBeNull();
@@ -80,13 +66,7 @@ describe('Admin Content Management — Markdown Editor & Live Preview', () => {
 
   it('shows empty preview state when content is blank', () => {
     const handleChange = vi.fn();
-    render(
-      <AdminMarkdownEditor
-        label="Guide Content"
-        value=""
-        onChange={handleChange}
-      />
-    );
+    render(<AdminMarkdownEditor label="Guide Content" value="" onChange={handleChange} />);
 
     const previewTab = screen.getByRole('tab', { name: /preview/i });
     act(() => {

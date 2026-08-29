@@ -4,10 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Card, Badge, Button, Input } from '@elsesourav/ui';
 import type { App, CategorySummary } from '@elsesourav/types';
-import {
-  archiveAppAction,
-  deleteAppAction,
-} from '../actions/admin-app-actions';
+import { archiveAppAction, deleteAppAction } from '../actions/admin-app-actions';
 import {
   Package,
   Search,
@@ -66,9 +63,7 @@ export function AdminAppsTable({ initialApps, categories }: AdminAppsTableProps)
   const handleArchive = async (appId: string) => {
     try {
       await archiveAppAction(appId);
-      setApps((prev) =>
-        prev.map((a) => (a.id === appId ? { ...a, status: 'archived' } : a))
-      );
+      setApps((prev) => prev.map((a) => (a.id === appId ? { ...a, status: 'archived' } : a)));
     } catch {
       // Non-blocking
     }
@@ -151,7 +146,8 @@ export function AdminAppsTable({ initialApps, categories }: AdminAppsTableProps)
             <Package className="w-10 h-10 text-zinc-600 mx-auto" />
             <h4 className="text-sm font-semibold text-zinc-300">No applications found</h4>
             <p className="text-xs text-zinc-500 max-w-xs mx-auto">
-              No applications match your selected filters. Try changing query filters or create a new application.
+              No applications match your selected filters. Try changing query filters or create a
+              new application.
             </p>
           </div>
         ) : (
@@ -176,10 +172,7 @@ export function AdminAppsTable({ initialApps, categories }: AdminAppsTableProps)
                   });
 
                   return (
-                    <tr
-                      key={app.id}
-                      className="hover:bg-zinc-800/30 transition-colors group"
-                    >
+                    <tr key={app.id} className="hover:bg-zinc-800/30 transition-colors group">
                       {/* Name & Icon */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-3">

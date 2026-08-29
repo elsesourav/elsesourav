@@ -166,8 +166,6 @@ describe('Admin Applications Domain & Security Boundary', () => {
 
     const service = new AppService(mockRepo);
 
-    await expect(
-      service.deleteApp('USER', 'app-terminal')
-    ).rejects.toThrowError(AppError);
+    await expect(service.deleteApp('USER', 'app-terminal')).rejects.toThrowError(AppError);
   });
 });

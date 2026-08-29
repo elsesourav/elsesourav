@@ -7,9 +7,7 @@ interface EditAdminAppPageProps {
   params: Promise<{ id: string }>;
 }
 
-export async function generateMetadata({
-  params,
-}: EditAdminAppPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: EditAdminAppPageProps): Promise<Metadata> {
   const { id } = await params;
   return {
     title: `Edit App (${id}) | Admin Portal`,

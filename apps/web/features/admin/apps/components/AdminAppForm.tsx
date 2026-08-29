@@ -29,6 +29,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { AdminMarkdownEditor } from '@/features/admin/components/AdminMarkdownEditor';
+import { ImageInputWithLibrary } from '@/features/admin/media/components/ImageInputWithLibrary';
 
 interface AdminAppFormProps {
   app?: App;
@@ -45,6 +46,7 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
   const [slug, setSlug] = React.useState(app?.slug || '');
   const [shortDescription, setShortDescription] = React.useState(app?.shortDescription || '');
   const [description, setDescription] = React.useState(app?.description || '');
+  const [documentationMd, setDocumentationMd] = React.useState(app?.documentationMd || '');
   const [iconUrl, setIconUrl] = React.useState(app?.iconUrl || '');
   const [featuredImageUrl, setFeaturedImageUrl] = React.useState(app?.featuredImageUrl || '');
   const [demoUrl, setDemoUrl] = React.useState(app?.demoUrl || '');
@@ -95,6 +97,7 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
       slug: slug.trim().toLowerCase(),
       shortDescription: shortDescription.trim(),
       description: description.trim(),
+      documentationMd: documentationMd.trim() || undefined,
       iconUrl: iconUrl.trim(),
       featuredImageUrl: featuredImageUrl.trim() || undefined,
       demoUrl: demoUrl.trim() || undefined,
@@ -299,15 +302,33 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
             />
           </div>
 
-          {/* Full Description / Markdown Documentation */}
+          {/* Marketing Overview Description */}
+          <div className="space-y-1.5">
+            <label className="block text-xs font-semibold text-zinc-300">
+              Overview & Marketing Description <span className="text-rose-400">*</span>
+            </label>
+            <textarea
+              rows={3}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+              minLength={20}
+              placeholder="Detailed overview of what this application does, key capabilities, and value proposition..."
+              className="w-full rounded-xl bg-zinc-950/60 border border-zinc-800 p-3 text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            <p className="text-[11px] text-zinc-500">
+              Minimum 20 characters. Plain text overview for cards and product summaries.
+            </p>
+          </div>
+
+          {/* Full Long-Form Markdown Documentation */}
           <AdminMarkdownEditor
-            label="Full Description & Documentation"
-            value={description}
-            onChange={setDescription}
-            required
+            label="Technical Documentation & Guides (Markdown)"
+            value={documentationMd}
+            onChange={setDocumentationMd}
             rows={10}
-            placeholder="Comprehensive application overview, architecture notes, usage instructions, and feature lists in Markdown..."
-            helperText="Supports feature lists, code blocks, screenshots, architecture notes, and tables"
+            placeholder="Comprehensive application overview, architecture notes, getting started instructions, CLI commands, and feature lists in Markdown..."
+            helperText="Supports headings, code blocks, screenshots, architecture notes, shortcuts, and tables"
           />
         </Card>
 
@@ -319,45 +340,34 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Icon URL */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-zinc-300">
-                Icon URL <span className="text-rose-400">*</span>
-              </label>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-zinc-950 border border-zinc-800 flex items-center justify-center overflow-hidden shrink-0">
-                  {iconUrl ? (
-                    <img src={iconUrl} alt="Preview" className="w-full h-full object-cover" />
-                  ) : (
-                    <Package className="w-5 h-5 text-zinc-600" />
-                  )}
-                </div>
-                <Input
-                  type="url"
-                  value={iconUrl}
-                  onChange={(e) => setIconUrl(e.target.value)}
-                  placeholder="https://res.cloudinary.com/..."
-                  required
-                  className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100 flex-1"
-                />
-              </div>
-            </div>
+            {/* App Icon */}
+            <ImageInputWithLibrary
+              label="Application Icon"
+              value={iconUrl}
+              onChange={setIconUrl}
+              required
+              folder="apps"
+              defaultCategory="apps"
+              previewShape="square"
+              placeholder="Icon URL or upload/select from library"
+            />
 
-            {/* Featured Image URL */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-zinc-300">Featured Image Banner URL</label>
-              <Input
-                type="url"
-                value={featuredImageUrl}
-                onChange={(e) => setFeaturedImageUrl(e.target.value)}
-                placeholder="https://res.cloudinary.com/..."
-                className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100"
-              />
-            </div>
+            {/* Featured Image Banner */}
+            <ImageInputWithLibrary
+              label="Featured Banner Image"
+              value={featuredImageUrl}
+              onChange={setFeaturedImageUrl}
+              folder="apps"
+              defaultCategory="apps"
+              previewShape="banner"
+              placeholder="Banner URL or upload/select from library"
+            />
 
             {/* Demo URL */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-zinc-300">Interactive Demo URL</label>
+              <label className="block text-xs font-semibold text-zinc-300">
+                Interactive Demo URL
+              </label>
               <Input
                 type="url"
                 value={demoUrl}
@@ -369,7 +379,9 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
 
             {/* Video URL */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-zinc-300">Showcase Video URL</label>
+              <label className="block text-xs font-semibold text-zinc-300">
+                Showcase Video URL
+              </label>
               <Input
                 type="url"
                 value={videoUrl}
@@ -424,7 +436,9 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
 
             {/* Sort Order */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-zinc-300">Display Sort Order</label>
+              <label className="block text-xs font-semibold text-zinc-300">
+                Display Sort Order
+              </label>
               <Input
                 type="number"
                 value={sortOrder}
@@ -440,7 +454,9 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
             <label className="flex items-center justify-between p-3 rounded-xl bg-zinc-950/40 border border-zinc-800/60 cursor-pointer">
               <div>
                 <div className="text-xs font-semibold text-zinc-200">Featured Application</div>
-                <div className="text-[11px] text-zinc-400">Highlights app on homepage hero spotlight.</div>
+                <div className="text-[11px] text-zinc-400">
+                  Highlights app on homepage hero spotlight.
+                </div>
               </div>
               <input
                 type="checkbox"
@@ -454,7 +470,9 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
             <label className="flex items-center justify-between p-3 rounded-xl bg-zinc-950/40 border border-zinc-800/60 cursor-pointer">
               <div>
                 <div className="text-xs font-semibold text-zinc-200">Pinned to Top</div>
-                <div className="text-[11px] text-zinc-400">Always ranks first in catalog grids.</div>
+                <div className="text-[11px] text-zinc-400">
+                  Always ranks first in catalog grids.
+                </div>
               </div>
               <input
                 type="checkbox"
@@ -558,7 +576,9 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="block font-semibold text-zinc-300">Download Asset URL (optional)</label>
+                <label className="block font-semibold text-zinc-300">
+                  Download Asset URL (optional)
+                </label>
                 <Input
                   type="url"
                   value={releaseDownloadUrl}

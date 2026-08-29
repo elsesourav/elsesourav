@@ -66,7 +66,8 @@ export const fixtureAppTerminalPro: App = {
   description:
     'Terminal Pro is an ultra low-latency web terminal emulator engineered for developers. Supports xterm-compatible ANSI escape codes, WebGL/WebGPU acceleration, customizable themes, and split pane multiplexing.',
   iconUrl: 'https://res.cloudinary.com/elsesourav/image/upload/v2/icons/terminal-pro.png',
-  featuredImageUrl: 'https://res.cloudinary.com/elsesourav/image/upload/v2/banners/terminal-pro-hero.png',
+  featuredImageUrl:
+    'https://res.cloudinary.com/elsesourav/image/upload/v2/banners/terminal-pro-hero.png',
   screenshots: [
     'https://res.cloudinary.com/elsesourav/image/upload/v2/screenshots/terminal-screen-1.png',
     'https://res.cloudinary.com/elsesourav/image/upload/v2/screenshots/terminal-screen-2.png',
@@ -140,7 +141,8 @@ export const fixtureAppPaletteStudio: App = {
   id: 'app-palette-studio',
   slug: 'palette-studio',
   name: 'Palette Studio',
-  shortDescription: 'Perceptually uniform color palette generator with WCAG AAA contrast validation.',
+  shortDescription:
+    'Perceptually uniform color palette generator with WCAG AAA contrast validation.',
   description:
     'Palette Studio provides mathematical HSL and OKLCH color space manipulation for UI designers and frontend developers. Generates accessible color tokens and design system variables with 1-click export.',
   iconUrl: 'https://res.cloudinary.com/elsesourav/image/upload/v2/icons/palette-studio.png',
@@ -194,7 +196,8 @@ export const fixtureAppFocusFlow: App = {
   id: 'app-focusflow',
   slug: 'focusflow',
   name: 'FocusFlow',
-  shortDescription: 'Distraction-free developer focus timer with ambient soundscapes and telemetry.',
+  shortDescription:
+    'Distraction-free developer focus timer with ambient soundscapes and telemetry.',
   description:
     'FocusFlow integrates lightweight Pomodoro rhythms with developer telemetry. Track deep work intervals without noisy interruptions.',
   iconUrl: 'https://res.cloudinary.com/elsesourav/image/upload/v2/icons/focusflow.png',

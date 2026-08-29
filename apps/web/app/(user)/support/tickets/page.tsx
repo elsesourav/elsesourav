@@ -39,12 +39,19 @@ export default async function UserSupportTicketsPage() {
 
         <div className="flex items-center gap-2.5">
           <Link href="/help">
-            <Button variant="outline" size="sm" className="border-zinc-800 text-zinc-300 text-xs gap-1.5">
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-zinc-800 text-zinc-300 text-xs gap-1.5"
+            >
               <LifeBuoy className="w-3.5 h-3.5" /> Knowledge Base
             </Button>
           </Link>
           <Link href="/support">
-            <Button size="sm" className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs gap-1.5 shadow-lg shadow-indigo-600/20">
+            <Button
+              size="sm"
+              className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs gap-1.5 shadow-lg shadow-indigo-600/20"
+            >
               <PlusCircle className="w-3.5 h-3.5" /> New Ticket
             </Button>
           </Link>

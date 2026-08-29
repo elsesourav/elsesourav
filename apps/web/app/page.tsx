@@ -2,11 +2,13 @@ import type { Metadata } from 'next';
 import { Button, Card, Badge } from '@elsesourav/ui';
 import { SITE_CONFIG, CREATOR_CONFIG, ROUTES } from '@elsesourav/config';
 import { AdminRepository } from '@elsesourav/database';
+import { parseStringList } from '@elsesourav/validation';
 import { discoverPublishedApps } from '@/features/apps/queries/get-apps';
 import { getPublicBlogListing } from '@/features/blog/queries/get-blog';
 import { AppCard } from '@/features/apps/components/AppCard';
 import Link from 'next/link';
 import { PublicHeader } from '@/components/navigation/PublicHeader';
+import { PublicFooter } from '@/components/navigation/PublicFooter';
 import {
   Sparkles,
   BookOpen,
@@ -57,18 +59,35 @@ export default async function HomePage() {
       page: 1,
       totalPages: 1,
     })),
-    adminRepo.getAllSettings().catch(() => ({} as Record<string, string>)),
+    adminRepo.getAllSettings().catch(() => ({}) as Record<string, string>),
   ]);
 
   const featuredApps = appsResult.items || [];
   const recentPosts = blogResult.items || [];
 
-  const heroBadge = dbSettings['hero_badge'] || `Software & Digital Tools by ${CREATOR_CONFIG.name}`;
-  const heroHeadline = dbSettings['hero_headline'] || 'Thoughtful software, practical tools, & engineering ideas.';
+  const heroBadge =
+    dbSettings['hero_badge'] || `Software & Digital Tools by ${CREATOR_CONFIG.name}`;
+  const heroHeadline =
+    dbSettings['hero_headline'] || 'Thoughtful software, practical tools, & engineering ideas.';
   const heroSubtitle = dbSettings['hero_subtitle'] || CREATOR_CONFIG.positioning;
   const primaryCtaLabel = dbSettings['primary_cta_label'] || 'Explore Applications';
   const secondaryCtaLabel = dbSettings['secondary_cta_label'] || 'Read Engineering Notes';
   const announcementBanner = dbSettings['announcement_banner'] || '';
+  const appsSectionTitle = dbSettings['homepage_apps_title'] || 'Featured Software & Tools';
+  const appsSectionSubtitle =
+    dbSettings['homepage_apps_subtitle'] ||
+    'Practical utilities and digital tools crafted for real workflows.';
+  const blogSectionTitle = dbSettings['homepage_blog_title'] || 'Technical Writing & Exploration';
+  const blogSectionSubtitle =
+    dbSettings['homepage_blog_subtitle'] ||
+    'Deep-dives on software design, performance, and architecture lessons.';
+  const creatorName = dbSettings['creator_name'] || CREATOR_CONFIG.name;
+  const creatorShortBio = dbSettings['creator_short_bio'] || CREATOR_CONFIG.shortBio;
+  const creatorAvatarUrl = dbSettings['creator_avatar_url'] || '';
+  const creatorPrinciples = parseStringList(
+    dbSettings['creator_principles_json'],
+    CREATOR_CONFIG.principles
+  );
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -123,7 +142,7 @@ export default async function HomePage() {
       {/* Hero Section: Identity, Positioning, & Value Proposition */}
       <section className="flex flex-col items-center justify-center text-center px-4 sm:px-6 lg:px-8 pt-20 pb-16 relative overflow-hidden">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(45rem_50rem_at_top,theme(colors.indigo.500/10),transparent)]" />
-        
+
         <Badge variant="info" className="mb-6 gap-1.5 py-1 px-3.5 text-xs font-medium">
           <Sparkles className="w-3.5 h-3.5" /> {heroBadge}
         </Badge>
@@ -157,13 +176,9 @@ export default async function HomePage() {
             <div>
               <div className="flex items-center gap-2">
                 <Layers className="w-5 h-5 text-indigo-400" />
-                <h2 className="text-2xl font-bold tracking-tight text-white">
-                  Featured Software & Tools
-                </h2>
+                <h2 className="text-2xl font-bold tracking-tight text-white">{appsSectionTitle}</h2>
               </div>
-              <p className="text-sm text-zinc-400 mt-1">
-                Practical utilities and digital tools crafted for real workflows.
-              </p>
+              <p className="text-sm text-zinc-400 mt-1">{appsSectionSubtitle}</p>
             </div>
             <Link
               href={ROUTES.APPS}
@@ -188,13 +203,9 @@ export default async function HomePage() {
             <div>
               <div className="flex items-center gap-2">
                 <BookOpen className="w-5 h-5 text-cyan-400" />
-                <h2 className="text-2xl font-bold tracking-tight text-white">
-                  Technical Writing & Exploration
-                </h2>
+                <h2 className="text-2xl font-bold tracking-tight text-white">{blogSectionTitle}</h2>
               </div>
-              <p className="text-sm text-zinc-400 mt-1">
-                Deep-dives on software design, performance, and architecture lessons.
-              </p>
+              <p className="text-sm text-zinc-400 mt-1">{blogSectionSubtitle}</p>
             </div>
             <Link
               href={ROUTES.BLOG}
@@ -246,19 +257,32 @@ export default async function HomePage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Creator Intro */}
           <div className="lg:col-span-5 space-y-4">
-            <Badge variant="outline" className="text-xs border-zinc-700 text-zinc-400">
-              Creator & Philosophy
-            </Badge>
+            <div className="flex items-center gap-3">
+              {creatorAvatarUrl ? (
+                <div className="w-11 h-11 rounded-2xl bg-indigo-950/60 border border-indigo-500/40 overflow-hidden shrink-0 shadow-md">
+                  <img
+                    src={creatorAvatarUrl}
+                    alt={creatorName}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ) : null}
+              <Badge variant="outline" className="text-xs border-zinc-700 text-zinc-400">
+                Creator & Philosophy
+              </Badge>
+            </div>
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
               Built with purpose & strong fundamentals
             </h2>
-            <p className="text-sm text-zinc-400 leading-relaxed">
-              {CREATOR_CONFIG.shortBio}
-            </p>
+            <p className="text-sm text-zinc-400 leading-relaxed">{creatorShortBio}</p>
             <div className="pt-2">
               <Link href={ROUTES.ABOUT}>
-                <Button variant="outline" size="sm" className="border-zinc-800 text-xs gap-1.5 text-zinc-300">
-                  Read About Sourav & Mission <ArrowRight className="w-3.5 h-3.5" />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-zinc-800 text-xs gap-1.5 text-zinc-300"
+                >
+                  Read About {creatorName} & Mission <ArrowRight className="w-3.5 h-3.5" />
                 </Button>
               </Link>
             </div>
@@ -266,7 +290,7 @@ export default async function HomePage() {
 
           {/* Core Principles Grid */}
           <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            {CREATOR_CONFIG.principles.map((principle, idx) => (
+            {creatorPrinciples.map((principle: string, idx: number) => (
               <div
                 key={idx}
                 className="p-4 rounded-2xl border border-zinc-800/80 bg-zinc-900/20 flex items-start gap-3"
@@ -281,31 +305,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-zinc-800/80 bg-zinc-950 py-10 text-center text-sm text-zinc-500">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>
-            © {new Date().getFullYear()} {SITE_CONFIG.name}. Crafted by {SITE_CONFIG.author}. All rights reserved.
-          </p>
-          <div className="flex items-center gap-6 text-xs text-zinc-400">
-            <Link href={ROUTES.APPS} className="hover:text-white transition-colors">
-              Applications
-            </Link>
-            <Link href={ROUTES.BLOG} className="hover:text-white transition-colors">
-              Blog
-            </Link>
-            <Link href={ROUTES.HELP} className="hover:text-white transition-colors">
-              Documentation
-            </Link>
-            <Link href={ROUTES.ABOUT} className="hover:text-white transition-colors">
-              About
-            </Link>
-            <Link href={ROUTES.SUPPORT} className="hover:text-white transition-colors">
-              Support
-            </Link>
-          </div>
-        </div>
-      </footer>
+      {/* Dynamic Responsive Footer */}
+      <PublicFooter />
     </main>
   );
 }
