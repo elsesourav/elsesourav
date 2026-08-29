@@ -114,4 +114,38 @@ describe('Admin Security Boundary, Role Authorization & Telemetry Service', () =
       service.getDashboardStats(invalidContext)
     ).rejects.toThrowError(AppError);
   });
+
+  // ==========================================
+  // Site Configuration & Dynamic Settings Tests
+  // ==========================================
+  describe('Site Settings Management', () => {
+    it('allows reading and writing dynamic site configuration key-values', async () => {
+      const mockPrisma = {
+        siteSetting: {
+          findUnique: vi.fn().mockResolvedValue({ key: 'announcement_banner', value: 'Welcome to ElseSourav' }),
+          upsert: vi.fn().mockResolvedValue({ key: 'announcement_banner', value: 'New release is live' }),
+          findMany: vi.fn().mockResolvedValue([
+            { key: 'announcement_banner', value: 'Welcome to ElseSourav' },
+            { key: 'maintenance_mode', value: 'false' },
+          ]),
+        },
+      } as unknown as import('@prisma/client').PrismaClient;
+
+      const repo = new AdminRepository(mockPrisma);
+
+      const val = await repo.getSetting('announcement_banner');
+      expect(val).toBe('Welcome to ElseSourav');
+
+      await repo.upsertSetting('announcement_banner', 'New release is live', 'Hero banner message', 'admin-1');
+      expect(mockPrisma.siteSetting.upsert).toHaveBeenCalledWith({
+        where: { key: 'announcement_banner' },
+        update: { value: 'New release is live', description: 'Hero banner message', updatedBy: 'admin-1' },
+        create: { key: 'announcement_banner', value: 'New release is live', description: 'Hero banner message', updatedBy: 'admin-1' },
+      });
+
+      const all = await repo.getAllSettings();
+      expect(all['announcement_banner']).toBe('Welcome to ElseSourav');
+      expect(all['maintenance_mode']).toBe('false');
+    });
+  });
 });

@@ -360,3 +360,13 @@ model AppStat {
   ratingAverage Float   @default(0.0)
   ratingCount  Int      @default(0)
 }
+
+model SiteSetting {
+  key         String   @id
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+  updatedBy   String?
+
+  @@index([key])
+}

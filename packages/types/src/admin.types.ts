@@ -40,3 +40,11 @@ export interface AdminNavigationItem {
   readonly badge?: string | number;
   readonly isExact?: boolean;
 }
+
+export interface SiteSetting {
+  readonly key: string;
+  readonly value: string;
+  readonly description?: string | null;
+  readonly updatedAt: Timestamp;
+  readonly updatedBy?: string | null;
+}

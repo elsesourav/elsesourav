@@ -138,4 +138,42 @@ export class AdminRepository {
       throw AppError.database('Failed to fetch admin recent activity', error);
     }
   }
+
+  async getSetting(key: string): Promise<string | null> {
+    try {
+      const setting = await this.prisma.siteSetting.findUnique({ where: { key } });
+      return setting ? setting.value : null;
+    } catch (error) {
+      throw AppError.database(`Failed to fetch setting: ${key}`, error);
+    }
+  }
+
+  async upsertSetting(
+    key: string,
+    value: string,
+    description?: string,
+    updatedBy?: string
+  ): Promise<void> {
+    try {
+      await this.prisma.siteSetting.upsert({
+        where: { key },
+        update: { value, description, updatedBy },
+        create: { key, value, description, updatedBy },
+      });
+    } catch (error) {
+      throw AppError.database(`Failed to upsert setting: ${key}`, error);
+    }
+  }
+
+  async getAllSettings(): Promise<Record<string, string>> {
+    try {
+      const settings = await this.prisma.siteSetting.findMany();
+      return settings.reduce<Record<string, string>>((acc, s) => {
+        acc[s.key] = s.value;
+        return acc;
+      }, {});
+    } catch (error) {
+      throw AppError.database('Failed to fetch all site settings', error);
+    }
+  }
 }
