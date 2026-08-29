@@ -113,4 +113,22 @@ describe('Blog Listing & Discovery Query Pipeline', () => {
     expect(mockPost.category?.name).toBe('Engineering');
     expect(mockPost.publishedAt).toBeDefined();
   });
+
+  it('strictly excludes draft and unpublished posts from public queries', async () => {
+    const mockRepo = {
+      findPublicPosts: vi.fn().mockResolvedValue({
+        items: [],
+        totalCount: 0,
+        page: 1,
+        limit: 9,
+        totalPages: 0,
+        hasMore: false,
+      }),
+    } as unknown as BlogRepository;
+
+    const service = new BlogService(mockRepo);
+    const result = await service.listPublicPosts({ query: 'secret-draft' });
+    expect(result.items).toHaveLength(0);
+    expect(result.totalCount).toBe(0);
+  });
 });

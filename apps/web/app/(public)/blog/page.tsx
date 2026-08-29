@@ -8,7 +8,7 @@ import { BlogCard } from '@/features/blog/components/BlogCard';
 import { BlogDiscoveryBar } from '@/features/blog/components/BlogDiscoveryBar';
 import { BlogPagination } from '@/features/blog/components/BlogPagination';
 import { BlogEmptyState } from '@/features/blog/components/BlogEmptyState';
-import { Badge } from '@elsesourav/ui';
+import { PageShell, PageHeader, Badge } from '@elsesourav/ui';
 import { SITE_CONFIG } from '@elsesourav/config';
 
 interface BlogPageProps {
@@ -114,29 +114,25 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <PageShell size="lg" glow>
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+      <div className="space-y-8">
         {/* Header Section */}
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-100">
-              Engineering Journal
-            </h1>
-            <Badge variant="info" className="text-xs px-2.5 py-0.5 font-medium">
+        <PageHeader
+          eyebrow="Engineering Journal & Archive"
+          badge={
+            <Badge variant="primary" className="text-xs px-2.5 py-0.5 font-medium">
               {listingResult.totalCount} {listingResult.totalCount === 1 ? 'Article' : 'Articles'}
             </Badge>
-          </div>
-          <p className="text-sm text-zinc-400 max-w-2xl">
-            Deep-dive notes on web architecture, software systems, performance benchmarks, and
-            release logs.
-          </p>
-        </div>
+          }
+          title="Engineering Journal & Ideas"
+          description="Technical essays, systems architecture notes, software benchmarks, and design observations crafted from building real-world software."
+        />
 
         {/* Discovery & Search Bar */}
         <BlogDiscoveryBar categories={categories} tags={tags} />
@@ -157,14 +153,16 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
             </div>
 
             {/* Pagination Controls */}
-            <BlogPagination
-              currentPage={listingResult.page}
-              totalPages={listingResult.totalPages}
-              totalMatches={listingResult.totalCount}
-            />
+            {listingResult.totalPages > 1 && (
+              <BlogPagination
+                currentPage={listingResult.page}
+                totalPages={listingResult.totalPages}
+                totalMatches={listingResult.totalCount}
+              />
+            )}
           </div>
         )}
       </div>
-    </div>
+    </PageShell>
   );
 }
