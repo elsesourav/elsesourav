@@ -21,9 +21,6 @@
     "db:seed": "tsx prisma/seed/seed.ts",
     "prisma": "prisma"
   },
-  "prisma": {
-    "seed": "tsx prisma/seed/seed.ts"
-  },
   "dependencies": {
     "@elsesourav/config": "workspace:*",
     "@elsesourav/media": "workspace:*",
