@@ -19,8 +19,11 @@
     "@elsesourav/ui": "workspace:*",
     "@elsesourav/utils": "workspace:*",
     "@elsesourav/validation": "workspace:*",
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "^7.10.0",
     "lucide-react": "^1.16.0",
     "next": "15.1.7",
+    "pg": "^8.23.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
