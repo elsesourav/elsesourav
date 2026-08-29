@@ -213,9 +213,45 @@ describe('UI Component State Matrix & Edge Cases', () => {
       expect(screen.getByRole('button', { name: 'Launch' })).toBeDefined();
     });
 
-    it('renders GlassSurface with backdrop blur styling', () => {
+    it('renders Card across all 5 depth levels (0 through 4)', () => {
       render(
-        <GlassSurface data-testid="glass-container">
+        <div>
+          <Card depth={0} data-testid="card-depth-0">Level 0 Canvas</Card>
+          <Card depth={1} data-testid="card-depth-1">Level 1 Surface</Card>
+          <Card depth={2} data-testid="card-depth-2">Level 2 Elevated</Card>
+          <Card depth={3} data-testid="card-depth-3">Level 3 Overlay</Card>
+          <Card depth={4} data-testid="card-depth-4">Level 4 Focused</Card>
+        </div>
+      );
+
+      expect(screen.getByText('Level 0 Canvas')).toBeDefined();
+      expect(screen.getByText('Level 1 Surface')).toBeDefined();
+      expect(screen.getByText('Level 2 Elevated')).toBeDefined();
+      expect(screen.getByText('Level 3 Overlay')).toBeDefined();
+      expect(screen.getByText('Level 4 Focused')).toBeDefined();
+    });
+
+    it('renders Card across surface variants (solid, subtle, elevated, glass, interactive)', () => {
+      render(
+        <div>
+          <Card variant="solid">Solid Card</Card>
+          <Card variant="subtle">Subtle Card</Card>
+          <Card variant="elevated">Elevated Card</Card>
+          <Card variant="glass">Glass Card</Card>
+          <Card variant="interactive">Interactive Card</Card>
+        </div>
+      );
+
+      expect(screen.getByText('Solid Card')).toBeDefined();
+      expect(screen.getByText('Subtle Card')).toBeDefined();
+      expect(screen.getByText('Elevated Card')).toBeDefined();
+      expect(screen.getByText('Glass Card')).toBeDefined();
+      expect(screen.getByText('Interactive Card')).toBeDefined();
+    });
+
+    it('renders GlassSurface with backdrop blur styling and interactive state', () => {
+      render(
+        <GlassSurface interactive data-testid="glass-container">
           <span>Glass Content</span>
         </GlassSurface>
       );

@@ -1,11 +1,19 @@
 import * as React from 'react';
 import { cn } from '../lib/utils';
 
+export type SurfaceDepth = 0 | 1 | 2 | 3 | 4;
+
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: 'default' | 'solid' | 'subtle' | 'elevated' | 'glass' | 'interactive';
+  depth?: SurfaceDepth;
 }
 
-export function Card({ className, variant = 'default', ...props }: CardProps) {
+export function Card({
+  className,
+  variant = 'default',
+  depth,
+  ...props
+}: CardProps) {
   const variants = {
     default: 'border-zinc-800 bg-zinc-950/70 backdrop-blur-md shadow-md',
     solid: 'border-zinc-800 bg-zinc-900 shadow-sm',
@@ -16,9 +24,21 @@ export function Card({ className, variant = 'default', ...props }: CardProps) {
       'border-zinc-800 bg-zinc-950/60 backdrop-blur-md hover:border-zinc-700 hover:bg-zinc-900/60 hover:shadow-xl transition-all duration-200 cursor-pointer active:scale-[0.99]',
   };
 
+  const depths = {
+    0: 'border-transparent bg-transparent shadow-none',
+    1: 'border-zinc-800/80 bg-zinc-900/60 shadow-sm',
+    2: 'border-zinc-700/80 bg-zinc-900/90 shadow-xl',
+    3: 'border-zinc-700 bg-zinc-950/95 shadow-2xl backdrop-blur-xl',
+    4: 'border-indigo-500/80 bg-zinc-900/95 shadow-2xl ring-1 ring-indigo-500/50',
+  };
+
   return (
     <div
-      className={cn('rounded-2xl border p-6 text-zinc-100', variants[variant], className)}
+      className={cn(
+        'rounded-2xl border p-6 text-zinc-100',
+        depth !== undefined ? depths[depth] : variants[variant],
+        className
+      )}
       {...props}
     />
   );

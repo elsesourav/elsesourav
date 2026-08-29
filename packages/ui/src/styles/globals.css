@@ -247,6 +247,50 @@ body {
 }
 
 /* ==========================================================================
+   Surface Depth Levels (Level 0 through 4)
+   ========================================================================== */
+.depth-0 {
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.depth-1 {
+  background-color: hsl(var(--surface));
+  border: 1px solid hsl(var(--border-subtle));
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.depth-2 {
+  background-color: hsl(var(--surface-elevated));
+  border: 1px solid hsl(var(--border));
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+}
+
+.depth-3 {
+  background-color: hsl(var(--surface-overlay));
+  border: 1px solid hsl(var(--border-strong));
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+}
+
+.depth-4 {
+  background-color: hsl(var(--surface-elevated));
+  border: 1px solid hsl(var(--primary));
+  box-shadow: 0 0 20px -3px rgba(99, 102, 241, 0.25), 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+}
+
+/* Domain-Specific Surface Helpers */
+.surface-admin {
+  background-color: #0d0d10;
+  border: 1px solid #27272a;
+}
+
+.surface-user {
+  background-color: #0d0d10;
+  border: 1px solid #1f1f23;
+}
+
+/* ==========================================================================
    Reduced Motion Override
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
