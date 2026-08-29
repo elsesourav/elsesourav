@@ -99,4 +99,10 @@ describe('Public App Details Integration & Related Apps', () => {
     expect(filtered).toHaveLength(1);
     expect(filtered[0]?.slug).toBe('regex-engine');
   });
+
+  it('validates documentation and release versioning integrity on public app', () => {
+    expect(mockPublicDetail.currentVersion).toBe('2.0.0');
+    expect(mockPublicDetail.versions[0]?.changelog).toContain('WebGL');
+    expect(mockPublicDetail.links[0]?.url).toBe('https://terminal.elsesourav.com');
+  });
 });

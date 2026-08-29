@@ -8,7 +8,7 @@ import { AppDetailLinks } from '@/features/apps/components/AppDetailLinks';
 import { AppVersionHistory } from '@/features/apps/components/AppVersionHistory';
 import { AppCard } from '@/features/apps/components/AppCard';
 import { BlogContentRenderer } from '@/features/blog/components/BlogContentRenderer';
-import { Card } from '@elsesourav/ui';
+import { PageShell, Card } from '@elsesourav/ui';
 import { Sparkles, FileText, BookOpen } from 'lucide-react';
 
 interface AppDetailPageProps {
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: AppDetailPageProps): Promise<
   const { slug } = await params;
   try {
     const app = await getPublicAppBySlug(slug);
-    const title = `${app.name} — Software & Tools`;
+    const title = `${app.name} — Software & Utility Overview`;
     const canonicalUrl = `${SITE_CONFIG.url}/apps/${app.slug}`;
     return {
       title,
@@ -128,26 +128,26 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <PageShell size="lg" glow>
       {/* Inject JSON-LD Schema */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+      <div className="space-y-12">
         {/* App Hero Section */}
         <AppDetailHero app={app} />
 
         {/* Screenshot Gallery if available */}
         <AppScreenshotGallery appName={app.name} screenshots={app.screenshots} />
 
-        {/* Detailed Description */}
+        {/* Detailed Long-Form Description / Markdown Content */}
         <div className="space-y-4">
           <h2 className="text-lg font-bold text-zinc-100 flex items-center gap-2">
             <FileText className="w-5 h-5 text-indigo-400" /> About {app.name}
           </h2>
-          <Card className="p-6 rounded-2xl border-zinc-800/80 bg-zinc-900/30">
+          <Card className="p-6 sm:p-8 rounded-3xl border-zinc-800/80 bg-zinc-900/30 backdrop-blur-sm">
             <BlogContentRenderer content={app.description} />
           </Card>
         </div>
@@ -158,13 +158,13 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
             <h2 className="text-lg font-bold text-zinc-100 flex items-center gap-2">
               <BookOpen className="w-5 h-5 text-indigo-400" /> Documentation & Guide
             </h2>
-            <Card className="p-6 sm:p-8 rounded-2xl border-zinc-800/80 bg-zinc-900/30">
+            <Card className="p-6 sm:p-8 rounded-3xl border-zinc-800/80 bg-zinc-900/30 backdrop-blur-sm">
               <BlogContentRenderer content={app.documentationMd} />
             </Card>
           </div>
         )}
 
-        {/* Platform Downloads & Links */}
+        {/* Platform Downloads & Distribution Links */}
         <AppDetailLinks links={app.links} />
 
         {/* Version History & Changelog */}
@@ -172,20 +172,20 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
 
         {/* Related Apps Section */}
         {relatedApps.length > 0 && (
-          <div className="space-y-4 pt-6 border-t border-zinc-800/60">
+          <div className="space-y-6 pt-8 border-t border-zinc-800/70">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-bold text-zinc-100 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-indigo-400" /> Related in {app.primaryCategory}
+                <Sparkles className="w-5 h-5 text-indigo-400" /> More in {app.primaryCategory}
               </h2>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {relatedApps.map((related) => (
-                <AppCard key={related.id} app={related} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {relatedApps.map((related, idx) => (
+                <AppCard key={related.id} app={related} index={idx} />
               ))}
             </div>
           </div>
         )}
       </div>
-    </div>
+    </PageShell>
   );
 }
