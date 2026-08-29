@@ -9,7 +9,7 @@ import { AdminMarkdownEditor } from '../index';
 
 // Mock next/image
 vi.mock('next/image', () => ({
-  default: (props: any) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} alt={props.alt || ''} />,
 }));
 
 describe('Admin Content Management — Markdown Editor & Live Preview', () => {
