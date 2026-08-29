@@ -1,3 +1,4 @@
+export * from '@prisma/client';
 export * from './client';
 export * from './mappers/app.mapper';
 export * from './mappers/user.mapper';

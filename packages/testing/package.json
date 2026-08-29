@@ -18,8 +18,18 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@elsesourav/auth": "workspace:*",
+    "@elsesourav/config": "workspace:*",
+    "@elsesourav/database": "workspace:*",
+    "@elsesourav/media": "workspace:*",
     "@elsesourav/types": "workspace:*",
+    "@elsesourav/ui": "workspace:*",
+    "@elsesourav/utils": "workspace:*",
+    "@elsesourav/validation": "workspace:*",
+    "@prisma/client": "^7.10.0",
     "@testing-library/react": "^16.2.0",
+    "jsdom": "^26.0.0",
+    "lucide-react": "^0.475.0",
     "vitest": "^3.0.5"
   },
   "peerDependencies": {

@@ -1,9 +1,19 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "rootDir": "src",
     "outDir": "dist",
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "paths": {
+      "@elsesourav/auth": ["../auth/src/index.ts"],
+      "@elsesourav/config": ["../config/src/index.ts"],
+      "@elsesourav/database": ["../database/src/index.ts"],
+      "@elsesourav/media": ["../media/src/index.ts"],
+      "@elsesourav/types": ["../types/src/index.ts"],
+      "@elsesourav/ui": ["../ui/src/index.ts"],
+      "@elsesourav/utils": ["../utils/src/index.ts"],
+      "@elsesourav/validation": ["../validation/src/index.ts"],
+      "@elsesourav/testing": ["./src/index.ts"]
+    }
   },
   "include": ["src/**/*"]
 }
