@@ -24,7 +24,7 @@ export async function getServerSession(
     } = await supabase.auth.getSession();
 
     const validRoles: UserRole[] = ['USER', 'ADMIN', 'STAFF'];
-    const rawRole = user.app_metadata?.['role'] as UserRole | undefined;
+    const rawRole = (user.app_metadata?.['role'] || user.user_metadata?.['role']) as UserRole | undefined;
     const role: UserRole = rawRole && validRoles.includes(rawRole) ? rawRole : 'USER';
 
     const authenticatedUser: AuthenticatedUser = {
