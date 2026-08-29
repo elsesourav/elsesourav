@@ -5,6 +5,7 @@ import type {
   SupportTicketListItem,
   SupportTicketDetail,
   SupportTicketMessage,
+  SupportTicketStatus,
   CreateSupportTicketInput,
   UserRole,
 } from '@elsesourav/types';
@@ -141,13 +142,30 @@ export class SupportService {
   }
 
   /**
-   * Retrieves all tickets for Admin portal
+   * Retrieves all tickets for Admin portal with filtering
    */
   async getAllTicketsAdmin(
     callerRole: UserRole,
-    limit = 50
+    options: {
+      status?: SupportTicketStatus;
+      category?: string;
+      search?: string;
+      limit?: number;
+    } = {}
   ): Promise<SupportTicketListItem[]> {
     this.verifyAdmin(callerRole);
-    return this.supportRepo.findAllTickets(limit);
+    return this.supportRepo.findAllTickets(options);
+  }
+
+  /**
+   * Updates ticket status from Admin workspace
+   */
+  async updateTicketStatusAdmin(
+    callerRole: UserRole,
+    ticketId: string,
+    status: SupportTicketStatus
+  ): Promise<void> {
+    this.verifyAdmin(callerRole);
+    await this.supportRepo.updateTicketStatus(ticketId, status);
   }
 }

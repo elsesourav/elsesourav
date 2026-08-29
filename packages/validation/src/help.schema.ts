@@ -29,6 +29,19 @@ export const CreateHelpArticleSchema = z.object({
 
 export const UpdateHelpArticleSchema = CreateHelpArticleSchema.partial();
 
+export const AdminSaveHelpSchema = z.object({
+  id: z.string().optional(),
+  categoryId: z.string().min(1, 'Category is required'),
+  title: z.string().min(5, 'Title must be at least 5 characters').max(150),
+  slug: HelpSlugSchema.optional(),
+  excerpt: z.string().max(250).optional().or(z.literal('')),
+  content: z.string().min(20, 'Content must be at least 20 characters'),
+  status: z.enum(['draft', 'published', 'archived', 'DRAFT', 'PUBLISHED', 'ARCHIVED']).default('draft'),
+  orderIndex: z.coerce.number().int().default(0),
+  seoTitle: z.string().max(100).optional().or(z.literal('')),
+  seoDescription: z.string().max(200).optional().or(z.literal('')),
+});
+
 export const PublishHelpArticleSchema = z.object({
   id: z.string().uuid(),
 });
@@ -64,6 +77,7 @@ export type CreateHelpCategoryInputSchema = z.infer<typeof CreateHelpCategorySch
 export type UpdateHelpCategoryInputSchema = z.infer<typeof UpdateHelpCategorySchema>;
 export type CreateHelpArticleInputSchema = z.infer<typeof CreateHelpArticleSchema>;
 export type UpdateHelpArticleInputSchema = z.infer<typeof UpdateHelpArticleSchema>;
+export type AdminSaveHelpSchemaInput = z.infer<typeof AdminSaveHelpSchema>;
 export type HelpSearchInputSchema = z.infer<typeof HelpSearchSchema>;
 export type ArticleHelpfulnessInput = z.infer<typeof ArticleHelpfulnessSchema>;
 export type HelpArticleInput = z.infer<typeof HelpArticleSchema>;

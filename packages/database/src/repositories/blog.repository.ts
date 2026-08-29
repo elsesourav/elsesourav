@@ -202,6 +202,70 @@ export class BlogRepository {
     }
   }
 
+  async findById(id: string): Promise<DomainBlogPost | null> {
+    try {
+      const record = await this.prisma.blogPost.findUnique({
+        where: { id },
+        include: this.postInclude,
+      });
+      if (!record || record.deletedAt) return null;
+      return mapPrismaBlogPostToDomain(record as unknown as PrismaBlogWithRelations);
+    } catch (error) {
+      throw AppError.database(`Failed to find blog post by id: ${id}`, error);
+    }
+  }
+
+  async listAdminPosts(options: {
+    status?: PublishStatus;
+    categorySlug?: string;
+    search?: string;
+    limit?: number;
+  } = {}): Promise<DomainBlogPost[]> {
+    try {
+      const limit = Math.min(Math.max(options.limit ?? 50, 1), 100);
+      const where: Prisma.BlogPostWhereInput = { deletedAt: null };
+
+      if (options.status) {
+        where.status = options.status;
+      }
+      if (options.categorySlug && options.categorySlug !== 'all') {
+        where.category = { slug: options.categorySlug };
+      }
+      if (options.search && options.search.trim().length > 0) {
+        const term = options.search.trim();
+        where.OR = [
+          { title: { contains: term, mode: 'insensitive' } },
+          { excerpt: { contains: term, mode: 'insensitive' } },
+        ];
+      }
+
+      const records = await this.prisma.blogPost.findMany({
+        where,
+        take: limit,
+        orderBy: { updatedAt: 'desc' },
+        include: this.postInclude,
+      });
+
+      return records.map((r) => mapPrismaBlogPostToDomain(r as unknown as PrismaBlogWithRelations));
+    } catch (error) {
+      throw AppError.database('Failed to query admin blog posts', error);
+    }
+  }
+
+  async deletePost(id: string): Promise<void> {
+    try {
+      await this.prisma.blogPost.update({
+        where: { id },
+        data: {
+          deletedAt: new Date(),
+          status: PublishStatus.ARCHIVED,
+        },
+      });
+    } catch (error) {
+      throw AppError.database(`Failed to delete blog post: ${id}`, error);
+    }
+  }
+
   async archivePost(id: string): Promise<DomainBlogPost> {
     try {
       const record = await this.prisma.blogPost.update({

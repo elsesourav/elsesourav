@@ -301,6 +301,61 @@ export class HelpRepository {
     return mapPrismaHelpArticleToDomain(article);
   }
 
+  async findArticleById(id: string): Promise<DomainHelpArticle | null> {
+    const article = await prisma.helpArticle.findUnique({
+      where: { id },
+      include: {
+        category: true,
+        author: true,
+      },
+    });
+    if (!article || article.deletedAt) return null;
+    return mapPrismaHelpArticleToDomain(article);
+  }
+
+  async listAdminArticles(options: {
+    categorySlug?: string;
+    search?: string;
+    limit?: number;
+  } = {}): Promise<DomainHelpArticle[]> {
+    const limit = Math.min(Math.max(options.limit ?? 50, 1), 100);
+    const where: Prisma.HelpArticleWhereInput = { deletedAt: null };
+
+    if (options.categorySlug && options.categorySlug !== 'all') {
+      where.category = { slug: options.categorySlug };
+    }
+
+    if (options.search && options.search.trim().length > 0) {
+      const term = options.search.trim();
+      where.OR = [
+        { title: { contains: term, mode: 'insensitive' } },
+        { content: { contains: term, mode: 'insensitive' } },
+      ];
+    }
+
+    const records = await prisma.helpArticle.findMany({
+      where,
+      take: limit,
+      orderBy: [{ category: { orderIndex: 'asc' } }, { orderIndex: 'asc' }],
+      include: {
+        category: true,
+        author: true,
+      },
+    });
+
+    return records.map(mapPrismaHelpArticleToDomain);
+  }
+
+  async deleteArticle(id: string): Promise<void> {
+    await prisma.helpArticle.update({
+      where: { id },
+      data: {
+        deletedAt: new Date(),
+        status: PublishStatus.ARCHIVED,
+      },
+    });
+  }
+
   /**
    * Increments helpfulness votes
    */

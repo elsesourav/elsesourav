@@ -20,7 +20,7 @@ export class HelpService {
   constructor(private readonly helpRepo: HelpRepository) {}
 
   private verifyAdmin(callerRole?: UserRole | string): void {
-    if (callerRole !== 'ADMIN') {
+    if (callerRole !== 'ADMIN' && callerRole !== 'STAFF') {
       throw AppError.forbidden('Administrative privileges are required for this action.');
     }
   }
@@ -94,8 +94,34 @@ export class HelpService {
   }
 
   // ==========================================
-  // Admin Mutation Operations
+  // Admin Operations
   // ==========================================
+
+  async getAdminArticleById(
+    callerRole: UserRole | string | undefined,
+    id: string
+  ): Promise<DomainHelpArticle> {
+    this.verifyAdmin(callerRole);
+
+    const article = await this.helpRepo.findArticleById(id);
+    if (!article) {
+      throw AppError.notFound(`Help article '${id}' was not found.`);
+    }
+
+    return article;
+  }
+
+  async listAdminArticles(
+    callerRole: UserRole | string | undefined,
+    options: {
+      categorySlug?: string;
+      search?: string;
+      limit?: number;
+    } = {}
+  ): Promise<DomainHelpArticle[]> {
+    this.verifyAdmin(callerRole);
+    return this.helpRepo.listAdminArticles(options);
+  }
 
   /**
    * Creates a new Help Category (ADMIN only)
@@ -184,5 +210,16 @@ export class HelpService {
   ): Promise<DomainHelpArticle> {
     this.verifyAdmin(callerRole);
     return this.helpRepo.archiveArticle(id);
+  }
+
+  /**
+   * Deletes a Help Article (ADMIN only)
+   */
+  async deleteArticle(
+    callerRole: UserRole | string | undefined,
+    id: string
+  ): Promise<void> {
+    this.verifyAdmin(callerRole);
+    return this.helpRepo.deleteArticle(id);
   }
 }

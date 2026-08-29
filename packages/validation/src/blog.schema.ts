@@ -23,6 +23,19 @@ export const UpdateBlogPostSchema = CreateBlogPostSchema.partial().extend({
   status: z.enum(['draft', 'published', 'archived']).optional(),
 });
 
+export const AdminSaveBlogSchema = z.object({
+  id: z.string().optional(),
+  title: z.string().min(5, 'Title must be at least 5 characters').max(150),
+  slug: BlogSlugSchema.optional(),
+  excerpt: z.string().min(10, 'Excerpt must be at least 10 characters').max(300),
+  content: z.string().min(50, 'Content must contain at least 50 characters'),
+  coverImageUrl: z.string().url('Cover image must be a valid URL').optional().or(z.literal('')),
+  categoryId: z.string().min(1, 'Category is required'),
+  status: z.enum(['draft', 'published', 'archived', 'DRAFT', 'PUBLISHED', 'ARCHIVED']).default('draft'),
+  seoTitle: z.string().max(70).optional().or(z.literal('')),
+  seoDescription: z.string().max(160).optional().or(z.literal('')),
+});
+
 export const PublishBlogPostSchema = z.object({
   postId: z.string().min(1, 'Post ID is required'),
 });
@@ -51,6 +64,7 @@ export const BlogPostSchema = CreateBlogPostSchema;
 export type BlogPostInput = z.infer<typeof CreateBlogPostSchema>;
 export type CreateBlogPostInputSchema = z.infer<typeof CreateBlogPostSchema>;
 export type UpdateBlogPostInputSchema = z.infer<typeof UpdateBlogPostSchema>;
+export type AdminSaveBlogSchemaInput = z.infer<typeof AdminSaveBlogSchema>;
 export type BlogCategoryInputSchema = z.infer<typeof BlogCategorySchema>;
 export type BlogTagInputSchema = z.infer<typeof BlogTagSchema>;
 export type BlogQueryInputSchema = z.infer<typeof BlogQuerySchema>;

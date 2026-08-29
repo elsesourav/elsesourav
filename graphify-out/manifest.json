@@ -140,8 +140,8 @@
     "hash": "eb4438d57a4e5e370cd6cab1586cf020"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/repositories/app.repository.ts": {
-    "mtime": 1787944222.3125517,
-    "hash": "b444845818a4e4ca6b4d3f4dda6b5365"
+    "mtime": 1787977997.861684,
+    "hash": "e80a4fc998c15873f839a8f351850339"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/repositories/support.repository.ts": {
     "mtime": 1787975959.8201225,
@@ -190,6 +190,10 @@
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/__tests__/app-detail-ui.test.ts": {
     "mtime": 1787943511.8072472,
     "hash": "58bc5eeb8a55ae94c47f067372ea1cf9"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/__tests__/admin-app-domain.test.ts": {
+    "mtime": 1787978191.4228032,
+    "hash": "ff055433435bb37d08a3b21cff0b1f40"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/__tests__/help-domain.test.ts": {
     "mtime": 1787946127.332243,
@@ -272,12 +276,12 @@
     "hash": "ffd2d15f1e191acfb4f10621f38d5fcf"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/mappers/app.mapper.ts": {
-    "mtime": 1787943484.3614862,
-    "hash": "cb3fe49307a22e333a67eb0e7e2fdd32"
+    "mtime": 1787978162.3462896,
+    "hash": "1782d677451165c0388d02a02650b47e"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/services/app.service.ts": {
-    "mtime": 1787942676.0280685,
-    "hash": "b08acca97fbe9427ae20df03e1184bb4"
+    "mtime": 1787978010.1110198,
+    "hash": "1bb0b7374029a0e75a88da3432661aeb"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/services/support.service.ts": {
     "mtime": 1787946683.4973588,
@@ -336,8 +340,8 @@
     "hash": "ac2a62da0ab4290d78c44500fbb124ac"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/types/src/app.types.ts": {
-    "mtime": 1787944283.6286786,
-    "hash": "091c7fe1166a79c08c953864e3c968c3"
+    "mtime": 1787978139.471831,
+    "hash": "28b2ee596aad2a2e84f060b87988806d"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/types/src/media.types.ts": {
     "mtime": 1787942101.2913485,
@@ -488,8 +492,8 @@
     "hash": "6b325b8e8f741fe92500c21d593c1b41"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/validation/src/app.schema.ts": {
-    "mtime": 1787944211.6963446,
-    "hash": "48e146b93317f915fd02b0c7e1315c96"
+    "mtime": 1787977982.498202,
+    "hash": "d6d02b2c1db4cae61f545586c8411f5d"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/validation/src/media.schema.ts": {
     "mtime": 1787942114.9195244,
@@ -811,6 +815,18 @@
     "mtime": 1787977862.0895247,
     "hash": "2253e65b7fbcebc2fe7647f5a18aace1"
   },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(admin)/admin/apps/page.tsx": {
+    "mtime": 1787978067.799013,
+    "hash": "0c2124983c9f3ec14a1d1306483cb9f0"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(admin)/admin/apps/new/page.tsx": {
+    "mtime": 1787978075.4862046,
+    "hash": "9211145f6523f35d71ad7a32f9f0847c"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(admin)/admin/apps/[id]/page.tsx": {
+    "mtime": 1787978081.7010632,
+    "hash": "f5bf3f31fe8cd3e223fe53209699d0cd"
+  },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/queries/get-admin-dashboard.ts": {
     "mtime": 1787977709.3060842,
     "hash": "6491766334159f93908bf4a90381dcfe"
@@ -830,6 +846,22 @@
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/components/AdminStatsGrid.tsx": {
     "mtime": 1787977737.0415165,
     "hash": "68a06fe5d1bc993a02b51809bfdd0173"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/apps/queries/get-admin-apps.ts": {
+    "mtime": 1787978021.7190073,
+    "hash": "3e27f5ec53cd1f2a50d7e9eda1b3343c"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/apps/components/AdminAppForm.tsx": {
+    "mtime": 1787978061.3326302,
+    "hash": "775b9f3dcdf1df1438f6775d83f419c3"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/apps/components/AdminAppsTable.tsx": {
+    "mtime": 1787978042.7681785,
+    "hash": "67b88e033564f83a457f0c9ff177d64d"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/apps/actions/admin-app-actions.ts": {
+    "mtime": 1787978030.5467863,
+    "hash": "1f8a041d005c9e3f9dfe7a923d5ea364"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/guards/require-admin.ts": {
     "mtime": 1787977702.868634,

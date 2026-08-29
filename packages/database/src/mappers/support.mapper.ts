@@ -48,6 +48,8 @@ export function mapPrismaSupportTicketToListItem(
     id: ticket.id,
     ticketNumber: ticket.ticketNumber,
     userId: ticket.userId,
+    userEmail: ticket.user?.email,
+    userName: ticket.user?.displayName || undefined,
     subject: ticket.subject,
     category: ticket.category,
     priority: ticket.priority.toLowerCase() as SupportTicketPriority,

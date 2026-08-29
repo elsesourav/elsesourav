@@ -1,5 +1,6 @@
 import { BlogRepository } from '../repositories/blog.repository';
 import { AppError } from '@elsesourav/types';
+import { PublishStatus } from '@prisma/client';
 import {
   CreateBlogPostSchema,
   UpdateBlogPostSchema,
@@ -22,8 +23,8 @@ import type {
 export class BlogService {
   constructor(private readonly blogRepo: BlogRepository) {}
 
-  private verifyAdmin(callerRole?: UserRole): void {
-    if (callerRole !== 'ADMIN') {
+  private verifyAdmin(callerRole?: UserRole | string): void {
+    if (callerRole !== 'ADMIN' && callerRole !== 'STAFF') {
       throw AppError.forbidden('Administrative privileges are required to perform this action');
     }
   }
@@ -44,6 +45,17 @@ export class BlogService {
     return post;
   }
 
+  async getAdminPostById(callerRole: UserRole | undefined, id: string): Promise<DomainBlogPost> {
+    this.verifyAdmin(callerRole);
+
+    const post = await this.blogRepo.findById(id);
+    if (!post) {
+      throw AppError.notFound(`Blog article '${id}'`);
+    }
+
+    return post;
+  }
+
   async listPublicPosts(options: BlogQueryInput = {}): Promise<BlogQueryResult> {
     const validated = BlogQuerySchema.safeParse(options);
     if (!validated.success) {
@@ -51,6 +63,29 @@ export class BlogService {
     }
 
     return this.blogRepo.findPublicPosts(validated.data);
+  }
+
+  async listAdminPosts(
+    callerRole: UserRole | undefined,
+    options: {
+      status?: 'draft' | 'published' | 'archived';
+      categorySlug?: string;
+      search?: string;
+      limit?: number;
+    } = {}
+  ): Promise<DomainBlogPost[]> {
+    this.verifyAdmin(callerRole);
+
+    const prismaStatus = options.status
+      ? (options.status.toUpperCase() as PublishStatus)
+      : undefined;
+
+    return this.blogRepo.listAdminPosts({
+      status: prismaStatus,
+      categorySlug: options.categorySlug,
+      search: options.search,
+      limit: options.limit,
+    });
   }
 
   async getRelatedPosts(postId: string, categoryId?: string, limit: number = 3): Promise<BlogPostListItem[]> {
@@ -129,5 +164,18 @@ export class BlogService {
     }
 
     return this.blogRepo.archivePost(id);
+  }
+
+  async deleteBlogPost(
+    callerRole: UserRole | undefined,
+    id: string
+  ): Promise<void> {
+    this.verifyAdmin(callerRole);
+
+    if (!id || typeof id !== 'string') {
+      throw AppError.validation('Valid post ID is required');
+    }
+
+    return this.blogRepo.deletePost(id);
   }
 }

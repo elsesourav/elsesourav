@@ -1,4 +1,4 @@
-import { PrismaClient, TicketStatus, TicketPriority } from '@prisma/client';
+import { PrismaClient, Prisma, TicketStatus, TicketPriority } from '@prisma/client';
 import { prisma as defaultPrisma } from '../client';
 import { AppError } from '@elsesourav/types';
 import {
@@ -234,10 +234,40 @@ export class SupportRepository {
   }
 
   /**
-   * Lists all tickets (Admin view)
+   * Lists all tickets (Admin view) with optional filters
    */
-  async findAllTickets(limit = 50): Promise<SupportTicketListItem[]> {
+  async findAllTickets(
+    options:
+      | {
+          status?: SupportTicketStatus;
+          category?: string;
+          search?: string;
+          limit?: number;
+        }
+      | number = 50
+  ): Promise<SupportTicketListItem[]> {
+    const limit = typeof options === 'number' ? options : Math.min(Math.max(options.limit ?? 50, 1), 100);
+    const where: Prisma.SupportTicketWhereInput = {};
+
+    if (typeof options === 'object') {
+      if (options.status && (options.status as string) !== 'all') {
+        where.status = parsePrismaStatus(options.status);
+      }
+      if (options.category && options.category !== 'all') {
+        where.category = options.category;
+      }
+      if (options.search && options.search.trim().length > 0) {
+        const term = options.search.trim();
+        where.OR = [
+          { ticketNumber: { contains: term, mode: 'insensitive' } },
+          { subject: { contains: term, mode: 'insensitive' } },
+          { user: { email: { contains: term, mode: 'insensitive' } } },
+        ];
+      }
+    }
+
     const records = await this.prisma.supportTicket.findMany({
+      where,
       take: limit,
       orderBy: { lastMessageAt: 'desc' },
       include: {

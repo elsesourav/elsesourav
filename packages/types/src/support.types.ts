@@ -42,6 +42,8 @@ export interface SupportTicketListItem {
   readonly id: ID;
   readonly ticketNumber: string;
   readonly userId: ID;
+  readonly userEmail?: string;
+  readonly userName?: string;
   readonly subject: string;
   readonly category: string;
   readonly priority: SupportTicketPriority;
