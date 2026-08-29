@@ -34,6 +34,7 @@ const NAV_ITEMS = [
   { href: '/admin/users', label: 'User Directory', icon: Users },
   { href: '/admin/media', label: 'Media Library', icon: Image },
   { href: '/admin/settings', label: 'Portal Config', icon: Sliders },
+  { href: '/admin/audit', label: 'Audit Trail', icon: Shield },
 ];
 
 export function AdminMobileNav({ context }: AdminMobileNavProps) {
