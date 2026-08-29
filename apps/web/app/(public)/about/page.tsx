@@ -6,7 +6,7 @@ import { ROUTES, SITE_CONFIG } from '@elsesourav/config';
 
 export const metadata: Metadata = {
   title: 'About the Creator & Ecosystem',
-  description: 'Learn about Sourav, the engineering philosophy behind ElseSourav, and the V2 cloud-native architecture.',
+  description: 'Learn about Sourav, the engineering philosophy behind ElseSourav, and its cloud-native architecture.',
   alternates: {
     canonical: 'https://elsesourav.com/about',
   },
@@ -67,7 +67,7 @@ export default function AboutPage() {
               terminal emulators, and cloud-native applications.
             </p>
             <p>
-              The V2 platform leverages a unified Next.js 15 App Router architecture, PostgreSQL with Prisma ORM,
+              The platform leverages a unified Next.js 15 App Router architecture, PostgreSQL with Prisma ORM,
               Supabase Auth, and Cloudinary media optimization.
             </p>
           </CardDescription>

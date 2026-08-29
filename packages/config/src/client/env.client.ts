@@ -34,7 +34,7 @@ export function validateClientEnv(env: Record<string, unknown> = process.env): C
       .map((issue) => `  • ${issue.path.join('.')}: ${issue.message}`)
       .join('\n');
     throw new Error(
-      `[ElseSourav V2 Client Config Error] Invalid client environment configuration:\n${errorDetails}\nPlease check your client environment variables (.env.local).`
+      `[ElseSourav Client Config Error] Invalid client environment configuration:\n${errorDetails}\nPlease check your client environment variables (.env.local).`
     );
   }
   return result.data;

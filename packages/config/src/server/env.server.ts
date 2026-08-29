@@ -35,7 +35,7 @@ export function validateServerEnv(env: Record<string, unknown> = process.env): S
       .map((issue) => `  • ${issue.path.join('.')}: ${issue.message}`)
       .join('\n');
     throw new Error(
-      `[ElseSourav V2 Server Config Error] Invalid server environment configuration:\n${errorDetails}\nPlease check your server secrets configuration.`
+      `[ElseSourav Server Config Error] Invalid server environment configuration:\n${errorDetails}\nPlease check your server secrets configuration.`
     );
   }
   return result.data;

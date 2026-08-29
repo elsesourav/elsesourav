@@ -231,7 +231,7 @@ export function AdminBlogForm({ post, categories }: AdminBlogFormProps) {
                 type="text"
                 value={title}
                 onChange={(e) => handleTitleChange(e.target.value)}
-                placeholder="e.g. Building ElseSourav V2: Next.js 15 Migration"
+                placeholder="e.g. Building ElseSourav: Next.js 15 Migration"
                 required
                 maxLength={150}
                 className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100"
@@ -247,7 +247,7 @@ export function AdminBlogForm({ post, categories }: AdminBlogFormProps) {
                 type="text"
                 value={slug}
                 onChange={(e) => setSlug(e.target.value.toLowerCase())}
-                placeholder="building-elsesourav-v2-nextjs-15-migration"
+                placeholder="building-elsesourav-nextjs-15-migration"
                 required
                 maxLength={100}
                 className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100 font-mono"

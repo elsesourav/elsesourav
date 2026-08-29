@@ -68,9 +68,9 @@ export function DesignSystemClient() {
             <Sparkles className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-white tracking-tight">V2 Design System & Component Library</h1>
+            <h1 className="text-3xl font-bold text-white tracking-tight">Design System & Component Library</h1>
             <p className="text-sm text-zinc-400 mt-0.5">
-              Production-grade, accessible, and responsive UI primitives built for ElseSourav V2.
+              Production-grade, accessible, and responsive UI primitives built for ElseSourav.
             </p>
           </div>
         </div>
@@ -185,7 +185,7 @@ export function DesignSystemClient() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Alert variant="info">
             <AlertTitle>System Notice</AlertTitle>
-            <AlertDescription>The ElseSourav V2 API gateway is running on Next.js 15 App Router.</AlertDescription>
+            <AlertDescription>The ElseSourav API gateway is running on Next.js 15 App Router.</AlertDescription>
           </Alert>
           <Alert variant="success">
             <AlertTitle>Database Connected</AlertTitle>
@@ -268,7 +268,7 @@ export function DesignSystemClient() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent onClose={() => setDialogOpen(false)}>
           <DialogHeader>
-            <DialogTitle>V2 System Confirmation</DialogTitle>
+            <DialogTitle>System Confirmation</DialogTitle>
             <DialogDescription>
               Are you sure you want to promote this release build to production?
             </DialogDescription>

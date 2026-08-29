@@ -42,7 +42,6 @@ export function PublicHeader() {
         <Link href={ROUTES.HOME} className="flex items-center gap-2 font-bold text-base sm:text-lg text-white group">
           <Sparkles className="w-5 h-5 text-indigo-400 group-hover:scale-110 transition-transform" />
           <span>{SITE_CONFIG.name}</span>
-          <Badge variant="outline" className="text-[10px] ml-1 px-1.5 py-0 border-zinc-700">v2.0</Badge>
         </Link>
 
         {/* Desktop Navigation Links */}

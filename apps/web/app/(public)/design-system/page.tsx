@@ -3,7 +3,7 @@ import { DesignSystemClient } from './client';
 
 export const metadata: Metadata = {
   title: 'Design System Primitives & Tokens',
-  description: 'Production-grade, accessible, and responsive UI primitives built for ElseSourav V2.',
+  description: 'Production-grade, accessible, and responsive UI primitives built for ElseSourav.',
   robots: {
     index: false,
     follow: false,

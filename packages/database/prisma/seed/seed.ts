@@ -964,7 +964,7 @@ We treat security and data ownership as core principles.
       {
         userId: userSarah.id,
         type: 'system_announcement',
-        title: 'Welcome to ElseSourav V2!',
+        title: 'Welcome to ElseSourav!',
         message: 'Explore your new developer launchpad and personal library.',
         linkUrl: '/library',
         isRead: true,
