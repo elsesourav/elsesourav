@@ -110,7 +110,7 @@ export const mockSupportTicket: SupportTicket = {
   subject: 'Cannot connect to web terminal',
   description: 'WebSocket connection fails on Safari browser.',
   category: 'Bug Report',
-  priority: 'normal',
+  priority: 'medium',
   status: 'open',
   lastMessageAt: 1704067200000,
   createdAt: 1704067200000,

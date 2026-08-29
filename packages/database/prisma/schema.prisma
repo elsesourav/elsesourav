@@ -270,15 +270,16 @@ model SupportTicket {
 }
 
 model TicketMessage {
-  id           String        @id @default(uuid())
-  ticketId     String
-  ticket       SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
-  senderUserId String
-  sender       User          @relation(fields: [senderUserId], references: [id])
-  senderRole   UserRole      @default(USER)
-  message      String
-  attachments  String[]      @default([])
-  createdAt    DateTime      @default(now())
+  id             String        @id @default(uuid())
+  ticketId       String
+  ticket         SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  senderUserId   String
+  sender         User          @relation(fields: [senderUserId], references: [id])
+  senderRole     UserRole      @default(USER)
+  message        String
+  attachments    String[]      @default([])
+  isInternalNote Boolean       @default(false)
+  createdAt      DateTime      @default(now())
 
   @@index([ticketId])
   @@index([senderUserId])
