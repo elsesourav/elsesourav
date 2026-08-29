@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import { getServerSession } from '@elsesourav/auth';
-import { Button, Card, Badge, Section, SectionHeader, ActionGroup, Container } from '@elsesourav/ui';
+import { Button, Badge, Section, SectionHeader, ActionGroup, Container } from '@elsesourav/ui';
 import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
 import { SiteService } from '@elsesourav/database';
 import { discoverPublishedApps } from '@/features/apps/queries/get-apps';
@@ -320,7 +320,7 @@ export default async function HomePage() {
 
         {/* 3. Technical Writing & Ideas Section */}
         {recentPosts.length > 0 && (
-          <Section spacing="md">
+          <Section spacing="lg">
             <Container size="lg">
               <SectionHeader
                 align="split"
@@ -330,49 +330,147 @@ export default async function HomePage() {
                 actions={
                   <Link
                     href={ROUTES.BLOG}
-                    className="text-sm font-medium text-cyan-400 hover:text-cyan-300 flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded p-1"
+                    className="text-sm font-medium text-cyan-400 hover:text-cyan-300 flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded p-1"
                   >
-                    <span>Read all articles</span>
+                    <span>Read all articles ({blogResult.totalCount})</span>
                     <ArrowRight className="w-4 h-4" />
                   </Link>
                 }
               />
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {recentPosts.map((post) => (
-                  <Link key={post.id} href={`/blog/${post.slug}`} className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-2xl">
-                    <Card className="h-full border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-cyan-500/50 p-6 rounded-2xl transition-all duration-300 flex flex-col justify-between backdrop-blur-sm group-hover:shadow-xl group-hover:shadow-cyan-500/10">
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between text-xs text-zinc-500">
-                          <span>{post.category?.name || 'Engineering'}</span>
-                          <span>{post.readingTime} min read</span>
+              {recentPosts.length >= 2 ? (
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                  {/* Left: Emphasized Lead Editorial Essay */}
+                  <div className="lg:col-span-7">
+                    <Link
+                      href={`/blog/${recentPosts[0]!.slug}`}
+                      className="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-3xl"
+                    >
+                      <div className="h-full border border-zinc-800/80 bg-zinc-900/30 hover:bg-zinc-900/60 hover:border-cyan-500/50 p-7 sm:p-8 rounded-3xl transition-all duration-300 flex flex-col justify-between backdrop-blur-sm group-hover:shadow-2xl group-hover:shadow-cyan-500/10">
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between text-xs pb-3 border-b border-zinc-800/70">
+                            <span className="font-mono text-cyan-400 text-xs font-semibold uppercase tracking-wider">
+                              Latest Essay // {recentPosts[0]!.category?.name || 'Architecture'}
+                            </span>
+                            <span className="text-zinc-400 text-xs">
+                              {recentPosts[0]!.readingTime} min read
+                            </span>
+                          </div>
+
+                          <h3 className="font-bold text-xl sm:text-2xl text-white group-hover:text-cyan-200 transition-colors leading-snug">
+                            {recentPosts[0]!.title}
+                          </h3>
+
+                          <p className="text-sm text-zinc-400 leading-relaxed line-clamp-4">
+                            {recentPosts[0]!.excerpt}
+                          </p>
                         </div>
-                        <h3 className="font-semibold text-base text-zinc-100 group-hover:text-white transition-colors line-clamp-2">
-                          {post.title}
+
+                        <div className="flex items-center justify-between pt-6 mt-6 border-t border-zinc-800/70 text-xs text-zinc-400">
+                          <span>
+                            {recentPosts[0]!.publishedAt
+                              ? new Date(recentPosts[0]!.publishedAt).toLocaleDateString('en-US', {
+                                  month: 'long',
+                                  day: 'numeric',
+                                  year: 'numeric',
+                                })
+                              : 'Published Recently'}
+                          </span>
+                          <span className="text-cyan-400 font-semibold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                            <span>Read complete essay</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+
+                  {/* Right: Archival Index Stream of Supporting Notes */}
+                  <div className="lg:col-span-5 flex flex-col justify-between divide-y divide-zinc-800/80 rounded-3xl border border-zinc-800/80 bg-zinc-900/20 p-6">
+                    {recentPosts.slice(1).map((post, idx) => (
+                      <Link
+                        key={post.id}
+                        href={`/blog/${post.slug}`}
+                        className={`group block py-4 first:pt-0 last:pb-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-xl`}
+                      >
+                        <div className="space-y-1.5">
+                          <div className="flex items-center justify-between text-xs text-zinc-500 font-mono">
+                            <span className="text-cyan-400/90 font-medium">
+                              {post.category?.name || 'Notes'}
+                            </span>
+                            <span>
+                              {post.publishedAt
+                                ? new Date(post.publishedAt).toLocaleDateString('en-US', {
+                                    month: 'short',
+                                    day: 'numeric',
+                                    year: 'numeric',
+                                  })
+                                : `Note 0${idx + 2}`}
+                            </span>
+                          </div>
+
+                          <h4 className="font-semibold text-base text-zinc-200 group-hover:text-white group-hover:underline underline-offset-4 transition-colors line-clamp-2">
+                            {post.title}
+                          </h4>
+
+                          <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+                            {post.excerpt}
+                          </p>
+
+                          <div className="pt-1 flex items-center justify-between text-[11px] text-zinc-500">
+                            <span>{post.readingTime} min read</span>
+                            <span className="text-cyan-400 font-medium flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                              <span>Read</span>
+                              <ArrowRight className="w-3 h-3" />
+                            </span>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="max-w-3xl mx-auto">
+                  <Link
+                    href={`/blog/${recentPosts[0]!.slug}`}
+                    className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-3xl"
+                  >
+                    <div className="border border-zinc-800/80 bg-zinc-900/30 hover:bg-zinc-900/60 hover:border-cyan-500/50 p-7 sm:p-8 rounded-3xl transition-all duration-300 flex flex-col justify-between backdrop-blur-sm group-hover:shadow-2xl group-hover:shadow-cyan-500/10">
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between text-xs pb-3 border-b border-zinc-800/70">
+                          <span className="font-mono text-cyan-400 text-xs font-semibold uppercase tracking-wider">
+                            Latest Essay // {recentPosts[0]!.category?.name || 'Architecture'}
+                          </span>
+                          <span className="text-zinc-400 text-xs">
+                            {recentPosts[0]!.readingTime} min read
+                          </span>
+                        </div>
+                        <h3 className="font-bold text-xl sm:text-2xl text-white group-hover:text-cyan-200 transition-colors">
+                          {recentPosts[0]!.title}
                         </h3>
-                        <p className="text-xs text-zinc-400 line-clamp-3 leading-relaxed">
-                          {post.excerpt}
+                        <p className="text-sm text-zinc-400 leading-relaxed">
+                          {recentPosts[0]!.excerpt}
                         </p>
                       </div>
-                      <div className="mt-4 pt-3 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-500">
+                      <div className="flex items-center justify-between pt-4 mt-6 border-t border-zinc-800/70 text-xs text-zinc-400">
                         <span>
-                          {post.publishedAt
-                            ? new Date(post.publishedAt).toLocaleDateString('en-US', {
-                                month: 'short',
+                          {recentPosts[0]!.publishedAt
+                            ? new Date(recentPosts[0]!.publishedAt).toLocaleDateString('en-US', {
+                                month: 'long',
                                 day: 'numeric',
                                 year: 'numeric',
                               })
-                            : 'Recent'}
+                            : 'Published Recently'}
                         </span>
-                        <span className="text-cyan-400 flex items-center gap-1 font-medium group-hover:translate-x-0.5 transition-transform">
-                          <span>Read</span>
-                          <ArrowRight className="w-3 h-3" />
+                        <span className="text-cyan-400 font-semibold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                          <span>Read essay</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
                         </span>
                       </div>
-                    </Card>
+                    </div>
                   </Link>
-                ))}
-              </div>
+                </div>
+              )}
             </Container>
           </Section>
         )}

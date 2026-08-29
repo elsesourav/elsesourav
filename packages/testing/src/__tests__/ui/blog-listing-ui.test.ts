@@ -106,4 +106,11 @@ describe('Blog Listing & Discovery Query Pipeline', () => {
       })
     );
   });
+
+  it('validates editorial and archival metadata fields on blog post list items', () => {
+    expect(mockPost.readingTime).toBe(5);
+    expect(mockPost.excerpt).toBeDefined();
+    expect(mockPost.category?.name).toBe('Engineering');
+    expect(mockPost.publishedAt).toBeDefined();
+  });
 });
