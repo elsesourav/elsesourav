@@ -24,6 +24,7 @@ import {
   Archive,
   Trash2,
 } from 'lucide-react';
+import { AdminMarkdownEditor } from '@/features/admin/components/AdminMarkdownEditor';
 
 interface AdminBlogFormProps {
   post?: BlogPost;
@@ -272,19 +273,15 @@ export function AdminBlogForm({ post, categories }: AdminBlogFormProps) {
           </div>
 
           {/* Markdown Content */}
-          <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-zinc-300">
-              Markdown Article Content <span className="text-rose-400">*</span>
-            </label>
-            <textarea
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="Write full article in Markdown format with code blocks, headings, and links..."
-              required
-              rows={12}
-              className="w-full bg-zinc-950/60 border border-zinc-800 rounded-xl p-3.5 text-xs text-zinc-100 focus:border-indigo-500 focus:outline-none font-mono leading-relaxed"
-            />
-          </div>
+          <AdminMarkdownEditor
+            label="Markdown Article Content"
+            value={content}
+            onChange={setContent}
+            required
+            rows={14}
+            placeholder="Write full article in Markdown format with code blocks, headings, tables, and links..."
+            helperText="Supports headings, lists, code highlighting, tables, blockquotes, and safe links"
+          />
         </Card>
 
         {/* Media & Category Card */}

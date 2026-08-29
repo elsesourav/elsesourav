@@ -35,7 +35,8 @@ export * from './components/tabs';
 export * from './components/breadcrumb';
 export * from './components/pagination';
 
-// Data Display
+// Data Display & Editing
 export * from './components/table';
 export * from './components/stat';
 export * from './components/markdown-renderer';
+export * from './components/admin-markdown-editor';

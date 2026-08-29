@@ -28,6 +28,7 @@ import {
   Archive,
   Trash2,
 } from 'lucide-react';
+import { AdminMarkdownEditor } from '@/features/admin/components/AdminMarkdownEditor';
 
 interface AdminAppFormProps {
   app?: App;
@@ -298,20 +299,16 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
             />
           </div>
 
-          {/* Full Description */}
-          <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-zinc-300">
-              Full Description & Documentation <span className="text-rose-400">*</span>
-            </label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Comprehensive application overview, architecture notes, and documentation..."
-              required
-              rows={6}
-              className="w-full bg-zinc-950/60 border border-zinc-800 rounded-xl p-3 text-xs text-zinc-100 focus:border-indigo-500 focus:outline-none leading-relaxed"
-            />
-          </div>
+          {/* Full Description / Markdown Documentation */}
+          <AdminMarkdownEditor
+            label="Full Description & Documentation"
+            value={description}
+            onChange={setDescription}
+            required
+            rows={10}
+            placeholder="Comprehensive application overview, architecture notes, usage instructions, and feature lists in Markdown..."
+            helperText="Supports feature lists, code blocks, screenshots, architecture notes, and tables"
+          />
         </Card>
 
         {/* Media & URLs Card */}

@@ -23,6 +23,7 @@ import {
   Archive,
   Trash2,
 } from 'lucide-react';
+import { AdminMarkdownEditor } from '@/features/admin/components/AdminMarkdownEditor';
 
 interface AdminHelpFormProps {
   article?: HelpArticle;
@@ -300,19 +301,15 @@ export function AdminHelpForm({ article, categories }: AdminHelpFormProps) {
           </div>
 
           {/* Markdown Content */}
-          <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-zinc-300">
-              Documentation Content <span className="text-rose-400">*</span>
-            </label>
-            <textarea
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="Write full article guide with step-by-step instructions in Markdown..."
-              required
-              rows={10}
-              className="w-full bg-zinc-950/60 border border-zinc-800 rounded-xl p-3.5 text-xs text-zinc-100 focus:border-indigo-500 focus:outline-none font-mono leading-relaxed"
-            />
-          </div>
+          <AdminMarkdownEditor
+            label="Documentation Content"
+            value={content}
+            onChange={setContent}
+            required
+            rows={12}
+            placeholder="Write full article guide with step-by-step instructions, checklists, and code snippets in Markdown..."
+            helperText="Supports step guides, checklists, tables, terminal commands, and notes"
+          />
         </Card>
 
         {/* Action Buttons */}
