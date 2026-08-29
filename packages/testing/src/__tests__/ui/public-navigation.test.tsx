@@ -49,4 +49,11 @@ describe('Public Navigation Information Architecture & Route Contracts', () => {
     expect(ROUTES.SETTINGS).toBe('/settings');
     expect(ROUTES.ADMIN.ROOT).toBe('/admin');
   });
+
+  it('exposes complete secondary footer navigation and compliance routes', () => {
+    expect(ROUTES.PRIVACY).toBe('/privacy');
+    expect(ROUTES.TERMS).toBe('/terms');
+    expect(ROUTES.ACCESSIBILITY).toBe('/accessibility');
+    expect(ROUTES.SUPPORT).toBe('/support');
+  });
 });
