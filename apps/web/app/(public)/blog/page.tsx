@@ -9,9 +9,13 @@ import { Badge } from '@elsesourav/ui';
 export const metadata: Metadata = {
   title: 'Engineering Journal & Articles | ElseSourav',
   description: 'Technical articles, architectural deep dives, software benchmarks, and release devlogs by ElseSourav.',
+  alternates: {
+    canonical: 'https://elsesourav.com/blog',
+  },
   openGraph: {
     title: 'Engineering Journal & Articles | ElseSourav',
     description: 'Technical articles, architectural deep dives, and software benchmarks by ElseSourav.',
+    url: 'https://elsesourav.com/blog',
     type: 'website',
   },
 };

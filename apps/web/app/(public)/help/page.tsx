@@ -11,9 +11,13 @@ import { LifeBuoy, Sparkles } from 'lucide-react';
 export const metadata: Metadata = {
   title: 'Help Center & Documentation | ElseSourav',
   description: 'Guides, FAQs, troubleshooting advice, and documentation for ElseSourav web tools and developer software.',
+  alternates: {
+    canonical: 'https://elsesourav.com/help',
+  },
   openGraph: {
     title: 'Help Center & Documentation | ElseSourav',
     description: 'Guides, FAQs, and troubleshooting documentation for ElseSourav tools.',
+    url: 'https://elsesourav.com/help',
     type: 'website',
   },
 };

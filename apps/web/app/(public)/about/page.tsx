@@ -6,6 +6,9 @@ import { ROUTES, SITE_CONFIG } from '@elsesourav/config';
 export const metadata = {
   title: 'About the Creator & Ecosystem',
   description: 'Learn about Sourav, the vision behind ElseSourav, and the architecture.',
+  alternates: {
+    canonical: 'https://elsesourav.com/about',
+  },
 };
 
 export default function AboutPage() {

@@ -19,13 +19,24 @@ export async function generateMetadata({ params }: AppDetailPageProps): Promise<
   const { slug } = await params;
   try {
     const app = await getPublicAppBySlug(slug);
+    const canonicalUrl = `https://elsesourav.com/apps/${app.slug}`;
     return {
       title: `${app.name} | ElseSourav Applications`,
       description: app.shortDescription,
+      alternates: {
+        canonical: canonicalUrl,
+      },
       openGraph: {
         title: `${app.name} | ElseSourav Applications`,
         description: app.shortDescription,
-        images: app.featuredImageUrl ? [{ url: app.featuredImageUrl }] : undefined,
+        url: canonicalUrl,
+        images: app.featuredImageUrl ? [{ url: app.featuredImageUrl, width: 1200, height: 630, alt: app.name }] : undefined,
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: `${app.name} | ElseSourav Applications`,
+        description: app.shortDescription,
+        images: app.featuredImageUrl ? [app.featuredImageUrl] : undefined,
       },
     };
   } catch {

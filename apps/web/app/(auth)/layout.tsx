@@ -2,6 +2,14 @@ import * as React from 'react';
 import Link from 'next/link';
 import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
 import { Sparkles } from 'lucide-react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default function AuthLayout({
   children,

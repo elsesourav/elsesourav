@@ -10,9 +10,13 @@ import type { AppSortOption } from '@elsesourav/types';
 export const metadata: Metadata = {
   title: 'Explore Applications | ElseSourav',
   description: 'Explore the complete ecosystem of web apps, browser extensions, developer utilities, and software created by ElseSourav.',
+  alternates: {
+    canonical: 'https://elsesourav.com/apps',
+  },
   openGraph: {
     title: 'Explore Applications | ElseSourav',
     description: 'Browse web applications, developer tools, and utilities.',
+    url: 'https://elsesourav.com/apps',
   },
 };
 

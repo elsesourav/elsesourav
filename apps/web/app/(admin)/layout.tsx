@@ -8,7 +8,15 @@ import { Button } from '@elsesourav/ui';
 import { AdminSidebar } from '@/features/admin/components/AdminSidebar';
 import { AdminMobileNav } from '@/features/admin/components/AdminMobileNav';
 import { Lock } from 'lucide-react';
+import type { Metadata } from 'next';
 import type { AdminContext } from '@elsesourav/types';
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function AdminLayout({
   children,
