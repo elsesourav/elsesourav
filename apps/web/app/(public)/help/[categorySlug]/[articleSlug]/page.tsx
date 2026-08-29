@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { SITE_CONFIG } from '@elsesourav/config';
 import {
   getPublicHelpArticleBySlug,
   getRelatedHelpArticles,
@@ -35,7 +36,7 @@ export async function generateMetadata({ params }: HelpArticlePageProps): Promis
   const title = article.seoTitle || article.title;
   const description =
     article.seoDescription || article.excerpt || `Read the official guide on ${article.title}.`;
-  const canonicalUrl = `https://elsesourav.com/help/${categorySlug}/${article.slug}`;
+  const canonicalUrl = `${SITE_CONFIG.url}/help/${categorySlug}/${article.slug}`;
 
   return {
     title,
@@ -44,16 +45,16 @@ export async function generateMetadata({ params }: HelpArticlePageProps): Promis
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: `${title} | ElseSourav`,
+      title: `${title} | ${SITE_CONFIG.name}`,
       description,
       type: 'article',
       url: canonicalUrl,
-      siteName: 'ElseSourav',
+      siteName: SITE_CONFIG.name,
       modifiedTime: new Date(article.updatedAt).toISOString(),
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${title} | ElseSourav`,
+      title: `${title} | ${SITE_CONFIG.name}`,
       description,
     },
   };
@@ -68,7 +69,7 @@ export default async function HelpArticlePage({ params }: HelpArticlePageProps) 
   }
 
   const relatedArticles = await getRelatedHelpArticles(article.id, article.category.id, 3);
-  const articleUrl = `https://elsesourav.com/help/${categorySlug}/${article.slug}`;
+  const articleUrl = `${SITE_CONFIG.url}/help/${categorySlug}/${article.slug}`;
 
   // JSON-LD structured data for article & breadcrumbs
   const jsonLd = {
@@ -90,12 +91,12 @@ export default async function HelpArticlePage({ params }: HelpArticlePageProps) 
             }
           : {
               '@type': 'Organization',
-              name: 'ElseSourav Documentation Team',
+              name: `${SITE_CONFIG.name} Documentation Team`,
             },
         publisher: {
           '@type': 'Organization',
-          name: 'ElseSourav',
-          url: 'https://elsesourav.com',
+          name: SITE_CONFIG.name,
+          url: SITE_CONFIG.url,
         },
         mainEntityOfPage: {
           '@type': 'WebPage',
@@ -110,19 +111,19 @@ export default async function HelpArticlePage({ params }: HelpArticlePageProps) 
             '@type': 'ListItem',
             position: 1,
             name: 'Home',
-            item: 'https://elsesourav.com',
+            item: SITE_CONFIG.url,
           },
           {
             '@type': 'ListItem',
             position: 2,
             name: 'Help Center',
-            item: 'https://elsesourav.com/help',
+            item: `${SITE_CONFIG.url}/help`,
           },
           {
             '@type': 'ListItem',
             position: 3,
             name: article.category.name,
-            item: `https://elsesourav.com/help/${categorySlug}`,
+            item: `${SITE_CONFIG.url}/help/${categorySlug}`,
           },
           {
             '@type': 'ListItem',

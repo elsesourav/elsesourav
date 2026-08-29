@@ -127,8 +127,8 @@ describe('Shared Markdown Rendering Architecture (@elsesourav/ui)', () => {
   });
 
   describe('3. GFM Tables & Overflow Protection', () => {
-    it('renders GitHub-Flavored Markdown tables with headers and rows', () => {
-      const markdown = `| Feature | Status | Support |\n| :--- | :--- | :--- |\n| WebGL 2.0 | Enabled | Full |\n| WASM JIT | Active | High |`;
+    it('renders GitHub-Flavored Markdown tables with headers, alignments, and rows', () => {
+      const markdown = `| Feature | Status | Support |\n| :--- | :---: | ---: |\n| WebGL 2.0 | Enabled | Full |\n| WASM JIT | Active | High |`;
       const { container } = render(<MarkdownRenderer content={markdown} />);
 
       const table = container.querySelector('table');
@@ -147,13 +147,47 @@ describe('Shared Markdown Rendering Architecture (@elsesourav/ui)', () => {
     });
   });
 
-  describe('4. Edge Cases & Robustness', () => {
+  describe('4. Safe Images & Horizontal Rules', () => {
+    it('renders safe images with lazy loading and alt caption', () => {
+      const markdown = `![Architecture Diagram](https://images.unsplash.com/photo-1555066931?w=800)`;
+      const { container } = render(<MarkdownRenderer content={markdown} />);
+
+      const img = container.querySelector('img');
+      expect(img).toBeDefined();
+      expect(img?.getAttribute('src')).toBe('https://images.unsplash.com/photo-1555066931?w=800');
+      expect(img?.getAttribute('alt')).toBe('Architecture Diagram');
+      expect(img?.getAttribute('loading')).toBe('lazy');
+    });
+
+    it('rejects unsafe image URLs', () => {
+      const markdown = `![Malicious](javascript:stealCookies())`;
+      const { container } = render(<MarkdownRenderer content={markdown} />);
+
+      expect(container.querySelector('img')).toBeNull();
+    });
+
+    it('renders horizontal rules', () => {
+      const markdown = `Section Above\n\n---\n\nSection Below`;
+      const { container } = render(<MarkdownRenderer content={markdown} />);
+
+      expect(container.querySelector('hr')).toBeDefined();
+    });
+  });
+
+  describe('5. Edge Cases, Fallbacks & Robustness', () => {
     it('handles empty or malformed strings gracefully without crashing', () => {
       const { container: c1 } = render(<MarkdownRenderer content="" />);
       expect(c1.textContent).toBe('');
 
       const { container: c2 } = render(<MarkdownRenderer content={'\n\n\n   \n'} />);
       expect(c2.querySelector('p')).toBeNull();
+    });
+
+    it('renders fallbackText when content is empty and fallbackText is provided', () => {
+      const { container } = render(
+        <MarkdownRenderer content="" fallbackText="No documentation provided." />
+      );
+      expect(container.textContent).toContain('No documentation provided.');
     });
 
     it('renders long paragraphs with break-words to prevent layout overflow', () => {
@@ -163,6 +197,14 @@ describe('Shared Markdown Rendering Architecture (@elsesourav/ui)', () => {
 
       expect(p).toBeDefined();
       expect(p?.className).toContain('break-words');
+    });
+
+    it('renders H5 and H6 headings', () => {
+      const markdown = `##### Heading Five\n###### Heading Six`;
+      const { container } = render(<MarkdownRenderer content={markdown} />);
+
+      expect(container.querySelector('h5')?.textContent).toBe('Heading Five');
+      expect(container.querySelector('h6')?.textContent).toBe('Heading Six');
     });
   });
 });

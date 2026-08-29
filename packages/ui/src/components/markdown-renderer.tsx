@@ -1,12 +1,13 @@
 'use client';
 
-import * as React from 'react';
-import { Copy, Check, Terminal } from 'lucide-react';
 import { isSafeUrl } from '@elsesourav/utils';
+import { Check, Copy, Terminal } from 'lucide-react';
+import * as React from 'react';
 
 export interface MarkdownRendererProps {
-  content: string;
+  content?: string | null;
   className?: string;
+  fallbackText?: string;
 }
 
 /**
@@ -28,21 +29,22 @@ export function MarkdownCodeBlock({ code, language }: { code: string; language?:
   };
 
   return (
-    <div className="my-6 rounded-xl overflow-hidden border border-border bg-zinc-950 font-mono text-xs shadow-xl">
-      <div className="flex items-center justify-between px-4 py-2 bg-surface-subtle border-b border-border-subtle text-muted-foreground text-[11px]">
+    <div className="my-6 rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-950 font-mono text-xs shadow-xl">
+      <div className="flex items-center justify-between px-4 py-2.5 bg-zinc-900/90 border-b border-zinc-800 text-zinc-400 text-[11px]">
         <span className="uppercase tracking-wider font-semibold text-zinc-300 flex items-center gap-1.5">
-          <Terminal className="w-3 h-3 text-primary" /> {language || 'code'}
+          <Terminal className="w-3.5 h-3.5 text-indigo-400" />
+          <span>{language || 'text'}</span>
         </span>
         <button
           type="button"
           onClick={handleCopy}
-          className="flex items-center gap-1 px-2 py-1 rounded-md bg-secondary hover:bg-zinc-800 text-zinc-300 hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none text-[11px]"
           aria-label="Copy code snippet to clipboard"
         >
           {copied ? (
             <>
-              <Check className="w-3.5 h-3.5 text-success" />
-              <span className="text-success font-medium">Copied</span>
+              <Check className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="text-emerald-400 font-medium">Copied</span>
             </>
           ) : (
             <>
@@ -103,14 +105,19 @@ export function renderInlineMarkdown(text: string): React.ReactNode[] {
           nodes.push(
             <span
               key={`img-${keyIndex++}`}
-              className="block my-6 relative aspect-[16/9] w-full rounded-2xl overflow-hidden border border-border bg-surface-subtle"
+              className="block my-6 rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-950/60 shadow-lg"
             >
               <img
                 src={rawLinkUrl}
                 alt={linkText || 'Content visual'}
-                className="w-full h-full object-cover"
+                className="w-full h-auto max-h-[550px] object-cover"
                 loading="lazy"
               />
+              {linkText ? (
+                <span className="block px-4 py-2 text-center text-[11px] text-zinc-500 italic bg-zinc-900/40 border-t border-zinc-800/60">
+                  {linkText}
+                </span>
+              ) : null}
             </span>
           );
         }
@@ -125,27 +132,28 @@ export function renderInlineMarkdown(text: string): React.ReactNode[] {
               href={rawLinkUrl}
               target={isExternal ? '_blank' : undefined}
               rel={isExternal ? 'noopener noreferrer' : undefined}
-              className="text-primary hover:text-indigo-300 underline underline-offset-4 font-medium transition-colors break-words focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded"
+              className="text-indigo-400 hover:text-indigo-300 underline underline-offset-4 font-medium transition-colors break-words focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:rounded"
             >
-              {linkText}
+              {linkText || rawLinkUrl}
             </a>
           );
         } else {
-          nodes.push(linkText);
+          // Dangerous link protocol stripped for XSS prevention
+          nodes.push(linkText || rawLinkUrl);
         }
       }
     } else if (isCode) {
       nodes.push(
         <code
           key={`code-${keyIndex++}`}
-          className="px-1.5 py-0.5 rounded-md bg-surface-subtle border border-border-strong text-indigo-300 text-xs font-mono break-words"
+          className="px-1.5 py-0.5 rounded-md bg-zinc-900 border border-zinc-800 text-indigo-300 text-xs font-mono break-words"
         >
           {codeText}
         </code>
       );
     } else if (isBold) {
       nodes.push(
-        <strong key={`bold-${keyIndex++}`} className="font-semibold text-foreground">
+        <strong key={`bold-${keyIndex++}`} className="font-semibold text-white">
           {boldText}
         </strong>
       );
@@ -157,7 +165,7 @@ export function renderInlineMarkdown(text: string): React.ReactNode[] {
       );
     } else if (isStrikethrough) {
       nodes.push(
-        <del key={`del-${keyIndex++}`} className="line-through text-muted-foreground">
+        <del key={`del-${keyIndex++}`} className="line-through text-zinc-500">
           {strikeText}
         </del>
       );
@@ -176,9 +184,11 @@ export function renderInlineMarkdown(text: string): React.ReactNode[] {
 /**
  * Universal, Secure Markdown Content Renderer
  */
-export function MarkdownRenderer({ content, className = '' }: MarkdownRendererProps) {
+export function MarkdownRenderer({ content, className = '', fallbackText }: MarkdownRendererProps) {
   const blocks = React.useMemo(() => {
-    if (!content || typeof content !== 'string') return [];
+    if (!content || typeof content !== 'string' || !content.trim()) {
+      return null;
+    }
 
     const lines = content.split('\n');
     const result: React.ReactNode[] = [];
@@ -208,12 +218,12 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
         continue;
       }
 
-      // 2. Headings (H1 to H4)
+      // 2. Headings (H1 to H6)
       if (line.startsWith('# ')) {
         result.push(
           <h1
             key={`h1-${blockIndex++}`}
-            className="text-2xl sm:text-3xl font-extrabold text-foreground mt-10 mb-4 tracking-tight"
+            className="text-2xl sm:text-3xl font-extrabold text-white mt-10 mb-4 tracking-tight"
           >
             {renderInlineMarkdown(line.slice(2))}
           </h1>
@@ -226,7 +236,7 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
         result.push(
           <h2
             key={`h2-${blockIndex++}`}
-            className="text-xl sm:text-2xl font-bold text-foreground mt-8 mb-3 tracking-tight border-b border-border pb-2"
+            className="text-xl sm:text-2xl font-bold text-white mt-8 mb-3 tracking-tight border-b border-zinc-800 pb-2"
           >
             {renderInlineMarkdown(line.slice(3))}
           </h2>
@@ -252,7 +262,7 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
         result.push(
           <h4
             key={`h4-${blockIndex++}`}
-            className="text-base sm:text-lg font-semibold text-zinc-200 mt-4 mb-2 tracking-tight"
+            className="text-base sm:text-lg font-semibold text-zinc-200 mt-5 mb-2 tracking-tight"
           >
             {renderInlineMarkdown(line.slice(5))}
           </h4>
@@ -261,9 +271,35 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
         continue;
       }
 
+      if (line.startsWith('##### ')) {
+        result.push(
+          <h5
+            key={`h5-${blockIndex++}`}
+            className="text-sm sm:text-base font-semibold text-zinc-300 mt-4 mb-2 tracking-tight uppercase tracking-wider"
+          >
+            {renderInlineMarkdown(line.slice(6))}
+          </h5>
+        );
+        i++;
+        continue;
+      }
+
+      if (line.startsWith('###### ')) {
+        result.push(
+          <h6
+            key={`h6-${blockIndex++}`}
+            className="text-xs sm:text-sm font-semibold text-zinc-400 mt-3 mb-1 tracking-tight uppercase tracking-wider"
+          >
+            {renderInlineMarkdown(line.slice(7))}
+          </h6>
+        );
+        i++;
+        continue;
+      }
+
       // 3. Horizontal Rules
-      if (line.trim() === '---' || line.trim() === '***') {
-        result.push(<hr key={`hr-${blockIndex++}`} className="my-8 border-border-subtle" />);
+      if (line.trim() === '---' || line.trim() === '***' || line.trim() === '___') {
+        result.push(<hr key={`hr-${blockIndex++}`} className="my-8 border-zinc-800" />);
         i++;
         continue;
       }
@@ -279,7 +315,7 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
         result.push(
           <blockquote
             key={`quote-${blockIndex++}`}
-            className="my-6 pl-4 border-l-4 border-primary bg-indigo-950/20 py-3 pr-4 rounded-r-xl text-zinc-300 italic text-sm"
+            className="my-6 pl-4 border-l-4 border-indigo-500 bg-indigo-950/20 py-3 pr-4 rounded-r-2xl text-zinc-300 italic text-sm leading-relaxed"
           >
             {quoteLines.map((ql, qIdx) => (
               <p key={qIdx} className={qIdx > 0 ? 'mt-2' : ''}>
@@ -311,6 +347,20 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
               .slice(1, -1)
               .map((c) => c.trim()) || [];
 
+          // Parse alignments if second row is separator
+          const alignRow =
+            tableLines.length > 1
+              ? tableLines[1]
+                  ?.split('|')
+                  .slice(1, -1)
+                  .map((c) => {
+                    const t = c.trim();
+                    if (t.startsWith(':') && t.endsWith(':')) return 'center';
+                    if (t.endsWith(':')) return 'right';
+                    return 'left';
+                  }) || []
+              : [];
+
           const dataRows = tableLines.slice(2).map((row) =>
             row
               .split('|')
@@ -321,23 +371,27 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
           result.push(
             <div
               key={`table-${blockIndex++}`}
-              className="my-6 overflow-x-auto rounded-xl border border-border bg-surface-subtle"
+              className="my-6 overflow-x-auto rounded-2xl border border-zinc-800 bg-zinc-950/40 shadow-md"
             >
-              <table className="min-w-full divide-y divide-border text-left text-xs sm:text-sm">
-                <thead className="bg-surface text-foreground font-semibold">
+              <table className="min-w-full divide-y divide-zinc-800 text-left text-xs sm:text-sm">
+                <thead className="bg-zinc-900/80 text-zinc-100 font-semibold">
                   <tr>
                     {headerRow.map((h, hIdx) => (
-                      <th key={hIdx} scope="col" className="px-4 py-3">
+                      <th
+                        key={hIdx}
+                        scope="col"
+                        className={`px-4 py-3 font-semibold text-zinc-200 text-${alignRow[hIdx] || 'left'}`}
+                      >
                         {renderInlineMarkdown(h)}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-border-subtle text-zinc-300">
+                <tbody className="divide-y divide-zinc-800/60 text-zinc-300">
                   {dataRows.map((row, rIdx) => (
-                    <tr key={rIdx} className="hover:bg-surface-elevated/40 transition-colors">
+                    <tr key={rIdx} className="hover:bg-zinc-900/40 transition-colors">
                       {row.map((cell, cIdx) => (
-                        <td key={cIdx} className="px-4 py-2.5">
+                        <td key={cIdx} className={`px-4 py-2.5 text-${alignRow[cIdx] || 'left'}`}>
                           {renderInlineMarkdown(cell)}
                         </td>
                       ))}
@@ -377,7 +431,7 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
                       readOnly
                       disabled
                       aria-label="Task item"
-                      className="rounded border-zinc-700 bg-zinc-900 text-primary w-4 h-4"
+                      className="rounded border-zinc-700 bg-zinc-900 text-indigo-500 w-4 h-4 cursor-default"
                     />
                     <span>{renderInlineMarkdown(item.slice(4))}</span>
                   </li>
@@ -450,5 +504,16 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
     return result;
   }, [content]);
 
-  return <article className={`prose-zinc max-w-none text-zinc-300 ${className}`}>{blocks}</article>;
+  if (!blocks) {
+    if (fallbackText) {
+      return <div className="py-6 text-center text-xs text-zinc-500 italic">{fallbackText}</div>;
+    }
+    return null;
+  }
+
+  return (
+    <article className={`prose-zinc max-w-none text-zinc-300 leading-relaxed ${className}`}>
+      {blocks}
+    </article>
+  );
 }
