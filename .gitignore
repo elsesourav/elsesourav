@@ -52,7 +52,6 @@ prisma/*.db
 prisma/*.db-journal
 
 # Tool Caches & Temp
-graphify-out/
 .firebase/
 *.log
 .DS_Store

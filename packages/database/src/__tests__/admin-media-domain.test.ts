@@ -18,7 +18,7 @@ describe('Admin Media Library & Reference Protection Security', () => {
   const mockReference: AdminMediaReference = {
     resourceType: 'App',
     resourceId: 'app-1',
-    resourceName: 'Graphify Explorer',
+    resourceName: 'Terminal Pro',
     fieldName: 'iconUrl',
   };
 
@@ -28,9 +28,9 @@ describe('Admin Media Library & Reference Protection Security', () => {
         listAdminMedia: vi.fn().mockResolvedValue({
           items: [
             {
-              id: 'elsesourav/apps/graphify_icon',
-              publicId: 'elsesourav/apps/graphify_icon',
-              secureUrl: 'https://res.cloudinary.com/demo/image/upload/v1/elsesourav/apps/graphify_icon.png',
+              id: 'elsesourav/apps/terminal_icon',
+              publicId: 'elsesourav/apps/terminal_icon',
+              secureUrl: 'https://res.cloudinary.com/demo/image/upload/v1/elsesourav/apps/terminal_icon.png',
               domain: 'apps',
               createdAt: Date.now(),
               isReferenced: true,
@@ -49,7 +49,7 @@ describe('Admin Media Library & Reference Protection Security', () => {
       expect(result.items.length).toBe(1);
       expect(result.totalReferenced).toBe(1);
       expect(result.items[0]?.isReferenced).toBe(true);
-      expect(result.items[0]?.references[0]?.resourceName).toBe('Graphify Explorer');
+      expect(result.items[0]?.references[0]?.resourceName).toBe('Terminal Pro');
     });
 
     it('strictly forbids normal USER from viewing admin media library', async () => {
@@ -77,7 +77,7 @@ describe('Admin Media Library & Reference Protection Security', () => {
         service.deleteMediaAdmin(
           'admin-1',
           'ADMIN',
-          'elsesourav/apps/graphify_icon',
+          'elsesourav/apps/terminal_icon',
           false // force = false
         )
       ).rejects.toThrowError(/Cannot safely delete media asset because it is actively referenced/);
@@ -121,7 +121,7 @@ describe('Admin Media Library & Reference Protection Security', () => {
       const res = await service.deleteMediaAdmin(
         'admin-1',
         'ADMIN',
-        'elsesourav/apps/graphify_icon',
+        'elsesourav/apps/terminal_icon',
         true // force = true
       );
 
@@ -130,7 +130,7 @@ describe('Admin Media Library & Reference Protection Security', () => {
       expect(mockRepo.logMediaAudit).toHaveBeenCalledWith(
         'admin-1',
         'MEDIA_ASSET_DELETED',
-        'elsesourav/apps/graphify_icon',
+        'elsesourav/apps/terminal_icon',
         expect.objectContaining({ referencesCount: 1, force: true })
       );
     });
