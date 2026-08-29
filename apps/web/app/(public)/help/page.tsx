@@ -6,26 +6,55 @@ import { HelpArticleCard } from '@/features/help/components/HelpArticleCard';
 import { HelpEmptyState } from '@/features/help/components/HelpEmptyState';
 import { HelpSupportCTA } from '@/features/help/components/HelpSupportCTA';
 import { Badge } from '@elsesourav/ui';
+import { SITE_CONFIG } from '@elsesourav/config';
 import { LifeBuoy, Sparkles } from 'lucide-react';
-
-export const metadata: Metadata = {
-  title: 'Help Center & Documentation | ElseSourav',
-  description: 'Guides, FAQs, troubleshooting advice, and documentation for ElseSourav web tools and developer software.',
-  alternates: {
-    canonical: 'https://elsesourav.com/help',
-  },
-  openGraph: {
-    title: 'Help Center & Documentation | ElseSourav',
-    description: 'Guides, FAQs, and troubleshooting documentation for ElseSourav tools.',
-    url: 'https://elsesourav.com/help',
-    type: 'website',
-  },
-};
 
 interface HelpPageProps {
   searchParams: Promise<{
     q?: string;
   }>;
+}
+
+export async function generateMetadata({ searchParams }: HelpPageProps): Promise<Metadata> {
+  const params = await searchParams;
+  const searchQuery = (params.q || '').trim();
+  const hasQuery = Boolean(searchQuery);
+
+  const title = hasQuery
+    ? `Search: "${searchQuery}" in Help Center`
+    : 'Help Center & Documentation';
+
+  const description = 'Guides, FAQs, troubleshooting advice, and documentation for ElseSourav web tools and developer software.';
+  const canonicalUrl = 'https://elsesourav.com/help';
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    robots: hasQuery
+      ? {
+          index: false,
+          follow: true,
+        }
+      : {
+          index: true,
+          follow: true,
+        },
+    openGraph: {
+      title: `${title} | ElseSourav`,
+      description,
+      url: canonicalUrl,
+      siteName: SITE_CONFIG.name,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${title} | ElseSourav`,
+      description,
+    },
+  };
 }
 
 export default async function HelpPage({ searchParams }: HelpPageProps) {

@@ -9,6 +9,7 @@ export interface ErrorStateProps extends React.HTMLAttributes<HTMLDivElement> {
   description?: string;
   onRetry?: () => void;
   retryLabel?: string;
+  action?: React.ReactNode;
 }
 
 export function ErrorState({
@@ -16,6 +17,7 @@ export function ErrorState({
   description = 'An unexpected error occurred while fetching information.',
   onRetry,
   retryLabel = 'Try Again',
+  action,
   className,
   ...props
 }: ErrorStateProps) {
@@ -28,11 +30,14 @@ export function ErrorState({
         <CardTitle className="text-lg text-red-200">{title}</CardTitle>
         <CardDescription className="max-w-sm mt-1.5">{description}</CardDescription>
       </CardHeader>
-      {onRetry && (
-        <div className="mt-6">
-          <Button onClick={onRetry} variant="secondary" size="sm" className="gap-2">
-            <RefreshCw className="w-3.5 h-3.5" /> {retryLabel}
-          </Button>
+      {(onRetry || action) && (
+        <div className="mt-6 flex items-center justify-center gap-3">
+          {onRetry && (
+            <Button onClick={onRetry} variant="secondary" size="sm" className="gap-2">
+              <RefreshCw className="w-3.5 h-3.5" /> {retryLabel}
+            </Button>
+          )}
+          {action}
         </div>
       )}
     </Card>

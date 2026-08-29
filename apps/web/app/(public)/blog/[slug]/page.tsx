@@ -20,13 +20,17 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
   if (!post) {
     return {
-      title: 'Article Not Found | ElseSourav',
+      title: 'Article Not Found',
       description: 'The requested engineering article could not be found.',
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
-  const title = post.seoTitle || `${post.title} | ElseSourav`;
-  const description = post.seoDescription || post.excerpt;
+  const title = post.seoTitle || post.title;
+  const description = post.seoDescription || post.excerpt || `Read ${post.title} on ElseSourav.`;
   const coverUrl = post.coverImageUrl ? getBlogCoverUrl(post.coverImageUrl, 1200, 630) : undefined;
   const canonicalUrl = `https://elsesourav.com/blog/${post.slug}`;
 
@@ -37,10 +41,11 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       canonical: canonicalUrl,
     },
     openGraph: {
-      title,
+      title: `${title} | ElseSourav`,
       description,
       type: 'article',
       url: canonicalUrl,
+      siteName: 'ElseSourav',
       publishedTime: post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined,
       modifiedTime: new Date(post.updatedAt).toISOString(),
       authors: [post.author.displayName],
@@ -48,7 +53,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     },
     twitter: {
       card: 'summary_large_image',
-      title,
+      title: `${title} | ElseSourav`,
       description,
       images: coverUrl ? [coverUrl] : undefined,
     },
@@ -66,29 +71,58 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const relatedPosts = await getRelatedBlogPosts(post.id, post.category?.id, 3);
   const postUrl = `https://elsesourav.com/blog/${post.slug}`;
 
-  // JSON-LD structured data for article
+  // JSON-LD structured data for article & breadcrumbs
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: post.title,
-    description: post.excerpt,
-    image: post.coverImageUrl ? [getBlogCoverUrl(post.coverImageUrl, 1200, 630)] : undefined,
-    datePublished: post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined,
-    dateModified: new Date(post.updatedAt).toISOString(),
-    author: {
-      '@type': 'Person',
-      name: post.author.displayName,
-      url: post.author.username ? `https://elsesourav.com/u/${post.author.username}` : undefined,
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: 'ElseSourav',
-      url: 'https://elsesourav.com',
-    },
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': postUrl,
-    },
+    '@graph': [
+      {
+        '@type': 'BlogPosting',
+        '@id': `${postUrl}/#article`,
+        headline: post.title,
+        description: post.excerpt,
+        image: post.coverImageUrl ? [getBlogCoverUrl(post.coverImageUrl, 1200, 630)] : undefined,
+        datePublished: post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined,
+        dateModified: new Date(post.updatedAt).toISOString(),
+        author: {
+          '@type': 'Person',
+          name: post.author.displayName,
+          url: post.author.username ? `https://elsesourav.com/u/${post.author.username}` : undefined,
+        },
+        publisher: {
+          '@type': 'Organization',
+          name: 'ElseSourav',
+          url: 'https://elsesourav.com',
+        },
+        mainEntityOfPage: {
+          '@type': 'WebPage',
+          '@id': postUrl,
+        },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${postUrl}/#breadcrumb`,
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Home',
+            item: 'https://elsesourav.com',
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: 'Engineering Journal',
+            item: 'https://elsesourav.com/blog',
+          },
+          {
+            '@type': 'ListItem',
+            position: 3,
+            name: post.title,
+            item: postUrl,
+          },
+        ],
+      },
+    ],
   };
 
   return (

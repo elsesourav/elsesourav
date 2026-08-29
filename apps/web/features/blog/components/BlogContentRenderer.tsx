@@ -2,7 +2,8 @@
 
 import * as React from 'react';
 import Image from 'next/image';
-import { Copy, Check, ExternalLink } from 'lucide-react';
+import { Copy, Check } from 'lucide-react';
+import { isSafeUrl } from '@elsesourav/utils';
 
 interface BlogContentRendererProps {
   content: string;
@@ -83,7 +84,7 @@ function renderInlineFormatting(text: string): React.ReactNode[] {
     if (isLinkOrImg) {
       if (fullMatch.startsWith('!')) {
         // Image
-        if (rawLinkUrl.startsWith('https://') || rawLinkUrl.startsWith('http://') || rawLinkUrl.startsWith('/')) {
+        if (isSafeUrl(rawLinkUrl) && (rawLinkUrl.startsWith('https://') || rawLinkUrl.startsWith('http://') || rawLinkUrl.startsWith('/'))) {
           nodes.push(
             <span key={`img-${keyIndex++}`} className="block my-6 relative aspect-[16/9] w-full rounded-2xl overflow-hidden border border-zinc-800">
               <Image
@@ -98,9 +99,9 @@ function renderInlineFormatting(text: string): React.ReactNode[] {
         }
       } else {
         // Safe Link
-        const isSafe = /^(https?:\/\/|mailto:|\/)/i.test(rawLinkUrl);
+        const isSafe = isSafeUrl(rawLinkUrl);
         if (isSafe) {
-          const isExternal = rawLinkUrl.startsWith('http');
+          const isExternal = rawLinkUrl.startsWith('http://') || rawLinkUrl.startsWith('https://');
           nodes.push(
             <a
               key={`link-${keyIndex++}`}

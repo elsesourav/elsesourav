@@ -60,6 +60,11 @@ export const AdminUpdateUserStatusSchema = z.object({
   reason: z.string().max(300).optional(),
 });
 
+export const AdminDeleteUserSchema = z.object({
+  userId: z.string().min(1, 'User ID is required'),
+  reason: z.string().max(300).optional(),
+});
+
 export const AdminUserQuerySchema = z.object({
   role: z.enum(['all', 'USER', 'STAFF', 'ADMIN']).optional().default('all'),
   status: z.enum(['all', 'active', 'suspended', 'deleted']).optional().default('all'),

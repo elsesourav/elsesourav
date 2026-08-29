@@ -20,12 +20,16 @@ export async function generateMetadata({ params }: HelpArticlePageProps): Promis
 
   if (!article) {
     return {
-      title: 'Guide Not Found | ElseSourav Help Center',
+      title: 'Guide Not Found',
       description: 'The requested documentation guide could not be found.',
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
-  const title = article.seoTitle || `${article.title} | ElseSourav Help Center`;
+  const title = article.seoTitle || article.title;
   const description = article.seoDescription || article.excerpt || `Read the official guide on ${article.title}.`;
   const canonicalUrl = `https://elsesourav.com/help/${categorySlug}/${article.slug}`;
 
@@ -36,11 +40,17 @@ export async function generateMetadata({ params }: HelpArticlePageProps): Promis
       canonical: canonicalUrl,
     },
     openGraph: {
-      title,
+      title: `${title} | ElseSourav`,
       description,
       type: 'article',
       url: canonicalUrl,
+      siteName: 'ElseSourav',
       modifiedTime: new Date(article.updatedAt).toISOString(),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${title} | ElseSourav`,
+      description,
     },
   };
 }
@@ -56,32 +66,67 @@ export default async function HelpArticlePage({ params }: HelpArticlePageProps) 
   const relatedArticles = await getRelatedHelpArticles(article.id, article.category.id, 3);
   const articleUrl = `https://elsesourav.com/help/${categorySlug}/${article.slug}`;
 
-  // JSON-LD structured data for article
+  // JSON-LD structured data for article & breadcrumbs
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: article.title,
-    description: article.excerpt,
-    datePublished: article.publishedAt ? new Date(article.publishedAt).toISOString() : undefined,
-    dateModified: new Date(article.updatedAt).toISOString(),
-    author: article.author
-      ? {
-          '@type': 'Person',
-          name: article.author.displayName,
-        }
-      : {
+    '@graph': [
+      {
+        '@type': 'TechArticle',
+        '@id': `${articleUrl}/#article`,
+        headline: article.title,
+        description: article.excerpt,
+        datePublished: article.publishedAt ? new Date(article.publishedAt).toISOString() : undefined,
+        dateModified: new Date(article.updatedAt).toISOString(),
+        author: article.author
+          ? {
+              '@type': 'Person',
+              name: article.author.displayName,
+            }
+          : {
+              '@type': 'Organization',
+              name: 'ElseSourav Documentation Team',
+            },
+        publisher: {
           '@type': 'Organization',
-          name: 'ElseSourav Documentation Team',
+          name: 'ElseSourav',
+          url: 'https://elsesourav.com',
         },
-    publisher: {
-      '@type': 'Organization',
-      name: 'ElseSourav',
-      url: 'https://elsesourav.com',
-    },
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': articleUrl,
-    },
+        mainEntityOfPage: {
+          '@type': 'WebPage',
+          '@id': articleUrl,
+        },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${articleUrl}/#breadcrumb`,
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Home',
+            item: 'https://elsesourav.com',
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: 'Help Center',
+            item: 'https://elsesourav.com/help',
+          },
+          {
+            '@type': 'ListItem',
+            position: 3,
+            name: article.category.name,
+            item: `https://elsesourav.com/help/${categorySlug}`,
+          },
+          {
+            '@type': 'ListItem',
+            position: 4,
+            name: article.title,
+            item: articleUrl,
+          },
+        ],
+      },
+    ],
   };
 
   return (

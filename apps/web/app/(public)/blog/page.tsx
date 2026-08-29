@@ -5,20 +5,7 @@ import { BlogDiscoveryBar } from '@/features/blog/components/BlogDiscoveryBar';
 import { BlogPagination } from '@/features/blog/components/BlogPagination';
 import { BlogEmptyState } from '@/features/blog/components/BlogEmptyState';
 import { Badge } from '@elsesourav/ui';
-
-export const metadata: Metadata = {
-  title: 'Engineering Journal & Articles | ElseSourav',
-  description: 'Technical articles, architectural deep dives, software benchmarks, and release devlogs by ElseSourav.',
-  alternates: {
-    canonical: 'https://elsesourav.com/blog',
-  },
-  openGraph: {
-    title: 'Engineering Journal & Articles | ElseSourav',
-    description: 'Technical articles, architectural deep dives, and software benchmarks by ElseSourav.',
-    url: 'https://elsesourav.com/blog',
-    type: 'website',
-  },
-};
+import { SITE_CONFIG } from '@elsesourav/config';
 
 interface BlogPageProps {
   searchParams: Promise<{
@@ -28,6 +15,54 @@ interface BlogPageProps {
     tag?: string;
     page?: string;
   }>;
+}
+
+export async function generateMetadata({ searchParams }: BlogPageProps): Promise<Metadata> {
+  const params = await searchParams;
+  const query = (params.q || params.search || '').trim();
+  const category = params.category;
+  const tag = params.tag;
+  const hasFilterOrQuery = Boolean(query || category || tag || params.page);
+
+  const title = query
+    ? `Search: "${query}" in Engineering Journal`
+    : category
+      ? `${category.charAt(0).toUpperCase() + category.slice(1)} Articles`
+      : tag
+        ? `#${tag} Engineering Notes`
+        : 'Engineering Journal & Articles';
+
+  const description = 'Technical articles, architectural deep dives, software benchmarks, and release devlogs by ElseSourav.';
+  const canonicalUrl = 'https://elsesourav.com/blog';
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    robots: hasFilterOrQuery
+      ? {
+          index: false,
+          follow: true,
+        }
+      : {
+          index: true,
+          follow: true,
+        },
+    openGraph: {
+      title: `${title} | ElseSourav`,
+      description,
+      url: canonicalUrl,
+      siteName: SITE_CONFIG.name,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${title} | ElseSourav`,
+      description,
+    },
+  };
 }
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {

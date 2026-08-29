@@ -19,30 +19,37 @@ export async function generateMetadata({ params }: AppDetailPageProps): Promise<
   const { slug } = await params;
   try {
     const app = await getPublicAppBySlug(slug);
+    const title = `${app.name} — Software & Tools`;
     const canonicalUrl = `https://elsesourav.com/apps/${app.slug}`;
     return {
-      title: `${app.name} | ElseSourav Applications`,
+      title,
       description: app.shortDescription,
       alternates: {
         canonical: canonicalUrl,
       },
       openGraph: {
-        title: `${app.name} | ElseSourav Applications`,
+        title: `${title} | ElseSourav`,
         description: app.shortDescription,
         url: canonicalUrl,
+        siteName: 'ElseSourav',
+        type: 'website',
         images: app.featuredImageUrl ? [{ url: app.featuredImageUrl, width: 1200, height: 630, alt: app.name }] : undefined,
       },
       twitter: {
         card: 'summary_large_image',
-        title: `${app.name} | ElseSourav Applications`,
+        title: `${title} | ElseSourav`,
         description: app.shortDescription,
         images: app.featuredImageUrl ? [app.featuredImageUrl] : undefined,
       },
     };
   } catch {
     return {
-      title: 'Application Not Found | ElseSourav',
+      title: 'Application Not Found',
       description: 'The requested application could not be found.',
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 }
@@ -63,20 +70,57 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
     limit: 4,
   }).then((items) => items.filter((item) => item.id !== app.id).slice(0, 3));
 
-  // JSON-LD Structured Data for SoftwareApplication
+  const appUrl = `https://elsesourav.com/apps/${app.slug}`;
+
+  // JSON-LD Structured Data for SoftwareApplication & BreadcrumbList
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: app.name,
-    description: app.shortDescription,
-    applicationCategory: app.primaryCategory,
-    operatingSystem: app.platforms.join(', '),
-    softwareVersion: app.currentVersion,
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
-    },
+    '@graph': [
+      {
+        '@type': 'SoftwareApplication',
+        '@id': `${appUrl}/#software`,
+        name: app.name,
+        description: app.shortDescription,
+        applicationCategory: app.primaryCategory,
+        operatingSystem: app.platforms.join(', '),
+        softwareVersion: app.currentVersion,
+        url: appUrl,
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+          priceCurrency: 'USD',
+        },
+        author: {
+          '@type': 'Organization',
+          name: 'ElseSourav',
+          url: 'https://elsesourav.com',
+        },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${appUrl}/#breadcrumb`,
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Home',
+            item: 'https://elsesourav.com',
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: 'Applications',
+            item: 'https://elsesourav.com/apps',
+          },
+          {
+            '@type': 'ListItem',
+            position: 3,
+            name: app.name,
+            item: appUrl,
+          },
+        ],
+      },
+    ],
   };
 
   return (

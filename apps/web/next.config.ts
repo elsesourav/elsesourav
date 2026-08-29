@@ -46,13 +46,51 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin',
+            value: 'strict-origin-when-cross-origin',
           },
           {
             key: 'Permissions-Policy',
             value: 'camera=(), microphone=(), geolocation=()',
           },
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://res.cloudinary.com https://images.unsplash.com https://*.supabase.co; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.cloudinary.com; frame-ancestors 'none'; form-action 'self'; base-uri 'self';",
+          },
         ],
+      },
+    ];
+  },
+  async redirects() {
+    return [
+      {
+        source: '/posts',
+        destination: '/blog',
+        permanent: true,
+      },
+      {
+        source: '/posts/:slug*',
+        destination: '/blog/:slug*',
+        permanent: true,
+      },
+      {
+        source: '/docs',
+        destination: '/help',
+        permanent: true,
+      },
+      {
+        source: '/docs/:slug*',
+        destination: '/help/:slug*',
+        permanent: true,
+      },
+      {
+        source: '/doc',
+        destination: '/help',
+        permanent: true,
+      },
+      {
+        source: '/doc/:slug*',
+        destination: '/help/:slug*',
+        permanent: true,
       },
     ];
   },

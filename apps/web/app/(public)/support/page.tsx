@@ -4,15 +4,26 @@ import { cookies } from 'next/headers';
 import { getServerSession } from '@elsesourav/auth';
 import { CreateTicketForm } from '@/features/support/components/CreateTicketForm';
 import { Card, Button } from '@elsesourav/ui';
+import { SITE_CONFIG } from '@elsesourav/config';
 import { LifeBuoy, Headphones, MessageSquare, ArrowRight, Lock } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Engineering & Technical Support | ElseSourav',
+  title: 'Engineering & Technical Support',
   description: 'Submit an issue, bug report, or technical question to the ElseSourav engineering team.',
+  alternates: {
+    canonical: 'https://elsesourav.com/support',
+  },
   openGraph: {
-    title: 'Technical Support | ElseSourav',
+    title: 'Engineering & Technical Support | ElseSourav',
     description: 'Open a support ticket with the ElseSourav engineering team.',
+    url: 'https://elsesourav.com/support',
+    siteName: SITE_CONFIG.name,
     type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Engineering & Technical Support | ElseSourav',
+    description: 'Open a support ticket with the ElseSourav engineering team.',
   },
 };
 
@@ -24,8 +35,25 @@ export default async function SupportPage() {
 
   const isAuthenticated = Boolean(session?.user);
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    name: 'ElseSourav Technical Support',
+    description: 'Engineering support and priority issue desk for ElseSourav users.',
+    url: 'https://elsesourav.com/support',
+    publisher: {
+      '@type': 'Organization',
+      name: SITE_CONFIG.name,
+      url: SITE_CONFIG.url,
+    },
+  };
+
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
         {/* Header Section */}
         <div className="text-center space-y-3 max-w-2xl mx-auto">

@@ -1,7 +1,31 @@
+import type { Metadata } from 'next';
 import { Button, Card, CardHeader, CardTitle, CardDescription, Badge } from '@elsesourav/ui';
 import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
 import Link from 'next/link';
 import { Sparkles, Terminal, BookOpen, LifeBuoy, ArrowRight } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: {
+    absolute: `${SITE_CONFIG.name} — ${SITE_CONFIG.tagline}`,
+  },
+  description: SITE_CONFIG.description,
+  alternates: {
+    canonical: SITE_CONFIG.url,
+  },
+  openGraph: {
+    title: `${SITE_CONFIG.name} — ${SITE_CONFIG.tagline}`,
+    description: SITE_CONFIG.description,
+    url: SITE_CONFIG.url,
+    siteName: SITE_CONFIG.name,
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${SITE_CONFIG.name} — ${SITE_CONFIG.tagline}`,
+    description: SITE_CONFIG.description,
+  },
+};
 
 export default function HomePage() {
   const jsonLd = {
@@ -13,6 +37,7 @@ export default function HomePage() {
         name: SITE_CONFIG.name,
         url: SITE_CONFIG.url,
         description: SITE_CONFIG.description,
+        sameAs: [SITE_CONFIG.links.github, SITE_CONFIG.links.twitter],
       },
       {
         '@type': 'WebSite',
@@ -22,6 +47,14 @@ export default function HomePage() {
         description: SITE_CONFIG.description,
         publisher: {
           '@id': `${SITE_CONFIG.url}/#organization`,
+        },
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: {
+            '@type': 'EntryPoint',
+            urlTemplate: `${SITE_CONFIG.url}/apps?q={search_term_string}`,
+          },
+          'query-input': 'required name=search_term_string',
         },
       },
     ],

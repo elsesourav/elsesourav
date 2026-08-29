@@ -3,6 +3,7 @@
 import { UserRepository, UserService } from '@elsesourav/database';
 import { requireAdmin } from '../../guards/require-admin';
 import {
+  AdminDeleteUserSchema,
   AdminUpdateUserRoleSchema,
 } from '@elsesourav/validation';
 import type { UserRole } from '@elsesourav/types';
@@ -53,12 +54,24 @@ export async function adminUpdateUserRoleAction(targetUserId: string, role: User
 export async function adminDeleteUserAction(targetUserId: string, reason?: string) {
   const context = await requireAdmin();
 
+  const parsed = AdminDeleteUserSchema.safeParse({
+    userId: targetUserId,
+    reason,
+  });
+
+  if (!parsed.success) {
+    return {
+      success: false,
+      error: parsed.error.issues[0]?.message || 'Invalid deletion request',
+    };
+  }
+
   try {
     await userService.deleteUserAccountAdmin(
       context.id,
       context.role,
-      targetUserId,
-      reason
+      parsed.data.userId,
+      parsed.data.reason
     );
 
     revalidatePath('/admin/users');

@@ -32,6 +32,7 @@ import {
   TableHead,
   TableCell,
   StatCard,
+  Pagination,
 } from '../index';
 
 describe('Button & Foundation Primitives', () => {
@@ -211,5 +212,27 @@ describe('Navigation & Data Display Components', () => {
     expect(screen.getByText('2.4M')).toBeDefined();
     expect(screen.getByText('+14%')).toBeDefined();
     expect(screen.getByText('Terminal Pro')).toBeDefined();
+  });
+
+  it('renders Pagination and handles page switching', () => {
+    const handlePageChange = vi.fn();
+    render(
+      <Pagination
+        currentPage={2}
+        totalPages={5}
+        onPageChange={handlePageChange}
+      />
+    );
+    expect(screen.getByRole('navigation', { name: /pagination/i })).toBeDefined();
+    expect(screen.getByText('2')).toBeDefined();
+    expect(screen.getByText('5')).toBeDefined();
+
+    const prevBtn = screen.getByRole('button', { name: /go to previous page/i });
+    fireEvent.click(prevBtn);
+    expect(handlePageChange).toHaveBeenCalledWith(1);
+
+    const nextBtn = screen.getByRole('button', { name: /go to next page/i });
+    fireEvent.click(nextBtn);
+    expect(handlePageChange).toHaveBeenCalledWith(3);
   });
 });

@@ -101,6 +101,10 @@ export async function replyToSupportTicketAction(input: {
 }
 
 export async function closeSupportTicketAction(ticketId: string) {
+  if (!ticketId || typeof ticketId !== 'string') {
+    return { success: false, error: 'Invalid ticket identifier' };
+  }
+
   const user = await getSessionUser();
   if (!user?.id) {
     return { success: false, error: 'Unauthorized' };
@@ -120,6 +124,10 @@ export async function closeSupportTicketAction(ticketId: string) {
 }
 
 export async function reopenSupportTicketAction(ticketId: string) {
+  if (!ticketId || typeof ticketId !== 'string') {
+    return { success: false, error: 'Invalid ticket identifier' };
+  }
+
   const user = await getSessionUser();
   if (!user?.id) {
     return { success: false, error: 'Unauthorized' };

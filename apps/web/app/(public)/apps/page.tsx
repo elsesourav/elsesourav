@@ -5,20 +5,8 @@ import { AppDiscoveryBar } from '@/features/apps/components/AppDiscoveryBar';
 import { AppPagination } from '@/features/apps/components/AppPagination';
 import { AppsEmptyState } from '@/features/apps/components/AppsEmptyState';
 import { Badge } from '@elsesourav/ui';
+import { SITE_CONFIG } from '@elsesourav/config';
 import type { AppSortOption } from '@elsesourav/types';
-
-export const metadata: Metadata = {
-  title: 'Explore Applications | ElseSourav',
-  description: 'Explore the complete ecosystem of web apps, browser extensions, developer utilities, and software created by ElseSourav.',
-  alternates: {
-    canonical: 'https://elsesourav.com/apps',
-  },
-  openGraph: {
-    title: 'Explore Applications | ElseSourav',
-    description: 'Browse web applications, developer tools, and utilities.',
-    url: 'https://elsesourav.com/apps',
-  },
-};
 
 interface AppsPageProps {
   searchParams: Promise<{
@@ -29,6 +17,51 @@ interface AppsPageProps {
     sort?: string;
     page?: string;
   }>;
+}
+
+export async function generateMetadata({ searchParams }: AppsPageProps): Promise<Metadata> {
+  const params = await searchParams;
+  const query = (params.q || params.search || '').trim();
+  const category = params.category;
+  const hasFilterOrQuery = Boolean(query || category || params.tag || params.page);
+
+  const title = query
+    ? `Search: "${query}" in Applications`
+    : category
+      ? `${category.charAt(0).toUpperCase() + category.slice(1)} Applications`
+      : 'Explore Applications';
+
+  const description = 'Explore the complete ecosystem of web apps, browser extensions, developer utilities, and software created by ElseSourav.';
+  const canonicalUrl = 'https://elsesourav.com/apps';
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    robots: hasFilterOrQuery
+      ? {
+          index: false,
+          follow: true,
+        }
+      : {
+          index: true,
+          follow: true,
+        },
+    openGraph: {
+      title: `${title} | ElseSourav`,
+      description,
+      url: canonicalUrl,
+      siteName: SITE_CONFIG.name,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${title} | ElseSourav`,
+      description,
+    },
+  };
 }
 
 export default async function AppsPage({ searchParams }: AppsPageProps) {
@@ -57,8 +90,34 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
 
   const hasFilters = Boolean(categorySlug || tagSlug || query || (params.sort && params.sort !== 'sortOrder'));
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Applications & Software Tools',
+    description: 'Explore the complete ecosystem of web apps and developer utilities.',
+    url: 'https://elsesourav.com/apps',
+    publisher: {
+      '@type': 'Organization',
+      name: SITE_CONFIG.name,
+      url: SITE_CONFIG.url,
+    },
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: searchResult.items.map((app, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: app.name,
+        url: `https://elsesourav.com/apps/${app.slug}`,
+      })),
+    },
+  };
+
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
         {/* Header Title Section */}
         <div className="space-y-2">

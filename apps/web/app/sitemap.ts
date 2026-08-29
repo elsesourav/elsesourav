@@ -42,10 +42,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     },
     {
-      url: `${baseUrl}/design-system`,
+      url: `${baseUrl}/support`,
       lastModified: now,
       changeFrequency: 'monthly',
-      priority: 0.4,
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/privacy`,
+      lastModified: now,
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/terms`,
+      lastModified: now,
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/accessibility`,
+      lastModified: now,
+      changeFrequency: 'yearly',
+      priority: 0.3,
     },
   ];
 
@@ -55,8 +73,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const helpService = new HelpService(new HelpRepository());
 
     const [apps, blogRes, helpCats] = await Promise.allSettled([
-      appQueryService.listPublicApps({ limit: 50 }),
-      blogService.listPublicPosts({ limit: 50 }),
+      appQueryService.listPublicApps({ limit: 100 }),
+      blogService.listPublicPosts({ limit: 100 }),
       helpService.listPublicCategories(),
     ]);
 

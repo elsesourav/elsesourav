@@ -16,9 +16,13 @@ export function generateSignedUploadParameters(
   // Secure folder path under root namespace
   const normalizedFolder = `elsesourav/${params.folder}`;
   
-  // Predictable, collision-resistant public ID prefix
-  const publicId = params.customPublicId
-    ? `${params.customPublicId}_${Date.now()}`
+  // Predictable, collision-resistant, sanitized public ID prefix
+  const sanitizedCustomId = params.customPublicId
+    ? params.customPublicId.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 80)
+    : undefined;
+
+  const publicId = sanitizedCustomId
+    ? `${sanitizedCustomId}_${Date.now()}`
     : undefined;
 
   // Build parameter dictionary for signature

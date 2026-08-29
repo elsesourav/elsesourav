@@ -1,19 +1,51 @@
+import type { Metadata } from 'next';
 import { Card, CardHeader, CardTitle, CardDescription, Badge } from '@elsesourav/ui';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { ROUTES, SITE_CONFIG } from '@elsesourav/config';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'About the Creator & Ecosystem',
-  description: 'Learn about Sourav, the vision behind ElseSourav, and the architecture.',
+  description: 'Learn about Sourav, the engineering philosophy behind ElseSourav, and the V2 cloud-native architecture.',
   alternates: {
     canonical: 'https://elsesourav.com/about',
+  },
+  openGraph: {
+    title: 'About the Creator & Ecosystem | ElseSourav',
+    description: 'Learn about Sourav and the engineering philosophy behind ElseSourav.',
+    url: 'https://elsesourav.com/about',
+    siteName: SITE_CONFIG.name,
+    type: 'profile',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'About the Creator & Ecosystem | ElseSourav',
+    description: 'Learn about Sourav and the engineering philosophy behind ElseSourav.',
   },
 };
 
 export default function AboutPage() {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    name: 'About ElseSourav & Creator',
+    description: 'Engineering philosophy and platform architecture behind ElseSourav.',
+    url: 'https://elsesourav.com/about',
+    mainEntity: {
+      '@type': 'Person',
+      name: 'Sourav',
+      jobTitle: 'Systems Engineer & Software Creator',
+      url: SITE_CONFIG.url,
+      sameAs: [SITE_CONFIG.links.github, SITE_CONFIG.links.twitter],
+    },
+  };
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Link href={ROUTES.HOME} className="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-white mb-6">
         <ArrowLeft className="w-4 h-4" /> Back to Home
       </Link>

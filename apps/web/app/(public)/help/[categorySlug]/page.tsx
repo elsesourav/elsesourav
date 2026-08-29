@@ -21,16 +21,36 @@ export async function generateMetadata({ params }: HelpCategoryPageProps): Promi
 
   if (!category) {
     return {
-      title: 'Category Not Found | ElseSourav Help Center',
+      title: 'Category Not Found',
       description: 'The requested help category does not exist.',
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
+  const title = `${category.name} Guides & Documentation`;
+  const description = category.description || `Browse documentation, tutorials, and troubleshooting guides for ${category.name}.`;
+  const canonicalUrl = `https://elsesourav.com/help/${category.slug}`;
+
   return {
-    title: `${category.name} Guides & Documentation | ElseSourav`,
-    description: category.description || `Browse documentation and guides in ${category.name}.`,
+    title,
+    description,
     alternates: {
-      canonical: `https://elsesourav.com/help/${category.slug}`,
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: `${title} | ElseSourav`,
+      description,
+      url: canonicalUrl,
+      siteName: 'ElseSourav',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${title} | ElseSourav`,
+      description,
     },
   };
 }
@@ -43,8 +63,59 @@ export default async function HelpCategoryPage({ params }: HelpCategoryPageProps
     notFound();
   }
 
+  const categoryUrl = `https://elsesourav.com/help/${category.slug}`;
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'CollectionPage',
+        '@id': `${categoryUrl}/#category`,
+        name: category.name,
+        description: category.description || `Guides and articles in ${category.name}.`,
+        url: categoryUrl,
+        mainEntity: {
+          '@type': 'ItemList',
+          itemListElement: category.articles.map((art, idx) => ({
+            '@type': 'ListItem',
+            position: idx + 1,
+            name: art.title,
+            url: `https://elsesourav.com/help/${category.slug}/${art.slug}`,
+          })),
+        },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${categoryUrl}/#breadcrumb`,
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Home',
+            item: 'https://elsesourav.com',
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: 'Help Center',
+            item: 'https://elsesourav.com/help',
+          },
+          {
+            '@type': 'ListItem',
+            position: 3,
+            name: category.name,
+            item: categoryUrl,
+          },
+        ],
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
         {/* Navigation & Breadcrumbs */}
         <div className="space-y-4">

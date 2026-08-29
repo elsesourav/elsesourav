@@ -11,6 +11,11 @@
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
+    "seed": "pnpm --filter @elsesourav/database db:seed",
+    "db:migrate": "pnpm --filter @elsesourav/database db:migrate",
+    "db:generate": "pnpm --filter @elsesourav/database db:generate",
+    "db:push": "pnpm --filter @elsesourav/database exec prisma db push",
+    "prisma": "pnpm --filter @elsesourav/database exec prisma",
     "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,md,json}\""
   },
