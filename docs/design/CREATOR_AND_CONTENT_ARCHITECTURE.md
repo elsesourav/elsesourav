@@ -13,34 +13,76 @@ All creator identity details are centralized in `@elsesourav/config` (`CREATOR_C
 export const CREATOR_CONFIG = {
   name: 'Sourav',
   handle: 'elsesourav',
-  title: 'Systems Engineer & Software Creator',
-  role: 'Creator & Software Architect',
-  location: 'Global / Remote',
+
+  identity: {
+    title: 'Software Engineer & Creator',
+    role: 'Independent Software Creator',
+    location: 'Remote',
+  },
+
   positioning:
-    'Crafting high-performance developer tools, terminal environments, and accessible web software.',
+    'Building thoughtful software, useful tools, and digital experiences with a focus on usability, performance, accessibility, and engineering quality.',
+
   shortBio:
-    'Full-stack software engineer and open-source creator focused on precision tooling, low-latency architecture, and elegant developer workflows.',
+    'Software engineer and independent creator building practical software, developer tools, and thoughtful web experiences.',
+
   longBio:
-    'Sourav is a systems and frontend software engineer passionate about developer ergonomics, modern browser capabilities, terminal multiplexing, and robust distributed web applications. ElseSourav serves as his central lab and archive for production-ready software tools.',
-  skills: [
+    'I’m Sourav, a software engineer and independent creator. ElseSourav is my personal space for building, sharing, and exploring software, tools, applications, and ideas. I care about creating useful experiences that are thoughtfully designed, accessible, performant, and built with strong engineering fundamentals.',
+
+  focus: [
+    'Software Engineering',
+    'Web Applications',
+    'Developer Tools',
+    'Product Design',
+    'Performance',
+    'Accessible Interfaces',
+  ],
+
+  technologies: [
     'TypeScript',
-    'React 19',
+    'React',
     'Next.js',
     'Node.js',
     'PostgreSQL',
-    'Prisma ORM',
-    'WebGL / Terminal Emulation',
+    'Prisma',
     'Tailwind CSS',
-    'Distributed Systems',
   ],
+
+  principles: [
+    'Build for real users',
+    'Design with purpose',
+    'Keep interfaces accessible',
+    'Prefer simplicity over unnecessary complexity',
+    'Treat performance as part of the product',
+    'Use technology as a tool, not the identity',
+  ],
+
   links: {
     github: 'https://github.com/elsesourav',
     twitter: 'https://twitter.com/elsesourav',
   },
+
   contact: {
     email: 'contact@elsesourav.com',
-    supportUrl: 'https://elsesourav.com/support',
+    support: 'https://elsesourav.com/support',
   },
+} as const;
+
+export const SITE_CONFIG = {
+  name: 'ElseSourav',
+
+  tagline: 'Software, Tools & Ideas',
+
+  description:
+    'ElseSourav is the personal platform of Sourav, featuring software, applications, developer tools, technical writing, experiments, and ideas.',
+
+  url: 'https://elsesourav.com',
+
+  author: 'Sourav',
+
+  creator: CREATOR_CONFIG,
+
+  links: CREATOR_CONFIG.links,
 } as const;
 ```
 
