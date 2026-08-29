@@ -184,15 +184,15 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* Pillar Architecture Overview */}
+      {/* Ecosystem Pillars & Values */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full border-t border-zinc-800/80">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <Badge variant="outline" className="mb-3 text-xs border-zinc-700">Platform Core</Badge>
+          <Badge variant="outline" className="mb-3 text-xs border-zinc-700">Philosophy</Badge>
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
-            Engineered for Reliability & Speed
+            Built for Developer Ergonomics & Speed
           </h2>
           <p className="mt-2 text-sm text-zinc-400">
-            A production-ready stack built on Next.js 15 App Router, PostgreSQL, and Supabase Auth.
+            Crafted for engineers who value precision, low-latency tools, and authentic technical writing.
           </p>
         </div>
 
@@ -200,9 +200,9 @@ export default async function HomePage() {
           <Card className="border-zinc-800/80 bg-zinc-900/30 p-6">
             <CardHeader className="p-0 space-y-2">
               <Cpu className="w-8 h-8 text-indigo-400" />
-              <CardTitle className="text-lg">Next.js 15 Server-First</CardTitle>
+              <CardTitle className="text-lg">Focused Software Craft</CardTitle>
               <CardDescription className="text-xs text-zinc-400 leading-relaxed">
-                Zero client bundle bloat with streaming Server Components, Server Actions, and sub-100ms response latencies.
+                Standalone developer utilities and terminal emulators designed for speed, privacy, and distraction-free workflows.
               </CardDescription>
             </CardHeader>
           </Card>
@@ -210,9 +210,9 @@ export default async function HomePage() {
           <Card className="border-zinc-800/80 bg-zinc-900/30 p-6">
             <CardHeader className="p-0 space-y-2">
               <ShieldCheck className="w-8 h-8 text-emerald-400" />
-              <CardTitle className="text-lg">Zero-Trust Security</CardTitle>
+              <CardTitle className="text-lg">Deep Engineering Notes</CardTitle>
               <CardDescription className="text-xs text-zinc-400 leading-relaxed">
-                Multi-tenant RBAC, input sanitization, rate limiting, and cryptographic session verification on every request.
+                Honest architectural write-ups, real performance benchmarks, and lessons learned building scalable systems.
               </CardDescription>
             </CardHeader>
           </Card>
@@ -220,9 +220,9 @@ export default async function HomePage() {
           <Card className="border-zinc-800/80 bg-zinc-900/30 p-6">
             <CardHeader className="p-0 space-y-2">
               <LifeBuoy className="w-8 h-8 text-cyan-400" />
-              <CardTitle className="text-lg">Integrated Help & Desk</CardTitle>
+              <CardTitle className="text-lg">Dedicated Knowledge & Support</CardTitle>
               <CardDescription className="text-xs text-zinc-400 leading-relaxed">
-                Comprehensive knowledge base guides and priority support ticket conversations with staff notes.
+                Clear documentation guides, task-oriented troubleshooting, and direct support communication.
               </CardDescription>
             </CardHeader>
           </Card>
@@ -232,7 +232,7 @@ export default async function HomePage() {
       {/* Footer */}
       <footer className="border-t border-zinc-800/80 bg-zinc-950 py-10 text-center text-sm text-zinc-500">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>© {new Date().getFullYear()} {SITE_CONFIG.name}. Built with Next.js 15, PostgreSQL & Tailwind CSS.</p>
+          <p>© {new Date().getFullYear()} {SITE_CONFIG.name}. Crafted by {SITE_CONFIG.author}. All rights reserved.</p>
           <div className="flex items-center gap-6 text-xs text-zinc-400">
             <Link href={ROUTES.APPS} className="hover:text-white transition-colors">Applications</Link>
             <Link href={ROUTES.BLOG} className="hover:text-white transition-colors">Blog</Link>
