@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { SITE_CONFIG } from '@elsesourav/config';
 import {
   getPublicBlogPostBySlug,
   getRelatedBlogPosts,
@@ -33,9 +34,9 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   }
 
   const title = post.seoTitle || post.title;
-  const description = post.seoDescription || post.excerpt || `Read ${post.title} on ElseSourav.`;
+  const description = post.seoDescription || post.excerpt || `Read ${post.title} on ${SITE_CONFIG.name}.`;
   const coverUrl = post.coverImageUrl ? getBlogCoverUrl(post.coverImageUrl, 1200, 630) : undefined;
-  const canonicalUrl = `https://elsesourav.com/blog/${post.slug}`;
+  const canonicalUrl = `${SITE_CONFIG.url}/blog/${post.slug}`;
 
   return {
     title,
@@ -44,11 +45,11 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: `${title} | ElseSourav`,
+      title: `${title} | ${SITE_CONFIG.name}`,
       description,
       type: 'article',
       url: canonicalUrl,
-      siteName: 'ElseSourav',
+      siteName: SITE_CONFIG.name,
       publishedTime: post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined,
       modifiedTime: new Date(post.updatedAt).toISOString(),
       authors: [post.author.displayName],
@@ -56,7 +57,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${title} | ElseSourav`,
+      title: `${title} | ${SITE_CONFIG.name}`,
       description,
       images: coverUrl ? [coverUrl] : undefined,
     },
@@ -72,7 +73,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   const relatedPosts = await getRelatedBlogPosts(post.id, post.category?.id, 3);
-  const postUrl = `https://elsesourav.com/blog/${post.slug}`;
+  const postUrl = `${SITE_CONFIG.url}/blog/${post.slug}`;
 
   // JSON-LD structured data for article & breadcrumbs
   const jsonLd = {
@@ -90,13 +91,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           '@type': 'Person',
           name: post.author.displayName,
           url: post.author.username
-            ? `https://elsesourav.com/u/${post.author.username}`
+            ? `${SITE_CONFIG.url}/u/${post.author.username}`
             : undefined,
         },
         publisher: {
           '@type': 'Organization',
-          name: 'ElseSourav',
-          url: 'https://elsesourav.com',
+          name: SITE_CONFIG.name,
+          url: SITE_CONFIG.url,
         },
         mainEntityOfPage: {
           '@type': 'WebPage',
@@ -111,13 +112,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             '@type': 'ListItem',
             position: 1,
             name: 'Home',
-            item: 'https://elsesourav.com',
+            item: SITE_CONFIG.url,
           },
           {
             '@type': 'ListItem',
             position: 2,
-            name: 'Engineering Journal',
-            item: 'https://elsesourav.com/blog',
+            name: 'Blog',
+            item: `${SITE_CONFIG.url}/blog`,
           },
           {
             '@type': 'ListItem',

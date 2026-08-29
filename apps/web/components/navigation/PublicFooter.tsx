@@ -1,8 +1,7 @@
 import * as React from 'react';
 import Link from 'next/link';
-import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
-import { AdminRepository } from '@elsesourav/database';
-import { parseSiteLinks, parseFooterLinks } from '@elsesourav/validation';
+import { ROUTES } from '@elsesourav/config';
+import { SiteService } from '@elsesourav/database';
 import type { SiteLinkPlatform } from '@elsesourav/types';
 import {
   ExternalLink,
@@ -35,29 +34,11 @@ function getPlatformIcon(platform: SiteLinkPlatform) {
 }
 
 export async function PublicFooter() {
-  const adminRepo = new AdminRepository();
-  const dbSettings: Record<string, string> = await adminRepo.getAllSettings().catch(() => ({}));
+  const siteService = new SiteService();
+  const identity = await siteService.getSiteAndCreatorIdentity();
 
-  const siteName = dbSettings['site_name'] || SITE_CONFIG.name;
-  const siteLogo = dbSettings['site_logo_url'] || '';
-  const footerCopyright =
-    dbSettings['footer_copyright'] ||
-    `© ${new Date().getFullYear()} ${siteName}. All rights reserved.`;
-  const footerText = dbSettings['footer_text'] || '';
-  const statusText =
-    dbSettings['footer_status_text'] ||
-    dbSettings['site_status_badge'] ||
-    '● All Systems Operational';
-  const showSocials = dbSettings['footer_show_socials'] !== 'false';
-  const showBackToTop = dbSettings['footer_show_back_to_top'] !== 'false';
-
-  const siteLinks = parseSiteLinks(dbSettings['social_links_json'], dbSettings).filter(
-    (l) => l.isActive
-  );
-
-  const customFooterLinks = parseFooterLinks(dbSettings['footer_links_json']).filter(
-    (f) => f.isActive
-  );
+  const siteLinks = identity.creator.links.filter((l) => l.isActive);
+  const customFooterLinks = identity.footer.links.filter((f) => f.isActive);
 
   return (
     <footer className="border-t border-zinc-800/80 bg-zinc-950/90 backdrop-blur-xl py-12 text-sm text-zinc-500">
@@ -66,22 +47,30 @@ export async function PublicFooter() {
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex items-center gap-2.5">
-              {siteLogo ? (
-                <img src={siteLogo} alt={siteName} className="w-6 h-6 rounded-lg object-cover" />
+              {identity.site.logoUrl ? (
+                <img
+                  src={identity.site.logoUrl}
+                  alt={identity.site.name}
+                  className="w-6 h-6 rounded-lg object-cover"
+                />
               ) : null}
-              <span className="text-base font-bold text-zinc-100 tracking-tight">{siteName}</span>
-              {statusText && (
+              <span className="text-base font-bold text-zinc-100 tracking-tight">
+                {identity.site.name}
+              </span>
+              {identity.footer.statusText && (
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-950/40 text-emerald-300 border border-emerald-500/30">
-                  {statusText}
+                  {identity.footer.statusText}
                 </span>
               )}
             </div>
-            {footerText && <p className="text-xs text-zinc-400 max-w-md">{footerText}</p>}
-            <p className="text-xs text-zinc-500">{footerCopyright}</p>
+            {identity.footer.text && (
+              <p className="text-xs text-zinc-400 max-w-md">{identity.footer.text}</p>
+            )}
+            <p className="text-xs text-zinc-500">{identity.footer.copyright}</p>
           </div>
 
           {/* Social / Platform Links */}
-          {showSocials && siteLinks.length > 0 && (
+          {identity.footer.showSocials && siteLinks.length > 0 && (
             <div className="flex flex-wrap items-center gap-2.5">
               {siteLinks.map((link) => (
                 <a
@@ -148,7 +137,7 @@ export async function PublicFooter() {
               </Link>
             </div>
 
-            {showBackToTop && (
+            {identity.footer.showBackToTop && (
               <a
                 href="#"
                 className="inline-flex items-center gap-1 text-[11px] text-zinc-400 hover:text-indigo-400 border border-zinc-800 hover:border-zinc-700 bg-zinc-900/40 px-2.5 py-1 rounded-lg transition-colors"

@@ -1,8 +1,7 @@
-import { CREATOR_CONFIG, ROUTES, SITE_CONFIG } from '@elsesourav/config';
-import { AdminRepository } from '@elsesourav/database';
+import { SITE_CONFIG, CREATOR_CONFIG, ROUTES } from '@elsesourav/config';
+import { SiteService } from '@elsesourav/database';
 import type { SiteLinkPlatform } from '@elsesourav/types';
 import { Badge, Card, CardHeader, CardTitle, MarkdownRenderer } from '@elsesourav/ui';
-import { parseContactMethods, parseSiteLinks, parseStringList } from '@elsesourav/validation';
 import {
   CheckCircle2,
   Code2,
@@ -62,41 +61,25 @@ function getPlatformIcon(platform: SiteLinkPlatform) {
 }
 
 export default async function AboutPage() {
-  const adminRepo = new AdminRepository();
-  const dbSettings: Record<string, string> = await adminRepo.getAllSettings().catch(() => ({}));
+  const siteService = new SiteService();
+  const identity = await siteService.getSiteAndCreatorIdentity();
 
-  const creatorName = dbSettings['creator_name'] || CREATOR_CONFIG.name;
-  const creatorTitle = dbSettings['creator_title'] || CREATOR_CONFIG.identity.title;
-  const creatorLocation = dbSettings['creator_location'] || CREATOR_CONFIG.identity.location;
-  const creatorLongBio = dbSettings['creator_long_bio'] || CREATOR_CONFIG.longBio;
-  const creatorAvatarUrl = dbSettings['creator_avatar_url'] || '';
-  const creatorPrinciples = parseStringList(
-    dbSettings['creator_principles_json'],
-    CREATOR_CONFIG.principles
-  );
-  const creatorFocus = parseStringList(dbSettings['creator_focus_json'], CREATOR_CONFIG.focus);
-
-  // Dynamic prioritized links & contact methods
-  const siteLinks = parseSiteLinks(dbSettings['social_links_json'], dbSettings).filter(
-    (l) => l.isActive
-  );
-  const contactMethods = parseContactMethods(dbSettings['contact_methods_json'], dbSettings).filter(
-    (c) => c.isActive
-  );
+  const activeLinks = identity.creator.links.filter((l) => l.isActive);
+  const activeContacts = identity.creator.contacts.filter((c) => c.isActive);
 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'AboutPage',
-    name: `About ${SITE_CONFIG.name} & Creator`,
-    description: CREATOR_CONFIG.positioning,
-    url: `${SITE_CONFIG.url}/about`,
+    name: `About ${identity.site.name} & Creator`,
+    description: identity.site.description,
+    url: `${identity.site.url}/about`,
     mainEntity: {
       '@type': 'Person',
-      name: creatorName,
-      jobTitle: creatorTitle,
-      image: creatorAvatarUrl || undefined,
-      url: SITE_CONFIG.url,
-      sameAs: siteLinks.map((l) => l.url),
+      name: identity.creator.name,
+      jobTitle: identity.creator.title,
+      image: identity.creator.avatarUrl || undefined,
+      url: identity.site.url,
+      sameAs: activeLinks.map((l) => l.url),
     },
   };
 
@@ -112,10 +95,10 @@ export default async function AboutPage() {
           <Sparkles className="w-3 h-3 text-indigo-400" /> Creator & Platform
         </Badge>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-          About {SITE_CONFIG.name}
+          About {identity.site.name}
         </h1>
         <p className="text-sm sm:text-base text-zinc-400">
-          {SITE_CONFIG.tagline} — {CREATOR_CONFIG.positioning}
+          {identity.site.tagline} — {identity.creator.positioning}
         </p>
       </div>
 
@@ -124,26 +107,28 @@ export default async function AboutPage() {
         <CardHeader className="p-0 space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800/60">
             <div className="flex items-center gap-4">
-              {creatorAvatarUrl ? (
+              {identity.creator.avatarUrl ? (
                 <div className="w-16 h-16 rounded-2xl bg-indigo-950/60 border border-indigo-500/40 overflow-hidden shrink-0 shadow-lg shadow-indigo-950/40">
                   <img
-                    src={creatorAvatarUrl}
-                    alt={creatorName}
+                    src={identity.creator.avatarUrl}
+                    alt={identity.creator.name}
                     className="w-full h-full object-cover"
                   />
                 </div>
               ) : (
                 <div className="w-16 h-16 rounded-2xl bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center text-xl font-bold text-indigo-400 shrink-0">
-                  {creatorName.slice(0, 2).toUpperCase()}
+                  {identity.creator.name.slice(0, 2).toUpperCase()}
                 </div>
               )}
               <div>
-                <h2 className="text-lg font-bold text-white">{creatorName}</h2>
-                <span className="text-xs font-semibold text-indigo-400">{creatorTitle}</span>
+                <h2 className="text-lg font-bold text-white">{identity.creator.name}</h2>
+                <span className="text-xs font-semibold text-indigo-400">
+                  {identity.creator.title}
+                </span>
               </div>
             </div>
             <span className="text-xs text-zinc-400 font-medium px-3 py-1 rounded-full bg-zinc-800/60 border border-zinc-700/60 w-fit">
-              {creatorLocation}
+              {identity.creator.location}
             </span>
           </div>
 
@@ -152,7 +137,7 @@ export default async function AboutPage() {
           </CardTitle>
 
           <div className="text-sm text-zinc-300 leading-relaxed pt-1">
-            <MarkdownRenderer content={creatorLongBio} />
+            <MarkdownRenderer content={identity.creator.longBio} />
           </div>
         </CardHeader>
       </Card>
@@ -165,7 +150,7 @@ export default async function AboutPage() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {creatorPrinciples.map((principle: string, idx: number) => (
+          {identity.creator.principles.map((principle: string, idx: number) => (
             <div
               key={idx}
               className="p-4 rounded-2xl border border-zinc-800/80 bg-zinc-900/20 flex items-start gap-3"
@@ -181,7 +166,7 @@ export default async function AboutPage() {
       <div className="space-y-4">
         <h2 className="text-lg font-bold text-white tracking-tight">Areas of Focus</h2>
         <div className="flex flex-wrap gap-2">
-          {creatorFocus.map((item: string, idx: number) => (
+          {identity.creator.focus.map((item: string, idx: number) => (
             <Badge
               key={idx}
               variant="outline"
@@ -197,7 +182,7 @@ export default async function AboutPage() {
       <div className="pt-6 border-t border-zinc-800/80 space-y-3">
         <h2 className="text-sm font-bold text-white tracking-tight">Platform & Social Channels</h2>
         <div className="flex flex-wrap items-center gap-3 text-xs font-medium">
-          {siteLinks.map((link) => (
+          {activeLinks.map((link) => (
             <a
               key={link.id}
               href={link.url}
@@ -222,7 +207,7 @@ export default async function AboutPage() {
           Have questions, technical inquiries, or want to discuss collaboration?
         </p>
         <div className="flex flex-wrap items-center gap-3 text-xs font-medium">
-          {contactMethods.map((contact) => (
+          {activeContacts.map((contact) => (
             <a
               key={contact.id}
               href={

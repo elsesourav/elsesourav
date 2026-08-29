@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { SITE_CONFIG } from '@elsesourav/config';
 import { getPublicAppBySlug, getPublishedApps } from '@/features/apps/queries/get-apps';
 import { AppDetailHero } from '@/features/apps/components/AppDetailHero';
 import { AppScreenshotGallery } from '@/features/apps/components/AppScreenshotGallery';
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }: AppDetailPageProps): Promise<
   try {
     const app = await getPublicAppBySlug(slug);
     const title = `${app.name} — Software & Tools`;
-    const canonicalUrl = `https://elsesourav.com/apps/${app.slug}`;
+    const canonicalUrl = `${SITE_CONFIG.url}/apps/${app.slug}`;
     return {
       title,
       description: app.shortDescription,
@@ -29,10 +30,10 @@ export async function generateMetadata({ params }: AppDetailPageProps): Promise<
         canonical: canonicalUrl,
       },
       openGraph: {
-        title: `${title} | ElseSourav`,
+        title: `${title} | ${SITE_CONFIG.name}`,
         description: app.shortDescription,
         url: canonicalUrl,
-        siteName: 'ElseSourav',
+        siteName: SITE_CONFIG.name,
         type: 'website',
         images: app.featuredImageUrl
           ? [{ url: app.featuredImageUrl, width: 1200, height: 630, alt: app.name }]
@@ -40,7 +41,7 @@ export async function generateMetadata({ params }: AppDetailPageProps): Promise<
       },
       twitter: {
         card: 'summary_large_image',
-        title: `${title} | ElseSourav`,
+        title: `${title} | ${SITE_CONFIG.name}`,
         description: app.shortDescription,
         images: app.featuredImageUrl ? [app.featuredImageUrl] : undefined,
       },
@@ -73,7 +74,7 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
     limit: 4,
   }).then((items) => items.filter((item) => item.id !== app.id).slice(0, 3));
 
-  const appUrl = `https://elsesourav.com/apps/${app.slug}`;
+  const appUrl = `${SITE_CONFIG.url}/apps/${app.slug}`;
 
   // JSON-LD Structured Data for SoftwareApplication & BreadcrumbList
   const jsonLd = {
@@ -95,8 +96,8 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
         },
         author: {
           '@type': 'Organization',
-          name: 'ElseSourav',
-          url: 'https://elsesourav.com',
+          name: SITE_CONFIG.name,
+          url: SITE_CONFIG.url,
         },
       },
       {
@@ -107,13 +108,13 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
             '@type': 'ListItem',
             position: 1,
             name: 'Home',
-            item: 'https://elsesourav.com',
+            item: SITE_CONFIG.url,
           },
           {
             '@type': 'ListItem',
             position: 2,
             name: 'Applications',
-            item: 'https://elsesourav.com/apps',
+            item: `${SITE_CONFIG.url}/apps`,
           },
           {
             '@type': 'ListItem',

@@ -91,3 +91,52 @@ export interface SiteSetting {
   readonly updatedAt: Timestamp;
   readonly updatedBy?: string | null;
 }
+
+export interface SiteAndCreatorIdentity {
+  readonly site: {
+    readonly name: string;
+    readonly tagline: string;
+    readonly description: string;
+    readonly url: string;
+    readonly logoUrl?: string;
+    readonly ogImageUrl?: string;
+    readonly keywords?: string;
+    readonly statusBadge?: string;
+  };
+  readonly footer: {
+    readonly copyright: string;
+    readonly text: string;
+    readonly statusText?: string;
+    readonly showSocials: boolean;
+    readonly showBackToTop: boolean;
+    readonly links: readonly SiteFooterLink[];
+  };
+  readonly homepage: {
+    readonly heroBadge: string;
+    readonly heroHeadline: string;
+    readonly heroSubtitle: string;
+    readonly primaryCtaLabel: string;
+    readonly secondaryCtaLabel: string;
+    readonly announcementBanner?: string;
+    readonly appsTitle: string;
+    readonly appsSubtitle: string;
+    readonly blogTitle: string;
+    readonly blogSubtitle: string;
+  };
+  readonly creator: {
+    readonly name: string;
+    readonly handle: string;
+    readonly title: string;
+    readonly role: string;
+    readonly location: string;
+    readonly avatarUrl?: string;
+    readonly shortBio: string;
+    readonly longBio: string;
+    readonly positioning: string;
+    readonly principles: readonly string[];
+    readonly focus: readonly string[];
+    readonly technologies: readonly string[];
+    readonly links: readonly SiteLinkItem[];
+    readonly contacts: readonly SiteContactItem[];
+  };
+}

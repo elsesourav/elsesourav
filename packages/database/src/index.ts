@@ -28,3 +28,5 @@ export * from './services/notification.service';
 export * from './services/admin.service';
 export * from './services/media.service';
 export * from './services/audit.service';
+export * from './services/site.service';
+

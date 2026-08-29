@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import { Button, Card, Badge } from '@elsesourav/ui';
-import { SITE_CONFIG, CREATOR_CONFIG, ROUTES } from '@elsesourav/config';
-import { AdminRepository } from '@elsesourav/database';
-import { parseStringList } from '@elsesourav/validation';
+import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
+import { SiteService } from '@elsesourav/database';
 import { discoverPublishedApps } from '@/features/apps/queries/get-apps';
 import { getPublicBlogListing } from '@/features/blog/queries/get-blog';
 import { AppCard } from '@/features/apps/components/AppCard';
@@ -45,10 +44,10 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
-  const adminRepo = new AdminRepository();
+  const siteService = new SiteService();
 
-  // Query live featured apps, latest blogs, and dynamic site settings
-  const [appsResult, blogResult, dbSettings] = await Promise.all([
+  // Query live featured apps, latest blogs, and consolidated site & creator identity
+  const [appsResult, blogResult, identity] = await Promise.all([
     discoverPublishedApps({ limit: 6, sort: 'popularity' }).catch(() => ({
       items: [],
       totalCount: 0,
@@ -59,61 +58,47 @@ export default async function HomePage() {
       page: 1,
       totalPages: 1,
     })),
-    adminRepo.getAllSettings().catch(() => ({}) as Record<string, string>),
+    siteService.getSiteAndCreatorIdentity(),
   ]);
 
   const featuredApps = appsResult.items || [];
   const recentPosts = blogResult.items || [];
-
-  const heroBadge =
-    dbSettings['hero_badge'] || `Software & Digital Tools by ${CREATOR_CONFIG.name}`;
-  const heroHeadline =
-    dbSettings['hero_headline'] || 'Thoughtful software, practical tools, & engineering ideas.';
-  const heroSubtitle = dbSettings['hero_subtitle'] || CREATOR_CONFIG.positioning;
-  const primaryCtaLabel = dbSettings['primary_cta_label'] || 'Explore Applications';
-  const secondaryCtaLabel = dbSettings['secondary_cta_label'] || 'Read Engineering Notes';
-  const announcementBanner = dbSettings['announcement_banner'] || '';
-  const appsSectionTitle = dbSettings['homepage_apps_title'] || 'Featured Software & Tools';
-  const appsSectionSubtitle =
-    dbSettings['homepage_apps_subtitle'] ||
-    'Practical utilities and digital tools crafted for real workflows.';
-  const blogSectionTitle = dbSettings['homepage_blog_title'] || 'Technical Writing & Exploration';
-  const blogSectionSubtitle =
-    dbSettings['homepage_blog_subtitle'] ||
-    'Deep-dives on software design, performance, and architecture lessons.';
-  const creatorName = dbSettings['creator_name'] || CREATOR_CONFIG.name;
-  const creatorShortBio = dbSettings['creator_short_bio'] || CREATOR_CONFIG.shortBio;
-  const creatorAvatarUrl = dbSettings['creator_avatar_url'] || '';
-  const creatorPrinciples = parseStringList(
-    dbSettings['creator_principles_json'],
-    CREATOR_CONFIG.principles
-  );
 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
       {
         '@type': 'Organization',
-        '@id': `${SITE_CONFIG.url}/#organization`,
-        name: SITE_CONFIG.name,
-        url: SITE_CONFIG.url,
-        description: SITE_CONFIG.description,
-        sameAs: [CREATOR_CONFIG.links.github, CREATOR_CONFIG.links.twitter],
+        '@id': `${identity.site.url}/#organization`,
+        name: identity.site.name,
+        url: identity.site.url,
+        description: identity.site.description,
+        logo: identity.site.logoUrl,
+        sameAs: identity.creator.links.map((l) => l.url),
+      },
+      {
+        '@type': 'Person',
+        '@id': `${identity.site.url}/#creator`,
+        name: identity.creator.name,
+        jobTitle: identity.creator.title,
+        image: identity.creator.avatarUrl,
+        url: `${identity.site.url}/about`,
+        sameAs: identity.creator.links.map((l) => l.url),
       },
       {
         '@type': 'WebSite',
-        '@id': `${SITE_CONFIG.url}/#website`,
-        url: SITE_CONFIG.url,
-        name: SITE_CONFIG.name,
-        description: SITE_CONFIG.description,
+        '@id': `${identity.site.url}/#website`,
+        url: identity.site.url,
+        name: identity.site.name,
+        description: identity.site.description,
         publisher: {
-          '@id': `${SITE_CONFIG.url}/#organization`,
+          '@id': `${identity.site.url}/#organization`,
         },
         potentialAction: {
           '@type': 'SearchAction',
           target: {
             '@type': 'EntryPoint',
-            urlTemplate: `${SITE_CONFIG.url}/apps?q={search_term_string}`,
+            urlTemplate: `${identity.site.url}/apps?q={search_term_string}`,
           },
           'query-input': 'required name=search_term_string',
         },
@@ -129,10 +114,10 @@ export default async function HomePage() {
       />
 
       {/* Optional Dynamic Announcement Banner */}
-      {announcementBanner && (
+      {identity.homepage.announcementBanner && (
         <div className="bg-indigo-950/80 border-b border-indigo-500/30 px-4 py-2 text-center text-xs text-indigo-200 flex items-center justify-center gap-2">
           <Megaphone className="w-3.5 h-3.5 text-indigo-400" />
-          <span>{announcementBanner}</span>
+          <span>{identity.homepage.announcementBanner}</span>
         </div>
       )}
 
@@ -144,26 +129,26 @@ export default async function HomePage() {
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(45rem_50rem_at_top,theme(colors.indigo.500/10),transparent)]" />
 
         <Badge variant="info" className="mb-6 gap-1.5 py-1 px-3.5 text-xs font-medium">
-          <Sparkles className="w-3.5 h-3.5" /> {heroBadge}
+          <Sparkles className="w-3.5 h-3.5" /> {identity.homepage.heroBadge}
         </Badge>
 
         <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white max-w-4xl leading-[1.15]">
-          {heroHeadline}
+          {identity.homepage.heroHeadline}
         </h1>
 
         <p className="mt-6 text-base sm:text-xl text-zinc-400 max-w-2xl leading-relaxed">
-          {heroSubtitle}
+          {identity.homepage.heroSubtitle}
         </p>
 
         <div className="mt-10 flex flex-wrap gap-4 justify-center items-center">
           <Link href={ROUTES.APPS}>
             <Button size="lg" className="gap-2 shadow-lg shadow-indigo-600/20 px-6 font-semibold">
-              <Terminal className="w-4 h-4" /> {primaryCtaLabel} ({appsResult.totalCount})
+              <Terminal className="w-4 h-4" /> {identity.homepage.primaryCtaLabel} ({appsResult.totalCount})
             </Button>
           </Link>
           <Link href={ROUTES.BLOG}>
             <Button variant="secondary" size="lg" className="gap-2 px-6">
-              <BookOpen className="w-4 h-4" /> {secondaryCtaLabel}
+              <BookOpen className="w-4 h-4" /> {identity.homepage.secondaryCtaLabel}
             </Button>
           </Link>
         </div>
@@ -176,9 +161,11 @@ export default async function HomePage() {
             <div>
               <div className="flex items-center gap-2">
                 <Layers className="w-5 h-5 text-indigo-400" />
-                <h2 className="text-2xl font-bold tracking-tight text-white">{appsSectionTitle}</h2>
+                <h2 className="text-2xl font-bold tracking-tight text-white">
+                  {identity.homepage.appsTitle}
+                </h2>
               </div>
-              <p className="text-sm text-zinc-400 mt-1">{appsSectionSubtitle}</p>
+              <p className="text-sm text-zinc-400 mt-1">{identity.homepage.appsSubtitle}</p>
             </div>
             <Link
               href={ROUTES.APPS}
@@ -203,9 +190,11 @@ export default async function HomePage() {
             <div>
               <div className="flex items-center gap-2">
                 <BookOpen className="w-5 h-5 text-cyan-400" />
-                <h2 className="text-2xl font-bold tracking-tight text-white">{blogSectionTitle}</h2>
+                <h2 className="text-2xl font-bold tracking-tight text-white">
+                  {identity.homepage.blogTitle}
+                </h2>
               </div>
-              <p className="text-sm text-zinc-400 mt-1">{blogSectionSubtitle}</p>
+              <p className="text-sm text-zinc-400 mt-1">{identity.homepage.blogSubtitle}</p>
             </div>
             <Link
               href={ROUTES.BLOG}
@@ -258,11 +247,11 @@ export default async function HomePage() {
           {/* Creator Intro */}
           <div className="lg:col-span-5 space-y-4">
             <div className="flex items-center gap-3">
-              {creatorAvatarUrl ? (
+              {identity.creator.avatarUrl ? (
                 <div className="w-11 h-11 rounded-2xl bg-indigo-950/60 border border-indigo-500/40 overflow-hidden shrink-0 shadow-md">
                   <img
-                    src={creatorAvatarUrl}
-                    alt={creatorName}
+                    src={identity.creator.avatarUrl}
+                    alt={identity.creator.name}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -274,7 +263,7 @@ export default async function HomePage() {
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
               Built with purpose & strong fundamentals
             </h2>
-            <p className="text-sm text-zinc-400 leading-relaxed">{creatorShortBio}</p>
+            <p className="text-sm text-zinc-400 leading-relaxed">{identity.creator.shortBio}</p>
             <div className="pt-2">
               <Link href={ROUTES.ABOUT}>
                 <Button
@@ -282,7 +271,7 @@ export default async function HomePage() {
                   size="sm"
                   className="border-zinc-800 text-xs gap-1.5 text-zinc-300"
                 >
-                  Read About {creatorName} & Mission <ArrowRight className="w-3.5 h-3.5" />
+                  Read About {identity.creator.name} & Mission <ArrowRight className="w-3.5 h-3.5" />
                 </Button>
               </Link>
             </div>
@@ -290,7 +279,7 @@ export default async function HomePage() {
 
           {/* Core Principles Grid */}
           <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            {creatorPrinciples.map((principle: string, idx: number) => (
+            {identity.creator.principles.map((principle: string, idx: number) => (
               <div
                 key={idx}
                 className="p-4 rounded-2xl border border-zinc-800/80 bg-zinc-900/20 flex items-start gap-3"
