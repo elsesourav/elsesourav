@@ -17,6 +17,9 @@ import {
   CheckCircle2,
   Terminal,
   Megaphone,
+  Layers,
+  Compass,
+  Code2,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -68,6 +71,7 @@ export default async function HomePage() {
 
   const featuredApps = appsResult.items || [];
   const recentPosts = blogResult.items || [];
+  const primaryFeaturedApp = featuredApps[0] || null;
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -131,45 +135,133 @@ export default async function HomePage() {
 
       {/* Main Content Landmark */}
       <main id="main-content" className="flex-1">
-        {/* 1. Hero Section: Identity, Positioning, & Value Proposition */}
-        <Section spacing="lg" className="text-center relative">
+        {/* 1. Hero Section: Editorial First-Viewport Narrative */}
+        <Section spacing="lg" className="relative pt-8 sm:pt-12 lg:pt-16 pb-16 sm:pb-20 lg:pb-24">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96 overflow-hidden flex justify-center"
+            className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[500px] overflow-hidden flex justify-center"
           >
-            <div className="w-[600px] sm:w-[900px] h-[350px] bg-gradient-to-b from-indigo-500/10 via-indigo-600/5 to-transparent blur-3xl rounded-full transform -translate-y-1/2" />
+            <div className="w-[700px] sm:w-[1100px] h-[400px] bg-gradient-to-b from-indigo-500/10 via-indigo-600/5 to-transparent blur-3xl rounded-full transform -translate-y-1/2" />
           </div>
 
-          <Container size="lg" className="flex flex-col items-center">
-            {identity.homepage.heroBadge && (
-              <Badge variant="primary" className="mb-6 gap-1.5 py-1 px-3.5 text-xs font-medium">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>{identity.homepage.heroBadge}</span>
-              </Badge>
-            )}
+          <Container size="lg">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+              {/* Left Column: Headline, Narrative, & Primary Exploration CTAs */}
+              <div className="lg:col-span-7 space-y-6 text-left">
+                {identity.homepage.heroBadge && (
+                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-indigo-500/30 bg-indigo-950/40 text-xs text-indigo-300 font-medium shadow-sm">
+                    <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                    <span>{identity.homepage.heroBadge}</span>
+                  </div>
+                )}
 
-            <h1 className="text-display font-extrabold tracking-tight text-white max-w-4xl leading-[1.15]">
-              {identity.homepage.heroHeadline}
-            </h1>
+                <h1 className="text-display font-extrabold tracking-tight text-white leading-[1.08]">
+                  {identity.homepage.heroHeadline}
+                </h1>
 
-            <p className="mt-6 text-base sm:text-xl text-zinc-400 max-w-2xl leading-relaxed">
-              {identity.homepage.heroSubtitle}
-            </p>
+                <p className="text-body sm:text-lg text-zinc-400 leading-relaxed max-w-xl">
+                  {identity.homepage.heroSubtitle}
+                </p>
 
-            <ActionGroup className="mt-10 justify-center">
-              <Link href={ROUTES.APPS}>
-                <Button size="lg" className="gap-2 shadow-lg shadow-indigo-600/20 px-6 font-semibold min-h-[44px]">
-                  <Terminal className="w-4 h-4" />
-                  <span>{identity.homepage.primaryCtaLabel} {appsResult.totalCount > 0 ? `(${appsResult.totalCount})` : ''}</span>
-                </Button>
-              </Link>
-              <Link href={ROUTES.BLOG}>
-                <Button variant="secondary" size="lg" className="gap-2 px-6 min-h-[44px]">
-                  <BookOpen className="w-4 h-4" />
-                  <span>{identity.homepage.secondaryCtaLabel}</span>
-                </Button>
-              </Link>
-            </ActionGroup>
+                <ActionGroup className="pt-2">
+                  <Link href={ROUTES.APPS}>
+                    <Button size="lg" className="gap-2 shadow-xl shadow-indigo-600/25 px-6 font-semibold min-h-[44px]">
+                      <Terminal className="w-4 h-4" />
+                      <span>{identity.homepage.primaryCtaLabel} {appsResult.totalCount > 0 ? `(${appsResult.totalCount})` : ''}</span>
+                    </Button>
+                  </Link>
+                  <Link href={ROUTES.BLOG}>
+                    <Button variant="secondary" size="lg" className="gap-2 px-6 min-h-[44px]">
+                      <BookOpen className="w-4 h-4" />
+                      <span>{identity.homepage.secondaryCtaLabel}</span>
+                    </Button>
+                  </Link>
+                </ActionGroup>
+
+                {/* Status & Scale Indicators */}
+                <div className="pt-3 flex flex-wrap items-center gap-4 text-xs text-zinc-500">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="text-zinc-400">Independent Software Platform</span>
+                  </span>
+                  <span>•</span>
+                  <span>{appsResult.totalCount} Applications</span>
+                  <span>•</span>
+                  <span>By {identity.creator.name}</span>
+                </div>
+              </div>
+
+              {/* Right Column: Visual Showcase Preview Panel (Glassmorphism 2.0) */}
+              <div className="lg:col-span-5">
+                <div className="relative rounded-3xl border border-zinc-800/80 bg-zinc-900/60 backdrop-blur-xl p-6 sm:p-7 shadow-2xl space-y-6 hover:border-zinc-700/80 transition-all duration-300">
+                  {/* Window Bar */}
+                  <div className="flex items-center justify-between pb-3 border-b border-zinc-800/70 text-xs text-zinc-400">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full bg-rose-500/80" />
+                      <div className="w-3 h-3 rounded-full bg-amber-500/80" />
+                      <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                      <span className="ml-2 font-mono text-[11px] text-zinc-400">{identity.site.name.toLowerCase()}://hub</span>
+                    </div>
+                    <span className="text-[11px] font-mono text-indigo-400 bg-indigo-950/60 border border-indigo-800/40 px-2 py-0.5 rounded-md">
+                      live
+                    </span>
+                  </div>
+
+                  {/* Spotlight Preview: First Featured App or Studio Summary */}
+                  {primaryFeaturedApp ? (
+                    <div className="space-y-3 p-4 rounded-2xl border border-zinc-800 bg-zinc-950/70">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-indigo-400 font-medium font-mono text-[11px] uppercase tracking-wider">
+                          Featured Utility
+                        </span>
+                        <span className="text-zinc-500 text-[11px]">v{primaryFeaturedApp.currentVersion || '1.0'}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-indigo-950/80 border border-indigo-800/60 flex items-center justify-center text-indigo-400 shrink-0">
+                          <Code2 className="w-5 h-5" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <h3 className="text-sm font-semibold text-white truncate">{primaryFeaturedApp.name}</h3>
+                          <p className="text-xs text-zinc-400 truncate">{primaryFeaturedApp.shortDescription}</p>
+                        </div>
+                      </div>
+                      <Link
+                        href={`/apps/${primaryFeaturedApp.slug}`}
+                        className="inline-flex items-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 font-medium pt-1 group"
+                      >
+                        <span>Launch & inspect app</span>
+                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                      </Link>
+                    </div>
+                  ) : null}
+
+                  {/* Ecosystem Quick Links */}
+                  <div className="grid grid-cols-2 gap-3 pt-1">
+                    <Link
+                      href={ROUTES.APPS}
+                      className="p-3.5 rounded-xl border border-zinc-800/60 bg-zinc-950/50 hover:bg-zinc-800/50 transition-colors group"
+                    >
+                      <div className="flex items-center gap-2 text-xs font-semibold text-zinc-200 group-hover:text-white">
+                        <Layers className="w-4 h-4 text-indigo-400" />
+                        <span>Apps Index</span>
+                      </div>
+                      <p className="text-[11px] text-zinc-500 mt-1">Tools & Software</p>
+                    </Link>
+
+                    <Link
+                      href={ROUTES.BLOG}
+                      className="p-3.5 rounded-xl border border-zinc-800/60 bg-zinc-950/50 hover:bg-zinc-800/50 transition-colors group"
+                    >
+                      <div className="flex items-center gap-2 text-xs font-semibold text-zinc-200 group-hover:text-white">
+                        <Compass className="w-4 h-4 text-cyan-400" />
+                        <span>Journal</span>
+                      </div>
+                      <p className="text-[11px] text-zinc-500 mt-1">Insights & Ideas</p>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
           </Container>
         </Section>
 
