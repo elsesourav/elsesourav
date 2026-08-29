@@ -343,12 +343,12 @@ export const fixtureAppDraft: App = {
 };
 
 export const fixtureAppArchived: App = {
-  id: 'app-archived-legacy',
-  slug: 'legacy-formatter',
-  name: 'Legacy Code Formatter',
-  shortDescription: 'Deprecated v1 formatting script.',
+  id: 'app-archived-utility',
+  slug: 'archived-formatter',
+  name: 'Archived Code Formatter',
+  shortDescription: 'Archived code formatting utility.',
   description: 'Superseded by modern native language server integrations.',
-  iconUrl: 'https://res.cloudinary.com/elsesourav/image/upload/v2/icons/legacy.png',
+  iconUrl: 'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=200&q=80',
   screenshots: [],
   primaryCategory: 'Developer Tools',
   categoryId: 'cat-dev-tools',

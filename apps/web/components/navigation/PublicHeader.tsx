@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Button, Badge } from '@elsesourav/ui';
+import { Button } from '@elsesourav/ui';
 import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
 import { Sparkles, Menu, X, ArrowRight } from 'lucide-react';
 
