@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import { Card, CardHeader, CardTitle, CardDescription, Badge } from '@elsesourav/ui';
+import { Card, CardHeader, CardTitle, Badge, MarkdownRenderer } from '@elsesourav/ui';
 import Link from 'next/link';
 import { ArrowLeft, ExternalLink, Sparkles, CheckCircle2, Compass } from 'lucide-react';
 import { ROUTES, SITE_CONFIG, CREATOR_CONFIG } from '@elsesourav/config';
+import { AdminRepository } from '@elsesourav/database';
 
 export const metadata: Metadata = {
   title: 'About Sourav & ElseSourav',
@@ -24,7 +25,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AboutPage() {
+export const dynamic = 'force-dynamic';
+
+export default async function AboutPage() {
+  const adminRepo = new AdminRepository();
+  const dbSettings: Record<string, string> = await adminRepo.getAllSettings().catch(() => ({}));
+
+  const creatorName = dbSettings['creator_name'] || CREATOR_CONFIG.name;
+  const creatorTitle = dbSettings['creator_title'] || CREATOR_CONFIG.identity.title;
+  const creatorLocation = dbSettings['creator_location'] || CREATOR_CONFIG.identity.location;
+  const creatorLongBio = dbSettings['creator_long_bio'] || CREATOR_CONFIG.longBio;
+  const githubUrl = dbSettings['github_url'] || CREATOR_CONFIG.links.github;
+  const twitterUrl = dbSettings['twitter_url'] || CREATOR_CONFIG.links.twitter;
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'AboutPage',
@@ -33,10 +46,10 @@ export default function AboutPage() {
     url: `${SITE_CONFIG.url}/about`,
     mainEntity: {
       '@type': 'Person',
-      name: CREATOR_CONFIG.name,
-      jobTitle: CREATOR_CONFIG.identity.title,
+      name: creatorName,
+      jobTitle: creatorTitle,
       url: SITE_CONFIG.url,
-      sameAs: [CREATOR_CONFIG.links.github, CREATOR_CONFIG.links.twitter],
+      sameAs: [githubUrl, twitterUrl],
     },
   };
 
@@ -46,7 +59,7 @@ export default function AboutPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      
+
       <div>
         <Link
           href={ROUTES.HOME}
@@ -67,25 +80,23 @@ export default function AboutPage() {
         </div>
       </div>
 
-      {/* Main Narrative Card */}
+      {/* Main Narrative Card with Markdown Support */}
       <Card className="p-6 sm:p-8 rounded-3xl border-zinc-800/80 bg-zinc-900/30 backdrop-blur-xl">
         <CardHeader className="p-0 space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">
-              {CREATOR_CONFIG.identity.title}
+              {creatorTitle}
             </span>
-            <span className="text-xs text-zinc-500">
-              {CREATOR_CONFIG.identity.location}
-            </span>
+            <span className="text-xs text-zinc-500">{creatorLocation}</span>
           </div>
 
           <CardTitle className="text-xl sm:text-2xl text-white font-bold">
             Crafting Practical Software & Digital Tools
           </CardTitle>
 
-          <CardDescription className="text-sm text-zinc-300 leading-relaxed space-y-4 pt-2">
-            <p>{CREATOR_CONFIG.longBio}</p>
-          </CardDescription>
+          <div className="text-sm text-zinc-300 leading-relaxed pt-2">
+            <MarkdownRenderer content={creatorLongBio} />
+          </div>
         </CardHeader>
       </Card>
 
@@ -116,7 +127,11 @@ export default function AboutPage() {
         <h2 className="text-lg font-bold text-white tracking-tight">Areas of Focus</h2>
         <div className="flex flex-wrap gap-2">
           {CREATOR_CONFIG.focus.map((item, idx) => (
-            <Badge key={idx} variant="outline" className="text-xs py-1.5 px-3 border-zinc-800 bg-zinc-900/60 text-zinc-200">
+            <Badge
+              key={idx}
+              variant="outline"
+              className="text-xs py-1.5 px-3 border-zinc-800 bg-zinc-900/60 text-zinc-200"
+            >
               {item}
             </Badge>
           ))}
@@ -130,7 +145,7 @@ export default function AboutPage() {
         </p>
         <div className="flex items-center gap-4 text-xs font-medium">
           <a
-            href={CREATOR_CONFIG.links.github}
+            href={githubUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="text-zinc-300 hover:text-white flex items-center gap-1 transition-colors"
@@ -138,7 +153,7 @@ export default function AboutPage() {
             GitHub <ExternalLink className="w-3 h-3" />
           </a>
           <a
-            href={CREATOR_CONFIG.links.twitter}
+            href={twitterUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="text-zinc-300 hover:text-white flex items-center gap-1 transition-colors"

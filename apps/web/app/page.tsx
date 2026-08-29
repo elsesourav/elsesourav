@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Button, Card, Badge } from '@elsesourav/ui';
 import { SITE_CONFIG, CREATOR_CONFIG, ROUTES } from '@elsesourav/config';
+import { AdminRepository } from '@elsesourav/database';
 import { discoverPublishedApps } from '@/features/apps/queries/get-apps';
 import { getPublicBlogListing } from '@/features/blog/queries/get-blog';
 import { AppCard } from '@/features/apps/components/AppCard';
@@ -13,6 +14,7 @@ import {
   Layers,
   CheckCircle2,
   Terminal,
+  Megaphone,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -41,8 +43,10 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
-  // Query live featured apps and latest blogs from database
-  const [appsResult, blogResult] = await Promise.all([
+  const adminRepo = new AdminRepository();
+
+  // Query live featured apps, latest blogs, and dynamic site settings
+  const [appsResult, blogResult, dbSettings] = await Promise.all([
     discoverPublishedApps({ limit: 6, sort: 'popularity' }).catch(() => ({
       items: [],
       totalCount: 0,
@@ -53,10 +57,18 @@ export default async function HomePage() {
       page: 1,
       totalPages: 1,
     })),
+    adminRepo.getAllSettings().catch(() => ({} as Record<string, string>)),
   ]);
 
   const featuredApps = appsResult.items || [];
   const recentPosts = blogResult.items || [];
+
+  const heroBadge = dbSettings['hero_badge'] || `Software & Digital Tools by ${CREATOR_CONFIG.name}`;
+  const heroHeadline = dbSettings['hero_headline'] || 'Thoughtful software, practical tools, & engineering ideas.';
+  const heroSubtitle = dbSettings['hero_subtitle'] || CREATOR_CONFIG.positioning;
+  const primaryCtaLabel = dbSettings['primary_cta_label'] || 'Explore Applications';
+  const secondaryCtaLabel = dbSettings['secondary_cta_label'] || 'Read Engineering Notes';
+  const announcementBanner = dbSettings['announcement_banner'] || '';
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -97,6 +109,14 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
+      {/* Optional Dynamic Announcement Banner */}
+      {announcementBanner && (
+        <div className="bg-indigo-950/80 border-b border-indigo-500/30 px-4 py-2 text-center text-xs text-indigo-200 flex items-center justify-center gap-2">
+          <Megaphone className="w-3.5 h-3.5 text-indigo-400" />
+          <span>{announcementBanner}</span>
+        </div>
+      )}
+
       {/* Responsive Header Navigation */}
       <PublicHeader />
 
@@ -105,26 +125,26 @@ export default async function HomePage() {
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(45rem_50rem_at_top,theme(colors.indigo.500/10),transparent)]" />
         
         <Badge variant="info" className="mb-6 gap-1.5 py-1 px-3.5 text-xs font-medium">
-          <Sparkles className="w-3.5 h-3.5" /> Software & Digital Tools by {CREATOR_CONFIG.name}
+          <Sparkles className="w-3.5 h-3.5" /> {heroBadge}
         </Badge>
 
         <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white max-w-4xl leading-[1.15]">
-          Thoughtful software, practical tools, & engineering ideas.
+          {heroHeadline}
         </h1>
 
         <p className="mt-6 text-base sm:text-xl text-zinc-400 max-w-2xl leading-relaxed">
-          {CREATOR_CONFIG.positioning}
+          {heroSubtitle}
         </p>
 
         <div className="mt-10 flex flex-wrap gap-4 justify-center items-center">
           <Link href={ROUTES.APPS}>
             <Button size="lg" className="gap-2 shadow-lg shadow-indigo-600/20 px-6 font-semibold">
-              <Terminal className="w-4 h-4" /> Explore Applications ({appsResult.totalCount})
+              <Terminal className="w-4 h-4" /> {primaryCtaLabel} ({appsResult.totalCount})
             </Button>
           </Link>
           <Link href={ROUTES.BLOG}>
             <Button variant="secondary" size="lg" className="gap-2 px-6">
-              <BookOpen className="w-4 h-4" /> Read Engineering Notes
+              <BookOpen className="w-4 h-4" /> {secondaryCtaLabel}
             </Button>
           </Link>
         </div>
