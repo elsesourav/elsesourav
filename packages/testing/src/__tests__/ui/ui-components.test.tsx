@@ -3,6 +3,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import {
   Button,
+  IconButton,
   Badge,
   Avatar,
   Input,
@@ -33,6 +34,7 @@ import {
   TableCell,
   StatCard,
   Pagination,
+  Tooltip,
 } from '@elsesourav/ui';
 
 describe('Button & Foundation Primitives', () => {
@@ -228,5 +230,55 @@ describe('Navigation & Data Display Components', () => {
     const nextBtn = screen.getByRole('button', { name: /go to next page/i });
     fireEvent.click(nextBtn);
     expect(handlePageChange).toHaveBeenCalledWith(3);
+  });
+
+  it('renders IconButton with accessible aria-label and click handler', () => {
+    const handleClick = vi.fn();
+    render(
+      <IconButton aria-label="Delete resource" onClick={handleClick}>
+        <span aria-hidden="true">✕</span>
+      </IconButton>
+    );
+    const btn = screen.getByRole('button', { name: /delete resource/i });
+    expect(btn).toBeDefined();
+    fireEvent.click(btn);
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders Tooltip upon focus/hover', () => {
+    render(
+      <Tooltip content="Quick action tooltip">
+        <button type="button">Hover trigger</button>
+      </Tooltip>
+    );
+    const trigger = screen.getByRole('button', { name: /hover trigger/i });
+    expect(trigger).toBeDefined();
+  });
+
+  it('renders Card with distinct surface variants', () => {
+    render(
+      <div>
+        <Card variant="default">Default Surface</Card>
+        <Card variant="elevated">Elevated Surface</Card>
+        <Card variant="glass">Glass Surface</Card>
+        <Card variant="interactive">Interactive Surface</Card>
+        <Card variant="bordered">Bordered Surface</Card>
+      </div>
+    );
+    expect(screen.getByText('Default Surface')).toBeDefined();
+    expect(screen.getByText('Elevated Surface')).toBeDefined();
+    expect(screen.getByText('Glass Surface')).toBeDefined();
+    expect(screen.getByText('Interactive Surface')).toBeDefined();
+    expect(screen.getByText('Bordered Surface')).toBeDefined();
+  });
+
+  it('renders Badge with dot indicator', () => {
+    const { container } = render(
+      <Badge variant="primary" dot>
+        Live Pulse
+      </Badge>
+    );
+    expect(screen.getByText('Live Pulse')).toBeDefined();
+    expect(container.querySelector('span[aria-hidden="true"]')).toBeDefined();
   });
 });

@@ -29,6 +29,7 @@ export * from './components/error-state';
 // Overlays
 export * from './components/dialog';
 export * from './components/drawer';
+export * from './components/tooltip';
 
 // Navigation
 export * from './components/tabs';

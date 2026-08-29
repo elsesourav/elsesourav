@@ -60,6 +60,9 @@ describe('UI Component State Matrix & Edge Cases', () => {
 
       rerender(<Button variant="danger">Danger</Button>);
       expect(screen.getByRole('button', { name: 'Danger' })).toBeDefined();
+
+      rerender(<Button variant="subtle">Subtle</Button>);
+      expect(screen.getByRole('button', { name: 'Subtle' })).toBeDefined();
     });
 
     it('handles disabled state and prevents click execution', () => {
