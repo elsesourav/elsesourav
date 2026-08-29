@@ -6,6 +6,7 @@ import { AppScreenshotGallery } from '@/features/apps/components/AppScreenshotGa
 import { AppDetailLinks } from '@/features/apps/components/AppDetailLinks';
 import { AppVersionHistory } from '@/features/apps/components/AppVersionHistory';
 import { AppCard } from '@/features/apps/components/AppCard';
+import { BlogContentRenderer } from '@/features/blog/components/BlogContentRenderer';
 import { Card } from '@elsesourav/ui';
 import { Sparkles, FileText } from 'lucide-react';
 
@@ -144,9 +145,7 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
             <FileText className="w-5 h-5 text-indigo-400" /> About {app.name}
           </h2>
           <Card className="p-6 rounded-2xl border-zinc-800/80 bg-zinc-900/30">
-            <div className="text-sm text-zinc-300 leading-relaxed whitespace-pre-line space-y-4">
-              {app.description}
-            </div>
+            <BlogContentRenderer content={app.description} />
           </Card>
         </div>
 

@@ -44,15 +44,23 @@ export const fixtureHelpArticleGettingStarted: HelpArticle = {
   slug: 'getting-started-with-the-elsesourav-ecosystem',
   excerpt:
     'A guided walkthrough for browsing developer tools, saving applications to your personal launchpad, and configuring your dark mode workspace.',
-  content: `## Welcome to ElseSourav V2
+  content: `## Welcome to ElseSourav
 
-The ElseSourav ecosystem provides hardware-accelerated developer utilities directly in your browser.
+The ElseSourav ecosystem provides high-performance developer utilities directly in your browser and native terminal environments.
 
 ### 1. Exploring the Catalog
-Visit the **Apps Catalog** to filter utilities by category, operating system platform, or tag.
+Visit the [Apps Catalog](/apps) to filter utilities by category, operating system platform, or tag.
 
 ### 2. Personal Launchpad
-Bookmark tools to your **Library** for instantaneous 1-click execution. Pinned applications appear prominently at the top of your dashboard.`,
+Bookmark tools to your [Personal Library](/library) for instantaneous 1-click execution. Pinned applications appear prominently at the top of your dashboard.
+
+### Quick Start Code Snippet
+\`\`\`bash
+# Install CLI tools directly via homebrew or npm
+npx @elsesourav/cli launch terminal-pro
+\`\`\`
+
+> Note: All applications operate locally with zero background tracking.`,
   status: 'published',
   orderIndex: 1,
   helpfulCount: 68,
