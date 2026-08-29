@@ -89,7 +89,7 @@ export default async function HomePage() {
       <section className="flex flex-col items-center justify-center text-center px-4 pt-20 pb-16 relative overflow-hidden">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(45rem_50rem_at_top,theme(colors.indigo.500/10),transparent)]" />
         <Badge variant="info" className="mb-6 gap-1.5 py-1 px-3">
-          <Sparkles className="w-3.5 h-3.5" /> Next-Generation V2 Platform
+          <Sparkles className="w-3.5 h-3.5" /> Developer Platform by Sourav
         </Badge>
         <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white max-w-4xl">
           High-performance developer tools, terminal environments, & web software.
