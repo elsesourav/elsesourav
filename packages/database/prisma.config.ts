@@ -1,9 +1,8 @@
-import path from 'node:path';
 import dotenv from 'dotenv';
+import path from 'node:path';
 import { defineConfig, env } from 'prisma/config';
 
 // Load environment variables from monorepo root
-dotenv.config({ path: path.resolve(__dirname, '../../.env.local') });
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 export default defineConfig({
@@ -12,6 +11,6 @@ export default defineConfig({
     path: 'prisma/migrations',
   },
   datasource: {
-    url: env('DATABASE_URL'),
+    url: env('DIRECT_URL') || env('DATABASE_URL'),
   },
 });
