@@ -512,7 +512,7 @@ export function MarkdownRenderer({ content, className = '', fallbackText }: Mark
   }
 
   return (
-    <article className={`prose-zinc max-w-none text-zinc-300 leading-relaxed ${className}`}>
+    <article className={`prose-zinc max-w-none text-zinc-300 leading-relaxed break-words ${className}`}>
       {blocks}
     </article>
   );

@@ -25,11 +25,12 @@ export function Drawer({ open, onOpenChange, position = 'right', children }: Dra
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
+    <div className="fixed inset-0 z-50 overflow-hidden" role="dialog" aria-modal="true">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity animate-in fade-in duration-200"
         onClick={() => onOpenChange(false)}
+        aria-hidden="true"
       />
       {/* Slide-over panel */}
       <div
@@ -38,7 +39,14 @@ export function Drawer({ open, onOpenChange, position = 'right', children }: Dra
           position === 'right' ? 'right-0' : 'left-0'
         )}
       >
-        <div className="w-screen max-w-md bg-zinc-950 border-l border-zinc-800 p-6 shadow-2xl flex flex-col justify-between animate-in slide-in-from-right duration-300">
+        <div
+          className={cn(
+            'w-screen max-w-md bg-zinc-950 border-zinc-800 p-6 shadow-2xl flex flex-col justify-between animate-in duration-300',
+            position === 'right'
+              ? 'border-l slide-in-from-right'
+              : 'border-r slide-in-from-left'
+          )}
+        >
           {children}
         </div>
       </div>
@@ -60,9 +68,10 @@ export function DrawerHeader({
       <div>{children}</div>
       {onClose && (
         <button
+          type="button"
           onClick={onClose}
           aria-label="Close drawer"
-          className="rounded-sm opacity-70 hover:opacity-100 text-zinc-400 hover:text-white p-1"
+          className="rounded-lg p-2 min-h-[40px] min-w-[40px] flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 transition-colors"
         >
           <X className="h-5 w-5" />
         </button>

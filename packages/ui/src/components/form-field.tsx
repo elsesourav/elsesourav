@@ -22,6 +22,8 @@ export function FormField({
 }: FormFieldProps) {
   const generatedId = React.useId();
   const fieldId = id || generatedId;
+  const errorId = `${fieldId}-error`;
+  const descriptionId = `${fieldId}-description`;
 
   return (
     <div className={cn('space-y-1.5 w-full', className)} {...props}>
@@ -31,8 +33,16 @@ export function FormField({
         </Label>
       )}
       {children}
-      {description && !error && <p className="text-xs text-zinc-500">{description}</p>}
-      {error && <p className="text-xs text-red-400 font-medium">{error}</p>}
+      {description && !error && (
+        <p id={descriptionId} className="text-xs text-zinc-400 leading-relaxed">
+          {description}
+        </p>
+      )}
+      {error && (
+        <p id={errorId} role="alert" className="text-xs text-rose-400 font-medium">
+          {error}
+        </p>
+      )}
     </div>
   );
 }
