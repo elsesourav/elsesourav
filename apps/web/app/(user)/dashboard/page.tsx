@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { getDashboardData } from '@/features/dashboard/queries/get-dashboard-data';
 import { DashboardOverview } from '@/features/dashboard/components/DashboardOverview';
+import { PageShell } from '@elsesourav/ui';
 
 export const metadata: Metadata = {
   title: 'Dashboard | ElseSourav',
@@ -15,8 +16,10 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <DashboardOverview data={data} />
-    </div>
+    <PageShell size="lg" glow>
+      <div className="max-w-7xl mx-auto">
+        <DashboardOverview data={data} />
+      </div>
+    </PageShell>
   );
 }
