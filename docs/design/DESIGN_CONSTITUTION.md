@@ -1,54 +1,54 @@
 # ElseSourav Design Constitution
 
-> **Status**: Permanent & Authoritative Baseline  
+> **Status**: Authoritative Baseline  
 > **Phase**: Foundation Phase  
 > **Governance Scope**: 100% of routes, components, tokens, interactions, and content across Public, Authenticated User, and Admin tiers.
 
 ---
 
-## 1. Philosophical Baseline & Product Identity
+## 1. Product Identity & Baseline
 
 ### 1.1 Product Identity
-The product is formally and exclusively:
+The public product identity is formally and exclusively:
 $$\mathbf{ElseSourav}$$
 
-ElseSourav is a handcrafted developer platform, software ecosystem, engineering notebook, and utility suite created by Sourav. It is not an enterprise template, not an AI-generated clone, and not a faceless SaaS aggregator.
+ElseSourav is a handcrafted personal platform, software ecosystem, and engineering notebook created by Sourav. It is not an enterprise template, not an AI-generated clone, and not a generic SaaS aggregator.
 
 ### 1.2 The Global Version Naming Mandate
-- **Rule**: Never expose "V1", "V2", "Version 2.0", or generational labels in user-facing surfaces.
-- **Affected Surfaces**: Titles, headings, hero badges, empty states, button labels, navigation links, error messages, metadata, OpenGraph tags, and JSON-LD schemas.
-- **Permitted Usage**: Limited strictly to internal developer docs (`docs/*`), Git commits, package versions (`package.json`), and changelogs (`CHANGELOG.md`).
+- **Rule**: Never present the product as "ElseSourav V1", "ElseSourav V2", "Version 1", "Version 2", "V2 platform", "V2 UI", or "New V2".
+- **Scope**: Public pages, User portal, and Admin portal.
+- **Permitted Technical Usages**: Limited strictly to internal developer docs (`docs/*`), Git commits, package versions (`package.json`), and SemVer application release tags (`v1.4.0`).
 
 ---
 
-## 2. The 10 Foundational Principles
+## 2. The 10 Design Principles
 
 ---
 
 ### Principle 1: Human-Made Design
 
-**Core Concept**  
+**Core Philosophy**  
 ElseSourav intentionally rejects the homogenized, generic aesthetic of AI-generated SaaS templates, cookie-cutter component libraries, and formulaic portfolio themes. The interface must communicate craft, intentionality, and a distinct human perspective.
 
 **Priorities**:
-- **Personality**: A clear point of view rooted in engineering depth, terminal ergonomics, and modern web standards.
+- **Authenticity & Personality**: A clear point of view rooted in engineering craft, developer ergonomics, and modern web standards.
 - **Intentional Composition**: Layouts designed around actual content shape, not generic rectangular placeholders.
-- **Authentic Content**: Real devlogs, genuine benchmark telemetry, verifiable software releases, and authored perspectives.
+- **Meaningful Content**: Real devlogs, genuine benchmark telemetry, verifiable software releases, and authored perspectives.
 - **Distinctive Typography**: Deliberate interplay between expressive display type (`Space Grotesk`), ultra-readable body (`Geist Sans`), and precise monospace (`JetBrains Mono`).
 - **Thoughtful Details**: Tactile borders, subtle radial glows, custom-crafted micro-interactions, and informative empty states.
 
 **Negative Constraints**:
-- Do **NOT** add visual novelty or decorative gimmicks merely to appear "modern" or "trendy".
+- Do **NOT** add visual novelty merely to appear modern or trendy.
 - Do **NOT** use unmotivated floating 3D shapes, meaningless gradient mesh blobs, or faux-cyberpunk neon outlines.
 
 ---
 
 ### Principle 2: Strategic Design Thinking
 
-**Core Concept**  
-Design follows purpose. No screen, component, or interaction is designed in isolation. Every view must resolve a specific user intent and satisfy strict functional success criteria.
+**Core Philosophy**  
+Design follows purpose. No screen, component, or interaction is designed in isolation. Always understand **WHY** before deciding **WHAT** to build.
 
-**Mandatory 7-Point Canvas for Every Significant Feature/Page**:
+**Mandatory 7-Point Canvas for Every Significant Page & Feature**:
 1. **Purpose**: Why does this page or feature exist?
 2. **Audience**: Who is using it (first-time visitor, logged-in developer, support seeker, admin)?
 3. **User Problem**: What specific friction or question is being resolved?
@@ -59,46 +59,45 @@ Design follows purpose. No screen, component, or interaction is designed in isol
 
 ---
 
-### Principle 3: Organic / Anti-Grid Layouts
+### Principle 3: Organic / Anti-Grid
 
-**Core Concept**  
-Visual rhythm must adapt to storytelling. While standard grids create monotony, asymmetric and organic compositions introduce editorial pacing and focus.
+**Core Philosophy**  
+Use asymmetrical and organic composition where it improves storytelling, visual hierarchy, personality, and editorial quality.
 
 **Selective Application Matrix**:
 
 | Category | Appropriate Routes / Sections | Composition Strategy |
 | :--- | :--- | :--- |
 | **Apply Organically** | • Homepage Hero & Spotlight<br>• About Page Storytelling<br>• Featured Work Showcase<br>• Devlog Editorial Headers | • Asymmetric column splits (`1.618fr 1fr`, `2fr 1fr`)<br>• Staggered focal points and alternating anchors<br>• Deliberate whitespace breathing rooms |
-| **Strict Grid / Layout** | • Search Results & Filters<br>• User Settings & Forms<br>• Support Ticket Threads<br>• Help Workflows & Documentation<br>• Admin Data Tables & Metrics | • Predictable column alignments<br>• Strict tab order and uniform spacing<br>• Optimized for rapid ocular scanning |
+| **Strict Layouts (No Forced Organic)** | • Search Results & Filters<br>• User Settings & Forms<br>• Support Ticket Threads<br>• Help Workflows & Documentation<br>• Admin Data Tables & Metrics | • Predictable column alignments<br>• Strict tab order and uniform spacing<br>• Optimized for rapid ocular scanning |
 
 ---
 
 ### Principle 4: Motion Narrative
 
-**Core Concept**  
-Animation is a functional communication layer, not decoration. Every transition must explain spatial relationships, acknowledge state transitions, or orient user attention.
+**Core Philosophy**  
+Motion must communicate something meaningful. Avoid decorative animation with no functional purpose.
 
 **Functional Motion Triggers**:
-- **Navigation & Wayfinding**: Page entry transitions and drawer/modal entrances communicate where the user arrived from.
-- **State Changes**: Expanding accordion items, tabs switching, or dropdown menus unfolding.
-- **Hierarchy & Attention**: Subtle stagger on page load guides the eye from the hero headline to the primary CTA.
-- **Feedback**: Instant tactile acknowledgement upon button clicks, switch flips, and form submissions.
+- **Transitions & Navigation**: Communicating where the user arrived from and spatial continuity.
+- **Hierarchy & Orientation**: Guiding attention from primary headlines to interactive calls to action.
+- **Feedback & State Changes**: Tactile acknowledgement upon button clicks, switch flips, accordions, and form submissions.
+- **Storytelling**: Controlled scroll-driven reveals on narrative editorial sections.
 
 **Strict Motion Constraints**:
-- Zero continuous decorative spinning or floating animations.
 - Transform **only** compositor properties (`transform`, `opacity`). Never animate layout dimensions (`width`, `height`, `top`, `margin`).
-- Enforce standard timing tokens: `--transition-fast` (`150ms`), `--transition-smooth` (`250ms`), `--transition-slow` (`400ms`).
-- Strictly respect `@media (prefers-reduced-motion: reduce)` by collapsing all durations to `0.01ms`.
+- Enforce standard timing tokens: `--duration-fast` (`150ms`), `--duration-normal` (`250ms`), `--duration-slow` (`400ms`).
+- Strictly respect `@media (prefers-reduced-motion: reduce)` by disabling non-essential motion.
 
 ---
 
 ### Principle 5: Glassmorphism 2.0 (Depth & Restraint)
 
-**Core Concept**  
-Solid surfaces are the default foundation. Glass is exclusively a hierarchy and depth tool used for floating overlays, fixed navigation, and elevated dialogs.
+**Core Philosophy**  
+Use translucent and frosted surfaces selectively. Glass should provide depth, hierarchy, layering, and emphasis.
 
 **Rules of Restraint**:
-- **Solid Surfaces First**: 90% of containers, cards, and body wells use solid, high-contrast tokens (`--color-bg-surface`, `--color-bg-surface-elevated`).
+- **Solid Surfaces First**: The vast majority of containers, cards, and body wells use solid, high-contrast tokens (`--surface`, `--surface-elevated`).
 - **Where Glass is Permitted**:
   1. Sticky top navigation bar (frosted backdrop blur over scrolling content).
   2. Floating modal dialogs and slide-out drawers.
@@ -108,144 +107,124 @@ Solid surfaces are the default foundation. Glass is exclusively a hierarchy and 
   - Never in dense Admin data grids or CMS forms.
   - Never behind long-form article body copy or documentation guides.
   - Never stacked/nested (glass on top of glass).
-- **Legibility Guard**: Contrast ratio of text on glass must remain $\ge 4.5:1$ across all scroll positions.
+- **Readability & Accessibility Guard**: Readability and accessibility always win. Contrast ratio of text on glass must remain $\ge 4.5:1$ across all scroll positions.
 
 ---
 
 ### Principle 6: Archival Index System
 
-**Core Concept**  
-ElseSourav is a permanent, evolving library of engineering artifacts, software tools, and devlogs. Content is indexed and discoverable through robust information architecture rather than ephemeral feeds.
+**Core Philosophy**  
+ElseSourav is a structured archive of engineering artifacts, software tools, devlogs, and documentation. Use structured information presentation with strong typography, metadata, indexing, and appropriate grids/tables.
 
 **Application Across Domains**:
 - **Apps Catalog**: Categorized by platform (Web, CLI, Desktop, Extensions), version status, and domain tags.
-- **Devlog Archive**: Chronological index with estimated reading times, category taxonomy, and tag wayfinding.
-- **Help Center**: Structured hierarchy (Topic $\rightarrow$ Category $\rightarrow$ Article) with cross-linked solutions.
+- **Blog Archive**: Chronological index with estimated reading times, category taxonomy, and tag wayfinding.
+- **Help Center**: Structured hierarchy (Category $\rightarrow$ Article) with cross-linked solutions.
 - **User Library**: Fast, bookmarkable personal collection with favorite toggles and launch history.
 - **Admin Directory**: Comprehensive, searchable data listings with explicit column sorting, pagination, and filter queries.
 
-**Visual Rule**: Use structured cards, metadata badges, and clean list items—do not reduce every catalog view into a sterile spreadsheet table.
+*Rule: Do not turn every interface into a table. Use structured cards, metadata badges, and clean list items where appropriate.*
 
 ---
 
 ### Principle 7: Purposeful Micro-Interactions
 
-**Core Concept**  
-Every interactive element must provide immediate, unmistakable feedback across all seven interaction states:
+**Core Philosophy**  
+Interactive elements must communicate state clearly and immediately. Do not animate interactions merely for decoration.
 
-```
-┌───────────┐    Hover    ┌───────────┐    Press    ┌───────────┐
-│  DEFAULT  │ ──────────> │   HOVER   │ ──────────> │  PRESSED  │
-└───────────┘             └───────────┘             └───────────┘
-      │                         │                         │
-      ▼                         ▼                         ▼
-┌───────────┐             ┌───────────┐             ┌───────────┐
-│ DISABLED  │             │  FOCUSED  │             │  LOADING  │
-└───────────┘             └───────────┘             └───────────┘
-                                                          │
-                                     ┌────────────────────┴────────────────────┐
-                                     ▼                                         ▼
-                               ┌───────────┐                             ┌───────────┐
-                               │  SUCCESS  │                             │   ERROR   │
-                               └───────────┘                             └───────────┘
-```
-
-**Interaction State Matrix**:
-1. **Hover**: 1px upward translation (`translateY(-1px)`) and subtle border brightness lift (`border-zinc-700`).
-2. **Focus**: High-visibility 2px contrast ring (`ring-2 ring-indigo-500 ring-offset-2 ring-offset-zinc-950`).
-3. **Pressed**: Tactile depression (`scale(0.98)` and `translateY(0)`).
-4. **Loading**: Replaces text with a smooth SVG spinner or inline pulse skeleton; element is automatically aria-busy.
-5. **Success**: Subtle green checkmark animation with a 2-second timeout.
-6. **Error**: Shake vibration animation (once, 300ms) with high-contrast red error border (`border-red-500`).
-7. **Disabled**: Reduced opacity (`opacity-50`), `cursor-not-allowed`, and pointer-events disabled.
+**Supported Interaction States**:
+- **Hover**: Subtle elevation and border brightness lift.
+- **Focus**: High-visibility contrast focus ring (`focus-visible:ring-2 focus-visible:ring-primary`).
+- **Pressed**: Tactile depression (`scale(0.98)`).
+- **Loading**: SVG spinner or pulse skeleton with `aria-busy="true"`.
+- **Success**: Checkmark state with tactile color feedback.
+- **Error**: High-contrast error border and message.
+- **Disabled**: Reduced opacity (`opacity-50`) and `cursor-not-allowed`.
+- **Selection / Save / Favorite**: Immediate toggle state reflection with optimistic UI updates.
+- **Copy**: Instant clipboard confirmation feedback.
+- **Navigation**: Clean active link indicator.
 
 ---
 
 ### Principle 8: Accessibility-First (Universal Usability)
 
-**Core Concept**  
-Accessibility is infrastructure. The platform must be completely usable by anyone, on any device, utilizing any assistive technology.
+**Core Philosophy**  
+Accessibility is mandatory infrastructure, not an afterthought.
 
 **Non-Negotiable Standards**:
-- **Semantic Structure**: Strictly sequential headings (`h1` $\rightarrow$ `h2` $\rightarrow$ `h3`). Exactly one `<h1>` per view.
-- **Contrast**: Body copy $\ge 7:1$ against backgrounds (WCAG AAA target). Large text & UI borders $\ge 4.5:1$ (WCAG AA).
-- **Keyboard Operability**: 100% of interactive elements reachable by `Tab` and executable via `Enter` or `Space`.
-- **Focus Management**: Focus trapped inside open modal dialogs; focus restored to trigger upon modal close.
-- **Forms**: Explicit `<label>` elements linked by `htmlFor`, inline error validation with `aria-describedby` and `aria-invalid`.
-- **Screen Reader Support**: Meaningful ARIA landmarks (`<header>`, `<main>`, `<nav>`, `<footer>`, `<aside>`), descriptive image `alt` attributes, and `sr-only` utility text where icons represent actions.
+- **Semantic HTML**: Strictly sequential headings (`h1` $\rightarrow$ `h2` $\rightarrow$ `h3`). Exactly one `<h1>` per view.
+- **Keyboard Navigation**: 100% of interactive elements reachable via `Tab` and executable via `Enter` or `Space`.
+- **Visible Focus**: Clear focus indicators on all interactive targets.
+- **Screen Readers**: Meaningful ARIA landmarks (`<header>`, `<main>`, `<nav>`, `<footer>`, `<aside>`), descriptive image `alt` attributes, and `sr-only` utility text where icons represent actions.
+- **Sufficient Contrast**: Body copy $\ge 7:1$ against backgrounds (WCAG AAA target). Large text & UI borders $\ge 4.5:1$ (WCAG AA).
+- **Accessible Forms**: Explicit `<label>` elements linked by `htmlFor`, inline error validation with `aria-describedby` and `aria-invalid`.
+- **Reduced Motion & Touch Usability**: Full support for `prefers-reduced-motion` and minimum $44\times 44\text{px}$ touch targets.
 
 ---
 
-### Principle 9: AI as Creative & Technical Co-Pilot
+### Principle 9: AI as Creative Partner
 
-**Core Concept**  
-AI is an implementation accelerator and verification tool. It is not the designer, not the product owner, and not the author.
+**Core Philosophy**  
+AI assists with implementation, analysis, refactoring, testing, brainstorming, and optimization. Human and product judgment remains strictly in control.
 
-**Boundary Protocol**:
-- **AI Responsibilities**: Rapid component scaffolding, TypeScript type inference, unit test generation, regression testing, lint fixes, and documentation synthesis.
-- **Human Authority**: Sourav retains exclusive authority over:
-  1. Product identity and branding.
-  2. UX philosophy and strategic layout decisions.
-  3. Copywriting tone, personal perspectives, and devlog content.
-  4. Final architectural reviews and quality sign-offs.
+**Strict Boundaries**:
+- AI must **NOT** invent:
+  - personal identity
+  - professional history
+  - achievements
+  - unsupported claims
+  - fake testimonials
+  - fake metrics
+- Authentic creator information (Sourav) and verified software features only.
 
 ---
 
 ### Principle 10: Performance-First Creativity
 
-**Core Concept**  
-Performance is an aesthetic virtue. Sluggish transitions, layout shifts, or heavy client bundles ruin beautiful visual design.
+**Core Philosophy**  
+Every visual decision must consider loading performance, client JavaScript bundle size, image size, animation cost, dependency cost, Server Components, data fetching, and mobile performance. Beauty must not come at the cost of unnecessary performance problems.
 
-**Performance Budget & Architecture**:
+**Performance Budgets**:
 - **Core Web Vitals Thresholds**:
   - **LCP** (Largest Contentful Paint) $< 1.2\text{s}$
   - **INP** (Interaction to Next Paint) $< 100\text{ms}$
   - **CLS** (Cumulative Layout Shift) $= 0.00$
   - **TTFB** (Time to First Byte) $< 200\text{ms}$
-- **Zero-Hydration Bloat**: Default to React Server Components (RSC). Restrict `'use client'` strictly to interactive leaves.
-- **Asset Optimization**: All images delivered via `next/image` with WebP/AVIF formatting, responsive srcset sizes, and CDN caching.
-- **Font Strategy**: Preloaded via `next/font/google` with `display: swap` to prevent FOIT (Flash of Invisible Text).
+- **Server-First Architecture**: Default to React Server Components (RSC); client JavaScript is restricted to interactive leaves.
+- **Asset Optimization**: Responsive WebP/AVIF images with CDN caching and preloaded Google font subsets.
 
 ---
 
-## 3. The Universal Page Decision Rule
+## 3. Global Decision Rule
 
-Before designing or implementing any page, the engineering team must answer:
-
-> **"What is the user trying to accomplish on this exact screen?"**
-
-Then, select the appropriate design language from the tier matrix:
+> **These principles are rules for decision-making.**  
+> **Do not force all 10 principles equally onto every page.**  
+> **Use the principles that best serve the page's strategic purpose.**
 
 ```
-                  ┌─────────────────────────────────────┐
-                  │ What is the primary user objective? │
-                  └──────────────────┬──────────────────┘
-                                     │
-         ┌───────────────────────────┼───────────────────────────┐
-         ▼                           ▼                           ▼
-┌──────────────────┐       ┌──────────────────┐       ┌──────────────────┐
-│  PUBLIC DISCOVERY│       │  AUTHENTICATED   │       │  ADMINISTRATIVE  │
-│  & STORYTELLING  │       │  PRODUCTIVITY    │       │  OPERATIONS      │
-├──────────────────┤       ├──────────────────┤       ├──────────────────┤
-│ • Asymmetric     │       │ • High contrast  │       │ • High density   │
-│ • Rich type      │       │ • Fast state     │       │ • Solid surfaces │
-│ • Glass accents  │       │ • Solid surfaces │       │ • Fast tables    │
-│ • Entrance motion│       │ • Tactile feedback│      │ • Zero motion    │
-└──────────────────┘       └──────────────────┘       └──────────────────┘
+┌────────────────────────────────────────────────────────────────────────┐
+│                        PAGE TIER STRATEGY MAP                          │
+├────────────────────┬────────────────────┬──────────────────────────────┤
+│ PUBLIC DISCOVERY   │ USER PRODUCTIVITY  │ ADMINISTRATIVE OPERATIONS    │
+├────────────────────┼────────────────────┼──────────────────────────────┤
+│ • Human-made craft │ • Fast state       │ • High data density          │
+│ • Rich typography  │ • High contrast    │ • Solid surface containers   │
+│ • Selective glass  │ • Solid surfaces   │ • Strict predictable layout  │
+│ • Asymmetric hero  │ • Tactile feedback │ • Zero distracting animation  │
+│ • Narrative motion │ • Keyboard flow    │ • Fast tabular sorting       │
+└────────────────────┴────────────────────┴──────────────────────────────┘
 ```
-
-**Golden Rule**: Do not force every principle equally onto every page. Let the page's strategic purpose determine its aesthetic intensity.
 
 ---
 
-## 4. Governance & Verification Gate
+## 4. Governance & Verification Checklist
 
-Every pull request or feature addition must verify compliance against this checklist:
+Every pull request or view implementation must verify compliance against:
 
-1. [ ] **Version Rule Checked**: Zero instances of "V1" or "V2" in customer-facing UI/metadata.
-2. [ ] **Purpose Defined**: 7-point design canvas established for new views.
-3. [ ] **Surface Tier Applied**: Appropriate visual restraint applied (Public vs User vs Admin).
+1. [ ] **Product Identity**: Zero mentions of "V1" or "V2" in public/user/admin UI.
+2. [ ] **Purpose Defined**: 7-point design canvas established.
+3. [ ] **Surface Restraint**: Solid surfaces default; glass restricted to overlays/nav.
 4. [ ] **Accessibility Audited**: Contrast $\ge 4.5:1$, sequential headings, keyboard tab path verified.
-5. [ ] **Motion Scoped**: All animations purposeful, GPU-composited, and reduced-motion compliant.
+5. [ ] **Motion Scoped**: Purposeful transitions only; reduced-motion compliant.
 6. [ ] **Performance Checked**: RSC streaming leveraged, zero layout shift, minimal client JS.
-7. [ ] **Build Health Verified**: `turbo typecheck`, `turbo lint`, and `turbo test` pass with 100% success.
+7. [ ] **Build Health Verified**: `turbo typecheck`, `turbo test`, and `turbo build` pass with 100% success.
