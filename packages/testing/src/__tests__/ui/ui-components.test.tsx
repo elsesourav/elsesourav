@@ -26,6 +26,8 @@ import {
   AlertTitle,
   EmptyState,
   ErrorState,
+  TableSkeleton,
+  DetailSkeleton,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -380,5 +382,50 @@ describe('Navigation & Data Display Components', () => {
     expect(screen.getByText('Architecture')).toBeDefined();
     expect(screen.getByText('Built for Speed')).toBeDefined();
     expect(screen.getByText('Zero-runtime dependencies.')).toBeDefined();
+  });
+
+  it('renders TableSkeleton and DetailSkeleton loading states', () => {
+    const { container } = render(
+      <div>
+        <TableSkeleton rows={3} cols={3} />
+        <DetailSkeleton />
+      </div>
+    );
+
+    const animatedPulses = container.querySelectorAll('.animate-pulse');
+    expect(animatedPulses.length).toBeGreaterThan(5);
+  });
+
+  it('renders ErrorState in compact mode with retry trigger', () => {
+    const retrySpy = vi.fn();
+    render(
+      <ErrorState
+        compact
+        title="Sync Failed"
+        description="Could not synchronize with cloud."
+        onRetry={retrySpy}
+        retryLabel="Retry Sync"
+      />
+    );
+
+    expect(screen.getByText(/Sync Failed/)).toBeDefined();
+    const retryBtn = screen.getByRole('button', { name: 'Retry Sync' });
+    fireEvent.click(retryBtn);
+    expect(retrySpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders EmptyState with custom action and variant', () => {
+    render(
+      <EmptyState
+        variant="search"
+        title="No Results Found"
+        description="Try adjusting your search criteria."
+        action={<Button size="sm">Clear Filters</Button>}
+      />
+    );
+
+    expect(screen.getByText('No Results Found')).toBeDefined();
+    expect(screen.getByText('Try adjusting your search criteria.')).toBeDefined();
+    expect(screen.getByRole('button', { name: 'Clear Filters' })).toBeDefined();
   });
 });

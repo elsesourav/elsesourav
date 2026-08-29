@@ -10,34 +10,66 @@ export interface ErrorStateProps extends React.HTMLAttributes<HTMLDivElement> {
   onRetry?: () => void;
   retryLabel?: string;
   action?: React.ReactNode;
+  compact?: boolean;
 }
 
 export function ErrorState({
-  title = 'Failed to Load Data',
-  description = 'An unexpected error occurred while fetching information.',
+  title = 'Unable to Load Content',
+  description = 'An unexpected issue occurred while retrieving this information.',
   onRetry,
   retryLabel = 'Try Again',
   action,
+  compact = false,
   className,
   ...props
 }: ErrorStateProps) {
+  if (compact) {
+    return (
+      <div
+        role="alert"
+        className={cn(
+          'p-4 rounded-xl border border-rose-900/40 bg-rose-950/20 flex items-center justify-between gap-4 text-xs',
+          className
+        )}
+        {...props}
+      >
+        <div className="flex items-center gap-2.5 text-rose-200">
+          <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+          <span className="font-medium">{title} — {description}</span>
+        </div>
+        {onRetry && (
+          <Button
+            onClick={onRetry}
+            size="sm"
+            variant="outline"
+            className="border-rose-800 text-rose-300 hover:bg-rose-900/40 shrink-0 text-[11px] h-7 px-2.5"
+          >
+            <RefreshCw className="w-3 h-3 mr-1" />
+            {retryLabel}
+          </Button>
+        )}
+      </div>
+    );
+  }
+
   return (
     <Card
+      role="alert"
       className={cn(
-        'text-center py-12 px-6 border-red-900/40 bg-zinc-950/80 flex flex-col items-center justify-center',
+        'text-center py-12 px-6 border-rose-900/40 bg-zinc-950/80 rounded-2xl flex flex-col items-center justify-center shadow-sm',
         className
       )}
       {...props}
     >
-      <CardHeader className="flex flex-col items-center p-0">
-        <div className="w-12 h-12 rounded-full bg-red-950/60 border border-red-800 flex items-center justify-center mb-4">
-          <AlertCircle className="w-6 h-6 text-red-400" />
+      <CardHeader className="flex flex-col items-center p-0 space-y-2">
+        <div className="w-12 h-12 rounded-2xl bg-rose-950/60 border border-rose-800/60 flex items-center justify-center mb-2">
+          <AlertCircle className="w-6 h-6 text-rose-400" />
         </div>
-        <CardTitle className="text-lg text-red-200">{title}</CardTitle>
-        <CardDescription className="max-w-sm mt-1.5">{description}</CardDescription>
+        <CardTitle className="text-lg text-rose-100 font-semibold">{title}</CardTitle>
+        <CardDescription className="max-w-sm text-xs text-zinc-400 leading-relaxed">{description}</CardDescription>
       </CardHeader>
       {(onRetry || action) && (
-        <div className="mt-6 flex items-center justify-center gap-3">
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           {onRetry && (
             <Button onClick={onRetry} variant="secondary" size="sm" className="gap-2">
               <RefreshCw className="w-3.5 h-3.5" /> {retryLabel}
