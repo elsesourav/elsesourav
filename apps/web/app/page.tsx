@@ -361,22 +361,25 @@ export default async function HomePage() {
           </Section>
         )}
 
-        {/* 3. Technical Writing & Ideas Section */}
+        {/* 3. Writing & Engineering Notes Section */}
         {recentPosts.length > 0 && (
           <Section spacing="lg">
             <Container size="lg">
               <SectionHeader
                 align="split"
-                caption="Field Notes & Devlogs"
-                title={identity.homepage.blogTitle || 'Engineering Notes & Insights'}
-                description={identity.homepage.blogSubtitle || 'Reflections on software architecture, interface design, monorepos, and digital craft.'}
+                caption="Field Notes & Writing"
+                title={identity.homepage.blogTitle || 'Engineering Notes & Reflections'}
+                description={
+                  identity.homepage.blogSubtitle ||
+                  'Notes on software design, architecture, performance, and things I learn while building.'
+                }
                 actions={
                   <Link
                     href={ROUTES.BLOG}
-                    className="text-sm font-medium text-cyan-400 hover:text-cyan-300 flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded p-1"
+                    className="text-sm font-medium text-cyan-400 hover:text-cyan-300 flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded p-1 group"
                   >
-                    <span>Read all articles ({blogResult.totalCount})</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <span>Read all notes {blogResult.totalCount > 0 ? `(${blogResult.totalCount})` : ''}</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                   </Link>
                 }
               />
@@ -389,70 +392,78 @@ export default async function HomePage() {
                       href={`/blog/${recentPosts[0]!.slug}`}
                       className="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-3xl"
                     >
-                      <div className="h-full border border-zinc-800/80 bg-zinc-900/30 hover:bg-zinc-900/60 hover:border-cyan-500/50 p-7 sm:p-8 rounded-3xl transition-all duration-300 flex flex-col justify-between backdrop-blur-sm group-hover:shadow-2xl group-hover:shadow-cyan-500/10">
+                      <article className="h-full border border-zinc-800/90 bg-gradient-to-br from-zinc-900/60 to-zinc-950/80 hover:border-cyan-500/50 p-7 sm:p-9 rounded-3xl transition-all duration-300 flex flex-col justify-between backdrop-blur-md group-hover:shadow-2xl group-hover:shadow-cyan-500/10">
                         <div className="space-y-4">
                           <div className="flex items-center justify-between text-xs pb-3 border-b border-zinc-800/70">
                             <span className="font-mono text-cyan-400 text-xs font-semibold uppercase tracking-wider">
                               Latest Essay // {recentPosts[0]!.category?.name || 'Architecture'}
                             </span>
-                            <span className="text-zinc-400 text-xs">
+                            <span className="text-zinc-500 text-xs font-mono">
                               {recentPosts[0]!.readingTime} min read
                             </span>
                           </div>
 
-                          <h3 className="font-bold text-xl sm:text-2xl text-white group-hover:text-cyan-200 transition-colors leading-snug">
+                          <h3 className="font-bold text-2xl sm:text-3xl text-white group-hover:text-cyan-200 transition-colors leading-tight">
                             {recentPosts[0]!.title}
                           </h3>
 
-                          <p className="text-sm text-zinc-400 leading-relaxed line-clamp-4">
+                          <p className="text-body text-zinc-400 leading-relaxed line-clamp-3">
                             {recentPosts[0]!.excerpt}
                           </p>
                         </div>
 
                         <div className="flex items-center justify-between pt-6 mt-6 border-t border-zinc-800/70 text-xs text-zinc-400">
-                          <span>
-                            {recentPosts[0]!.publishedAt
-                              ? new Date(recentPosts[0]!.publishedAt).toLocaleDateString('en-US', {
-                                  month: 'long',
-                                  day: 'numeric',
-                                  year: 'numeric',
-                                })
-                              : 'Published Recently'}
-                          </span>
-                          <span className="text-cyan-400 font-semibold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                          {recentPosts[0]!.publishedAt ? (
+                            <time
+                              dateTime={new Date(recentPosts[0]!.publishedAt).toISOString()}
+                              className="font-mono text-zinc-500"
+                            >
+                              {new Date(recentPosts[0]!.publishedAt).toLocaleDateString('en-US', {
+                                month: 'long',
+                                day: 'numeric',
+                                year: 'numeric',
+                              })}
+                            </time>
+                          ) : (
+                            <span className="text-zinc-500 font-mono">Published Recently</span>
+                          )}
+                          <span className="text-cyan-400 font-semibold flex items-center gap-1.5 group-hover:translate-x-1 transition-transform">
                             <span>Read complete essay</span>
                             <ArrowRight className="w-3.5 h-3.5" />
                           </span>
                         </div>
-                      </div>
+                      </article>
                     </Link>
                   </div>
 
                   {/* Right: Archival Index Stream of Supporting Notes */}
-                  <div className="lg:col-span-5 flex flex-col justify-between divide-y divide-zinc-800/80 rounded-3xl border border-zinc-800/80 bg-zinc-900/20 p-6">
+                  <div className="lg:col-span-5 flex flex-col justify-between divide-y divide-zinc-800/70 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 p-6 sm:p-7 backdrop-blur-sm">
                     {recentPosts.slice(1).map((post, idx) => (
                       <Link
                         key={post.id}
                         href={`/blog/${post.slug}`}
-                        className={`group block py-4 first:pt-0 last:pb-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-xl`}
+                        className="group block py-4 first:pt-0 last:pb-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-xl"
                       >
-                        <div className="space-y-1.5">
+                        <article className="space-y-2">
                           <div className="flex items-center justify-between text-xs text-zinc-500 font-mono">
                             <span className="text-cyan-400/90 font-medium">
                               {post.category?.name || 'Notes'}
                             </span>
-                            <span>
-                              {post.publishedAt
-                                ? new Date(post.publishedAt).toLocaleDateString('en-US', {
-                                    month: 'short',
-                                    day: 'numeric',
-                                    year: 'numeric',
-                                  })
-                                : `Note 0${idx + 2}`}
-                            </span>
+                            {post.publishedAt ? (
+                              <time dateTime={new Date(post.publishedAt).toISOString()}>
+                                {new Date(post.publishedAt).toLocaleDateString('en-US', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric',
+                                })}{' '}
+                                · {post.readingTime} min
+                              </time>
+                            ) : (
+                              <span>Note 0{idx + 2} · {post.readingTime} min</span>
+                            )}
                           </div>
 
-                          <h4 className="font-semibold text-base text-zinc-200 group-hover:text-white group-hover:underline underline-offset-4 transition-colors line-clamp-2">
+                          <h4 className="font-semibold text-base sm:text-lg text-zinc-200 group-hover:text-white group-hover:underline underline-offset-4 transition-colors line-clamp-2 leading-snug">
                             {post.title}
                           </h4>
 
@@ -460,14 +471,11 @@ export default async function HomePage() {
                             {post.excerpt}
                           </p>
 
-                          <div className="pt-1 flex items-center justify-between text-[11px] text-zinc-500">
-                            <span>{post.readingTime} min read</span>
-                            <span className="text-cyan-400 font-medium flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-                              <span>Read</span>
-                              <ArrowRight className="w-3 h-3" />
-                            </span>
+                          <div className="pt-1 flex items-center text-xs text-cyan-400 font-medium gap-1 group-hover:translate-x-0.5 transition-transform">
+                            <span>Read note</span>
+                            <ArrowRight className="w-3 h-3" />
                           </div>
-                        </div>
+                        </article>
                       </Link>
                     ))}
                   </div>
@@ -478,39 +486,44 @@ export default async function HomePage() {
                     href={`/blog/${recentPosts[0]!.slug}`}
                     className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-3xl"
                   >
-                    <div className="border border-zinc-800/80 bg-zinc-900/30 hover:bg-zinc-900/60 hover:border-cyan-500/50 p-7 sm:p-8 rounded-3xl transition-all duration-300 flex flex-col justify-between backdrop-blur-sm group-hover:shadow-2xl group-hover:shadow-cyan-500/10">
-                      <div className="space-y-3">
+                    <article className="border border-zinc-800/90 bg-gradient-to-br from-zinc-900/60 to-zinc-950/80 hover:border-cyan-500/50 p-7 sm:p-9 rounded-3xl transition-all duration-300 flex flex-col justify-between backdrop-blur-md group-hover:shadow-2xl group-hover:shadow-cyan-500/10">
+                      <div className="space-y-4">
                         <div className="flex items-center justify-between text-xs pb-3 border-b border-zinc-800/70">
                           <span className="font-mono text-cyan-400 text-xs font-semibold uppercase tracking-wider">
                             Latest Essay // {recentPosts[0]!.category?.name || 'Architecture'}
                           </span>
-                          <span className="text-zinc-400 text-xs">
+                          <span className="text-zinc-500 text-xs font-mono">
                             {recentPosts[0]!.readingTime} min read
                           </span>
                         </div>
-                        <h3 className="font-bold text-xl sm:text-2xl text-white group-hover:text-cyan-200 transition-colors">
+                        <h3 className="font-bold text-2xl sm:text-3xl text-white group-hover:text-cyan-200 transition-colors leading-tight">
                           {recentPosts[0]!.title}
                         </h3>
-                        <p className="text-sm text-zinc-400 leading-relaxed">
+                        <p className="text-body text-zinc-400 leading-relaxed">
                           {recentPosts[0]!.excerpt}
                         </p>
                       </div>
-                      <div className="flex items-center justify-between pt-4 mt-6 border-t border-zinc-800/70 text-xs text-zinc-400">
-                        <span>
-                          {recentPosts[0]!.publishedAt
-                            ? new Date(recentPosts[0]!.publishedAt).toLocaleDateString('en-US', {
-                                month: 'long',
-                                day: 'numeric',
-                                year: 'numeric',
-                              })
-                            : 'Published Recently'}
-                        </span>
-                        <span className="text-cyan-400 font-semibold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                          <span>Read essay</span>
+                      <div className="flex items-center justify-between pt-6 mt-6 border-t border-zinc-800/70 text-xs text-zinc-400">
+                        {recentPosts[0]!.publishedAt ? (
+                          <time
+                            dateTime={new Date(recentPosts[0]!.publishedAt).toISOString()}
+                            className="font-mono text-zinc-500"
+                          >
+                            {new Date(recentPosts[0]!.publishedAt).toLocaleDateString('en-US', {
+                              month: 'long',
+                              day: 'numeric',
+                              year: 'numeric',
+                            })}
+                          </time>
+                        ) : (
+                          <span className="text-zinc-500 font-mono">Published Recently</span>
+                        )}
+                        <span className="text-cyan-400 font-semibold flex items-center gap-1.5 group-hover:translate-x-1 transition-transform">
+                          <span>Read complete essay</span>
                           <ArrowRight className="w-3.5 h-3.5" />
                         </span>
                       </div>
-                    </div>
+                    </article>
                   </Link>
                 </div>
               )}
