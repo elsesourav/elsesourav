@@ -6,6 +6,11 @@ export * from './components/badge';
 export * from './components/avatar';
 export * from './components/separator';
 
+// Layout & Shell
+export * from './components/container';
+export * from './components/section';
+export * from './components/skip-link';
+
 // Forms
 export * from './components/label';
 export * from './components/input';

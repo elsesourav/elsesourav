@@ -9,7 +9,9 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       <PublicHeader />
 
       {/* Main Content */}
-      <main className="flex-1">{children}</main>
+      <main id="main-content" className="flex-1">
+        {children}
+      </main>
 
       {/* Dynamic Responsive Footer */}
       <PublicFooter />

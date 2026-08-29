@@ -14,6 +14,11 @@ import {
   RadioGroup,
   RadioGroupItem,
   FormField,
+  Container,
+  Section,
+  SectionHeader,
+  PageHeader,
+  SkipLink,
   Card,
   CardTitle,
   GlassSurface,
@@ -343,5 +348,37 @@ describe('Navigation & Data Display Components', () => {
 
     expect(screen.getByText('Settings Saved')).toBeDefined();
     expect(screen.getByText('Profile updated successfully.')).toBeDefined();
+  });
+
+  it('renders Container, Section, SectionHeader, PageHeader, and SkipLink', () => {
+    render(
+      <div>
+        <SkipLink targetId="main-content" />
+        <Container size="lg">
+          <PageHeader
+            title="Applications Directory"
+            description="High-performance developer tools."
+            badge={<Badge variant="primary">Production</Badge>}
+            actions={<Button size="sm">Create App</Button>}
+          />
+          <Section spacing="md">
+            <SectionHeader
+              caption="Architecture"
+              title="Built for Speed"
+              description="Zero-runtime dependencies."
+            />
+          </Section>
+        </Container>
+      </div>
+    );
+
+    expect(screen.getByText('Skip to main content')).toBeDefined();
+    expect(screen.getByText('Applications Directory')).toBeDefined();
+    expect(screen.getByText('High-performance developer tools.')).toBeDefined();
+    expect(screen.getByText('Production')).toBeDefined();
+    expect(screen.getByText('Create App')).toBeDefined();
+    expect(screen.getByText('Architecture')).toBeDefined();
+    expect(screen.getByText('Built for Speed')).toBeDefined();
+    expect(screen.getByText('Zero-runtime dependencies.')).toBeDefined();
   });
 });

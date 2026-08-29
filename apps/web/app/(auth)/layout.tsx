@@ -20,7 +20,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <span>{SITE_CONFIG.name}</span>
         </Link>
       </header>
-      <main className="flex-1 flex items-center justify-center p-4">{children}</main>
+      <main id="main-content" className="flex-1 flex items-center justify-center p-4">
+        {children}
+      </main>
       <footer className="p-6 text-center text-xs text-zinc-500">
         Protected by Supabase Authentication & ElseSourav Identity Protocol.
       </footer>
