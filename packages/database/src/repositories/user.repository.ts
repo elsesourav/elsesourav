@@ -6,6 +6,8 @@ import type {
   User as DomainUser,
   PublicUserProfile,
   UserRole as DomainRole,
+  AdminUserListItem,
+  AdminUserDetail,
   SyncUserAuthInput,
   UpdateProfileInput,
   UpdatePreferencesInput,
@@ -217,6 +219,144 @@ export class UserRepository {
       });
     } catch (error) {
       throw AppError.database('Failed to count active users', error);
+    }
+  }
+
+  async countAdmins(): Promise<number> {
+    try {
+      return await this.prisma.user.count({
+        where: {
+          role: PrismaRole.ADMIN,
+          deletedAt: null,
+        },
+      });
+    } catch (error) {
+      throw AppError.database('Failed to count admins', error);
+    }
+  }
+
+  async findAllUsersAdmin(options: {
+    role?: DomainRole | 'all';
+    status?: string;
+    search?: string;
+    page?: number;
+    limit?: number;
+  } = {}): Promise<{ users: AdminUserListItem[]; total: number }> {
+    const page = Math.max(options.page ?? 1, 1);
+    const limit = Math.min(Math.max(options.limit ?? 20, 1), 100);
+    const skip = (page - 1) * limit;
+
+    const where: Prisma.UserWhereInput = {};
+
+    if (options.role && options.role !== 'all') {
+      where.role = options.role as PrismaRole;
+    }
+
+    if (options.status && options.status !== 'all') {
+      if (options.status === 'deleted') {
+        where.deletedAt = { not: null };
+      } else if (options.status === 'active') {
+        where.deletedAt = null;
+      }
+    }
+
+    if (options.search && options.search.trim().length > 0) {
+      const term = options.search.trim();
+      where.OR = [
+        { email: { contains: term, mode: 'insensitive' } },
+        { displayName: { contains: term, mode: 'insensitive' } },
+        { username: { contains: term, mode: 'insensitive' } },
+      ];
+    }
+
+    const [records, total] = await Promise.all([
+      this.prisma.user.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        include: {
+          _count: {
+            select: {
+              library: true,
+              supportTickets: true,
+            },
+          },
+        },
+      }),
+      this.prisma.user.count({ where }),
+    ]);
+
+    const users: AdminUserListItem[] = records.map((u) => ({
+      id: u.id,
+      email: u.email,
+      displayName: u.displayName,
+      username: u.username ?? undefined,
+      photoUrl: u.photoUrl ?? undefined,
+      role: u.role as PrismaRole as DomainRole,
+      status: u.deletedAt ? 'deleted' : 'active',
+      libraryCount: u._count.library,
+      supportTicketCount: u._count.supportTickets,
+      createdAt: u.createdAt.getTime(),
+      updatedAt: u.updatedAt.getTime(),
+    }));
+
+    return { users, total };
+  }
+
+  async findUserDetailAdmin(userId: string): Promise<AdminUserDetail | null> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        _count: {
+          select: {
+            library: true,
+            supportTickets: true,
+          },
+        },
+        supportTickets: {
+          where: { status: { in: ['OPEN', 'IN_PROGRESS', 'WAITING_FOR_USER'] } },
+          select: { id: true },
+        },
+      },
+    });
+
+    if (!user) return null;
+
+    const baseUser = mapPrismaUserToDomain(user);
+
+    return {
+      ...baseUser,
+      libraryCount: user._count.library,
+      supportTicketCount: user._count.supportTickets,
+      openTicketCount: user.supportTickets.length,
+    };
+  }
+
+  async adminDeleteUser(userId: string, adminUserId: string, reason = 'Admin initiated account termination'): Promise<void> {
+    try {
+      await this.prisma.$transaction(async (tx) => {
+        await tx.user.update({
+          where: { id: userId },
+          data: {
+            deletedAt: new Date(),
+            bio: null,
+            photoUrl: null,
+          },
+        });
+
+        await tx.auditLog.create({
+          data: {
+            userId: adminUserId,
+            action: 'ADMIN_USER_DELETED',
+            entityType: 'User',
+            entityId: userId,
+            details: { reason },
+          },
+        });
+      });
+    } catch (error) {
+      throw AppError.database(`Failed to delete user: ${userId}`, error);
     }
   }
 }

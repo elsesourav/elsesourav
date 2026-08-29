@@ -144,16 +144,16 @@
     "hash": "e80a4fc998c15873f839a8f351850339"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/repositories/support.repository.ts": {
-    "mtime": 1787975959.8201225,
-    "hash": "b46d8d716a44d3889d9e9fe4decab087"
+    "mtime": 1787978779.4799252,
+    "hash": "3926e3d4026ca915cd349716dc9aa89f"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/repositories/library.repository.ts": {
     "mtime": 1787944413.4337838,
     "hash": "e5c43efc61e3b97fb6cfd899e252ad06"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/repositories/help.repository.ts": {
-    "mtime": 1787946169.0794759,
-    "hash": "5bef0509afb8f0d7bbd79aba87933d77"
+    "mtime": 1787978528.4382784,
+    "hash": "1d58c5bc0ad26e1aed9a18343d640f66"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/repositories/admin.repository.ts": {
     "mtime": 1787977832.783613,
@@ -168,8 +168,8 @@
     "hash": "46407ae2d4c13be750463d1d918e532e"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/repositories/blog.repository.ts": {
-    "mtime": 1787945155.6719637,
-    "hash": "ac66273146ee9a7a2cdea0cbff5d8fbb"
+    "mtime": 1787978501.8330677,
+    "hash": "091f1b6c3058af63892b7f9bb0eab214"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/__tests__/app-domain.test.ts": {
     "mtime": 1787942689.0038335,
@@ -194,6 +194,10 @@
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/__tests__/admin-app-domain.test.ts": {
     "mtime": 1787978191.4228032,
     "hash": "ff055433435bb37d08a3b21cff0b1f40"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/__tests__/admin-content-support-domain.test.ts": {
+    "mtime": 1787978795.0591886,
+    "hash": "2df2d6de93f9b54b27f32556052f425a"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/__tests__/help-domain.test.ts": {
     "mtime": 1787946127.332243,
@@ -268,8 +272,8 @@
     "hash": "49f9b6407da0d092250e373b926ec0f5"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/mappers/support.mapper.ts": {
-    "mtime": 1787946662.8163495,
-    "hash": "34ac39e4a77c8427b751dbe4acbbd0eb"
+    "mtime": 1787978833.335479,
+    "hash": "8925f0815bb893d27d8127145aae7373"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/mappers/user.mapper.ts": {
     "mtime": 1787940906.4583967,
@@ -284,8 +288,8 @@
     "hash": "1bb0b7374029a0e75a88da3432661aeb"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/services/support.service.ts": {
-    "mtime": 1787946683.4973588,
-    "hash": "f236a31cbda67ea87236124959b3eec2"
+    "mtime": 1787978576.0492692,
+    "hash": "b87e391844532bb8a3ed223563d753d3"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/services/notification.service.ts": {
     "mtime": 1787976543.302015,
@@ -304,24 +308,24 @@
     "hash": "45eb6a9bded40887ff4bd71d2bb573ac"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/services/help.service.ts": {
-    "mtime": 1787946110.9089193,
-    "hash": "1305561aaede88bbda5e28519c9dd69b"
+    "mtime": 1787978542.9789472,
+    "hash": "5f8c00f2811762201937c0d45d236618"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/services/app-query.service.ts": {
     "mtime": 1787944227.5566733,
     "hash": "ba72a611903cf70313fc80f51892ef0d"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/database/src/services/blog.service.ts": {
-    "mtime": 1787945163.8166285,
-    "hash": "230e88cb34fde680b1bba21900acb9cc"
+    "mtime": 1787978517.8508708,
+    "hash": "609ef2b70aaf996330d755f1e23098a7"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/types/src/common.types.ts": {
     "mtime": 1787938364.0817175,
     "hash": "08c37425b606f236bd0920c841477185"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/types/src/support.types.ts": {
-    "mtime": 1787975892.853918,
-    "hash": "baf91563c816c279a133302d466400c1"
+    "mtime": 1787978828.8635697,
+    "hash": "139dffa2a97070f4686f63ddfb9a85e1"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/types/src/help.types.ts": {
     "mtime": 1787946073.6239076,
@@ -504,12 +508,12 @@
     "hash": "c074a9194e08ffba7f337e473fdec836"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/validation/src/blog.schema.ts": {
-    "mtime": 1787945242.9543571,
-    "hash": "cd364e10a48079e99bd63cd25ed2a05f"
+    "mtime": 1787978588.5091162,
+    "hash": "73f576dd38cff8e695d2137db530bcfe"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/validation/src/help.schema.ts": {
-    "mtime": 1787946083.85015,
-    "hash": "99bad9690e8b31b44f387c54105df41d"
+    "mtime": 1787978593.769022,
+    "hash": "464395773a9565f09ff4c2494a9f9367"
   },
   "/Users/sourav/Developer/WEB/elsesourav/packages/validation/src/support.schema.ts": {
     "mtime": 1787946656.7729583,
@@ -815,6 +819,26 @@
     "mtime": 1787977862.0895247,
     "hash": "2253e65b7fbcebc2fe7647f5a18aace1"
   },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(admin)/admin/blog/page.tsx": {
+    "mtime": 1787978630.9834905,
+    "hash": "d5da2bf20e01a8f9a8b1d7c2cd2bdd3c"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(admin)/admin/blog/new/page.tsx": {
+    "mtime": 1787978635.2232335,
+    "hash": "c08e93731c9b4c814c1612156f6a3da7"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(admin)/admin/blog/[id]/page.tsx": {
+    "mtime": 1787978639.549407,
+    "hash": "28181a56028e32e4bffb2ab2f56caeb7"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(admin)/admin/support/page.tsx": {
+    "mtime": 1787978729.8453655,
+    "hash": "3252c73af4fea7d5fcf3432051033f2a"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(admin)/admin/support/[id]/page.tsx": {
+    "mtime": 1787978736.1741333,
+    "hash": "e186ac6b44d1e796152282b300c3c92d"
+  },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(admin)/admin/apps/page.tsx": {
     "mtime": 1787978067.799013,
     "hash": "0c2124983c9f3ec14a1d1306483cb9f0"
@@ -827,9 +851,37 @@
     "mtime": 1787978081.7010632,
     "hash": "f5bf3f31fe8cd3e223fe53209699d0cd"
   },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(admin)/admin/help/page.tsx": {
+    "mtime": 1787978673.3806217,
+    "hash": "f9fbf34064634f023f8486e67e0db61a"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(admin)/admin/help/new/page.tsx": {
+    "mtime": 1787978678.8750002,
+    "hash": "d8d3bc81f8602bc71875f970da716ff9"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(admin)/admin/help/[id]/page.tsx": {
+    "mtime": 1787978684.3518093,
+    "hash": "2e248b306479ab0e5f1984056b015ae5"
+  },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/queries/get-admin-dashboard.ts": {
     "mtime": 1787977709.3060842,
     "hash": "6491766334159f93908bf4a90381dcfe"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/blog/queries/get-admin-blog.ts": {
+    "mtime": 1787978599.4868376,
+    "hash": "fdc4d92a31357ec3c59494b949f67279"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/blog/components/AdminBlogForm.tsx": {
+    "mtime": 1787978623.7952037,
+    "hash": "a2f9f19680eaba129fc6f576cfd8488c"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/blog/components/AdminBlogTable.tsx": {
+    "mtime": 1787978614.3754113,
+    "hash": "3899755d34b8e17d76e3f4c57e1da3a3"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/blog/actions/admin-blog-actions.ts": {
+    "mtime": 1787978837.7515554,
+    "hash": "dc45eb7db7fba25f5fcd176b855027b7"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/components/AdminSidebar.tsx": {
     "mtime": 1787977717.513063,
@@ -846,6 +898,22 @@
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/components/AdminStatsGrid.tsx": {
     "mtime": 1787977737.0415165,
     "hash": "68a06fe5d1bc993a02b51809bfdd0173"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/support/queries/get-admin-support.ts": {
+    "mtime": 1787978849.6345415,
+    "hash": "e125423dbd64399ac385d13983657d72"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/support/components/AdminTicketDetailView.tsx": {
+    "mtime": 1787978901.0617924,
+    "hash": "229b93cd0092587f08a20de21ea850f1"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/support/components/AdminSupportTable.tsx": {
+    "mtime": 1787978878.3187864,
+    "hash": "87aa4ae170b5c4446b648f59b6b58b66"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/support/actions/admin-support-actions.ts": {
+    "mtime": 1787978858.586409,
+    "hash": "b9193c9dbc6139b99339bc72052338c5"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/apps/queries/get-admin-apps.ts": {
     "mtime": 1787978021.7190073,
@@ -866,6 +934,22 @@
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/guards/require-admin.ts": {
     "mtime": 1787977702.868634,
     "hash": "59b2db6f0280a0ec628f5c61c093f622"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/help/queries/get-admin-help.ts": {
+    "mtime": 1787978645.4813848,
+    "hash": "91719f585e086a4dedb00b76f6784633"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/help/components/AdminHelpForm.tsx": {
+    "mtime": 1787978668.3585284,
+    "hash": "a3537862a5a2b8c0c2efc8d4602e521f"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/help/components/AdminHelpTable.tsx": {
+    "mtime": 1787978658.0851922,
+    "hash": "23457dd3e1955cc9df157905c24e6328"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/admin/help/actions/admin-help-actions.ts": {
+    "mtime": 1787978845.0254776,
+    "hash": "6c73130c9d6f78ab9c4914db71e405ff"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/library/queries/get-library.ts": {
     "mtime": 1787944454.0726964,

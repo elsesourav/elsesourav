@@ -49,9 +49,31 @@ export const DeleteAccountSchema = z.object({
   reason: z.string().max(500).optional(),
 });
 
+export const AdminUpdateUserRoleSchema = z.object({
+  userId: z.string().min(1, 'User ID is required'),
+  role: z.enum(['USER', 'STAFF', 'ADMIN']),
+});
+
+export const AdminUpdateUserStatusSchema = z.object({
+  userId: z.string().min(1, 'User ID is required'),
+  status: z.enum(['active', 'suspended', 'deleted']),
+  reason: z.string().max(300).optional(),
+});
+
+export const AdminUserQuerySchema = z.object({
+  role: z.enum(['all', 'USER', 'STAFF', 'ADMIN']).optional().default('all'),
+  status: z.enum(['all', 'active', 'suspended', 'deleted']).optional().default('all'),
+  search: z.string().max(100).optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(20),
+});
+
 export const UserProfileSchema = UpdateProfileSchema;
 export const UserPreferencesSchema = UpdatePreferencesSchema;
 
 export type UpdateProfileSchemaInput = z.infer<typeof UpdateProfileSchema>;
 export type UpdatePreferencesSchemaInput = z.infer<typeof UpdatePreferencesSchema>;
 export type DeleteAccountSchemaInput = z.infer<typeof DeleteAccountSchema>;
+export type AdminUpdateUserRoleInput = z.infer<typeof AdminUpdateUserRoleSchema>;
+export type AdminUpdateUserStatusInput = z.infer<typeof AdminUpdateUserStatusSchema>;
+export type AdminUserQueryInput = z.infer<typeof AdminUserQuerySchema>;

@@ -76,3 +76,31 @@ export interface UserLibraryItem {
   readonly addedAt: Timestamp;
   readonly lastOpenedAt?: Timestamp;
 }
+
+export interface AdminUserListItem {
+  readonly id: ID;
+  readonly email: string;
+  readonly displayName: string;
+  readonly username?: string;
+  readonly photoUrl?: string;
+  readonly role: UserRole;
+  readonly status: UserStatus;
+  readonly libraryCount: number;
+  readonly supportTicketCount: number;
+  readonly createdAt: Timestamp;
+  readonly updatedAt: Timestamp;
+}
+
+export interface AdminUserDetail extends User {
+  readonly libraryCount: number;
+  readonly supportTicketCount: number;
+  readonly openTicketCount: number;
+}
+
+export interface AdminUserListResult {
+  readonly users: readonly AdminUserListItem[];
+  readonly total: number;
+  readonly page: number;
+  readonly limit: number;
+  readonly totalPages: number;
+}
