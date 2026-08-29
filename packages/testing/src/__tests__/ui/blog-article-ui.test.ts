@@ -94,4 +94,11 @@ describe('Blog Article Reader Query & Projection Tests', () => {
     expect(related[0]?.slug).toBe('nextjs-15-deep-dive');
     expect(mockRepo.findRelatedPosts).toHaveBeenCalledWith('post-101', 'cat-eng', 3);
   });
+
+  it('validates reading interface fields on public blog post projection', () => {
+    expect(mockPublicArticle.content).toContain('## Architecture Strategy');
+    expect(mockPublicArticle.readingTime).toBe(4);
+    expect(mockPublicArticle.author.displayName).toBe('Sourav');
+    expect(mockPublicArticle.category?.name).toBe('Engineering');
+  });
 });

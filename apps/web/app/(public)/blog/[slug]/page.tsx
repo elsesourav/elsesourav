@@ -10,6 +10,7 @@ import { BlogArticleHeader } from '@/features/blog/components/BlogArticleHeader'
 import { BlogContentRenderer } from '@/features/blog/components/BlogContentRenderer';
 import { RelatedPosts } from '@/features/blog/components/RelatedPosts';
 import { getBlogCoverUrl } from '@elsesourav/media';
+import { PageShell } from '@elsesourav/ui';
 import { Tag } from 'lucide-react';
 
 interface BlogPostPageProps {
@@ -39,7 +40,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   const canonicalUrl = `${SITE_CONFIG.url}/blog/${post.slug}`;
 
   return {
-    title,
+    title: `${title} — ${SITE_CONFIG.name} Journal`,
     description,
     alternates: {
       canonical: canonicalUrl,
@@ -117,7 +118,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {
             '@type': 'ListItem',
             position: 2,
-            name: 'Blog',
+            name: 'Journal',
             item: `${SITE_CONFIG.url}/blog`,
           },
           {
@@ -132,20 +133,20 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <PageShell size="lg" glow>
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+      <div className="space-y-12">
         {/* Article Header */}
         <BlogArticleHeader post={post} postUrl={postUrl} />
 
-        {/* Article Content Container */}
-        <main className="max-w-4xl mx-auto">
-          <div className="rounded-3xl border border-zinc-800/60 bg-zinc-900/20 p-6 sm:p-10 backdrop-blur-sm">
+        {/* Long-Form Article Content */}
+        <article className="max-w-4xl mx-auto">
+          <div className="rounded-3xl border border-zinc-800/60 bg-zinc-900/20 p-6 sm:p-10 backdrop-blur-sm shadow-xl">
             <BlogContentRenderer content={post.content} />
 
             {/* Tag Pills Footer */}
@@ -164,11 +165,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               </div>
             )}
           </div>
-        </main>
+        </article>
 
         {/* Related Articles Section */}
         <RelatedPosts posts={relatedPosts} />
       </div>
-    </div>
+    </PageShell>
   );
 }
