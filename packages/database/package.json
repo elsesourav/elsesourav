@@ -23,6 +23,7 @@
     "prisma": "prisma"
   },
   "dependencies": {
+    "@elsesourav/auth": "workspace:*",
     "@elsesourav/config": "workspace:*",
     "@elsesourav/media": "workspace:*",
     "@elsesourav/types": "workspace:*",
