@@ -1,0 +1,40 @@
+import type { AuditLog } from '@elsesourav/types';
+
+export const fixtureAuditLogs: readonly AuditLog[] = [
+  {
+    id: 'audit-1',
+    userId: 'usr-admin-1',
+    userEmail: 'admin@example.test',
+    action: 'APP_PUBLISHED',
+    entityType: 'APP',
+    entityId: 'app-terminal-pro',
+    details: { version: '2.1.0', releaseNotes: 'WebGPU Pipeline' },
+    ipAddress: '127.0.0.1',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
+    timestamp: 1704067200000,
+  },
+  {
+    id: 'audit-2',
+    userId: 'usr-admin-1',
+    userEmail: 'admin@example.test',
+    action: 'BLOG_CREATED',
+    entityType: 'BLOG_POST',
+    entityId: 'post-v2-architecture',
+    details: { status: 'PUBLISHED' },
+    ipAddress: '127.0.0.1',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
+    timestamp: 1704068000000,
+  },
+  {
+    id: 'audit-3',
+    userId: 'usr-staff-1',
+    userEmail: 'staff@example.test',
+    action: 'SUPPORT_STATUS_CHANGED',
+    entityType: 'SUPPORT_TICKET',
+    entityId: 'tick-open-1',
+    details: { status: 'in_progress', replyAdded: true },
+    ipAddress: '127.0.0.1',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
+    timestamp: 1704070800000,
+  },
+];
