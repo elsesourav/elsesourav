@@ -11,16 +11,24 @@ build/
 
 # Environment Files
 .env
-.env*.local
+.env*
 .env.local
+.env.development
+.env.test
+.env.production
+.env*.local
 .env.development.local
 .env.test.local
 .env.production.local
-apps/*/.env*
-packages/*/.env*
+**/.env
+**/.env*
+**/.env.local
+**/.env.development
+**/.env.production
+**/.env.test
+**/.env*.local
 !.env.example
-!apps/*/.env.example
-!packages/*/.env.example
+!**/.env.example
 
 # IDE & OS
 .DS_Store

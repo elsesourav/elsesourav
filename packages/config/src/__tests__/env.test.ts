@@ -74,13 +74,30 @@ describe('Environment Validation Configuration', () => {
       SUPABASE_SERVICE_ROLE_KEY: 'ey1234567890supersecret',
       CLOUDINARY_API_SECRET: 'mysecret',
       NEXT_PUBLIC_SITE_URL: 'https://elsesourav.com',
+      JWT_TOKEN: 'header.payload.signature',
+      ADMIN_PASSWORD: 'SuperSecretPassword123!',
     };
 
     const sanitized = sanitizeEnvForDisplay(raw);
     expect(sanitized.DATABASE_URL).toBe('[REDACTED]');
     expect(sanitized.SUPABASE_SERVICE_ROLE_KEY).toBe('[REDACTED]');
     expect(sanitized.CLOUDINARY_API_SECRET).toBe('[REDACTED]');
+    expect(sanitized.JWT_TOKEN).toBe('[REDACTED]');
+    expect(sanitized.ADMIN_PASSWORD).toBe('[REDACTED]');
     expect(sanitized.NEXT_PUBLIC_SITE_URL).toBe('https://elsesourav.com');
+  });
+
+  it('guarantees client environment schema does not accept or leak server secrets', () => {
+    const clientEnv = validateClientEnv({
+      NEXT_PUBLIC_SITE_URL: 'https://elsesourav.com',
+      DATABASE_URL: 'postgresql://user:pass@localhost:5432/db',
+      SUPABASE_SERVICE_ROLE_KEY: 'secret-key',
+    });
+
+    // ClientEnv type and object must not contain server secret properties
+    expect((clientEnv as unknown as Record<string, unknown>).DATABASE_URL).toBeUndefined();
+    expect((clientEnv as unknown as Record<string, unknown>).SUPABASE_SERVICE_ROLE_KEY).toBeUndefined();
+    expect(clientEnv.NEXT_PUBLIC_SITE_URL).toBe('https://elsesourav.com');
   });
 });
 
@@ -96,5 +113,8 @@ describe('Site & Routes Configuration Constants', () => {
     expect(ROUTES.APP_DETAIL('terminal-pro')).toBe('/apps/terminal-pro');
     expect(ROUTES.HELP_ARTICLE('getting-started', 'intro')).toBe('/help/getting-started/intro');
     expect(ROUTES.ADMIN.ROOT).toBe('/admin');
+    expect(ROUTES.ADMIN.MEDIA).toBe('/admin/media');
+    expect(ROUTES.ADMIN.USERS).toBe('/admin/users');
+    expect(ROUTES.ADMIN.AUDIT).toBe('/admin/audit');
   });
 });

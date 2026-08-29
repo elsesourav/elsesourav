@@ -22,7 +22,10 @@ export const ROUTES = {
     BLOG: '/admin/blog',
     HELP: '/admin/help',
     SUPPORT: '/admin/support',
-    ANALYTICS: '/admin/analytics',
-    AUDIT_LOGS: '/admin/audit-logs',
+    MEDIA: '/admin/media',
+    USERS: '/admin/users',
+    AUDIT: '/admin/audit',
+    AUDIT_LOGS: '/admin/audit',
+    ANALYTICS: '/admin',
   },
 } as const;
