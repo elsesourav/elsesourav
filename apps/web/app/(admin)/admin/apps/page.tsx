@@ -1,10 +1,17 @@
 import { Metadata } from 'next';
 import { getAdminAppsList } from '@/features/admin/apps/queries/get-admin-apps';
 import { AdminAppsTable } from '@/features/admin/apps/components/AdminAppsTable';
+import { PageHeader, Badge, Button } from '@elsesourav/ui';
+import { Plus } from 'lucide-react';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Applications Management | Admin Portal',
   description: 'Manage software catalog releases, versions, categories, and media assets.',
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default async function AdminAppsPage() {
@@ -17,13 +24,27 @@ export default async function AdminAppsPage() {
   return (
     <div className="max-w-7xl mx-auto space-y-8">
       {/* Header */}
-      <div className="space-y-1">
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-100 tracking-tight">
-          Applications Catalog
-        </h1>
-        <p className="text-xs sm:text-sm text-zinc-400">
-          Create, edit, publish releases, and manage software products across ElseSourav.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <PageHeader
+          eyebrow="Catalog CMS"
+          badge={
+            <Badge variant="primary" className="text-xs px-2.5 py-0.5 font-medium">
+              {apps.length} {apps.length === 1 ? 'App' : 'Apps'}
+            </Badge>
+          }
+          title="Applications Catalog"
+          description="Create, edit, publish releases, and manage software products across ElseSourav."
+        />
+
+        <Link href="/admin/apps/new" className="shrink-0 self-start sm:self-auto sm:pt-4">
+          <Button
+            size="sm"
+            className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2 rounded-xl gap-1.5 shadow-lg shadow-indigo-600/20"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>Create Application</span>
+          </Button>
+        </Link>
       </div>
 
       {/* Main Apps Table */}
