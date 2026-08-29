@@ -64,11 +64,12 @@
     --radius-2xl: 1.5rem;               /* 24px */
     --radius-full: 9999px;
 
-    /* Glass Tokens */
-    --glass-bg-subtle: rgba(9, 9, 11, 0.5);
+    /* Glass Tokens (Glassmorphism 2.0) */
+    --glass-bg-subtle: rgba(9, 9, 11, 0.45);
     --glass-bg: rgba(13, 13, 16, 0.72);
     --glass-bg-elevated: rgba(27, 27, 32, 0.85);
     --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-border-strong: rgba(255, 255, 255, 0.14);
     --glass-blur-sm: 8px;
     --glass-blur-md: 16px;
     --glass-blur-lg: 24px;
@@ -129,6 +130,7 @@
     --glass-bg: rgba(255, 255, 255, 0.75);
     --glass-bg-elevated: rgba(255, 255, 255, 0.9);
     --glass-border: rgba(0, 0, 0, 0.08);
+    --glass-border-strong: rgba(0, 0, 0, 0.15);
   }
 }
 
@@ -140,7 +142,66 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Surface Utility Classes */
+/* ==========================================================================
+   Typography Scale Utilities
+   ========================================================================== */
+.text-display {
+  font-size: clamp(2.25rem, 5vw, 3.75rem);
+  line-height: 1.08;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+.text-h1 {
+  font-size: clamp(1.875rem, 4vw, 2.5rem);
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.text-h2 {
+  font-size: clamp(1.375rem, 3vw, 1.75rem);
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.text-h3 {
+  font-size: 1.125rem;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.text-body {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.text-small {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  font-weight: 450;
+}
+
+.text-caption {
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.text-code {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   Surface Utility Classes (5 Semantic Layers)
+   ========================================================================== */
 .surface-solid {
   background-color: hsl(var(--surface));
   border: 1px solid hsl(var(--border));
@@ -155,6 +216,12 @@ body {
   background-color: hsl(var(--surface-elevated));
   border: 1px solid hsl(var(--border));
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.surface-overlay {
+  background-color: hsl(var(--surface-overlay));
+  border: 1px solid hsl(var(--border-strong));
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
 }
 
 .surface-glass {
@@ -175,11 +242,13 @@ body {
   background-color: var(--glass-bg-elevated);
   backdrop-filter: blur(var(--glass-blur-lg));
   -webkit-backdrop-filter: blur(var(--glass-blur-lg));
-  border: 1px solid var(--glass-border);
+  border: 1px solid var(--glass-border-strong);
   box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
 }
 
-/* Reduced Motion Override */
+/* ==========================================================================
+   Reduced Motion Override
+   ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,

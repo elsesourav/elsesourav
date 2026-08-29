@@ -5,34 +5,20 @@ import { cn } from '../lib/utils';
 
 export interface TooltipProps {
   content: React.ReactNode;
-  children: React.ReactElement;
-  position?: 'top' | 'bottom' | 'left' | 'right';
+  children: React.ReactNode;
+  side?: 'top' | 'bottom' | 'left' | 'right';
   className?: string;
-  delayMs?: number;
 }
 
 export function Tooltip({
   content,
   children,
-  position = 'top',
+  side = 'top',
   className,
-  delayMs = 200,
 }: TooltipProps) {
   const [isVisible, setIsVisible] = React.useState(false);
-  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
-  const showTooltip = () => {
-    timeoutRef.current = setTimeout(() => setIsVisible(true), delayMs);
-  };
-
-  const hideTooltip = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    setIsVisible(false);
-  };
-
-  const positionStyles: Record<string, string> = {
+  const sideStyles = {
     top: 'bottom-full left-1/2 -translate-x-1/2 mb-2',
     bottom: 'top-full left-1/2 -translate-x-1/2 mt-2',
     left: 'right-full top-1/2 -translate-y-1/2 mr-2',
@@ -42,18 +28,18 @@ export function Tooltip({
   return (
     <div
       className="relative inline-flex"
-      onMouseEnter={showTooltip}
-      onMouseLeave={hideTooltip}
-      onFocus={showTooltip}
-      onBlur={hideTooltip}
+      onMouseEnter={() => setIsVisible(true)}
+      onMouseLeave={() => setIsVisible(false)}
+      onFocus={() => setIsVisible(true)}
+      onBlur={() => setIsVisible(false)}
     >
       {children}
       {isVisible && (
         <div
           role="tooltip"
           className={cn(
-            'absolute z-50 whitespace-nowrap rounded-lg border border-zinc-800 bg-zinc-950/95 px-2.5 py-1 text-[11px] font-medium text-zinc-200 shadow-xl backdrop-blur-md animate-in fade-in zoom-in-95 duration-150 pointer-events-none select-none',
-            positionStyles[position],
+            'pointer-events-none absolute z-50 whitespace-nowrap rounded-lg border border-zinc-700/80 bg-zinc-900/95 px-2.5 py-1 text-xs font-medium text-zinc-100 shadow-xl backdrop-blur-md animate-in fade-in zoom-in-95 duration-150',
+            sideStyles[side],
             className
           )}
         >
