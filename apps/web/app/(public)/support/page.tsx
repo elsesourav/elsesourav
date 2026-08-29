@@ -3,27 +3,27 @@ import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { getServerSession } from '@elsesourav/auth';
 import { CreateTicketForm } from '@/features/support/components/CreateTicketForm';
-import { Card, Button } from '@elsesourav/ui';
+import { PageShell, PageHeader, Card, Button, Badge } from '@elsesourav/ui';
 import { SITE_CONFIG } from '@elsesourav/config';
-import { LifeBuoy, Headphones, MessageSquare, ArrowRight, Lock } from 'lucide-react';
+import { LifeBuoy, MessageSquare, ArrowRight, Lock } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Engineering & Technical Support',
+  title: 'Engineering & Technical Support Desk',
   description:
-    'Submit an issue, bug report, or technical question to the ElseSourav engineering team.',
+    'Submit an issue, bug report, or technical question directly to the ElseSourav engineering team.',
   alternates: {
-    canonical: 'https://elsesourav.com/support',
+    canonical: `${SITE_CONFIG.url}/support`,
   },
   openGraph: {
-    title: 'Engineering & Technical Support | ElseSourav',
+    title: `Engineering & Technical Support | ${SITE_CONFIG.name}`,
     description: 'Open a support ticket with the ElseSourav engineering team.',
-    url: 'https://elsesourav.com/support',
+    url: `${SITE_CONFIG.url}/support`,
     siteName: SITE_CONFIG.name,
     type: 'website',
   },
   twitter: {
     card: 'summary',
-    title: 'Engineering & Technical Support | ElseSourav',
+    title: `Engineering & Technical Support | ${SITE_CONFIG.name}`,
     description: 'Open a support ticket with the ElseSourav engineering team.',
   },
 };
@@ -39,9 +39,9 @@ export default async function SupportPage() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ContactPage',
-    name: 'ElseSourav Technical Support',
+    name: `${SITE_CONFIG.name} Technical Support`,
     description: 'Engineering support and priority issue desk for ElseSourav users.',
-    url: 'https://elsesourav.com/support',
+    url: `${SITE_CONFIG.url}/support`,
     publisher: {
       '@type': 'Organization',
       name: SITE_CONFIG.name,
@@ -50,65 +50,64 @@ export default async function SupportPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <PageShell size="lg" glow>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+
+      <div className="space-y-12 max-w-4xl mx-auto">
         {/* Header Section */}
-        <div className="text-center space-y-3 max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-950/60 border border-indigo-500/30 text-indigo-400 text-xs font-medium">
-            <Headphones className="w-3.5 h-3.5" />
-            <span>Technical Support Portal</span>
+        <PageHeader
+          eyebrow="Technical Assistance & Issue Desk"
+          badge={
+            <Badge variant="primary" className="text-xs px-2.5 py-0.5 font-medium">
+              Direct Support
+            </Badge>
+          }
+          title="Engineering & Technical Support"
+          description="Submit a bug report, troubleshooting inquiry, or account assistance request directly to our developer team."
+        />
+
+        {/* Existing Tickets Shortcut for Authenticated Users */}
+        {isAuthenticated && (
+          <div className="flex justify-center -mt-6">
+            <Link href="/support/tickets">
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 text-xs gap-2 rounded-xl"
+              >
+                <MessageSquare className="w-3.5 h-3.5 text-indigo-400" />
+                <span>View My Existing Tickets</span>
+                <ArrowRight className="w-3 h-3 text-zinc-500" />
+              </Button>
+            </Link>
           </div>
-
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-zinc-100 tracking-tight">
-            How can our engineers assist you?
-          </h1>
-
-          <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-            Submit a bug report, troubleshooting inquiry, or account assistance request directly to
-            our developer team.
-          </p>
-
-          {isAuthenticated && (
-            <div className="pt-2">
-              <Link href="/support/tickets">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-zinc-800 text-zinc-300 text-xs gap-1.5"
-                >
-                  <MessageSquare className="w-3.5 h-3.5" /> View My Existing Tickets
-                </Button>
-              </Link>
-            </div>
-          )}
-        </div>
+        )}
 
         {/* Support Ticket Submission Card */}
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-2xl mx-auto w-full">
           {isAuthenticated ? (
-            <Card className="p-6 sm:p-8 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-sm shadow-2xl">
-              <div className="mb-6 space-y-1 pb-4 border-b border-zinc-800/60">
+            <Card className="p-6 sm:p-8 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 backdrop-blur-xl shadow-2xl space-y-6">
+              <div className="space-y-1 pb-4 border-b border-zinc-800/60">
                 <h2 className="text-lg font-bold text-zinc-100">Create Support Ticket</h2>
                 <p className="text-xs text-zinc-400">
-                  Our engineering team aims to review and reply to all tickets promptly.
+                  Our engineering team reviews and responds to all tickets directly through your account.
                 </p>
               </div>
 
               <CreateTicketForm />
             </Card>
           ) : (
-            <Card className="p-8 text-center rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-sm space-y-5 shadow-2xl">
-              <div className="w-14 h-14 rounded-2xl bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center mx-auto text-indigo-400">
+            <Card className="p-8 text-center rounded-3xl border border-zinc-800/80 bg-zinc-900/30 backdrop-blur-xl space-y-6 shadow-2xl">
+              <div className="w-14 h-14 rounded-2xl bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center mx-auto text-indigo-400 shadow-lg shadow-indigo-950/40">
                 <Lock className="w-7 h-7" />
               </div>
 
-              <div className="space-y-1.5">
-                <h2 className="text-lg font-bold text-zinc-100">Sign in to Submit a Ticket</h2>
-                <p className="text-xs text-zinc-400 max-w-sm mx-auto leading-relaxed">
+              <div className="space-y-2">
+                <h2 className="text-xl font-bold text-zinc-100">Sign in to Submit a Ticket</h2>
+                <p className="text-xs sm:text-sm text-zinc-400 max-w-sm mx-auto leading-relaxed">
                   Support tickets are linked directly to your authenticated user account so you can
                   track responses and maintain conversation history.
                 </p>
@@ -116,7 +115,7 @@ export default async function SupportPage() {
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
                 <Link href="/login?next=/support" className="w-full sm:w-auto">
-                  <Button className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-5 py-2.5 rounded-xl gap-1.5 shadow-lg shadow-indigo-600/20">
+                  <Button className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-5 py-2.5 rounded-xl gap-2 shadow-lg shadow-indigo-600/20">
                     <span>Sign In to Continue</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Button>
@@ -124,9 +123,10 @@ export default async function SupportPage() {
                 <Link href="/help" className="w-full sm:w-auto">
                   <Button
                     variant="outline"
-                    className="w-full sm:w-auto border-zinc-800 hover:bg-zinc-800 text-zinc-300 text-xs gap-1.5"
+                    className="w-full sm:w-auto border-zinc-800 hover:bg-zinc-800 text-zinc-300 text-xs gap-2 rounded-xl"
                   >
-                    <LifeBuoy className="w-3.5 h-3.5" /> Browse Help Center
+                    <LifeBuoy className="w-3.5 h-3.5 text-indigo-400" />
+                    <span>Browse Help Center</span>
                   </Button>
                 </Link>
               </div>
@@ -134,9 +134,9 @@ export default async function SupportPage() {
           )}
         </div>
 
-        {/* Knowledge Base Callout */}
-        <Card className="p-6 rounded-2xl border-zinc-800/80 bg-zinc-900/20 backdrop-blur-sm max-w-2xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
+        {/* Knowledge Base Help-First Callout */}
+        <Card className="p-6 rounded-2xl border border-zinc-800/80 bg-zinc-900/20 backdrop-blur-sm max-w-2xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
             <div className="w-10 h-10 rounded-xl bg-indigo-950/40 border border-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0">
               <LifeBuoy className="w-5 h-5" />
             </div>
@@ -152,14 +152,14 @@ export default async function SupportPage() {
             <Button
               variant="outline"
               size="sm"
-              className="text-xs border-zinc-800 text-zinc-300 gap-1"
+              className="text-xs border-zinc-800 text-zinc-300 gap-1.5 rounded-xl"
             >
               <span>Help Center</span>
-              <ArrowRight className="w-3 h-3" />
+              <ArrowRight className="w-3 h-3 text-zinc-500" />
             </Button>
           </Link>
         </Card>
       </div>
-    </div>
+    </PageShell>
   );
 }
