@@ -15,9 +15,15 @@ import {
   RadioGroupItem,
   FormField,
   Container,
+  PageShell,
   Section,
   SectionHeader,
   PageHeader,
+  ActionGroup,
+  ContentGrid,
+  EditorialLayout,
+  MetadataRow,
+  MetadataItem,
   SkipLink,
   Card,
   CardTitle,
@@ -427,5 +433,58 @@ describe('Navigation & Data Display Components', () => {
     expect(screen.getByText('No Results Found')).toBeDefined();
     expect(screen.getByText('Try adjusting your search criteria.')).toBeDefined();
     expect(screen.getByRole('button', { name: 'Clear Filters' })).toBeDefined();
+  });
+
+  it('renders Public Page Framework primitives: PageShell, ContentGrid, EditorialLayout, MetadataRow, ActionGroup', () => {
+    render(
+      <PageShell size="lg" glow>
+        <PageHeader
+          eyebrow="Developer Utilities"
+          title="Terminal Pro Architecture"
+          description="High-performance CLI workstation."
+          actions={
+            <ActionGroup>
+              <Button size="sm">Launch App</Button>
+              <Button size="sm" variant="outline">Docs</Button>
+            </ActionGroup>
+          }
+          metadata={
+            <MetadataRow>
+              <MetadataItem label="Version" value="2.0.0" mono />
+              <MetadataItem label="Platform" value="macOS, Web" />
+            </MetadataRow>
+          }
+        />
+        <EditorialLayout
+          sidebar={
+            <div className="p-4 rounded-xl border border-zinc-800 bg-zinc-950">
+              <span className="font-semibold text-white">Table of Contents</span>
+            </div>
+          }
+        >
+          <Section spacing="sm" surface="subtle">
+            <SectionHeader
+              align="split"
+              caption="Specifications"
+              title="GPU Acceleration"
+              description="Zero runtime latency rendering."
+            />
+            <ContentGrid columns={2} gap="md">
+              <div className="p-4 rounded-xl border border-zinc-800">Module A</div>
+              <div className="p-4 rounded-xl border border-zinc-800">Module B</div>
+            </ContentGrid>
+          </Section>
+        </EditorialLayout>
+      </PageShell>
+    );
+
+    expect(screen.getByText('Developer Utilities')).toBeDefined();
+    expect(screen.getByText('Terminal Pro Architecture')).toBeDefined();
+    expect(screen.getByText('Launch App')).toBeDefined();
+    expect(screen.getByText('Table of Contents')).toBeDefined();
+    expect(screen.getByText('GPU Acceleration')).toBeDefined();
+    expect(screen.getByText('Module A')).toBeDefined();
+    expect(screen.getByText('Module B')).toBeDefined();
+    expect(screen.getByText('2.0.0')).toBeDefined();
   });
 });

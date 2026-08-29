@@ -8,7 +8,11 @@ export * from './components/separator';
 
 // Layout & Shell
 export * from './components/container';
+export * from './components/page-shell';
 export * from './components/section';
+export * from './components/content-grid';
+export * from './components/editorial-layout';
+export * from './components/metadata-row';
 export * from './components/skip-link';
 
 // Forms
