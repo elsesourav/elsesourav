@@ -115,7 +115,9 @@ describe('Shared Markdown Rendering Architecture (@elsesourav/ui)', () => {
       expect(container.textContent?.toLowerCase()).toContain('typescript');
 
       if (copyButton) {
-        fireEvent.click(copyButton);
+        await React.act(async () => {
+          fireEvent.click(copyButton);
+        });
         expect(writeTextMock).toHaveBeenCalledWith(code);
       }
     });
