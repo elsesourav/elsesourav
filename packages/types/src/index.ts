@@ -11,3 +11,4 @@ export * from './support.types';
 export * from './notification.types';
 export * from './audit.types';
 export * from './media.types';
+export * from './admin.types';

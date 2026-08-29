@@ -600,8 +600,8 @@
     "hash": "3fb97a379f35187786eba7b5f93966a7"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(user)/settings/page.tsx": {
-    "mtime": 1787944800.6865451,
-    "hash": "4a06071298c07b8e869571950fc442a6"
+    "mtime": 1787977111.827757,
+    "hash": "906fe920b05fbcd1d173d91d32a8ebbc"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(user)/library/loading.tsx": {
     "mtime": 1787944501.5267017,
@@ -624,8 +624,8 @@
     "hash": "6808eba8b50d053454f0d36a44a7d8c4"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(user)/profile/page.tsx": {
-    "mtime": 1787944793.7900426,
-    "hash": "bfd1cc44466c83f8f96a66c166171073"
+    "mtime": 1787977357.2455468,
+    "hash": "100067fc2d0e24bedc3a296416410a06"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/app/(user)/support/tickets/loading.tsx": {
     "mtime": 1787945008.8463655,
@@ -894,6 +894,34 @@
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/support/actions/support-actions.ts": {
     "mtime": 1787976003.2777061,
     "hash": "63c652cba7f24cebc3c47442392aa2b7"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/account/queries/get-account.ts": {
+    "mtime": 1787976932.4013016,
+    "hash": "7ffae6f057561245cefb9684c5a144da"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/account/components/DangerZone.tsx": {
+    "mtime": 1787977065.048601,
+    "hash": "248573c4dcc7a21b7f8d38f94709957f"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/account/components/PreferencesForm.tsx": {
+    "mtime": 1787977004.8576994,
+    "hash": "72f315a3dc68d64846abbceee8c101e1"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/account/components/ProfileForm.tsx": {
+    "mtime": 1787977406.4192958,
+    "hash": "40f077570866138cf31e098f20bcf270"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/account/components/SecuritySection.tsx": {
+    "mtime": 1787977301.3577125,
+    "hash": "ee0390e2456c1134b7e01002ac5addb1"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/account/components/SettingsTabs.tsx": {
+    "mtime": 1787977089.2971203,
+    "hash": "1a8f2b6a25975297af2031bf684a6daf"
+  },
+  "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/account/actions/account-actions.ts": {
+    "mtime": 1787976951.8236227,
+    "hash": "da7af61974b6077e32523075ae6aec12"
   },
   "/Users/sourav/Developer/WEB/elsesourav/apps/web/features/apps/queries/get-apps.ts": {
     "mtime": 1787944234.8589997,

@@ -1,62 +1,52 @@
-import { Card, CardHeader, CardTitle, CardDescription, Badge } from '@elsesourav/ui';
+import { Metadata } from 'next';
+import { getAdminDashboardData } from '@/features/admin/queries/get-admin-dashboard';
+import { AdminStatsGrid } from '@/features/admin/components/AdminStatsGrid';
+import { AdminRecentActivity } from '@/features/admin/components/AdminRecentActivity';
+import { Badge, Button } from '@elsesourav/ui';
+import { Sparkles } from 'lucide-react';
 import Link from 'next/link';
-import { ArrowLeft, Package, FileText, LifeBuoy, Activity } from 'lucide-react';
-import { ROUTES } from '@elsesourav/config';
 
-export const metadata = {
-  title: 'Admin Control Center',
-  description: 'Administrative management console.',
+export const metadata: Metadata = {
+  title: 'Admin Control Center | ElseSourav',
+  description: 'Administrative overview, platform telemetry, application catalog, and support desk.',
 };
 
-export default function AdminDashboardPage() {
+export default async function AdminDashboardPage() {
+  const { context, stats, recentActivities } = await getAdminDashboardData();
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
-      <Link href={ROUTES.HOME} className="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-white mb-6">
-        <ArrowLeft className="w-4 h-4" /> Back to Home
-      </Link>
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
-            <Badge variant="warning">Staff Only</Badge>
+    <div className="max-w-7xl mx-auto space-y-8">
+      {/* Header Banner */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-800/80 pb-6">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-100 tracking-tight">
+              Control Portal Dashboard
+            </h1>
+            <Badge variant="warning" className="text-xs">
+              {context.role}
+            </Badge>
           </div>
-          <p className="text-zinc-400">Platform telemetry, application release management, and support desk.</p>
+          <p className="text-xs sm:text-sm text-zinc-400">
+            Platform metrics, software catalog releases, knowledge base, and support triage desk.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2.5 self-start sm:self-auto">
+          <Link href="/admin/apps">
+            <Button size="sm" className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs gap-1.5 shadow-lg shadow-indigo-600/20">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Manage Apps</span>
+            </Button>
+          </Link>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card>
-          <CardHeader>
-            <Package className="w-6 h-6 text-indigo-400 mb-2" />
-            <CardTitle>Applications</CardTitle>
-            <CardDescription>Manage software catalog releases</CardDescription>
-          </CardHeader>
-        </Card>
+      {/* Real Platform Stats Grid */}
+      <AdminStatsGrid stats={stats} />
 
-        <Card>
-          <CardHeader>
-            <FileText className="w-6 h-6 text-cyan-400 mb-2" />
-            <CardTitle>Devlog CMS</CardTitle>
-            <CardDescription>Publish engineering notes</CardDescription>
-          </CardHeader>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <LifeBuoy className="w-6 h-6 text-emerald-400 mb-2" />
-            <CardTitle>Support Desk</CardTitle>
-            <CardDescription>Triage customer requests</CardDescription>
-          </CardHeader>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <Activity className="w-6 h-6 text-amber-400 mb-2" />
-            <CardTitle>Telemetry</CardTitle>
-            <CardDescription>Traffic and database health</CardDescription>
-          </CardHeader>
-        </Card>
-      </div>
+      {/* Real Recent Platform Activity Stream */}
+      <AdminRecentActivity activities={recentActivities} />
     </div>
   );
 }
