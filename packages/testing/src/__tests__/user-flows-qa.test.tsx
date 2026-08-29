@@ -42,7 +42,7 @@ describe('UI Stabilization Phase 09 — Full User-Flow QA Validation', () => {
       // Verify latest blogs
       const latestPost = scenario.blogResult.items[0];
       expect(latestPost).toBeDefined();
-      expect(latestPost?.slug).toBe('v2-architecture-insights');
+      expect(latestPost?.slug).toBe('architecture-insights');
       expect(latestPost?.readingTime).toBe(6);
     });
   });
@@ -112,9 +112,9 @@ describe('UI Stabilization Phase 09 — Full User-Flow QA Validation', () => {
       const listing = await mockService.listPublicBlogPosts({ limit: 10 });
       expect(listing.items.length).toBe(3);
 
-      const post = await mockService.getBlogPostBySlug('v2-architecture-insights');
+      const post = await mockService.getBlogPostBySlug('architecture-insights');
       expect(post).toBeDefined();
-      expect(post?.title).toBe('ElseSourav V2 Architecture: Migrating to Turborepo and Next.js 15 App Router');
+      expect(post?.title).toBe('ElseSourav Architecture: Scaling with Turborepo and Next.js 15 App Router');
       expect(post?.tags.map((t) => t.slug)).toContain('nextjs-15');
       expect(post?.content).toContain('## Architectural Motivation');
     });

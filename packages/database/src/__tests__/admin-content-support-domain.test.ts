@@ -22,10 +22,10 @@ describe('Admin Content (Blog & Help) and Support Domain Security', () => {
   describe('Blog Admin CMS', () => {
     const mockPost: BlogPost = {
       id: 'post-1',
-      title: 'Building ElseSourav V2',
-      slug: 'building-elsesourav-v2',
+      title: 'Building ElseSourav',
+      slug: 'building-elsesourav',
       excerpt: 'Comprehensive architectural deep dive.',
-      content: 'Detailed markdown content explaining Next.js 15 migration.',
+      content: 'Detailed markdown content explaining Next.js 15 architecture.',
       status: 'draft',
       categoryId: 'cat-eng',
       tags: [],
@@ -44,9 +44,9 @@ describe('Admin Content (Blog & Help) and Support Domain Security', () => {
       const service = new BlogService(mockRepo);
 
       const created = await service.createBlogPost('admin-1', 'ADMIN', {
-        title: 'Building ElseSourav V2',
+        title: 'Building ElseSourav',
         excerpt: 'Comprehensive architectural deep dive.',
-        content: 'Detailed markdown content explaining Next.js 15 migration.',
+        content: 'Detailed markdown content explaining Next.js 15 architecture.',
         categoryId: 'cat-eng',
       });
       expect(created.id).toBe('post-1');

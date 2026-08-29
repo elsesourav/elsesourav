@@ -24,7 +24,7 @@ vi.mock('@elsesourav/media', () => ({
   deleteCloudinaryAsset: vi.fn().mockResolvedValue(true),
 }));
 
-describe('V2 Full System QA and Regression Test Suite', () => {
+describe('Full System QA and Regression Test Suite', () => {
   // 1. User Identity & Authorization Boundaries
   describe('Task 4 & 5: User Authentication & Authorization Boundaries', () => {
     it('prevents standard users from performing administrative role upgrades', async () => {

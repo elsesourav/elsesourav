@@ -57,7 +57,7 @@ async function updateImages() {
   // 2. Update Blog Posts
   const postUpdates = [
     {
-      slug: 'v2-architecture-insights',
+      slug: 'architecture-insights',
       coverImageUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80',
     },
     {

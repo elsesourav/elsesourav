@@ -13,7 +13,7 @@ import { PublishStatus, TicketPriority, TicketStatus, UserRole } from '@prisma/c
 import { prisma } from '../../src/client';
 
 async function main() {
-  console.info('🌱 Seeding ElseSourav V2 Database with rich realistic test records...');
+  console.info('🌱 Seeding ElseSourav Database with rich realistic test records...');
 
   // ===========================================================================
   // 1. SEED USERS (Admin, Staff, and Community Members)
@@ -574,16 +574,16 @@ async function main() {
 
   // Post 1
   await prisma.blogPost.upsert({
-    where: { slug: 'architecting-elsesourav-v2-nextjs-postgresql' },
+    where: { slug: 'architecting-elsesourav-nextjs-postgresql' },
     update: {},
     create: {
-      title: 'Architecting ElseSourav V2 with Next.js 15 App Router & PostgreSQL',
-      slug: 'architecting-elsesourav-v2-nextjs-postgresql',
+      title: 'Architecting ElseSourav with Next.js 15 App Router & PostgreSQL',
+      slug: 'architecting-elsesourav-nextjs-postgresql',
       excerpt:
-        'A comprehensive architectural journey migrating from Firebase to a high-performance Next.js 15 monorepo backed by PostgreSQL and Prisma.',
-      content: `## The Motivation for V2
+        'A comprehensive architectural journey building a high-performance Next.js 15 monorepo backed by PostgreSQL and Prisma.',
+      content: `## The Modern Platform Architecture
 
-As the ElseSourav platform expanded to host richer developer tools, our original single-page architecture faced challenges with initial load times, granular SEO indexing, and relational data integrity.
+As the ElseSourav platform expanded to host richer developer tools, our architecture prioritized initial load times, granular SEO indexing, and relational data integrity.
 
 ### Key Architectural Pillars
 1. **Next.js 15 Server Components**: Rendering data close to PostgreSQL and minimizing client bundle overhead.
@@ -1067,7 +1067,7 @@ We treat security and data ownership as core principles.
   });
 
   console.info('===========================================================');
-  console.info('✅ Successfully seeded ElseSourav V2 database!');
+  console.info('✅ Successfully seeded ElseSourav database!');
   console.info('  • Users: 5 (1 Admin, 1 Staff, 3 Users)');
   console.info('  • Categories: 5 App Categories, 3 Blog Categories, 3 Help Categories');
   console.info('  • Tags: 6 App Tags, 4 Blog Tags');

@@ -40,15 +40,15 @@ export const fixtureBlogTags: readonly BlogTag[] = [
   fixtureBlogTagTokens,
 ];
 
-export const fixtureBlogPostV2Architecture: BlogPost = {
-  id: 'post-v2-architecture',
-  slug: 'v2-architecture-insights',
-  title: 'ElseSourav V2 Architecture: Migrating to Turborepo and Next.js 15 App Router',
+export const fixtureBlogPostArchitecture: BlogPost = {
+  id: 'post-architecture',
+  slug: 'architecture-insights',
+  title: 'ElseSourav Architecture: Scaling with Turborepo and Next.js 15 App Router',
   excerpt:
     'A technical post-mortem on restructuring our single-page React app into a modular, multi-package Turborepo with server-first rendering.',
   content: `## Architectural Motivation
 
-When designing ElseSourav V2, we needed to scale past client-side bundler bottlenecks. By decomposing the monolithic web application into isolated, single-responsibility workspace packages, we achieved instant sub-package typechecking and shared UI design tokens.
+When designing ElseSourav, we needed to scale past client-side bundler bottlenecks. By decomposing the monolithic web application into isolated, single-responsibility workspace packages, we achieved instant sub-package typechecking and shared UI design tokens.
 
 ### Key Performance Benchmarks
 
@@ -146,7 +146,7 @@ export const fixtureBlogPostDraft: BlogPost = {
 };
 
 export const fixtureBlogPosts: readonly BlogPost[] = [
-  fixtureBlogPostV2Architecture,
+  fixtureBlogPostArchitecture,
   fixtureBlogPostZeroTrust,
   fixtureBlogPostDesignSystems,
 ];

@@ -108,7 +108,7 @@ export function DesignSystemClient() {
               <CardDescription>Clean bordered container with semantic header, content, and footer.</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-xs text-zinc-400">Tokens adapted from V1 design specifications.</p>
+              <p className="text-xs text-zinc-400">Tokens defined via centralized semantic CSS properties.</p>
             </CardContent>
           </Card>
         </div>

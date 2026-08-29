@@ -18,7 +18,7 @@ import {
 } from '@elsesourav/utils';
 import type { UserRole } from '@elsesourav/types';
 
-describe('V2 Comprehensive Security Hardening & Audit Test Suite (Prompt 44)', () => {
+describe('Comprehensive Security Hardening & Audit Test Suite', () => {
   describe('Task 5 & Task 6 — IDOR & Privilege Escalation Defenses', () => {
     it('SupportService: prevents normal user A from reading user B tickets or internal notes', async () => {
       const mockRepo: Partial<SupportRepository> = {

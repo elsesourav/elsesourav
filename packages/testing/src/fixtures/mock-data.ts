@@ -119,9 +119,9 @@ export const mockSupportTicket: SupportTicket = {
 
 export const mockBlogPost: BlogPost = {
   id: 'post-1',
-  slug: 'v2-architecture-insights',
-  title: 'ElseSourav V2 Architecture Deep Dive',
-  excerpt: 'Explaining our migration to Turborepo and Next.js 15 App Router.',
+  slug: 'architecture-insights',
+  title: 'ElseSourav Architecture Deep Dive',
+  excerpt: 'Explaining our architecture with Turborepo and Next.js 15 App Router.',
   content: 'Full article content describing architecture decisions...',
   authorId: 'usr-admin-1',
   category: {
