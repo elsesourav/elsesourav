@@ -446,11 +446,11 @@ export default async function HomePage() {
             <Container size="lg">
               <SectionHeader
                 align="split"
-                caption="Field Notes & Writing"
-                title={identity.homepage.blogTitle || 'Engineering Notes & Reflections'}
+                caption="Field Notes"
+                title={identity.homepage.blogTitle || 'Field Notes & Reflections'}
                 description={
                   identity.homepage.blogSubtitle ||
-                  'Notes on software design, architecture, performance, and things I learn while building.'
+                  'Things I write about while building software, learning tools, and solving architectural problems.'
                 }
                 actions={
                   <Link
@@ -475,7 +475,7 @@ export default async function HomePage() {
                         <div className="space-y-4">
                           <div className="flex items-center justify-between text-xs pb-3 border-b border-zinc-800/70">
                             <span className="font-mono text-cyan-400 text-xs font-semibold uppercase tracking-wider">
-                              Latest Essay // {recentPosts[0]!.category?.name || 'Architecture'}
+                              Field Note // {recentPosts[0]!.category?.name || 'Architecture'}
                             </span>
                             <span className="text-zinc-500 text-xs font-mono">
                               {recentPosts[0]!.readingTime} min read
@@ -495,11 +495,11 @@ export default async function HomePage() {
                           {recentPosts[0]!.publishedAt ? (
                             <time
                               dateTime={new Date(recentPosts[0]!.publishedAt).toISOString()}
-                              className="font-mono text-zinc-500"
+                              className="font-mono text-zinc-500 uppercase"
                             >
                               {new Date(recentPosts[0]!.publishedAt).toLocaleDateString('en-US', {
-                                month: 'long',
-                                day: 'numeric',
+                                month: 'short',
+                                day: '2-digit',
                                 year: 'numeric',
                               })}
                             </time>
@@ -507,7 +507,7 @@ export default async function HomePage() {
                             <span className="text-zinc-500 font-mono">Published Recently</span>
                           )}
                           <span className="text-cyan-400 font-semibold flex items-center gap-1.5 group-hover:translate-x-1 transition-transform">
-                            <span>Read complete essay</span>
+                            <span>Read note</span>
                             <ArrowRight className="w-3.5 h-3.5" />
                           </span>
                         </div>
@@ -517,46 +517,54 @@ export default async function HomePage() {
 
                   {/* Right: Archival Index Stream of Supporting Notes */}
                   <div className="lg:col-span-5 flex flex-col justify-between divide-y divide-zinc-800/70 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 p-6 sm:p-7 backdrop-blur-sm">
-                    {recentPosts.slice(1).map((post, idx) => (
-                      <Link
-                        key={post.id}
-                        href={`/blog/${post.slug}`}
-                        className="group block py-4 first:pt-0 last:pb-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-xl"
-                      >
-                        <article className="space-y-2">
-                          <div className="flex items-center justify-between text-xs text-zinc-500 font-mono">
-                            <span className="text-cyan-400/90 font-medium">
-                              {post.category?.name || 'Notes'}
-                            </span>
-                            {post.publishedAt ? (
-                              <time dateTime={new Date(post.publishedAt).toISOString()}>
-                                {new Date(post.publishedAt).toLocaleDateString('en-US', {
-                                  month: 'short',
-                                  day: 'numeric',
-                                  year: 'numeric',
-                                })}{' '}
-                                · {post.readingTime} min
-                              </time>
-                            ) : (
-                              <span>Note 0{idx + 2} · {post.readingTime} min</span>
-                            )}
-                          </div>
+                    {recentPosts.slice(1, 3).map((post, idx) => {
+                      const formattedIdx = String(idx + 1).padStart(2, '0');
+                      return (
+                        <Link
+                          key={post.id}
+                          href={`/blog/${post.slug}`}
+                          className="group block py-4 first:pt-0 last:pb-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-xl"
+                        >
+                          <article className="space-y-2">
+                            <div className="flex items-center justify-between text-xs text-zinc-500 font-mono">
+                              <div className="flex items-center gap-2">
+                                <span className="text-cyan-400 font-bold text-[11px]">
+                                  {formattedIdx}
+                                </span>
+                                <span className="text-cyan-400/90 font-medium uppercase tracking-wider text-[11px]">
+                                  {post.category?.name || 'Notes'}
+                                </span>
+                              </div>
+                              {post.publishedAt ? (
+                                <time dateTime={new Date(post.publishedAt).toISOString()} className="uppercase">
+                                  {new Date(post.publishedAt).toLocaleDateString('en-US', {
+                                    month: 'short',
+                                    day: '2-digit',
+                                    year: 'numeric',
+                                  })}{' '}
+                                  · {post.readingTime} min
+                                </time>
+                              ) : (
+                                <span>{post.readingTime} min read</span>
+                              )}
+                            </div>
 
-                          <h4 className="font-semibold text-base sm:text-lg text-zinc-200 group-hover:text-white group-hover:underline underline-offset-4 transition-colors line-clamp-2 leading-snug">
-                            {post.title}
-                          </h4>
+                            <h4 className="font-semibold text-base text-zinc-100 group-hover:text-white transition-colors line-clamp-2 leading-snug">
+                              {post.title}
+                            </h4>
 
-                          <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
-                            {post.excerpt}
-                          </p>
+                            <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+                              {post.excerpt}
+                            </p>
 
-                          <div className="pt-1 flex items-center text-xs text-cyan-400 font-medium gap-1 group-hover:translate-x-0.5 transition-transform">
-                            <span>Read note</span>
-                            <ArrowRight className="w-3 h-3" />
-                          </div>
-                        </article>
-                      </Link>
-                    ))}
+                            <div className="pt-1 flex items-center text-xs text-cyan-400 font-medium gap-1 group-hover:translate-x-0.5 transition-transform">
+                              <span>Read note</span>
+                              <ArrowRight className="w-3 h-3" />
+                            </div>
+                          </article>
+                        </Link>
+                      );
+                    })}
                   </div>
                 </div>
               ) : (
@@ -569,7 +577,7 @@ export default async function HomePage() {
                       <div className="space-y-4">
                         <div className="flex items-center justify-between text-xs pb-3 border-b border-zinc-800/70">
                           <span className="font-mono text-cyan-400 text-xs font-semibold uppercase tracking-wider">
-                            Latest Essay // {recentPosts[0]!.category?.name || 'Architecture'}
+                            Field Note // {recentPosts[0]!.category?.name || 'Architecture'}
                           </span>
                           <span className="text-zinc-500 text-xs font-mono">
                             {recentPosts[0]!.readingTime} min read
@@ -586,11 +594,11 @@ export default async function HomePage() {
                         {recentPosts[0]!.publishedAt ? (
                           <time
                             dateTime={new Date(recentPosts[0]!.publishedAt).toISOString()}
-                            className="font-mono text-zinc-500"
+                            className="font-mono text-zinc-500 uppercase"
                           >
                             {new Date(recentPosts[0]!.publishedAt).toLocaleDateString('en-US', {
-                              month: 'long',
-                              day: 'numeric',
+                              month: 'short',
+                              day: '2-digit',
                               year: 'numeric',
                             })}
                           </time>
@@ -598,7 +606,7 @@ export default async function HomePage() {
                           <span className="text-zinc-500 font-mono">Published Recently</span>
                         )}
                         <span className="text-cyan-400 font-semibold flex items-center gap-1.5 group-hover:translate-x-1 transition-transform">
-                          <span>Read complete essay</span>
+                          <span>Read note</span>
                           <ArrowRight className="w-3.5 h-3.5" />
                         </span>
                       </div>
@@ -606,6 +614,17 @@ export default async function HomePage() {
                   </Link>
                 </div>
               )}
+
+              {/* Bottom Exploration CTA */}
+              <div className="text-center pt-8">
+                <Link
+                  href={ROUTES.BLOG}
+                  className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-cyan-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded p-1"
+                >
+                  <span>Read all engineering field notes ({blogResult.totalCount} articles)</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-cyan-400" />
+                </Link>
+              </div>
             </Container>
           </Section>
         )}
