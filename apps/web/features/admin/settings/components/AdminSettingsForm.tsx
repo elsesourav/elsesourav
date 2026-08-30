@@ -943,6 +943,32 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
               />
             </FormField>
           </div>
+
+          <FormField label="Creator Statement ('How I Build' Headline)">
+            <Input
+              value={settings['creator_statement'] || ''}
+              onChange={(e) => handleChange('creator_statement', e.target.value)}
+              placeholder="I care about software that is understandable, useful, fast, and considerate."
+            />
+          </FormField>
+
+          <div className="pt-3 border-t border-zinc-800 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormField label="Closing CTA / Pathways Title">
+              <Input
+                value={settings['closing_cta_title'] || ''}
+                onChange={(e) => handleChange('closing_cta_title', e.target.value)}
+                placeholder="Explore the ElseSourav Archive"
+              />
+            </FormField>
+
+            <FormField label="Closing CTA / Pathways Subtitle">
+              <Input
+                value={settings['closing_cta_subtitle'] || ''}
+                onChange={(e) => handleChange('closing_cta_subtitle', e.target.value)}
+                placeholder="Discover software tools, read architectural writings, or get in touch directly."
+              />
+            </FormField>
+          </div>
         </Card>
       )}
 

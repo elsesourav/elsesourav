@@ -122,6 +122,8 @@ export interface SiteAndCreatorIdentity {
     readonly appsSubtitle: string;
     readonly blogTitle: string;
     readonly blogSubtitle: string;
+    readonly closingCtaTitle?: string;
+    readonly closingCtaSubtitle?: string;
   };
   readonly creator: {
     readonly name: string;
@@ -131,6 +133,7 @@ export interface SiteAndCreatorIdentity {
     readonly role: string;
     readonly location: string;
     readonly avatarUrl?: string;
+    readonly statement?: string;
     readonly shortBio: string;
     readonly longBio: string;
     readonly positioning: string;

@@ -30,6 +30,15 @@ export default async function AdminSettingsPage() {
     primary_cta_label: dbSettings['primary_cta_label'] || 'Explore Applications',
     secondary_cta_label: dbSettings['secondary_cta_label'] || 'Read Engineering Notes',
     announcement_banner: dbSettings['announcement_banner'] || '',
+    homepage_apps_title: dbSettings['homepage_apps_title'] || 'Software Crafted with Purpose',
+    homepage_blog_title: dbSettings['homepage_blog_title'] || 'Engineering Notes & Reflections',
+    creator_statement:
+      dbSettings['creator_statement'] ||
+      'I care about software that is understandable, useful, fast, and considerate.',
+    closing_cta_title: dbSettings['closing_cta_title'] || 'Explore the ElseSourav Archive',
+    closing_cta_subtitle:
+      dbSettings['closing_cta_subtitle'] ||
+      'Discover software tools, read architectural writings, or get in touch directly.',
     creator_name: dbSettings['creator_name'] || CREATOR_CONFIG.name,
     creator_title: dbSettings['creator_title'] || CREATOR_CONFIG.identity.title,
     creator_role: dbSettings['creator_role'] || CREATOR_CONFIG.identity.role,

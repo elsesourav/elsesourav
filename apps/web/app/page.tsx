@@ -154,28 +154,28 @@ export default async function HomePage() {
               <div className="lg:col-span-7 space-y-6 text-left">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-indigo-500/30 bg-indigo-950/40 text-xs text-indigo-300 font-medium shadow-sm">
                   <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-                  <span>Independent Software Studio & Archive</span>
+                  <span>{identity.homepage.heroBadge || 'Independent Software Studio & Archive'}</span>
                 </div>
 
                 <h1 className="text-display font-extrabold tracking-tight text-white leading-[1.08]">
-                  I&apos;m {identity.creator.name}. I design and build independent software, developer tools, and digital experiences.
+                  {identity.homepage.heroHeadline || `I'm ${identity.creator.name}. I design and build software, tools, and interactive experiences.`}
                 </h1>
 
                 <p className="text-body sm:text-lg text-zinc-400 leading-relaxed max-w-xl">
-                  {SITE_CONFIG.name} is my personal studio and workshop—a living collection of software, engineering field notes, and creative experiments built with a focus on craft, speed, and privacy.
+                  {identity.homepage.heroSubtitle || `${SITE_CONFIG.name} is my personal studio and workshop—a living collection of software, engineering field notes, and creative experiments built with a focus on craft, speed, and privacy.`}
                 </p>
 
                 <ActionGroup className="pt-2">
                   <Link href={ROUTES.APPS}>
                     <Button size="lg" className="gap-2 shadow-xl shadow-indigo-600/25 px-6 font-semibold min-h-[44px]">
                       <Layers className="w-4 h-4" />
-                      <span>Explore Applications {appsResult.totalCount > 0 ? `(${appsResult.totalCount})` : ''}</span>
+                      <span>{identity.homepage.primaryCtaLabel || 'Explore Applications'} {appsResult.totalCount > 0 ? `(${appsResult.totalCount})` : ''}</span>
                     </Button>
                   </Link>
                   <Link href={ROUTES.BLOG}>
                     <Button variant="secondary" size="lg" className="gap-2 px-6 min-h-[44px]">
                       <BookOpen className="w-4 h-4" />
-                      <span>Read Engineering Notes</span>
+                      <span>{identity.homepage.secondaryCtaLabel || 'Read Engineering Notes'}</span>
                     </Button>
                   </Link>
                 </ActionGroup>
@@ -539,7 +539,7 @@ export default async function HomePage() {
                 </div>
 
                 <h2 className="text-h2 font-bold tracking-tight text-white leading-snug">
-                  I care about software that is understandable, useful, fast, and considerate.
+                  {identity.creator.statement || 'I care about software that is understandable, useful, fast, and considerate.'}
                 </h2>
 
                 <p className="text-body text-zinc-400 leading-relaxed">
@@ -592,8 +592,8 @@ export default async function HomePage() {
             <SectionHeader
               align="center"
               caption="Studio Pathways"
-              title="Explore the ElseSourav Archive"
-              description="Discover software tools, read architectural writings, or get in touch directly."
+              title={identity.homepage.closingCtaTitle || 'Explore the ElseSourav Archive'}
+              description={identity.homepage.closingCtaSubtitle || 'Discover software tools, read architectural writings, or get in touch directly.'}
             />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">

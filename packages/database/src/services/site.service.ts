@@ -58,6 +58,12 @@ export class SiteService {
       dbSettings['homepage_blog_subtitle'] ||
       'Deep-dives on software design, performance, and architecture lessons.';
 
+    const closingCtaTitle =
+      dbSettings['closing_cta_title'] || 'Explore the ElseSourav Archive';
+    const closingCtaSubtitle =
+      dbSettings['closing_cta_subtitle'] ||
+      'Discover software tools, read architectural writings, or get in touch directly.';
+
     const creatorName = dbSettings['creator_name'] || CREATOR_CONFIG.name;
     const creatorFullName = dbSettings['creator_full_name'] || CREATOR_CONFIG.fullName;
     const creatorHandle = CREATOR_CONFIG.handle;
@@ -65,6 +71,9 @@ export class SiteService {
     const creatorRole = dbSettings['creator_role'] || CREATOR_CONFIG.identity.role;
     const creatorLocation = dbSettings['creator_location'] || CREATOR_CONFIG.identity.location;
     const creatorAvatarUrl = dbSettings['creator_avatar_url'] || undefined;
+    const creatorStatement =
+      dbSettings['creator_statement'] ||
+      'I care about software that is understandable, useful, fast, and considerate.';
     const creatorShortBio = dbSettings['creator_short_bio'] || CREATOR_CONFIG.shortBio;
     const creatorLongBio = dbSettings['creator_long_bio'] || CREATOR_CONFIG.longBio;
     const creatorPositioning = dbSettings['hero_subtitle'] || CREATOR_CONFIG.positioning;
@@ -112,6 +121,8 @@ export class SiteService {
         appsSubtitle,
         blogTitle,
         blogSubtitle,
+        closingCtaTitle,
+        closingCtaSubtitle,
       },
       creator: {
         name: creatorName,
@@ -121,6 +132,7 @@ export class SiteService {
         role: creatorRole,
         location: creatorLocation,
         avatarUrl: creatorAvatarUrl,
+        statement: creatorStatement,
         shortBio: creatorShortBio,
         longBio: creatorLongBio,
         positioning: creatorPositioning,
