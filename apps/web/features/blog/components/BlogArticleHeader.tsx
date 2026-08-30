@@ -100,8 +100,8 @@ export function BlogArticleHeader({ post, postUrl }: BlogArticleHeaderProps) {
           </div>
         </div>
 
-        {/* Share Buttons */}
-        <BlogShareButtons title={post.title} url={postUrl} />
+        {/* Content-Aware Share Action */}
+        <BlogShareButtons title={post.title} url={postUrl} excerpt={post.excerpt} />
       </div>
 
       {/* Cover Image */}

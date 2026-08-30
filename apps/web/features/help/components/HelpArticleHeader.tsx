@@ -2,7 +2,8 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Badge } from '@elsesourav/ui';
 import type { PublicHelpArticle } from '@elsesourav/types';
-import { ChevronRight, Calendar, User, BookOpen } from 'lucide-react';
+import { ChevronRight, Calendar, User } from 'lucide-react';
+import { ShareButton } from '@/components/share/ShareButton';
 
 interface HelpArticleHeaderProps {
   article: PublicHelpArticle;
@@ -61,22 +62,33 @@ export function HelpArticleHeader({ article, categorySlug }: HelpArticleHeaderPr
         </p>
       )}
 
-      {/* Metadata Bar */}
-      <div className="flex items-center gap-4 text-xs text-zinc-400 pt-3 pb-3 border-y border-zinc-800/80">
-        <div className="flex items-center gap-1.5">
-          <Calendar className="w-3.5 h-3.5 text-zinc-500" />
-          <span>Last updated {updatedDate}</span>
+      {/* Metadata & Share Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-4 text-xs text-zinc-400 pt-3 pb-3 border-y border-zinc-800/80">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1.5">
+            <Calendar className="w-3.5 h-3.5 text-zinc-500" />
+            <span>Last updated {updatedDate}</span>
+          </div>
+
+          {article.author && (
+            <>
+              <span>•</span>
+              <div className="flex items-center gap-1.5">
+                <User className="w-3.5 h-3.5 text-zinc-500" />
+                <span>{article.author.displayName}</span>
+              </div>
+            </>
+          )}
         </div>
 
-        {article.author && (
-          <>
-            <span>•</span>
-            <div className="flex items-center gap-1.5">
-              <User className="w-3.5 h-3.5 text-zinc-500" />
-              <span>{article.author.displayName}</span>
-            </div>
-          </>
-        )}
+        <ShareButton
+          title={article.title}
+          text={article.excerpt}
+          canonicalPathOrUrl={`/help/${categorySlug}/${article.slug}`}
+          size="sm"
+          label="Share Guide"
+          className="h-8 px-3 text-xs border-zinc-800 bg-zinc-900/80 hover:bg-zinc-800"
+        />
       </div>
     </header>
   );

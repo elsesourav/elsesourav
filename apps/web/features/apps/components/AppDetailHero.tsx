@@ -18,6 +18,7 @@ import {
   Archive,
 } from 'lucide-react';
 import { SaveAppButton } from './SaveAppButton';
+import { ShareButton } from '@/components/share/ShareButton';
 
 interface AppDetailHeroProps {
   app: PublicApp;
@@ -178,6 +179,13 @@ export function AppDetailHero({ app }: AppDetailHeroProps) {
 
               {/* Save to User Library */}
               <SaveAppButton appId={app.id} appSlug={app.slug} />
+
+              {/* Content-Aware Canonical Share */}
+              <ShareButton
+                title={app.name}
+                text={app.shortDescription}
+                canonicalPathOrUrl={`/apps/${app.slug}`}
+              />
             </div>
           </div>
         </div>
