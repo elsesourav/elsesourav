@@ -242,18 +242,136 @@ export default async function AboutPage() {
           </div>
         </section>
 
-        {/* 3. Project Evidence: Grounded in Real Work */}
-        <section aria-labelledby="project-evidence-heading" className="space-y-6">
+        {/* 3. Project Journey & Technical Evolution */}
+        <section aria-labelledby="journey-heading" className="space-y-6">
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-xs font-mono text-cyan-400 uppercase tracking-wider font-semibold">
               <Layers className="w-4 h-4" />
-              <span>Body of Work</span>
+              <span>Evolution</span>
             </div>
-            <h2 id="project-evidence-heading" className="text-xl font-bold text-white tracking-tight">
-              Project Evidence & Technical Explorations
+            <h2 id="journey-heading" className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+              Project Journey & Technical Progression
             </h2>
-            <p className="text-xs sm:text-sm text-zinc-400">
-              Selected examples demonstrating architectural decisions across diverse domains:
+            <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl leading-relaxed">
+              Organized conceptually by the engineering challenges and paradigms explored across different stages:
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {/* Stage 01 */}
+            <div className="p-6 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 backdrop-blur-sm space-y-3">
+              <div className="flex items-center justify-between text-xs font-mono">
+                <span className="text-indigo-400 font-bold bg-indigo-950/60 px-2.5 py-0.5 rounded border border-indigo-800/40">
+                  Stage 01 // Foundations
+                </span>
+                <span className="text-zinc-500">Core Utilities & DOM</span>
+              </div>
+              <h3 className="text-base sm:text-lg font-bold text-white">
+                Foundations, Calculators & Web Utilities
+              </h3>
+              <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
+                Early exploration focused on mastering native browser APIs, client-side input validation, asynchronous state machines, and building tools with zero external dependencies.
+              </p>
+              <div className="pt-1 flex flex-wrap items-center gap-2 text-xs font-mono text-zinc-400">
+                <span className="text-zinc-500">Representative work:</span>
+                <Link href="/apps/base-calculator" className="text-indigo-300 hover:underline">Base Calculator</Link>
+                <span>·</span>
+                <Link href="/apps/currency-converter" className="text-indigo-300 hover:underline">Currency Converter</Link>
+                <span>·</span>
+                <Link href="/apps/form-maker" className="text-indigo-300 hover:underline">Form Maker</Link>
+              </div>
+            </div>
+
+            {/* Stage 02 */}
+            <div className="p-6 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 backdrop-blur-sm space-y-3">
+              <div className="flex items-center justify-between text-xs font-mono">
+                <span className="text-purple-400 font-bold bg-purple-950/60 px-2.5 py-0.5 rounded border border-purple-800/40">
+                  Stage 02 // Interactive
+                </span>
+                <span className="text-zinc-500">Graphics & Physics</span>
+              </div>
+              <h3 className="text-base sm:text-lg font-bold text-white">
+                Interactive Systems, Canvas Graphics & Simulations
+              </h3>
+              <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
+                Exploring real-time 60 FPS animation loops, physics constraints, particle dynamics, and cellular automata to understand computer graphics and procedural generation from first principles.
+              </p>
+              <div className="pt-1 flex flex-wrap items-center gap-2 text-xs font-mono text-zinc-400">
+                <span className="text-zinc-500">Representative work:</span>
+                <Link href="/apps/breakout-ball" className="text-purple-300 hover:underline">Breakout Ball</Link>
+                <span>·</span>
+                <Link href="/apps/particle-chain-wasm" className="text-purple-300 hover:underline">Particle Chain WASM</Link>
+                <span>·</span>
+                <Link href="/apps/wave-function-collapse" className="text-purple-300 hover:underline">Wave Function Collapse</Link>
+                <span>·</span>
+                <Link href="/apps/falling-sands" className="text-purple-300 hover:underline">Falling Sands</Link>
+              </div>
+            </div>
+
+            {/* Stage 03 */}
+            <div className="p-6 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 backdrop-blur-sm space-y-3">
+              <div className="flex items-center justify-between text-xs font-mono">
+                <span className="text-cyan-400 font-bold bg-cyan-950/60 px-2.5 py-0.5 rounded border border-cyan-800/40">
+                  Stage 03 // Systems
+                </span>
+                <span className="text-zinc-500">WASM, ML & Hardware</span>
+              </div>
+              <h3 className="text-base sm:text-lg font-bold text-white">
+                Systems Programming, WebAssembly & Machine Learning
+              </h3>
+              <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
+                Stepping below high-level frameworks—compiling C++ to WebAssembly with Emscripten, implementing matrix mathematics for on-device neural networks, and writing embedded microcontroller firmware.
+              </p>
+              <div className="pt-1 flex flex-wrap items-center gap-2 text-xs font-mono text-zinc-400">
+                <span className="text-zinc-500">Representative work:</span>
+                <Link href="/apps/neural-network-number-recognition" className="text-cyan-300 hover:underline">Neural Network Number Recognition</Link>
+                <span>·</span>
+                <Link href="/apps/esp32-cam-with-car-contro" className="text-cyan-300 hover:underline">ESP32-CAM WiFi Car</Link>
+                <span>·</span>
+                <Link href="/apps/spectralens-ai" className="text-cyan-300 hover:underline">SpectraLens AI WASM OCR</Link>
+              </div>
+            </div>
+
+            {/* Stage 04 */}
+            <div className="p-6 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 backdrop-blur-sm space-y-3">
+              <div className="flex items-center justify-between text-xs font-mono">
+                <span className="text-emerald-400 font-bold bg-emerald-950/60 px-2.5 py-0.5 rounded border border-emerald-800/40">
+                  Stage 04 // Applications
+                </span>
+                <span className="text-zinc-500">Production Software</span>
+              </div>
+              <h3 className="text-base sm:text-lg font-bold text-white">
+                Full-Stack Applications, Mobile & Automation Platforms
+              </h3>
+              <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
+                Shipping resilient end-to-end software tools: multi-seller e-commerce batch reconciliation engines, browser extensions, client-side photo editors, and local-first mobile applications.
+              </p>
+              <div className="pt-1 flex flex-wrap items-center gap-2 text-xs font-mono text-zinc-400">
+                <span className="text-zinc-500">Representative work:</span>
+                <Link href="/apps/es-automation" className="text-emerald-300 hover:underline">ES Automation</Link>
+                <span>·</span>
+                <Link href="/apps/img-editor" className="text-emerald-300 hover:underline">Img Editor</Link>
+                <span>·</span>
+                <Link href="/apps/meal-tracker" className="text-emerald-300 hover:underline">Meal Tracker Mobile</Link>
+                <span>·</span>
+                <Link href="/apps/gcelt-automate" className="text-emerald-300 hover:underline">GCELT Automate</Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 4. Capability Story: Capability to Evidence */}
+        <section aria-labelledby="capability-heading" className="space-y-6">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-xs font-mono text-indigo-400 uppercase tracking-wider font-semibold">
+              <Cpu className="w-4 h-4" />
+              <span>Capabilities</span>
+            </div>
+            <h2 id="capability-heading" className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+              Engineering Capabilities & Concrete Evidence
+            </h2>
+            <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl leading-relaxed">
+              Rather than generic keyword lists, each technical capability is grounded in verified, working implementations:
             </p>
           </div>
 
@@ -276,16 +394,27 @@ export default async function AboutPage() {
                     {item.highlight}
                   </p>
                   <div className="pt-2 flex items-center gap-1 text-xs text-indigo-400 group-hover:text-indigo-300 font-medium">
-                    <span>Inspect project</span>
+                    <span>Inspect implementation</span>
                     <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                   </div>
                 </div>
               </Link>
             ))}
           </div>
+
+          {/* Direct link to complete archive */}
+          <div className="text-center pt-4">
+            <Link
+              href={ROUTES.APPS}
+              className="inline-flex items-center gap-2 text-xs font-mono text-zinc-300 hover:text-white px-5 py-2.5 rounded-2xl border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+            >
+              <span>Explore complete project archive & technical documentation</span>
+              <ArrowRight className="w-4 h-4 text-indigo-400" />
+            </Link>
+          </div>
         </section>
 
-        {/* 4. Guiding Principles & Engineering Approach */}
+        {/* 5. Guiding Principles & Engineering Approach */}
         <section aria-labelledby="principles-heading" className="space-y-6">
           <div className="space-y-2">
             <h2 id="principles-heading" className="text-xl font-bold text-white tracking-tight">
@@ -311,7 +440,7 @@ export default async function AboutPage() {
           </div>
         </section>
 
-        {/* 5. Current Focus */}
+        {/* 6. Current Focus */}
         <section aria-labelledby="focus-heading" className="space-y-4">
           <div className="flex items-center gap-2">
             <Cpu className="w-4 h-4 text-purple-400" />
@@ -331,7 +460,7 @@ export default async function AboutPage() {
           </div>
         </section>
 
-        {/* 6. Verified Social & Platform Channels */}
+        {/* 7. Verified Social & Platform Channels */}
         <section aria-labelledby="channels-heading" className="pt-6 border-t border-zinc-800/80 space-y-4">
           <h2 id="channels-heading" className="text-sm font-bold text-white tracking-tight font-mono uppercase">
             Platform & Social Channels
@@ -355,7 +484,7 @@ export default async function AboutPage() {
           </div>
         </section>
 
-        {/* 7. Direct Contact & Support Channels */}
+        {/* 8. Direct Contact & Support Channels */}
         <section aria-labelledby="contact-heading" className="pt-4 border-t border-zinc-800/80 space-y-4">
           <h2 id="contact-heading" className="text-sm font-bold text-white tracking-tight font-mono uppercase">
             Direct Contact & Inquiries
