@@ -35,6 +35,7 @@ export function AppScreenshotGallery({ appName, screenshots }: AppScreenshotGall
             alt={`${appName} screenshot preview ${selectedIndex + 1}`}
             width={1280}
             height={720}
+            unoptimized
             className="w-full h-full object-contain rounded-xl"
           />
         ) : null}
@@ -47,7 +48,7 @@ export function AppScreenshotGallery({ appName, screenshots }: AppScreenshotGall
               onClick={() =>
                 setSelectedIndex((prev) => (prev > 0 ? prev - 1 : screenshots.length - 1))
               }
-              className="pointer-events-auto w-10 h-10 rounded-full bg-zinc-900/80 border border-zinc-700/80 text-white flex items-center justify-center hover:bg-zinc-800 shadow-xl transition-all"
+              className="pointer-events-auto w-10 h-10 rounded-full bg-zinc-900/80 border border-zinc-700/80 text-white flex items-center justify-center hover:bg-zinc-800 shadow-xl transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
               aria-label="Previous screenshot"
             >
               <ChevronLeft className="w-5 h-5" />
@@ -57,7 +58,7 @@ export function AppScreenshotGallery({ appName, screenshots }: AppScreenshotGall
               onClick={() =>
                 setSelectedIndex((prev) => (prev < screenshots.length - 1 ? prev + 1 : 0))
               }
-              className="pointer-events-auto w-10 h-10 rounded-full bg-zinc-900/80 border border-zinc-700/80 text-white flex items-center justify-center hover:bg-zinc-800 shadow-xl transition-all"
+              className="pointer-events-auto w-10 h-10 rounded-full bg-zinc-900/80 border border-zinc-700/80 text-white flex items-center justify-center hover:bg-zinc-800 shadow-xl transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
               aria-label="Next screenshot"
             >
               <ChevronRight className="w-5 h-5" />
@@ -77,7 +78,7 @@ export function AppScreenshotGallery({ appName, screenshots }: AppScreenshotGall
                 key={src}
                 type="button"
                 onClick={() => setSelectedIndex(idx)}
-                className={`relative w-28 aspect-video rounded-lg overflow-hidden border-2 transition-all shrink-0 ${
+                className={`relative w-28 aspect-video rounded-lg overflow-hidden border-2 transition-all shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                   isSelected
                     ? 'border-indigo-500 ring-2 ring-indigo-500/20'
                     : 'border-zinc-800 opacity-60 hover:opacity-100'
@@ -89,6 +90,8 @@ export function AppScreenshotGallery({ appName, screenshots }: AppScreenshotGall
                   alt={`${appName} thumbnail ${idx + 1}`}
                   width={240}
                   height={135}
+                  unoptimized
+                  loading="lazy"
                   className="w-full h-full object-cover"
                 />
               </button>

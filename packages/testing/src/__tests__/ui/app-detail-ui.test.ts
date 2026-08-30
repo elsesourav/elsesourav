@@ -100,6 +100,84 @@ describe('Public App Details Integration & Related Apps', () => {
     expect(filtered[0]?.slug).toBe('regex-engine');
   });
 
+  it('handles flagship projects with markdown documentation and repository links', async () => {
+    const flagshipApp: PublicApp = {
+      ...mockPublicDetail,
+      id: 'app-flagship',
+      slug: 'spectralens-ai',
+      name: 'SpectraLens AI',
+      documentationMd: '## Technical Architecture\n\n- WebAssembly OCR\n- Chrome Extension MV3',
+      links: [
+        {
+          id: 'gh-link',
+          appId: 'app-flagship',
+          platform: 'github',
+          label: 'GitHub Source',
+          url: 'https://github.com/elsesourav/spectralens-ai',
+          displayOrder: 1,
+          isActive: true,
+        },
+      ],
+    };
+
+    const mockRepo = {
+      getPublicDetailBySlug: vi.fn().mockResolvedValue(flagshipApp),
+    } as unknown as AppRepository;
+
+    const queryService = new AppQueryService(mockRepo);
+    const app = await queryService.getPublicAppDetail('spectralens-ai');
+
+    expect(app.documentationMd).toContain('Technical Architecture');
+    expect(app.links.some((l) => l.platform === 'github')).toBe(true);
+  });
+
+  it('handles lab experiments with simulation metadata', async () => {
+    const labApp: PublicApp = {
+      ...mockPublicDetail,
+      id: 'app-lab',
+      slug: 'falling-sands',
+      name: 'Falling Sands Sandbox',
+      primaryCategory: 'Simulations & Graphics',
+      categorySlug: 'simulations',
+      tags: ['lab', 'simulation', 'canvas'],
+      demoUrl: 'https://elsesourav.github.io/falling-sand',
+    };
+
+    const mockRepo = {
+      getPublicDetailBySlug: vi.fn().mockResolvedValue(labApp),
+    } as unknown as AppRepository;
+
+    const queryService = new AppQueryService(mockRepo);
+    const app = await queryService.getPublicAppDetail('falling-sands');
+
+    expect(app.categorySlug).toBe('simulations');
+    expect(app.demoUrl).toBeDefined();
+  });
+
+  it('handles archived projects without crashing', async () => {
+    const archivedApp: PublicApp = {
+      ...mockPublicDetail,
+      id: 'app-archived',
+      slug: 'legacy-utility',
+      name: 'Legacy Utility',
+      tags: ['archived', 'legacy'],
+      screenshots: [],
+      versions: [],
+      links: [],
+    };
+
+    const mockRepo = {
+      getPublicDetailBySlug: vi.fn().mockResolvedValue(archivedApp),
+    } as unknown as AppRepository;
+
+    const queryService = new AppQueryService(mockRepo);
+    const app = await queryService.getPublicAppDetail('legacy-utility');
+
+    expect(app.tags).toContain('archived');
+    expect(app.screenshots).toHaveLength(0);
+    expect(app.versions).toHaveLength(0);
+  });
+
   it('validates documentation and release versioning integrity on public app', () => {
     expect(mockPublicDetail.currentVersion).toBe('2.0.0');
     expect(mockPublicDetail.versions[0]?.changelog).toContain('WebGL');

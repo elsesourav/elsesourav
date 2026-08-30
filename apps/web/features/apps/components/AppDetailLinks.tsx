@@ -42,9 +42,9 @@ export function AppDetailLinks({ links }: AppDetailLinksProps) {
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="group block focus:outline-none"
+            className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-2xl"
           >
-            <Card className="p-4 rounded-xl border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900 hover:border-indigo-500/40 transition-all flex items-center justify-between">
+            <Card className="p-4 rounded-2xl border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-indigo-500/40 transition-all flex items-center justify-between shadow-sm">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-lg bg-zinc-800/80 border border-zinc-700/50 flex items-center justify-center shrink-0">
                   {getPlatformIcon(link.platform)}
