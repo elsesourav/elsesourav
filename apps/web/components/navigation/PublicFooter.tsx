@@ -62,18 +62,8 @@ export async function PublicFooter() {
             </Link>
 
             <p className="text-xs text-zinc-400 leading-relaxed max-w-sm">
-              {identity.footer.text || identity.site.description}
+              {identity.footer.text || `${identity.site.name} is the personal software studio and archive of ${identity.creator.fullName}. Practical tools, simulations, and engineering notes.`}
             </p>
-
-            {/* Operational Status Pill */}
-            {identity.footer.statusText && (
-              <div className="pt-1">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-950/50 text-emerald-300 border border-emerald-500/30 shadow-sm">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  {identity.footer.statusText}
-                </span>
-              </div>
-            )}
 
             {/* Social / External Links */}
             {identity.footer.showSocials && siteLinks.length > 0 && (
