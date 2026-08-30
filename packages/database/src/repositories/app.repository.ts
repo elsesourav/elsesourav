@@ -62,7 +62,7 @@ export class AppRepository {
       const record = await this.prisma.app.findFirst({
         where: {
           slug: slug.trim().toLowerCase(),
-          status: PublishStatus.PUBLISHED,
+          status: { in: [PublishStatus.PUBLISHED, PublishStatus.ARCHIVED] },
           deletedAt: null,
         },
         include: this.appInclude,
@@ -71,6 +71,26 @@ export class AppRepository {
       return mapPrismaAppToPublicDetail(record as PrismaAppWithRelations);
     } catch (error) {
       throw AppError.database(`Failed to fetch public application detail: ${slug}`, error);
+    }
+  }
+
+  async listArchive(): Promise<AppListItem[]> {
+    try {
+      const records = await this.prisma.app.findMany({
+        where: {
+          status: { in: [PublishStatus.PUBLISHED, PublishStatus.ARCHIVED] },
+          deletedAt: null,
+        },
+        orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
+        include: {
+          category: true,
+          links: true,
+        },
+      });
+
+      return records.map((r) => mapPrismaAppToListItem(r as PrismaAppWithRelations));
+    } catch (error) {
+      throw AppError.database('Failed to query public archive applications list', error);
     }
   }
 

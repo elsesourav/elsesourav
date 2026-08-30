@@ -29,6 +29,13 @@ export class AppQueryService {
   }
 
   /**
+   * Queries historical and published archive applications.
+   */
+  async listArchive(): Promise<AppListItem[]> {
+    return this.appRepo.listArchive();
+  }
+
+  /**
    * Retrieves complete public application details by slug.
    * Shields unpublished/draft content from non-privileged public callers.
    */

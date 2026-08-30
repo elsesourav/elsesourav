@@ -21,6 +21,13 @@ export async function getPublishedApps(options?: AppQueryOptions): Promise<AppLi
 }
 
 /**
+ * Server Component query for public archive timeline index.
+ */
+export async function getArchivedApps(): Promise<AppListItem[]> {
+  return appQueryService.listArchive();
+}
+
+/**
  * Server Component query for a single public application page.
  */
 export async function getPublicAppBySlug(slug: string): Promise<PublicApp> {
