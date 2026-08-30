@@ -112,8 +112,8 @@ export function resolveAppShareImage(app: {
 
   return {
     url: toAbsoluteUrl(SITE_CONFIG.ogImage),
-    width: 1024,
-    height: 576,
+    width: 1200,
+    height: 630,
     alt: `${SITE_CONFIG.name} — ${SITE_CONFIG.tagline}`,
   };
 }
@@ -140,8 +140,8 @@ export function resolveNoteShareImage(note: {
 
   return {
     url: toAbsoluteUrl(SITE_CONFIG.ogImage),
-    width: 1024,
-    height: 576,
+    width: 1200,
+    height: 630,
     alt: `${SITE_CONFIG.name} — Engineering Journal`,
   };
 }
@@ -183,8 +183,8 @@ export function buildPageMetadata(options: PageMetadataOptions) {
       images: [
         {
           url: imageUrl,
-          width: 1024,
-          height: 576,
+          width: 1200,
+          height: 630,
           alt: title,
         },
       ],
@@ -307,8 +307,8 @@ export function buildHelpArticleMetadata(article: HelpArticleMetadataSource) {
   const canonicalUrl = toAbsoluteUrl(`/help/${article.categorySlug}/${article.slug}`);
   const image = {
     url: toAbsoluteUrl(SITE_CONFIG.ogImage),
-    width: 1024,
-    height: 576,
+    width: 1200,
+    height: 630,
     alt: title,
   };
 

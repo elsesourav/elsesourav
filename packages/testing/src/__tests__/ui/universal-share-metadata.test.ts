@@ -65,8 +65,8 @@ describe('Universal Content-Aware Share Preview Metadata System', () => {
         name: 'Utility Tool',
       });
       expect(img.url).toBe('https://elsesourav.com/og-image.png');
-      expect(img.width).toBe(1024);
-      expect(img.height).toBe(576);
+      expect(img.width).toBe(1200);
+      expect(img.height).toBe(630);
     });
 
     it('prioritizes cover image for blog notes and falls back to global banner', () => {
