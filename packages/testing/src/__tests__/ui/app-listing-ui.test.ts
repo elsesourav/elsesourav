@@ -141,4 +141,14 @@ describe('Public Apps Listing Integration', () => {
     expect(item.platforms).toEqual(['web']);
     expect(item.currentVersion).toBe('1.2.0');
   });
+
+  it('separates spotlight featured items from main catalog on default view', () => {
+    const spotlight = mockApps.filter((a) => a.isFeatured).slice(0, 2);
+    const catalog = mockApps.filter((a) => !spotlight.some((s) => s.id === a.id));
+
+    expect(spotlight).toHaveLength(1);
+    expect(spotlight[0]?.slug).toBe('terminal-pro');
+    expect(catalog).toHaveLength(1);
+    expect(catalog[0]?.slug).toBe('focus-timer');
+  });
 });
