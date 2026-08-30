@@ -1,11 +1,11 @@
 import * as React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { getServerSession } from '@elsesourav/auth';
 import { UserNav } from '@/features/user/components/UserNav';
 import { UserAvatarMenu } from '@/features/user/components/UserAvatarMenu';
-import { Sparkles } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -22,7 +22,7 @@ export default async function UserLayout({ children }: { children: React.ReactNo
   });
 
   if (!session?.user) {
-    redirect('/login?next=/dashboard');
+    redirect('/login?next=/profile');
   }
 
   return (
@@ -31,11 +31,20 @@ export default async function UserLayout({ children }: { children: React.ReactNo
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
           <div className="flex items-center gap-6">
             <Link
-              href="/dashboard"
-              className="flex items-center gap-2 font-bold text-base text-white tracking-tight"
+              href="/"
+              className="flex items-center gap-2.5 font-bold text-base text-white tracking-tight hover:opacity-90 transition-opacity group"
             >
-              <Sparkles className="w-5 h-5 text-indigo-400" />
-              <span>ElseSourav</span>
+              <div className="w-8 h-8 rounded-xl overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
+                <Image
+                  src="/logo-sm.png"
+                  alt="ElseSourav Logo"
+                  width={32}
+                  height={32}
+                  className="w-full h-full object-contain"
+                  priority
+                />
+              </div>
+              <span className="tracking-tight">ElseSourav</span>
             </Link>
 
             <UserNav user={session.user} />

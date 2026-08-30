@@ -17,24 +17,56 @@ export const RESERVED_USERNAMES = [
   'system',
 ] as const;
 
+// Username Regex: 4-30 chars, lowercase alphanumeric, underscores, hyphens. Must start & end with letter/number.
+export const USERNAME_REGEX = /^[a-z0-9][a-z0-9_-]{2,28}[a-z0-9]$/;
+
 export const UsernameSchema = z
   .string()
-  .min(3, 'Username must be at least 3 characters long')
+  .trim()
+  .min(4, 'Username must be at least 4 characters long')
   .max(30, 'Username cannot exceed 30 characters')
   .regex(
     /^[a-z0-9_-]+$/,
     'Username can only contain lowercase letters, numbers, hyphens, and underscores'
+  )
+  .regex(
+    /^[a-z0-9].*[a-z0-9]$/,
+    'Username must start and end with a letter or number'
+  )
+  .refine(
+    (val) => !val.includes('__') && !val.includes('--') && !val.includes('_-') && !val.includes('-_'),
+    { message: 'Username cannot contain consecutive hyphens or underscores' }
   )
   .refine(
     (val) => !RESERVED_USERNAMES.includes(val.toLowerCase() as (typeof RESERVED_USERNAMES)[number]),
     { message: 'This username is reserved and cannot be claimed' }
   );
 
+// Name Regex: 2-60 chars, letters, spaces, apostrophes, hyphens, periods (strictly no numbers or special symbols)
+export const NAME_REGEX = /^[\p{L}\s'.-]{2,60}$/u;
+export const FULL_NAME_REGEX = NAME_REGEX;
+
+export const NameSchema = z
+  .string()
+  .trim()
+  .min(2, 'Name must be at least 2 characters long')
+  .max(60, 'Name cannot exceed 60 characters')
+  .regex(
+    NAME_REGEX,
+    'Name can only contain letters, spaces, hyphens, and apostrophes'
+  )
+  .refine((val) => !/[0-9]/.test(val), {
+    message: 'Name cannot contain numbers',
+  });
+
+export const FullNameSchema = NameSchema;
+
 export const UpdateProfileSchema = z.object({
-  displayName: z.string().min(2, 'Display name must be at least 2 characters').max(50).optional(),
-  username: UsernameSchema.optional(),
-  bio: z.string().max(250, 'Bio cannot exceed 250 characters').optional(),
-  photoUrl: z.string().url('Please enter a valid photo URL').optional(),
+  displayName: FullNameSchema.optional(),
+  username: UsernameSchema.optional().or(z.literal('')),
+  bio: z.string().max(250, 'Bio cannot exceed 250 characters').optional().or(z.literal('')),
+  photoUrl: z.string().optional().or(z.literal('')),
+  email: z.string().email('Please enter a valid email address').optional(),
 });
 
 export const UpdatePreferencesSchema = z.object({
@@ -76,9 +108,18 @@ export const AdminUserQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(20),
 });
 
+export const SyncUserAuthSchema = z.object({
+  supabaseAuthId: z.string().min(1, 'Supabase Auth ID is required'),
+  email: z.string().email('Please enter a valid email address'),
+  displayName: FullNameSchema.optional(),
+  username: UsernameSchema.optional(),
+  photoUrl: z.string().optional().or(z.literal('')),
+});
+
 export const UserProfileSchema = UpdateProfileSchema;
 export const UserPreferencesSchema = UpdatePreferencesSchema;
 
+export type SyncUserAuthSchemaInput = z.infer<typeof SyncUserAuthSchema>;
 export type UpdateProfileSchemaInput = z.infer<typeof UpdateProfileSchema>;
 export type UpdatePreferencesSchemaInput = z.infer<typeof UpdatePreferencesSchema>;
 export type DeleteAccountSchemaInput = z.infer<typeof DeleteAccountSchema>;

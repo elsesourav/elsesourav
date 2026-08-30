@@ -92,6 +92,7 @@ export function mapPrismaAppToListItem(prismaApp: PrismaAppWithRelations): AppLi
     name: prismaApp.name,
     shortDescription: prismaApp.shortDescription,
     iconUrl: prismaApp.iconUrl,
+    featuredImageUrl: prismaApp.featuredImageUrl ?? undefined,
     primaryCategory: prismaApp.category?.name || 'General',
     categorySlug: prismaApp.category?.slug || 'general',
     platforms: (prismaApp.links?.map((l) => l.platform as AppPlatform) || [

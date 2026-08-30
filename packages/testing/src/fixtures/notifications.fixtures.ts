@@ -29,7 +29,7 @@ export const fixtureNotificationReadBlog: NotificationItem = {
   type: 'SYSTEM',
   title: 'New Article: Architecture Insights',
   message: 'Explore our latest deep-dive on Next.js 15 App Router migration and domain modeling.',
-  linkUrl: '/blog/architecture-insights',
+  linkUrl: '/notes/architecture-insights',
   isRead: true,
   createdAt: 1704060000000,
 };

@@ -1,6 +1,6 @@
 import { UserRepository } from '../repositories/user.repository';
 import { AppError } from '@elsesourav/types';
-import { RESERVED_USERNAMES } from '@elsesourav/validation';
+import { RESERVED_USERNAMES, UsernameSchema } from '@elsesourav/validation';
 import type {
   User,
   PublicUserProfile,
@@ -55,12 +55,101 @@ export class UserService {
 
     if (data.username) {
       const normalized = data.username.trim().toLowerCase();
+      if (normalized.length < 4) {
+        throw AppError.validation('Username must be at least 4 characters long');
+      }
       if (RESERVED_USERNAMES.includes(normalized as (typeof RESERVED_USERNAMES)[number])) {
         throw AppError.validation(`Username '${data.username}' is reserved and cannot be claimed`);
+      }
+      const existing = await this.userRepo.findByUsername(normalized);
+      if (existing && existing.id !== targetUserId) {
+        throw AppError.validation(`Username '${data.username}' is already taken`);
       }
     }
 
     return this.userRepo.updateProfile(targetUserId, data);
+  }
+
+  async checkUsernameAvailability(
+    username: string,
+    currentUserId?: string
+  ): Promise<{ available: boolean; error?: string }> {
+    const parsed = UsernameSchema.safeParse(username.trim().toLowerCase());
+    if (!parsed.success) {
+      return {
+        available: false,
+        error: parsed.error.issues[0]?.message || 'Invalid username format',
+      };
+    }
+
+    const normalized = parsed.data;
+    const existing = await this.userRepo.findByUsername(normalized);
+    if (existing && existing.id !== currentUserId) {
+      return { available: false, error: 'Username is already taken' };
+    }
+
+    return { available: true };
+  }
+
+  /**
+   * Generates and verifies available username suggestions based on a name or handle
+   */
+  async suggestAvailableUsernames(baseName: string, count = 2): Promise<string[]> {
+    const clean = baseName
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9\s_-]/g, '')
+      .replace(/\s+/g, '_');
+
+    if (!clean) return [];
+
+    const parts = clean.split('_').filter(Boolean);
+    const first = parts[0] || 'user';
+    const last = parts.slice(1).join('_');
+
+    // Candidate generator patterns
+    const rawCandidates: string[] = [];
+
+    if (first && last) {
+      rawCandidates.push(`${first}_${last}`);
+      rawCandidates.push(`${first}${last}`);
+      rawCandidates.push(`${first}_${last.slice(0, 2)}`);
+      rawCandidates.push(`${first.slice(0, 1)}_${last}`);
+      rawCandidates.push(`${first}_${last}_dev`);
+    } else {
+      rawCandidates.push(`${first}_dev`);
+      rawCandidates.push(`${first}_code`);
+      rawCandidates.push(`${first}_app`);
+      rawCandidates.push(`${first}_pro`);
+    }
+
+    // Numerical and timestamp suffix variations
+    const randomSuffix1 = Math.floor(10 + Math.random() * 89);
+    const randomSuffix2 = Math.floor(100 + Math.random() * 899);
+    rawCandidates.push(`${first}_${randomSuffix1}`);
+    rawCandidates.push(`${first}${randomSuffix2}`);
+
+    // Deduplicate and filter candidates by constraints
+    const validCandidates = Array.from(new Set(rawCandidates)).filter((c) => {
+      return (
+        c.length >= 4 &&
+        c.length <= 30 &&
+        /^[a-z0-9_-]+$/.test(c) &&
+        !RESERVED_USERNAMES.includes(c as (typeof RESERVED_USERNAMES)[number])
+      );
+    });
+
+    const availableSuggestions: string[] = [];
+
+    for (const candidate of validCandidates) {
+      if (availableSuggestions.length >= count) break;
+      const existing = await this.userRepo.findByUsername(candidate);
+      if (!existing) {
+        availableSuggestions.push(candidate);
+      }
+    }
+
+    return availableSuggestions;
   }
 
   async updatePreferences(

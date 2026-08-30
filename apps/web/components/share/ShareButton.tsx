@@ -83,10 +83,10 @@ export function ShareButton({
       variant={variant}
       size={size}
       onClick={handleShare}
-      className={`min-h-[36px] sm:min-h-[40px] gap-2 transition-colors ${
+      className={`min-h-[44px] sm:min-h-[40px] gap-2 active:scale-[0.98] transition-colors ${
         copied
-          ? 'border-emerald-500/50 bg-emerald-950/30 text-emerald-300'
-          : 'border-zinc-700 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-200'
+          ? 'border-emerald-500/50 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300'
+          : 'border-[hsl(var(--border))] bg-[hsl(var(--surface-subtle))] hover:bg-[hsl(var(--accent))] text-[hsl(var(--foreground))]'
       } ${className}`}
       aria-label={copied ? 'Link copied to clipboard' : `Share ${title}`}
       title={copied ? 'Link copied!' : 'Share or copy canonical link'}

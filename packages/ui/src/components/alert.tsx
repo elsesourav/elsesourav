@@ -8,10 +8,10 @@ export interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function Alert({ className, variant = 'info', children, ...props }: AlertProps) {
   const variants = {
-    info: 'bg-indigo-950/40 border-indigo-800/60 text-indigo-200',
-    success: 'bg-emerald-950/40 border-emerald-800/60 text-emerald-200',
-    warning: 'bg-amber-950/40 border-amber-800/60 text-amber-200',
-    error: 'bg-red-950/40 border-red-800/60 text-red-200',
+    info: 'bg-sky-500/10 border-sky-500/30 text-sky-800 dark:text-sky-200',
+    success: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-800 dark:text-emerald-200',
+    warning: 'bg-amber-500/10 border-amber-500/30 text-amber-800 dark:text-amber-200',
+    error: 'bg-rose-500/10 border-rose-500/30 text-rose-800 dark:text-rose-200',
   };
 
   const icons = {
@@ -27,7 +27,7 @@ export function Alert({ className, variant = 'info', children, ...props }: Alert
     <div
       role="alert"
       className={cn(
-        'relative w-full rounded-lg border p-4 flex gap-3 text-sm items-start',
+        'relative w-full rounded-2xl border p-4 flex gap-3 text-sm items-start shadow-sm',
         variants[variant],
         className
       )}

@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { User, LogOut, Settings } from 'lucide-react';
+import { User, LogOut, Settings, LifeBuoy, Shield, AtSign } from 'lucide-react';
 import type { AuthenticatedUser } from '@elsesourav/auth';
 
 interface UserAvatarMenuProps {
@@ -12,48 +12,79 @@ interface UserAvatarMenuProps {
 
 export function UserAvatarMenu({ user }: UserAvatarMenuProps) {
   const [open, setOpen] = React.useState(false);
+  const [isClosing, setIsClosing] = React.useState(false);
   const menuRef = React.useRef<HTMLDivElement>(null);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
 
+  const requestClose = React.useCallback((callback?: () => void) => {
+    if (isClosing) return;
+    setIsClosing(true);
+    setTimeout(() => {
+      setIsClosing(false);
+      setOpen(false);
+      callback?.();
+    }, 130);
+  }, [isClosing]);
+
+  const handleToggle = () => {
+    if (open) {
+      requestClose();
+    } else {
+      setIsClosing(false);
+      setOpen(true);
+    }
+  };
+
   // Close on outside click
   React.useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setOpen(false);
+        requestClose();
       }
     };
-    if (open) {
+    if (open && !isClosing) {
       document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside, { passive: true });
     }
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [open]);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [open, isClosing, requestClose]);
 
   // Close on Escape, restore focus
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && open) {
-        setOpen(false);
-        triggerRef.current?.focus();
+        requestClose(() => {
+          triggerRef.current?.focus();
+        });
       }
     };
     if (open) {
       window.addEventListener('keydown', handleKeyDown);
     }
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [open]);
+  }, [open, requestClose]);
+
+  const rawUsername =
+    (user as { username?: string }).username ||
+    (user as unknown as { user_metadata?: { username?: string; user_name?: string } }).user_metadata?.username ||
+    (user as unknown as { user_metadata?: { username?: string; user_name?: string } }).user_metadata?.user_name ||
+    null;
 
   return (
     <div className="relative" ref={menuRef}>
       <button
         ref={triggerRef}
         type="button"
-        onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 p-1 rounded-full hover:ring-2 hover:ring-[hsl(var(--border-strong))] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))]"
+        onClick={handleToggle}
+        className="flex items-center gap-2 p-0.5 rounded-full hover:ring-2 hover:ring-indigo-500/40 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 cursor-pointer active:scale-95 duration-150"
         aria-label="User account menu"
         aria-expanded={open}
         aria-haspopup="menu"
       >
-        <div className="w-8 h-8 rounded-full overflow-hidden bg-[hsl(var(--surface-elevated))] border border-[hsl(var(--border))] flex items-center justify-center text-xs font-semibold text-[hsl(var(--muted-foreground))]">
+        <div className="w-8 h-8 rounded-full overflow-hidden bg-zinc-900 border border-zinc-700/80 flex items-center justify-center text-xs font-semibold text-zinc-300 shadow-sm shadow-black/40">
           {user.photoUrl ? (
             <Image
               src={user.photoUrl}
@@ -72,41 +103,95 @@ export function UserAvatarMenu({ user }: UserAvatarMenuProps) {
         <div
           role="menu"
           aria-label="User menu"
-          className="absolute right-0 mt-2 w-56 rounded-2xl bg-[hsl(var(--surface-elevated))] border border-[hsl(var(--border))] shadow-2xl p-2 z-50 text-xs space-y-1 backdrop-blur-xl animate-scale-in"
+          className={`absolute right-0 mt-2 w-64 rounded-2xl bg-zinc-950/95 border border-zinc-800 shadow-2xl p-1.5 z-50 text-xs space-y-1 backdrop-blur-2xl ${
+            isClosing ? 'animate-popup-out' : 'animate-popup-in'
+          }`}
         >
-          <div className="px-3 py-2 border-b border-[hsl(var(--border))]/80">
-            <p className="font-semibold text-[hsl(var(--foreground))] truncate">
-              {user.displayName || 'ElseSourav Member'}
-            </p>
-            <p className="text-[11px] text-[hsl(var(--muted-foreground))] truncate">{user.email}</p>
+          {/* Identity Header */}
+          <div className="px-3 py-2.5 bg-zinc-900/60 rounded-xl border border-zinc-800/60 mb-1">
+            <div className="flex items-center justify-between gap-2">
+              <p className="font-semibold text-white truncate text-xs">
+                {user.displayName || 'ElseSourav Member'}
+              </p>
+              <span
+                className={`text-[9px] font-mono px-1.5 py-0.5 rounded font-medium ${
+                  user.role === 'ADMIN'
+                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                    : 'bg-zinc-800 text-zinc-400'
+                }`}
+              >
+                {user.role}
+              </span>
+            </div>
+            {rawUsername && (
+              <p className="text-[11px] font-mono text-indigo-400 truncate flex items-center gap-0.5 mt-0.5">
+                <AtSign className="w-3 h-3 inline" />
+                <span>{rawUsername}</span>
+              </p>
+            )}
+            <p className="text-[11px] text-zinc-400 truncate mt-0.5">{user.email}</p>
           </div>
 
+          {/* Core Options */}
           <Link
             href="/profile"
-            onClick={() => setOpen(false)}
-            className="flex items-center gap-2 px-3 py-2 rounded-xl text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] transition-colors"
+            onClick={() => requestClose()}
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-zinc-800/80 transition-colors"
           >
-            <User className="w-3.5 h-3.5" />
-            <span>View Profile</span>
+            <User className="w-3.5 h-3.5 text-indigo-400" />
+            <div className="flex flex-col">
+              <span className="font-medium">View Profile</span>
+              <span className="text-[10px] text-zinc-500">Identity & public information</span>
+            </div>
           </Link>
 
           <Link
             href="/settings"
-            onClick={() => setOpen(false)}
-            className="flex items-center gap-2 px-3 py-2 rounded-xl text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] transition-colors"
+            onClick={() => requestClose()}
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-zinc-800/80 transition-colors"
           >
-            <Settings className="w-3.5 h-3.5" />
-            <span>Account Settings</span>
+            <Settings className="w-3.5 h-3.5 text-indigo-400" />
+            <div className="flex flex-col">
+              <span className="font-medium">Account Settings</span>
+              <span className="text-[10px] text-zinc-500">Security, password & preferences</span>
+            </div>
           </Link>
 
-          <div className="pt-1 border-t border-[hsl(var(--border))]/80">
+          <Link
+            href="/support/tickets"
+            onClick={() => requestClose()}
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-zinc-800/80 transition-colors"
+          >
+            <LifeBuoy className="w-3.5 h-3.5 text-indigo-400" />
+            <div className="flex flex-col">
+              <span className="font-medium">Help & Support</span>
+              <span className="text-[10px] text-zinc-500">Tickets & technical assistance</span>
+            </div>
+          </Link>
+
+          {user.role === 'ADMIN' && (
+            <Link
+              href="/admin"
+              onClick={() => requestClose()}
+              className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 transition-colors"
+            >
+              <Shield className="w-3.5 h-3.5 text-amber-400" />
+              <div className="flex flex-col">
+                <span className="font-medium">Admin Portal</span>
+                <span className="text-[10px] text-amber-400/70">Management & system audit</span>
+              </div>
+            </Link>
+          )}
+
+          {/* Sign Out */}
+          <div className="pt-1 border-t border-zinc-800/80">
             <form action="/api/auth/logout" method="POST">
               <button
                 type="submit"
-                className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-[hsl(var(--destructive))] hover:bg-[hsl(var(--destructive))]/10 transition-colors"
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer text-left"
               >
-                <LogOut className="w-3.5 h-3.5" />
-                <span>Sign Out</span>
+                <LogOut className="w-3.5 h-3.5 text-rose-400" />
+                <span className="font-medium">Sign Out</span>
               </button>
             </form>
           </div>

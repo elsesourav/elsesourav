@@ -61,14 +61,33 @@ describe('Auth Validation Schemas', () => {
     expect(parsed.success).toBe(false);
   });
 
-  it('validates signup with password confirmation', () => {
+  it('validates signup with valid username and credentials', () => {
     const valid = {
       email: 'newuser@elsesourav.com',
       password: 'StrongPassword123',
       displayName: 'New Developer',
+      username: 'developer_pro',
     };
     const parsed = SignUpSchema.safeParse(valid);
     expect(parsed.success).toBe(true);
+  });
+
+  it('rejects signup with reserved or invalid username', () => {
+    const reserved = {
+      email: 'newuser@elsesourav.com',
+      password: 'StrongPassword123',
+      displayName: 'New Developer',
+      username: 'admin',
+    };
+    expect(SignUpSchema.safeParse(reserved).success).toBe(false);
+
+    const invalidChars = {
+      email: 'newuser@elsesourav.com',
+      password: 'StrongPassword123',
+      displayName: 'New Developer',
+      username: 'user@name!',
+    };
+    expect(SignUpSchema.safeParse(invalidChars).success).toBe(false);
   });
 
   it('validates forgot password email payload', () => {

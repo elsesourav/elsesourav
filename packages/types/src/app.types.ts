@@ -96,6 +96,7 @@ export interface AppListItem {
   readonly name: string;
   readonly shortDescription: string;
   readonly iconUrl: string;
+  readonly featuredImageUrl?: string;
   readonly primaryCategory: string;
   readonly categorySlug: string;
   readonly platforms: readonly AppPlatform[];

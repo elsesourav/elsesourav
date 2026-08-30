@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { getUserAccountData } from '@/features/account/queries/get-account';
 import { PageShell, PageHeader, Card, Badge, Button } from '@elsesourav/ui';
-import { Mail, Shield, Calendar, Key, CheckCircle, Settings } from 'lucide-react';
+import { Mail, Shield, Calendar, Key, CheckCircle, Settings, User, Lock, LifeBuoy } from 'lucide-react';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -35,7 +35,7 @@ export default async function ProfilePage() {
           eyebrow="Account Identity"
           badge={
             <Badge variant="primary" className="text-xs px-2.5 py-0.5 font-medium">
-              Verified User
+              Verified Member
             </Badge>
           }
           title="User Profile"
@@ -64,7 +64,7 @@ export default async function ProfilePage() {
                     {user.displayName || 'ElseSourav Member'}
                   </h2>
                   {user.username && (
-                    <span className="text-xs text-zinc-400 font-mono">@{user.username}</span>
+                    <span className="text-xs text-indigo-400 font-mono">@{user.username}</span>
                   )}
                   <Badge variant="info" className="text-[10px] font-mono">
                     {user.role}
@@ -80,15 +80,23 @@ export default async function ProfilePage() {
               </div>
             </div>
 
-            <Link href="/settings" className="shrink-0 self-start sm:self-auto">
-              <Button variant="outline" size="sm" className="border-zinc-800 text-zinc-300 text-xs gap-1.5 rounded-xl">
-                <Settings className="w-3.5 h-3.5 text-indigo-400" />
-                <span>Account Settings</span>
-              </Button>
-            </Link>
+            <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
+              <Link href="/settings?tab=profile">
+                <Button variant="outline" size="sm" className="border-zinc-800 text-zinc-300 text-xs gap-1.5 rounded-xl hover:bg-zinc-800">
+                  <User className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>Edit Profile</span>
+                </Button>
+              </Link>
+              <Link href="/settings">
+                <Button size="sm" className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs gap-1.5 rounded-xl shadow-lg shadow-indigo-600/20">
+                  <Settings className="w-3.5 h-3.5" />
+                  <span>Account Settings</span>
+                </Button>
+              </Link>
+            </div>
           </div>
 
-          {/* Private Account Information Grid */}
+          {/* Account Details Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div className="p-4 rounded-2xl bg-zinc-950/40 border border-zinc-800/60 space-y-1.5 shadow-sm">
               <div className="text-zinc-500 flex items-center gap-1.5 font-medium">
@@ -119,6 +127,41 @@ export default async function ProfilePage() {
               </div>
               <div className="text-zinc-200 font-semibold">{joinedDate}</div>
             </div>
+          </div>
+
+          {/* Quick Hub Navigation Cards */}
+          <div className="pt-2 border-t border-zinc-800/60 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Link
+              href="/settings?tab=security"
+              className="flex items-center justify-between p-3.5 rounded-2xl bg-zinc-950/40 border border-zinc-800/60 hover:bg-zinc-800/40 hover:border-indigo-500/30 transition-all group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
+                  <Lock className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors">Security & Password</p>
+                  <p className="text-[11px] text-zinc-500">Update password and auth settings</p>
+                </div>
+              </div>
+              <span className="text-xs text-indigo-400 font-medium">Manage &rarr;</span>
+            </Link>
+
+            <Link
+              href="/support/tickets"
+              className="flex items-center justify-between p-3.5 rounded-2xl bg-zinc-950/40 border border-zinc-800/60 hover:bg-zinc-800/40 hover:border-indigo-500/30 transition-all group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
+                  <LifeBuoy className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors">Help & Support</p>
+                  <p className="text-[11px] text-zinc-500">Submit or check support tickets</p>
+                </div>
+              </div>
+              <span className="text-xs text-indigo-400 font-medium">View &rarr;</span>
+            </Link>
           </div>
         </Card>
       </div>

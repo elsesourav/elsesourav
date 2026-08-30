@@ -124,9 +124,13 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
         <AppDetailHero app={app} />
 
         {/* 2. Visual Showcase / Screenshot Gallery */}
-        {app.screenshots && app.screenshots.length > 0 && (
+        {(app.featuredImageUrl || (app.screenshots && app.screenshots.length > 0)) && (
           <Reveal direction="up" distance={16}>
-            <AppScreenshotGallery appName={app.name} screenshots={app.screenshots} />
+            <AppScreenshotGallery
+              appName={app.name}
+              screenshots={app.screenshots || []}
+              featuredImageUrl={app.featuredImageUrl}
+            />
           </Reveal>
         )}
 
@@ -134,16 +138,16 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
         {app.documentationMd ? (
           <Reveal direction="up" distance={16}>
             <section aria-labelledby="technical-architecture-heading" className="space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-zinc-800/80">
-                <div className="flex items-center gap-2 text-xs font-mono text-indigo-400 uppercase tracking-wider font-semibold">
+              <div className="flex items-center justify-between pb-3 border-b border-[hsl(var(--border-subtle))]">
+                <div className="flex items-center gap-2 text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold">
                   <BookOpen className="w-4 h-4" />
-                  <h2 id="technical-architecture-heading" className="text-xs font-mono text-indigo-400 uppercase tracking-wider font-semibold">
+                  <h2 id="technical-architecture-heading" className="text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold">
                     Technical Architecture & Implementation
                   </h2>
                 </div>
-                <span className="text-xs font-mono text-zinc-500">Verified Implementation</span>
+                <span className="text-xs font-mono text-[hsl(var(--muted-foreground))]">Verified Implementation</span>
               </div>
-              <div className="p-6 sm:p-10 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 backdrop-blur-xl shadow-2xl">
+              <div className="p-6 sm:p-10 rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] backdrop-blur-xl shadow-2xl">
                 <BlogContentRenderer content={app.documentationMd} />
               </div>
             </section>
@@ -151,13 +155,13 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
         ) : app.description ? (
           <Reveal direction="up" distance={16}>
             <section aria-labelledby="project-story-heading" className="space-y-4">
-              <div className="flex items-center gap-2 text-xs font-mono text-indigo-400 uppercase tracking-wider font-semibold pb-3 border-b border-zinc-800/80">
+              <div className="flex items-center gap-2 text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold pb-3 border-b border-[hsl(var(--border-subtle))]">
                 <FileText className="w-4 h-4" />
-                <h2 id="project-story-heading" className="text-xs font-mono text-indigo-400 uppercase tracking-wider font-semibold">
+                <h2 id="project-story-heading" className="text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold">
                   About the Project
                 </h2>
               </div>
-              <div className="p-6 sm:p-10 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 backdrop-blur-xl shadow-2xl">
+              <div className="p-6 sm:p-10 rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] backdrop-blur-xl shadow-2xl">
                 <BlogContentRenderer content={app.description} />
               </div>
             </section>
@@ -181,17 +185,17 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
         {/* 6. Adjacent Sequence Navigation (Previous / Next Project) */}
         {(prevApp || nextApp) && (
           <Reveal direction="up" distance={14}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-8 border-t border-zinc-800/70">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-8 border-t border-[hsl(var(--border-subtle))]">
               {prevApp ? (
                 <Link
                   href={`/apps/${prevApp.slug}`}
-                  className="group p-5 rounded-2xl border border-zinc-800/80 bg-zinc-900/30 hover:bg-zinc-900/70 hover:border-indigo-500/40 transition-all flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                  className="group p-5 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-subtle))] hover:border-indigo-500/40 transition-all flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
                 >
-                  <span className="text-xs font-mono text-zinc-500 flex items-center gap-1">
+                  <span className="text-xs font-mono text-[hsl(var(--muted-foreground))] flex items-center gap-1">
                     <ArrowLeft className="w-3 h-3 group-hover:-translate-x-0.5 transition-transform" />
                     <span>Previous Project</span>
                   </span>
-                  <span className="text-sm font-semibold text-zinc-200 group-hover:text-white pt-1">
+                  <span className="text-sm font-semibold text-[hsl(var(--foreground))] group-hover:text-indigo-600 dark:group-hover:text-white pt-1">
                     {prevApp.name}
                   </span>
                 </Link>
@@ -202,13 +206,13 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
               {nextApp ? (
                 <Link
                   href={`/apps/${nextApp.slug}`}
-                  className="group p-5 rounded-2xl border border-zinc-800/80 bg-zinc-900/30 hover:bg-zinc-900/70 hover:border-indigo-500/40 transition-all flex flex-col justify-between sm:text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                  className="group p-5 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-subtle))] hover:border-indigo-500/40 transition-all flex flex-col justify-between sm:text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
                 >
-                  <span className="text-xs font-mono text-zinc-500 flex items-center justify-end gap-1">
+                  <span className="text-xs font-mono text-[hsl(var(--muted-foreground))] flex items-center justify-end gap-1">
                     <span>Next Project</span>
                     <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                   </span>
-                  <span className="text-sm font-semibold text-zinc-200 group-hover:text-white pt-1">
+                  <span className="text-sm font-semibold text-[hsl(var(--foreground))] group-hover:text-indigo-600 dark:group-hover:text-white pt-1">
                     {nextApp.name}
                   </span>
                 </Link>
@@ -221,21 +225,21 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
 
         {/* 7. Related Projects Section */}
         {fallbackRelated.length > 0 && (
-          <section aria-labelledby="related-projects-heading" className="space-y-6 pt-8 border-t border-zinc-800/70">
+          <section aria-labelledby="related-projects-heading" className="space-y-6 pt-8 border-t border-[hsl(var(--border-subtle))]">
             <Reveal direction="up" distance={14}>
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
-                  <h2 id="related-projects-heading" className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-indigo-400" />
+                  <h2 id="related-projects-heading" className="text-xl font-bold text-[hsl(var(--foreground))] tracking-tight flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-indigo-500" />
                     <span>More in {app.primaryCategory}</span>
                   </h2>
-                  <p className="text-xs text-zinc-400">
+                  <p className="text-xs text-[hsl(var(--muted-foreground))]">
                     Explore related tools, systems, and applications built by Sourav.
                   </p>
                 </div>
                 <Link
                   href={ROUTES.APPS}
-                  className="text-xs font-mono text-indigo-400 hover:text-indigo-300 flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded p-1"
+                  className="text-xs font-mono text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded p-1"
                 >
                   <span>View all apps</span>
                   <ArrowRight className="w-3.5 h-3.5" />

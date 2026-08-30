@@ -4,12 +4,10 @@ import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  LayoutDashboard,
-  Bookmark,
   User,
-  Bell,
-  LifeBuoy,
   Settings,
+  LifeBuoy,
+  Bell,
   Menu,
   X,
   LogOut,
@@ -22,12 +20,10 @@ interface UserNavProps {
 }
 
 const NAV_LINKS = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/library', label: 'Library', icon: Bookmark },
   { href: '/profile', label: 'Profile', icon: User },
-  { href: '/notifications', label: 'Notifications', icon: Bell },
-  { href: '/support/tickets', label: 'Support', icon: LifeBuoy },
   { href: '/settings', label: 'Settings', icon: Settings },
+  { href: '/support/tickets', label: 'Support', icon: LifeBuoy },
+  { href: '/notifications', label: 'Notifications', icon: Bell },
 ] as const;
 
 export function UserNav({ user }: UserNavProps) {
@@ -91,7 +87,7 @@ export function UserNav({ user }: UserNavProps) {
 
           <div className="grid grid-cols-2 gap-2">
             {NAV_LINKS.map(({ href, label, icon: Icon }) => {
-              const isActive = pathname === href;
+              const isActive = pathname === href || pathname.startsWith(`${href}/`);
               return (
                 <Link
                   key={href}

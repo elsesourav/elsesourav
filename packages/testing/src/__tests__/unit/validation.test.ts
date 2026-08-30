@@ -7,6 +7,8 @@ import {
   SupportTicketSchema,
   HelpArticleSchema,
   UserProfileSchema,
+  UsernameSchema,
+  UniversalLoginSchema,
 } from '@elsesourav/validation';
 
 describe('Validation Schemas Contract Test', () => {
@@ -23,6 +25,7 @@ describe('Validation Schemas Contract Test', () => {
       email: 'user@elsesourav.com',
       password: 'securepassword123',
       displayName: 'Sourav',
+      username: 'sourav_dev',
     };
     expect(SignUpSchema.safeParse(valid).success).toBe(true);
   });
@@ -83,5 +86,18 @@ describe('Validation Schemas Contract Test', () => {
     };
 
     expect(UserProfileSchema.safeParse(validProfile).success).toBe(true);
+  });
+
+  it('validates minimum 4 characters for username', () => {
+    expect(UsernameSchema.safeParse('sou').success).toBe(false);
+    expect(UsernameSchema.safeParse('sour').success).toBe(true);
+    expect(UsernameSchema.safeParse('valid_user-1').success).toBe(true);
+    expect(UsernameSchema.safeParse('admin').success).toBe(false); // reserved
+  });
+
+  it('validates UniversalLoginSchema with email or username', () => {
+    expect(UniversalLoginSchema.safeParse({ identifier: 'user@example.com', password: 'password123' }).success).toBe(true);
+    expect(UniversalLoginSchema.safeParse({ identifier: 'elsesourav', password: 'password123' }).success).toBe(true);
+    expect(UniversalLoginSchema.safeParse({ identifier: 'usr', password: 'password123' }).success).toBe(false);
   });
 });

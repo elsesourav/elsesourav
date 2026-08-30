@@ -18,7 +18,7 @@ async function main() {
   // ===========================================================================
   // 1. SEED CANONICAL ADMIN USER
   // ===========================================================================
-  console.info('  → Seeding Canonical Admin User...');
+  console.info('  → Seeding Canonical Admin & Community Users...');
 
   const adminUser = await prisma.user.upsert({
     where: { email: 'elsesourav.auth@gmail.com' },
@@ -26,6 +26,7 @@ async function main() {
       role: UserRole.ADMIN,
       displayName: 'Sourav',
       username: 'elsesourav',
+      photoUrl: '/avatars/avatar-1.svg',
       bio: CREATOR_CONFIG.shortBio,
     },
     create: {
@@ -33,11 +34,70 @@ async function main() {
       email: 'elsesourav.auth@gmail.com',
       displayName: 'Sourav',
       username: 'elsesourav',
+      photoUrl: '/avatars/avatar-1.svg',
       bio: CREATOR_CONFIG.shortBio,
       role: UserRole.ADMIN,
       preferences: { theme: 'dark', emailNotifications: true, reducedMotion: false },
     },
   });
+
+  const demoUsers = [
+    {
+      supabaseAuthId: '00000000-0000-0000-0000-000000000002',
+      email: 'alex.rivers@example.test',
+      displayName: 'Alex Rivers',
+      username: 'alex_rivers',
+      photoUrl: '/avatars/avatar-2.svg',
+      bio: 'Full-stack TypeScript developer and open-source enthusiast.',
+      role: UserRole.USER,
+      preferences: { theme: 'dark', emailNotifications: true, reducedMotion: false },
+    },
+    {
+      supabaseAuthId: '00000000-0000-0000-0000-000000000003',
+      email: 'elena.arch@example.test',
+      displayName: 'Elena Rostova',
+      username: 'elena_arch',
+      photoUrl: '/avatars/avatar-3.svg',
+      bio: 'Systems architect exploring WebAssembly, compilers, and high-performance web tooling.',
+      role: UserRole.USER,
+      preferences: { theme: 'dark', emailNotifications: false, reducedMotion: false },
+    },
+    {
+      supabaseAuthId: '00000000-0000-0000-0000-000000000004',
+      email: 'marcus.ux@example.test',
+      displayName: 'Marcus Vance',
+      username: 'marcus_ux',
+      photoUrl: '/avatars/avatar-4.svg',
+      bio: 'Interface designer & developer advocate focused on design systems and micro-interactions.',
+      role: UserRole.STAFF,
+      preferences: { theme: 'system', emailNotifications: true, reducedMotion: false },
+    },
+    {
+      supabaseAuthId: '00000000-0000-0000-0000-000000000005',
+      email: 'sarah.cloud@example.test',
+      displayName: 'Sarah Jenkins',
+      username: 'sarah_cloud',
+      photoUrl: '/avatars/avatar-5.svg',
+      bio: 'Cloud engineer and creator building serverless infrastructure and developer productivity tools.',
+      role: UserRole.USER,
+      preferences: { theme: 'dark', emailNotifications: true, reducedMotion: true },
+    },
+  ];
+
+  for (const u of demoUsers) {
+    await prisma.user.upsert({
+      where: { email: u.email },
+      update: {
+        displayName: u.displayName,
+        username: u.username,
+        photoUrl: u.photoUrl,
+        bio: u.bio,
+        role: u.role,
+        preferences: u.preferences,
+      },
+      create: u,
+    });
+  }
 
   // ===========================================================================
   // 2. SEED APP CATEGORIES
@@ -406,8 +466,8 @@ A modular browser photo and graphics editor built using vanilla JavaScript modul
 - **Transform Tools**: Precise pan, zoom, snap guides, crop, and rotation workflows.
 - **History Pipeline**: Robust undo/redo state manager tracking discrete user actions.
 - **Template System**: Import and export editor project states as JSON files.`,
-      iconUrl: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=200&q=80',
-      featuredImageUrl: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=1200&q=80',
+      iconUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&q=80',
       demoUrl: 'https://elsesourav.github.io/img-editor',
       githubUrl: 'https://github.com/elsesourav/img-editor',
       categoryId: catMap['media-design']!,

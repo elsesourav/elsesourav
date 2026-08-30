@@ -8,6 +8,7 @@ export interface MarkdownRendererProps {
   content?: string | null;
   className?: string;
   fallbackText?: string;
+  startHeadingLevel?: 1 | 2;
 }
 
 /**
@@ -29,7 +30,7 @@ export function MarkdownCodeBlock({ code, language }: { code: string; language?:
   };
 
   return (
-    <div className="my-6 rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-950 font-mono text-xs shadow-xl">
+    <div className="my-6 rounded-2xl overflow-hidden border border-[hsl(var(--border))] bg-zinc-950 text-zinc-100 font-mono text-xs shadow-xl">
       <div className="flex items-center justify-between px-4 py-2.5 bg-zinc-900/90 border-b border-zinc-800 text-zinc-400 text-[11px]">
         <span className="uppercase tracking-wider font-semibold text-zinc-300 flex items-center gap-1.5">
           <Terminal className="w-3.5 h-3.5 text-indigo-400" />
@@ -54,7 +55,7 @@ export function MarkdownCodeBlock({ code, language }: { code: string; language?:
           )}
         </button>
       </div>
-      <pre className="p-4 overflow-x-auto text-zinc-200 leading-relaxed font-mono selection:bg-indigo-500/30">
+      <pre className="p-4 overflow-x-auto max-w-full text-zinc-200 leading-relaxed font-mono selection:bg-indigo-500/30">
         <code>{code}</code>
       </pre>
     </div>
@@ -64,18 +65,19 @@ export function MarkdownCodeBlock({ code, language }: { code: string; language?:
 /**
  * Helper to sanitize and format inline Markdown tokens
  */
-export function renderInlineMarkdown(text: string): React.ReactNode[] {
-  if (!text) return [];
+export function renderInlineMarkdown(text: string): React.ReactNode {
+  if (!text) return '';
+
+  // Patterns for Markdown links, inline code, bold, italic, strikethrough
+  const inlinePattern =
+    /(!?\[([^\]]*)\]\(([^)]+)\))|(`([^`]+)`)|(\*\*([^*]+)\*\*)|(\*([^*]+)\*)|(~~([^~]+)~~)/g;
 
   const nodes: React.ReactNode[] = [];
-  const tokenRegex =
-    /(!?\[([^\]]*)\]\(((?:[^()]+|\([^()]*\))+)\))|(`([^`]+)`)|(\*\*([^*]+)\*\*)|(\*([^*]+)\*)|(~~([^~]+)~~)/g;
-
   let lastIndex = 0;
   let match: RegExpExecArray | null;
   let keyIndex = 0;
 
-  while ((match = tokenRegex.exec(text)) !== null) {
+  while ((match = inlinePattern.exec(text)) !== null) {
     if (match.index > lastIndex) {
       nodes.push(text.substring(lastIndex, match.index));
     }
@@ -105,7 +107,7 @@ export function renderInlineMarkdown(text: string): React.ReactNode[] {
           nodes.push(
             <span
               key={`img-${keyIndex++}`}
-              className="block my-6 rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-950/60 shadow-lg"
+              className="block my-6 rounded-2xl overflow-hidden border border-[hsl(var(--border))] bg-[hsl(var(--surface-subtle))] shadow-md"
             >
               <img
                 src={rawLinkUrl}
@@ -114,7 +116,7 @@ export function renderInlineMarkdown(text: string): React.ReactNode[] {
                 loading="lazy"
               />
               {linkText ? (
-                <span className="block px-4 py-2 text-center text-[11px] text-zinc-500 italic bg-zinc-900/40 border-t border-zinc-800/60">
+                <span className="block px-4 py-2 text-center text-[11px] text-[hsl(var(--muted-foreground))] italic bg-[hsl(var(--card))] border-t border-[hsl(var(--border-subtle))]">
                   {linkText}
                 </span>
               ) : null}
@@ -146,32 +148,32 @@ export function renderInlineMarkdown(text: string): React.ReactNode[] {
       nodes.push(
         <code
           key={`code-${keyIndex++}`}
-          className="px-1.5 py-0.5 rounded-md bg-zinc-900 border border-zinc-800 text-indigo-300 text-xs font-mono break-words"
+          className="px-1.5 py-0.5 rounded-md bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border-subtle))] text-indigo-600 dark:text-indigo-300 text-xs font-mono break-words"
         >
           {codeText}
         </code>
       );
     } else if (isBold) {
       nodes.push(
-        <strong key={`bold-${keyIndex++}`} className="font-semibold text-white">
+        <strong key={`bold-${keyIndex++}`} className="font-bold text-[hsl(var(--foreground))]">
           {boldText}
         </strong>
       );
     } else if (isItalic) {
       nodes.push(
-        <em key={`italic-${keyIndex++}`} className="italic text-zinc-200">
+        <em key={`italic-${keyIndex++}`} className="italic text-[hsl(var(--foreground))]">
           {italicText}
         </em>
       );
     } else if (isStrikethrough) {
       nodes.push(
-        <del key={`del-${keyIndex++}`} className="line-through text-zinc-500">
+        <del key={`strike-${keyIndex++}`} className="line-through text-[hsl(var(--muted-foreground))]">
           {strikeText}
         </del>
       );
     }
 
-    lastIndex = match.index + match[0].length;
+    lastIndex = inlinePattern.lastIndex;
   }
 
   if (lastIndex < text.length) {
@@ -184,7 +186,12 @@ export function renderInlineMarkdown(text: string): React.ReactNode[] {
 /**
  * Universal, Secure Markdown Content Renderer
  */
-export function MarkdownRenderer({ content, className = '', fallbackText }: MarkdownRendererProps) {
+export function MarkdownRenderer({
+  content,
+  className = '',
+  fallbackText,
+  startHeadingLevel = 1,
+}: MarkdownRendererProps) {
   const blocks = React.useMemo(() => {
     if (!content || typeof content !== 'string' || !content.trim()) {
       return null;
@@ -220,77 +227,138 @@ export function MarkdownRenderer({ content, className = '', fallbackText }: Mark
 
       // 2. Headings (H1 to H6)
       if (line.startsWith('# ')) {
-        result.push(
-          <h1
-            key={`h1-${blockIndex++}`}
-            className="text-2xl sm:text-3xl font-extrabold text-white mt-10 mb-4 tracking-tight"
-          >
-            {renderInlineMarkdown(line.slice(2))}
-          </h1>
-        );
+        const text = line.slice(2);
+        if (startHeadingLevel === 2) {
+          result.push(
+            <h2
+              key={`h2-${blockIndex++}`}
+              className="text-xl sm:text-2xl font-bold text-[hsl(var(--foreground))] mt-8 mb-3 tracking-tight border-b border-[hsl(var(--border-subtle))] pb-2"
+            >
+              {renderInlineMarkdown(text)}
+            </h2>
+          );
+        } else {
+          result.push(
+            <h1
+              key={`h1-${blockIndex++}`}
+              className="text-2xl sm:text-3xl font-extrabold text-[hsl(var(--foreground))] mt-10 mb-4 tracking-tight"
+            >
+              {renderInlineMarkdown(text)}
+            </h1>
+          );
+        }
         i++;
         continue;
       }
 
       if (line.startsWith('## ')) {
-        result.push(
-          <h2
-            key={`h2-${blockIndex++}`}
-            className="text-xl sm:text-2xl font-bold text-white mt-8 mb-3 tracking-tight border-b border-zinc-800 pb-2"
-          >
-            {renderInlineMarkdown(line.slice(3))}
-          </h2>
-        );
+        const text = line.slice(3);
+        if (startHeadingLevel === 2) {
+          result.push(
+            <h3
+              key={`h3-${blockIndex++}`}
+              className="text-lg sm:text-xl font-bold text-[hsl(var(--foreground))] mt-6 mb-2 tracking-tight"
+            >
+              {renderInlineMarkdown(text)}
+            </h3>
+          );
+        } else {
+          result.push(
+            <h2
+              key={`h2-${blockIndex++}`}
+              className="text-xl sm:text-2xl font-bold text-[hsl(var(--foreground))] mt-8 mb-3 tracking-tight border-b border-[hsl(var(--border-subtle))] pb-2"
+            >
+              {renderInlineMarkdown(text)}
+            </h2>
+          );
+        }
         i++;
         continue;
       }
 
       if (line.startsWith('### ')) {
-        result.push(
-          <h3
-            key={`h3-${blockIndex++}`}
-            className="text-lg sm:text-xl font-bold text-zinc-100 mt-6 mb-2 tracking-tight"
-          >
-            {renderInlineMarkdown(line.slice(4))}
-          </h3>
-        );
+        const text = line.slice(4);
+        if (startHeadingLevel === 2) {
+          result.push(
+            <h4
+              key={`h4-${blockIndex++}`}
+              className="text-base sm:text-lg font-semibold text-[hsl(var(--foreground))] mt-5 mb-2 tracking-tight"
+            >
+              {renderInlineMarkdown(text)}
+            </h4>
+          );
+        } else {
+          result.push(
+            <h3
+              key={`h3-${blockIndex++}`}
+              className="text-lg sm:text-xl font-bold text-[hsl(var(--foreground))] mt-6 mb-2 tracking-tight"
+            >
+              {renderInlineMarkdown(text)}
+            </h3>
+          );
+        }
         i++;
         continue;
       }
 
       if (line.startsWith('#### ')) {
-        result.push(
-          <h4
-            key={`h4-${blockIndex++}`}
-            className="text-base sm:text-lg font-semibold text-zinc-200 mt-5 mb-2 tracking-tight"
-          >
-            {renderInlineMarkdown(line.slice(5))}
-          </h4>
-        );
+        const text = line.slice(5);
+        if (startHeadingLevel === 2) {
+          result.push(
+            <h5
+              key={`h5-${blockIndex++}`}
+              className="text-sm sm:text-base font-semibold text-[hsl(var(--muted-foreground))] mt-4 mb-2 tracking-tight uppercase tracking-wider"
+            >
+              {renderInlineMarkdown(text)}
+            </h5>
+          );
+        } else {
+          result.push(
+            <h4
+              key={`h4-${blockIndex++}`}
+              className="text-base sm:text-lg font-semibold text-[hsl(var(--foreground))] mt-5 mb-2 tracking-tight"
+            >
+              {renderInlineMarkdown(text)}
+            </h4>
+          );
+        }
         i++;
         continue;
       }
 
       if (line.startsWith('##### ')) {
-        result.push(
-          <h5
-            key={`h5-${blockIndex++}`}
-            className="text-sm sm:text-base font-semibold text-zinc-300 mt-4 mb-2 tracking-tight uppercase tracking-wider"
-          >
-            {renderInlineMarkdown(line.slice(6))}
-          </h5>
-        );
+        const text = line.slice(6);
+        if (startHeadingLevel === 2) {
+          result.push(
+            <h6
+              key={`h6-${blockIndex++}`}
+              className="text-xs sm:text-sm font-semibold text-[hsl(var(--muted-foreground))] mt-3 mb-1 tracking-tight uppercase tracking-wider"
+            >
+              {renderInlineMarkdown(text)}
+            </h6>
+          );
+        } else {
+          result.push(
+            <h5
+              key={`h5-${blockIndex++}`}
+              className="text-sm sm:text-base font-semibold text-[hsl(var(--muted-foreground))] mt-4 mb-2 tracking-tight uppercase tracking-wider"
+            >
+              {renderInlineMarkdown(text)}
+            </h5>
+          );
+        }
         i++;
         continue;
       }
 
       if (line.startsWith('###### ')) {
+        const text = line.slice(7);
         result.push(
           <h6
             key={`h6-${blockIndex++}`}
-            className="text-xs sm:text-sm font-semibold text-zinc-400 mt-3 mb-1 tracking-tight uppercase tracking-wider"
+            className="text-xs font-semibold text-[hsl(var(--muted-foreground))] mt-2 mb-1 tracking-tight uppercase tracking-wider"
           >
-            {renderInlineMarkdown(line.slice(7))}
+            {renderInlineMarkdown(text)}
           </h6>
         );
         i++;
@@ -299,7 +367,7 @@ export function MarkdownRenderer({ content, className = '', fallbackText }: Mark
 
       // 3. Horizontal Rules
       if (line.trim() === '---' || line.trim() === '***' || line.trim() === '___') {
-        result.push(<hr key={`hr-${blockIndex++}`} className="my-8 border-zinc-800" />);
+        result.push(<hr key={`hr-${blockIndex++}`} className="my-8 border-[hsl(var(--border-subtle))]" />);
         i++;
         continue;
       }
@@ -315,7 +383,7 @@ export function MarkdownRenderer({ content, className = '', fallbackText }: Mark
         result.push(
           <blockquote
             key={`quote-${blockIndex++}`}
-            className="my-6 pl-4 border-l-4 border-indigo-500 bg-indigo-950/20 py-3 pr-4 rounded-r-2xl text-zinc-300 italic text-sm leading-relaxed"
+            className="my-6 pl-4 border-l-4 border-indigo-500 bg-indigo-500/10 py-3 pr-4 rounded-r-2xl text-[hsl(var(--foreground))] italic text-sm leading-relaxed"
           >
             {quoteLines.map((ql, qIdx) => (
               <p key={qIdx} className={qIdx > 0 ? 'mt-2' : ''}>
@@ -371,25 +439,25 @@ export function MarkdownRenderer({ content, className = '', fallbackText }: Mark
           result.push(
             <div
               key={`table-${blockIndex++}`}
-              className="my-6 overflow-x-auto rounded-2xl border border-zinc-800 bg-zinc-950/40 shadow-md"
+              className="my-6 overflow-x-auto rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] shadow-sm"
             >
-              <table className="min-w-full divide-y divide-zinc-800 text-left text-xs sm:text-sm">
-                <thead className="bg-zinc-900/80 text-zinc-100 font-semibold">
+              <table className="min-w-full divide-y divide-[hsl(var(--border-subtle))] text-left text-xs sm:text-sm">
+                <thead className="bg-[hsl(var(--surface-subtle))] text-[hsl(var(--foreground))] font-semibold">
                   <tr>
                     {headerRow.map((h, hIdx) => (
                       <th
                         key={hIdx}
                         scope="col"
-                        className={`px-4 py-3 font-semibold text-zinc-200 text-${alignRow[hIdx] || 'left'}`}
+                        className={`px-4 py-3 font-semibold text-[hsl(var(--foreground))] text-${alignRow[hIdx] || 'left'}`}
                       >
                         {renderInlineMarkdown(h)}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-zinc-800/60 text-zinc-300">
+                <tbody className="divide-y divide-[hsl(var(--border-subtle))] text-[hsl(var(--foreground))]">
                   {dataRows.map((row, rIdx) => (
-                    <tr key={rIdx} className="hover:bg-zinc-900/40 transition-colors">
+                    <tr key={rIdx} className="hover:bg-[hsl(var(--surface-subtle))] transition-colors">
                       {row.map((cell, cIdx) => (
                         <td key={cIdx} className={`px-4 py-2.5 text-${alignRow[cIdx] || 'left'}`}>
                           {renderInlineMarkdown(cell)}
@@ -416,7 +484,7 @@ export function MarkdownRenderer({ content, className = '', fallbackText }: Mark
         result.push(
           <ul
             key={`ul-${blockIndex++}`}
-            className="my-4 space-y-2 list-disc list-inside text-sm text-zinc-300 leading-relaxed pl-2"
+            className="my-4 space-y-2 list-disc list-inside text-sm text-[hsl(var(--foreground))] leading-relaxed pl-2"
           >
             {listItems.map((item, itemIdx) => {
               const isTaskChecked = item.startsWith('[x] ') || item.startsWith('[X] ');
@@ -431,7 +499,7 @@ export function MarkdownRenderer({ content, className = '', fallbackText }: Mark
                       readOnly
                       disabled
                       aria-label="Task item"
-                      className="rounded border-zinc-700 bg-zinc-900 text-indigo-500 w-4 h-4 cursor-default"
+                      className="rounded border-[hsl(var(--input))] bg-[hsl(var(--surface-subtle))] text-indigo-500 w-4 h-4 cursor-default"
                     />
                     <span>{renderInlineMarkdown(item.slice(4))}</span>
                   </li>
@@ -456,7 +524,7 @@ export function MarkdownRenderer({ content, className = '', fallbackText }: Mark
         result.push(
           <ol
             key={`ol-${blockIndex++}`}
-            className="my-4 space-y-2 list-decimal list-inside text-sm text-zinc-300 leading-relaxed pl-2"
+            className="my-4 space-y-2 list-decimal list-inside text-sm text-[hsl(var(--foreground))] leading-relaxed pl-2"
           >
             {listItems.map((item, itemIdx) => (
               <li key={itemIdx}>{renderInlineMarkdown(item)}</li>
@@ -494,7 +562,7 @@ export function MarkdownRenderer({ content, className = '', fallbackText }: Mark
       result.push(
         <p
           key={`p-${blockIndex++}`}
-          className="my-4 text-sm sm:text-base text-zinc-300 leading-relaxed font-normal break-words"
+          className="my-4 text-sm sm:text-base text-[hsl(var(--foreground))] leading-relaxed font-normal break-words"
         >
           {renderInlineMarkdown(paragraphLines.join(' '))}
         </p>
@@ -502,17 +570,17 @@ export function MarkdownRenderer({ content, className = '', fallbackText }: Mark
     }
 
     return result;
-  }, [content]);
+  }, [content, startHeadingLevel]);
 
   if (!blocks) {
     if (fallbackText) {
-      return <div className="py-6 text-center text-xs text-zinc-500 italic">{fallbackText}</div>;
+      return <div className="py-6 text-center text-xs text-[hsl(var(--muted-foreground))] italic">{fallbackText}</div>;
     }
     return null;
   }
 
   return (
-    <article className={`prose-zinc max-w-none text-zinc-300 leading-relaxed break-words ${className}`}>
+    <article className={`max-w-none text-[hsl(var(--foreground))] leading-relaxed break-words ${className}`}>
       {blocks}
     </article>
   );

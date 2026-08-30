@@ -20,6 +20,7 @@ export class UserRepository {
     try {
       const email = input.email.trim().toLowerCase();
       const displayName = input.displayName?.trim() || email.split('@')[0] || 'Developer';
+      const username = input.username?.trim().toLowerCase() || undefined;
 
       const adminEmail = (
         process.env.ADMIN_EMAIL ||
@@ -34,12 +35,14 @@ export class UserRepository {
         update: {
           email,
           ...(input.photoUrl ? { photoUrl: input.photoUrl } : {}),
+          ...(username ? { username } : {}),
           ...(isDesignatedAdmin ? { role: PrismaRole.ADMIN } : {}),
         },
         create: {
           supabaseAuthId: input.supabaseAuthId,
           email,
           displayName,
+          username,
           photoUrl: input.photoUrl,
           role: initialRole,
           preferences: {

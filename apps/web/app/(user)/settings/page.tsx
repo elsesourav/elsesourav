@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { getUserAccountData } from '@/features/account/queries/get-account';
@@ -30,7 +31,9 @@ export default async function SettingsPage() {
           description="Manage your personal identity, security credentials, and application preferences."
         />
 
-        <SettingsTabs user={user} />
+        <React.Suspense fallback={<div className="h-64 rounded-3xl bg-zinc-900/30 border border-zinc-800 animate-pulse" />}>
+          <SettingsTabs user={user} />
+        </React.Suspense>
       </div>
     </PageShell>
   );

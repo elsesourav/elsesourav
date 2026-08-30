@@ -38,7 +38,7 @@ export function Tooltip({
         <div
           role="tooltip"
           className={cn(
-            'pointer-events-none absolute z-50 whitespace-nowrap rounded-lg border border-zinc-700/80 bg-zinc-900/95 px-2.5 py-1 text-xs font-medium text-zinc-100 shadow-xl backdrop-blur-md animate-in fade-in zoom-in-95 duration-150',
+            'pointer-events-none absolute z-50 whitespace-nowrap rounded-xl border border-[hsl(var(--border-strong))] bg-[hsl(var(--surface-overlay))] px-2.5 py-1 text-xs font-medium text-[hsl(var(--foreground))] shadow-xl backdrop-blur-md animate-in fade-in zoom-in-95 duration-150',
             sideStyles[side],
             className
           )}

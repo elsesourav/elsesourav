@@ -28,7 +28,7 @@ describe('Dynamic Content-Aware Social Image System (Prompt 3 of 5)', () => {
   });
 
   it('verifies Note-specific opengraph-image.tsx is configured with 1200x630 dimensions and dynamic post loader', () => {
-    const blogOgPath = path.join(webAppDir, 'app/(public)/blog/[slug]/opengraph-image.tsx');
+    const blogOgPath = path.join(webAppDir, 'app/(public)/notes/[slug]/opengraph-image.tsx');
     expect(fs.existsSync(blogOgPath)).toBe(true);
 
     const content = fs.readFileSync(blogOgPath, 'utf8');
@@ -59,7 +59,7 @@ describe('Dynamic Content-Aware Social Image System (Prompt 3 of 5)', () => {
     const ogFiles = [
       path.join(webAppDir, 'app/opengraph-image.tsx'),
       path.join(webAppDir, 'app/(public)/apps/[slug]/opengraph-image.tsx'),
-      path.join(webAppDir, 'app/(public)/blog/[slug]/opengraph-image.tsx'),
+      path.join(webAppDir, 'app/(public)/notes/[slug]/opengraph-image.tsx'),
       path.join(webAppDir, 'app/(public)/about/opengraph-image.tsx'),
     ];
 

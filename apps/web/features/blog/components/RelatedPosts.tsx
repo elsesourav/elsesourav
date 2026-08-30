@@ -14,14 +14,19 @@ export function RelatedPosts({ posts }: RelatedPostsProps) {
 
   return (
     <section
-      className="space-y-6 pt-12 border-t border-zinc-800/80 max-w-4xl mx-auto"
+      className="space-y-6 pt-12 border-t border-[hsl(var(--border-subtle))] max-w-4xl mx-auto"
       aria-labelledby="related-articles-heading"
     >
-      <div className="flex items-center gap-2">
-        <Sparkles className="w-5 h-5 text-indigo-400" />
-        <h2 id="related-articles-heading" className="text-xl font-bold text-zinc-100">
-          Related Articles
+      <div className="flex items-center justify-between pb-2 border-b border-[hsl(var(--border-subtle))]">
+        <h2
+          id="related-articles-heading"
+          className="text-xs font-mono text-[hsl(var(--muted-foreground))] uppercase tracking-wider font-semibold"
+        >
+          Further Reading & Related Notes
         </h2>
+        <span className="text-xs font-mono text-[hsl(var(--subtle-foreground))]">
+          {posts.length} {posts.length === 1 ? 'Note' : 'Notes'}
+        </span>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">

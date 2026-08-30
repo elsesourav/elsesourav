@@ -3,25 +3,25 @@ import {
   HelpCategorySkeleton,
   HelpArticleCardSkeleton,
 } from '@/features/help/components/HelpSkeleton';
-import { Skeleton } from '@elsesourav/ui';
+import { Skeleton, SkeletonBadge } from '@elsesourav/ui';
 
 export default function HelpLoading() {
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+    <div className="min-h-screen bg-[hsl(var(--background))] text-[hsl(var(--foreground))]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-16">
         {/* Hero Skeleton */}
         <div className="text-center space-y-4 max-w-3xl mx-auto pt-4">
-          <Skeleton className="h-6 w-48 bg-zinc-800/60 rounded-full mx-auto" />
-          <Skeleton className="h-12 w-96 bg-zinc-800/60 rounded-2xl mx-auto" />
-          <Skeleton className="h-5 w-80 bg-zinc-800/60 rounded-lg mx-auto" />
-          <Skeleton className="h-12 w-full max-w-2xl bg-zinc-900/80 rounded-2xl mx-auto" />
+          <SkeletonBadge className="w-44 h-6 mx-auto" />
+          <Skeleton className="h-10 sm:h-12 w-80 sm:w-96 rounded-2xl mx-auto" />
+          <Skeleton className="h-5 w-72 rounded-lg mx-auto" />
+          <Skeleton className="h-12 w-full max-w-2xl rounded-2xl mx-auto" />
         </div>
 
         {/* Categories Grid Skeleton */}
         <div className="space-y-6">
-          <div className="flex items-center justify-between pb-4 border-b border-zinc-800/80">
-            <Skeleton className="h-7 w-48 bg-zinc-800/60 rounded" />
-            <Skeleton className="h-4 w-24 bg-zinc-800/60 rounded" />
+          <div className="flex items-center justify-between pb-4 border-b border-[hsl(var(--border-subtle))]">
+            <Skeleton className="h-7 w-48 rounded-lg" />
+            <Skeleton className="h-4 w-24 rounded" />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -33,7 +33,10 @@ export default function HelpLoading() {
 
         {/* Popular Articles Grid Skeleton */}
         <div className="space-y-6">
-          <Skeleton className="h-7 w-56 bg-zinc-800/60 rounded pb-4 border-b border-zinc-800/80" />
+          <div className="flex items-center justify-between pb-4 border-b border-[hsl(var(--border-subtle))]">
+            <Skeleton className="h-7 w-56 rounded-lg" />
+            <Skeleton className="h-4 w-20 rounded" />
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {Array.from({ length: 3 }).map((_, idx) => (
               <HelpArticleCardSkeleton key={idx} />

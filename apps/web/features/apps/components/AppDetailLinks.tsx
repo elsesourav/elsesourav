@@ -10,17 +10,17 @@ interface AppDetailLinksProps {
 function getPlatformIcon(platform: string) {
   switch (platform) {
     case 'github':
-      return <GitBranch className="w-4 h-4 text-zinc-300" />;
+      return <GitBranch className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />;
     case 'chrome':
-      return <Compass className="w-4 h-4 text-amber-400" />;
+      return <Compass className="w-4 h-4 text-amber-600 dark:text-amber-400" />;
     case 'android':
     case 'ios':
-      return <Smartphone className="w-4 h-4 text-emerald-400" />;
+      return <Smartphone className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />;
     case 'macos':
-      return <Apple className="w-4 h-4 text-zinc-200" />;
+      return <Apple className="w-4 h-4 text-[hsl(var(--foreground))]" />;
     case 'web':
     default:
-      return <Globe className="w-4 h-4 text-indigo-400" />;
+      return <Globe className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />;
   }
 }
 
@@ -30,12 +30,20 @@ export function AppDetailLinks({ links }: AppDetailLinksProps) {
   }
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-bold text-zinc-100 flex items-center gap-2">
-        <ExternalLink className="w-5 h-5 text-indigo-400" /> Platforms & Downloads
-      </h2>
+    <section aria-labelledby="platforms-downloads-heading" className="space-y-4">
+      <div className="flex items-center justify-between pb-3 border-b border-[hsl(var(--border-subtle))]">
+        <div className="flex items-center gap-2 text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold">
+          <ExternalLink className="w-4 h-4" />
+          <h2 id="platforms-downloads-heading" className="text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold">
+            Platforms & Distribution Links
+          </h2>
+        </div>
+        <span className="text-xs font-mono text-[hsl(var(--muted-foreground))]">
+          {links.length} {links.length === 1 ? 'Target' : 'Targets'}
+        </span>
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {links.map((link) => (
           <a
             key={link.id}
@@ -44,25 +52,25 @@ export function AppDetailLinks({ links }: AppDetailLinksProps) {
             rel="noopener noreferrer"
             className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-2xl"
           >
-            <Card className="p-4 rounded-2xl border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-indigo-500/40 transition-all flex items-center justify-between shadow-sm">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-zinc-800/80 border border-zinc-700/50 flex items-center justify-center shrink-0">
+            <Card className="p-4 rounded-2xl border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] hover:border-indigo-500/50 transition-all flex items-center justify-between shadow-sm backdrop-blur-md">
+              <div className="flex items-center gap-3.5">
+                <div className="w-10 h-10 rounded-xl bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border-subtle))] flex items-center justify-center shrink-0 shadow-inner">
                   {getPlatformIcon(link.platform)}
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-zinc-100 group-hover:text-white transition-colors">
+                  <h4 className="text-sm font-semibold text-[hsl(var(--foreground))] group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                     {link.label}
                   </h4>
-                  <span className="text-[11px] text-zinc-500 capitalize">
-                    {link.platform} Platform
+                  <span className="text-xs text-[hsl(var(--muted-foreground))] capitalize">
+                    {link.platform} Distribution
                   </span>
                 </div>
               </div>
-              <ExternalLink className="w-4 h-4 text-zinc-500 group-hover:text-indigo-400 transition-colors shrink-0" />
+              <ExternalLink className="w-4 h-4 text-[hsl(var(--muted-foreground))] group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors shrink-0 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Card>
           </a>
         ))}
       </div>
-    </div>
+    </section>
   );
 }

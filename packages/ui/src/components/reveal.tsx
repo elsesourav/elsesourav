@@ -20,7 +20,7 @@ export function useScrollReveal(options: {
   once?: boolean;
   rootMargin?: string;
 } = {}) {
-  const { threshold = 0.12, once = true, rootMargin = '0px 0px -30px 0px' } = options;
+  const { threshold = 0.05, once = true, rootMargin = '50px 0px 50px 0px' } = options;
   const ref = useRef<HTMLDivElement | null>(null);
   const [isRevealed, setIsRevealed] = useState(false);
 
@@ -73,10 +73,10 @@ export function useScrollReveal(options: {
 export function Reveal({
   children,
   direction = 'up',
-  distance = 14,
+  distance = 12,
   delay = 0,
-  duration = 0.38,
-  threshold = 0.12,
+  duration = 0.35,
+  threshold = 0.05,
   once = true,
   as: Component = 'div',
   className,

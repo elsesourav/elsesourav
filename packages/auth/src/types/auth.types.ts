@@ -7,7 +7,9 @@ export interface AuthenticatedUser {
   readonly supabaseAuthId: string;
   readonly email: string;
   readonly displayName: string;
+  readonly username?: string;
   readonly photoUrl?: string;
+  readonly bio?: string;
   readonly role: UserRole;
   readonly isEmailVerified: boolean;
   readonly provider: AuthProvider;

@@ -25,19 +25,19 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const isCurrentlyLoading = Boolean(isLoading || loading);
 
     const baseStyles =
-      'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 disabled:opacity-50 disabled:pointer-events-none cursor-pointer select-none active:scale-[0.98]';
+      'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-150 ease-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))] disabled:opacity-50 disabled:pointer-events-none cursor-pointer select-none active:scale-[0.98] active:translate-y-0';
 
     const variants = {
       primary:
-        'bg-indigo-600 text-white hover:bg-indigo-500 shadow-md shadow-indigo-600/20 border border-indigo-500/30',
+        'bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:bg-indigo-500 hover:shadow-lg hover:shadow-indigo-500/25 border border-indigo-400/30 hover:-translate-y-0.5 active:translate-y-0',
       secondary:
-        'bg-zinc-800 text-zinc-100 hover:bg-zinc-700 border border-zinc-700/80 shadow-sm',
+        'bg-[hsl(var(--secondary))] text-[hsl(var(--secondary-foreground))] hover:bg-[hsl(var(--surface-subtle))] hover:border-[hsl(var(--border-strong))] border border-[hsl(var(--border))] shadow-sm hover:-translate-y-0.5 active:translate-y-0',
       outline:
-        'border border-zinc-700/80 text-zinc-200 hover:bg-zinc-800/60 hover:text-white',
+        'border border-[hsl(var(--border))] text-[hsl(var(--foreground))] hover:bg-[hsl(var(--surface-subtle))] hover:border-[hsl(var(--border-strong))] hover:text-[hsl(var(--foreground))] hover:-translate-y-0.5 active:translate-y-0',
       ghost:
-        'text-zinc-300 hover:bg-zinc-800/50 hover:text-white',
+        'text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--surface-subtle))] hover:text-[hsl(var(--foreground))] active:scale-[0.98]',
       danger:
-        'bg-rose-600 text-white hover:bg-rose-500 shadow-md shadow-rose-600/20 border border-rose-500/30',
+        'bg-rose-600 text-white hover:bg-rose-500 hover:shadow-lg hover:shadow-rose-600/25 border border-rose-500/30 hover:-translate-y-0.5 active:translate-y-0',
     };
 
     const sizes = {

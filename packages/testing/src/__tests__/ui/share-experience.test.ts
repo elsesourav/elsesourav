@@ -15,8 +15,8 @@ describe('Share Experience & Canonical URL Handling (Prompt 4 of 5)', () => {
 
     it('constructs immutable canonical URLs for Note/Blog shares', () => {
       const noteSlug = 'deep-dive-rsc';
-      const canonical = toAbsoluteUrl(`/blog/${noteSlug}`);
-      expect(canonical).toBe('https://elsesourav.com/blog/deep-dive-rsc');
+      const canonical = toAbsoluteUrl(`/notes/${noteSlug}`);
+      expect(canonical).toBe('https://elsesourav.com/notes/deep-dive-rsc');
     });
 
     it('constructs immutable canonical URLs for Help Documentation shares', () => {
@@ -61,12 +61,12 @@ describe('Share Experience & Canonical URL Handling (Prompt 4 of 5)', () => {
       const sharePayload = {
         title: post.title,
         text: post.excerpt,
-        url: toAbsoluteUrl(`/blog/${post.slug}`),
+        url: toAbsoluteUrl(`/notes/${post.slug}`),
       };
 
       expect(sharePayload.title).toBe('Building WASM Pipelines with Rust and Next.js');
       expect(sharePayload.text).toBe('How we achieved sub-millisecond tensor processing in the browser.');
-      expect(sharePayload.url).toBe('https://elsesourav.com/blog/wasm-rust-nextjs');
+      expect(sharePayload.url).toBe('https://elsesourav.com/notes/wasm-rust-nextjs');
     });
   });
 });

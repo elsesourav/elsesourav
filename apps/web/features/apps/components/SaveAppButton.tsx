@@ -52,10 +52,10 @@ export function SaveAppButton({
       variant="secondary"
       onClick={handleToggleSave}
       disabled={isLoading}
-      className={`border-zinc-800 text-sm gap-1.5 transition-all ${
+      className={`border-[hsl(var(--border))] text-sm gap-1.5 min-h-[44px] active:scale-[0.98] transition-all ${
         isSaved
-          ? 'bg-indigo-600/20 border-indigo-500/40 text-indigo-300'
-          : 'bg-zinc-800/80 text-zinc-300 hover:text-white'
+          ? 'bg-indigo-500/15 border-indigo-500/40 text-indigo-700 dark:text-indigo-300'
+          : 'bg-[hsl(var(--surface-subtle))] hover:bg-[hsl(var(--accent))] text-[hsl(var(--foreground))]'
       }`}
       aria-label={isSaved ? 'Remove from library' : 'Save to library'}
     >

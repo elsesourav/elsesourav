@@ -74,6 +74,14 @@
     --glass-blur-md: 16px;
     --glass-blur-lg: 24px;
 
+    /* Ambient Lighting Tokens (Subtle Depth & Atmospheric Glow) */
+    --ambient-glow-1: rgba(99, 102, 241, 0.12);       /* Deep Indigo */
+    --ambient-glow-2: rgba(56, 189, 248, 0.065);      /* Cyan / Sky */
+    --ambient-glow-3: rgba(168, 85, 247, 0.07);       /* Violet */
+    --ambient-glow-4: rgba(244, 63, 94, 0.045);       /* Subtle Rose / Amber accent */
+    --ambient-pointer-glow: rgba(99, 102, 241, 0.045);/* Desktop pointer follow glow */
+    --ambient-noise-opacity: 0.022;
+
     /* Motion Tokens */
     --duration-fast: 150ms;
     --duration-smooth: 250ms;
@@ -131,15 +139,31 @@
     --glass-bg-elevated: rgba(255, 255, 255, 0.9);
     --glass-border: rgba(0, 0, 0, 0.08);
     --glass-border-strong: rgba(0, 0, 0, 0.15);
+
+    /* Ambient Lighting Tokens (Subtle Editorial Depth) */
+    --ambient-glow-1: rgba(99, 102, 241, 0.055);      /* Soft Indigo wash */
+    --ambient-glow-2: rgba(14, 165, 233, 0.04);       /* Soft Sky wash */
+    --ambient-glow-3: rgba(147, 51, 234, 0.035);      /* Soft Violet wash */
+    --ambient-glow-4: rgba(249, 115, 22, 0.025);      /* Warm Amber / Editorial tone */
+    --ambient-pointer-glow: rgba(99, 102, 241, 0.025);/* Desktop pointer follow glow */
+    --ambient-noise-opacity: 0.012;
   }
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+html,
 body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
   font-family: var(--font-sans, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 /* ==========================================================================
@@ -357,8 +381,245 @@ body {
   }
 }
 
+/* ==========================================================================
+   Unified Overlay & Popup Motion System (Prompt 23)
+   ========================================================================== */
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes overlayFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes popupEmergenceIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes popupEmergenceOut {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95) translateY(-4px);
+  }
+}
+
+@keyframes searchModalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98) translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes searchModalOut {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98) translateY(-8px);
+  }
+}
+
+@keyframes dialogScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes dialogScaleOut {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.96) translateY(4px);
+  }
+}
+
+@keyframes mobileNavIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mobileNavOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
 .animate-fade-in {
   animation: fadeIn var(--duration-fast) var(--ease-smooth) forwards;
+}
+
+.animate-overlay-in {
+  animation: overlayFadeIn 180ms var(--ease-smooth) forwards;
+}
+
+.animate-overlay-out {
+  animation: overlayFadeOut 150ms var(--ease-smooth) forwards;
+}
+
+.animate-popup-in {
+  animation: popupEmergenceIn 160ms var(--ease-smooth) forwards;
+  transform-origin: top right;
+}
+
+.animate-popup-out {
+  animation: popupEmergenceOut 130ms var(--ease-smooth) forwards;
+  transform-origin: top right;
+}
+
+.animate-search-in {
+  animation: searchModalIn 200ms var(--ease-smooth) forwards;
+  transform-origin: top center;
+}
+
+.animate-search-out {
+  animation: searchModalOut 150ms var(--ease-smooth) forwards;
+  transform-origin: top center;
+}
+
+.animate-dialog-in {
+  animation: dialogScaleIn 200ms var(--ease-smooth) forwards;
+  transform-origin: center;
+}
+
+.animate-dialog-out {
+  animation: dialogScaleOut 150ms var(--ease-smooth) forwards;
+  transform-origin: center;
+}
+
+.animate-mobile-nav-in {
+  animation: mobileNavIn 220ms var(--ease-smooth) forwards;
+}
+
+.animate-mobile-nav-out {
+  animation: mobileNavOut 180ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ==========================================================================
+   Page Transition & Navigation Continuity System (Prompt 27)
+   ========================================================================== */
+@keyframes pageTransitionIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-page-in {
+  animation: pageTransitionIn 180ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+/* ==========================================================================
+   Unified Skeleton Loading & Shimmer System (Prompt 24)
+   ========================================================================== */
+@keyframes skeletonPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-skeleton-pulse {
+  animation: skeletonPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 20%,
+    rgba(255, 255, 255, 0.07) 50%,
+    rgba(255, 255, 255, 0.03) 80%,
+    transparent 100%
+  );
+  animation: skeletonShimmer 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+:root:not(.dark) .skeleton-shimmer::after,
+.light .skeleton-shimmer::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.02) 20%,
+    rgba(0, 0, 0, 0.05) 50%,
+    rgba(0, 0, 0, 0.02) 80%,
+    transparent 100%
+  );
+}
+
+.skeleton-fade-in {
+  animation: fadeIn 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-slide-up {
@@ -390,6 +651,35 @@ body {
   will-change: opacity, transform;
 }
 
+/* Ambient Background Drift Animations (Extremely slow & hardware-accelerated) */
+@keyframes ambientDrift1 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(25px, -20px, 0) scale(1.06);
+  }
+}
+
+@keyframes ambientDrift2 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-30px, 20px, 0) scale(1.04);
+  }
+}
+
+.animate-ambient-drift-1 {
+  animation: ambientDrift1 26s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-ambient-drift-2 {
+  animation: ambientDrift2 32s ease-in-out infinite;
+  will-change: transform;
+}
+
 /* ==========================================================================
    Reduced Motion Override
    ========================================================================== */
@@ -403,8 +693,22 @@ body {
     scroll-behavior: auto !important;
   }
 
-  .reveal-container {
+  .reveal-container,
+  .animate-page-in,
+  .animate-ambient-drift-1,
+  .animate-ambient-drift-2,
+  .animate-popup-in,
+  .animate-popup-out,
+  .animate-search-in,
+  .animate-search-out,
+  .animate-dialog-in,
+  .animate-dialog-out,
+  .animate-mobile-nav-in,
+  .animate-mobile-nav-out,
+  .animate-skeleton-pulse,
+  .skeleton-shimmer::after {
     opacity: 1 !important;
+    animation: none !important;
     transform: none !important;
     transition: none !important;
     will-change: auto !important;

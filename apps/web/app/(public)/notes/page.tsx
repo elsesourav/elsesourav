@@ -43,7 +43,7 @@ export async function generateMetadata({ searchParams }: BlogPageProps): Promise
   return buildPageMetadata({
     title,
     description,
-    path: '/blog',
+    path: '/notes',
     noIndex: hasFilterOrQuery,
   });
 }
@@ -75,14 +75,14 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Blog',
-    name: 'ElseSourav Engineering Journal',
-    description: 'Technical articles, software benchmarks, and architecture walkthroughs.',
-    url: 'https://elsesourav.com/blog',
+    name: 'ElseSourav Notes & Writing',
+    description: 'Technical observations, architecture notes, and lessons learned while building software.',
+    url: 'https://elsesourav.com/notes',
     blogPost: posts.map((post) => ({
       '@type': 'BlogPosting',
       headline: post.title,
       description: post.excerpt,
-      url: `https://elsesourav.com/blog/${post.slug}`,
+      url: `https://elsesourav.com/notes/${post.slug}`,
       datePublished: post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined,
       author: {
         '@type': 'Person',
@@ -102,14 +102,14 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
       <div className="space-y-8">
         {/* Header Section */}
         <PageHeader
-          eyebrow="Engineering Journal & Archive"
+          eyebrow="Writing & Observations"
           badge={
             <Badge variant="primary" className="text-xs px-2.5 py-0.5 font-medium">
-              {listingResult.totalCount} {listingResult.totalCount === 1 ? 'Article' : 'Articles'}
+              {listingResult.totalCount} {listingResult.totalCount === 1 ? 'Note' : 'Notes'}
             </Badge>
           }
-          title="Engineering Journal & Ideas"
-          description="Technical essays, systems architecture notes, software benchmarks, and design observations crafted from building real-world software."
+          title="Notes"
+          description="Thoughts, technical observations, architecture notes, and things learned while building software."
         />
 
         {/* Discovery & Search Bar */}

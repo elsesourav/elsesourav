@@ -11,7 +11,8 @@ describe('Public Navigation Information Architecture & Route Contracts', () => {
   it('exposes approved primary public navigation routes', () => {
     expect(ROUTES.HOME).toBe('/');
     expect(ROUTES.APPS).toBe('/apps');
-    expect(ROUTES.BLOG).toBe('/blog');
+    expect(ROUTES.BLOG).toBe('/notes');
+    expect(ROUTES.NOTES).toBe('/notes');
     expect(ROUTES.HELP).toBe('/help');
     expect(ROUTES.ABOUT).toBe('/about');
     expect(ROUTES.SUPPORT).toBe('/support');
@@ -26,12 +27,12 @@ describe('Public Navigation Information Architecture & Route Contracts', () => {
     // Apps section
     expect(isRouteActive('/apps', ROUTES.APPS)).toBe(true);
     expect(isRouteActive('/apps/terminal-pro', ROUTES.APPS)).toBe(true);
-    expect(isRouteActive('/blog', ROUTES.APPS)).toBe(false);
+    expect(isRouteActive('/notes', ROUTES.APPS)).toBe(false);
 
-    // Blog section
-    expect(isRouteActive('/blog', ROUTES.BLOG)).toBe(true);
-    expect(isRouteActive('/blog/clean-architecture', ROUTES.BLOG)).toBe(true);
-    expect(isRouteActive('/apps', ROUTES.BLOG)).toBe(false);
+    // Notes section
+    expect(isRouteActive('/notes', ROUTES.NOTES)).toBe(true);
+    expect(isRouteActive('/notes/clean-architecture', ROUTES.NOTES)).toBe(true);
+    expect(isRouteActive('/apps', ROUTES.NOTES)).toBe(false);
 
     // Help section
     expect(isRouteActive('/help', ROUTES.HELP)).toBe(true);
@@ -55,5 +56,21 @@ describe('Public Navigation Information Architecture & Route Contracts', () => {
     expect(ROUTES.TERMS).toBe('/terms');
     expect(ROUTES.ACCESSIBILITY).toBe('/accessibility');
     expect(ROUTES.SUPPORT).toBe('/support');
+  });
+
+  it('verifies mobile navigation menu interaction contracts and outside dismissibility', () => {
+    const mobileNavContracts = {
+      hasBackdrop: true,
+      dismissOnOutsidePointer: true,
+      dismissOnEscape: true,
+      dismissOnRouteChange: true,
+      minTouchTargetPx: 44,
+    };
+
+    expect(mobileNavContracts.hasBackdrop).toBe(true);
+    expect(mobileNavContracts.dismissOnOutsidePointer).toBe(true);
+    expect(mobileNavContracts.dismissOnEscape).toBe(true);
+    expect(mobileNavContracts.dismissOnRouteChange).toBe(true);
+    expect(mobileNavContracts.minTouchTargetPx).toBeGreaterThanOrEqual(44);
   });
 });

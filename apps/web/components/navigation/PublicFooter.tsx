@@ -81,7 +81,7 @@ export async function PublicFooter() {
                     aria-label={`${link.label} (${link.platform})`}
                     target={link.url.startsWith('mailto:') ? undefined : '_blank'}
                     rel={link.url.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
-                    className="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--surface-subtle))] hover:bg-[hsl(var(--accent))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))]"
+                    className="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--surface-subtle))] hover:bg-[hsl(var(--surface-elevated))] hover:border-[hsl(var(--border-strong))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:scale-105 active:scale-95 transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))]"
                     title={link.label}
                   >
                     {getPlatformIcon(link.platform)}
@@ -146,6 +146,11 @@ export async function PublicFooter() {
             </h4>
             <ul className="space-y-2.5 text-xs text-[hsl(var(--muted-foreground))]">
               <li>
+                <Link href={ROUTES.HELP} className="hover:text-[hsl(var(--foreground))] transition-colors">
+                  Help Center
+                </Link>
+              </li>
+              <li>
                 <Link href={ROUTES.SUPPORT} className="hover:text-[hsl(var(--foreground))] transition-colors">
                   Support Desk
                 </Link>
@@ -199,10 +204,10 @@ export async function PublicFooter() {
             <a
               href="#"
               aria-label="Scroll back to top of page"
-              className="inline-flex items-center gap-1.5 text-xs text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] border border-[hsl(var(--border))] hover:border-[hsl(var(--border-strong))] bg-[hsl(var(--surface-subtle))] px-3 py-1.5 rounded-xl transition-all hover:bg-[hsl(var(--accent))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))]"
+              className="inline-flex items-center gap-1.5 text-xs text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] border border-[hsl(var(--border))] hover:border-[hsl(var(--border-strong))] bg-[hsl(var(--surface-subtle))] hover:bg-[hsl(var(--surface-elevated))] px-3 py-1.5 rounded-xl transition-all duration-150 ease-smooth hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))]"
             >
               <span>Back to Top</span>
-              <ArrowUp className="w-3.5 h-3.5" />
+              <ArrowUp className="w-3.5 h-3.5 group-hover:-translate-y-0.5 transition-transform duration-150" />
             </a>
           )}
         </div>

@@ -13,10 +13,18 @@ export function AppVersionHistory({ versions }: AppVersionHistoryProps) {
   }
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-bold text-zinc-100 flex items-center gap-2">
-        <History className="w-5 h-5 text-indigo-400" /> Release History & Changelogs
-      </h2>
+    <section aria-labelledby="release-history-heading" className="space-y-4">
+      <div className="flex items-center justify-between pb-3 border-b border-[hsl(var(--border-subtle))]">
+        <div className="flex items-center gap-2 text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold">
+          <History className="w-4 h-4" />
+          <h2 id="release-history-heading" className="text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold">
+            Release History & Changelog
+          </h2>
+        </div>
+        <span className="text-xs font-mono text-[hsl(var(--muted-foreground))]">
+          {versions.length} {versions.length === 1 ? 'Release' : 'Releases'}
+        </span>
+      </div>
 
       <div className="space-y-3">
         {versions.map((ver, idx) => {
@@ -29,28 +37,31 @@ export function AppVersionHistory({ versions }: AppVersionHistoryProps) {
           return (
             <Card
               key={ver.id}
-              className="p-4 rounded-xl border-zinc-800/80 bg-zinc-900/30 space-y-2"
+              className="p-5 rounded-2xl border-[hsl(var(--border))] bg-[hsl(var(--card))] space-y-3 shadow-sm backdrop-blur-md"
             >
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between flex-wrap gap-2">
                 <div className="flex items-center gap-2">
                   <Badge variant={idx === 0 ? 'success' : 'outline'} className="text-xs font-mono">
                     v{ver.version}
                   </Badge>
                   {idx === 0 && (
-                    <span className="text-[10px] text-emerald-400 font-medium">Latest Release</span>
+                    <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium font-mono">
+                      Current Stable
+                    </span>
                   )}
                 </div>
-                <span className="text-xs text-zinc-500 flex items-center gap-1">
-                  <Calendar className="w-3.5 h-3.5" /> {formattedDate}
+                <span className="text-xs font-mono text-[hsl(var(--muted-foreground))] flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5" />
+                  <span>{formattedDate}</span>
                 </span>
               </div>
-              <p className="text-xs text-zinc-400 whitespace-pre-line leading-relaxed">
+              <p className="text-xs sm:text-sm text-[hsl(var(--muted-foreground))] whitespace-pre-line leading-relaxed">
                 {ver.changelog}
               </p>
             </Card>
           );
         })}
       </div>
-    </div>
+    </section>
   );
 }

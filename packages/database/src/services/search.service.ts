@@ -19,7 +19,7 @@ const RESULTS_PER_GROUP = 5;
  */
 const STATIC_PAGES: GlobalSearchResult[] = [
   { type: 'page', title: 'Apps', description: 'Browse all published applications and software.', url: '/apps' },
-  { type: 'page', title: 'Notes', description: 'Engineering field notes, technical writing, and ideas.', url: '/blog' },
+  { type: 'page', title: 'Notes', description: 'Engineering field notes, technical writing, and ideas.', url: '/notes' },
   { type: 'page', title: 'About', description: 'About Sourav — independent software creator.', url: '/about' },
   { type: 'page', title: 'Help', description: 'Help center and documentation.', url: '/help' },
   { type: 'page', title: 'Archive', description: 'Historical and archived projects.', url: '/archive' },
@@ -152,7 +152,7 @@ export class SearchService {
         type: 'note' as const,
         title: record.title,
         description: record.excerpt || '',
-        url: `/blog/${record.slug}`,
+        url: `/notes/${record.slug}`,
         category: record.category?.name,
         metadata: {
           ...(record.readingTime ? { readingTime: `${record.readingTime} min read` } : {}),

@@ -253,7 +253,7 @@ export function buildNoteMetadata(post: NoteMetadataSource) {
     post.seoDescription ||
     post.excerpt ||
     `Read ${post.title} on ${SITE_CONFIG.name}.`;
-  const canonicalUrl = toAbsoluteUrl(`/blog/${post.slug}`);
+  const canonicalUrl = toAbsoluteUrl(`/notes/${post.slug}`);
   const image = resolveNoteShareImage(post);
 
   const authorName =

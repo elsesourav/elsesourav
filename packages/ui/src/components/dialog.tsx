@@ -27,7 +27,7 @@ export function Dialog({ open, onOpenChange, children }: DialogProps) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity animate-in fade-in duration-200"
+        className="fixed inset-0 bg-black/80 backdrop-blur-sm animate-overlay-in"
         onClick={() => onOpenChange(false)}
         aria-hidden="true"
       />
@@ -48,7 +48,7 @@ export function DialogContent({
       role="dialog"
       aria-modal="true"
       className={cn(
-        'relative rounded-2xl border border-zinc-800 bg-zinc-950 p-6 sm:p-7 shadow-2xl animate-in fade-in zoom-in-95 duration-200 max-h-[85vh] overflow-y-auto',
+        'relative rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--surface-elevated))] text-[hsl(var(--foreground))] p-6 sm:p-7 shadow-2xl animate-dialog-in max-h-[85vh] overflow-y-auto',
         className
       )}
       {...props}
@@ -58,7 +58,7 @@ export function DialogContent({
           type="button"
           onClick={onClose}
           aria-label="Close dialog"
-          className="absolute right-4 top-4 rounded-lg p-2 min-h-[40px] min-w-[40px] flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 transition-colors"
+          className="absolute right-4 top-4 rounded-lg p-2 min-h-[40px] min-w-[40px] flex items-center justify-center text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] focus:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))] transition-colors"
         >
           <X className="h-4 w-4" />
         </button>
@@ -75,7 +75,7 @@ export function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLD
 export function DialogTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h3
-      className={cn('text-lg sm:text-xl font-semibold leading-tight tracking-tight text-white', className)}
+      className={cn('text-lg sm:text-xl font-semibold leading-tight tracking-tight text-[hsl(var(--foreground))]', className)}
       {...props}
     />
   );
@@ -85,7 +85,7 @@ export function DialogDescription({
   className,
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn('text-sm text-zinc-400 leading-relaxed', className)} {...props} />;
+  return <p className={cn('text-sm text-[hsl(var(--muted-foreground))] leading-relaxed', className)} {...props} />;
 }
 
 export function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {

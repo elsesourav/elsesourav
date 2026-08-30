@@ -13,6 +13,7 @@ import { PageShell, PageHeader, Badge, Reveal, RevealGroup } from '@elsesourav/u
 import { SITE_CONFIG } from '@elsesourav/config';
 import type { AppSortOption, AppPlatform } from '@elsesourav/types';
 import { Sparkles, ArrowRight, LayoutGrid, Archive, BookOpen } from 'lucide-react';
+import { buildPageMetadata } from '@/lib/seo-metadata';
 
 interface AppsPageProps {
   searchParams: Promise<{
@@ -25,8 +26,6 @@ interface AppsPageProps {
     page?: string;
   }>;
 }
-
-import { buildPageMetadata } from '@/lib/seo-metadata';
 
 export async function generateMetadata({ searchParams }: AppsPageProps): Promise<Metadata> {
   const params = await searchParams;
@@ -176,13 +175,13 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
             {/* Spotlight Section on Clean Default View */}
             {isDefaultView && spotlightItems.length > 0 && (
               <section aria-labelledby="spotlight-apps-heading" className="space-y-4">
-                <div className="flex items-center gap-2 text-xs font-mono text-zinc-400 uppercase tracking-wider font-semibold pb-2 border-b border-zinc-800/60">
-                  <Sparkles className="w-4 h-4 text-indigo-400" />
-                  <h2 id="spotlight-apps-heading" className="text-xs font-mono text-zinc-400 uppercase tracking-wider font-semibold">
+                <div className="flex items-center gap-2 text-xs font-mono text-[hsl(var(--muted-foreground))] uppercase tracking-wider font-semibold pb-2 border-b border-[hsl(var(--border-subtle))]">
+                  <Sparkles className="w-4 h-4 text-indigo-500" />
+                  <h2 id="spotlight-apps-heading" className="text-xs font-mono text-[hsl(var(--muted-foreground))] uppercase tracking-wider font-semibold">
                     Featured Spotlight
                   </h2>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {spotlightItems.map((app, idx) => (
                     <AppCard key={app.id} app={app} index={idx} featured />
                   ))}
@@ -192,14 +191,14 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
 
             {/* Catalog Grid */}
             <section aria-labelledby="catalog-apps-heading" className="space-y-4">
-              <div className="flex items-center justify-between pb-2 border-b border-zinc-800/60 text-xs font-mono text-zinc-400">
+              <div className="flex items-center justify-between pb-2 border-b border-[hsl(var(--border-subtle))] text-xs font-mono text-[hsl(var(--muted-foreground))]">
                 <div className="flex items-center gap-2 uppercase tracking-wider font-semibold">
-                  <LayoutGrid className="w-4 h-4 text-indigo-400" />
-                  <h2 id="catalog-apps-heading" className="text-xs font-mono text-zinc-400 uppercase tracking-wider font-semibold">
+                  <LayoutGrid className="w-4 h-4 text-indigo-500" />
+                  <h2 id="catalog-apps-heading" className="text-xs font-mono text-[hsl(var(--muted-foreground))] uppercase tracking-wider font-semibold">
                     {hasFilters ? `Filtered Projects (${searchResult.totalCount})` : 'All Software & Projects'}
                   </h2>
                 </div>
-                <span className="text-zinc-500">
+                <span className="text-[hsl(var(--subtle-foreground))]">
                   Page {searchResult.page} of {searchResult.totalPages}
                 </span>
               </div>
@@ -230,24 +229,24 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
 
         {/* Discovery Bridges: The Archive & Notes */}
         <Reveal direction="up" distance={14}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-10 border-t border-zinc-800/70">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-10 border-t border-[hsl(var(--border-subtle))]">
             {/* The Archive Callout */}
             <Link
               href="/archive"
-              className="group p-6 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 hover:bg-zinc-900/60 hover:border-indigo-500/40 transition-all flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              className="group p-6 rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] hover:border-indigo-500/40 transition-all flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
             >
               <div className="space-y-2">
-                <div className="w-10 h-10 rounded-2xl bg-indigo-950/60 border border-indigo-800/40 flex items-center justify-center text-indigo-400">
+                <div className="w-10 h-10 rounded-2xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-sm">
                   <Archive className="w-5 h-5" />
                 </div>
-                <h3 className="text-base font-bold text-zinc-100 group-hover:text-indigo-300 transition-colors">
+                <h3 className="text-base font-bold text-[hsl(var(--foreground))] group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors">
                   The Archive
                 </h3>
-                <p className="text-xs text-zinc-400 leading-relaxed">
+                <p className="text-xs text-[hsl(var(--muted-foreground))] leading-relaxed">
                   Chronological timeline of earlier projects, legacy utilities, and exploratory implementations.
                 </p>
               </div>
-              <span className="text-xs font-mono text-indigo-400 flex items-center gap-1 pt-4 group-hover:translate-x-1 transition-transform">
+              <span className="text-xs font-mono text-indigo-600 dark:text-indigo-400 flex items-center gap-1 pt-4 group-hover:translate-x-1 transition-transform">
                 <span>Explore historical archive</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </span>
@@ -256,20 +255,20 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
             {/* Notes / Architecture Callout */}
             <Link
               href="/blog"
-              className="group p-6 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 hover:bg-zinc-900/60 hover:border-cyan-500/40 transition-all flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
+              className="group p-6 rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] hover:border-cyan-500/40 transition-all flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
             >
               <div className="space-y-2">
-                <div className="w-10 h-10 rounded-2xl bg-cyan-950/60 border border-cyan-800/40 flex items-center justify-center text-cyan-400">
+                <div className="w-10 h-10 rounded-2xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-600 dark:text-cyan-400 shadow-sm">
                   <BookOpen className="w-5 h-5" />
                 </div>
-                <h3 className="text-base font-bold text-zinc-100 group-hover:text-cyan-300 transition-colors">
+                <h3 className="text-base font-bold text-[hsl(var(--foreground))] group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
                   Engineering Field Notes
                 </h3>
-                <p className="text-xs text-zinc-400 leading-relaxed">
+                <p className="text-xs text-[hsl(var(--muted-foreground))] leading-relaxed">
                   Technical write-ups, architecture decisions, postmortems, and lessons learned while building.
                 </p>
               </div>
-              <span className="text-xs font-mono text-cyan-400 flex items-center gap-1 pt-4 group-hover:translate-x-1 transition-transform">
+              <span className="text-xs font-mono text-cyan-600 dark:text-cyan-400 flex items-center gap-1 pt-4 group-hover:translate-x-1 transition-transform">
                 <span>Read engineering notes</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </span>

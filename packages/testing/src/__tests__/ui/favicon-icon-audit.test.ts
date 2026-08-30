@@ -14,12 +14,10 @@ describe('Favicon & Site Brand Icon Audit', () => {
     expect(stats.size).toBeGreaterThan(50000); // 1024x1024 master PNG
   });
 
-  it('verifies standard multi-resolution favicon.ico is present in public/ and app/', () => {
+  it('verifies standard multi-resolution favicon.ico is present in public/', () => {
     const publicIco = path.join(publicDir, 'favicon.ico');
-    const appIco = path.join(appDir, 'favicon.ico');
 
     expect(fs.existsSync(publicIco)).toBe(true);
-    expect(fs.existsSync(appIco)).toBe(true);
 
     const buffer = fs.readFileSync(publicIco);
     // Check ICO header: 0x0000 0x0001
@@ -47,8 +45,8 @@ describe('Favicon & Site Brand Icon Audit', () => {
     });
   });
 
-  it('verifies App Router root icons are present in app/', () => {
-    const appIcons = ['favicon.ico', 'icon.png', 'apple-icon.png'];
+  it('verifies App Router root metadata icons are present in app/', () => {
+    const appIcons = ['icon.png', 'apple-icon.png'];
     appIcons.forEach((file) => {
       const filePath = path.join(appDir, file);
       expect(fs.existsSync(filePath)).toBe(true);

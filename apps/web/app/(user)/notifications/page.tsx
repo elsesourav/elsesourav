@@ -47,14 +47,14 @@ export default async function NotificationsPage() {
             description="Support replies, app releases, security alerts, and system updates."
           />
 
-          <Link href="/settings" className="self-start sm:self-auto sm:pt-4">
+          <Link href="/settings?tab=preferences" className="self-start sm:self-auto sm:pt-4">
             <Button
               variant="outline"
               size="sm"
               className="text-xs text-zinc-300 border-zinc-800 hover:bg-zinc-800 gap-1.5 rounded-xl"
             >
               <Settings className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Preferences</span>
+              <span>Notification Preferences</span>
             </Button>
           </Link>
         </div>

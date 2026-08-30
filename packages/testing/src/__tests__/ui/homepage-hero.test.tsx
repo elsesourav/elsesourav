@@ -14,12 +14,12 @@ describe('Homepage Hero & First-Viewport Architecture', () => {
   it('exposes approved first-viewport navigation links and exploration CTAs', () => {
     expect(ROUTES.HOME).toBe('/');
     expect(ROUTES.APPS).toBe('/apps');
-    expect(ROUTES.BLOG).toBe('/blog');
+    expect(ROUTES.BLOG).toBe('/notes');
     expect(ROUTES.ABOUT).toBe('/about');
   });
 
   it('guarantees complete fallback behavior when optional hero badges or counts are missing', () => {
-    const defaultBadge = 'SOURAV / ELSESOURAV';
+    const defaultBadge = 'Personal Software Studio';
     const fallbackCount = 0;
     const computedCtaText = (label: string, count: number) => {
       return count > 0 ? `${label} (${count})` : label;
@@ -43,7 +43,7 @@ describe('Homepage Hero & First-Viewport Architecture', () => {
       'live studio',
     ];
 
-    const currentHeroElements = ['SOURAV / ELSESOURAV', 'Explore Apps', 'About Me', 'Selected Apps'];
+    const currentHeroElements = ['Personal Software Studio', 'Explore Apps', 'About Me', 'Selected Apps'];
 
     currentHeroElements.forEach((label) => {
       forbiddenDashboardTerms.forEach((term) => {

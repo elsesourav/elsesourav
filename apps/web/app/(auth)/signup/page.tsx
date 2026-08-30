@@ -4,11 +4,11 @@ import {
   Card,
   CardHeader,
   CardTitle,
-  CardDescription,
   CardContent,
   CardFooter,
 } from '@elsesourav/ui';
 import { SignUpForm } from '@/components/auth/SignUpForm';
+import { Lock } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Create Account | ElseSourav',
@@ -17,24 +17,27 @@ export const metadata: Metadata = {
 
 export default function SignUpPage() {
   return (
-    <Card className="border-zinc-800 bg-zinc-900/50 backdrop-blur-md shadow-2xl">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold text-zinc-100">
+    <Card className="w-full max-w-md border-[hsl(var(--border))] bg-[hsl(var(--card))]/90 backdrop-blur-xl shadow-2xl rounded-3xl relative overflow-hidden">
+      <CardHeader className="text-center pb-3 pt-6 space-y-2">
+        <div className="flex justify-center">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[11px] font-medium tracking-wide shadow-sm">
+            <Lock className="w-3 h-3 text-indigo-400" />
+            <span>End-to-End Encrypted Auth</span>
+          </div>
+        </div>
+        <CardTitle className="text-2xl font-bold text-[hsl(var(--foreground))] tracking-tight">
           Create ElseSourav Account
         </CardTitle>
-        <CardDescription className="text-zinc-400">
-          One account across all ElseSourav applications and developer tools
-        </CardDescription>
       </CardHeader>
       <CardContent>
         <SignUpForm />
       </CardContent>
-      <CardFooter className="flex justify-center border-t border-zinc-800/50 pt-4">
-        <p className="text-sm text-zinc-400">
+      <CardFooter className="flex justify-center border-t border-[hsl(var(--border-subtle))] pt-4 pb-5">
+        <p className="text-sm text-[hsl(var(--muted-foreground))]">
           Already have an account?{' '}
           <Link
             href="/login"
-            className="text-indigo-400 hover:text-indigo-300 font-medium hover:underline"
+            className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium hover:underline"
           >
             Sign In
           </Link>

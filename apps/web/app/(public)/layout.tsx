@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { cookies } from 'next/headers';
 import { getServerSession } from '@elsesourav/auth';
+import { PageAtmosphere } from '@/components/ambient/PageAtmosphere';
 import { PublicHeader } from '@/components/navigation/PublicHeader';
 import { PublicFooter } from '@/components/navigation/PublicFooter';
 
@@ -11,7 +12,9 @@ export default async function PublicLayout({ children }: { children: React.React
   });
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-[hsl(var(--background))] text-[hsl(var(--foreground))] relative">
+      <PageAtmosphere />
+
       {/* Responsive Header Navigation with Server-Fed Auth State */}
       <PublicHeader user={session?.user || null} />
 

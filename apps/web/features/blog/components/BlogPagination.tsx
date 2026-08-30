@@ -22,20 +22,20 @@ export function BlogPagination({ currentPage, totalPages, totalMatches }: BlogPa
   const createPageUrl = (pageNumber: number) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set('page', pageNumber.toString());
-    return `/blog?${params.toString()}`;
+    return `/notes?${params.toString()}`;
   };
 
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
     <nav
-      className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-zinc-800/80"
+      className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-[hsl(var(--border-subtle))]"
       aria-label="Blog pagination navigation"
     >
-      <div className="text-xs text-zinc-400">
-        Page <span className="font-semibold text-zinc-200">{currentPage}</span> of{' '}
-        <span className="font-semibold text-zinc-200">{totalPages}</span> ({totalMatches} total
-        articles)
+      <div className="text-xs text-[hsl(var(--muted-foreground))]">
+        Page <span className="font-semibold text-[hsl(var(--foreground))]">{currentPage}</span> of{' '}
+        <span className="font-semibold text-[hsl(var(--foreground))]">{totalPages}</span> ({totalMatches} total
+        notes)
       </div>
 
       <div className="flex items-center gap-1.5">
@@ -45,7 +45,7 @@ export function BlogPagination({ currentPage, totalPages, totalMatches }: BlogPa
             <Button
               variant="outline"
               size="sm"
-              className="h-8 px-2.5 text-xs border-zinc-800 hover:bg-zinc-800 text-zinc-300"
+              className="h-8 px-2.5 text-xs border-[hsl(var(--border))] hover:bg-[hsl(var(--accent))] text-[hsl(var(--foreground))]"
             >
               <ChevronLeft className="w-3.5 h-3.5 mr-1" /> Prev
             </Button>
@@ -55,7 +55,7 @@ export function BlogPagination({ currentPage, totalPages, totalMatches }: BlogPa
             variant="outline"
             size="sm"
             disabled
-            className="h-8 px-2.5 text-xs border-zinc-800/50 text-zinc-600 cursor-not-allowed"
+            className="h-8 px-2.5 text-xs border-[hsl(var(--border-subtle))] text-[hsl(var(--subtle-foreground))] opacity-50 cursor-not-allowed"
           >
             <ChevronLeft className="w-3.5 h-3.5 mr-1" /> Prev
           </Button>
@@ -69,7 +69,7 @@ export function BlogPagination({ currentPage, totalPages, totalMatches }: BlogPa
               <Button
                 key={p}
                 size="sm"
-                className="h-8 w-8 p-0 text-xs bg-indigo-600 hover:bg-indigo-600 text-white font-bold"
+                className="h-8 w-8 p-0 text-xs bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] font-bold shadow-sm"
                 aria-current="page"
                 aria-label={`Page ${p}`}
               >
@@ -80,7 +80,7 @@ export function BlogPagination({ currentPage, totalPages, totalMatches }: BlogPa
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-8 w-8 p-0 text-xs text-zinc-400 hover:text-white hover:bg-zinc-800"
+                  className="h-8 w-8 p-0 text-xs text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))]"
                 >
                   {p}
                 </Button>
@@ -95,7 +95,7 @@ export function BlogPagination({ currentPage, totalPages, totalMatches }: BlogPa
             <Button
               variant="outline"
               size="sm"
-              className="h-8 px-2.5 text-xs border-zinc-800 hover:bg-zinc-800 text-zinc-300"
+              className="h-8 px-2.5 text-xs border-[hsl(var(--border))] hover:bg-[hsl(var(--accent))] text-[hsl(var(--foreground))]"
             >
               Next <ChevronRight className="w-3.5 h-3.5 ml-1" />
             </Button>
@@ -105,7 +105,7 @@ export function BlogPagination({ currentPage, totalPages, totalMatches }: BlogPa
             variant="outline"
             size="sm"
             disabled
-            className="h-8 px-2.5 text-xs border-zinc-800/50 text-zinc-600 cursor-not-allowed"
+            className="h-8 px-2.5 text-xs border-[hsl(var(--border-subtle))] text-[hsl(var(--subtle-foreground))] opacity-50 cursor-not-allowed"
           >
             Next <ChevronRight className="w-3.5 h-3.5 ml-1" />
           </Button>

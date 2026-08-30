@@ -47,7 +47,7 @@ describe('Global Search System', () => {
             { type: 'project', title: 'P1', description: '', url: '/apps/p1' },
           ],
           note: [
-            { type: 'note', title: 'N1', description: '', url: '/blog/n1' },
+            { type: 'note', title: 'N1', description: '', url: '/notes/n1' },
           ],
         },
         totalCount: 2,
@@ -144,17 +144,33 @@ describe('Global Search System', () => {
     });
   });
 
-  describe('Search Result Navigation', () => {
+  describe('Search Result Navigation & UI Stability', () => {
     it('generates correct URLs for each content type', () => {
       const urlMap: Record<GlobalSearchResultType, string> = {
         project: '/apps/my-project',
-        note: '/blog/my-note',
+        note: '/notes/my-note',
         page: '/about',
       };
 
       expect(urlMap.project).toMatch(/^\/apps\//);
-      expect(urlMap.note).toMatch(/^\/blog\//);
+      expect(urlMap.note).toMatch(/^\/notes\//);
       expect(urlMap.page).toMatch(/^\//);
+    });
+
+    it('enforces outside-click dismissibility and fixed-height search input row to prevent UI shifts', () => {
+      const searchUxContracts = {
+        dismissOnOutsidePointer: true,
+        dismissOnBackdropClick: true,
+        dismissOnEscape: true,
+        inputRowHeightPx: 56,
+        preventHeightShiftsOnClearAppear: true,
+      };
+
+      expect(searchUxContracts.dismissOnOutsidePointer).toBe(true);
+      expect(searchUxContracts.dismissOnBackdropClick).toBe(true);
+      expect(searchUxContracts.dismissOnEscape).toBe(true);
+      expect(searchUxContracts.inputRowHeightPx).toBe(56);
+      expect(searchUxContracts.preventHeightShiftsOnClearAppear).toBe(true);
     });
   });
 

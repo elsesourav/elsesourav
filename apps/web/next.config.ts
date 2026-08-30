@@ -5,6 +5,16 @@ import dotenv from 'dotenv';
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 const nextConfig: NextConfig = {
+  typescript: {
+    // Turborepo runs separate cached typechecks via `pnpm typecheck`
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    // Turborepo runs separate cached linting via `pnpm lint`
+    ignoreDuringBuilds: true,
+  },
+  outputFileTracingRoot: path.resolve(__dirname, '../../'),
+  poweredByHeader: false,
   serverExternalPackages: ['@prisma/client', 'pg', '@prisma/adapter-pg'],
   transpilePackages: [
     '@elsesourav/ui',
@@ -17,6 +27,11 @@ const nextConfig: NextConfig = {
     '@elsesourav/database',
   ],
   images: {
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 2592000, // 30 days
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
       {
         protocol: 'https',
@@ -26,10 +41,32 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'images.unsplash.com',
       },
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+      },
     ],
   },
   async headers() {
     return [
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/fonts/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
       {
         source: '/:path*',
         headers: [
@@ -69,13 +106,23 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: '/blog',
+        destination: '/notes',
+        permanent: true,
+      },
+      {
+        source: '/blog/:slug*',
+        destination: '/notes/:slug*',
+        permanent: true,
+      },
+      {
         source: '/posts',
-        destination: '/blog',
+        destination: '/notes',
         permanent: true,
       },
       {
         source: '/posts/:slug*',
-        destination: '/blog/:slug*',
+        destination: '/notes/:slug*',
         permanent: true,
       },
       {

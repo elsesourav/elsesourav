@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import {
-  SITE_CONFIG,
   toAbsoluteUrl,
   resolveAppShareImage,
   resolveNoteShareImage,
@@ -23,9 +22,10 @@ describe('PROMPT 5 OF 5: Final Favicon, SEO, Social Sharing and Release Audit', 
       expect(fs.existsSync(path.join(publicDir, 'logo.png'))).toBe(true);
     });
 
-    it('verifies multi-resolution favicon.ico exists in both public/ and app/', () => {
-      expect(fs.existsSync(path.join(publicDir, 'favicon.ico'))).toBe(true);
-      expect(fs.existsSync(path.join(webAppDir, 'app/favicon.ico'))).toBe(true);
+    it('verifies multi-resolution favicon.ico exists in public/ directory', () => {
+      const favPath = path.join(publicDir, 'favicon.ico');
+      expect(fs.existsSync(favPath)).toBe(true);
+      expect(fs.statSync(favPath).size).toBeGreaterThan(0);
     });
 
     it('verifies standard raster favicons and apple-touch-icon exist', () => {
@@ -104,8 +104,8 @@ describe('PROMPT 5 OF 5: Final Favicon, SEO, Social Sharing and Release Audit', 
       expect(note1.description).not.toBe(note2.description);
       expect(note1.alternates.canonical).not.toBe(note2.alternates.canonical);
       expect(note1.openGraph.publishedTime).not.toBe(note2.openGraph.publishedTime);
-      expect(note1.alternates.canonical).toBe('https://elsesourav.com/blog/scaling-nextjs-15');
-      expect(note2.alternates.canonical).toBe('https://elsesourav.com/blog/wasm-vector-search');
+      expect(note1.alternates.canonical).toBe('https://elsesourav.com/notes/scaling-nextjs-15');
+      expect(note2.alternates.canonical).toBe('https://elsesourav.com/notes/wasm-vector-search');
     });
 
     it('produces distinct metadata for About, Help, and Homepage', () => {
@@ -198,7 +198,7 @@ describe('PROMPT 5 OF 5: Final Favicon, SEO, Social Sharing and Release Audit', 
 
     it('intercepts accidental localhost/127.0.0.1 development URLs and normalizes them', () => {
       expect(toAbsoluteUrl('http://localhost:3000/apps/audio-dsp')).toBe('https://elsesourav.com/apps/audio-dsp');
-      expect(toAbsoluteUrl('http://127.0.0.1:8080/blog/post-one')).toBe('https://elsesourav.com/blog/post-one');
+      expect(toAbsoluteUrl('http://127.0.0.1:8080/notes/post-one')).toBe('https://elsesourav.com/notes/post-one');
     });
 
     it('preserves valid external HTTPS URLs', () => {
@@ -212,7 +212,7 @@ describe('PROMPT 5 OF 5: Final Favicon, SEO, Social Sharing and Release Audit', 
       const endpoints = [
         path.join(webAppDir, 'app/opengraph-image.tsx'),
         path.join(webAppDir, 'app/(public)/apps/[slug]/opengraph-image.tsx'),
-        path.join(webAppDir, 'app/(public)/blog/[slug]/opengraph-image.tsx'),
+        path.join(webAppDir, 'app/(public)/notes/[slug]/opengraph-image.tsx'),
         path.join(webAppDir, 'app/(public)/about/opengraph-image.tsx'),
       ];
 

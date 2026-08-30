@@ -14,10 +14,15 @@ export async function getPublicHelpArticleBySlug(slug: string): Promise<PublicHe
 
 export async function getRelatedHelpArticles(
   articleId: string,
-  categoryId: string,
+  categoryId?: string,
   limit: number = 3
 ): Promise<HelpArticleListItem[]> {
-  return helpService.getRelatedArticles(articleId, categoryId, limit);
+  if (!categoryId) return [];
+  try {
+    return await helpService.getRelatedArticles(articleId, categoryId, limit);
+  } catch {
+    return [];
+  }
 }
 
 export async function submitHelpVote(

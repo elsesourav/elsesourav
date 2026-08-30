@@ -1,3 +1,4 @@
+export { z } from 'zod';
 export * from './user.schema';
 export * from './auth.schema';
 export * from './app.schema';

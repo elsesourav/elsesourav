@@ -57,7 +57,7 @@ export const CAPABILITY_GROUPS_CONFIG: readonly CapabilityGroupConfig[] = [
       },
       {
         name: 'Neural Network Number Recognition',
-        slug: 'neural-network-number-recognition',
+        slug: 'nn-number-rec',
         context: 'Matrix multiplication neural net from scratch',
       },
     ],

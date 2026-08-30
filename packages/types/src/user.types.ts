@@ -43,6 +43,7 @@ export interface SyncUserAuthInput {
   readonly supabaseAuthId: string;
   readonly email: string;
   readonly displayName?: string;
+  readonly username?: string;
   readonly photoUrl?: string;
 }
 

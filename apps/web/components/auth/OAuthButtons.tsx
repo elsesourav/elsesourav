@@ -43,7 +43,7 @@ export function OAuthButtons({ redirectTo, onError }: OAuthButtonsProps) {
         variant="outline"
         disabled={loadingProvider !== null}
         onClick={() => handleOAuth('google')}
-        className="w-full border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-200 text-xs font-medium py-2.5"
+        className="w-full border-[hsl(var(--border))] bg-[hsl(var(--surface-subtle))] hover:bg-[hsl(var(--accent))] text-[hsl(var(--foreground))] text-xs font-medium py-2.5"
       >
         {loadingProvider === 'google' ? (
           <Spinner className="w-4 h-4 mr-2" />
@@ -75,7 +75,7 @@ export function OAuthButtons({ redirectTo, onError }: OAuthButtonsProps) {
         variant="outline"
         disabled={loadingProvider !== null}
         onClick={() => handleOAuth('github')}
-        className="w-full border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-200 text-xs font-medium py-2.5"
+        className="w-full border-[hsl(var(--border))] bg-[hsl(var(--surface-subtle))] hover:bg-[hsl(var(--accent))] text-[hsl(var(--foreground))] text-xs font-medium py-2.5"
       >
         {loadingProvider === 'github' ? (
           <Spinner className="w-4 h-4 mr-2" />

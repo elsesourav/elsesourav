@@ -26,20 +26,20 @@ export function BlogArticleHeader({ post, postUrl }: BlogArticleHeaderProps) {
     <header className="space-y-6 max-w-4xl mx-auto">
       {/* Back Button */}
       <Link
-        href="/blog"
-        className="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white transition-colors group"
+        href="/notes"
+        className="inline-flex items-center gap-1.5 text-xs text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] transition-colors group font-medium"
       >
         <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
-        <span>Back to All Articles</span>
+        <span>Back to Notes</span>
       </Link>
 
       {/* Category Pill */}
       {post.category && (
         <div>
-          <Link href={`/blog?category=${post.category.slug}`}>
+          <Link href={`/notes?category=${post.category.slug}`}>
             <Badge
               variant="info"
-              className="text-xs px-2.5 py-0.5 hover:bg-indigo-900/60 transition-colors"
+              className="text-xs px-2.5 py-0.5 hover:opacity-80 transition-colors"
             >
               {post.category.name}
             </Badge>
@@ -48,21 +48,21 @@ export function BlogArticleHeader({ post, postUrl }: BlogArticleHeaderProps) {
       )}
 
       {/* Main Title */}
-      <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-zinc-100 tracking-tight leading-tight">
+      <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-[hsl(var(--foreground))] tracking-tight leading-tight">
         {post.title}
       </h1>
 
       {/* Excerpt Lead */}
       {post.excerpt && (
-        <p className="text-base sm:text-lg text-zinc-300 leading-relaxed max-w-3xl">
+        <p className="text-base sm:text-lg text-[hsl(var(--muted-foreground))] leading-relaxed max-w-3xl">
           {post.excerpt}
         </p>
       )}
 
       {/* Author and Metadata Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 pb-4 border-y border-zinc-800/80">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 pb-4 border-y border-[hsl(var(--border-subtle))]">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full overflow-hidden bg-zinc-800 border border-zinc-700 flex items-center justify-center text-xs font-bold text-zinc-300 shrink-0">
+          <div className="w-10 h-10 rounded-full overflow-hidden bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] flex items-center justify-center text-xs font-bold text-[hsl(var(--foreground))] shrink-0">
             {post.author.photoUrl ? (
               <Image
                 src={post.author.photoUrl}
@@ -76,22 +76,22 @@ export function BlogArticleHeader({ post, postUrl }: BlogArticleHeaderProps) {
             )}
           </div>
           <div>
-            <div className="font-semibold text-xs text-zinc-200">{post.author.displayName}</div>
-            <div className="flex items-center gap-2 text-[11px] text-zinc-400">
+            <div className="font-semibold text-xs text-[hsl(var(--foreground))]">{post.author.displayName}</div>
+            <div className="flex items-center gap-2 text-[11px] text-[hsl(var(--muted-foreground))]">
               <span className="flex items-center gap-1">
-                <Calendar className="w-3 h-3 text-zinc-500" />
+                <Calendar className="w-3 h-3 text-[hsl(var(--subtle-foreground))]" />
                 <span>{publishedDate}</span>
               </span>
               <span>•</span>
               <span className="flex items-center gap-1">
-                <Clock className="w-3 h-3 text-zinc-500" />
+                <Clock className="w-3 h-3 text-[hsl(var(--subtle-foreground))]" />
                 <span>{post.readingTime} min read</span>
               </span>
               {post.viewsCount > 0 && (
                 <>
                   <span>•</span>
                   <span className="flex items-center gap-1">
-                    <Eye className="w-3 h-3 text-zinc-500" />
+                    <Eye className="w-3 h-3 text-[hsl(var(--subtle-foreground))]" />
                     <span>{post.viewsCount} views</span>
                   </span>
                 </>
@@ -106,7 +106,7 @@ export function BlogArticleHeader({ post, postUrl }: BlogArticleHeaderProps) {
 
       {/* Cover Image */}
       {coverUrl && (
-        <div className="relative aspect-[16/9] w-full rounded-3xl overflow-hidden border border-zinc-800 bg-zinc-950 shadow-2xl">
+        <div className="relative aspect-[16/9] w-full rounded-3xl overflow-hidden border border-[hsl(var(--border))] bg-[hsl(var(--surface-subtle))] shadow-2xl">
           <Image
             src={coverUrl}
             alt={post.title}

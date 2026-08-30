@@ -56,17 +56,17 @@ export function ErrorState({
     <Card
       role="alert"
       className={cn(
-        'text-center py-12 px-6 border-rose-900/40 bg-zinc-950/80 rounded-2xl flex flex-col items-center justify-center shadow-sm',
+        'text-center py-12 px-6 border-rose-500/30 bg-[hsl(var(--card))] rounded-2xl flex flex-col items-center justify-center shadow-sm',
         className
       )}
       {...props}
     >
       <CardHeader className="flex flex-col items-center p-0 space-y-2">
-        <div className="w-12 h-12 rounded-2xl bg-rose-950/60 border border-rose-800/60 flex items-center justify-center mb-2">
-          <AlertCircle className="w-6 h-6 text-rose-400" />
+        <div className="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center mb-2">
+          <AlertCircle className="w-6 h-6 text-rose-500" />
         </div>
-        <CardTitle className="text-lg text-rose-100 font-semibold">{title}</CardTitle>
-        <CardDescription className="max-w-sm text-xs text-zinc-400 leading-relaxed">{description}</CardDescription>
+        <CardTitle className="text-lg text-[hsl(var(--foreground))] font-semibold">{title}</CardTitle>
+        <CardDescription className="max-w-sm text-xs text-[hsl(var(--muted-foreground))] leading-relaxed">{description}</CardDescription>
       </CardHeader>
       {(onRetry || action) && (
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">

@@ -46,23 +46,23 @@ export function HelpArticleFeedback({
 
   if (hasVoted) {
     return (
-      <div className="p-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 text-center space-y-2 backdrop-blur-sm">
-        <div className="flex items-center justify-center gap-2 text-emerald-400 text-sm font-semibold">
+      <div className="p-6 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] text-center space-y-2 backdrop-blur-sm">
+        <div className="flex items-center justify-center gap-2 text-emerald-500 dark:text-emerald-400 text-sm font-semibold">
           <CheckCircle2 className="w-4 h-4" />
           <span>Thank you for your feedback!</span>
         </div>
-        <p className="text-xs text-zinc-400">
-          Your input helps us continuously improve the ElseSourav documentation suite.
+        <p className="text-xs text-[hsl(var(--muted-foreground))]">
+          Your input helps continuously improve the ElseSourav documentation suite.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="p-6 rounded-2xl border border-zinc-800/80 bg-zinc-900/40 flex flex-col sm:flex-row items-center justify-between gap-4 backdrop-blur-sm">
+    <div className="p-6 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] flex flex-col sm:flex-row items-center justify-between gap-4 backdrop-blur-sm shadow-sm">
       <div className="space-y-0.5 text-center sm:text-left">
-        <h4 className="text-sm font-bold text-zinc-100">Was this guide helpful?</h4>
-        <p className="text-xs text-zinc-400">Let us know if this article resolved your question.</p>
+        <h4 className="text-sm font-bold text-[hsl(var(--foreground))]">Was this guide helpful?</h4>
+        <p className="text-xs text-[hsl(var(--muted-foreground))]">Let us know if this article resolved your question.</p>
       </div>
 
       <div className="flex items-center gap-2">
@@ -72,7 +72,7 @@ export function HelpArticleFeedback({
           size="sm"
           onClick={() => handleVote(true)}
           disabled={isSubmitting}
-          className="text-xs border-zinc-800 hover:border-emerald-500/50 hover:bg-emerald-950/20 hover:text-emerald-300 text-zinc-300 gap-1.5"
+          className="text-xs border-[hsl(var(--border))] hover:border-emerald-500/50 hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-300 text-[hsl(var(--foreground))] gap-1.5"
           aria-label="Mark article as helpful"
         >
           <ThumbsUp className="w-3.5 h-3.5" />
@@ -85,7 +85,7 @@ export function HelpArticleFeedback({
           size="sm"
           onClick={() => handleVote(false)}
           disabled={isSubmitting}
-          className="text-xs border-zinc-800 hover:border-rose-500/50 hover:bg-rose-950/20 hover:text-rose-300 text-zinc-300 gap-1.5"
+          className="text-xs border-[hsl(var(--border))] hover:border-rose-500/50 hover:bg-rose-500/10 hover:text-rose-600 dark:hover:text-rose-300 text-[hsl(var(--foreground))] gap-1.5"
           aria-label="Mark article as not helpful"
         >
           <ThumbsDown className="w-3.5 h-3.5" />

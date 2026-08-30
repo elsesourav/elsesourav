@@ -33,12 +33,12 @@ export function AppPagination({ currentPage, totalPages, totalMatches }: AppPagi
 
   return (
     <nav
-      className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-zinc-800/80"
+      className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-[hsl(var(--border-subtle))]"
       aria-label="Pagination Navigation"
     >
-      <span className="text-xs text-zinc-500 order-2 sm:order-1">
-        Showing page <span className="text-zinc-300 font-medium">{currentPage}</span> of{' '}
-        <span className="text-zinc-300 font-medium">{totalPages}</span> ({totalMatches} total
+      <span className="text-xs text-[hsl(var(--muted-foreground))] order-2 sm:order-1 font-mono">
+        Showing page <span className="text-[hsl(var(--foreground))] font-semibold">{currentPage}</span> of{' '}
+        <span className="text-[hsl(var(--foreground))] font-semibold">{totalPages}</span> ({totalMatches} total
         results)
       </span>
 
@@ -48,7 +48,7 @@ export function AppPagination({ currentPage, totalPages, totalMatches }: AppPagi
           size="sm"
           onClick={() => navigateToPage(currentPage - 1)}
           disabled={currentPage <= 1}
-          className="border-zinc-800 text-zinc-300 disabled:opacity-40 text-xs gap-1"
+          className="text-xs gap-1"
           aria-label="Go to previous page"
         >
           <ChevronLeft className="w-3.5 h-3.5" /> Previous
@@ -64,10 +64,10 @@ export function AppPagination({ currentPage, totalPages, totalMatches }: AppPagi
                 type="button"
                 onClick={() => navigateToPage(pageNum)}
                 aria-current={isCurrent ? 'page' : undefined}
-                className={`w-8 h-8 rounded-lg text-xs font-medium transition-all ${
+                className={`w-8 h-8 rounded-lg text-xs font-mono font-medium transition-all ${
                   isCurrent
                     ? 'bg-indigo-600 text-white font-bold shadow-md shadow-indigo-600/30'
-                    : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800'
+                    : 'bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))]'
                 }`}
               >
                 {pageNum}
@@ -81,7 +81,7 @@ export function AppPagination({ currentPage, totalPages, totalMatches }: AppPagi
           size="sm"
           onClick={() => navigateToPage(currentPage + 1)}
           disabled={currentPage >= totalPages}
-          className="border-zinc-800 text-zinc-300 disabled:opacity-40 text-xs gap-1"
+          className="text-xs gap-1"
           aria-label="Go to next page"
         >
           Next <ChevronRight className="w-3.5 h-3.5" />

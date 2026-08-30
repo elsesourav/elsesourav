@@ -9,6 +9,7 @@ import {
 import { BlogArticleHeader } from '@/features/blog/components/BlogArticleHeader';
 import { BlogContentRenderer } from '@/features/blog/components/BlogContentRenderer';
 import { RelatedPosts } from '@/features/blog/components/RelatedPosts';
+import { ReadingProgressBar } from '@/features/blog/components/ReadingProgressBar';
 import { getBlogCoverUrl } from '@elsesourav/media';
 import { PageShell } from '@elsesourav/ui';
 import { Tag } from 'lucide-react';
@@ -27,8 +28,8 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
   if (!post) {
     return {
-      title: `Article Not Found — ${SITE_CONFIG.name}`,
-      description: 'The requested engineering note or article could not be found.',
+      title: `Note Not Found — ${SITE_CONFIG.name}`,
+      description: 'The requested engineering note or writing could not be found.',
       robots: {
         index: false,
         follow: false,
@@ -48,7 +49,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   const relatedPosts = await getRelatedBlogPosts(post.id, post.category?.id, 3);
-  const postUrl = `${SITE_CONFIG.url}/blog/${post.slug}`;
+  const postUrl = `${SITE_CONFIG.url}/notes/${post.slug}`;
 
   // JSON-LD structured data for article & breadcrumbs
   const jsonLd = {
@@ -56,7 +57,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     '@graph': [
       {
         '@type': 'BlogPosting',
-        '@id': `${postUrl}/#article`,
+        '@id': `${postUrl}/#note`,
         headline: post.title,
         description: post.excerpt,
         image: post.coverImageUrl ? [getBlogCoverUrl(post.coverImageUrl, 1200, 630)] : undefined,
@@ -92,8 +93,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {
             '@type': 'ListItem',
             position: 2,
-            name: 'Journal',
-            item: `${SITE_CONFIG.url}/blog`,
+            name: 'Notes',
+            item: `${SITE_CONFIG.url}/notes`,
           },
           {
             '@type': 'ListItem',
@@ -108,6 +109,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <PageShell size="lg" glow>
+      {/* Subtle, Accessible Reading Progress Bar */}
+      <ReadingProgressBar />
+
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
@@ -120,18 +124,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
         {/* Long-Form Article Content */}
         <article className="max-w-4xl mx-auto">
-          <div className="rounded-3xl border border-zinc-800/60 bg-zinc-900/20 p-6 sm:p-10 backdrop-blur-sm shadow-xl">
+          <div className="rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-6 sm:p-10 backdrop-blur-sm shadow-xl">
             <BlogContentRenderer content={post.content} />
 
             {/* Tag Pills Footer */}
             {post.tags.length > 0 && (
-              <div className="pt-8 mt-8 border-t border-zinc-800/80 flex flex-wrap items-center gap-2">
-                <span className="text-xs text-zinc-500 font-medium flex items-center gap-1">
+              <div className="pt-8 mt-8 border-t border-[hsl(var(--border-subtle))] flex flex-wrap items-center gap-2">
+                <span className="text-xs text-[hsl(var(--muted-foreground))] font-medium flex items-center gap-1">
                   <Tag className="w-3.5 h-3.5" /> Tags:
                 </span>
                 {post.tags.map((tag) => (
-                  <Link key={tag.id} href={`/blog?tag=${tag.slug}`}>
-                    <span className="px-2.5 py-1 rounded-lg text-xs font-medium bg-zinc-800/80 text-zinc-300 hover:text-white hover:bg-zinc-700 transition-colors">
+                  <Link key={tag.id} href={`/notes?tag=${tag.slug}`}>
+                    <span className="px-2.5 py-1 rounded-lg text-xs font-medium bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border-subtle))] text-[hsl(var(--foreground))] hover:bg-[hsl(var(--surface-elevated))] transition-colors">
                       #{tag.name}
                     </span>
                   </Link>

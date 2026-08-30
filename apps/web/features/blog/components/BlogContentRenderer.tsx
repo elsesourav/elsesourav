@@ -17,6 +17,18 @@ export const BlogCodeBlock = MarkdownCodeBlock;
 /**
  * BlogContentRenderer - Canonical shared Markdown renderer for devlogs and articles
  */
-export function BlogContentRenderer({ content, className = '' }: BlogContentRendererProps) {
-  return <MarkdownRenderer content={content} className={className} />;
+export function BlogContentRenderer({
+  content,
+  className = '',
+  startHeadingLevel = 2,
+  ...props
+}: BlogContentRendererProps) {
+  return (
+    <MarkdownRenderer
+      content={content}
+      className={className}
+      startHeadingLevel={startHeadingLevel}
+      {...props}
+    />
+  );
 }

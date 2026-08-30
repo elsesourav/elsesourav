@@ -109,21 +109,21 @@ export default async function HelpCategoryPage({ params }: HelpCategoryPageProps
       <div className="space-y-12">
         {/* Navigation & Breadcrumbs */}
         <div className="space-y-4">
-          <nav className="flex items-center gap-2 text-xs text-zinc-400" aria-label="Breadcrumb">
-            <Link href="/help" className="hover:text-white transition-colors">
+          <nav className="flex items-center gap-2 text-xs text-[hsl(var(--muted-foreground))]" aria-label="Breadcrumb">
+            <Link href="/help" className="hover:text-[hsl(var(--foreground))] transition-colors">
               Help Center
             </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-zinc-600" />
-            <span className="text-zinc-200 font-medium">{category.name}</span>
+            <ChevronRight className="w-3.5 h-3.5 text-[hsl(var(--subtle-foreground))]" />
+            <span className="text-[hsl(var(--foreground))] font-medium">{category.name}</span>
           </nav>
 
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
             <div className="space-y-1.5">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+                <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
                   <Folder className="w-5 h-5" />
                 </div>
-                <h1 className="text-2xl sm:text-4xl font-extrabold text-zinc-100 tracking-tight">
+                <h1 className="text-2xl sm:text-4xl font-extrabold text-[hsl(var(--foreground))] tracking-tight">
                   {category.name}
                 </h1>
                 <Badge variant="primary" className="text-xs px-2.5 py-0.5">
@@ -133,7 +133,7 @@ export default async function HelpCategoryPage({ params }: HelpCategoryPageProps
               </div>
 
               {category.description && (
-                <p className="text-sm text-zinc-400 max-w-2xl">{category.description}</p>
+                <p className="text-sm text-[hsl(var(--muted-foreground))] max-w-2xl">{category.description}</p>
               )}
             </div>
 

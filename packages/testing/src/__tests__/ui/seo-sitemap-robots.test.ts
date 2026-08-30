@@ -71,8 +71,8 @@ describe('SEO, Sitemap, and Discoverability Boundary Verification', () => {
     const result = await blogService.listPublicPosts();
 
     expect(result.items).toHaveLength(1);
-    const sitemapUrl = `${SITE_CONFIG.url}/blog/${result.items[0]?.slug}`;
-    expect(sitemapUrl).toBe('https://elsesourav.com/blog/scaling-nextjs-15');
+    const sitemapUrl = `${SITE_CONFIG.url}/notes/${result.items[0]?.slug}`;
+    expect(sitemapUrl).toBe('https://elsesourav.com/notes/scaling-nextjs-15');
   });
 
   it('should verify sitemap generator builds canonical entries for published help categories and articles', async () => {
@@ -130,7 +130,7 @@ describe('SEO, Sitemap, and Discoverability Boundary Verification', () => {
     expect(disallowList).toContain('/notifications');
     expect(disallowList).toContain('/api/');
     expect(disallowList).not.toContain('/apps');
-    expect(disallowList).not.toContain('/blog');
+    expect(disallowList).not.toContain('/notes');
     expect(disallowList).not.toContain('/help');
   });
 });

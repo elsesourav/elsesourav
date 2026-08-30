@@ -14,7 +14,7 @@ describe('Universal Content-Aware Share Preview Metadata System', () => {
   describe('toAbsoluteUrl helper', () => {
     it('prepends canonical SITE_CONFIG.url to relative paths', () => {
       expect(toAbsoluteUrl('/apps/spectralens-ai')).toBe('https://elsesourav.com/apps/spectralens-ai');
-      expect(toAbsoluteUrl('blog/nextjs-deepdive')).toBe('https://elsesourav.com/blog/nextjs-deepdive');
+      expect(toAbsoluteUrl('notes/nextjs-deepdive')).toBe('https://elsesourav.com/notes/nextjs-deepdive');
     });
 
     it('preserves valid absolute HTTPS URLs', () => {
@@ -124,7 +124,7 @@ describe('Universal Content-Aware Share Preview Metadata System', () => {
 
       expect(meta.title).toBe(`Understanding React Server Components Architecture — ${SITE_CONFIG.name} Journal`);
       expect(meta.description).toBe('A deep exploration into streaming SSR and server action lifecycles.');
-      expect(meta.alternates?.canonical).toBe('https://elsesourav.com/blog/rsc-architecture');
+      expect(meta.alternates?.canonical).toBe('https://elsesourav.com/notes/rsc-architecture');
 
       expect(meta.openGraph?.type).toBe('article');
       expect(meta.openGraph?.publishedTime).toBe('2026-08-28T12:00:00.000Z');

@@ -30,7 +30,7 @@ export default async function UserSupportTicketsPage() {
       <div className="space-y-8 max-w-4xl mx-auto">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <PageHeader
-            eyebrow="Authenticated User Area"
+            eyebrow="Help & Support"
             title="My Support Tickets"
             description="Submit inquiries, track issue tickets, and get technical assistance from our team."
           />

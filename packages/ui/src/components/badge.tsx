@@ -21,14 +21,14 @@ export function Badge({
   ...props
 }: BadgeProps) {
   const variants = {
-    default: 'bg-zinc-800 text-zinc-200 border-zinc-700/80',
-    primary: 'bg-indigo-950/70 text-indigo-300 border-indigo-800/60',
-    secondary: 'bg-zinc-900 text-zinc-300 border-zinc-800',
-    success: 'bg-emerald-950/60 text-emerald-300 border-emerald-800/60',
-    warning: 'bg-amber-950/60 text-amber-300 border-amber-800/60',
-    error: 'bg-rose-950/60 text-rose-300 border-rose-800/60',
-    info: 'bg-cyan-950/60 text-cyan-300 border-cyan-800/60',
-    outline: 'border-zinc-700 text-zinc-400 bg-transparent',
+    default: 'bg-[hsl(var(--secondary))] text-[hsl(var(--secondary-foreground))] border-[hsl(var(--border))]',
+    primary: 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border-indigo-500/30',
+    secondary: 'bg-[hsl(var(--surface-subtle))] text-[hsl(var(--muted-foreground))] border-[hsl(var(--border-subtle))]',
+    success: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30',
+    warning: 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30',
+    error: 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/30',
+    info: 'bg-sky-500/15 text-sky-700 dark:text-sky-300 border-sky-500/30',
+    outline: 'border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] bg-transparent',
   };
 
   const sizes = {

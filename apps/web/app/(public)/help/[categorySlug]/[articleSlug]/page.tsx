@@ -52,7 +52,7 @@ export default async function HelpArticlePage({ params }: HelpArticlePageProps) 
     notFound();
   }
 
-  const relatedArticles = await getRelatedHelpArticles(article.id, article.category.id, 3);
+  const relatedArticles = await getRelatedHelpArticles(article.id, article.category?.id, 3);
   const articleUrl = `${SITE_CONFIG.url}/help/${categorySlug}/${article.slug}`;
 
   // JSON-LD structured data for article & breadcrumbs
@@ -134,7 +134,7 @@ export default async function HelpArticlePage({ params }: HelpArticlePageProps) 
 
         {/* Article Body */}
         <main className="max-w-4xl mx-auto space-y-10">
-          <div className="rounded-3xl border border-zinc-800/60 bg-zinc-900/20 p-6 sm:p-10 backdrop-blur-sm shadow-xl">
+          <div className="rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-6 sm:p-10 backdrop-blur-sm shadow-xl">
             <BlogContentRenderer content={article.content} />
           </div>
 

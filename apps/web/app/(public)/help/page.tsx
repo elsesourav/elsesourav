@@ -52,7 +52,7 @@ export default async function HelpPage({ searchParams }: HelpPageProps) {
         <div className="space-y-10">
           {/* Header & Search Bar */}
           <div className="text-center space-y-4 max-w-3xl mx-auto">
-            <h1 className="text-2xl sm:text-4xl font-extrabold text-zinc-100 tracking-tight">
+            <h1 className="text-2xl sm:text-4xl font-extrabold text-[hsl(var(--foreground))] tracking-tight">
               Help Center Search
             </h1>
             <HelpSearchBar />
@@ -60,11 +60,11 @@ export default async function HelpPage({ searchParams }: HelpPageProps) {
 
           {/* Results Summary */}
           <div className="space-y-6">
-            <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
+            <div className="flex items-center justify-between border-b border-[hsl(var(--border-subtle))] pb-4">
               <div className="flex items-center gap-2">
-                <span className="text-sm text-zinc-400">
+                <span className="text-sm text-[hsl(var(--muted-foreground))]">
                   Search results for &ldquo;
-                  <span className="text-zinc-200 font-semibold">{searchQuery}</span>&rdquo;
+                  <span className="text-[hsl(var(--foreground))] font-semibold">{searchQuery}</span>&rdquo;
                 </span>
                 <Badge variant="primary" className="text-xs px-2 py-0.5">
                   {searchResult.totalCount} {searchResult.totalCount === 1 ? 'guide' : 'guides'}
@@ -118,19 +118,19 @@ export default async function HelpPage({ searchParams }: HelpPageProps) {
           className="text-center space-y-5 max-w-3xl mx-auto pt-4"
           aria-labelledby="help-hero-title"
         >
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-indigo-950/60 border border-indigo-500/30 text-indigo-400 text-xs font-medium">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-600 dark:text-indigo-400 text-xs font-medium">
             <LifeBuoy className="w-3.5 h-3.5" />
             <span>Help Center & Knowledge Base</span>
           </div>
 
           <h1
             id="help-hero-title"
-            className="text-3xl sm:text-5xl font-extrabold tracking-tight text-zinc-100"
+            className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[hsl(var(--foreground))]"
           >
             How can we help you?
           </h1>
 
-          <p className="text-sm sm:text-base text-zinc-400 max-w-xl mx-auto leading-relaxed">
+          <p className="text-sm sm:text-base text-[hsl(var(--muted-foreground))] max-w-xl mx-auto leading-relaxed">
             Guides, FAQs, troubleshooting advice, and step-by-step documentation for ElseSourav
             tools.
           </p>
@@ -142,11 +142,11 @@ export default async function HelpPage({ searchParams }: HelpPageProps) {
 
         {/* Categories Grid */}
         <section className="space-y-6" aria-labelledby="categories-heading">
-          <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
-            <h2 id="categories-heading" className="text-xl font-bold text-zinc-100">
+          <div className="flex items-center justify-between border-b border-[hsl(var(--border-subtle))] pb-4">
+            <h2 id="categories-heading" className="text-xl font-bold text-[hsl(var(--foreground))]">
               Browse by Category
             </h2>
-            <span className="text-xs text-zinc-500">
+            <span className="text-xs text-[hsl(var(--muted-foreground))]">
               {categories.length} Knowledge Base {categories.length === 1 ? 'Topic' : 'Topics'}
             </span>
           </div>
@@ -165,9 +165,9 @@ export default async function HelpPage({ searchParams }: HelpPageProps) {
         {/* Popular / Featured Guides */}
         {featuredArticles.length > 0 && (
           <section className="space-y-6" aria-labelledby="popular-guides-heading">
-            <div className="flex items-center gap-2 border-b border-zinc-800/80 pb-4">
-              <Sparkles className="w-5 h-5 text-indigo-400" />
-              <h2 id="popular-guides-heading" className="text-xl font-bold text-zinc-100">
+            <div className="flex items-center gap-2 border-b border-[hsl(var(--border-subtle))] pb-4">
+              <Sparkles className="w-5 h-5 text-indigo-500" />
+              <h2 id="popular-guides-heading" className="text-xl font-bold text-[hsl(var(--foreground))]">
                 Popular Guides & Tutorials
               </h2>
             </div>

@@ -80,6 +80,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      (window as unknown as { __setTheme?: (t: Theme) => void }).__setTheme = setTheme;
+    }
+  }, [setTheme]);
+
   const value = React.useMemo(
     () => ({ theme, resolvedTheme, setTheme }),
     [theme, resolvedTheme, setTheme]

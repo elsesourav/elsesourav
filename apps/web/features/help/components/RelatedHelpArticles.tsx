@@ -14,12 +14,12 @@ export function RelatedHelpArticles({ articles }: RelatedHelpArticlesProps) {
 
   return (
     <section
-      className="space-y-6 pt-10 border-t border-zinc-800/80 max-w-4xl mx-auto"
+      className="space-y-6 pt-10 border-t border-[hsl(var(--border-subtle))] max-w-4xl mx-auto"
       aria-labelledby="related-guides-heading"
     >
       <div className="flex items-center gap-2">
-        <Sparkles className="w-5 h-5 text-indigo-400" />
-        <h3 id="related-guides-heading" className="text-lg font-bold text-zinc-100">
+        <Sparkles className="w-5 h-5 text-indigo-500" />
+        <h3 id="related-guides-heading" className="text-lg font-bold text-[hsl(var(--foreground))]">
           Related Guides in this Topic
         </h3>
       </div>

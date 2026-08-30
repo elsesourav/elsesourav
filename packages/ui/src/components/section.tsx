@@ -30,10 +30,10 @@ export function Section({
 
   const surfaces: Record<SectionSurface, string> = {
     transparent: '',
-    subtle: 'bg-zinc-900/30 border-y border-zinc-800/60',
-    solid: 'bg-zinc-950 border-y border-zinc-800',
-    elevated: 'bg-zinc-900/60 border-y border-zinc-800/80 shadow-md',
-    glass: 'bg-zinc-950/60 backdrop-blur-md border-y border-zinc-800/80',
+    subtle: 'bg-[hsl(var(--surface-subtle))] border-y border-[hsl(var(--border-subtle))]',
+    solid: 'bg-[hsl(var(--surface))] border-y border-[hsl(var(--border))]',
+    elevated: 'bg-[hsl(var(--surface-elevated))] border-y border-[hsl(var(--border))] shadow-md',
+    glass: 'bg-[var(--glass-bg)] backdrop-blur-md border-y border-[var(--glass-border)]',
   };
 
   return (
@@ -73,20 +73,20 @@ export function SectionHeader({
     return (
       <div
         className={cn(
-          'flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 sm:mb-12 pb-4 border-b border-zinc-800/60',
+          'flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 sm:mb-12 pb-4 border-b border-[hsl(var(--border-subtle))]',
           className
         )}
         {...props}
       >
         <div className="space-y-1.5 max-w-2xl">
           {caption && (
-            <span className="text-caption text-indigo-400 font-semibold tracking-wider uppercase">
+            <span className="text-caption text-indigo-600 dark:text-indigo-400 font-semibold tracking-wider uppercase">
               {caption}
             </span>
           )}
-          <h2 className="text-h2 font-bold text-white tracking-tight leading-tight">{title}</h2>
+          <h2 className="text-h2 font-bold text-[hsl(var(--foreground))] tracking-tight leading-tight">{title}</h2>
           {description && (
-            <p className="text-body text-zinc-400 leading-relaxed text-sm">{description}</p>
+            <p className="text-body text-[hsl(var(--muted-foreground))] leading-relaxed text-sm">{description}</p>
           )}
         </div>
         {actions && <div className="flex items-center gap-3 shrink-0">{actions}</div>}
@@ -105,13 +105,13 @@ export function SectionHeader({
       {...props}
     >
       {caption && (
-        <span className="text-caption text-indigo-400 font-semibold tracking-wider uppercase">
+        <span className="text-caption text-indigo-600 dark:text-indigo-400 font-semibold tracking-wider uppercase">
           {caption}
         </span>
       )}
-      <h2 className="text-h2 font-bold text-white tracking-tight leading-tight">{title}</h2>
+      <h2 className="text-h2 font-bold text-[hsl(var(--foreground))] tracking-tight leading-tight">{title}</h2>
       {description && (
-        <p className="text-body text-zinc-400 leading-relaxed max-w-2xl">{description}</p>
+        <p className="text-body text-[hsl(var(--muted-foreground))] leading-relaxed max-w-2xl">{description}</p>
       )}
       {actions && <div className="pt-3 flex items-center gap-3">{actions}</div>}
     </div>
@@ -142,7 +142,7 @@ export function PageHeader({
   return (
     <div
       className={cn(
-        'pb-8 pt-2 sm:pt-4 border-b border-zinc-800/80 mb-8 sm:mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between',
+        'pb-8 pt-2 sm:pt-4 border-b border-[hsl(var(--border-subtle))] mb-8 sm:mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between',
         align === 'center' && 'text-center md:flex-col md:items-center',
         className
       )}
@@ -152,16 +152,16 @@ export function PageHeader({
         {(eyebrow || badge) && (
           <div className="flex flex-wrap items-center gap-2.5">
             {eyebrow && (
-              <span className="text-xs font-semibold text-indigo-400 uppercase tracking-wider font-mono">
+              <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-mono">
                 {eyebrow}
               </span>
             )}
             {badge}
           </div>
         )}
-        <h1 className="text-h1 font-extrabold text-white tracking-tight leading-tight">{title}</h1>
+        <h1 className="text-h1 font-extrabold text-[hsl(var(--foreground))] tracking-tight leading-tight">{title}</h1>
         {description && (
-          <p className="text-body text-zinc-400 leading-relaxed">{description}</p>
+          <p className="text-body text-[hsl(var(--muted-foreground))] leading-relaxed">{description}</p>
         )}
         {metadata && <div className="pt-1">{metadata}</div>}
       </div>
