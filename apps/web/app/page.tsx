@@ -11,16 +11,13 @@ import Link from 'next/link';
 import { PublicHeader } from '@/components/navigation/PublicHeader';
 import { PublicFooter } from '@/components/navigation/PublicFooter';
 import {
-  Sparkles,
   BookOpen,
   ArrowRight,
   CheckCircle2,
   Layers,
-  Code2,
   Megaphone,
   LifeBuoy,
   HelpCircle,
-  Activity,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -55,8 +52,8 @@ export default async function HomePage() {
   const cookieStore = await cookies();
   const siteService = new SiteService();
 
-  // Query live selected apps (curated 3), latest blogs, consolidated site/creator identity, and auth session
-  const [appsResult, blogResult, identity, session] = await Promise.all([
+  // Query live selected apps (curated 3), latest blogs, active lab experiment, site/creator identity, and session
+  const [appsResult, blogResult, labResult, identity, session] = await Promise.all([
     discoverPublishedApps({ limit: 3, sort: 'popularity' }).catch(() => ({
       items: [],
       totalCount: 0,
@@ -67,6 +64,10 @@ export default async function HomePage() {
       page: 1,
       totalPages: 1,
     })),
+    discoverPublishedApps({ filters: { categorySlug: 'simulations' }, limit: 1 }).catch(() => ({
+      items: [],
+      totalCount: 0,
+    })),
     siteService.getSiteAndCreatorIdentity(),
     getServerSession({
       getAll: () => cookieStore.getAll(),
@@ -75,6 +76,7 @@ export default async function HomePage() {
 
   const featuredApps = appsResult.items || [];
   const recentPosts = blogResult.items || [];
+  const activeLabApp = labResult.items[0] || null;
   const primaryFeaturedApp = featuredApps[0] || null;
 
   const jsonLd = {
@@ -139,7 +141,7 @@ export default async function HomePage() {
 
       {/* Main Content Landmark */}
       <main id="main-content" className="flex-1">
-        {/* 1. Hero Section: Personal Creator Studio & Digital Archive */}
+        {/* 1. Hero Section: Identity-First Creator Studio */}
         <Section spacing="lg" className="relative pt-8 sm:pt-12 lg:pt-16 pb-16 sm:pb-20 lg:pb-24">
           <div
             aria-hidden="true"
@@ -150,112 +152,118 @@ export default async function HomePage() {
 
           <Container size="lg">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-              {/* Left Column: Creator Introduction & Direct Studio Narrative */}
+              {/* Left Column: Creator Identity & Direct Positioning */}
               <div className="lg:col-span-7 space-y-6 text-left">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-indigo-500/30 bg-indigo-950/40 text-xs text-indigo-300 font-medium shadow-sm">
-                  <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-                  <span>{identity.homepage.heroBadge || 'Independent Software Studio & Archive'}</span>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/60 text-xs text-zinc-300 font-medium">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>{identity.homepage.heroBadge || 'Software Creator & Engineer'}</span>
                 </div>
 
-                <h1 className="text-display font-extrabold tracking-tight text-white leading-[1.08]">
-                  {identity.homepage.heroHeadline || `I'm ${identity.creator.name}. I design and build software, tools, and interactive experiences.`}
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-[1.12]">
+                  {identity.homepage.heroHeadline || `I'm ${identity.creator.name}. I build software, tools, games, and experiments.`}
                 </h1>
 
-                <p className="text-body sm:text-lg text-zinc-400 leading-relaxed max-w-xl">
-                  {identity.homepage.heroSubtitle || `${SITE_CONFIG.name} is my personal studio and workshop—a living collection of software, engineering field notes, and creative experiments built with a focus on craft, speed, and privacy.`}
+                <p className="text-base sm:text-lg text-zinc-400 leading-relaxed max-w-xl">
+                  {identity.homepage.heroSubtitle || 'Exploring ideas across web architecture, AI, graphics, automation, and systems—built with a focus on usability, performance, and independent craft.'}
                 </p>
 
                 <ActionGroup className="pt-2">
                   <Link href={ROUTES.APPS}>
                     <Button size="lg" className="gap-2 shadow-xl shadow-indigo-600/25 px-6 font-semibold min-h-[44px]">
                       <Layers className="w-4 h-4" />
-                      <span>{identity.homepage.primaryCtaLabel || 'Explore Applications'} {appsResult.totalCount > 0 ? `(${appsResult.totalCount})` : ''}</span>
+                      <span>{identity.homepage.primaryCtaLabel || 'Explore Work'}</span>
                     </Button>
                   </Link>
                   <Link href={ROUTES.BLOG}>
                     <Button variant="secondary" size="lg" className="gap-2 px-6 min-h-[44px]">
                       <BookOpen className="w-4 h-4" />
-                      <span>{identity.homepage.secondaryCtaLabel || 'Read Engineering Notes'}</span>
+                      <span>{identity.homepage.secondaryCtaLabel || 'Read Notes'}</span>
                     </Button>
                   </Link>
                 </ActionGroup>
 
                 {/* Subtle Real-Data Scale Indicators */}
-                <div className="pt-3 flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-zinc-500">
-                  <span className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-zinc-400">Independent Studio</span>
-                  </span>
+                <div className="pt-2 flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-zinc-500 font-mono">
+                  <span className="text-zinc-400">Independent Studio</span>
                   <span>•</span>
-                  <span>{appsResult.totalCount} {appsResult.totalCount === 1 ? 'Application' : 'Applications'}</span>
+                  <span>{appsResult.totalCount} {appsResult.totalCount === 1 ? 'Project' : 'Projects'}</span>
                   <span>•</span>
                   <span>{blogResult.totalCount} {blogResult.totalCount === 1 ? 'Note' : 'Field Notes'}</span>
-                  <span>•</span>
-                  <span>By {identity.creator.name}</span>
                 </div>
               </div>
 
-              {/* Right Column: Creator Spotlight & Exploration Overview Panel */}
+              {/* Right Column: Quiet Editorial Studio Workbench Artifact */}
               <div className="lg:col-span-5">
-                <div className="relative rounded-3xl border border-zinc-800/80 bg-zinc-900/60 backdrop-blur-xl p-6 sm:p-7 shadow-2xl space-y-5 hover:border-zinc-700/80 transition-all duration-300">
+                <div className="rounded-3xl border border-zinc-800/80 bg-zinc-900/40 backdrop-blur-md p-6 sm:p-7 shadow-xl space-y-5 hover:border-zinc-700/80 transition-colors">
                   {/* Studio Status Header */}
                   <div className="flex items-center justify-between pb-3 border-b border-zinc-800/70 text-xs text-zinc-400">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-indigo-500" />
-                      <span className="font-mono text-xs font-semibold text-zinc-200 uppercase tracking-wider">
-                        Current Focus & Work
-                      </span>
-                    </div>
-                    <span className="text-[11px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/40 px-2 py-0.5 rounded-md flex items-center gap-1">
-                      <Activity className="w-3 h-3" />
-                      <span>Active Studio</span>
+                    <span className="font-mono text-xs font-semibold text-zinc-300 uppercase tracking-wider">
+                      Studio Workbench
+                    </span>
+                    <span className="text-[11px] font-mono text-emerald-400 flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                      <span>Active Focus</span>
                     </span>
                   </div>
 
-                  {/* Flagship Work Spotlight */}
+                  {/* 1. Currently Building (Featured Project) */}
                   {primaryFeaturedApp && (
-                    <div className="p-4 rounded-2xl border border-zinc-800/90 bg-zinc-950/70 space-y-2.5">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-indigo-400 font-medium font-mono text-[11px] uppercase tracking-wider">
-                          Featured Work
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between text-[11px] font-mono">
+                        <span className="text-indigo-400 uppercase tracking-wider font-semibold">
+                          Currently Building
                         </span>
-                        <span className="text-zinc-500 text-[11px] font-mono">v{primaryFeaturedApp.currentVersion || '1.0'}</span>
+                        <span className="text-zinc-500">v{primaryFeaturedApp.currentVersion || '1.0'}</span>
                       </div>
-                      <div className="flex items-start gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-indigo-950/80 border border-indigo-800/60 flex items-center justify-center text-indigo-400 shrink-0 mt-0.5">
-                          <Code2 className="w-4.5 h-4.5" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <h3 className="text-sm font-semibold text-white truncate">{primaryFeaturedApp.name}</h3>
-                          <p className="text-xs text-zinc-400 line-clamp-2 mt-0.5">{primaryFeaturedApp.shortDescription}</p>
-                        </div>
-                      </div>
+                      <h3 className="text-sm font-semibold text-white">
+                        <Link
+                          href={`/apps/${primaryFeaturedApp.slug}`}
+                          className="hover:text-indigo-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded"
+                        >
+                          {primaryFeaturedApp.name}
+                        </Link>
+                      </h3>
+                      <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+                        {primaryFeaturedApp.shortDescription}
+                      </p>
                       <Link
                         href={`/apps/${primaryFeaturedApp.slug}`}
-                        className="inline-flex items-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 font-medium pt-1 group"
+                        className="inline-flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300 font-medium pt-0.5 group"
                       >
-                        <span>Inspect architecture</span>
+                        <span>Launch & inspect</span>
                         <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                       </Link>
                     </div>
                   )}
 
-                  {/* Latest Note Spotlight */}
+                  {/* Divider */}
+                  {primaryFeaturedApp && (recentPosts[0] || activeLabApp) && (
+                    <div className="border-t border-zinc-800/60" />
+                  )}
+
+                  {/* 2. Latest Published Note */}
                   {recentPosts[0] && (
-                    <div className="p-4 rounded-2xl border border-zinc-800/90 bg-zinc-950/70 space-y-2.5">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-cyan-400 font-medium font-mono text-[11px] uppercase tracking-wider">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between text-[11px] font-mono">
+                        <span className="text-cyan-400 uppercase tracking-wider font-semibold">
                           Latest Note
                         </span>
-                        <span className="text-zinc-500 text-[11px] font-mono">{recentPosts[0].readingTime || 5} min read</span>
+                        <span className="text-zinc-500">{recentPosts[0].readingTime || 5} min read</span>
                       </div>
-                      <div>
-                        <h3 className="text-sm font-semibold text-white line-clamp-1">{recentPosts[0].title}</h3>
-                        <p className="text-xs text-zinc-400 line-clamp-2 mt-0.5">{recentPosts[0].excerpt}</p>
-                      </div>
+                      <h3 className="text-sm font-semibold text-white">
+                        <Link
+                          href={`/blog/${recentPosts[0].slug}`}
+                          className="hover:text-cyan-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded"
+                        >
+                          {recentPosts[0].title}
+                        </Link>
+                      </h3>
+                      <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+                        {recentPosts[0].excerpt}
+                      </p>
                       <Link
                         href={`/blog/${recentPosts[0].slug}`}
-                        className="inline-flex items-center gap-1.5 text-xs text-cyan-400 hover:text-cyan-300 font-medium pt-1 group"
+                        className="inline-flex items-center gap-1 text-xs text-cyan-400 hover:text-cyan-300 font-medium pt-0.5 group"
                       >
                         <span>Read note</span>
                         <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -263,32 +271,40 @@ export default async function HomePage() {
                     </div>
                   )}
 
-                  {/* Fast Exploration Links */}
-                  <div className="grid grid-cols-3 gap-2.5 pt-1 text-center">
-                    <Link
-                      href={ROUTES.APPS}
-                      className="p-2.5 rounded-xl border border-zinc-800/70 bg-zinc-950/50 hover:bg-zinc-800/60 transition-colors group"
-                    >
-                      <div className="text-xs font-semibold text-zinc-200 group-hover:text-white">Work</div>
-                      <div className="text-[10px] text-zinc-500 font-mono">Software</div>
-                    </Link>
+                  {/* Divider */}
+                  {recentPosts[0] && activeLabApp && (
+                    <div className="border-t border-zinc-800/60" />
+                  )}
 
-                    <Link
-                      href="/apps?category=simulations"
-                      className="p-2.5 rounded-xl border border-zinc-800/70 bg-zinc-950/50 hover:bg-zinc-800/60 transition-colors group"
-                    >
-                      <div className="text-xs font-semibold text-zinc-200 group-hover:text-white">Lab</div>
-                      <div className="text-[10px] text-zinc-500 font-mono">Experiments</div>
-                    </Link>
-
-                    <Link
-                      href={ROUTES.BLOG}
-                      className="p-2.5 rounded-xl border border-zinc-800/70 bg-zinc-950/50 hover:bg-zinc-800/60 transition-colors group"
-                    >
-                      <div className="text-xs font-semibold text-zinc-200 group-hover:text-white">Notes</div>
-                      <div className="text-[10px] text-zinc-500 font-mono">Devlog</div>
-                    </Link>
-                  </div>
+                  {/* 3. Exploring / Lab Experiment */}
+                  {activeLabApp && (
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between text-[11px] font-mono">
+                        <span className="text-purple-400 uppercase tracking-wider font-semibold">
+                          Exploring Lab
+                        </span>
+                        <span className="text-zinc-500">Experiment</span>
+                      </div>
+                      <h3 className="text-sm font-semibold text-white">
+                        <Link
+                          href={`/apps/${activeLabApp.slug}`}
+                          className="hover:text-purple-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded"
+                        >
+                          {activeLabApp.name}
+                        </Link>
+                      </h3>
+                      <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+                        {activeLabApp.shortDescription}
+                      </p>
+                      <Link
+                        href={`/apps/${activeLabApp.slug}`}
+                        className="inline-flex items-center gap-1 text-xs text-purple-400 hover:text-purple-300 font-medium pt-0.5 group"
+                      >
+                        <span>Run simulation</span>
+                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                      </Link>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
