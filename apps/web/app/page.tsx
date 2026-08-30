@@ -17,8 +17,8 @@ import {
   CheckCircle2,
   Layers,
   Megaphone,
-  LifeBuoy,
-  HelpCircle,
+  Sparkles,
+  User,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -53,7 +53,7 @@ export default async function HomePage() {
   const cookieStore = await cookies();
   const siteService = new SiteService();
 
-  // Query live selected apps (curated 5), latest blogs, active lab experiments (up to 6), site/creator identity, and session
+  // Curated data queries: 5 selected projects, 3 recent notes, 3 lab simulations, site/creator identity
   const [appsResult, blogResult, labResult, identity, session] = await Promise.all([
     discoverPublishedApps({ limit: 5, sort: 'popularity' }).catch(() => ({
       items: [],
@@ -65,7 +65,7 @@ export default async function HomePage() {
       page: 1,
       totalPages: 1,
     })),
-    discoverPublishedApps({ filters: { categorySlug: 'simulations' }, limit: 6 }).catch(() => ({
+    discoverPublishedApps({ filters: { categorySlug: 'simulations' }, limit: 3 }).catch(() => ({
       items: [],
       totalCount: 0,
     })),
@@ -312,8 +312,7 @@ export default async function HomePage() {
           </Container>
         </Section>
 
-        {/* 2. Selected Work / Projects Introduction */}
-        {/* 2. Selected Work / Projects Introduction */}
+        {/* 2. Selected Work / Projects (Curated 4–5 Projects) */}
         {featuredApps.length > 0 && (
           <Section spacing="lg" surface="subtle">
             <Container size="lg">
@@ -367,91 +366,9 @@ export default async function HomePage() {
           </Section>
         )}
 
-        {/* 3. LAB / Experiments Preview Section */}
-        {labProjects.length > 0 && (
-          <Section spacing="lg">
-            <Container size="lg">
-              <Reveal direction="up" distance={14}>
-                <SectionHeader
-                  align="split"
-                  caption="Lab"
-                  title="Small experiments, prototypes, and ideas."
-                  description="Built to explore algorithms, physics solvers, constraint satisfaction, and graphics."
-                  actions={
-                    <Link
-                      href="/apps?category=simulations"
-                      className="text-sm font-medium text-purple-400 hover:text-purple-300 flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded p-1 group"
-                    >
-                      <span>Explore the Lab {labResult.totalCount > 0 ? `(${labResult.totalCount})` : ''}</span>
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                    </Link>
-                  }
-                />
-              </Reveal>
-
-              <RevealGroup staggerDelay={0.05} baseDelay={0.06} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-                {labProjects.map((item: AppListItem, idx: number) => {
-                  const formattedIdx = String(idx + 1).padStart(2, '0');
-                  const categoryName = item.primaryCategory || 'Simulation';
-                  return (
-                    <Link
-                      key={item.id}
-                      href={`/apps/${item.slug}`}
-                      className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded-2xl"
-                    >
-                      <article className="h-full rounded-2xl border border-zinc-800/70 bg-zinc-900/30 hover:bg-zinc-900/70 hover:border-purple-500/40 p-5 transition-all duration-200 flex flex-col justify-between backdrop-blur-sm">
-                        <div className="space-y-2.5">
-                          <div className="flex items-center justify-between text-xs font-mono">
-                            <span className="text-purple-400 font-bold text-[11px] bg-purple-950/50 px-2 py-0.5 rounded border border-purple-800/30">
-                              {formattedIdx}
-                            </span>
-                            <span className="text-zinc-500 text-[11px] uppercase tracking-wider">
-                              {categoryName}
-                            </span>
-                          </div>
-
-                          <div>
-                            <h3 className="text-base font-semibold text-zinc-100 group-hover:text-white transition-colors">
-                              {item.name}
-                            </h3>
-                            <p className="text-xs text-zinc-400 line-clamp-2 mt-1 leading-relaxed">
-                              {item.shortDescription}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center justify-between pt-3 mt-3 border-t border-zinc-800/50 text-[11px] font-mono text-zinc-500">
-                          <span className="text-zinc-400">Interactive</span>
-                          <span className="text-purple-400 group-hover:translate-x-0.5 transition-transform flex items-center gap-1 font-sans text-xs">
-                            <span>Run experiment</span>
-                            <ArrowRight className="w-3 h-3" />
-                          </span>
-                        </div>
-                      </article>
-                    </Link>
-                  );
-                })}
-              </RevealGroup>
-
-              {/* Bottom Lab CTA link */}
-              <Reveal direction="up" distance={10} delay={0.12}>
-                <div className="text-center pt-8">
-                  <Link
-                    href="/apps?category=simulations"
-                    className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-purple-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded p-1"
-                  >
-                    <span>Explore full Lab & Simulation archive ({labResult.totalCount} active experiments)</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </Reveal>
-            </Container>
-          </Section>
-        )}
-
-        {/* 4. Writing & Engineering Notes Section */}
+        {/* 3. Field Notes & Reflections (1 Lead Essay + 2 Archival Notes) */}
         {recentPosts.length > 0 && (
-          <Section spacing="lg" surface="subtle">
+          <Section spacing="lg">
             <Container size="lg">
               <Reveal direction="up" distance={14}>
                 <SectionHeader
@@ -642,8 +559,90 @@ export default async function HomePage() {
           </Section>
         )}
 
+        {/* 4. The Lab & Interactive Prototypes (Compact Sample) */}
+        {labProjects.length > 0 && (
+          <Section spacing="lg" surface="subtle">
+            <Container size="lg">
+              <Reveal direction="up" distance={14}>
+                <SectionHeader
+                  align="split"
+                  caption="The Lab"
+                  title="Small experiments, prototypes, and ideas."
+                  description="Built to explore algorithms, physics solvers, constraint satisfaction, and graphics."
+                  actions={
+                    <Link
+                      href={ROUTES.LAB}
+                      className="text-sm font-medium text-purple-400 hover:text-purple-300 flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded p-1 group"
+                    >
+                      <span>Explore the Lab {labResult.totalCount > 0 ? `(${labResult.totalCount})` : ''}</span>
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                    </Link>
+                  }
+                />
+              </Reveal>
+
+              <RevealGroup staggerDelay={0.05} baseDelay={0.06} className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                {labProjects.slice(0, 3).map((item: AppListItem, idx: number) => {
+                  const formattedIdx = String(idx + 1).padStart(2, '0');
+                  const categoryName = item.primaryCategory || 'Simulation';
+                  return (
+                    <Link
+                      key={item.id}
+                      href={`/apps/${item.slug}`}
+                      className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded-2xl"
+                    >
+                      <article className="h-full rounded-2xl border border-zinc-800/70 bg-zinc-900/30 hover:bg-zinc-900/70 hover:border-purple-500/40 p-5 transition-all duration-200 flex flex-col justify-between backdrop-blur-sm">
+                        <div className="space-y-2.5">
+                          <div className="flex items-center justify-between text-xs font-mono">
+                            <span className="text-purple-400 font-bold text-[11px] bg-purple-950/50 px-2 py-0.5 rounded border border-purple-800/30">
+                              {formattedIdx}
+                            </span>
+                            <span className="text-zinc-500 text-[11px] uppercase tracking-wider">
+                              {categoryName}
+                            </span>
+                          </div>
+
+                          <div>
+                            <h3 className="text-base font-semibold text-zinc-100 group-hover:text-white transition-colors">
+                              {item.name}
+                            </h3>
+                            <p className="text-xs text-zinc-400 line-clamp-2 mt-1 leading-relaxed">
+                              {item.shortDescription}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-3 mt-3 border-t border-zinc-800/50 text-[11px] font-mono text-zinc-500">
+                          <span className="text-zinc-400">Interactive</span>
+                          <span className="text-purple-400 group-hover:translate-x-0.5 transition-transform flex items-center gap-1 font-sans text-xs">
+                            <span>Run experiment</span>
+                            <ArrowRight className="w-3 h-3" />
+                          </span>
+                        </div>
+                      </article>
+                    </Link>
+                  );
+                })}
+              </RevealGroup>
+
+              {/* Bottom Lab CTA link */}
+              <Reveal direction="up" distance={10} delay={0.12}>
+                <div className="text-center pt-8">
+                  <Link
+                    href={ROUTES.LAB}
+                    className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-purple-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded p-1"
+                  >
+                    <span>Explore full Lab & Simulation hub ({labResult.totalCount} active experiments)</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              </Reveal>
+            </Container>
+          </Section>
+        )}
+
         {/* 5. Creator Context & Guiding Philosophy */}
-        <Section spacing="lg" surface="subtle">
+        <Section spacing="lg">
           <Container size="lg">
             <Reveal direction="up" distance={16}>
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
@@ -684,7 +683,7 @@ export default async function HomePage() {
                         size="sm"
                         className="border-zinc-800 text-xs gap-1.5 text-zinc-300 hover:text-white"
                       >
-                        <span>Read the complete studio mission & bio</span>
+                        <span>Read about the journey & background</span>
                         <ArrowRight className="w-3.5 h-3.5" />
                       </Button>
                     </Link>
@@ -718,103 +717,86 @@ export default async function HomePage() {
           </Container>
         </Section>
 
-        {/* 6. Explore Studio Pathways */}
-        <Section spacing="lg">
+        {/* 6. Closing Invitation & Studio Pathways */}
+        <Section spacing="lg" surface="subtle">
           <Container size="lg">
             <Reveal direction="up" distance={14}>
-              <SectionHeader
-                align="center"
-                caption="Studio Pathways"
-                title={identity.homepage.closingCtaTitle || 'Explore the ElseSourav Archive'}
-                description={identity.homepage.closingCtaSubtitle || 'Discover software tools, read architectural writings, or get in touch directly.'}
-              />
+              <div className="rounded-3xl border border-zinc-800/80 bg-gradient-to-b from-zinc-900/50 to-zinc-950/80 p-8 sm:p-12 text-center space-y-8 backdrop-blur-md">
+                <div className="space-y-3 max-w-2xl mx-auto">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-500/30 bg-indigo-950/40 text-xs text-indigo-300 font-mono">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Studio Doorway</span>
+                  </div>
+                  <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                    {identity.homepage.closingCtaTitle || 'Explore the ElseSourav Studio'}
+                  </h2>
+                  <p className="text-sm text-zinc-400 leading-relaxed">
+                    {identity.homepage.closingCtaSubtitle || 'Every project, note, and experiment is built independently with a focus on craft, performance, and usability.'}
+                  </p>
+                </div>
+
+                {/* 3 Focused Core Pathways */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
+                  <Link
+                    href={ROUTES.APPS}
+                    className="p-5 rounded-2xl border border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-800/70 hover:border-indigo-500/40 transition-all text-left space-y-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                  >
+                    <div className="flex items-center justify-between">
+                      <Layers className="w-4 h-4 text-indigo-400" />
+                      <ArrowRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-indigo-400 group-hover:translate-x-0.5 transition-all" />
+                    </div>
+                    <h3 className="text-sm font-bold text-zinc-100 group-hover:text-white">
+                      Explore All Work
+                    </h3>
+                    <p className="text-xs text-zinc-400 line-clamp-2">
+                      Browse full collection of software, utilities, and developer tools.
+                    </p>
+                  </Link>
+
+                  <Link
+                    href={ROUTES.BLOG}
+                    className="p-5 rounded-2xl border border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-800/70 hover:border-cyan-500/40 transition-all text-left space-y-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
+                  >
+                    <div className="flex items-center justify-between">
+                      <BookOpen className="w-4 h-4 text-cyan-400" />
+                      <ArrowRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-cyan-400 group-hover:translate-x-0.5 transition-all" />
+                    </div>
+                    <h3 className="text-sm font-bold text-zinc-100 group-hover:text-white">
+                      Read Field Notes
+                    </h3>
+                    <p className="text-xs text-zinc-400 line-clamp-2">
+                      Technical write-ups, architecture breakdowns, and learnings.
+                    </p>
+                  </Link>
+
+                  <Link
+                    href={ROUTES.ABOUT}
+                    className="p-5 rounded-2xl border border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-800/70 hover:border-purple-500/40 transition-all text-left space-y-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
+                  >
+                    <div className="flex items-center justify-between">
+                      <User className="w-4 h-4 text-purple-400" />
+                      <ArrowRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-purple-400 group-hover:translate-x-0.5 transition-all" />
+                    </div>
+                    <h3 className="text-sm font-bold text-zinc-100 group-hover:text-white">
+                      About the Journey
+                    </h3>
+                    <p className="text-xs text-zinc-400 line-clamp-2">
+                      Background, engineering evolution, and studio principles.
+                    </p>
+                  </Link>
+                </div>
+
+                <div className="pt-2 text-xs text-zinc-500">
+                  Have a question or found a bug?{' '}
+                  <Link
+                    href={ROUTES.SUPPORT}
+                    className="text-indigo-400 hover:text-indigo-300 underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded"
+                  >
+                    Reach out via Support Desk
+                  </Link>
+                </div>
+              </div>
             </Reveal>
-
-            <RevealGroup staggerDelay={0.06} baseDelay={0.08} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              <Link
-                href={ROUTES.APPS}
-                className="p-5 rounded-3xl border border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-indigo-500/40 transition-all duration-200 group flex flex-col justify-between"
-              >
-                <div className="space-y-2">
-                  <div className="w-9 h-9 rounded-xl bg-indigo-950/60 border border-indigo-800/40 flex items-center justify-center text-indigo-400 group-hover:scale-105 transition-transform">
-                    <Layers className="w-4 h-4" />
-                  </div>
-                  <h4 className="font-semibold text-sm text-zinc-100 group-hover:text-indigo-300 transition-colors">
-                    Applications Catalog
-                  </h4>
-                  <p className="text-xs text-zinc-400 leading-relaxed">
-                    Explore standalone desktop and web utilities built for everyday productivity.
-                  </p>
-                </div>
-                <div className="pt-4 flex items-center text-xs text-indigo-400 font-medium gap-1">
-                  <span>Browse apps</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </Link>
-
-              <Link
-                href={ROUTES.BLOG}
-                className="p-5 rounded-3xl border border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-cyan-500/40 transition-all duration-200 group flex flex-col justify-between"
-              >
-                <div className="space-y-2">
-                  <div className="w-9 h-9 rounded-xl bg-cyan-950/60 border border-cyan-800/40 flex items-center justify-center text-cyan-400 group-hover:scale-105 transition-transform">
-                    <BookOpen className="w-4 h-4" />
-                  </div>
-                  <h4 className="font-semibold text-sm text-zinc-100 group-hover:text-cyan-300 transition-colors">
-                    Engineering Devlogs
-                  </h4>
-                  <p className="text-xs text-zinc-400 leading-relaxed">
-                    Deep dives into software architecture, monorepos, and creative engineering.
-                  </p>
-                </div>
-                <div className="pt-4 flex items-center text-xs text-cyan-400 font-medium gap-1">
-                  <span>Read devlogs</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </Link>
-
-              <Link
-                href={ROUTES.HELP}
-                className="p-5 rounded-3xl border border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-purple-500/40 transition-all duration-200 group flex flex-col justify-between"
-              >
-                <div className="space-y-2">
-                  <div className="w-9 h-9 rounded-xl bg-purple-950/60 border border-purple-800/40 flex items-center justify-center text-purple-400 group-hover:scale-105 transition-transform">
-                    <HelpCircle className="w-4 h-4" />
-                  </div>
-                  <h4 className="font-semibold text-sm text-zinc-100 group-hover:text-purple-300 transition-colors">
-                    Documentation & Guides
-                  </h4>
-                  <p className="text-xs text-zinc-400 leading-relaxed">
-                    Step-by-step setup guides, feature walkthroughs, and troubleshooting tips.
-                  </p>
-                </div>
-                <div className="pt-4 flex items-center text-xs text-purple-400 font-medium gap-1">
-                  <span>Open help desk</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </Link>
-
-              <Link
-                href={ROUTES.SUPPORT}
-                className="p-5 rounded-3xl border border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-emerald-500/40 transition-all duration-200 group flex flex-col justify-between"
-              >
-                <div className="space-y-2">
-                  <div className="w-9 h-9 rounded-xl bg-emerald-950/60 border border-emerald-800/40 flex items-center justify-center text-emerald-400 group-hover:scale-105 transition-transform">
-                    <LifeBuoy className="w-4 h-4" />
-                  </div>
-                  <h4 className="font-semibold text-sm text-zinc-100 group-hover:text-emerald-300 transition-colors">
-                    Support Desk
-                  </h4>
-                  <p className="text-xs text-zinc-400 leading-relaxed">
-                    Have feedback or found a bug? Submit a ticket directly to the studio.
-                  </p>
-                </div>
-                <div className="pt-4 flex items-center text-xs text-emerald-400 font-medium gap-1">
-                  <span>Get support</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </Link>
-            </RevealGroup>
           </Container>
         </Section>
       </main>

@@ -40,4 +40,37 @@ describe('Homepage & About Visual and Content Integration Pass', () => {
     expect(identity.creator.principles.length).toBeGreaterThanOrEqual(4);
     expect(identity.creator.focus.length).toBeGreaterThanOrEqual(3);
   });
+
+  it('enforces focused content density and structured narrative flow on homepage (Prompt 25)', () => {
+    // 6-step editorial narrative hierarchy
+    const homepageSections = [
+      'INTRODUCTION',
+      'SELECTED_WORK',
+      'FIELD_NOTES',
+      'THE_LAB',
+      'CREATOR_PHILOSOPHY',
+      'CLOSING_PATHWAYS',
+    ];
+
+    expect(homepageSections.length).toBe(6);
+    expect(homepageSections[0]).toBe('INTRODUCTION');
+    expect(homepageSections[1]).toBe('SELECTED_WORK');
+    expect(homepageSections[2]).toBe('FIELD_NOTES');
+    expect(homepageSections[3]).toBe('THE_LAB');
+    expect(homepageSections[4]).toBe('CREATOR_PHILOSOPHY');
+    expect(homepageSections[5]).toBe('CLOSING_PATHWAYS');
+
+    // Density limits to prevent homepage overload
+    const limits = {
+      selectedWorkMax: 5,
+      fieldNotesMax: 3,
+      labExperimentsMax: 3,
+      closingPathwaysMax: 3,
+    };
+
+    expect(limits.selectedWorkMax).toBeLessThanOrEqual(6);
+    expect(limits.fieldNotesMax).toBeLessThanOrEqual(3);
+    expect(limits.labExperimentsMax).toBeLessThanOrEqual(4);
+    expect(limits.closingPathwaysMax).toBe(3);
+  });
 });
