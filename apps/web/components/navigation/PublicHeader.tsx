@@ -8,6 +8,8 @@ import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
 import Image from 'next/image';
 import { Menu, X, ArrowRight, LayoutDashboard, Shield } from 'lucide-react';
 import { UserAvatarMenu } from '@/features/user/components/UserAvatarMenu';
+import { SearchButton } from '@/components/search/SearchButton';
+import { ThemePopup } from '@/components/theme/ThemePopup';
 import type { AuthenticatedUser } from '@elsesourav/auth';
 
 export interface PublicHeaderProps {
@@ -86,8 +88,11 @@ export function PublicHeader({ user }: PublicHeaderProps) {
           })}
         </nav>
 
-        {/* Desktop User/Auth Actions */}
-        <div className="hidden md:flex items-center gap-3">
+        {/* Desktop Utility & Auth Actions */}
+        <div className="hidden md:flex items-center gap-2">
+          <SearchButton />
+          <ThemePopup />
+          <div className="w-px h-5 bg-zinc-800 mx-1" />
           {user ? (
             <div className="flex items-center gap-3">
               {user.role === 'ADMIN' && (
@@ -123,7 +128,9 @@ export function PublicHeader({ user }: PublicHeaderProps) {
         </div>
 
         {/* Mobile Menu Toggle Button */}
-        <div className="flex items-center gap-2 md:hidden">
+        <div className="flex items-center gap-1.5 md:hidden">
+          <SearchButton />
+          <ThemePopup />
           {user && <UserAvatarMenu user={user} />}
           <Button
             variant="ghost"
