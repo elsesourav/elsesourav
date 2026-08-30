@@ -115,6 +115,20 @@ describe('SiteService & Unified Identity Architecture (Prompt 03)', () => {
     expect(identity).toBeDefined();
     expect(identity.site.name).toBe(SITE_CONFIG.name);
     expect(identity.creator.name).toBe(CREATOR_CONFIG.name);
+    expect(identity.creator.fullName).toBe(CREATOR_CONFIG.fullName);
     expect(identity.creator.principles).toEqual(CREATOR_CONFIG.principles);
+  });
+
+  it('validates creator name presentation hierarchy: Sourav on homepage, Sourav Barui on About/Footer', async () => {
+    const mockAdminRepo = {
+      getAllSettings: vi.fn().mockResolvedValue({}),
+    } as unknown as AdminRepository;
+
+    const siteService = new SiteService(mockAdminRepo);
+    const identity = await siteService.getSiteAndCreatorIdentity();
+
+    expect(identity.creator.name).toBe('Sourav');
+    expect(identity.creator.fullName).toBe('Sourav Barui');
+    expect(identity.creator.positioning).toContain('thoughtful software');
   });
 });

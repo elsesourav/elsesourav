@@ -107,18 +107,18 @@ export async function PublicFooter() {
                 </Link>
               </li>
               <li>
-                <Link href="/apps?category=simulations" className="hover:text-white transition-colors">
-                  Lab & Experiments
+                <Link href={ROUTES.LAB} className="hover:text-white transition-colors">
+                  The Lab
+                </Link>
+              </li>
+              <li>
+                <Link href={ROUTES.ARCHIVE} className="hover:text-white transition-colors">
+                  The Archive
                 </Link>
               </li>
               <li>
                 <Link href={ROUTES.BLOG} className="hover:text-white transition-colors">
                   Notes
-                </Link>
-              </li>
-              <li>
-                <Link href={ROUTES.HELP} className="hover:text-white transition-colors">
-                  Help Center
                 </Link>
               </li>
             </ul>
@@ -202,7 +202,7 @@ export async function PublicFooter() {
 
         {/* Bottom Sub-Footer Row */}
         <div className="pt-8 border-t border-zinc-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
-          <p>{identity.footer.copyright || `© ${new Date().getFullYear()} ${identity.site.name}. All rights reserved.`}</p>
+          <p>{identity.footer.copyright || `© ${new Date().getFullYear()} ${identity.site.name} • Built by ${identity.creator.fullName}`}</p>
 
           {identity.footer.showBackToTop && (
             <a
