@@ -59,6 +59,7 @@ export class SiteService {
       'Deep-dives on software design, performance, and architecture lessons.';
 
     const creatorName = dbSettings['creator_name'] || CREATOR_CONFIG.name;
+    const creatorFullName = dbSettings['creator_full_name'] || CREATOR_CONFIG.fullName;
     const creatorHandle = CREATOR_CONFIG.handle;
     const creatorTitle = dbSettings['creator_title'] || CREATOR_CONFIG.identity.title;
     const creatorRole = dbSettings['creator_role'] || CREATOR_CONFIG.identity.role;
@@ -114,6 +115,7 @@ export class SiteService {
       },
       creator: {
         name: creatorName,
+        fullName: creatorFullName,
         handle: creatorHandle,
         title: creatorTitle,
         role: creatorRole,

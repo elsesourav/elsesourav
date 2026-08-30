@@ -1,5 +1,6 @@
 export const CREATOR_CONFIG = {
   name: 'Sourav',
+  fullName: 'Sourav Barui',
   handle: 'elsesourav',
 
   identity: {

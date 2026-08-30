@@ -9,1707 +9,850 @@ const rootDir = path.resolve(__dirname, '../../../../');
 dotenv.config({ path: path.join(rootDir, '.env.local') });
 dotenv.config({ path: path.join(rootDir, '.env') });
 
-import { CREATOR_CONFIG } from '@elsesourav/config';
-import { PublishStatus, TicketPriority, TicketStatus, UserRole, prisma } from '../../src/index';
+import { CREATOR_CONFIG, SITE_CONFIG } from '@elsesourav/config';
+import { PublishStatus, UserRole, prisma } from '../../src/index';
 
 async function main() {
-  console.info('🌱 Seeding ElseSourav Database with rich realistic test records...');
+  console.info('🌱 Seeding ElseSourav Database with authentic creator and portfolio records...');
 
   // ===========================================================================
-  // 1. SEED USERS (Admin, Staff, and Community Members)
+  // 1. SEED CANONICAL ADMIN USER
   // ===========================================================================
-  console.info('  → Seeding Users...');
+  console.info('  → Seeding Canonical Admin User...');
 
   const adminUser = await prisma.user.upsert({
     where: { email: 'elsesourav.auth@gmail.com' },
-    update: { role: UserRole.ADMIN },
+    update: {
+      role: UserRole.ADMIN,
+      displayName: 'Sourav',
+      username: 'elsesourav',
+      bio: CREATOR_CONFIG.shortBio,
+    },
     create: {
       supabaseAuthId: '00000000-0000-0000-0000-000000000001',
       email: 'elsesourav.auth@gmail.com',
-      displayName: 'Sourav (ElseSourav)',
+      displayName: 'Sourav',
       username: 'elsesourav',
-      photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80',
-      bio: 'Full-stack software architect, open-source enthusiast, creator of ElseSourav platform & developer utilities.',
+      bio: CREATOR_CONFIG.shortBio,
       role: UserRole.ADMIN,
       preferences: { theme: 'dark', emailNotifications: true, reducedMotion: false },
     },
   });
 
-  const staffUser = await prisma.user.upsert({
-    where: { email: 'alex.chen@elsesourav.com' },
-    update: { role: UserRole.STAFF },
-    create: {
-      supabaseAuthId: '00000000-0000-0000-0000-000000000002',
-      email: 'alex.chen@elsesourav.com',
-      displayName: 'Alex Chen',
-      username: 'alexchen',
-      photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80',
-      bio: 'Staff systems engineer & developer tooling advocate.',
-      role: UserRole.STAFF,
-      preferences: { theme: 'dark', emailNotifications: true },
-    },
-  });
-
-  const userSarah = await prisma.user.upsert({
-    where: { email: 'sarah.c@example.com' },
-    update: {},
-    create: {
-      supabaseAuthId: '00000000-0000-0000-0000-000000000003',
-      email: 'sarah.c@example.com',
-      displayName: 'Sarah Connor',
-      username: 'sarahconnor',
-      photoUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80',
-      bio: 'Frontend engineer specializing in React 19, WebGL, and design systems.',
-      role: UserRole.USER,
-      preferences: { theme: 'dark', emailNotifications: false },
-    },
-  });
-
-  const userDavid = await prisma.user.upsert({
-    where: { email: 'david.m@example.com' },
-    update: {},
-    create: {
-      supabaseAuthId: '00000000-0000-0000-0000-000000000004',
-      email: 'david.m@example.com',
-      displayName: 'David Miller',
-      username: 'davidm',
-      photoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80',
-      bio: 'DevOps enthusiast and backend cloud infrastructure developer.',
-      role: UserRole.USER,
-      preferences: { theme: 'dark', emailNotifications: true },
-    },
-  });
-
-  const userElena = await prisma.user.upsert({
-    where: { email: 'elena.r@example.com' },
-    update: {},
-    create: {
-      supabaseAuthId: '00000000-0000-0000-0000-000000000005',
-      email: 'elena.r@example.com',
-      displayName: 'Elena Rostova',
-      username: 'elenar',
-      photoUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80',
-      bio: 'Product designer & creative coder passionate about typography and UI accessibility.',
-      role: UserRole.USER,
-      preferences: { theme: 'dark', emailNotifications: true },
-    },
-  });
-
   // ===========================================================================
-  // 2. SEED CATEGORIES (App Catalog)
+  // 2. SEED APP CATEGORIES
   // ===========================================================================
   console.info('  → Seeding App Categories...');
 
-  const catDevTools = await prisma.category.upsert({
-    where: { slug: 'dev-tools' },
-    update: {},
-    create: {
-      name: 'Developer Tools',
-      slug: 'dev-tools',
-      description: 'Terminal emulators, debugging tools, and system utilities for engineers.',
-      icon: 'Terminal',
+  const categories = [
+    {
+      name: 'AI & Machine Learning',
+      slug: 'ai-ml',
+      description: 'Neural networks, multi-model AI assistants, computer vision, and on-device machine intelligence.',
+      icon: 'Sparkles',
       orderIndex: 0,
     },
-  });
-
-  const catProductivity = await prisma.category.upsert({
-    where: { slug: 'productivity' },
-    update: {},
-    create: {
-      name: 'Productivity',
-      slug: 'productivity',
-      description: 'Focus timers, workflow management, and distraction reduction utilities.',
-      icon: 'Clock',
+    {
+      name: 'Automation & E-Commerce',
+      slug: 'automation',
+      description: 'Marketplace seller automation, SKU mapping, batch data pipelines, and workflow optimizations.',
+      icon: 'Cpu',
       orderIndex: 1,
     },
-  });
-
-  const catDesign = await prisma.category.upsert({
-    where: { slug: 'media-design' },
-    update: {},
-    create: {
-      name: 'Media & Design',
-      slug: 'media-design',
-      description: 'Color palettes, contrast checkers, SVG generators, and creative tooling.',
-      icon: 'Palette',
+    {
+      name: 'Web Applications & CMS',
+      slug: 'web-apps',
+      description: 'Production web platforms, custom content management systems, and specialized client platforms.',
+      icon: 'Globe',
       orderIndex: 2,
     },
-  });
-
-  const catDevOps = await prisma.category.upsert({
-    where: { slug: 'cloud-devops' },
-    update: {},
-    create: {
-      name: 'Cloud & DevOps',
-      slug: 'cloud-devops',
-      description: 'Container orchestration, network probes, and cloud automation utilities.',
-      icon: 'Cloud',
+    {
+      name: 'Algorithms & Simulations',
+      slug: 'simulations',
+      description: 'Cellular automata, physics solvers, constraint satisfaction, and interactive canvas graphics.',
+      icon: 'Layers',
       orderIndex: 3,
     },
-  });
-
-  const catUtilities = await prisma.category.upsert({
-    where: { slug: 'utilities' },
-    update: {},
-    create: {
-      name: 'System Utilities',
-      slug: 'utilities',
-      description: 'Regex evaluators, JSON formatters, text transforms, and encoding helpers.',
-      icon: 'Wrench',
+    {
+      name: 'Hardware & Embedded IoT',
+      slug: 'hardware-iot',
+      description: 'Microcontroller firmware, real-time video streaming, robotics control, and sensor telemetry.',
+      icon: 'Radio',
       orderIndex: 4,
     },
-  });
+    {
+      name: 'Media & Design Tools',
+      slug: 'media-design',
+      description: 'Layer-based photo editors, canvas tools, SVG pipelines, and creative utilities.',
+      icon: 'Palette',
+      orderIndex: 5,
+    },
+    {
+      name: 'Developer Utilities',
+      slug: 'utilities',
+      description: 'Client-side PDF processors, invoice makers, formatting tools, and privacy-first helpers.',
+      icon: 'Wrench',
+      orderIndex: 6,
+    },
+  ];
+
+  const catMap: Record<string, string> = {};
+  for (const cat of categories) {
+    const created = await prisma.category.upsert({
+      where: { slug: cat.slug },
+      update: { name: cat.name, description: cat.description, icon: cat.icon, orderIndex: cat.orderIndex },
+      create: cat,
+    });
+    catMap[cat.slug] = created.id;
+  }
 
   // ===========================================================================
   // 3. SEED TAGS
   // ===========================================================================
-  console.info('  → Seeding App Tags...');
+  console.info('  → Seeding Tags...');
 
-  const tagCLI = await prisma.tag.upsert({
-    where: { slug: 'cli' },
-    update: {},
-    create: { name: 'CLI', slug: 'cli' },
-  });
-  const tagWeb = await prisma.tag.upsert({
-    where: { slug: 'web' },
-    update: {},
-    create: { name: 'Web', slug: 'web' },
-  });
-  const tagReact = await prisma.tag.upsert({
-    where: { slug: 'react' },
-    update: {},
-    create: { name: 'React 19', slug: 'react' },
-  });
-  const tagTypeScript = await prisma.tag.upsert({
-    where: { slug: 'typescript' },
-    update: {},
-    create: { name: 'TypeScript', slug: 'typescript' },
-  });
-  const tagOpenSource = await prisma.tag.upsert({
-    where: { slug: 'open-source' },
-    update: {},
-    create: { name: 'Open Source', slug: 'open-source' },
-  });
-  const tagCloud = await prisma.tag.upsert({
-    where: { slug: 'cloud' },
-    update: {},
-    create: { name: 'Cloud', slug: 'cloud' },
-  });
+  const tagsList = [
+    { name: 'AI', slug: 'ai' },
+    { name: 'WebAssembly', slug: 'webassembly' },
+    { name: 'Chrome Extension', slug: 'chrome-extension' },
+    { name: 'TypeScript', slug: 'typescript' },
+    { name: 'React 19', slug: 'react' },
+    { name: 'C++', slug: 'cpp' },
+    { name: 'Embedded', slug: 'embedded' },
+    { name: 'IoT', slug: 'iot' },
+    { name: 'Firebase', slug: 'firebase' },
+    { name: 'Supabase', slug: 'supabase' },
+    { name: 'Canvas', slug: 'canvas' },
+    { name: 'Algorithms', slug: 'algorithms' },
+    { name: 'PDF Tools', slug: 'pdf-tools' },
+    { name: 'Tailwind CSS', slug: 'tailwindcss' },
+    { name: 'Open Source', slug: 'open-source' },
+  ];
+
+  const tagMap: Record<string, string> = {};
+  for (const tag of tagsList) {
+    const created = await prisma.tag.upsert({
+      where: { slug: tag.slug },
+      update: { name: tag.name },
+      create: tag,
+    });
+    tagMap[tag.slug] = created.id;
+  }
 
   // ===========================================================================
-  // 4. SEED APPS (With links, versions, stats, and tags)
+  // 4. SEED REAL APPLICATIONS
   // ===========================================================================
-  console.info('  → Seeding Applications...');
+  console.info('  → Seeding Real Applications...');
 
-  // App 1: Terminal Pro
-  const appTerminal = await prisma.app.upsert({
-    where: { slug: 'terminal-pro' },
-    update: {},
-    create: {
-      name: 'Terminal Pro',
-      slug: 'terminal-pro',
-      shortDescription: 'Hardware-accelerated web terminal emulator with multiplexing.',
+  const appsData = [
+    {
+      name: 'SpectraLens AI',
+      slug: 'spectralens-ai',
+      shortDescription: 'Multi-engine parallel AI browser assistant, visual DOM element scanner, and on-device WASM OCR.',
       description:
-        'A cutting-edge WebGL-powered terminal emulator supporting split panes, custom themes, SSH tunnels, and lightning-fast rendering.',
-      documentationMd: `## Getting Started
-
-Terminal Pro runs entirely in your browser using a **WebGL 2.0** rendering engine. No installation required.
-
-### Quick Start
-
-1. Visit [terminal.elsesourav.com](https://terminal.elsesourav.com)
-2. Click **New Session** to open your first terminal pane
-3. Use \`Ctrl+Shift+D\` to split horizontally, \`Ctrl+Shift+R\` to split vertically
-
-### SSH Tunnel Setup
-
-\`\`\`bash
-# Connect to a remote host
-terminalpro connect user@host.example.com --port 22
-\`\`\`
-
-### Keyboard Shortcuts
-
-| Action | Shortcut |
-|---|---|
-| New pane | \`Ctrl+Shift+N\` |
-| Close pane | \`Ctrl+W\` |
-| Switch pane | \`Alt+Arrow\` |
-| Full screen | \`F11\` |
-
-### Custom Themes
-
-Drop a \`.terminalpro.json\` config file in your home directory to apply custom color schemes. See the [theme gallery](https://terminal.elsesourav.com/themes) for community presets.
-
-### Changelog
-
-**v2.1.0** — Upgraded to Next.js 15, WebGL 2.0 rendering engine, dynamic tab splits  
-**v2.0.0** — Complete architecture redesign with TypeScript and zero-latency WebSocket stream`,
-      iconUrl: 'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=200&q=80',
-      featuredImageUrl: 'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=1200&q=80',
-      demoUrl: 'https://terminal.elsesourav.com',
-      status: PublishStatus.PUBLISHED,
-      isFeatured: true,
-      isPinned: true,
-      currentVersion: '2.1.0',
-      seoTitle: 'Terminal Pro — Fast WebGL Terminal Emulator | ElseSourav',
-      seoDescription:
-        'High performance browser-based terminal emulator with split multiplexing and custom themes.',
-      publishedAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-      categoryId: catDevTools.id,
-      tags: {
-        create: [{ tagId: tagCLI.id }, { tagId: tagWeb.id }, { tagId: tagTypeScript.id }],
-      },
-      links: {
-        create: [
-          {
-            platform: 'web',
-            label: 'Launch Terminal',
-            url: 'https://terminal.elsesourav.com',
-            action: 'open_app',
-            isPrimary: true,
-            displayOrder: 0,
-          },
-          {
-            platform: 'github',
-            label: 'GitHub Repository',
-            url: 'https://github.com/elsesourav/terminal-pro',
-            action: 'view_source',
-            isPrimary: false,
-            displayOrder: 1,
-          },
-        ],
-      },
-      versions: {
-        create: [
-          {
-            version: '2.1.0',
-            changelog:
-              'Upgraded to Next.js 15, WebGL 2.0 rendering engine, and dynamic tab splits.',
-          },
-          {
-            version: '2.0.0',
-            changelog:
-              'Complete architecture redesign with TypeScript and zero-latency WebSocket stream.',
-          },
-        ],
-      },
-      stats: {
-        create: {
-          views: 4250,
-          launches: 3120,
-          libraryAdds: 890,
-          ratingAverage: 4.95,
-          ratingCount: 88,
-        },
-      },
-    },
-  });
-
-  // App 2: Palette Studio
-  const appPalette = await prisma.app.upsert({
-    where: { slug: 'palette-studio' },
-    update: {},
-    create: {
-      name: 'Palette Studio',
-      slug: 'palette-studio',
-      shortDescription: 'Professional color palette generator and WCAG contrast analyzer.',
-      description:
-        'Generate harmonious color systems, test WCAG 2.1 AA/AAA accessibility contrast in real-time, and export directly to Tailwind CSS and CSS variables.',
+        'A high-performance Chrome extension (Manifest V3) that enables simultaneous multi-model AI querying across active web sessions with zero API token costs, point-and-click DOM inspection, and offline WebAssembly OCR.',
       documentationMd: `## Overview
 
-Palette Studio is a professional-grade color system designer built for designers and frontend engineers.
+**SpectraLens AI** is an advanced browser companion built on Manifest V3. It allows researchers and developers to query multiple leading AI models simultaneously through their active web sessions, compare answers side-by-side, and extract structured page data with zero subscription token costs.
 
-### Generating a Palette
+### Key Capabilities
 
-1. Enter a base hex color (e.g. \`#6366f1\`)
-2. Choose a harmony rule: **Analogous**, **Complementary**, **Triadic**, or **Split-Complementary**
-3. Click **Generate** — Palette Studio produces a 10-shade scale
-
-### WCAG Contrast Checker
-
-Every color pair is checked against **WCAG 2.1 AA** (4.5:1) and **AAA** (7:1) ratios in real-time.
-
-\`\`\`
-Background: #1e1e2e  →  Foreground: #cdd6f4
-Contrast ratio: 12.4:1  ✅ AAA PASS
-\`\`\`
-
-### Export Formats
-
-| Format | Command |
-|---|---|
-| Tailwind CSS | Click **Export → Tailwind** |
-| CSS Variables | Click **Export → CSS Vars** |
-| JSON tokens | Click **Export → Design Tokens** |
-
-### Changelog
-
-**v1.4.0** — Figma plugin integration and batch export  
-**v1.3.0** — APCA contrast algorithm support  
-**v1.0.0** — Initial public release`,
-      iconUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=200&q=80',
-      featuredImageUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&q=80',
-      demoUrl: 'https://palette.elsesourav.com',
-      status: PublishStatus.PUBLISHED,
-      isFeatured: true,
-      isPinned: false,
-      currentVersion: '1.4.0',
-      seoTitle: 'Palette Studio — Accessible Color System Generator | ElseSourav',
-      seoDescription:
-        'Generate accessible color palettes, check WCAG contrast, and export tokens for Tailwind and Figma.',
-      publishedAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000),
-      categoryId: catDesign.id,
-      tags: {
-        create: [{ tagId: tagWeb.id }, { tagId: tagReact.id }, { tagId: tagOpenSource.id }],
-      },
-      links: {
-        create: [
-          {
-            platform: 'web',
-            label: 'Open Palette Studio',
-            url: 'https://palette.elsesourav.com',
-            action: 'open_app',
-            isPrimary: true,
-            displayOrder: 0,
-          },
-          {
-            platform: 'github',
-            label: 'Source Code',
-            url: 'https://github.com/elsesourav/palette-studio',
-            action: 'view_source',
-            isPrimary: false,
-            displayOrder: 1,
-          },
-        ],
-      },
-      versions: {
-        create: [
-          {
-            version: '1.4.0',
-            changelog:
-              'Added OKLCH color space support and automatic dark mode counterpart generation.',
-          },
-          {
-            version: '1.0.0',
-            changelog: 'Initial release with HSL/Hex color generator and WCAG AA contrast matrix.',
-          },
-        ],
-      },
-      stats: {
-        create: {
-          views: 3100,
-          launches: 2450,
-          libraryAdds: 610,
-          ratingAverage: 4.88,
-          ratingCount: 52,
-        },
-      },
-    },
-  });
-
-  // App 3: FocusFlow
-  const appFocus = await prisma.app.upsert({
-    where: { slug: 'focusflow' },
-    update: {},
-    create: {
-      name: 'FocusFlow',
-      slug: 'focusflow',
-      shortDescription: 'Adaptive Pomodoro focus timer with deep git commit telemetry.',
-      description:
-        'Stay in the zone with smart interval timing, ambient soundscapes, task sprint tracking, and GitHub commit streak integrations.',
-      documentationMd: `## How FocusFlow Works
-
-FocusFlow uses the **Pomodoro Technique** with adaptive interval tuning based on your completion rate.
-
-### Default Intervals
-
-- **Focus block**: 25 minutes
-- **Short break**: 5 minutes
-- **Long break**: 15 minutes (every 4 cycles)
-
-### GitHub Integration
-
-Connect your GitHub account to track commit streaks alongside your focus sessions:
-
-1. Go to **Settings → Integrations**
-2. Click **Connect GitHub**
-3. Authorize the \`focusflow-bot\` OAuth app
-
-Your commit count for the day appears in the focus dashboard.
-
-### Ambient Soundscapes
-
-Built-in tracks: **Rain**, **White Noise**, **Café**, **Forest**, **Lo-Fi Beats**.
-Custom audio URLs are supported via **Settings → Audio → Custom URL**.
-
-### PWA Offline Mode
-
-FocusFlow works offline as a Progressive Web App. Install it from the browser address bar on Chrome or Edge.
-
-### Changelog
-
-**v1.2.0** — Offline PWA support, customizable ambient audio tracks  
-**v1.1.0** — GitHub commit streak dashboard  
-**v1.0.0** — Initial release`,
-      iconUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=200&q=80',
-      featuredImageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=80',
-      demoUrl: 'https://focus.elsesourav.com',
-      status: PublishStatus.PUBLISHED,
-      isFeatured: false,
-      isPinned: false,
-      currentVersion: '1.2.0',
-      seoTitle: 'FocusFlow — Smart Developer Focus Timer | ElseSourav',
-      seoDescription:
-        'Productivity timer designed for engineers with distraction blocking and task telemetry.',
-      publishedAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000),
-      categoryId: catProductivity.id,
-      tags: {
-        create: [{ tagId: tagWeb.id }, { tagId: tagReact.id }],
-      },
-      links: {
-        create: [
-          {
-            platform: 'web',
-            label: 'Launch Timer',
-            url: 'https://focus.elsesourav.com',
-            action: 'open_app',
-            isPrimary: true,
-            displayOrder: 0,
-          },
-        ],
-      },
-      versions: {
-        create: [
-          {
-            version: '1.2.0',
-            changelog: 'Offline PWA support and customizable ambient audio tracks.',
-          },
-        ],
-      },
-      stats: {
-        create: {
-          views: 1890,
-          launches: 1420,
-          libraryAdds: 410,
-          ratingAverage: 4.75,
-          ratingCount: 39,
-        },
-      },
-    },
-  });
-
-  // App 4: DevDock
-  const appDevDock = await prisma.app.upsert({
-    where: { slug: 'devdock' },
-    update: {},
-    create: {
-      name: 'DevDock',
-      slug: 'devdock',
-      shortDescription: 'Local container & microservice orchestrator for development.',
-      description:
-        'Manage Docker containers, PostgreSQL databases, and local server instances from a single unified web dashboard.',
-      documentationMd: `## DevDock Overview
-
-DevDock is a local web dashboard for managing your development infrastructure — Docker containers, databases, and microservices — without touching the command line.
-
-### Prerequisites
-
-- Docker Desktop 4.x or Docker Engine 24+
-- Node.js 20+
+- **Simultaneous Multi-Model Querying**: Dispatch prompts across multiple AI engines in parallel without juggling tabs.
+- **Visual Element Scanner**: Point-and-click DOM inspector that formats tables, code snippets, and text into Markdown.
+- **On-Device Screen OCR**: Crop screen areas and extract text using bundled Tesseract.js WebAssembly.
+- **Zero API Costs**: Connects directly via signed-in browser sessions.
+- **Privacy First**: 100% on-device operation with zero telemetry.
 
 ### Installation
 
-\`\`\`bash
-npx @elsesourav/devdock@latest init
-# Starts the dashboard at http://localhost:4200
-\`\`\`
-
-### Dashboard Panels
-
-| Panel | Description |
-|---|---|
-| **Containers** | Start, stop, and inspect running containers |
-| **Databases** | Browse PostgreSQL and Redis instances |
-| **Logs** | Stream live container logs with regex filtering |
-| **Network** | Inspect port bindings and service mesh |
-
-### Config File
-
-\`\`\`yaml
-# devdock.yml
-services:
-  - name: api
-    image: node:20-alpine
-    port: 3000
-  - name: db
-    image: postgres:16
-    port: 5432
-\`\`\`
-
-### Changelog
-
-**v3.0.0** — Multi-profile environments and real-time log streaming  
-**v2.0.0** — PostgreSQL browser with query runner  
-**v1.0.0** — Initial Docker dashboard`,
-      iconUrl: 'https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=200&q=80',
-      featuredImageUrl: 'https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=1200&q=80',
-      demoUrl: 'https://devdock.elsesourav.com',
+1. Clone or download \`spectralens-ai\` from GitHub.
+2. Open \`chrome://extensions/\` in Chrome, Edge, or Brave.
+3. Enable **Developer Mode** in the top-right corner.
+4. Click **Load unpacked** and select the \`extension/\` folder.`,
+      iconUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&q=80',
+      githubUrl: 'https://github.com/elsesourav/spectralens-ai',
+      categoryId: catMap['ai-ml']!,
       status: PublishStatus.PUBLISHED,
       isFeatured: true,
-      isPinned: false,
-      currentVersion: '3.0.0',
-      seoTitle: 'DevDock — Container Orchestrator Dashboard | ElseSourav',
-      seoDescription: 'Manage local Docker containers and microservices from a clean web UI.',
-      publishedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
-      categoryId: catDevOps.id,
-      tags: {
-        create: [{ tagId: tagCloud.id }, { tagId: tagCLI.id }, { tagId: tagTypeScript.id }],
-      },
-      links: {
-        create: [
-          {
-            platform: 'web',
-            label: 'Open DevDock',
-            url: 'https://devdock.elsesourav.com',
-            action: 'open_app',
-            isPrimary: true,
-            displayOrder: 0,
-          },
-        ],
-      },
-      versions: {
-        create: [
-          {
-            version: '3.0.0',
-            changelog: 'Docker compose multi-project manager and live container log streaming.',
-          },
-        ],
-      },
-      stats: {
-        create: {
-          views: 2780,
-          launches: 1950,
-          libraryAdds: 530,
-          ratingAverage: 4.92,
-          ratingCount: 64,
-        },
-      },
-    },
-  });
-
-  // App 5: RegexLens
-  const appRegexLens = await prisma.app.upsert({
-    where: { slug: 'regexlens' },
-    update: {},
-    create: {
-      name: 'RegexLens',
-      slug: 'regexlens',
-      shortDescription: 'Visual regular expression debugger and syntax tree analyzer.',
-      description:
-        'Break down complex regular expressions into understandable visual state machines with real-time match highlighting and unit tests.',
-      documentationMd: `## What is RegexLens?
-
-RegexLens transforms your regular expressions into interactive visual **state machine diagrams** with real-time match highlighting.
-
-### Basic Usage
-
-1. Paste your regex into the **Pattern** field
-2. Enter test strings in the **Input** panel
-3. Matching groups are highlighted with distinct colors
-
-### Supported Engines
-
-- JavaScript (ECMAScript 2024)
-- Python (re module)
-- PCRE2
-- Rust (regex crate)
-
-Switch engines using the dropdown in the top toolbar.
-
-### Visualizer Modes
-
-| Mode | Description |
-|---|---|
-| **NFA** | Non-deterministic finite automaton diagram |
-| **Railroad** | Readable railroad track diagram |
-| **Match Tree** | Captures and groups hierarchy |
-
-### Unit Test Generator
-
-Click **Generate Tests** to produce Jest/Pytest assertions for your current regex and test strings.
-
-\`\`\`js
-// Generated test
-expect(/^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$/.test('user@example.com')).toBe(true);
-\`\`\`
-
-### Changelog
-
-**v1.1.0** — ECMAScript 2024 named capture group visualization  
-**v1.0.0** — Initial release with NFA and railroad diagrams`,
-      iconUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=200&q=80',
-      featuredImageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&q=80',
-      demoUrl: 'https://regex.elsesourav.com',
-      status: PublishStatus.PUBLISHED,
-      isFeatured: false,
-      isPinned: false,
-      currentVersion: '1.1.0',
-      seoTitle: 'RegexLens — Visual Regex Debugger | ElseSourav',
-      seoDescription: 'Interactive regular expression visualizer and live test suite generator.',
-      publishedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-      categoryId: catUtilities.id,
-      tags: {
-        create: [{ tagId: tagWeb.id }, { tagId: tagTypeScript.id }, { tagId: tagOpenSource.id }],
-      },
-      links: {
-        create: [
-          {
-            platform: 'web',
-            label: 'Test Regex',
-            url: 'https://regex.elsesourav.com',
-            action: 'open_app',
-            isPrimary: true,
-            displayOrder: 0,
-          },
-        ],
-      },
-      versions: {
-        create: [
-          {
-            version: '1.1.0',
-            changelog: 'Added ECMAScript 2024 named capture group visualization.',
-          },
-        ],
-      },
-      stats: {
-        create: {
-          views: 1650,
-          launches: 1100,
-          libraryAdds: 320,
-          ratingAverage: 4.82,
-          ratingCount: 28,
-        },
-      },
-    },
-  });
-
-  // App 6: QuickHash Mini (Minimal, no documentation, no images fallback)
-  await prisma.app.upsert({
-    where: { slug: 'quickhash-mini' },
-    update: {},
-    create: {
-      name: 'QuickHash Mini',
-      slug: 'quickhash-mini',
-      shortDescription: 'Lightweight client-side cryptographic hashing utility.',
-      description:
-        'Generate SHA-256, SHA-512, MD5, and HMAC signatures directly in your browser with zero network requests.',
-      documentationMd: null, // Tests empty/null documentation rendering
-      iconUrl: 'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=200&q=80',
-      featuredImageUrl: null, // Tests missing featured banner fallback
-      demoUrl: 'https://hash.elsesourav.com',
-      status: PublishStatus.PUBLISHED,
-      isFeatured: false,
-      isPinned: false,
       currentVersion: '1.0.0',
-      seoTitle: 'QuickHash Mini — Fast Client Hash Utility | ElseSourav',
-      seoDescription: 'Fast client-side hashing utility without network calls.',
-      publishedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-      categoryId: catUtilities.id,
-      tags: {
-        create: [{ tagId: tagWeb.id }, { tagId: tagTypeScript.id }],
-      },
-      links: {
-        create: [
-          {
-            platform: 'web',
-            label: 'Open QuickHash',
-            url: 'https://hash.elsesourav.com',
-            action: 'open_app',
-            isPrimary: true,
-            displayOrder: 0,
-          },
-        ],
-      },
-      versions: {
-        create: [
-          {
-            version: '1.0.0',
-            changelog: 'Initial lightweight crypto hashing tool release.',
-          },
-        ],
-      },
-      stats: {
-        create: {
-          views: 450,
-          launches: 310,
-          libraryAdds: 88,
-          ratingAverage: 4.6,
-          ratingCount: 12,
-        },
-      },
+      publishedAt: new Date('2026-08-26T12:00:00Z'),
+      tags: ['ai', 'chrome-extension', 'webassembly', 'typescript', 'open-source'],
     },
-  });
-
-  // App 7: CloudPulse Monitor (Draft state)
-  await prisma.app.upsert({
-    where: { slug: 'cloudpulse-monitor' },
-    update: {},
-    create: {
-      name: 'CloudPulse Monitor',
-      slug: 'cloudpulse-monitor',
-      shortDescription: 'Serverless heartbeat and health monitoring dashboard.',
+    {
+      name: 'ES Automation',
+      slug: 'es-automation',
+      shortDescription: 'Multi-seller marketplace automation platform for product mapping, bulk catalog generation, and SKU management.',
       description:
-        'Continuous uptime tracking and latency heatmaps for edge functions and global endpoints.',
-      documentationMd: '## CloudPulse Setup Guide\n\nDraft documentation for upcoming release.',
+        'A powerful Chrome extension and management system built for Flipkart and Shopsy sellers to automate catalog operations, sync internal SKU codes, process bulk inventory, and eliminate manual order workflows.',
+      documentationMd: `## Overview
+
+**ES Automation** is an operational platform and browser extension engineered for high-volume marketplace sellers. It automates repetitive catalog operations, SKU mapping, and cross-platform listing transfers.
+
+### Features
+
+- **SKU Mapping Engine**: Audit, bulk import, and reconcile \`old_sku -> new_sku\` relationships with conflict detection.
+- **Catalog Generator**: Automated XLSX catalog export with customizable schema transformations.
+- **Cross-Marketplace Sync**: One-click listing porting from Flipkart to Shopsy marketplace formats.
+- **Order & Inventory Tracking**: Direct integration with Supabase PostgreSQL backend.`,
       iconUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=200&q=80',
       featuredImageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80',
-      status: PublishStatus.DRAFT,
-      isFeatured: false,
-      isPinned: false,
-      currentVersion: '0.1.0-alpha',
-      categoryId: catDevOps.id,
-      tags: {
-        create: [{ tagId: tagCloud.id }],
-      },
+      githubUrl: 'https://github.com/elsesourav/es-automation',
+      categoryId: catMap['automation']!,
+      status: PublishStatus.PUBLISHED,
+      isFeatured: true,
+      currentVersion: '2.4.6',
+      publishedAt: new Date('2026-08-25T14:00:00Z'),
+      tags: ['automation', 'react', 'typescript', 'supabase'],
     },
-  });
-
-  // App 8: Legacy CodeDiff (Archived state)
-  await prisma.app.upsert({
-    where: { slug: 'legacy-codediff' },
-    update: {},
-    create: {
-      name: 'Legacy CodeDiff',
-      slug: 'legacy-codediff',
-      shortDescription: 'Legacy Git diff analyzer and patch generation tool.',
+    {
+      name: 'Dr. Debayan Ganguly Portfolio & CMS',
+      slug: 'debayan-ganguly-portfolio',
+      shortDescription: 'Bilingual academic and research portfolio platform with custom CMS and LaTeX math typesetting.',
       description:
-        'Deprecated text diff engine previously used for patch reviews. Retained for historical verification.',
-      documentationMd: '## Deprecation Notice\n\nThis application is archived.',
-      iconUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=200&q=80',
-      status: PublishStatus.ARCHIVED,
+        'An official academic portfolio and administrative CMS built for Dr. Debayan Ganguly (Deputy Director OSD & Ex-officio, Govt of West Bengal), featuring real-time Bengali/English i18n, KaTeX math rendering, and Cloud Firestore.',
+      documentationMd: `## Overview
+
+A high-performance academic and research portfolio website engineered for **Dr. Debayan Ganguly**, Deputy Director OSD & Ex-officio at the Directorate of Technical Education, Government of West Bengal.
+
+### Key Architecture
+
+- **Bilingual i18n**: Real-time seamless toggle between English and Bengali (বাংলা).
+- **Custom Admin CMS**: Full administrative management for research grants, publications, honors, and workshops.
+- **LaTeX Math Rendering**: KaTeX integration for mathematical proofs and formula typesetting.
+- **Cloud Firestore**: Real-time reactive data store with zero layout shift skeleton loading.`,
+      iconUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=80',
+      demoUrl: 'https://debayanganguly.web.app',
+      githubUrl: 'https://github.com/elsesourav/debayan-ganguly-portfolio',
+      categoryId: catMap['web-apps']!,
+      status: PublishStatus.PUBLISHED,
+      isFeatured: true,
+      currentVersion: '1.0.0',
+      publishedAt: new Date('2026-08-14T09:00:00Z'),
+      tags: ['react', 'typescript', 'firebase', 'tailwindcss'],
+    },
+    {
+      name: 'Neural Network Number Recognition',
+      slug: 'nn-number-rec',
+      shortDescription: 'Handwritten digit recognition neural network built from scratch in C++ and compiled to WebAssembly.',
+      description:
+        'A high-performance machine learning demonstration featuring a custom matrix math and backpropagation engine written in C++, compiled with Emscripten SIMD optimizations, with live drawing and neural layer visualization.',
+      documentationMd: `## Technical Architecture
+
+This project implements a fully functional Feedforward Neural Network with Backpropagation from scratch in **C++**, compiled directly into **WebAssembly** via Emscripten.
+
+### Highlights
+
+- **Near-Native Performance**: Core training matrix computations execute in WebAssembly with \`-msimd128\` vector instructions.
+- **Live Canvas Drawing**: Draw any digit (0–9) and inspect real-time classification probabilities.
+- **Layer & Weight Visualization**: Interactive visualizer inspecting active neuron activations across input, hidden, and output layers.`,
+      iconUrl: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1200&q=80',
+      demoUrl: 'https://elsesourav.github.io/nn-number-rec',
+      githubUrl: 'https://github.com/elsesourav/nn-number-rec',
+      categoryId: catMap['ai-ml']!,
+      status: PublishStatus.PUBLISHED,
       isFeatured: false,
-      isPinned: false,
-      currentVersion: '0.9.4',
-      categoryId: catDevTools.id,
+      currentVersion: '1.0.0',
+      publishedAt: new Date('2025-11-29T10:00:00Z'),
+      tags: ['cpp', 'webassembly', 'ai', 'canvas', 'open-source'],
     },
-  });
+    {
+      name: 'ESP32-CAM WiFi RC Vehicle',
+      slug: 'esp32-cam-with-car-control',
+      shortDescription: 'Single-board WiFi vehicle control system with real-time MJPEG streaming and MPU6050 telemetry.',
+      description:
+        'A standalone microcontroller robotics project eliminating secondary Arduino Uno hardware. Features embedded web server, 4-pin PWM motor control trick, I2C telemetry, and mobile touch joystick UI.',
+      documentationMd: `## Hardware Architecture
+
+A standalone WiFi car control system where the **ESP32-CAM** functions as the complete brain: handling video streaming, WebSocket server, direct PWM motor drive, and I2C sensor telemetry.
+
+### Engineering Highlights
+
+- **4-Pin PWM Trick**: Uses L298N IN pins for PWM duty cycle control, saving vital GPIO pins.
+- **Real-Time Video**: Streams live MJPEG camera feed directly to connected web clients.
+- **Zero External Server**: All web controller assets are compiled into microcontroller memory.
+- **MPU6050 Telemetry**: Live accelerometer and tilt display in the mobile touch controller.`,
+      iconUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80',
+      githubUrl: 'https://github.com/elsesourav/esp32-cam-with-car-control',
+      categoryId: catMap['hardware-iot']!,
+      status: PublishStatus.PUBLISHED,
+      isFeatured: false,
+      currentVersion: '1.0.0',
+      publishedAt: new Date('2026-06-22T08:00:00Z'),
+      tags: ['cpp', 'embedded', 'iot', 'open-source'],
+    },
+    {
+      name: 'ES GST Return',
+      slug: 'gst-return',
+      shortDescription: 'SaaS-style web application for marketplace sales and GST return discrepancy processing.',
+      description:
+        'A production-ready web application for parsing multi-channel marketplace reports (Flipkart, Amazon), validating GST liabilities, diffing mismatch records, and rendering interactive sales analytics.',
+      documentationMd: `## Overview
+
+A specialized financial reconciliation tool designed to parse messy marketplace sales reports, detect GST calculation discrepancies, and produce verified return summaries.
+
+### Features
+
+- **Multi-Format Excel Parser**: Drag-and-drop parsing for diverse marketplace spreadsheet layouts.
+- **Discrepancy Diff Engine**: Side-by-side comparison highlighting missing invoices and tax mismatches.
+- **Interactive Analytics**: State-wise GST breakdown and sales trend visualizations using Recharts.`,
+      iconUrl: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1200&q=80',
+      githubUrl: 'https://github.com/elsesourav/gst-return',
+      categoryId: catMap['web-apps']!,
+      status: PublishStatus.PUBLISHED,
+      isFeatured: false,
+      currentVersion: '1.0.0',
+      publishedAt: new Date('2026-05-10T11:00:00Z'),
+      tags: ['react', 'typescript', 'tailwindcss', 'firebase'],
+    },
+    {
+      name: 'Img Editor',
+      slug: 'img-editor',
+      shortDescription: 'Modular, layer-based browser image and graphics editor with non-destructive adjustments.',
+      description:
+        'A modular web graphic editor featuring layer hierarchy, pan/zoom canvas, crop and rotate tools, filter pipelines, undo/redo history manager, and JSON template workflows.',
+      documentationMd: `## Architecture
+
+A modular browser photo editor built using vanilla JavaScript modules and HTML5 Canvas.
+
+### Features
+
+- **Layer Graph**: Parent/child layer management with drag reordering.
+- **Transform Tools**: Precise pan, zoom, snap guides, crop, and rotation workflows.
+- **History Pipeline**: Robust undo/redo state manager tracking discrete user actions.
+- **Template System**: Import and export editor project states as JSON.`,
+      iconUrl: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=1200&q=80',
+      githubUrl: 'https://github.com/elsesourav/img-editor',
+      categoryId: catMap['media-design']!,
+      status: PublishStatus.PUBLISHED,
+      isFeatured: false,
+      currentVersion: '1.0.0',
+      publishedAt: new Date('2026-03-28T16:00:00Z'),
+      tags: ['canvas', 'algorithms', 'open-source'],
+    },
+    {
+      name: 'Particle Chain WASM',
+      slug: 'particle-chain-wasm',
+      shortDescription: 'Real-time particle physics chain simulation in C++ compiled to WebAssembly.',
+      description:
+        'High frame-rate physics simulation implementing Verlet integration and particle chain constraints in C++, compiled via Emscripten to WebAssembly with HTML5 canvas output.',
+      documentationMd: `## Performance & Physics
+
+Real-time particle chain dynamics written in modern C++ and compiled to WebAssembly.
+
+- **Verlet Integration**: Accurate physical constraints for linked particle chains.
+- **Optimized Compilation**: Built using Emscripten with \`-Os\` and zero exception overhead.
+- **Canvas Rendering**: High-performance browser rendering loop.`,
+      iconUrl: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=1200&q=80',
+      githubUrl: 'https://github.com/elsesourav/particle-chain-wasm',
+      categoryId: catMap['simulations']!,
+      status: PublishStatus.PUBLISHED,
+      isFeatured: false,
+      currentVersion: '1.0.0',
+      publishedAt: new Date('2025-04-06T14:00:00Z'),
+      tags: ['cpp', 'webassembly', 'canvas', 'algorithms'],
+    },
+    {
+      name: 'Seller PDF Cropper',
+      slug: 'seller-pdf-cropper',
+      shortDescription: 'Client-side shipping label and invoice PDF cropper with dynamic text measurement.',
+      description:
+        'A 100% client-side privacy-first utility for cropping multi-page marketplace shipping labels, adding sequential numbering, and rendering print-ready PDFs without uploading data to servers.',
+      documentationMd: `## Privacy & Client-Side Processing
+
+Processes multi-page shipping PDFs directly in the browser using \`pdf-lib\` and \`pdfjs-dist\`.
+
+### Capabilities
+
+- **Label Dimension Cropping**: Automatically isolates shipping labels from invoice sheets.
+- **Sequential Numbering**: Dynamic canvas font measurement for numbering packages.
+- **Zero Server Uploads**: Full confidentiality for customer and order data.`,
+      iconUrl: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&q=80',
+      githubUrl: 'https://github.com/elsesourav/seller-pdf-cropper',
+      categoryId: catMap['utilities']!,
+      status: PublishStatus.PUBLISHED,
+      isFeatured: false,
+      currentVersion: '1.0.0',
+      publishedAt: new Date('2025-04-04T12:00:00Z'),
+      tags: ['pdf-tools', 'typescript', 'open-source'],
+    },
+    {
+      name: 'Professional Invoice Maker',
+      slug: 'professional-invoice-maker',
+      shortDescription: 'Print-ready invoice generation web utility with automatic GST calculations and custom branding.',
+      description:
+        'A responsive React 19 web utility for generating clean A4 invoice documents with automatic itemized tax breakdown, company branding, and client-side print formatting.',
+      documentationMd: `## Features
+
+- **Clean A4 Layout**: Print-optimized stylesheet for crisp paper and PDF exports.
+- **Automatic Tax Calculations**: Handles Indian GST rate breakdowns seamlessly.
+- **Custom Branding**: Company logo and signature customization.`,
+      iconUrl: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?w=200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?w=1200&q=80',
+      githubUrl: 'https://github.com/elsesourav/professional-invoice-maker',
+      categoryId: catMap['utilities']!,
+      status: PublishStatus.PUBLISHED,
+      isFeatured: false,
+      currentVersion: '1.0.0',
+      publishedAt: new Date('2025-08-25T15:00:00Z'),
+      tags: ['react', 'tailwindcss', 'typescript'],
+    },
+    {
+      name: 'Wave Function Collapse Visualizer',
+      slug: 'wave-function-collapse',
+      shortDescription: 'Procedural tile and texture generation using the quantum-inspired Wave Function Collapse algorithm.',
+      description:
+        'An interactive JavaScript visualization of constraint satisfaction and entropy reduction generating continuous seamless procedural maps and tile grids.',
+      documentationMd: `## Algorithm Details
+
+Visualizes the **Wave Function Collapse (WFC)** algorithm for 2D bitmap and tile generation.
+
+- **Entropy Tracking**: Calculates lowest-entropy superpositions across grid nodes.
+- **Constraint Propagation**: Collapses neighboring adjacency rules dynamically.
+- **Interactive Step Mode**: Inspect generation step-by-step on canvas.`,
+      iconUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80',
+      githubUrl: 'https://github.com/elsesourav/wave-function-collapse',
+      categoryId: catMap['simulations']!,
+      status: PublishStatus.PUBLISHED,
+      isFeatured: false,
+      currentVersion: '1.0.0',
+      publishedAt: new Date('2024-04-14T18:00:00Z'),
+      tags: ['algorithms', 'canvas', 'open-source'],
+    },
+    {
+      name: 'Falling Sands Sandbox',
+      slug: 'falling-sands',
+      shortDescription: 'Cellular automata physics simulation for particulate materials (sand, water, solids).',
+      description:
+        'A real-time cellular automata engine modeling gravity, dispersion, and liquid displacement across thousands of particles on canvas.',
+      documentationMd: `## Cellular Automata Physics
+
+Simulates granular materials and fluids using grid-based neighborhood rules.
+
+- **Material States**: Sand (falling solid), Water (liquid dispersion), Stone (static barrier).
+- **High-Performance Loop**: Optimized grid buffer swapping for 60 FPS interaction.`,
+      iconUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=80',
+      githubUrl: 'https://github.com/elsesourav/falling-sands',
+      categoryId: catMap['simulations']!,
+      status: PublishStatus.PUBLISHED,
+      isFeatured: false,
+      currentVersion: '1.0.0',
+      publishedAt: new Date('2024-04-09T17:00:00Z'),
+      tags: ['algorithms', 'canvas', 'open-source'],
+    },
+  ];
+
+  for (const app of appsData) {
+    const { tags, githubUrl, ...appFields } = app;
+    const createdApp = await prisma.app.upsert({
+      where: { slug: app.slug },
+      update: {
+        ...appFields,
+      },
+      create: {
+        ...appFields,
+      },
+    });
+
+    // Sync app links (GitHub & Demo)
+    await prisma.appLink.deleteMany({ where: { appId: createdApp.id } });
+    if (githubUrl) {
+      await prisma.appLink.create({
+        data: {
+          appId: createdApp.id,
+          platform: 'github',
+          label: 'GitHub Repository',
+          url: githubUrl,
+          isPrimary: true,
+          displayOrder: 0,
+        },
+      });
+    }
+    if (appFields.demoUrl) {
+      await prisma.appLink.create({
+        data: {
+          appId: createdApp.id,
+          platform: 'web',
+          label: 'Live Preview',
+          url: appFields.demoUrl,
+          isPrimary: false,
+          displayOrder: 1,
+        },
+      });
+    }
+
+    // Sync app tags
+    await prisma.appTag.deleteMany({ where: { appId: createdApp.id } });
+    for (const tagSlug of tags) {
+      if (tagMap[tagSlug]) {
+        await prisma.appTag.create({
+          data: {
+            appId: createdApp.id,
+            tagId: tagMap[tagSlug]!,
+          },
+        });
+      }
+    }
+  }
 
   // ===========================================================================
-  // 5. SEED BLOG (Categories, Tags, and Posts)
+  // 5. SEED BLOG CATEGORIES & DEVLOG ARTICLES
   // ===========================================================================
-  console.info('  → Seeding Blog Categories & Posts...');
+  console.info('  → Seeding Blog Articles & Engineering Notes...');
 
-  const blogCatEng = await prisma.blogCategory.upsert({
-    where: { slug: 'engineering' },
-    update: {},
+  const blogCatArchitecture = await prisma.blogCategory.upsert({
+    where: { slug: 'architecture-design' },
+    update: { name: 'Architecture & Design' },
     create: {
-      name: 'Engineering',
-      slug: 'engineering',
-      description: 'Technical deep-dives and systems architecture.',
+      name: 'Architecture & Design',
+      slug: 'architecture-design',
+      description: 'System design, monorepos, and architectural lessons learned from building software.',
     },
   });
 
-  const blogCatArch = await prisma.blogCategory.upsert({
-    where: { slug: 'architecture' },
-    update: {},
+  const blogCatWasm = await prisma.blogCategory.upsert({
+    where: { slug: 'systems-webassembly' },
+    update: { name: 'Systems & WebAssembly' },
     create: {
-      name: 'Architecture',
-      slug: 'architecture',
-      description: 'Scalable system design and software patterns.',
+      name: 'Systems & WebAssembly',
+      slug: 'systems-webassembly',
+      description: 'C++, WebAssembly compilation pipelines, SIMD, and low-level web performance.',
     },
   });
 
-  const blogCatRel = await prisma.blogCategory.upsert({
-    where: { slug: 'releases' },
-    update: {},
+  const blogCatHardware = await prisma.blogCategory.upsert({
+    where: { slug: 'hardware-robotics' },
+    update: { name: 'Hardware & Robotics' },
     create: {
-      name: 'Product Releases',
-      slug: 'releases',
-      description: 'Platform updates and major milestone releases.',
+      name: 'Hardware & Robotics',
+      slug: 'hardware-robotics',
+      description: 'Microcontroller engineering, ESP32, motor controllers, and real-time telemetry.',
     },
   });
 
-  const blogTagNext = await prisma.blogTag.upsert({
-    where: { slug: 'nextjs-15' },
-    update: {},
-    create: { name: 'Next.js 15', slug: 'nextjs-15' },
-  });
-  const tagPostgres = await prisma.blogTag.upsert({
-    where: { slug: 'postgresql' },
-    update: {},
-    create: { name: 'PostgreSQL', slug: 'postgresql' },
-  });
-  const tagSysDesign = await prisma.blogTag.upsert({
-    where: { slug: 'system-design' },
-    update: {},
-    create: { name: 'System Design', slug: 'system-design' },
-  });
-  const tagSec = await prisma.blogTag.upsert({
-    where: { slug: 'security' },
-    update: {},
-    create: { name: 'Security', slug: 'security' },
-  });
-
-  // Post 1
-  await prisma.blogPost.upsert({
-    where: { slug: 'architecting-elsesourav-nextjs-postgresql' },
-    update: {},
-    create: {
-      title: 'Architecting ElseSourav with Next.js 15 App Router & PostgreSQL',
-      slug: 'architecting-elsesourav-nextjs-postgresql',
+  const articlesData = [
+    {
+      title: 'Inside SpectraLens AI: Architecture for Multi-Engine Browser AI with Zero API Costs',
+      slug: 'inside-spectralens-multi-engine-ai-architecture',
       excerpt:
-        'A comprehensive architectural journey building a high-performance Next.js 15 monorepo backed by PostgreSQL and Prisma.',
-      content: `## The Modern Platform Architecture
+        'How I designed a Manifest V3 Chrome extension that queries leading AI models simultaneously through signed-in web sessions without token costs.',
+      content: `# Inside SpectraLens AI: Architecture for Multi-Engine Browser AI with Zero API Costs
 
-As the ElseSourav platform expanded to host richer developer tools, our architecture prioritized initial load times, granular SEO indexing, and relational data integrity.
+When building research workflows with LLMs, switching between different model interfaces is frustrating and disjointed. Commercial API keys are expensive for personal experimentation, while web chat interfaces are isolated in separate tabs.
 
-### Key Architectural Pillars
-1. **Next.js 15 Server Components**: Rendering data close to PostgreSQL and minimizing client bundle overhead.
-2. **PostgreSQL & Prisma ORM**: Strict typing, foreign key constraints, and transactional consistency.
-3. **Turborepo & pnpm Workspaces**: Clean separation of domain packages with zero circular dependencies.
+With **SpectraLens AI**, I wanted to answer a practical engineering question:
 
-\`\`\`typescript
-// Clean Layered Execution Flow
-Client UI -> Server Actions -> Domain Services -> Repositories -> Prisma
+> *Can we execute parallel multi-model queries directly inside any active webpage by orchestrating existing browser sessions with zero API token overhead?*
+
+## 1. The Multi-Model Session Gateway
+
+Rather than requiring users to maintain paid third-party API subscriptions, SpectraLens AI communicates directly with active session endpoints.
+
+### Key Architectural Challenges:
+1. **Manifest V3 Worker Constraints**: Background service workers in Manifest V3 are ephemeral and can terminate unexpectedly during long streaming responses.
+2. **CORS & Session Token Handling**: Ensuring session authorization cookies are forwarded cleanly without compromising user security.
+3. **DOM Content Extraction**: Parsing arbitrary HTML structures into clean Markdown formatted inputs for prompt assembly.
+
+## 2. On-Device OCR with WebAssembly
+
+To capture text from non-selectable web graphics or video frames, SpectraLens integrates an offline Tesseract.js WebAssembly build. Text extraction happens 100% locally on the client without uploading screenshots to external servers.
+
+## 3. Key Takeaways
+
+- Browser extensions can act as powerful personal orchestration layers.
+- Local-first WebAssembly pipelines give users privacy without server hosting bills.
+- Designing with strict Manifest V3 lifecycle constraints creates resilient, memory-efficient software.`,
+      coverImageUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&q=80',
+      categoryId: blogCatArchitecture.id,
+      readingTime: 6,
+      status: PublishStatus.PUBLISHED,
+      publishedAt: new Date('2026-08-20T10:00:00Z'),
+    },
+    {
+      title: 'Compiling C++ Neural Networks to WebAssembly: Matrix Math & SIMD in the Browser',
+      slug: 'compiling-cpp-neural-networks-to-webassembly',
+      excerpt:
+        'Lessons learned writing custom backpropagation matrix routines in C++ and compiling them with Emscripten -msimd128 for real-time handwriting recognition.',
+      content: `# Compiling C++ Neural Networks to WebAssembly: Matrix Math & SIMD in the Browser
+
+Building machine learning models from scratch in low-level languages is one of the most effective ways to understand how backpropagation, matrix multiplication, and memory layout affect computational throughput.
+
+In \`nn-number-rec\`, I built a multilayer perceptron in **C++** and compiled it to **WebAssembly (WASM)** using Emscripten to achieve near-native digit classification in the browser.
+
+## 1. Cache-Friendly Matrix Operations
+
+In standard JavaScript, array allocations can introduce GC pauses and irregular memory strides. In C++, we control memory layout precisely:
+
+\`\`\`cpp
+// Contiguous flat buffer for weights to maximize L1/L2 cache hits
+std::vector<float> weights;
 \`\`\`
 
-The result is a lightning-fast ecosystem that boots in under 100ms with full WCAG AA compliance.`,
-      coverImageUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80',
+## 2. Emscripten Compilation & Vectorization
+
+By targeting the WebAssembly SIMD specification (\`-msimd128\`), 128-bit vector registers process multiple float multiplications in parallel per CPU cycle:
+
+\`\`\`bash
+em++ -std=c++11 ./cpp/wasm.cpp -O3 -flto -msimd128 -s WASM=1 -o ./js/logic.js
+\`\`\`
+
+## 3. Real-Time Canvas Interactivity
+
+The compiled WASM module exposes a fast C function to JavaScript that accepts pixel buffers directly from an HTML5 Canvas drawing element, classifying the digit in under 1 millisecond.`,
+      coverImageUrl: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1200&q=80',
+      categoryId: blogCatWasm.id,
+      readingTime: 8,
       status: PublishStatus.PUBLISHED,
-      readingTime: 6,
-      viewsCount: 1420,
-      publishedAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
-      authorId: adminUser.id,
-      categoryId: blogCatArch.id,
-      tags: {
-        create: [{ tagId: blogTagNext.id }, { tagId: tagPostgres.id }, { tagId: tagSysDesign.id }],
+      publishedAt: new Date('2026-08-10T14:30:00Z'),
+    },
+    {
+      title: 'Eliminating the Arduino Uno: Standalone ESP32-CAM Robotics & 4-Pin PWM Tricks',
+      slug: 'standalone-esp32-cam-robotics-and-pwm-tricks',
+      excerpt:
+        'How to build a single-board WiFi RC car by serving an embedded web controller and driving an L298N motor controller directly with ESP32-CAM GPIOs.',
+      content: `# Eliminating the Arduino Uno: Standalone ESP32-CAM Robotics & 4-Pin PWM Tricks
+
+Most hobbyist WiFi camera robot designs use two microcontrollers: an **ESP32-CAM** for video streaming and an **Arduino Uno** to control motor drivers. This dual-board approach adds unnecessary wiring, weight, and serial communication latency.
+
+For the \`esp32-cam-with-car-control\` project, my goal was to make the ESP32-CAM the **sole brain** of the vehicle.
+
+## 1. Overcoming the GPIO Pin Shortage
+
+The ESP32-CAM exposes very few usable GPIOs because most are consumed by the OV2640 camera and onboard flash.
+
+### The 4-Pin PWM Solution
+Standard L298N motor driver wiring requires 6 pins (2 enable pins for PWM speed control + 4 directional inputs). By leaving the hardware jumpers on the ENA and ENB pins permanently enabled, we apply PWM directly to the IN1–IN4 directional pins, reducing our required GPIO count from 6 to 4!
+
+## 2. In-Memory Web Server & Telemetry
+
+Instead of relying on SD card filesystems, all HTML, CSS, and WebSocket controller assets are compiled directly into microcontroller program memory. The car streams live MJPEG video and telemetry from an onboard MPU6050 accelerometer at low latency.`,
+      coverImageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80',
+      categoryId: blogCatHardware.id,
+      readingTime: 7,
+      status: PublishStatus.PUBLISHED,
+      publishedAt: new Date('2026-07-28T09:00:00Z'),
+    },
+    {
+      title: 'Architecting E-Commerce Automation: Reverse Engineering Seller Workflows & Bulk Data Transforms',
+      slug: 'architecting-marketplace-seller-automation',
+      excerpt:
+        'Building tools to solve real seller friction: mapping legacy SKU codes, batching XLSX catalog transformations, and automating cross-marketplace synchronization.',
+      content: `# Architecting E-Commerce Automation: Reverse Engineering Seller Workflows & Bulk Data Transforms
+
+Online sellers spend hundreds of manual hours every month formatting spreadsheets, copying listing attributes across platforms, and verifying shipping labels.
+
+In building \`es-automation\` and its companion tools, the focus was creating real utility for high-volume marketplace operations.
+
+## 1. Schema Inconsistencies Across Marketplaces
+
+Every e-commerce platform enforces distinct catalog schemas. Porting a catalog from Flipkart to Shopsy requires automated pricing adjustments, prefix mapping, and attribute normalization.
+
+## 2. Client-Side Batch Processing
+
+Handling thousands of catalog rows without server timeouts requires client-side chunking. By utilizing Web Workers and fast in-memory spreadsheet parsing, sellers can process large SKU listings in seconds right inside their browser.`,
+      coverImageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80',
+      categoryId: blogCatArchitecture.id,
+      readingTime: 9,
+      status: PublishStatus.PUBLISHED,
+      publishedAt: new Date('2026-07-15T16:00:00Z'),
+    },
+  ];
+
+  for (const article of articlesData) {
+    await prisma.blogPost.upsert({
+      where: { slug: article.slug },
+      update: {
+        ...article,
+        authorId: adminUser.id,
       },
-    },
-  });
-
-  // Post 2
-  await prisma.blogPost.upsert({
-    where: { slug: 'zero-trust-multi-tenant-security-patterns' },
-    update: {},
-    create: {
-      title: 'Designing for Zero-Trust: Multi-Tenant RBAC & IDOR Defense Patterns',
-      slug: 'zero-trust-multi-tenant-security-patterns',
-      excerpt:
-        'How we implemented server-side authorization boundaries, input sanitization, and cryptographic token verification.',
-      content: `## Defense-in-Depth on the Web
-
-Authentication verifies who you are; authorization verifies what you are allowed to touch.
-
-### Core Defenses Implemented:
-- **Server Action Authorization**: Every mutation independently verifies user identity and resource ownership.
-- **Internal Note Redaction**: Support ticket internal messages are filtered before non-staff clients receive data.
-- **Signed Cloudinary Uploads**: Direct client binary uploads are constrained to namespaced paths.
-
-\`\`\`typescript
-const isOwner = ticket.userId === session.userId;
-if (!isOwner && !isAdmin) {
-  throw AppError.forbidden('Access denied.');
-}
-\`\`\``,
-      coverImageUrl: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1200&q=80',
-      status: PublishStatus.PUBLISHED,
-      readingTime: 5,
-      viewsCount: 980,
-      publishedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-      authorId: adminUser.id,
-      categoryId: blogCatEng.id,
-      tags: { create: [{ tagId: tagSec.id }, { tagId: tagSysDesign.id }] },
-    },
-  });
-
-  // Post 3
-  await prisma.blogPost.upsert({
-    where: { slug: 'building-accessible-design-tokens-with-tailwind' },
-    update: {},
-    create: {
-      title: 'Building Accessible Design Systems: WCAG 2.1 AA Tokens with Tailwind',
-      slug: 'building-accessible-design-tokens-with-tailwind',
-      excerpt:
-        'Creating a cohesive dark-mode design system with 25 reusable primitives, glassmorphism, and keyboard navigation.',
-      content: `## Accessibility is Not an Afterthought
-
-Building a world-class user interface requires balancing modern aesthetics (like glassmorphism and subtle borders) with high contrast and assistive navigation.
-
-### Guidelines for Design Tokens:
-- **Contrast Ratios**: Body text exceeding 7:1 ratio on deep zinc backgrounds.
-- **Focus Rings**: High-visibility \`ring-2 ring-indigo-500\` with contrast offsets.
-- **Reduced Motion**: Respecting \`prefers-reduced-motion\` for transition smoothness.`,
-      coverImageUrl: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=1200&q=80',
-      status: PublishStatus.PUBLISHED,
-      readingTime: 4,
-      viewsCount: 840,
-      publishedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-      authorId: staffUser.id,
-      categoryId: blogCatRel.id,
-      tags: { create: [{ tagId: blogTagNext.id }, { tagId: tagSysDesign.id }] },
-    },
-  });
-
-  // Post 4 (Draft state)
-  await prisma.blogPost.upsert({
-    where: { slug: 'upcoming-web-performance-trends' },
-    update: {},
-    create: {
-      title: 'Upcoming Trends in Web Performance & Edge Computing (Draft)',
-      slug: 'upcoming-web-performance-trends',
-      excerpt:
-        'A preview of emerging compiler optimizations, WASM runtime integrations, and streaming HTML architectures.',
-      content: `## The Next Wave of Web Performance
-      
-Draft article discussing streaming compilation, baseline browser feature support, and zero-JS interactive islands.`,
-      status: PublishStatus.DRAFT,
-      readingTime: 3,
-      viewsCount: 0,
-      authorId: adminUser.id,
-      categoryId: blogCatEng.id,
-    },
-  });
+      create: {
+        ...article,
+        authorId: adminUser.id,
+      },
+    });
+  }
 
   // ===========================================================================
-  // 6. SEED HELP CENTER (Categories & Technical Articles)
+  // 6. SEED HELP CENTER & DOCUMENTATION
   // ===========================================================================
-  console.info('  → Seeding Help Documentation...');
+  console.info('  → Seeding Help Center Categories & Articles...');
 
-  const helpCatStart = await prisma.helpCategory.upsert({
+  const helpCatGeneral = await prisma.helpCategory.upsert({
     where: { slug: 'getting-started' },
-    update: {},
+    update: { name: 'Getting Started & Studio Overview' },
     create: {
-      name: 'Getting Started',
+      name: 'Getting Started & Studio Overview',
       slug: 'getting-started',
-      description: 'Quick start guides, discovery features, and ecosystem fundamentals.',
-      icon: 'Rocket',
+      description: 'Overview of ElseSourav, navigating the catalog, and understanding project architectures.',
+      icon: 'BookOpen',
       orderIndex: 0,
     },
   });
 
-  const helpCatAuth = await prisma.helpCategory.upsert({
-    where: { slug: 'account-security' },
-    update: {},
+  const helpCatApps = await prisma.helpCategory.upsert({
+    where: { slug: 'applications-guides' },
+    update: { name: 'Applications & Installation Guides' },
     create: {
-      name: 'Account & Security',
-      slug: 'account-security',
-      description: 'Profiles, OAuth connections, security settings, and data privacy.',
+      name: 'Applications & Installation Guides',
+      slug: 'applications-guides',
+      description: 'Setup instructions, extension installation, and running tools locally.',
+      icon: 'Layers',
+      orderIndex: 1,
+    },
+  });
+
+  const helpCatPrivacy = await prisma.helpCategory.upsert({
+    where: { slug: 'privacy-account' },
+    update: { name: 'Privacy & User Accounts' },
+    create: {
+      name: 'Privacy & User Accounts',
+      slug: 'privacy-account',
+      description: 'Account settings, notification preferences, and local-first data privacy guarantees.',
       icon: 'Shield',
-      orderIndex: 1,
-    },
-  });
-
-  const helpCatTools = await prisma.helpCategory.upsert({
-    where: { slug: 'developer-tools' },
-    update: {},
-    create: {
-      name: 'Developer Tools & Workflows',
-      slug: 'developer-tools',
-      description: 'CLI integrations, keyboard shortcuts, and launchpad bookmarking.',
-      icon: 'Cpu',
       orderIndex: 2,
     },
   });
 
-  // Help Article 1
-  await prisma.helpArticle.upsert({
-    where: { slug: 'intro-to-ecosystem' },
-    update: {},
-    create: {
-      categoryId: helpCatStart.id,
-      title: 'Introduction to ElseSourav Tools',
-      slug: 'intro-to-ecosystem',
-      excerpt: 'Learn how to discover, launch, and bookmark developer utilities on ElseSourav.',
-      content: `# Getting Started with ElseSourav
+  const helpArticles = [
+    {
+      title: 'Exploring the Studio Catalog & Launching Applications',
+      slug: 'exploring-the-studio-catalog',
+      excerpt: 'Learn how to discover, filter, inspect, and launch tools in the ElseSourav software archive.',
+      content: `# Exploring the Studio Catalog
 
-ElseSourav is a unified software hub designed to empower engineers, designers, and creators with web-native productivity utilities.
+Welcome to the **ElseSourav** application catalog. This archive contains software applications, browser extensions, developer utilities, and technical simulations created by Sourav.
 
-## Discovering Applications
-1. Visit the **Apps Catalog** at \`/apps\`.
-2. Use the interactive search bar or filter by category (Developer Tools, Productivity, Media & Design).
-3. Click any application card to inspect technical specifications, version history, and launch options.
+## How to Navigate the Catalog
 
-## Bookmarking to Personal Library
-Click **Save to Library** on any application to pin it to your personal dashboard launchpad for instant access.`,
+- **Category Filtering**: Filter applications by domain (AI, Automation, Systems, Tools).
+- **Search**: Fast client-side search across app titles, descriptions, and technology tags.
+- **Inspect Code**: Every open-source project links directly to its source repository on GitHub.`,
+      categoryId: helpCatGeneral.id,
       status: PublishStatus.PUBLISHED,
-      publishedAt: new Date(),
       orderIndex: 0,
-      helpfulCount: 48,
-      unhelpfulCount: 1,
-      authorId: adminUser.id,
     },
-  });
+    {
+      title: 'Installing SpectraLens AI Chrome Extension',
+      slug: 'installing-spectralens-ai-chrome-extension',
+      excerpt: 'Step-by-step instructions for loading the unpacked SpectraLens AI browser extension in developer mode.',
+      content: `# Installing SpectraLens AI (Unpacked Extension)
 
-  // Help Article 2
-  await prisma.helpArticle.upsert({
-    where: { slug: 'managing-personal-library' },
-    update: {},
-    create: {
-      categoryId: helpCatTools.id,
-      title: 'Managing Your Personal App Library & Launchpad',
-      slug: 'managing-personal-library',
-      excerpt: 'Organize your favorite utilities, pin daily tools, and launch apps in one click.',
-      content: `# Personal Library & Launchpad
+To install SpectraLens AI in any Chromium-based browser (Chrome, Edge, Brave, Opera):
 
-Your Library (\`/library\`) is your customizable command center for all saved applications.
-
-## Key Features
-- **One-Click Launch**: Open live tools in standalone windows or tabs.
-- **Favorites & Pinning**: Keep critical daily tools at the top of your grid.
-- **Offline Availability**: PWA-enabled tools remain functional even without an internet connection.`,
+1. **Clone the Repository**: Clone \`https://github.com/elsesourav/spectralens-ai\` to your local computer.
+2. **Open Extensions Page**: Navigate to \`chrome://extensions/\`.
+3. **Enable Developer Mode**: Toggle the switch in the top-right corner.
+4. **Load Unpacked**: Click **Load unpacked** and select the \`extension/\` folder.
+5. **Pin Extension**: Pin SpectraLens AI to your browser toolbar for quick access.`,
+      categoryId: helpCatApps.id,
       status: PublishStatus.PUBLISHED,
-      publishedAt: new Date(),
+      orderIndex: 0,
+    },
+    {
+      title: 'Using the Client-Side Seller PDF Cropper',
+      slug: 'using-the-seller-pdf-cropper',
+      excerpt: 'How to crop marketplace shipping labels with zero server uploads and complete privacy.',
+      content: `# Using the Seller PDF Cropper
+
+The **Seller PDF Cropper** processes shipping documents 100% inside your browser using WebAssembly and canvas text measurement.
+
+## Steps:
+1. Open the tool and drag your multi-page shipping PDF into the dropzone.
+2. Select your crop preset (Label or Full Invoice).
+3. Toggle sequential page numbering if packaging batch orders.
+4. Click **Process PDF** to immediately download the optimized PDF. No file is ever transmitted over the network.`,
+      categoryId: helpCatApps.id,
+      status: PublishStatus.PUBLISHED,
       orderIndex: 1,
-      helpfulCount: 32,
-      unhelpfulCount: 0,
-      authorId: staffUser.id,
     },
-  });
+    {
+      title: 'Data Privacy & Local-First Philosophy',
+      slug: 'data-privacy-and-local-first-storage',
+      excerpt: 'Why ElseSourav tools prioritize client-side processing, zero telemetry, and user privacy.',
+      content: `# Data Privacy & Local-First Philosophy
 
-  // Help Article 3
-  await prisma.helpArticle.upsert({
-    where: { slug: 'account-security-data-privacy' },
-    update: {},
-    create: {
-      categoryId: helpCatAuth.id,
-      title: 'Account Security & Data Privacy Guidelines',
-      slug: 'account-security-data-privacy',
-      excerpt: 'How your identity is protected with Supabase Auth and cryptographic sessions.',
-      content: `# Account Security & Privacy
+ElseSourav is built with respect for user privacy:
 
-We treat security and data ownership as core principles.
-
-## How Your Data Is Stored
-- Authentication is handled exclusively by **Supabase Auth**. We do not store raw password hashes on our application server.
-- Session tokens are stored in secure \`HttpOnly\` cookies with \`SameSite=Lax\` attributes.
-- You can request full account data deletion at any time from **Settings -> Danger Zone**.`,
+- **Local Execution**: Wherever possible, utilities (PDF manipulation, OCR, simulations) execute entirely on your device.
+- **No Intrusive Tracking**: We do not use third-party behavioral trackers or sell user telemetry.
+- **Open Source Transparency**: Source code is available on GitHub for community inspection.`,
+      categoryId: helpCatPrivacy.id,
       status: PublishStatus.PUBLISHED,
-      publishedAt: new Date(),
-      orderIndex: 2,
-      helpfulCount: 29,
-      unhelpfulCount: 0,
-      authorId: adminUser.id,
+      orderIndex: 0,
     },
-  });
+  ];
 
-  // Help Article 4 (Draft state)
-  await prisma.helpArticle.upsert({
-    where: { slug: 'configuring-custom-domains' },
-    update: {},
-    create: {
-      categoryId: helpCatTools.id,
-      title: 'Configuring Custom Domains & DNS Settings (Draft)',
-      slug: 'configuring-custom-domains',
-      excerpt: 'Step-by-step DNS record configuration for connecting custom domains to web apps.',
-      content: `# Custom Domain Routing (Draft)
-
-Instructions on mapping CNAME and A records to ElseSourav web tools.`,
-      status: PublishStatus.DRAFT,
-      orderIndex: 3,
-      helpfulCount: 0,
-      unhelpfulCount: 0,
-      authorId: adminUser.id,
-    },
-  });
+  for (const article of helpArticles) {
+    await prisma.helpArticle.upsert({
+      where: { slug: article.slug },
+      update: {
+        ...article,
+        authorId: adminUser.id,
+      },
+      create: {
+        ...article,
+        authorId: adminUser.id,
+      },
+    });
+  }
 
   // ===========================================================================
-  // 7. SEED SUPPORT TICKETS & MESSAGES
-  // ===========================================================================
-  console.info('  → Seeding Support Tickets & Messages...');
-
-  // Ticket 1: Active In-Progress
-  const ticket1 = await prisma.supportTicket.upsert({
-    where: { ticketNumber: 'TK-2026-001' },
-    update: {},
-    create: {
-      ticketNumber: 'TK-2026-001',
-      userId: userSarah.id,
-      subject: 'WebGL terminal rendering artifact on high-DPI display',
-      description:
-        'When running Terminal Pro on a 4K display with fractional scaling, character borders sometimes blur on split panes.',
-      category: 'bug',
-      priority: TicketPriority.HIGH,
-      status: TicketStatus.IN_PROGRESS,
-      createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-      messages: {
-        create: [
-          {
-            senderUserId: userSarah.id,
-            senderRole: UserRole.USER,
-            message:
-              'Hi team, I noticed fractional scaling on Linux causes text blurring in the Terminal Pro split view.',
-            createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-          },
-          {
-            senderUserId: staffUser.id,
-            senderRole: UserRole.STAFF,
-            message:
-              'Thank you for reporting this Sarah! We reproduced this on Wayland with 125% scaling. A canvas pixel ratio fix is currently in testing.',
-            createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-          },
-          {
-            senderUserId: adminUser.id,
-            senderRole: UserRole.ADMIN,
-            message:
-              'Internal Note: PR #42 patches this with window.devicePixelRatio listener. Will deploy in v2.1.1.',
-            isInternalNote: true,
-            createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
-          },
-        ],
-      },
-    },
-  });
-
-  // Ticket 2: Resolved
-  await prisma.supportTicket.upsert({
-    where: { ticketNumber: 'TK-2026-002' },
-    update: {},
-    create: {
-      ticketNumber: 'TK-2026-002',
-      userId: userDavid.id,
-      subject: 'Request for custom SVG export format in Palette Studio',
-      description: 'Would it be possible to add direct SVG swatch export for Figma imports?',
-      category: 'feature_request',
-      priority: TicketPriority.MEDIUM,
-      status: TicketStatus.RESOLVED,
-      createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-      messages: {
-        create: [
-          {
-            senderUserId: userDavid.id,
-            senderRole: UserRole.USER,
-            message: 'Would love an SVG export option alongside CSS variables.',
-            createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-          },
-          {
-            senderUserId: staffUser.id,
-            senderRole: UserRole.STAFF,
-            message:
-              'Good news David! We added SVG export in Palette Studio v1.4.0. You can now copy or download raw SVG swatches directly.',
-            createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
-          },
-        ],
-      },
-    },
-  });
-
-  // Ticket 3: New Open Ticket
-  await prisma.supportTicket.upsert({
-    where: { ticketNumber: 'TK-2026-003' },
-    update: {},
-    create: {
-      ticketNumber: 'TK-2026-003',
-      userId: userElena.id,
-      subject: 'Dark mode contrast verification question',
-      description:
-        'Are all color palettes generated in Palette Studio guaranteed to meet WCAG AAA contrast?',
-      category: 'general',
-      priority: TicketPriority.LOW,
-      status: TicketStatus.OPEN,
-      createdAt: new Date(),
-      messages: {
-        create: [
-          {
-            senderUserId: userElena.id,
-            senderRole: UserRole.USER,
-            message:
-              'Hello! I wanted to confirm if the contrast matrix checks both light and dark backgrounds automatically.',
-            createdAt: new Date(),
-          },
-        ],
-      },
-    },
-  });
-
-  // ===========================================================================
-  // 8. SEED USER LIBRARY (Bookmarks)
-  // ===========================================================================
-  console.info('  → Seeding User Library Bookmarks...');
-
-  await prisma.userLibraryItem.upsert({
-    where: { userId_appId: { userId: userSarah.id, appId: appTerminal.id } },
-    update: {},
-    create: { userId: userSarah.id, appId: appTerminal.id, isFavorite: true, isPinned: true },
-  });
-
-  await prisma.userLibraryItem.upsert({
-    where: { userId_appId: { userId: userSarah.id, appId: appPalette.id } },
-    update: {},
-    create: { userId: userSarah.id, appId: appPalette.id, isFavorite: true, isPinned: false },
-  });
-
-  await prisma.userLibraryItem.upsert({
-    where: { userId_appId: { userId: userDavid.id, appId: appDevDock.id } },
-    update: {},
-    create: { userId: userDavid.id, appId: appDevDock.id, isFavorite: true, isPinned: true },
-  });
-
-  await prisma.userLibraryItem.upsert({
-    where: { userId_appId: { userId: userDavid.id, appId: appTerminal.id } },
-    update: {},
-    create: { userId: userDavid.id, appId: appTerminal.id, isFavorite: false, isPinned: false },
-  });
-
-  await prisma.userLibraryItem.upsert({
-    where: { userId_appId: { userId: userElena.id, appId: appFocus.id } },
-    update: {},
-    create: { userId: userElena.id, appId: appFocus.id, isFavorite: true, isPinned: true },
-  });
-
-  await prisma.userLibraryItem.upsert({
-    where: { userId_appId: { userId: userElena.id, appId: appRegexLens.id } },
-    update: {},
-    create: { userId: userElena.id, appId: appRegexLens.id, isFavorite: false, isPinned: false },
-  });
-
-  // ===========================================================================
-  // 9. SEED NOTIFICATIONS
-  // ===========================================================================
-  console.info('  → Seeding User Notifications...');
-
-  await prisma.notification.createMany({
-    data: [
-      {
-        userId: userSarah.id,
-        type: 'support_update',
-        title: 'Support Ticket TK-2026-001 Updated',
-        message: 'Alex Chen replied to your ticket regarding WebGL terminal scaling.',
-        linkUrl: `/support/tickets/${ticket1.id}`,
-        isRead: false,
-      },
-      {
-        userId: userSarah.id,
-        type: 'system_announcement',
-        title: 'Welcome to ElseSourav!',
-        message: 'Explore your new developer launchpad and personal library.',
-        linkUrl: '/library',
-        isRead: true,
-      },
-      {
-        userId: userDavid.id,
-        type: 'app_update',
-        title: 'DevDock v3.0.0 is Live',
-        message: 'New container log streaming and docker compose management are now available.',
-        linkUrl: '/apps/devdock',
-        isRead: false,
-      },
-      {
-        userId: userElena.id,
-        type: 'feature_release',
-        title: 'Palette Studio OKLCH Update',
-        message: 'Export accessible color systems directly to CSS variables and Figma.',
-        linkUrl: '/apps/palette-studio',
-        isRead: true,
-      },
-    ],
-    skipDuplicates: true,
-  });
-
-  // ===========================================================================
-  // 10. SEED APP FEEDBACK & AUDIT LOGS
-  // ===========================================================================
-  console.info('  → Seeding App Feedback & Audit Logs...');
-
-  await prisma.appFeedback.createMany({
-    data: [
-      {
-        userId: userSarah.id,
-        appId: appTerminal.id,
-        rating: 5,
-        message: 'Phenomenal web terminal. The WebGL rendering is butter smooth!',
-        status: 'approved',
-      },
-      {
-        userId: userDavid.id,
-        appId: appDevDock.id,
-        rating: 5,
-        message: 'Saved me hours managing local microservices.',
-        status: 'approved',
-      },
-      {
-        userId: userElena.id,
-        appId: appPalette.id,
-        rating: 5,
-        message: 'The contrast checker makes WCAG AA compliance effortless.',
-        status: 'approved',
-      },
-      {
-        userId: userSarah.id,
-        appId: appFocus.id,
-        rating: 4,
-        message: 'Great timer! Would love integrations with Spotify.',
-        status: 'approved',
-      },
-    ],
-    skipDuplicates: true,
-  });
-
-  await prisma.auditLog.createMany({
-    data: [
-      {
-        userId: adminUser.id,
-        action: 'APP_PUBLISHED',
-        entityType: 'App',
-        entityId: appTerminal.id,
-        details: { appName: 'Terminal Pro', version: '2.1.0' },
-        ipAddress: '127.0.0.1',
-      },
-      {
-        userId: adminUser.id,
-        action: 'USER_ROLE_UPDATED',
-        entityType: 'User',
-        entityId: staffUser.id,
-        details: { targetUser: 'Alex Chen', previousRole: 'USER', newRole: 'STAFF' },
-        ipAddress: '127.0.0.1',
-      },
-      {
-        userId: staffUser.id,
-        action: 'HELP_ARTICLE_PUBLISHED',
-        entityType: 'HelpArticle',
-        entityId: 'intro-to-ecosystem',
-        details: { title: 'Introduction to ElseSourav Tools' },
-        ipAddress: '127.0.0.1',
-      },
-      {
-        userId: adminUser.id,
-        action: 'SECURITY_AUDIT_COMPLETED',
-        entityType: 'System',
-        entityId: 'v2-rc',
-        details: { status: 'PASS', score: '100%' },
-        ipAddress: '127.0.0.1',
-      },
-    ],
-    skipDuplicates: true,
-  });
-
-  // ===========================================================================
-  // 10. SEED SITE SETTINGS (All known keys with dev defaults)
+  // 7. SEED CANONICAL SITE SETTINGS
   // ===========================================================================
   console.info('  → Seeding Site Settings...');
 
-  const siteSettings: Array<{ key: string; value: string; description: string }> = [
-    // Site Identity
-    {
-      key: 'site_name',
-      value: 'ElseSourav',
-      description: 'Primary site name displayed in browser title and header.',
-    },
-    {
-      key: 'site_tagline',
-      value: 'Software, Tools & Ideas',
-      description: 'Short tagline shown in the site header and metadata.',
-    },
-    {
-      key: 'site_description',
-      value:
-        'ElseSourav is the personal platform of Sourav, featuring software, applications, developer tools, technical writing, experiments, and ideas.',
-      description: 'Meta description for SEO and social sharing.',
-    },
-    // Homepage Hero
-    {
-      key: 'hero_badge',
-      value: 'Software & Digital Tools by Sourav',
-      description: 'Small badge label shown above the hero headline.',
-    },
-    {
-      key: 'hero_headline',
-      value: 'Thoughtful software, practical tools, & engineering ideas.',
-      description: 'Primary hero headline on the homepage.',
-    },
-    {
-      key: 'hero_subtitle',
-      value:
-        'Building thoughtful software, useful tools, and digital experiences with a focus on usability, performance, accessibility, and engineering quality.',
-      description: 'Subtitle paragraph beneath the hero headline.',
-    },
-    {
-      key: 'primary_cta_label',
-      value: 'Explore Applications',
-      description: 'Label for the primary call-to-action button on the homepage.',
-    },
-    {
-      key: 'secondary_cta_label',
-      value: 'Read Engineering Notes',
-      description: 'Label for the secondary CTA button linking to the blog.',
-    },
-    {
-      key: 'announcement_banner',
-      value: '',
-      description:
-        'Optional announcement banner shown at the top of the homepage. Leave empty to hide.',
-    },
-    {
-      key: 'homepage_apps_title',
-      value: 'Featured Software & Tools',
-      description: 'Heading for the featured applications section on the homepage.',
-    },
-    {
-      key: 'homepage_apps_subtitle',
-      value: 'Practical utilities and digital tools crafted for real workflows.',
-      description: 'Subtitle for the featured applications section on the homepage.',
-    },
-    {
-      key: 'homepage_blog_title',
-      value: 'Technical Writing & Exploration',
-      description: 'Heading for the recent engineering notes section on the homepage.',
-    },
-    {
-      key: 'homepage_blog_subtitle',
-      value: 'Deep-dives on software design, performance, and architecture lessons.',
-      description: 'Subtitle for the recent engineering notes section on the homepage.',
-    },
-    {
-      key: 'site_logo_url',
-      value: '',
-      description: 'Site brand logo or icon URL.',
-    },
-    {
-      key: 'site_og_image_url',
-      value: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&q=80',
-      description: 'OpenGraph banner image for social sharing.',
-    },
-    {
-      key: 'site_keywords',
-      value: 'software, developer tools, typescript, web performance, engineering',
-      description: 'SEO keywords separated by commas.',
-    },
-    {
-      key: 'site_status_badge',
-      value: '● All Systems Operational',
-      description: 'System operational status badge.',
-    },
-    {
-      key: 'footer_copyright',
-      value: '© 2026 ElseSourav. All rights reserved.',
-      description: 'Copyright notice shown across public page footers.',
-    },
-    {
-      key: 'footer_text',
-      value: 'Software, Tools & Ideas — Built with purpose.',
-      description: 'Mission statement or tagline shown in public footers.',
-    },
-    {
-      key: 'footer_status_text',
-      value: '● All Systems Operational',
-      description: 'Operational status badge shown in footer.',
-    },
-    {
-      key: 'footer_show_socials',
-      value: 'true',
-      description: 'Toggle to show or hide social links in footer.',
-    },
-    {
-      key: 'footer_show_back_to_top',
-      value: 'true',
-      description: 'Toggle to show or hide back-to-top button in footer.',
-    },
-    {
-      key: 'footer_links_json',
-      value: JSON.stringify([
-        {
-          id: 'foot-1',
-          label: 'Status',
-          url: 'https://status.elsesourav.com',
-          isExternal: true,
-          priority: 0,
-          isActive: true,
-        },
-      ]),
-      description: 'Dynamic JSON array of custom footer navigation links.',
-    },
-    // Creator Identity
-    {
-      key: 'creator_name',
-      value: 'Sourav',
-      description: 'Creator display name used across public pages.',
-    },
-    {
-      key: 'creator_title',
-      value: 'Software Engineer & Creator',
-      description: 'Professional title shown on the About page.',
-    },
-    {
-      key: 'creator_role',
-      value: 'Independent Software Creator',
-      description: 'Role description used in structured data and admin display.',
-    },
-    {
-      key: 'creator_location',
-      value: 'Remote',
-      description: 'Location shown on the About page.',
-    },
-    {
-      key: 'creator_avatar_url',
-      value: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80',
-      description: 'Profile photo / avatar URL for the creator.',
-    },
-    {
-      key: 'creator_short_bio',
-      value:
-        'Software engineer and independent creator building practical software, developer tools, and thoughtful web experiences.',
-      description: 'One-line bio shown on the homepage creator section.',
-    },
-    {
-      key: 'creator_long_bio',
-      value:
-        "I'm Sourav, a software engineer and independent creator. ElseSourav is my personal space for building, sharing, and exploring software, tools, applications, and ideas. I care about creating useful experiences that are thoughtfully designed, accessible, performant, and built with strong engineering fundamentals.",
-      description: 'Long-form bio shown on the About page. Supports Markdown.',
-    },
-    {
-      key: 'creator_principles_json',
-      value: JSON.stringify(CREATOR_CONFIG.principles),
-      description: 'JSON array of creator engineering and design principles.',
-    },
-    {
-      key: 'creator_focus_json',
-      value: JSON.stringify(CREATOR_CONFIG.focus),
-      description: 'JSON array of creator focus badges and specializations.',
-    },
-    // Social & Contact (Legacy + Dynamic Priority Links JSON)
-    {
-      key: 'github_url',
-      value: 'https://github.com/elsesourav',
-      description: 'GitHub profile URL.',
-    },
-    {
-      key: 'twitter_url',
-      value: 'https://twitter.com/elsesourav',
-      description: 'Twitter / X profile URL.',
-    },
-    {
-      key: 'contact_email',
-      value: 'contact@elsesourav.com',
-      description: 'Primary contact email address.',
-    },
-    {
-      key: 'support_url',
-      value: 'https://elsesourav.com/support',
-      description: 'URL to the public support page.',
-    },
-    {
-      key: 'social_links_json',
-      value: JSON.stringify([
-        {
-          id: 'link-1',
-          label: 'GitHub',
-          url: 'https://github.com/elsesourav',
-          platform: 'github',
-          priority: 0,
-          isActive: true,
-        },
-        {
-          id: 'link-2',
-          label: 'Twitter / X',
-          url: 'https://twitter.com/elsesourav',
-          platform: 'twitter',
-          priority: 1,
-          isActive: true,
-        },
-        {
-          id: 'link-3',
-          label: 'Discord Community',
-          url: 'https://discord.gg/elsesourav',
-          platform: 'discord',
-          priority: 2,
-          isActive: true,
-        },
-      ]),
-      description: 'Dynamic JSON array of prioritized site links and social channels.',
-    },
-    {
-      key: 'contact_methods_json',
-      value: JSON.stringify([
-        {
-          id: 'contact-1',
-          label: 'Primary Inquiries',
-          value: 'contact@elsesourav.com',
-          type: 'email',
-          description: 'Direct communication for technical discussions & collaborations',
-          priority: 0,
-          isActive: true,
-        },
-        {
-          id: 'contact-2',
-          label: 'Support Desk',
-          value: 'https://elsesourav.com/support',
-          type: 'support_desk',
-          description: 'Issue tracker and support tickets',
-          priority: 1,
-          isActive: true,
-        },
-        {
-          id: 'contact-3',
-          label: 'Telegram Direct',
-          value: 'https://t.me/elsesourav',
-          type: 'telegram',
-          description: 'Fast response for urgent requests',
-          priority: 2,
-          isActive: true,
-        },
-      ]),
-      description: 'Dynamic JSON array of direct contact methods and support channels.',
-    },
-    {
-      key: 'media_library_items_json',
-      value: JSON.stringify([
-        {
-          url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80',
-          publicId: 'users/creator-avatar-portrait',
-          domain: 'users',
-          title: 'Creator Portrait (Default)',
-          createdAt: Date.now(),
-        },
-        {
-          url: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80',
-          publicId: 'blog/code-terminal-banner',
-          domain: 'blog',
-          title: 'Code Terminal Dark Banner',
-          createdAt: Date.now(),
-        },
-        {
-          url: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80',
-          publicId: 'apps/dev-workspace-showcase',
-          domain: 'apps',
-          title: 'Developer Workspace',
-          createdAt: Date.now(),
-        },
-      ]),
-      description: 'Media Library asset registry and direct uploads.',
-    },
+  const siteSettings = [
+    { key: 'site_name', value: 'ElseSourav' },
+    { key: 'site_tagline', value: 'Software, Tools & Ideas' },
+    { key: 'site_description', value: SITE_CONFIG.description },
+    { key: 'hero_badge', value: 'Independent Software Studio & Archive' },
+    { key: 'hero_headline', value: "I'm Sourav. I design and build independent software, developer tools, and digital experiences." },
+    { key: 'hero_subtitle', value: 'ElseSourav is my personal studio and workshop—a living collection of software, engineering field notes, and creative experiments built with a focus on craft, speed, and privacy.' },
+    { key: 'primary_cta_label', value: 'Explore Applications' },
+    { key: 'secondary_cta_label', value: 'Read Engineering Notes' },
+    { key: 'homepage_apps_title', value: 'Software Crafted with Purpose' },
+    { key: 'homepage_apps_subtitle', value: 'A curated collection of desktop utilities, web apps, and developer tools built for daily workflows.' },
+    { key: 'homepage_blog_title', value: 'Engineering Notes & Reflections' },
+    { key: 'homepage_blog_subtitle', value: 'Notes on software design, architecture, performance, and things I learn while building.' },
+    { key: 'creator_name', value: 'Sourav' },
+    { key: 'creator_full_name', value: 'Sourav Barui' },
+    { key: 'creator_title', value: CREATOR_CONFIG.identity.title },
+    { key: 'creator_role', value: CREATOR_CONFIG.identity.role },
+    { key: 'creator_location', value: CREATOR_CONFIG.identity.location },
+    { key: 'creator_short_bio', value: CREATOR_CONFIG.shortBio },
+    { key: 'creator_long_bio', value: CREATOR_CONFIG.longBio },
+    { key: 'creator_principles_json', value: JSON.stringify(CREATOR_CONFIG.principles) },
+    { key: 'creator_focus_json', value: JSON.stringify(CREATOR_CONFIG.focus) },
+    { key: 'github_url', value: CREATOR_CONFIG.links.github },
+    { key: 'twitter_url', value: CREATOR_CONFIG.links.twitter },
+    { key: 'contact_email', value: CREATOR_CONFIG.contact.email },
+    { key: 'support_url', value: CREATOR_CONFIG.contact.support },
+    { key: 'footer_status_text', value: '● All Systems Operational' },
   ];
 
   for (const setting of siteSettings) {
     await prisma.siteSetting.upsert({
       where: { key: setting.key },
-      update: { value: setting.value, description: setting.description },
-      create: { key: setting.key, value: setting.value, description: setting.description },
+      update: { value: setting.value },
+      create: setting,
     });
   }
 
-  console.info('===========================================================');
-  console.info('✅ Successfully seeded ElseSourav database!');
-  console.info('  • Users: 5 (1 Admin, 1 Staff, 3 Users)');
-  console.info('  • Categories: 5 App Categories, 3 Blog Categories, 3 Help Categories');
-  console.info('  • Tags: 6 App Tags, 4 Blog Tags');
-  console.info(
-    '  • Applications: 5 Full Dev Tools (Terminal Pro, Palette Studio, FocusFlow, DevDock, RegexLens)'
-  );
-  console.info('  • App documentationMd: 5 Markdown documentation blocks');
-  console.info('  • Blog Posts: 3 Comprehensive Technical Articles');
-  console.info('  • Help Guides: 3 Structured Documentation Guides');
-  console.info('  • Support Tickets: 3 Tickets with full message threads and internal notes');
-  console.info('  • User Library: 6 Saved App Bookmarks');
-  console.info('  • Notifications: 4 Notification entries');
-  console.info('  • App Feedback: 4 Reviews with ratings');
-  console.info('  • Audit Logs: 4 Security and administration audit entries');
-  console.info('  • Site Settings: 27 keys seeded with dev defaults');
-  console.info('===========================================================');
+  console.info('✅ ElseSourav Database successfully seeded with authentic creator and project content!');
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Seed execution failed:', e);
+    console.error('❌ Error during seeding:', e);
     process.exit(1);
   })
   .finally(async () => {

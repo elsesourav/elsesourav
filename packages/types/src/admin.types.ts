@@ -125,6 +125,7 @@ export interface SiteAndCreatorIdentity {
   };
   readonly creator: {
     readonly name: string;
+    readonly fullName?: string;
     readonly handle: string;
     readonly title: string;
     readonly role: string;
