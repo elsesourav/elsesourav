@@ -18,7 +18,7 @@ import {
 function getPlatformIcon(platform: SiteLinkPlatform) {
   switch (platform) {
     case 'github':
-      return <Code2 className="w-4 h-4 text-zinc-300" />;
+      return <Code2 className="w-4 h-4" />;
     case 'twitter':
       return <Share2 className="w-4 h-4 text-sky-400" />;
     case 'linkedin':
@@ -30,7 +30,7 @@ function getPlatformIcon(platform: SiteLinkPlatform) {
     case 'email':
       return <Mail className="w-4 h-4 text-emerald-400" />;
     default:
-      return <Globe className="w-4 h-4 text-zinc-400" />;
+      return <Globe className="w-4 h-4" />;
   }
 }
 
@@ -44,7 +44,7 @@ export async function PublicFooter() {
   return (
     <footer
       aria-label="Site footer"
-      className="border-t border-zinc-800/80 bg-zinc-950/95 backdrop-blur-md pt-16 pb-12 text-sm text-zinc-400"
+      className="border-t border-[hsl(var(--border))]/80 bg-[hsl(var(--background))]/95 backdrop-blur-md pt-16 pb-12 text-sm text-[hsl(var(--muted-foreground))]"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Main Footer Grid */}
@@ -53,7 +53,7 @@ export async function PublicFooter() {
           <div className="lg:col-span-2 space-y-4">
             <Link
               href={ROUTES.HOME}
-              className="inline-flex items-center gap-2.5 font-bold text-base sm:text-lg text-white group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg p-1"
+              className="inline-flex items-center gap-2.5 font-bold text-base sm:text-lg text-[hsl(var(--foreground))] group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] rounded-lg p-1"
             >
               <div className="w-8 h-8 rounded-xl overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
                 <Image
@@ -64,10 +64,10 @@ export async function PublicFooter() {
                   className="w-full h-full object-contain"
                 />
               </div>
-              <span className="tracking-tight text-white font-bold">{identity.site.name}</span>
+              <span className="tracking-tight font-bold">{identity.site.name}</span>
             </Link>
 
-            <p className="text-xs text-zinc-400 leading-relaxed max-w-sm">
+            <p className="text-xs text-[hsl(var(--muted-foreground))] leading-relaxed max-w-sm">
               {identity.footer.text || `${identity.site.name} is the personal software studio and archive of ${identity.creator.fullName}. Practical tools, simulations, and engineering notes.`}
             </p>
 
@@ -81,7 +81,7 @@ export async function PublicFooter() {
                     aria-label={`${link.label} (${link.platform})`}
                     target={link.url.startsWith('mailto:') ? undefined : '_blank'}
                     rel={link.url.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
-                    className="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                    className="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--surface-subtle))] hover:bg-[hsl(var(--accent))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))]"
                     title={link.label}
                   >
                     {getPlatformIcon(link.platform)}
@@ -93,27 +93,27 @@ export async function PublicFooter() {
 
           {/* Column 1: Explore */}
           <div className="space-y-3">
-            <h4 className="text-xs font-semibold text-zinc-200 uppercase tracking-wider">
+            <h4 className="text-xs font-semibold text-[hsl(var(--foreground))] uppercase tracking-wider">
               Explore
             </h4>
-            <ul className="space-y-2.5 text-xs text-zinc-400">
+            <ul className="space-y-2.5 text-xs text-[hsl(var(--muted-foreground))]">
               <li>
-                <Link href={ROUTES.APPS} className="hover:text-white transition-colors">
+                <Link href={ROUTES.APPS} className="hover:text-[hsl(var(--foreground))] transition-colors">
                   Work
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.LAB} className="hover:text-white transition-colors">
+                <Link href={ROUTES.LAB} className="hover:text-[hsl(var(--foreground))] transition-colors">
                   The Lab
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.ARCHIVE} className="hover:text-white transition-colors">
+                <Link href={ROUTES.ARCHIVE} className="hover:text-[hsl(var(--foreground))] transition-colors">
                   The Archive
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.BLOG} className="hover:text-white transition-colors">
+                <Link href={ROUTES.BLOG} className="hover:text-[hsl(var(--foreground))] transition-colors">
                   Notes
                 </Link>
               </li>
@@ -122,22 +122,22 @@ export async function PublicFooter() {
 
           {/* Column 2: About */}
           <div className="space-y-3">
-            <h4 className="text-xs font-semibold text-zinc-200 uppercase tracking-wider">
+            <h4 className="text-xs font-semibold text-[hsl(var(--foreground))] uppercase tracking-wider">
               About
             </h4>
-            <ul className="space-y-2.5 text-xs text-zinc-400">
+            <ul className="space-y-2.5 text-xs text-[hsl(var(--muted-foreground))]">
               <li>
-                <Link href={ROUTES.ABOUT} className="hover:text-white transition-colors">
+                <Link href={ROUTES.ABOUT} className="hover:text-[hsl(var(--foreground))] transition-colors">
                   About Creator
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.ACCESSIBILITY} className="hover:text-white transition-colors">
+                <Link href={ROUTES.ACCESSIBILITY} className="hover:text-[hsl(var(--foreground))] transition-colors">
                   Accessibility
                 </Link>
               </li>
               <li>
-                <Link href="/design-system" className="hover:text-white transition-colors">
+                <Link href="/design-system" className="hover:text-[hsl(var(--foreground))] transition-colors">
                   Design System
                 </Link>
               </li>
@@ -146,17 +146,17 @@ export async function PublicFooter() {
 
           {/* Column 3: Support */}
           <div className="space-y-3">
-            <h4 className="text-xs font-semibold text-zinc-200 uppercase tracking-wider">
+            <h4 className="text-xs font-semibold text-[hsl(var(--foreground))] uppercase tracking-wider">
               Support
             </h4>
-            <ul className="space-y-2.5 text-xs text-zinc-400">
+            <ul className="space-y-2.5 text-xs text-[hsl(var(--muted-foreground))]">
               <li>
-                <Link href={ROUTES.SUPPORT} className="hover:text-white transition-colors">
+                <Link href={ROUTES.SUPPORT} className="hover:text-[hsl(var(--foreground))] transition-colors">
                   Support Desk
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.SETTINGS} className="hover:text-white transition-colors">
+                <Link href={ROUTES.SETTINGS} className="hover:text-[hsl(var(--foreground))] transition-colors">
                   Account Settings
                 </Link>
               </li>
@@ -166,10 +166,10 @@ export async function PublicFooter() {
                     href={cLink.url}
                     target={cLink.isExternal ? '_blank' : undefined}
                     rel={cLink.isExternal ? 'noopener noreferrer' : undefined}
-                    className="inline-flex items-center gap-1 hover:text-white transition-colors"
+                    className="inline-flex items-center gap-1 hover:text-[hsl(var(--foreground))] transition-colors"
                   >
                     <span>{cLink.label}</span>
-                    {cLink.isExternal && <ExternalLink className="w-3 h-3 text-zinc-500" />}
+                    {cLink.isExternal && <ExternalLink className="w-3 h-3 text-[hsl(var(--subtle-foreground))]" />}
                   </a>
                 </li>
               ))}
@@ -178,17 +178,17 @@ export async function PublicFooter() {
 
           {/* Column 4: Legal */}
           <div className="space-y-3">
-            <h4 className="text-xs font-semibold text-zinc-200 uppercase tracking-wider">
+            <h4 className="text-xs font-semibold text-[hsl(var(--foreground))] uppercase tracking-wider">
               Legal
             </h4>
-            <ul className="space-y-2.5 text-xs text-zinc-400">
+            <ul className="space-y-2.5 text-xs text-[hsl(var(--muted-foreground))]">
               <li>
-                <Link href={ROUTES.PRIVACY} className="hover:text-white transition-colors">
+                <Link href={ROUTES.PRIVACY} className="hover:text-[hsl(var(--foreground))] transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.TERMS} className="hover:text-white transition-colors">
+                <Link href={ROUTES.TERMS} className="hover:text-[hsl(var(--foreground))] transition-colors">
                   Terms of Service
                 </Link>
               </li>
@@ -197,17 +197,17 @@ export async function PublicFooter() {
         </div>
 
         {/* Bottom Sub-Footer Row */}
-        <div className="pt-8 border-t border-zinc-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
+        <div className="pt-8 border-t border-[hsl(var(--border-subtle))] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[hsl(var(--subtle-foreground))]">
           <p>{identity.footer.copyright || `© ${new Date().getFullYear()} ${identity.site.name} • Built by ${identity.creator.fullName}`}</p>
 
           {identity.footer.showBackToTop && (
             <a
               href="#"
               aria-label="Scroll back to top of page"
-              className="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white border border-zinc-800 hover:border-zinc-700 bg-zinc-900/60 px-3 py-1.5 rounded-xl transition-all hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              className="inline-flex items-center gap-1.5 text-xs text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] border border-[hsl(var(--border))] hover:border-[hsl(var(--border-strong))] bg-[hsl(var(--surface-subtle))] px-3 py-1.5 rounded-xl transition-all hover:bg-[hsl(var(--accent))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))]"
             >
               <span>Back to Top</span>
-              <ArrowUp className="w-3.5 h-3.5 text-zinc-400" />
+              <ArrowUp className="w-3.5 h-3.5" />
             </a>
           )}
         </div>
