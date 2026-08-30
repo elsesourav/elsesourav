@@ -35,7 +35,7 @@ export function PublicHeader({ user }: PublicHeaderProps) {
 
   const navLinks = [
     { href: ROUTES.APPS, label: 'Work' },
-    { href: '/apps?category=simulations', label: 'Lab' },
+    { href: ROUTES.LAB, label: 'Lab' },
     { href: ROUTES.BLOG, label: 'Notes' },
     { href: ROUTES.ABOUT, label: 'About' },
   ];
