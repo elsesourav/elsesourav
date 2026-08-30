@@ -13,7 +13,7 @@ import { CREATOR_CONFIG, SITE_CONFIG } from '@elsesourav/config';
 import { PublishStatus, UserRole, prisma } from '../../src/index';
 
 async function main() {
-  console.info('🌱 Seeding ElseSourav Database with authentic creator and portfolio records...');
+  console.info('🌱 Seeding ElseSourav Database with canonical portfolio records...');
 
   // ===========================================================================
   // 1. SEED CANONICAL ADMIN USER
@@ -88,9 +88,9 @@ async function main() {
       orderIndex: 5,
     },
     {
-      name: 'Developer Utilities',
+      name: 'Developer Utilities & Mobile',
       slug: 'utilities',
-      description: 'Client-side PDF processors, invoice makers, formatting tools, and privacy-first helpers.',
+      description: 'Client-side PDF processors, invoice makers, mobile apps, and privacy-first helpers.',
       icon: 'Wrench',
       orderIndex: 6,
     },
@@ -117,6 +117,8 @@ async function main() {
     { name: 'Chrome Extension', slug: 'chrome-extension' },
     { name: 'TypeScript', slug: 'typescript' },
     { name: 'React 19', slug: 'react' },
+    { name: 'React Native', slug: 'react-native' },
+    { name: 'Expo', slug: 'expo' },
     { name: 'C++', slug: 'cpp' },
     { name: 'Embedded', slug: 'embedded' },
     { name: 'IoT', slug: 'iot' },
@@ -127,6 +129,7 @@ async function main() {
     { name: 'PDF Tools', slug: 'pdf-tools' },
     { name: 'Tailwind CSS', slug: 'tailwindcss' },
     { name: 'Open Source', slug: 'open-source' },
+    { name: 'Game Dev', slug: 'game-dev' },
   ];
 
   const tagMap: Record<string, string> = {};
@@ -140,35 +143,37 @@ async function main() {
   }
 
   // ===========================================================================
-  // 4. SEED REAL APPLICATIONS
+  // 4. CANONICAL PORTFOLIO PROJECTS
   // ===========================================================================
-  console.info('  → Seeding Real Applications...');
+  console.info('  → Seeding Canonical Portfolio Projects across 4 Tiers...');
 
   const appsData = [
+    // -------------------------------------------------------------------------
+    // TIER A: FEATURED (3 Projects)
+    // -------------------------------------------------------------------------
     {
       name: 'SpectraLens AI',
       slug: 'spectralens-ai',
       shortDescription: 'Multi-engine parallel AI browser assistant, visual DOM element scanner, and on-device WASM OCR.',
       description:
-        'A high-performance Chrome extension (Manifest V3) that enables simultaneous multi-model AI querying across active web sessions with zero API token costs, point-and-click DOM inspection, and offline WebAssembly OCR.',
+        'A Manifest V3 Chrome extension enabling simultaneous multi-model AI querying across active web sessions with zero API token costs, point-and-click DOM inspection, and offline WebAssembly OCR.',
       documentationMd: `## Overview
 
-**SpectraLens AI** is an advanced browser companion built on Manifest V3. It allows researchers and developers to query multiple leading AI models simultaneously through their active web sessions, compare answers side-by-side, and extract structured page data with zero subscription token costs.
+**SpectraLens AI** is a browser companion built on Manifest V3. It allows researchers and developers to query multiple AI models simultaneously through their active web sessions, compare responses side-by-side, and extract structured page data without subscription token costs.
 
-### Key Capabilities
+## What It Does
 
-- **Simultaneous Multi-Model Querying**: Dispatch prompts across multiple AI engines in parallel without juggling tabs.
+- **Simultaneous Multi-Model Querying**: Dispatch prompts across multiple AI engines in parallel without tab switching.
 - **Visual Element Scanner**: Point-and-click DOM inspector that formats tables, code snippets, and text into Markdown.
 - **On-Device Screen OCR**: Crop screen areas and extract text using bundled Tesseract.js WebAssembly.
 - **Zero API Costs**: Connects directly via signed-in browser sessions.
 - **Privacy First**: 100% on-device operation with zero telemetry.
 
-### Installation
+## Technical Architecture
 
-1. Clone or download \`spectralens-ai\` from GitHub.
-2. Open \`chrome://extensions/\` in Chrome, Edge, or Brave.
-3. Enable **Developer Mode** in the top-right corner.
-4. Click **Load unpacked** and select the \`extension/\` folder.`,
+- **Extension Framework**: Chrome Manifest V3 with event-driven background service worker.
+- **WASM Engine**: Client-side Tesseract.js compiled for local optical character recognition.
+- **Content Bridge**: Isolated context script for non-intrusive DOM inspection and element highlights.`,
       iconUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&q=80',
       featuredImageUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&q=80',
       githubUrl: 'https://github.com/elsesourav/spectralens-ai',
@@ -184,17 +189,22 @@ async function main() {
       slug: 'es-automation',
       shortDescription: 'Multi-seller marketplace automation platform for product mapping, bulk catalog generation, and SKU management.',
       description:
-        'A powerful Chrome extension and management system built for Flipkart and Shopsy sellers to automate catalog operations, sync internal SKU codes, process bulk inventory, and eliminate manual order workflows.',
+        'A Chrome extension and operational platform built for Flipkart and Shopsy sellers to automate catalog operations, sync internal SKU codes, process bulk inventory, and eliminate manual order workflows.',
       documentationMd: `## Overview
 
 **ES Automation** is an operational platform and browser extension engineered for high-volume marketplace sellers. It automates repetitive catalog operations, SKU mapping, and cross-platform listing transfers.
 
-### Features
+## What It Does
 
 - **SKU Mapping Engine**: Audit, bulk import, and reconcile \`old_sku -> new_sku\` relationships with conflict detection.
 - **Catalog Generator**: Automated XLSX catalog export with customizable schema transformations.
 - **Cross-Marketplace Sync**: One-click listing porting from Flipkart to Shopsy marketplace formats.
-- **Order & Inventory Tracking**: Direct integration with Supabase PostgreSQL backend.`,
+- **Order & Inventory Tracking**: Direct integration with Supabase PostgreSQL backend.
+
+## Implementation Details
+
+- Built using **React 19**, **TypeScript**, and **Tailwind CSS**.
+- Employs Web Workers for in-memory parsing of multi-thousand-row spreadsheet files without freezing the browser UI.`,
       iconUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=200&q=80',
       featuredImageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80',
       githubUrl: 'https://github.com/elsesourav/es-automation',
@@ -210,17 +220,21 @@ async function main() {
       slug: 'debayan-ganguly-portfolio',
       shortDescription: 'Bilingual academic and research portfolio platform with custom CMS and LaTeX math typesetting.',
       description:
-        'An official academic portfolio and administrative CMS built for Dr. Debayan Ganguly (Deputy Director OSD & Ex-officio, Govt of West Bengal), featuring real-time Bengali/English i18n, KaTeX math rendering, and Cloud Firestore.',
+        'An academic portfolio and administrative CMS built for Dr. Debayan Ganguly (Deputy Director OSD & Ex-officio, Govt of West Bengal), featuring Bengali/English i18n, KaTeX math rendering, and Cloud Firestore.',
       documentationMd: `## Overview
 
-A high-performance academic and research portfolio website engineered for **Dr. Debayan Ganguly**, Deputy Director OSD & Ex-officio at the Directorate of Technical Education, Government of West Bengal.
+An academic and research portfolio website engineered for **Dr. Debayan Ganguly**, Deputy Director OSD & Ex-officio at the Directorate of Technical Education, Government of West Bengal.
 
-### Key Architecture
+## What It Does
 
 - **Bilingual i18n**: Real-time seamless toggle between English and Bengali (বাংলা).
 - **Custom Admin CMS**: Full administrative management for research grants, publications, honors, and workshops.
 - **LaTeX Math Rendering**: KaTeX integration for mathematical proofs and formula typesetting.
-- **Cloud Firestore**: Real-time reactive data store with zero layout shift skeleton loading.`,
+- **Cloud Firestore**: Real-time reactive data store with zero layout shift skeleton loading.
+
+## Live Deployment
+
+- Available at: [debayanganguly.web.app](https://debayanganguly.web.app)`,
       iconUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=200&q=80',
       featuredImageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=80',
       demoUrl: 'https://debayanganguly.web.app',
@@ -232,21 +246,88 @@ A high-performance academic and research portfolio website engineered for **Dr. 
       publishedAt: new Date('2026-08-14T09:00:00Z'),
       tags: ['react', 'typescript', 'firebase', 'tailwindcss'],
     },
+
+    // -------------------------------------------------------------------------
+    // TIER B: SELECTED WORK (8 Projects)
+    // -------------------------------------------------------------------------
+    {
+      name: 'Breakout Ball',
+      slug: 'breakout-ball',
+      shortDescription: 'WebAssembly and C++ arcade game with AABB collision physics, custom level builder, and gyroscope controls.',
+      description:
+        'An arcade brick-breaking game built with C++ compiled to WebAssembly, featuring high frame-rate physics, in-game level editor, gyroscope tilt controls, and Firebase ranking.',
+      documentationMd: `## Overview
+
+**Breakout Ball** combines classic arcade brick-breaking gameplay with modern WebAssembly performance, custom level creation tools, and mobile sensor input.
+
+## What It Does
+
+- **High-Performance Physics**: Game loop and collision resolution execute in compiled C++ WebAssembly.
+- **Custom Level Editor**: Design custom brick patterns and save them publicly or privately to Firebase.
+- **Multi-Input Controls**: Supports touch swipe, keyboard/mouse, and mobile device gyroscope tilt controls.
+- **Global Leaderboards**: Tracks completion times and high scores per level.
+
+## Technical Notes
+
+- Compiles C++ logic to WebAssembly via Emscripten.
+- Uses Axis-Aligned Bounding Box (AABB) collision algorithms for accurate block rebounds at 60 FPS.`,
+      iconUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&q=80',
+      demoUrl: 'https://elsesourav.github.io/breakout-ball',
+      githubUrl: 'https://github.com/elsesourav/breakout-ball',
+      categoryId: catMap['simulations']!,
+      status: PublishStatus.PUBLISHED,
+      isFeatured: false,
+      currentVersion: '1.0.0',
+      publishedAt: new Date('2024-07-13T14:00:00Z'),
+      tags: ['cpp', 'webassembly', 'game-dev', 'canvas', 'firebase', 'open-source'],
+    },
+    {
+      name: 'Meal Tracker Mobile',
+      slug: 'meal-tracker',
+      shortDescription: 'React Native & Expo mobile application with smart reminder notifications, offline storage, and calendar views.',
+      description:
+        'A cross-platform mobile application for tracking daily dietary consumption with intelligent notification scheduling, intentional meal skipping states, and offline JSON data portability.',
+      documentationMd: `## Overview
+
+**Meal Tracker** is a mobile application built with React Native and Expo designed for tracking daily meals, managing dietary routines, and scheduling non-intrusive meal reminders.
+
+## What It Does
+
+- **Daily Meal Logging**: Record daytime, evening, and extra meal items with a clean touch interface.
+- **Smart "OFF" State**: Flag deliberate fasting or skipped meals, automatically pausing scheduled notifications.
+- **Local-First Storage**: Operates entirely offline using AsyncStorage with JSON backup and export.
+- **Background Notifications**: Uses Expo Notifications for scheduled reminder alerts.
+
+## Architecture
+
+- Built using **React Native**, **Expo Router**, **TypeScript**, and **NativeWind**.
+- Configured with automated EAS Cloud and native Gradle build pipelines.`,
+      iconUrl: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=1200&q=80',
+      githubUrl: 'https://github.com/elsesourav/meal-tracker',
+      categoryId: catMap['utilities']!,
+      status: PublishStatus.PUBLISHED,
+      isFeatured: false,
+      currentVersion: '1.0.0',
+      publishedAt: new Date('2025-05-18T10:00:00Z'),
+      tags: ['react-native', 'expo', 'typescript', 'open-source'],
+    },
     {
       name: 'Neural Network Number Recognition',
       slug: 'nn-number-rec',
       shortDescription: 'Handwritten digit recognition neural network built from scratch in C++ and compiled to WebAssembly.',
       description:
-        'A high-performance machine learning demonstration featuring a custom matrix math and backpropagation engine written in C++, compiled with Emscripten SIMD optimizations, with live drawing and neural layer visualization.',
-      documentationMd: `## Technical Architecture
+        'A machine learning demonstration featuring a custom matrix math and backpropagation engine written in C++, compiled with Emscripten SIMD optimizations, with live drawing and neural layer visualization.',
+      documentationMd: `## Overview
 
-This project implements a fully functional Feedforward Neural Network with Backpropagation from scratch in **C++**, compiled directly into **WebAssembly** via Emscripten.
+This project implements a Feedforward Neural Network with Backpropagation from scratch in **C++**, compiled to **WebAssembly** via Emscripten.
 
-### Highlights
+## What It Does
 
 - **Near-Native Performance**: Core training matrix computations execute in WebAssembly with \`-msimd128\` vector instructions.
-- **Live Canvas Drawing**: Draw any digit (0–9) and inspect real-time classification probabilities.
-- **Layer & Weight Visualization**: Interactive visualizer inspecting active neuron activations across input, hidden, and output layers.`,
+- **Live Canvas Drawing**: Draw digits (0–9) and inspect real-time classification probabilities.
+- **Layer & Weight Visualization**: Interactive visualizer showing activations across input, hidden, and output neuron layers.`,
       iconUrl: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=200&q=80',
       featuredImageUrl: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1200&q=80',
       demoUrl: 'https://elsesourav.github.io/nn-number-rec',
@@ -263,16 +344,16 @@ This project implements a fully functional Feedforward Neural Network with Backp
       slug: 'esp32-cam-with-car-control',
       shortDescription: 'Single-board WiFi vehicle control system with real-time MJPEG streaming and MPU6050 telemetry.',
       description:
-        'A standalone microcontroller robotics project eliminating secondary Arduino Uno hardware. Features embedded web server, 4-pin PWM motor control trick, I2C telemetry, and mobile touch joystick UI.',
-      documentationMd: `## Hardware Architecture
+        'A standalone microcontroller robotics project eliminating secondary Arduino Uno hardware. Serves an embedded web controller and drives an L298N motor controller using a 4-pin PWM technique.',
+      documentationMd: `## Overview
 
 A standalone WiFi car control system where the **ESP32-CAM** functions as the complete brain: handling video streaming, WebSocket server, direct PWM motor drive, and I2C sensor telemetry.
 
-### Engineering Highlights
+## Technical Highlights
 
-- **4-Pin PWM Trick**: Uses L298N IN pins for PWM duty cycle control, saving vital GPIO pins.
+- **4-Pin PWM Trick**: Applies PWM directly to L298N directional inputs, preserving GPIO pins for camera operations.
 - **Real-Time Video**: Streams live MJPEG camera feed directly to connected web clients.
-- **Zero External Server**: All web controller assets are compiled into microcontroller memory.
+- **Embedded Web Server**: All HTML and JavaScript controller assets are compiled into microcontroller Flash memory.
 - **MPU6050 Telemetry**: Live accelerometer and tilt display in the mobile touch controller.`,
       iconUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=200&q=80',
       featuredImageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80',
@@ -287,14 +368,14 @@ A standalone WiFi car control system where the **ESP32-CAM** functions as the co
     {
       name: 'ES GST Return',
       slug: 'gst-return',
-      shortDescription: 'SaaS-style web application for marketplace sales and GST return discrepancy processing.',
+      shortDescription: 'Web application for marketplace sales report parsing and GST return discrepancy reconciliation.',
       description:
-        'A production-ready web application for parsing multi-channel marketplace reports (Flipkart, Amazon), validating GST liabilities, diffing mismatch records, and rendering interactive sales analytics.',
+        'A web application for parsing multi-channel marketplace reports (Flipkart, Amazon), validating GST tax liabilities, diffing mismatch records, and rendering interactive sales analytics.',
       documentationMd: `## Overview
 
-A specialized financial reconciliation tool designed to parse messy marketplace sales reports, detect GST calculation discrepancies, and produce verified return summaries.
+A specialized financial reconciliation tool designed to parse marketplace sales reports, detect GST calculation discrepancies, and produce verified return summaries.
 
-### Features
+## Features
 
 - **Multi-Format Excel Parser**: Drag-and-drop parsing for diverse marketplace spreadsheet layouts.
 - **Discrepancy Diff Engine**: Side-by-side comparison highlighting missing invoices and tax mismatches.
@@ -315,18 +396,19 @@ A specialized financial reconciliation tool designed to parse messy marketplace 
       shortDescription: 'Modular, layer-based browser image and graphics editor with non-destructive adjustments.',
       description:
         'A modular web graphic editor featuring layer hierarchy, pan/zoom canvas, crop and rotate tools, filter pipelines, undo/redo history manager, and JSON template workflows.',
-      documentationMd: `## Architecture
+      documentationMd: `## Overview
 
-A modular browser photo editor built using vanilla JavaScript modules and HTML5 Canvas.
+A modular browser photo and graphics editor built using vanilla JavaScript modules and HTML5 Canvas.
 
-### Features
+## Features
 
 - **Layer Graph**: Parent/child layer management with drag reordering.
 - **Transform Tools**: Precise pan, zoom, snap guides, crop, and rotation workflows.
 - **History Pipeline**: Robust undo/redo state manager tracking discrete user actions.
-- **Template System**: Import and export editor project states as JSON.`,
+- **Template System**: Import and export editor project states as JSON files.`,
       iconUrl: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=200&q=80',
       featuredImageUrl: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=1200&q=80',
+      demoUrl: 'https://elsesourav.github.io/img-editor',
       githubUrl: 'https://github.com/elsesourav/img-editor',
       categoryId: catMap['media-design']!,
       status: PublishStatus.PUBLISHED,
@@ -336,39 +418,16 @@ A modular browser photo editor built using vanilla JavaScript modules and HTML5 
       tags: ['canvas', 'algorithms', 'open-source'],
     },
     {
-      name: 'Particle Chain WASM',
-      slug: 'particle-chain-wasm',
-      shortDescription: 'Real-time particle physics chain simulation in C++ compiled to WebAssembly.',
-      description:
-        'High frame-rate physics simulation implementing Verlet integration and particle chain constraints in C++, compiled via Emscripten to WebAssembly with HTML5 canvas output.',
-      documentationMd: `## Performance & Physics
-
-Real-time particle chain dynamics written in modern C++ and compiled to WebAssembly.
-
-- **Verlet Integration**: Accurate physical constraints for linked particle chains.
-- **Optimized Compilation**: Built using Emscripten with \`-Os\` and zero exception overhead.
-- **Canvas Rendering**: High-performance browser rendering loop.`,
-      iconUrl: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=200&q=80',
-      featuredImageUrl: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=1200&q=80',
-      githubUrl: 'https://github.com/elsesourav/particle-chain-wasm',
-      categoryId: catMap['simulations']!,
-      status: PublishStatus.PUBLISHED,
-      isFeatured: false,
-      currentVersion: '1.0.0',
-      publishedAt: new Date('2025-04-06T14:00:00Z'),
-      tags: ['cpp', 'webassembly', 'canvas', 'algorithms'],
-    },
-    {
       name: 'Seller PDF Cropper',
       slug: 'seller-pdf-cropper',
       shortDescription: 'Client-side shipping label and invoice PDF cropper with dynamic text measurement.',
       description:
-        'A 100% client-side privacy-first utility for cropping multi-page marketplace shipping labels, adding sequential numbering, and rendering print-ready PDFs without uploading data to servers.',
-      documentationMd: `## Privacy & Client-Side Processing
+        'A client-side privacy-first utility for cropping multi-page marketplace shipping labels, adding sequential numbering, and rendering print-ready PDFs without uploading data to servers.',
+      documentationMd: `## Overview
 
 Processes multi-page shipping PDFs directly in the browser using \`pdf-lib\` and \`pdfjs-dist\`.
 
-### Capabilities
+## Features
 
 - **Label Dimension Cropping**: Automatically isolates shipping labels from invoice sheets.
 - **Sequential Numbering**: Dynamic canvas font measurement for numbering packages.
@@ -389,11 +448,15 @@ Processes multi-page shipping PDFs directly in the browser using \`pdf-lib\` and
       shortDescription: 'Print-ready invoice generation web utility with automatic GST calculations and custom branding.',
       description:
         'A responsive React 19 web utility for generating clean A4 invoice documents with automatic itemized tax breakdown, company branding, and client-side print formatting.',
-      documentationMd: `## Features
+      documentationMd: `## Overview
+
+A responsive web utility for generating clean, print-optimized A4 invoices.
+
+## Features
 
 - **Clean A4 Layout**: Print-optimized stylesheet for crisp paper and PDF exports.
 - **Automatic Tax Calculations**: Handles Indian GST rate breakdowns seamlessly.
-- **Custom Branding**: Company logo and signature customization.`,
+- **Custom Branding**: Company logo, header, and signature customization.`,
       iconUrl: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?w=200&q=80',
       featuredImageUrl: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?w=1200&q=80',
       githubUrl: 'https://github.com/elsesourav/professional-invoice-maker',
@@ -404,13 +467,41 @@ Processes multi-page shipping PDFs directly in the browser using \`pdf-lib\` and
       publishedAt: new Date('2025-08-25T15:00:00Z'),
       tags: ['react', 'tailwindcss', 'typescript'],
     },
+
+    // -------------------------------------------------------------------------
+    // TIER C: LAB & EXPERIMENTS (8 Projects)
+    // -------------------------------------------------------------------------
+    {
+      name: 'Particle Chain WASM',
+      slug: 'particle-chain-wasm',
+      shortDescription: 'Real-time particle physics chain simulation in C++ compiled to WebAssembly.',
+      description:
+        'Physics simulation implementing Verlet integration and particle chain constraints in C++, compiled via Emscripten to WebAssembly with HTML5 canvas output.',
+      documentationMd: `## Overview
+
+Real-time particle chain dynamics written in modern C++ and compiled to WebAssembly.
+
+- **Verlet Integration**: Physical constraints for linked particle chains.
+- **Optimized Compilation**: Built using Emscripten with \`-Os\` and zero exception overhead.
+- **Canvas Rendering**: High-performance browser rendering loop.`,
+      iconUrl: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=1200&q=80',
+      demoUrl: 'https://elsesourav.github.io/particle-chain-wasm',
+      githubUrl: 'https://github.com/elsesourav/particle-chain-wasm',
+      categoryId: catMap['simulations']!,
+      status: PublishStatus.PUBLISHED,
+      isFeatured: false,
+      currentVersion: '1.0.0',
+      publishedAt: new Date('2025-04-06T14:00:00Z'),
+      tags: ['cpp', 'webassembly', 'canvas', 'algorithms'],
+    },
     {
       name: 'Wave Function Collapse Visualizer',
       slug: 'wave-function-collapse',
       shortDescription: 'Procedural tile and texture generation using the quantum-inspired Wave Function Collapse algorithm.',
       description:
         'An interactive JavaScript visualization of constraint satisfaction and entropy reduction generating continuous seamless procedural maps and tile grids.',
-      documentationMd: `## Algorithm Details
+      documentationMd: `## Overview
 
 Visualizes the **Wave Function Collapse (WFC)** algorithm for 2D bitmap and tile generation.
 
@@ -419,6 +510,7 @@ Visualizes the **Wave Function Collapse (WFC)** algorithm for 2D bitmap and tile
 - **Interactive Step Mode**: Inspect generation step-by-step on canvas.`,
       iconUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=200&q=80',
       featuredImageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80',
+      demoUrl: 'https://elsesourav.github.io/wave-function-collapse',
       githubUrl: 'https://github.com/elsesourav/wave-function-collapse',
       categoryId: catMap['simulations']!,
       status: PublishStatus.PUBLISHED,
@@ -433,7 +525,7 @@ Visualizes the **Wave Function Collapse (WFC)** algorithm for 2D bitmap and tile
       shortDescription: 'Cellular automata physics simulation for particulate materials (sand, water, solids).',
       description:
         'A real-time cellular automata engine modeling gravity, dispersion, and liquid displacement across thousands of particles on canvas.',
-      documentationMd: `## Cellular Automata Physics
+      documentationMd: `## Overview
 
 Simulates granular materials and fluids using grid-based neighborhood rules.
 
@@ -441,6 +533,7 @@ Simulates granular materials and fluids using grid-based neighborhood rules.
 - **High-Performance Loop**: Optimized grid buffer swapping for 60 FPS interaction.`,
       iconUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=200&q=80',
       featuredImageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=80',
+      demoUrl: 'https://elsesourav.github.io/falling-sands',
       githubUrl: 'https://github.com/elsesourav/falling-sands',
       categoryId: catMap['simulations']!,
       status: PublishStatus.PUBLISHED,
@@ -448,6 +541,179 @@ Simulates granular materials and fluids using grid-based neighborhood rules.
       currentVersion: '1.0.0',
       publishedAt: new Date('2024-04-09T17:00:00Z'),
       tags: ['algorithms', 'canvas', 'open-source'],
+    },
+    {
+      name: 'GCELT Automate',
+      slug: 'gcelt-automate',
+      shortDescription: 'Chrome extension automating form submissions, PDF document uploads, and marks tabulation for faculty.',
+      description:
+        'A browser extension developed for GCELT faculty to automate repetitive academic portal tasks including PDF document uploads, form auto-filling, and answer sheet tabulation.',
+      documentationMd: `## Overview
+
+**GCELT Automate** is a Chrome extension designed to streamline academic portal interactions for college faculty members.
+
+## Features
+
+- **Automated Form Filling**: Identifies required input fields and auto-populates batch data.
+- **PDF Upload Automation**: Manages document queue submissions without manual re-navigation.
+- **Smart Field Detection**: Dynamic content script detection for form structures.`,
+      iconUrl: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&q=80',
+      githubUrl: 'https://github.com/elsesourav/gcelt-automate',
+      categoryId: catMap['automation']!,
+      status: PublishStatus.PUBLISHED,
+      isFeatured: false,
+      currentVersion: '1.0.0',
+      publishedAt: new Date('2024-09-15T11:00:00Z'),
+      tags: ['chrome-extension', 'automation', 'open-source'],
+    },
+    {
+      name: 'Auto Flipkart OTP',
+      slug: 'auto-flipkart-otp',
+      shortDescription: 'Chrome extension integrating Gmail API and OAuth 2.0 to detect and auto-fill seller verification OTPs.',
+      description:
+        'A browser extension using Google OAuth 2.0 and the Gmail API to securely read incoming verification emails and automatically paste OTP codes into Flipkart Seller login pages.',
+      documentationMd: `## Overview
+
+**Auto Flipkart OTP** streamlines multi-seller logins by capturing verification emails in the background and auto-filling authentication fields.
+
+## Features
+
+- **OAuth 2.0 Integration**: Authenticates with Gmail API via Chrome Identity API.
+- **Automated Parsing**: Uses regex to extract one-time passwords from incoming marketplace emails.
+- **Domain Isolation**: Restricts execution to authorized seller domains for security.`,
+      iconUrl: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1200&q=80',
+      githubUrl: 'https://github.com/elsesourav/auto-flipkart-otp',
+      categoryId: catMap['automation']!,
+      status: PublishStatus.PUBLISHED,
+      isFeatured: false,
+      currentVersion: '1.0.0',
+      publishedAt: new Date('2024-08-10T14:00:00Z'),
+      tags: ['chrome-extension', 'automation', 'open-source'],
+    },
+    {
+      name: 'Typing Test Speed Calculator',
+      slug: 'typing-test',
+      shortDescription: 'Real-time typing speed and accuracy testing utility with dynamic WPM calculation and mistake highlighting.',
+      description:
+        'A responsive web utility for measuring typing speed (Words Per Minute), accuracy percentages, and keystroke metrics with real-time text diffing and error analysis.',
+      documentationMd: `## Overview
+
+A browser typing speed test measuring WPM and keystroke accuracy in real time.
+
+## Features
+
+- **Live WPM Calculation**: Real-time computation using standard 5-character word metrics.
+- **Visual Diff Highlighting**: Instant visual feedback on correctly typed versus errant characters.
+- **Summary Analytics**: Breakdown of raw WPM, net WPM, accuracy, and error frequency.`,
+      iconUrl: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=1200&q=80',
+      demoUrl: 'https://elsesourav.github.io/typing-test',
+      githubUrl: 'https://github.com/elsesourav/typing-test',
+      categoryId: catMap['utilities']!,
+      status: PublishStatus.PUBLISHED,
+      isFeatured: false,
+      currentVersion: '1.0.0',
+      publishedAt: new Date('2024-05-12T16:00:00Z'),
+      tags: ['react', 'typescript', 'canvas', 'open-source'],
+    },
+    {
+      name: 'Edu Khel Games',
+      slug: 'edu-khel-games',
+      shortDescription: 'Interactive educational canvas mini-games designed for elementary learning and cognitive development.',
+      description:
+        'A collection of lightweight educational mini-games built with HTML5 Canvas and JavaScript to teach foundational math, memory recall, and pattern recognition.',
+      documentationMd: `## Overview
+
+**Edu Khel Games** provides interactive educational mini-games built for young learners.
+
+## Features
+
+- **Pattern Matching**: Interactive puzzles for spatial recognition.
+- **Math Drills**: Gamified arithmetic exercises with progressive difficulty.
+- **Canvas Physics**: Lightweight animations and touch-responsive game loops.`,
+      iconUrl: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=1200&q=80',
+      demoUrl: 'https://elsesourav.github.io/edu-khel-games',
+      githubUrl: 'https://github.com/elsesourav/edu-khel-games',
+      categoryId: catMap['simulations']!,
+      status: PublishStatus.PUBLISHED,
+      isFeatured: false,
+      currentVersion: '1.0.0',
+      publishedAt: new Date('2024-03-20T10:00:00Z'),
+      tags: ['game-dev', 'canvas', 'open-source'],
+    },
+    {
+      name: 'Travel Plans Planner',
+      slug: 'travel-plans',
+      shortDescription: 'Interactive travel itinerary planner with map coordinates, destination notes, and expense tracking.',
+      description:
+        'A responsive web application for organizing multi-day trip itineraries, mapping destination coordinates, cataloging packing checklists, and tracking estimated travel expenses.',
+      documentationMd: `## Overview
+
+A travel itinerary planning utility for structuring multi-destination journeys.
+
+## Features
+
+- **Day-by-Day Itinerary**: Chronological timeline of activities, bookings, and transit.
+- **Expense Estimator**: Itemized budgeting for lodging, food, and transport.
+- **Checklist Manager**: Packing and preparation item tracking.`,
+      iconUrl: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1200&q=80',
+      githubUrl: 'https://github.com/elsesourav/travel-plans',
+      categoryId: catMap['web-apps']!,
+      status: PublishStatus.PUBLISHED,
+      isFeatured: false,
+      currentVersion: '1.0.0',
+      publishedAt: new Date('2024-02-14T12:00:00Z'),
+      tags: ['react', 'typescript', 'open-source'],
+    },
+
+    // -------------------------------------------------------------------------
+    // TIER D: ARCHIVE / PROTOTYPES (2 Projects)
+    // -------------------------------------------------------------------------
+    {
+      name: 'NEO CLI Utility',
+      slug: 'neo',
+      shortDescription: 'Experimental developer command-line interface tool for personal workspace automation.',
+      description:
+        'A command-line interface prototype exploring task automation, terminal formatting, and developer workflow shortcuts.',
+      documentationMd: `## Overview
+
+**NEO** is an experimental CLI exploration for local developer task management.
+
+## Status
+
+Archived experimental prototype for terminal automation patterns.`,
+      iconUrl: 'https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=1200&q=80',
+      githubUrl: 'https://github.com/elsesourav/neo',
+      categoryId: catMap['utilities']!,
+      status: PublishStatus.ARCHIVED,
+      isFeatured: false,
+      currentVersion: '0.1.0',
+      publishedAt: new Date('2023-11-10T10:00:00Z'),
+      tags: ['open-source'],
+    },
+    {
+      name: 'User Manager Prototype',
+      slug: 'user-manager',
+      shortDescription: 'Full-stack user management prototype exploring CRUD workflows, pagination, and role-based permissions.',
+      description:
+        'A prototype web application evaluating user directory interfaces, search query debouncing, and permission administration.',
+      documentationMd: `## Overview
+
+Prototype interface exploring administrative user table controls and search performance.`,
+      iconUrl: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=200&q=80',
+      featuredImageUrl: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=1200&q=80',
+      githubUrl: 'https://github.com/elsesourav/user-manager',
+      categoryId: catMap['web-apps']!,
+      status: PublishStatus.DRAFT,
+      isFeatured: false,
+      currentVersion: '0.1.0',
+      publishedAt: new Date('2023-09-05T15:00:00Z'),
+      tags: ['react', 'open-source'],
     },
   ];
 
@@ -847,7 +1113,7 @@ ElseSourav is built with respect for user privacy:
     });
   }
 
-  console.info('✅ ElseSourav Database successfully seeded with authentic creator and project content!');
+  console.info('✅ ElseSourav Database successfully seeded with canonical 4-tier portfolio!');
 }
 
 main()
