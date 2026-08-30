@@ -61,3 +61,50 @@ export async function getActiveCategories(): Promise<CategorySummary[]> {
 export async function getActiveTags(): Promise<TagSummary[]> {
   return appQueryService.listPublicTags();
 }
+
+/**
+ * Calculates contextually related projects based on semantic category,
+ * shared platform/technical attributes, and domain hierarchy.
+ */
+export async function getRelatedProjects(
+  currentApp: PublicApp,
+  limit: number = 3
+): Promise<AppListItem[]> {
+  const allApps = await getPublishedApps({ limit: 50 });
+  const otherApps = allApps.filter((a) => a.id !== currentApp.id);
+
+  // Score projects based on semantic closeness
+  const scored = otherApps.map((candidate) => {
+    let score = 0;
+
+    // 1. Same category match
+    if (candidate.categorySlug === currentApp.categorySlug) {
+      score += 10;
+    }
+
+    // 2. Matching platforms
+    const sharedPlatforms = candidate.platforms.filter((p) =>
+      currentApp.platforms.includes(p)
+    );
+    score += sharedPlatforms.length * 2;
+
+    // 3. Lab / Simulation affinity
+    const isCurrentLab = currentApp.categorySlug === 'simulations';
+    const isCandidateLab = candidate.categorySlug === 'simulations';
+    if (isCurrentLab && isCandidateLab) {
+      score += 5;
+    }
+
+    // 4. Featured boost for high quality tie-breaker
+    if (candidate.isFeatured) {
+      score += 1;
+    }
+
+    return { candidate, score };
+  });
+
+  // Sort descending by relevance score, then by sortOrder
+  scored.sort((a, b) => b.score - a.score || a.candidate.sortOrder - b.candidate.sortOrder);
+
+  return scored.slice(0, limit).map((s) => s.candidate);
+}

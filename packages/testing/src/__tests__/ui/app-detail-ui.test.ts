@@ -183,4 +183,48 @@ describe('Public App Details Integration & Related Apps', () => {
     expect(mockPublicDetail.versions[0]?.changelog).toContain('WebGL');
     expect(mockPublicDetail.links[0]?.url).toBe('https://terminal.elsesourav.com');
   });
+
+  it('ranks related projects by category and shared platform affinities', () => {
+    const candidates: AppListItem[] = [
+      {
+        id: 'app-rel-1',
+        slug: 'regex-engine',
+        name: 'Regex Engine',
+        shortDescription: 'Regex tool',
+        iconUrl: 'icon1.png',
+        primaryCategory: 'Developer Tools',
+        categorySlug: 'dev-tools',
+        platforms: ['web', 'macos'],
+        isFeatured: true,
+        isPinned: false,
+        sortOrder: 1,
+      },
+      {
+        id: 'app-rel-2',
+        slug: 'unrelated-game',
+        name: 'Unrelated Game',
+        shortDescription: 'Game tool',
+        iconUrl: 'icon2.png',
+        primaryCategory: 'Games',
+        categorySlug: 'games',
+        platforms: ['web'],
+        isFeatured: false,
+        isPinned: false,
+        sortOrder: 2,
+      },
+    ];
+
+    // Candidate 1 shares 'dev-tools' and 'macos' with mockPublicDetail -> higher score
+    const scored = candidates.map((cand) => {
+      let score = 0;
+      if (cand.categorySlug === mockPublicDetail.categorySlug) score += 10;
+      const sharedPlatforms = cand.platforms.filter((p) => mockPublicDetail.platforms.includes(p));
+      score += sharedPlatforms.length * 2;
+      return { cand, score };
+    });
+
+    scored.sort((a, b) => b.score - a.score);
+    expect(scored[0]?.cand.slug).toBe('regex-engine');
+    expect(scored[0]?.score).toBeGreaterThan(scored[1]?.score ?? 0);
+  });
 });

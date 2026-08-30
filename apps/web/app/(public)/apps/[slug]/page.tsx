@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
-import { getPublicAppBySlug, getPublishedApps } from '@/features/apps/queries/get-apps';
+import { getPublicAppBySlug, getPublishedApps, getRelatedProjects } from '@/features/apps/queries/get-apps';
 import { AppDetailHero } from '@/features/apps/components/AppDetailHero';
 import { AppScreenshotGallery } from '@/features/apps/components/AppScreenshotGallery';
 import { AppDetailLinks } from '@/features/apps/components/AppDetailLinks';
@@ -70,16 +70,10 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
   }
 
   // Fetch all published apps to determine related apps and next/previous exploration
-  const allApps = await getPublishedApps({ limit: 50 });
-  const relatedApps = allApps
-    .filter((item) => item.id !== app.id && item.categorySlug === app.categorySlug)
-    .slice(0, 3);
-
-  // If not enough in same category, backfill with other notable apps
-  const fallbackRelated =
-    relatedApps.length > 0
-      ? relatedApps
-      : allApps.filter((item) => item.id !== app.id).slice(0, 3);
+  const [allApps, fallbackRelated] = await Promise.all([
+    getPublishedApps({ limit: 50 }),
+    getRelatedProjects(app, 3),
+  ]);
 
   // Find adjacent items for sequence navigation
   const currentIndex = allApps.findIndex((item) => item.id === app.id);
