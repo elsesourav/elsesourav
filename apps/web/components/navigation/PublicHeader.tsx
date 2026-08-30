@@ -34,9 +34,9 @@ export function PublicHeader({ user }: PublicHeaderProps) {
   }, [mobileMenuOpen]);
 
   const navLinks = [
-    { href: ROUTES.APPS, label: 'Apps' },
-    { href: ROUTES.BLOG, label: 'Blog' },
-    { href: ROUTES.HELP, label: 'Help' },
+    { href: ROUTES.APPS, label: 'Work' },
+    { href: '/apps?category=simulations', label: 'Lab' },
+    { href: ROUTES.BLOG, label: 'Notes' },
     { href: ROUTES.ABOUT, label: 'About' },
   ];
 

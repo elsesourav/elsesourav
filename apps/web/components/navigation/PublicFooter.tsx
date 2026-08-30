@@ -103,22 +103,22 @@ export async function PublicFooter() {
             <ul className="space-y-2.5 text-xs text-zinc-400">
               <li>
                 <Link href={ROUTES.APPS} className="hover:text-white transition-colors">
-                  Applications
+                  Work
+                </Link>
+              </li>
+              <li>
+                <Link href="/apps?category=simulations" className="hover:text-white transition-colors">
+                  Lab & Experiments
                 </Link>
               </li>
               <li>
                 <Link href={ROUTES.BLOG} className="hover:text-white transition-colors">
-                  Engineering Blog
+                  Notes
                 </Link>
               </li>
               <li>
                 <Link href={ROUTES.HELP} className="hover:text-white transition-colors">
-                  Documentation & Help
-                </Link>
-              </li>
-              <li>
-                <Link href={ROUTES.LIBRARY} className="hover:text-white transition-colors">
-                  User Library
+                  Help Center
                 </Link>
               </li>
             </ul>

@@ -16,14 +16,11 @@ import {
   ArrowRight,
   CheckCircle2,
   Layers,
-  Compass,
   Code2,
   Megaphone,
   LifeBuoy,
   HelpCircle,
   Activity,
-  FileText,
-  Laptop,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -198,114 +195,98 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              {/* Right Column: Studio Field Notes & Archival Overview Panel */}
+              {/* Right Column: Creator Spotlight & Exploration Overview Panel */}
               <div className="lg:col-span-5">
-                <div className="relative rounded-3xl border border-zinc-800/80 bg-zinc-900/60 backdrop-blur-xl p-6 sm:p-7 shadow-2xl space-y-6 hover:border-zinc-700/80 transition-all duration-300">
+                <div className="relative rounded-3xl border border-zinc-800/80 bg-zinc-900/60 backdrop-blur-xl p-6 sm:p-7 shadow-2xl space-y-5 hover:border-zinc-700/80 transition-all duration-300">
                   {/* Studio Status Header */}
                   <div className="flex items-center justify-between pb-3 border-b border-zinc-800/70 text-xs text-zinc-400">
                     <div className="flex items-center gap-2">
-                      <div className="w-2.5 h-2.5 rounded-full bg-indigo-500/80" />
+                      <div className="w-2 h-2 rounded-full bg-indigo-500" />
                       <span className="font-mono text-xs font-semibold text-zinc-200 uppercase tracking-wider">
-                        Studio Index & Archive
+                        Current Focus & Work
                       </span>
                     </div>
                     <span className="text-[11px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/40 px-2 py-0.5 rounded-md flex items-center gap-1">
                       <Activity className="w-3 h-3" />
-                      <span>Active Build</span>
+                      <span>Active Studio</span>
                     </span>
                   </div>
 
-                  {/* Real Metrics Grid */}
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="p-3.5 rounded-2xl bg-zinc-950/60 border border-zinc-800/80 space-y-1">
-                      <div className="flex items-center justify-between text-xs text-zinc-500 font-mono">
-                        <span>APPS</span>
-                        <Laptop className="w-3.5 h-3.5 text-indigo-400" />
-                      </div>
-                      <div className="text-2xl font-bold font-mono text-white">
-                        {appsResult.totalCount < 10 ? `0${appsResult.totalCount}` : appsResult.totalCount}
-                      </div>
-                      <div className="text-[11px] text-zinc-400">Published Tools</div>
-                    </div>
-
-                    <div className="p-3.5 rounded-2xl bg-zinc-950/60 border border-zinc-800/80 space-y-1">
-                      <div className="flex items-center justify-between text-xs text-zinc-500 font-mono">
-                        <span>NOTES</span>
-                        <FileText className="w-3.5 h-3.5 text-cyan-400" />
-                      </div>
-                      <div className="text-2xl font-bold font-mono text-white">
-                        {blogResult.totalCount < 10 ? `0${blogResult.totalCount}` : blogResult.totalCount}
-                      </div>
-                      <div className="text-[11px] text-zinc-400">Devlog Articles</div>
-                    </div>
-
-                    <div className="p-3.5 rounded-2xl bg-zinc-950/60 border border-zinc-800/80 space-y-1">
-                      <div className="flex items-center justify-between text-xs text-zinc-500 font-mono">
-                        <span>CREATOR</span>
-                        <Compass className="w-3.5 h-3.5 text-amber-400" />
-                      </div>
-                      <div className="text-2xl font-bold font-mono text-white">01</div>
-                      <div className="text-[11px] text-zinc-400">Direct Craft & Focus</div>
-                    </div>
-
-                    <div className="p-3.5 rounded-2xl bg-zinc-950/60 border border-zinc-800/80 space-y-1">
-                      <div className="flex items-center justify-between text-xs text-zinc-500 font-mono">
-                        <span>LAB</span>
-                        <Code2 className="w-3.5 h-3.5 text-purple-400" />
-                      </div>
-                      <div className="text-2xl font-bold font-mono text-white">∞</div >
-                      <div className="text-[11px] text-zinc-400">Ideas in Progress</div>
-                    </div>
-                  </div>
-
-                  {/* Spotlight Preview: Flagship Work */}
-                  {primaryFeaturedApp ? (
-                    <div className="p-4 rounded-2xl border border-zinc-800 bg-zinc-950/70 space-y-3">
+                  {/* Flagship Work Spotlight */}
+                  {primaryFeaturedApp && (
+                    <div className="p-4 rounded-2xl border border-zinc-800/90 bg-zinc-950/70 space-y-2.5">
                       <div className="flex items-center justify-between text-xs">
                         <span className="text-indigo-400 font-medium font-mono text-[11px] uppercase tracking-wider">
-                          Flagship Utility
+                          Featured Work
                         </span>
                         <span className="text-zinc-500 text-[11px] font-mono">v{primaryFeaturedApp.currentVersion || '1.0'}</span>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-indigo-950/80 border border-indigo-800/60 flex items-center justify-center text-indigo-400 shrink-0">
-                          <Code2 className="w-5 h-5" />
+                      <div className="flex items-start gap-3">
+                        <div className="w-9 h-9 rounded-xl bg-indigo-950/80 border border-indigo-800/60 flex items-center justify-center text-indigo-400 shrink-0 mt-0.5">
+                          <Code2 className="w-4.5 h-4.5" />
                         </div>
                         <div className="min-w-0 flex-1">
                           <h3 className="text-sm font-semibold text-white truncate">{primaryFeaturedApp.name}</h3>
-                          <p className="text-xs text-zinc-400 truncate">{primaryFeaturedApp.shortDescription}</p>
+                          <p className="text-xs text-zinc-400 line-clamp-2 mt-0.5">{primaryFeaturedApp.shortDescription}</p>
                         </div>
                       </div>
                       <Link
                         href={`/apps/${primaryFeaturedApp.slug}`}
                         className="inline-flex items-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 font-medium pt-1 group"
                       >
-                        <span>Launch & inspect app</span>
+                        <span>Inspect architecture</span>
                         <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                       </Link>
                     </div>
-                  ) : null}
+                  )}
 
-                  {/* Studio Index Fast Links */}
-                  <div className="grid grid-cols-2 gap-3 pt-1">
+                  {/* Latest Note Spotlight */}
+                  {recentPosts[0] && (
+                    <div className="p-4 rounded-2xl border border-zinc-800/90 bg-zinc-950/70 space-y-2.5">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-cyan-400 font-medium font-mono text-[11px] uppercase tracking-wider">
+                          Latest Note
+                        </span>
+                        <span className="text-zinc-500 text-[11px] font-mono">{recentPosts[0].readingTime || 5} min read</span>
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-semibold text-white line-clamp-1">{recentPosts[0].title}</h3>
+                        <p className="text-xs text-zinc-400 line-clamp-2 mt-0.5">{recentPosts[0].excerpt}</p>
+                      </div>
+                      <Link
+                        href={`/blog/${recentPosts[0].slug}`}
+                        className="inline-flex items-center gap-1.5 text-xs text-cyan-400 hover:text-cyan-300 font-medium pt-1 group"
+                      >
+                        <span>Read note</span>
+                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                      </Link>
+                    </div>
+                  )}
+
+                  {/* Fast Exploration Links */}
+                  <div className="grid grid-cols-3 gap-2.5 pt-1 text-center">
                     <Link
                       href={ROUTES.APPS}
-                      className="p-3 rounded-xl border border-zinc-800/60 bg-zinc-950/50 hover:bg-zinc-800/50 transition-colors group"
+                      className="p-2.5 rounded-xl border border-zinc-800/70 bg-zinc-950/50 hover:bg-zinc-800/60 transition-colors group"
                     >
-                      <div className="flex items-center gap-2 text-xs font-semibold text-zinc-200 group-hover:text-white">
-                        <Layers className="w-4 h-4 text-indigo-400" />
-                        <span>Apps Archive</span>
-                      </div>
+                      <div className="text-xs font-semibold text-zinc-200 group-hover:text-white">Work</div>
+                      <div className="text-[10px] text-zinc-500 font-mono">Software</div>
+                    </Link>
+
+                    <Link
+                      href="/apps?category=simulations"
+                      className="p-2.5 rounded-xl border border-zinc-800/70 bg-zinc-950/50 hover:bg-zinc-800/60 transition-colors group"
+                    >
+                      <div className="text-xs font-semibold text-zinc-200 group-hover:text-white">Lab</div>
+                      <div className="text-[10px] text-zinc-500 font-mono">Experiments</div>
                     </Link>
 
                     <Link
                       href={ROUTES.BLOG}
-                      className="p-3 rounded-xl border border-zinc-800/60 bg-zinc-950/50 hover:bg-zinc-800/50 transition-colors group"
+                      className="p-2.5 rounded-xl border border-zinc-800/70 bg-zinc-950/50 hover:bg-zinc-800/60 transition-colors group"
                     >
-                      <div className="flex items-center gap-2 text-xs font-semibold text-zinc-200 group-hover:text-white">
-                        <Compass className="w-4 h-4 text-cyan-400" />
-                        <span>Field Notes</span>
-                      </div>
+                      <div className="text-xs font-semibold text-zinc-200 group-hover:text-white">Notes</div>
+                      <div className="text-[10px] text-zinc-500 font-mono">Devlog</div>
                     </Link>
                   </div>
                 </div>
