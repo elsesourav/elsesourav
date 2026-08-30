@@ -52,9 +52,9 @@ export default async function HomePage() {
   const cookieStore = await cookies();
   const siteService = new SiteService();
 
-  // Query live selected apps (curated 3), latest blogs, active lab experiment, site/creator identity, and session
+  // Query live selected apps (curated 5), latest blogs, active lab experiment, site/creator identity, and session
   const [appsResult, blogResult, labResult, identity, session] = await Promise.all([
-    discoverPublishedApps({ limit: 3, sort: 'popularity' }).catch(() => ({
+    discoverPublishedApps({ limit: 5, sort: 'popularity' }).catch(() => ({
       items: [],
       totalCount: 0,
     })),
@@ -311,49 +311,52 @@ export default async function HomePage() {
           </Container>
         </Section>
 
-        {/* 2. Selected Work / Applications Section */}
+        {/* 2. Selected Work / Projects Introduction */}
         {featuredApps.length > 0 && (
-          <Section spacing="md" surface="subtle">
+          <Section spacing="lg" surface="subtle">
             <Container size="lg">
               <SectionHeader
                 align="split"
                 caption="Selected Work"
-                title={identity.homepage.appsTitle || 'Software Crafted with Purpose'}
-                description={identity.homepage.appsSubtitle || 'A curated collection of desktop utilities, web apps, and developer tools built for daily workflows.'}
+                title={identity.homepage.appsTitle || "A few things I've built."}
+                description={identity.homepage.appsSubtitle || 'A curated selection of software, developer tools, games, and systems.'}
                 actions={
                   <Link
                     href={ROUTES.APPS}
                     className="text-sm font-medium text-indigo-400 hover:text-indigo-300 flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded p-1 group"
                   >
-                    <span>View all applications {appsResult.totalCount > 0 ? `(${appsResult.totalCount})` : ''}</span>
+                    <span>Explore all projects {appsResult.totalCount > 0 ? `(${appsResult.totalCount})` : ''}</span>
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                   </Link>
                 }
               />
 
-              {featuredApps.length >= 3 ? (
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-                  {/* Primary Highlighted Project (Col 7) */}
-                  <div className="lg:col-span-7">
-                    <AppCard app={featuredApps[0]!} index={0} featured={true} />
-                  </div>
-                  {/* Secondary Curated Projects (Col 5) */}
-                  <div className="lg:col-span-5 flex flex-col gap-6">
-                    <AppCard app={featuredApps[1]!} index={1} />
-                    <AppCard app={featuredApps[2]!} index={2} />
-                  </div>
-                </div>
-              ) : featuredApps.length === 2 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {featuredApps.map((app, idx) => (
-                    <AppCard key={app.id} app={app} index={idx} />
-                  ))}
-                </div>
-              ) : (
-                <div className="max-w-3xl mx-auto">
+              <div className="space-y-6">
+                {/* 1. Flagship Lead Project */}
+                <div>
                   <AppCard app={featuredApps[0]!} index={0} featured={true} />
                 </div>
-              )}
+
+                {/* 2. Supporting Projects Grid (up to 4 projects in 2x2) */}
+                {featuredApps.length > 1 && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+                    {featuredApps.slice(1, 5).map((app, idx) => (
+                      <AppCard key={app.id} app={app} index={idx + 1} />
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Bottom Exploration CTA */}
+              <div className="text-center pt-10">
+                <Link
+                  href={ROUTES.APPS}
+                  className="inline-flex items-center gap-2 text-sm font-medium text-zinc-300 hover:text-white px-5 py-2.5 rounded-2xl border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                >
+                  <span>Explore full software catalog ({appsResult.totalCount} projects)</span>
+                  <ArrowRight className="w-4 h-4 text-indigo-400" />
+                </Link>
+              </div>
             </Container>
           </Section>
         )}

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Card, Badge } from '@elsesourav/ui';
+import { Card } from '@elsesourav/ui';
 import { getAppIconUrl } from '@elsesourav/media';
 import type { AppListItem, AppPlatform } from '@elsesourav/types';
-import { Sparkles, Globe, Compass, Smartphone, Apple, Terminal, ArrowRight } from 'lucide-react';
+import { Globe, Compass, Smartphone, Apple, Terminal, ArrowRight } from 'lucide-react';
 
 export interface AppCardProps {
   app: AppListItem;
@@ -38,10 +38,7 @@ export function AppCard({ app, index, featured = false }: AppCardProps) {
   if (featured) {
     return (
       <Link href={`/apps/${app.slug}`} className="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-3xl">
-        <Card className="h-full border-zinc-800/90 bg-gradient-to-br from-zinc-900/90 to-zinc-950/90 hover:border-indigo-500/60 p-6 sm:p-8 rounded-3xl transition-all duration-300 flex flex-col justify-between backdrop-blur-md group-hover:shadow-2xl group-hover:shadow-indigo-500/10 relative overflow-hidden">
-          {/* Subtle Ambient Accent */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-2xl pointer-events-none -mr-16 -mt-16 group-hover:bg-indigo-500/10 transition-colors" />
-
+        <Card className="h-full border-zinc-800/90 bg-gradient-to-br from-zinc-900/80 to-zinc-950/90 hover:border-indigo-500/50 p-6 sm:p-8 rounded-3xl transition-all duration-300 flex flex-col justify-between backdrop-blur-md group-hover:shadow-2xl group-hover:shadow-indigo-500/10 relative overflow-hidden">
           <div className="space-y-4 relative z-10">
             {/* Top metadata index bar */}
             <div className="flex items-center justify-between text-xs pb-3 border-b border-zinc-800/80">
@@ -53,9 +50,9 @@ export function AppCard({ app, index, featured = false }: AppCardProps) {
                 )}
                 <span className="text-zinc-400 font-medium">{app.primaryCategory}</span>
               </div>
-              <span className="text-indigo-300 bg-indigo-950/60 px-2.5 py-0.5 rounded-full text-[10px] font-medium font-mono flex items-center gap-1 border border-indigo-800/40">
-                <Sparkles className="w-2.5 h-2.5 text-indigo-400" /> Selected Project
-              </span>
+              {app.currentVersion && (
+                <span className="text-zinc-500 text-xs font-mono">v{app.currentVersion}</span>
+              )}
             </div>
 
             {/* Icon + Title */}
@@ -70,7 +67,7 @@ export function AppCard({ app, index, featured = false }: AppCardProps) {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                 ) : (
-                  <Sparkles className="w-7 h-7 text-indigo-400" />
+                  <Globe className="w-7 h-7 text-indigo-400" />
                 )}
               </div>
 
@@ -78,9 +75,7 @@ export function AppCard({ app, index, featured = false }: AppCardProps) {
                 <h3 className="font-bold text-lg sm:text-xl text-white group-hover:text-indigo-200 transition-colors truncate">
                   {app.name}
                 </h3>
-                {app.currentVersion && (
-                  <span className="text-xs text-zinc-500 font-mono">v{app.currentVersion}</span>
-                )}
+                <p className="text-xs text-zinc-500 font-mono mt-0.5">{app.primaryCategory}</p>
               </div>
             </div>
 
@@ -105,7 +100,7 @@ export function AppCard({ app, index, featured = false }: AppCardProps) {
             </div>
 
             <span className="text-indigo-400 font-medium flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-              <span>Inspect Application</span>
+              <span>Inspect project</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </span>
           </div>
@@ -118,7 +113,7 @@ export function AppCard({ app, index, featured = false }: AppCardProps) {
     <Link href={`/apps/${app.slug}`} className="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-2xl">
       <Card className="h-full border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-indigo-500/50 p-5 rounded-2xl transition-all duration-300 flex flex-col justify-between backdrop-blur-sm group-hover:shadow-xl group-hover:shadow-indigo-500/10">
         <div className="space-y-3">
-          {/* Header row with index, icon, title, and category */}
+          {/* Header row with index and category */}
           <div className="flex items-center justify-between text-xs pb-2 border-b border-zinc-800/60">
             <div className="flex items-center gap-2">
               {formattedIndex && (
@@ -128,10 +123,8 @@ export function AppCard({ app, index, featured = false }: AppCardProps) {
               )}
               <span className="text-zinc-400 text-xs font-medium">{app.primaryCategory}</span>
             </div>
-            {app.isFeatured && (
-              <span className="shrink-0 text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded text-[10px] font-medium flex items-center gap-1 border border-amber-400/20">
-                <Sparkles className="w-2.5 h-2.5 fill-current" /> Featured
-              </span>
+            {app.currentVersion && (
+              <span className="text-[11px] text-zinc-500 font-mono">v{app.currentVersion}</span>
             )}
           </div>
 
@@ -146,7 +139,7 @@ export function AppCard({ app, index, featured = false }: AppCardProps) {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               ) : (
-                <Sparkles className="w-5 h-5 text-indigo-400" />
+                <Globe className="w-5 h-5 text-indigo-400" />
               )}
             </div>
 
@@ -154,9 +147,6 @@ export function AppCard({ app, index, featured = false }: AppCardProps) {
               <h3 className="font-semibold text-base text-zinc-100 group-hover:text-white transition-colors truncate">
                 {app.name}
               </h3>
-              {app.currentVersion && (
-                <span className="text-[11px] text-zinc-500 font-mono">v{app.currentVersion}</span>
-              )}
             </div>
           </div>
 
@@ -181,7 +171,7 @@ export function AppCard({ app, index, featured = false }: AppCardProps) {
           </div>
 
           <span className="text-zinc-400 group-hover:text-indigo-400 font-medium flex items-center gap-1 text-[11px] group-hover:translate-x-0.5 transition-transform">
-            <span>Explore</span>
+            <span>View project</span>
             <ArrowRight className="w-3 h-3" />
           </span>
         </div>
