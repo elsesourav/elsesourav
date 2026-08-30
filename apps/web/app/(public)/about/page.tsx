@@ -1,4 +1,4 @@
-import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
+import { ROUTES } from '@elsesourav/config';
 import { SiteService } from '@elsesourav/database';
 import type { SiteLinkPlatform } from '@elsesourav/types';
 import { PageShell, PageHeader, Badge, Button, Reveal, RevealGroup } from '@elsesourav/ui';
@@ -25,37 +25,15 @@ import {
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-export const metadata: Metadata = {
+import { buildPageMetadata } from '@/lib/seo-metadata';
+
+export const metadata: Metadata = buildPageMetadata({
   title: 'About Sourav Barui — Independent Software Creator',
   description:
     'About Sourav Barui, an independent software creator building software, tools, games, and experiments across web architecture, AI, graphics, and systems.',
-  alternates: {
-    canonical: `${SITE_CONFIG.url}/about`,
-  },
-  openGraph: {
-    title: `About Sourav Barui — ${SITE_CONFIG.name}`,
-    description:
-      'About Sourav Barui, an independent software creator building software, tools, games, and experiments across web architecture, AI, graphics, and systems.',
-    url: `${SITE_CONFIG.url}/about`,
-    siteName: SITE_CONFIG.name,
-    type: 'profile',
-    images: [
-      {
-        url: SITE_CONFIG.ogImage,
-        width: 1024,
-        height: 576,
-        alt: `About Sourav Barui — ${SITE_CONFIG.name}`,
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: `About Sourav Barui — ${SITE_CONFIG.name}`,
-    description:
-      'About Sourav Barui, an independent software creator building software, tools, games, and experiments across web architecture, AI, graphics, and systems.',
-    images: [SITE_CONFIG.ogImage],
-  },
-};
+  path: '/about',
+  type: 'profile',
+});
 
 export const dynamic = 'force-dynamic';
 

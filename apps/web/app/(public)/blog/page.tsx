@@ -9,7 +9,6 @@ import { BlogDiscoveryBar } from '@/features/blog/components/BlogDiscoveryBar';
 import { BlogPagination } from '@/features/blog/components/BlogPagination';
 import { BlogEmptyState } from '@/features/blog/components/BlogEmptyState';
 import { PageShell, PageHeader, Badge } from '@elsesourav/ui';
-import { SITE_CONFIG } from '@elsesourav/config';
 
 interface BlogPageProps {
   searchParams: Promise<{
@@ -21,6 +20,8 @@ interface BlogPageProps {
   }>;
 }
 
+import { buildPageMetadata } from '@/lib/seo-metadata';
+
 export async function generateMetadata({ searchParams }: BlogPageProps): Promise<Metadata> {
   const params = await searchParams;
   const query = (params.q || params.search || '').trim();
@@ -29,45 +30,22 @@ export async function generateMetadata({ searchParams }: BlogPageProps): Promise
   const hasFilterOrQuery = Boolean(query || category || tag || params.page);
 
   const title = query
-    ? `Search: "${query}" in Engineering Journal`
+    ? `Search: "${query}" in Field Notes`
     : category
-      ? `${category.charAt(0).toUpperCase() + category.slice(1)} Articles`
+      ? `${category.charAt(0).toUpperCase() + category.slice(1)} — Field Notes`
       : tag
-        ? `#${tag} Engineering Notes`
-        : 'Engineering Journal & Articles';
+        ? `#${tag} — Field Notes`
+        : 'Field Notes & Technical Writing';
 
   const description =
-    'Technical articles, architectural deep dives, software benchmarks, and release devlogs by ElseSourav.';
-  const canonicalUrl = 'https://elsesourav.com/blog';
+    'Technical articles, architectural deep dives, software benchmarks, and release devlogs by Sourav Barui.';
 
-  return {
+  return buildPageMetadata({
     title,
     description,
-    alternates: {
-      canonical: canonicalUrl,
-    },
-    robots: hasFilterOrQuery
-      ? {
-          index: false,
-          follow: true,
-        }
-      : {
-          index: true,
-          follow: true,
-        },
-    openGraph: {
-      title: `${title} | ElseSourav`,
-      description,
-      url: canonicalUrl,
-      siteName: SITE_CONFIG.name,
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${title} | ElseSourav`,
-      description,
-    },
-  };
+    path: '/blog',
+    noIndex: hasFilterOrQuery,
+  });
 }
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {

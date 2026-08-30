@@ -19,14 +19,16 @@ interface BlogPostPageProps {
   }>;
 }
 
+import { buildNoteMetadata } from '@/lib/seo-metadata';
+
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPublicBlogPostBySlug(slug);
 
   if (!post) {
     return {
-      title: 'Article Not Found',
-      description: 'The requested engineering article could not be found.',
+      title: `Article Not Found — ${SITE_CONFIG.name}`,
+      description: 'The requested engineering note or article could not be found.',
       robots: {
         index: false,
         follow: false,
@@ -34,35 +36,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     };
   }
 
-  const title = post.seoTitle || post.title;
-  const description = post.seoDescription || post.excerpt || `Read ${post.title} on ${SITE_CONFIG.name}.`;
-  const coverUrl = post.coverImageUrl ? getBlogCoverUrl(post.coverImageUrl, 1200, 630) : undefined;
-  const canonicalUrl = `${SITE_CONFIG.url}/blog/${post.slug}`;
-
-  return {
-    title: `${title} — ${SITE_CONFIG.name} Journal`,
-    description,
-    alternates: {
-      canonical: canonicalUrl,
-    },
-    openGraph: {
-      title: `${title} | ${SITE_CONFIG.name}`,
-      description,
-      type: 'article',
-      url: canonicalUrl,
-      siteName: SITE_CONFIG.name,
-      publishedTime: post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined,
-      modifiedTime: new Date(post.updatedAt).toISOString(),
-      authors: [post.author.displayName],
-      images: coverUrl ? [{ url: coverUrl, width: 1200, height: 630, alt: post.title }] : undefined,
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${title} | ${SITE_CONFIG.name}`,
-      description,
-      images: coverUrl ? [coverUrl] : undefined,
-    },
-  };
+  return buildNoteMetadata(post);
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {

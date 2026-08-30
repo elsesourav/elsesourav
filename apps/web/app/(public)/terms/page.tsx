@@ -4,25 +4,14 @@ import { Card } from '@elsesourav/ui';
 import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
 import { FileText, ArrowLeft, CheckCircle2, Scale, Terminal } from 'lucide-react';
 
-export const metadata: Metadata = {
+import { buildPageMetadata } from '@/lib/seo-metadata';
+
+export const metadata: Metadata = buildPageMetadata({
   title: 'Terms of Service',
   description:
     'Terms and conditions governing the use of ElseSourav applications, software products, and web services.',
-  alternates: {
-    canonical: 'https://elsesourav.com/terms',
-  },
-  openGraph: {
-    title: 'Terms of Service | ElseSourav',
-    description: 'Read the terms of service and usage conditions for ElseSourav.',
-    url: 'https://elsesourav.com/terms',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary',
-    title: 'Terms of Service | ElseSourav',
-    description: 'Read the terms of service for ElseSourav software ecosystem.',
-  },
-};
+  path: '/terms',
+});
 
 export default function TermsPage() {
   const jsonLd = {

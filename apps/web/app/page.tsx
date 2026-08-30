@@ -22,40 +22,14 @@ import {
   User,
 } from 'lucide-react';
 
-export const metadata: Metadata = {
-  title: {
-    absolute: `${SITE_CONFIG.name} — Personal Software Studio & Digital Archive`,
-  },
+import { buildPageMetadata } from '@/lib/seo-metadata';
+
+export const metadata: Metadata = buildPageMetadata({
+  title: `${SITE_CONFIG.name} — Personal Software Studio & Digital Archive`,
   description:
     'Building software, tools, games, and experiments that solve real problems and spark new ideas.',
-  alternates: {
-    canonical: SITE_CONFIG.url,
-  },
-  openGraph: {
-    title: `${SITE_CONFIG.name} — Personal Software Studio & Digital Archive`,
-    description:
-      'Building software, tools, games, and experiments that solve real problems and spark new ideas.',
-    url: SITE_CONFIG.url,
-    siteName: SITE_CONFIG.name,
-    locale: 'en_US',
-    type: 'website',
-    images: [
-      {
-        url: SITE_CONFIG.ogImage,
-        width: 1024,
-        height: 576,
-        alt: `${SITE_CONFIG.name} — Personal Software Studio & Digital Archive`,
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: `${SITE_CONFIG.name} — Personal Software Studio & Digital Archive`,
-    description:
-      'Building software, tools, games, and experiments that solve real problems and spark new ideas.',
-    images: [SITE_CONFIG.ogImage],
-  },
-};
+  path: '/',
+});
 
 export const dynamic = 'force-dynamic';
 

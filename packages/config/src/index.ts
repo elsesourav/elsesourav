@@ -4,3 +4,4 @@ export * from './environment/index';
 export * from './site';
 export * from './routes';
 export * from './capabilities';
+export * from './seo-metadata';

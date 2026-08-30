@@ -4,25 +4,14 @@ import { Card } from '@elsesourav/ui';
 import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
 import { Shield, ArrowLeft, Lock, Eye, Database } from 'lucide-react';
 
-export const metadata: Metadata = {
+import { buildPageMetadata } from '@/lib/seo-metadata';
+
+export const metadata: Metadata = buildPageMetadata({
   title: 'Privacy Policy',
   description:
     'Understand how ElseSourav handles data, security, and privacy across our developer tools and web ecosystem.',
-  alternates: {
-    canonical: 'https://elsesourav.com/privacy',
-  },
-  openGraph: {
-    title: 'Privacy Policy | ElseSourav',
-    description: 'Learn about data privacy, telemetry policies, and security on ElseSourav.',
-    url: 'https://elsesourav.com/privacy',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary',
-    title: 'Privacy Policy | ElseSourav',
-    description: 'Learn about data privacy and security on ElseSourav.',
-  },
-};
+  path: '/privacy',
+});
 
 export default function PrivacyPage() {
   const jsonLd = {

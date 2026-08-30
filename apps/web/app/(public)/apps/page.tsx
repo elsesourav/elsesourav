@@ -26,6 +26,8 @@ interface AppsPageProps {
   }>;
 }
 
+import { buildPageMetadata } from '@/lib/seo-metadata';
+
 export async function generateMetadata({ searchParams }: AppsPageProps): Promise<Metadata> {
   const params = await searchParams;
   const query = (params.q || params.search || '').trim();
@@ -42,37 +44,14 @@ export async function generateMetadata({ searchParams }: AppsPageProps): Promise
         : 'Apps — Software, Tools & Systems';
 
   const description =
-    "Software applications, developer tools, games, and interactive systems built, shipped, and maintained by Sourav Barui.";
-  const canonicalUrl = `${SITE_CONFIG.url}/apps`;
+    'Software applications, developer tools, games, and interactive systems built, shipped, and maintained by Sourav Barui.';
 
-  return {
+  return buildPageMetadata({
     title,
     description,
-    alternates: {
-      canonical: canonicalUrl,
-    },
-    robots: hasFilterOrQuery
-      ? {
-          index: false,
-          follow: true,
-        }
-      : {
-          index: true,
-          follow: true,
-        },
-    openGraph: {
-      title: `${title} | ${SITE_CONFIG.name}`,
-      description,
-      url: canonicalUrl,
-      siteName: SITE_CONFIG.name,
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${title} | ${SITE_CONFIG.name}`,
-      description,
-    },
-  };
+    path: '/apps',
+    noIndex: hasFilterOrQuery,
+  });
 }
 
 export default async function AppsPage({ searchParams }: AppsPageProps) {

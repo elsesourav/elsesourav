@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { SITE_CONFIG } from '@elsesourav/config';
+import { buildHelpArticleMetadata } from '@/lib/seo-metadata';
 import {
   getPublicHelpArticleBySlug,
   getRelatedHelpArticles,
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: HelpArticlePageProps): Promis
 
   if (!article) {
     return {
-      title: 'Guide Not Found',
+      title: `Guide Not Found — ${SITE_CONFIG.name}`,
       description: 'The requested documentation guide could not be found.',
       robots: {
         index: false,
@@ -34,31 +35,13 @@ export async function generateMetadata({ params }: HelpArticlePageProps): Promis
     };
   }
 
-  const title = article.seoTitle || article.title;
-  const description =
-    article.seoDescription || article.excerpt || `Read the official guide on ${article.title}.`;
-  const canonicalUrl = `${SITE_CONFIG.url}/help/${categorySlug}/${article.slug}`;
-
-  return {
-    title: `${title} — Help & Documentation`,
-    description,
-    alternates: {
-      canonical: canonicalUrl,
-    },
-    openGraph: {
-      title: `${title} | ${SITE_CONFIG.name}`,
-      description,
-      type: 'article',
-      url: canonicalUrl,
-      siteName: SITE_CONFIG.name,
-      modifiedTime: new Date(article.updatedAt).toISOString(),
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${title} | ${SITE_CONFIG.name}`,
-      description,
-    },
-  };
+  return buildHelpArticleMetadata({
+    title: article.seoTitle || article.title,
+    slug: article.slug,
+    categorySlug,
+    summary: article.seoDescription || article.excerpt,
+    updatedAt: article.updatedAt,
+  });
 }
 
 export default async function HelpArticlePage({ params }: HelpArticlePageProps) {

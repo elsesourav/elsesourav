@@ -18,39 +18,17 @@ interface AppDetailPageProps {
   }>;
 }
 
+import { buildAppMetadata } from '@/lib/seo-metadata';
+
 export async function generateMetadata({ params }: AppDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
   try {
     const app = await getPublicAppBySlug(slug);
-    const title = `${app.name} — Architecture & Technical Overview`;
-    const canonicalUrl = `${SITE_CONFIG.url}/apps/${app.slug}`;
-    return {
-      title,
-      description: app.shortDescription,
-      alternates: {
-        canonical: canonicalUrl,
-      },
-      openGraph: {
-        title: `${title} | ${SITE_CONFIG.name}`,
-        description: app.shortDescription,
-        url: canonicalUrl,
-        siteName: SITE_CONFIG.name,
-        type: 'article',
-        images: app.featuredImageUrl
-          ? [{ url: app.featuredImageUrl, width: 1200, height: 630, alt: app.name }]
-          : undefined,
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title: `${title} | ${SITE_CONFIG.name}`,
-        description: app.shortDescription,
-        images: app.featuredImageUrl ? [app.featuredImageUrl] : undefined,
-      },
-    };
+    return buildAppMetadata(app);
   } catch {
     return {
-      title: 'Project Not Found',
-      description: 'The requested project could not be found.',
+      title: `Project Not Found — ${SITE_CONFIG.name}`,
+      description: 'The requested software application or project could not be found.',
       robots: {
         index: false,
         follow: false,

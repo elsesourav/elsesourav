@@ -16,13 +16,15 @@ interface HelpCategoryPageProps {
   }>;
 }
 
+import { buildPageMetadata } from '@/lib/seo-metadata';
+
 export async function generateMetadata({ params }: HelpCategoryPageProps): Promise<Metadata> {
   const { categorySlug } = await params;
   const category = await getHelpCategoryBySlug(categorySlug);
 
   if (!category) {
     return {
-      title: 'Category Not Found',
+      title: `Category Not Found — ${SITE_CONFIG.name}`,
       description: 'The requested help category does not exist.',
       robots: {
         index: false,
@@ -35,27 +37,12 @@ export async function generateMetadata({ params }: HelpCategoryPageProps): Promi
   const description =
     category.description ||
     `Browse documentation, tutorials, and troubleshooting guides for ${category.name}.`;
-  const canonicalUrl = `${SITE_CONFIG.url}/help/${category.slug}`;
 
-  return {
+  return buildPageMetadata({
     title,
     description,
-    alternates: {
-      canonical: canonicalUrl,
-    },
-    openGraph: {
-      title: `${title} | ${SITE_CONFIG.name}`,
-      description,
-      url: canonicalUrl,
-      siteName: SITE_CONFIG.name,
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${title} | ${SITE_CONFIG.name}`,
-      description,
-    },
-  };
+    path: `/help/${category.slug}`,
+  });
 }
 
 export default async function HelpCategoryPage({ params }: HelpCategoryPageProps) {

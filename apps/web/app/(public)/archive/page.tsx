@@ -21,6 +21,8 @@ interface ArchivePageProps {
   }>;
 }
 
+import { buildPageMetadata } from '@/lib/seo-metadata';
+
 export async function generateMetadata({ searchParams }: ArchivePageProps): Promise<Metadata> {
   const params = await searchParams;
   const year = params.year;
@@ -28,28 +30,13 @@ export async function generateMetadata({ searchParams }: ArchivePageProps): Prom
     ? `${year} Software Index — The Archive`
     : 'The Archive — Historical Software & Chronology';
   const description =
-    "A chronological record of software, utilities, academic tools, and earlier implementations built by Sourav Barui.";
-  const canonicalUrl = `${SITE_CONFIG.url}/archive`;
+    'A chronological record of software, utilities, academic tools, and earlier implementations built by Sourav Barui.';
 
-  return {
+  return buildPageMetadata({
     title,
     description,
-    alternates: {
-      canonical: canonicalUrl,
-    },
-    openGraph: {
-      title: `${title} | ${SITE_CONFIG.name}`,
-      description,
-      url: canonicalUrl,
-      siteName: SITE_CONFIG.name,
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${title} | ${SITE_CONFIG.name}`,
-      description,
-    },
-  };
+    path: '/archive',
+  });
 }
 
 export default async function ArchivePage({ searchParams }: ArchivePageProps) {

@@ -18,6 +18,8 @@ interface HelpPageProps {
   }>;
 }
 
+import { buildPageMetadata } from '@/lib/seo-metadata';
+
 export async function generateMetadata({ searchParams }: HelpPageProps): Promise<Metadata> {
   const params = await searchParams;
   const searchQuery = (params.q || '').trim();
@@ -29,36 +31,13 @@ export async function generateMetadata({ searchParams }: HelpPageProps): Promise
 
   const description =
     'Guides, FAQs, troubleshooting advice, and documentation for ElseSourav web tools and developer software.';
-  const canonicalUrl = `${SITE_CONFIG.url}/help`;
 
-  return {
+  return buildPageMetadata({
     title,
     description,
-    alternates: {
-      canonical: canonicalUrl,
-    },
-    robots: hasQuery
-      ? {
-          index: false,
-          follow: true,
-        }
-      : {
-          index: true,
-          follow: true,
-        },
-    openGraph: {
-      title: `${title} | ${SITE_CONFIG.name}`,
-      description,
-      url: canonicalUrl,
-      siteName: SITE_CONFIG.name,
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${title} | ${SITE_CONFIG.name}`,
-      description,
-    },
-  };
+    path: '/help',
+    noIndex: hasQuery,
+  });
 }
 
 export default async function HelpPage({ searchParams }: HelpPageProps) {
