@@ -3,6 +3,7 @@ import { SiteService } from '@elsesourav/database';
 import type { SiteLinkPlatform } from '@elsesourav/types';
 import { PageShell, PageHeader, Badge, Button, Reveal, RevealGroup } from '@elsesourav/ui';
 import { BlogContentRenderer } from '@/features/blog/components/BlogContentRenderer';
+import { CapabilityMap } from '@/features/about/components/CapabilityMap';
 import {
   CheckCircle2,
   Code2,
@@ -67,59 +68,6 @@ function getPlatformIcon(platform: SiteLinkPlatform) {
       return <Globe className="w-3.5 h-3.5 text-zinc-400" />;
   }
 }
-
-interface ProjectEvidence {
-  readonly name: string;
-  readonly slug: string;
-  readonly domain: string;
-  readonly description: string;
-  readonly highlight: string;
-}
-
-const PROJECT_EVIDENCE: readonly ProjectEvidence[] = [
-  {
-    name: 'SpectraLens AI',
-    slug: 'spectralens-ai',
-    domain: 'AI & Browser Productivity',
-    description: 'Manifest V3 Chrome extension with multi-model streaming and DOM tree inspection.',
-    highlight: 'On-device WebAssembly OCR + dual local/cloud LLM routing without background service-worker leaks.',
-  },
-  {
-    name: 'ES Automation',
-    slug: 'es-automation',
-    domain: 'Data Processing & E-Commerce',
-    description: 'Multi-seller marketplace catalog pipeline and batch SKU reconciliation engine.',
-    highlight: 'Web Worker Excel parsing and fuzzy SKU conflict resolution handling 10,000+ entries client-side.',
-  },
-  {
-    name: 'Breakout Ball',
-    slug: 'breakout-ball',
-    domain: 'C++ & WebAssembly Systems',
-    description: 'Arcade brick-breaker game with real-time physics engine and in-game stage designer.',
-    highlight: 'Emscripten compilation with Axis-Aligned Bounding Box (AABB) continuous collision detection at 60 FPS.',
-  },
-  {
-    name: 'Img Editor',
-    slug: 'img-editor',
-    domain: 'Canvas Graphics & Creative Tools',
-    description: 'Client-side photo editor with non-destructive adjustments, crop, and filter presets.',
-    highlight: 'Pure HTML5 Canvas 2D matrix transformations with zero server uploads for complete user privacy.',
-  },
-  {
-    name: 'Meal Tracker Mobile',
-    slug: 'meal-tracker',
-    domain: 'Mobile & Offline-First',
-    description: 'Cross-platform mobile application with dietary routine logging and smart reminder alerts.',
-    highlight: 'Offline-first AsyncStorage persistence and intentional meal skipping notification states.',
-  },
-  {
-    name: 'Particle Chain WASM',
-    slug: 'particle-chain-wasm',
-    domain: 'Physics Solvers & Algorithms',
-    description: 'Interactive constraint relaxation simulation modeling dynamic connected elastic meshes.',
-    highlight: 'C++ Verlet integration loop compiled to WebAssembly for high-density particle relaxation.',
-  },
-];
 
 export default async function AboutPage() {
   const siteService = new SiteService();
@@ -364,63 +312,8 @@ export default async function AboutPage() {
           </RevealGroup>
         </section>
 
-        {/* 4. Capability Story: Capability to Evidence */}
-        <section aria-labelledby="capability-heading" className="space-y-6">
-          <Reveal direction="up" distance={14}>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-xs font-mono text-indigo-400 uppercase tracking-wider font-semibold">
-                <Cpu className="w-4 h-4" />
-                <span>Capabilities</span>
-              </div>
-              <h2 id="capability-heading" className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-                Engineering Capabilities & Concrete Evidence
-              </h2>
-              <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl leading-relaxed">
-                Rather than generic keyword lists, each technical capability is grounded in verified, working implementations:
-              </p>
-            </div>
-          </Reveal>
-
-          <RevealGroup staggerDelay={0.06} baseDelay={0.08} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {PROJECT_EVIDENCE.map((item) => (
-              <Link
-                key={item.slug}
-                href={`/apps/${item.slug}`}
-                className="group block p-5 rounded-2xl border border-zinc-800/80 bg-zinc-900/30 hover:bg-zinc-900/70 hover:border-indigo-500/50 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
-              >
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-xs font-mono">
-                    <span className="text-indigo-400 font-semibold">{item.name}</span>
-                    <span className="text-zinc-500 text-[11px]">{item.domain}</span>
-                  </div>
-                  <p className="text-xs text-zinc-300 font-medium leading-relaxed">
-                    {item.description}
-                  </p>
-                  <p className="text-xs text-zinc-400 font-mono text-[11px] leading-relaxed pt-1">
-                    {item.highlight}
-                  </p>
-                  <div className="pt-2 flex items-center gap-1 text-xs text-indigo-400 group-hover:text-indigo-300 font-medium">
-                    <span>Inspect implementation</span>
-                    <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </RevealGroup>
-
-          {/* Direct link to complete archive */}
-          <Reveal direction="up" distance={10} delay={0.15}>
-            <div className="text-center pt-4">
-              <Link
-                href={ROUTES.APPS}
-                className="inline-flex items-center gap-2 text-xs font-mono text-zinc-300 hover:text-white px-5 py-2.5 rounded-2xl border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
-              >
-                <span>Explore complete project archive & technical documentation</span>
-                <ArrowRight className="w-4 h-4 text-indigo-400" />
-              </Link>
-            </div>
-          </Reveal>
-        </section>
+        {/* 4. Professional Capability Map: Capabilities to Real Evidence */}
+        <CapabilityMap />
 
         {/* 5. Guiding Principles & Engineering Approach */}
         <section aria-labelledby="principles-heading" className="space-y-6">
