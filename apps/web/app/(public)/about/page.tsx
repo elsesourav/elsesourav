@@ -4,6 +4,8 @@ import type { SiteLinkPlatform } from '@elsesourav/types';
 import { PageShell, PageHeader, Badge, Button, Reveal, RevealGroup } from '@elsesourav/ui';
 import { BlogContentRenderer } from '@/features/blog/components/BlogContentRenderer';
 import { CapabilityMap } from '@/features/about/components/CapabilityMap';
+import { discoverPublishedApps } from '@/features/apps/queries/get-apps';
+import { getPublicBlogListing } from '@/features/blog/queries/get-blog';
 import {
   CheckCircle2,
   Code2,
@@ -17,8 +19,8 @@ import {
   BookOpen,
   ArrowRight,
   Layers,
-  Cpu,
   Sparkles,
+  Radio,
 } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -71,7 +73,17 @@ function getPlatformIcon(platform: SiteLinkPlatform) {
 
 export default async function AboutPage() {
   const siteService = new SiteService();
-  const identity = await siteService.getSiteAndCreatorIdentity();
+
+  const [identity, appsResult, labResult, blogResult] = await Promise.all([
+    siteService.getSiteAndCreatorIdentity(),
+    discoverPublishedApps({ limit: 1, sort: 'popularity' }).catch(() => ({ items: [] })),
+    discoverPublishedApps({ filters: { categorySlug: 'simulations' }, limit: 1 }).catch(() => ({ items: [] })),
+    getPublicBlogListing({ limit: 1 }).catch(() => ({ items: [] })),
+  ]);
+
+  const activeApp = appsResult.items?.[0] || null;
+  const activeLab = labResult.items?.[0] || null;
+  const activePost = blogResult.items?.[0] || null;
 
   const activeLinks = identity.creator.links.filter((l) => l.isActive);
   const activeContacts = identity.creator.contacts.filter((c) => c.isActive);
@@ -343,25 +355,116 @@ export default async function AboutPage() {
           </RevealGroup>
         </section>
 
-        {/* 6. Current Focus */}
+        {/* 6. Current Focus / Now */}
         <Reveal direction="up" distance={14}>
-          <section aria-labelledby="focus-heading" className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Cpu className="w-4 h-4 text-purple-400" />
-              <h2 id="focus-heading" className="text-lg font-bold text-white tracking-tight">
-                Current Focus
-              </h2>
+          <section aria-labelledby="now-focus-heading" className="space-y-6 p-6 sm:p-8 rounded-3xl border border-zinc-800/80 bg-zinc-900/40 backdrop-blur-sm shadow-xl">
+            <div className="flex items-center justify-between pb-3 border-b border-zinc-800/70">
+              <div className="flex items-center gap-2">
+                <Radio className="w-4 h-4 text-emerald-400 animate-pulse" />
+                <h2 id="now-focus-heading" className="text-lg font-bold text-white tracking-tight">
+                  Studio Focus // Now
+                </h2>
+              </div>
+              <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
+                Live Status
+              </span>
             </div>
-            <div className="flex flex-wrap gap-2.5">
-              {identity.creator.focus.map((item: string, idx: number) => (
-                <span
-                  key={idx}
-                  className="text-xs py-1.5 px-3.5 rounded-xl border border-zinc-800 bg-zinc-900/60 text-zinc-200 font-medium font-mono"
-                >
-                  {item}
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {/* Currently Building */}
+              {activeApp && (
+                <div className="space-y-2 p-4 rounded-2xl bg-zinc-950/40 border border-zinc-800/60">
+                  <span className="text-[10px] font-mono text-indigo-400 uppercase tracking-wider font-semibold block">
+                    Currently Building
+                  </span>
+                  <Link
+                    href={`/apps/${activeApp.slug}`}
+                    className="font-bold text-sm text-zinc-100 hover:text-indigo-300 transition-colors block line-clamp-1"
+                  >
+                    {activeApp.name}
+                  </Link>
+                  <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+                    {activeApp.shortDescription}
+                  </p>
+                  <Link
+                    href={`/apps/${activeApp.slug}`}
+                    className="inline-flex items-center gap-1 text-[11px] text-indigo-400 hover:text-indigo-300 font-mono pt-1 group"
+                  >
+                    <span>Inspect project</span>
+                    <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                  </Link>
+                </div>
+              )}
+
+              {/* Currently Exploring (The Lab) */}
+              {activeLab && (
+                <div className="space-y-2 p-4 rounded-2xl bg-zinc-950/40 border border-zinc-800/60">
+                  <span className="text-[10px] font-mono text-purple-400 uppercase tracking-wider font-semibold block">
+                    Currently Exploring
+                  </span>
+                  <Link
+                    href={`/apps/${activeLab.slug}`}
+                    className="font-bold text-sm text-zinc-100 hover:text-purple-300 transition-colors block line-clamp-1"
+                  >
+                    {activeLab.name}
+                  </Link>
+                  <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+                    {activeLab.shortDescription}
+                  </p>
+                  <Link
+                    href={`/apps/${activeLab.slug}`}
+                    className="inline-flex items-center gap-1 text-[11px] text-purple-400 hover:text-purple-300 font-mono pt-1 group"
+                  >
+                    <span>Launch experiment</span>
+                    <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                  </Link>
+                </div>
+              )}
+
+              {/* Latest Published Note */}
+              {activePost && (
+                <div className="space-y-2 p-4 rounded-2xl bg-zinc-950/40 border border-zinc-800/60">
+                  <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-wider font-semibold block">
+                    Latest Field Note
+                  </span>
+                  <Link
+                    href={`/blog/${activePost.slug}`}
+                    className="font-bold text-sm text-zinc-100 hover:text-cyan-300 transition-colors block line-clamp-1"
+                  >
+                    {activePost.title}
+                  </Link>
+                  <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+                    {activePost.excerpt}
+                  </p>
+                  <Link
+                    href={`/blog/${activePost.slug}`}
+                    className="inline-flex items-center gap-1 text-[11px] text-cyan-400 hover:text-cyan-300 font-mono pt-1 group"
+                  >
+                    <span>Read writing</span>
+                    <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Active Technical Topics */}
+            {identity.creator.focus.length > 0 && (
+              <div className="pt-3 border-t border-zinc-800/60 space-y-2">
+                <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider block">
+                  Active Architectural Focus:
                 </span>
-              ))}
-            </div>
+                <div className="flex flex-wrap gap-2">
+                  {identity.creator.focus.map((item: string, idx: number) => (
+                    <span
+                      key={idx}
+                      className="text-xs py-1 px-3 rounded-xl border border-zinc-800 bg-zinc-900/60 text-zinc-300 font-medium font-mono"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </section>
         </Reveal>
 
