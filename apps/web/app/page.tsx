@@ -63,9 +63,9 @@ export default async function HomePage() {
   const cookieStore = await cookies();
   const siteService = new SiteService();
 
-  // Curated data queries: 5 selected projects, 3 recent notes, site/creator identity
+  // Curated data queries: 5 selected projects (prioritizing featured/pinned), 3 recent notes, site/creator identity
   const [appsResult, blogResult, identity, session] = await Promise.all([
-    discoverPublishedApps({ limit: 5, sort: 'popularity' }).catch(() => ({
+    discoverPublishedApps({ limit: 5, sort: 'sortOrder' }).catch(() => ({
       items: [],
       totalCount: 0,
     })),
@@ -160,13 +160,16 @@ export default async function HomePage() {
               {/* Left Column: Primary Hero Statement & Positioning */}
               <div className="lg:col-span-7 space-y-6 text-left">
                 {/* 1. Small Identity/Context Badge */}
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/60 text-xs font-mono text-indigo-300 font-semibold tracking-wider uppercase">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-indigo-500/30 bg-indigo-950/40 text-xs font-mono text-indigo-300 font-semibold tracking-wider uppercase">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>{identity.homepage.heroBadge || 'SOURAV / ELSESOURAV'}</span>
+                  <span>ElseSourav Studio</span>
                 </div>
 
-                {/* 2. Strong Statement with Structured Visual Hierarchy */}
+                {/* 2. Strong Statement with "I am Sourav." opening */}
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-[1.12]">
+                  <span className="block text-2xl sm:text-3xl lg:text-4xl font-bold font-mono text-indigo-400 mb-2 sm:mb-3">
+                    I am Sourav.
+                  </span>
                   <span className="text-white">Building software, tools, games, and experiments</span>{' '}
                   <span className="text-zinc-400 font-normal">that</span>{' '}
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-indigo-200 to-white font-extrabold">
