@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import { getServerSession } from '@elsesourav/auth';
-import { Button, Section, SectionHeader, ActionGroup, Container } from '@elsesourav/ui';
+import type { AppListItem, BlogPostListItem, SiteLinkItem } from '@elsesourav/types';
+import { Button, Section, SectionHeader, ActionGroup, Container, Reveal, RevealGroup } from '@elsesourav/ui';
 import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
 import { SiteService } from '@elsesourav/database';
 import { discoverPublishedApps } from '@/features/apps/queries/get-apps';
@@ -90,7 +91,7 @@ export default async function HomePage() {
         url: identity.site.url,
         description: identity.site.description,
         logo: identity.site.logoUrl,
-        sameAs: identity.creator.links.map((l) => l.url),
+        sameAs: identity.creator.links.map((l: SiteLinkItem) => l.url),
       },
       {
         '@type': 'Person',
@@ -99,7 +100,7 @@ export default async function HomePage() {
         jobTitle: identity.creator.title,
         image: identity.creator.avatarUrl,
         url: `${identity.site.url}/about`,
-        sameAs: identity.creator.links.map((l) => l.url),
+        sameAs: identity.creator.links.map((l: SiteLinkItem) => l.url),
       },
       {
         '@type': 'WebSite',
@@ -313,51 +314,56 @@ export default async function HomePage() {
         </Section>
 
         {/* 2. Selected Work / Projects Introduction */}
+        {/* 2. Selected Work / Projects Introduction */}
         {featuredApps.length > 0 && (
           <Section spacing="lg" surface="subtle">
             <Container size="lg">
-              <SectionHeader
-                align="split"
-                caption="Selected Work"
-                title={identity.homepage.appsTitle || "A few things I've built."}
-                description={identity.homepage.appsSubtitle || 'A curated selection of software, developer tools, games, and systems.'}
-                actions={
-                  <Link
-                    href={ROUTES.APPS}
-                    className="text-sm font-medium text-indigo-400 hover:text-indigo-300 flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded p-1 group"
-                  >
-                    <span>Explore all projects {appsResult.totalCount > 0 ? `(${appsResult.totalCount})` : ''}</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                  </Link>
-                }
-              />
+              <Reveal direction="up" distance={14}>
+                <SectionHeader
+                  align="split"
+                  caption="Selected Work"
+                  title={identity.homepage.appsTitle || "A few things I've built."}
+                  description={identity.homepage.appsSubtitle || 'A curated selection of software, developer tools, games, and systems.'}
+                  actions={
+                    <Link
+                      href={ROUTES.APPS}
+                      className="text-sm font-medium text-indigo-400 hover:text-indigo-300 flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded p-1 group"
+                    >
+                      <span>Explore all projects {appsResult.totalCount > 0 ? `(${appsResult.totalCount})` : ''}</span>
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                    </Link>
+                  }
+                />
+              </Reveal>
 
               <div className="space-y-6">
                 {/* 1. Flagship Lead Project */}
-                <div>
+                <Reveal direction="up" distance={16} delay={0.05}>
                   <AppCard app={featuredApps[0]!} index={0} featured={true} />
-                </div>
+                </Reveal>
 
                 {/* 2. Supporting Projects Grid (up to 4 projects in 2x2) */}
                 {featuredApps.length > 1 && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
-                    {featuredApps.slice(1, 5).map((app, idx) => (
+                  <RevealGroup staggerDelay={0.06} baseDelay={0.08} className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+                    {featuredApps.slice(1, 5).map((app: AppListItem, idx: number) => (
                       <AppCard key={app.id} app={app} index={idx + 1} />
                     ))}
-                  </div>
+                  </RevealGroup>
                 )}
               </div>
 
               {/* Bottom Exploration CTA */}
-              <div className="text-center pt-10">
-                <Link
-                  href={ROUTES.APPS}
-                  className="inline-flex items-center gap-2 text-sm font-medium text-zinc-300 hover:text-white px-5 py-2.5 rounded-2xl border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
-                >
-                  <span>Explore full software catalog ({appsResult.totalCount} projects)</span>
-                  <ArrowRight className="w-4 h-4 text-indigo-400" />
-                </Link>
-              </div>
+              <Reveal direction="up" distance={10} delay={0.15}>
+                <div className="text-center pt-10">
+                  <Link
+                    href={ROUTES.APPS}
+                    className="inline-flex items-center gap-2 text-sm font-medium text-zinc-300 hover:text-white px-5 py-2.5 rounded-2xl border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                  >
+                    <span>Explore full software catalog ({appsResult.totalCount} projects)</span>
+                    <ArrowRight className="w-4 h-4 text-indigo-400" />
+                  </Link>
+                </div>
+              </Reveal>
             </Container>
           </Section>
         )}
@@ -366,24 +372,26 @@ export default async function HomePage() {
         {labProjects.length > 0 && (
           <Section spacing="lg">
             <Container size="lg">
-              <SectionHeader
-                align="split"
-                caption="Lab"
-                title="Small experiments, prototypes, and ideas."
-                description="Built to explore algorithms, physics solvers, constraint satisfaction, and graphics."
-                actions={
-                  <Link
-                    href="/apps?category=simulations"
-                    className="text-sm font-medium text-purple-400 hover:text-purple-300 flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded p-1 group"
-                  >
-                    <span>Explore the Lab {labResult.totalCount > 0 ? `(${labResult.totalCount})` : ''}</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                  </Link>
-                }
-              />
+              <Reveal direction="up" distance={14}>
+                <SectionHeader
+                  align="split"
+                  caption="Lab"
+                  title="Small experiments, prototypes, and ideas."
+                  description="Built to explore algorithms, physics solvers, constraint satisfaction, and graphics."
+                  actions={
+                    <Link
+                      href="/apps?category=simulations"
+                      className="text-sm font-medium text-purple-400 hover:text-purple-300 flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded p-1 group"
+                    >
+                      <span>Explore the Lab {labResult.totalCount > 0 ? `(${labResult.totalCount})` : ''}</span>
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                    </Link>
+                  }
+                />
+              </Reveal>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-                {labProjects.map((item, idx) => {
+              <RevealGroup staggerDelay={0.05} baseDelay={0.06} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+                {labProjects.map((item: AppListItem, idx: number) => {
                   const formattedIdx = String(idx + 1).padStart(2, '0');
                   const categoryName = item.primaryCategory || 'Simulation';
                   return (
@@ -424,18 +432,20 @@ export default async function HomePage() {
                     </Link>
                   );
                 })}
-              </div>
+              </RevealGroup>
 
               {/* Bottom Lab CTA link */}
-              <div className="text-center pt-8">
-                <Link
-                  href="/apps?category=simulations"
-                  className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-purple-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded p-1"
-                >
-                  <span>Explore full Lab & Simulation archive ({labResult.totalCount} active experiments)</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
+              <Reveal direction="up" distance={10} delay={0.12}>
+                <div className="text-center pt-8">
+                  <Link
+                    href="/apps?category=simulations"
+                    className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-purple-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded p-1"
+                  >
+                    <span>Explore full Lab & Simulation archive ({labResult.totalCount} active experiments)</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              </Reveal>
             </Container>
           </Section>
         )}
@@ -444,29 +454,31 @@ export default async function HomePage() {
         {recentPosts.length > 0 && (
           <Section spacing="lg" surface="subtle">
             <Container size="lg">
-              <SectionHeader
-                align="split"
-                caption="Field Notes"
-                title={identity.homepage.blogTitle || 'Field Notes & Reflections'}
-                description={
-                  identity.homepage.blogSubtitle ||
-                  'Things I write about while building software, learning tools, and solving architectural problems.'
-                }
-                actions={
-                  <Link
-                    href={ROUTES.BLOG}
-                    className="text-sm font-medium text-cyan-400 hover:text-cyan-300 flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded p-1 group"
-                  >
-                    <span>Read all notes {blogResult.totalCount > 0 ? `(${blogResult.totalCount})` : ''}</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                  </Link>
-                }
-              />
+              <Reveal direction="up" distance={14}>
+                <SectionHeader
+                  align="split"
+                  caption="Field Notes"
+                  title={identity.homepage.blogTitle || 'Field Notes & Reflections'}
+                  description={
+                    identity.homepage.blogSubtitle ||
+                    'Things I write about while building software, learning tools, and solving architectural problems.'
+                  }
+                  actions={
+                    <Link
+                      href={ROUTES.BLOG}
+                      className="text-sm font-medium text-cyan-400 hover:text-cyan-300 flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded p-1 group"
+                    >
+                      <span>Read all notes {blogResult.totalCount > 0 ? `(${blogResult.totalCount})` : ''}</span>
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                    </Link>
+                  }
+                />
+              </Reveal>
 
               {recentPosts.length >= 2 ? (
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
                   {/* Left: Emphasized Lead Editorial Essay */}
-                  <div className="lg:col-span-7">
+                  <Reveal direction="up" distance={16} delay={0.06} className="lg:col-span-7">
                     <Link
                       href={`/blog/${recentPosts[0]!.slug}`}
                       className="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-3xl"
@@ -513,11 +525,11 @@ export default async function HomePage() {
                         </div>
                       </article>
                     </Link>
-                  </div>
+                  </Reveal>
 
                   {/* Right: Archival Index Stream of Supporting Notes */}
-                  <div className="lg:col-span-5 flex flex-col justify-between divide-y divide-zinc-800/70 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 p-6 sm:p-7 backdrop-blur-sm">
-                    {recentPosts.slice(1, 3).map((post, idx) => {
+                  <Reveal direction="up" distance={16} delay={0.12} className="lg:col-span-5 flex flex-col justify-between divide-y divide-zinc-800/70 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 p-6 sm:p-7 backdrop-blur-sm">
+                    {recentPosts.slice(1, 3).map((post: BlogPostListItem, idx: number) => {
                       const formattedIdx = String(idx + 1).padStart(2, '0');
                       return (
                         <Link
@@ -565,10 +577,10 @@ export default async function HomePage() {
                         </Link>
                       );
                     })}
-                  </div>
+                  </Reveal>
                 </div>
               ) : (
-                <div className="max-w-3xl mx-auto">
+                <Reveal direction="up" distance={16} className="max-w-3xl mx-auto">
                   <Link
                     href={`/blog/${recentPosts[0]!.slug}`}
                     className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-3xl"
@@ -612,108 +624,114 @@ export default async function HomePage() {
                       </div>
                     </article>
                   </Link>
-                </div>
+                </Reveal>
               )}
 
               {/* Bottom Exploration CTA */}
-              <div className="text-center pt-8">
-                <Link
-                  href={ROUTES.BLOG}
-                  className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-cyan-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded p-1"
-                >
-                  <span>Read all engineering field notes ({blogResult.totalCount} articles)</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-cyan-400" />
-                </Link>
-              </div>
+              <Reveal direction="up" distance={10} delay={0.15}>
+                <div className="text-center pt-8">
+                  <Link
+                    href={ROUTES.BLOG}
+                    className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-cyan-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded p-1"
+                  >
+                    <span>Read all engineering field notes ({blogResult.totalCount} articles)</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-cyan-400" />
+                  </Link>
+                </div>
+              </Reveal>
             </Container>
           </Section>
         )}
 
-        {/* 4. Creator Context & Guiding Philosophy */}
+        {/* 5. Creator Context & Guiding Philosophy */}
         <Section spacing="lg" surface="subtle">
           <Container size="lg">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-              {/* Left Column: Creator Statement & Narrative */}
-              <div className="lg:col-span-5 space-y-5">
-                <div className="flex items-center gap-3">
-                  {identity.creator.avatarUrl ? (
-                    <div className="w-12 h-12 rounded-2xl bg-indigo-950/60 border border-indigo-500/40 overflow-hidden shrink-0 shadow-md">
-                      <img
-                        src={identity.creator.avatarUrl}
-                        alt={identity.creator.name}
-                        className="w-full h-full object-cover"
-                      />
+            <Reveal direction="up" distance={16}>
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                {/* Left Column: Creator Statement & Narrative */}
+                <div className="lg:col-span-5 space-y-5">
+                  <div className="flex items-center gap-3">
+                    {identity.creator.avatarUrl ? (
+                      <div className="w-12 h-12 rounded-2xl bg-indigo-950/60 border border-indigo-500/40 overflow-hidden shrink-0 shadow-md">
+                        <img
+                          src={identity.creator.avatarUrl}
+                          alt={identity.creator.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ) : null}
+                    <div>
+                      <div className="text-xs font-mono text-indigo-400 font-semibold uppercase tracking-wider">
+                        How I Build
+                      </div>
+                      <div className="text-xs text-zinc-400">
+                        {identity.creator.name} · {identity.creator.title}
+                      </div>
                     </div>
-                  ) : null}
-                  <div>
-                    <div className="text-xs font-mono text-indigo-400 font-semibold uppercase tracking-wider">
-                      How I Build
-                    </div>
-                    <div className="text-xs text-zinc-400">
-                      {identity.creator.name} · {identity.creator.title}
-                    </div>
+                  </div>
+
+                  <h2 className="text-h2 font-bold tracking-tight text-white leading-snug">
+                    {identity.creator.statement || 'I care about software that is understandable, useful, fast, and considerate.'}
+                  </h2>
+
+                  <p className="text-body text-zinc-400 leading-relaxed">
+                    {identity.creator.shortBio || identity.creator.positioning}
+                  </p>
+
+                  <div className="pt-2">
+                    <Link href={ROUTES.ABOUT}>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-zinc-800 text-xs gap-1.5 text-zinc-300 hover:text-white"
+                      >
+                        <span>Read the complete studio mission & bio</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </Button>
+                    </Link>
                   </div>
                 </div>
 
-                <h2 className="text-h2 font-bold tracking-tight text-white leading-snug">
-                  {identity.creator.statement || 'I care about software that is understandable, useful, fast, and considerate.'}
-                </h2>
-
-                <p className="text-body text-zinc-400 leading-relaxed">
-                  {identity.creator.shortBio || identity.creator.positioning}
-                </p>
-
-                <div className="pt-2">
-                  <Link href={ROUTES.ABOUT}>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-zinc-800 text-xs gap-1.5 text-zinc-300 hover:text-white"
-                    >
-                      <span>Read the complete studio mission & bio</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </Button>
-                  </Link>
+                {/* Right Column: Ordered Principles Grid */}
+                <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {identity.creator.principles.map((principle: string, idx: number) => {
+                    const formattedIdx = String(idx + 1).padStart(2, '0');
+                    return (
+                      <div
+                        key={idx}
+                        className="p-5 rounded-2xl border border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/70 hover:border-zinc-700/80 transition-colors space-y-2 shadow-sm"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-mono text-xs font-bold text-indigo-400/90 bg-indigo-950/60 border border-indigo-800/40 px-2 py-0.5 rounded">
+                            {formattedIdx}
+                          </span>
+                          <CheckCircle2 className="w-3.5 h-3.5 text-zinc-600" />
+                        </div>
+                        <p className="text-sm text-zinc-200 font-medium leading-snug">
+                          {principle}
+                        </p>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
-
-              {/* Right Column: Ordered Principles Grid */}
-              <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {identity.creator.principles.map((principle: string, idx: number) => {
-                  const formattedIdx = String(idx + 1).padStart(2, '0');
-                  return (
-                    <div
-                      key={idx}
-                      className="p-5 rounded-2xl border border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/70 hover:border-zinc-700/80 transition-colors space-y-2 shadow-sm"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="font-mono text-xs font-bold text-indigo-400/90 bg-indigo-950/60 border border-indigo-800/40 px-2 py-0.5 rounded">
-                          {formattedIdx}
-                        </span>
-                        <CheckCircle2 className="w-3.5 h-3.5 text-zinc-600" />
-                      </div>
-                      <p className="text-sm text-zinc-200 font-medium leading-snug">
-                        {principle}
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+            </Reveal>
           </Container>
         </Section>
 
-        {/* 5. Explore Studio Pathways */}
+        {/* 6. Explore Studio Pathways */}
         <Section spacing="lg">
           <Container size="lg">
-            <SectionHeader
-              align="center"
-              caption="Studio Pathways"
-              title={identity.homepage.closingCtaTitle || 'Explore the ElseSourav Archive'}
-              description={identity.homepage.closingCtaSubtitle || 'Discover software tools, read architectural writings, or get in touch directly.'}
-            />
+            <Reveal direction="up" distance={14}>
+              <SectionHeader
+                align="center"
+                caption="Studio Pathways"
+                title={identity.homepage.closingCtaTitle || 'Explore the ElseSourav Archive'}
+                description={identity.homepage.closingCtaSubtitle || 'Discover software tools, read architectural writings, or get in touch directly.'}
+              />
+            </Reveal>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <RevealGroup staggerDelay={0.06} baseDelay={0.08} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               <Link
                 href={ROUTES.APPS}
                 className="p-5 rounded-3xl border border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-indigo-500/40 transition-all duration-200 group flex flex-col justify-between"
@@ -793,11 +811,11 @@ export default async function HomePage() {
                   </p>
                 </div>
                 <div className="pt-4 flex items-center text-xs text-emerald-400 font-medium gap-1">
-                  <span>Contact support</span>
+                  <span>Get support</span>
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </div>
               </Link>
-            </div>
+            </RevealGroup>
           </Container>
         </Section>
       </main>

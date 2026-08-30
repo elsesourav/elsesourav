@@ -1,7 +1,7 @@
 import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
 import { SiteService } from '@elsesourav/database';
 import type { SiteLinkPlatform } from '@elsesourav/types';
-import { PageShell, PageHeader, Badge, Button } from '@elsesourav/ui';
+import { PageShell, PageHeader, Badge, Button, Reveal, RevealGroup } from '@elsesourav/ui';
 import { BlogContentRenderer } from '@/features/blog/components/BlogContentRenderer';
 import {
   CheckCircle2,
@@ -224,40 +224,44 @@ export default async function AboutPage() {
         </section>
 
         {/* 2. Why So Many Different Projects? (Learning by Building) */}
-        <section aria-labelledby="why-projects-heading" className="space-y-4">
-          <div className="p-6 sm:p-8 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 backdrop-blur-sm space-y-4">
-            <div className="inline-flex items-center gap-2 text-xs font-mono text-indigo-400 uppercase tracking-wider font-semibold">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Core Motivation</span>
+        <Reveal direction="up" distance={16}>
+          <section aria-labelledby="why-projects-heading" className="space-y-4">
+            <div className="p-6 sm:p-8 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 backdrop-blur-sm space-y-4">
+              <div className="inline-flex items-center gap-2 text-xs font-mono text-indigo-400 uppercase tracking-wider font-semibold">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Core Motivation</span>
+              </div>
+              <h2 id="why-projects-heading" className="text-2xl font-bold text-white tracking-tight">
+                &ldquo;I like understanding ideas by building them.&rdquo;
+              </h2>
+              <p className="text-sm text-zinc-300 leading-relaxed">
+                Rather than viewing software engineering through a single narrow framework, Sourav approaches programming as a medium for understanding systems from first principles. When exploring computer graphics, he writes canvas renderers and physics loops. When studying AI, he builds browser extensions with local WebAssembly models. When solving data management bottlenecks, he develops batch automation tools.
+              </p>
+              <p className="text-sm text-zinc-400 leading-relaxed">
+                Every project in this portfolio represents an intentional exploration: exploring new paradigms, testing performance boundaries, and crafting tools that solve concrete real-world problems.
+              </p>
             </div>
-            <h2 id="why-projects-heading" className="text-2xl font-bold text-white tracking-tight">
-              &ldquo;I like understanding ideas by building them.&rdquo;
-            </h2>
-            <p className="text-sm text-zinc-300 leading-relaxed">
-              Rather than viewing software engineering through a single narrow framework, Sourav approaches programming as a medium for understanding systems from first principles. When exploring computer graphics, he writes canvas renderers and physics loops. When studying AI, he builds browser extensions with local WebAssembly models. When solving data management bottlenecks, he develops batch automation tools.
-            </p>
-            <p className="text-sm text-zinc-400 leading-relaxed">
-              Every project in this portfolio represents an intentional exploration: exploring new paradigms, testing performance boundaries, and crafting tools that solve concrete real-world problems.
-            </p>
-          </div>
-        </section>
+          </section>
+        </Reveal>
 
         {/* 3. Project Journey & Technical Evolution */}
         <section aria-labelledby="journey-heading" className="space-y-6">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-xs font-mono text-cyan-400 uppercase tracking-wider font-semibold">
-              <Layers className="w-4 h-4" />
-              <span>Evolution</span>
+          <Reveal direction="up" distance={14}>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-xs font-mono text-cyan-400 uppercase tracking-wider font-semibold">
+                <Layers className="w-4 h-4" />
+                <span>Evolution</span>
+              </div>
+              <h2 id="journey-heading" className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                Project Journey & Technical Progression
+              </h2>
+              <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl leading-relaxed">
+                Organized conceptually by the engineering challenges and paradigms explored across different stages:
+              </p>
             </div>
-            <h2 id="journey-heading" className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-              Project Journey & Technical Progression
-            </h2>
-            <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl leading-relaxed">
-              Organized conceptually by the engineering challenges and paradigms explored across different stages:
-            </p>
-          </div>
+          </Reveal>
 
-          <div className="space-y-4">
+          <RevealGroup staggerDelay={0.06} baseDelay={0.08} className="space-y-4">
             {/* Stage 01 */}
             <div className="p-6 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 backdrop-blur-sm space-y-3">
               <div className="flex items-center justify-between text-xs font-mono">
@@ -357,25 +361,27 @@ export default async function AboutPage() {
                 <Link href="/apps/gcelt-automate" className="text-emerald-300 hover:underline">GCELT Automate</Link>
               </div>
             </div>
-          </div>
+          </RevealGroup>
         </section>
 
         {/* 4. Capability Story: Capability to Evidence */}
         <section aria-labelledby="capability-heading" className="space-y-6">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-xs font-mono text-indigo-400 uppercase tracking-wider font-semibold">
-              <Cpu className="w-4 h-4" />
-              <span>Capabilities</span>
+          <Reveal direction="up" distance={14}>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-xs font-mono text-indigo-400 uppercase tracking-wider font-semibold">
+                <Cpu className="w-4 h-4" />
+                <span>Capabilities</span>
+              </div>
+              <h2 id="capability-heading" className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                Engineering Capabilities & Concrete Evidence
+              </h2>
+              <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl leading-relaxed">
+                Rather than generic keyword lists, each technical capability is grounded in verified, working implementations:
+              </p>
             </div>
-            <h2 id="capability-heading" className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-              Engineering Capabilities & Concrete Evidence
-            </h2>
-            <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl leading-relaxed">
-              Rather than generic keyword lists, each technical capability is grounded in verified, working implementations:
-            </p>
-          </div>
+          </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <RevealGroup staggerDelay={0.06} baseDelay={0.08} className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {PROJECT_EVIDENCE.map((item) => (
               <Link
                 key={item.slug}
@@ -400,32 +406,36 @@ export default async function AboutPage() {
                 </div>
               </Link>
             ))}
-          </div>
+          </RevealGroup>
 
           {/* Direct link to complete archive */}
-          <div className="text-center pt-4">
-            <Link
-              href={ROUTES.APPS}
-              className="inline-flex items-center gap-2 text-xs font-mono text-zinc-300 hover:text-white px-5 py-2.5 rounded-2xl border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
-            >
-              <span>Explore complete project archive & technical documentation</span>
-              <ArrowRight className="w-4 h-4 text-indigo-400" />
-            </Link>
-          </div>
+          <Reveal direction="up" distance={10} delay={0.15}>
+            <div className="text-center pt-4">
+              <Link
+                href={ROUTES.APPS}
+                className="inline-flex items-center gap-2 text-xs font-mono text-zinc-300 hover:text-white px-5 py-2.5 rounded-2xl border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              >
+                <span>Explore complete project archive & technical documentation</span>
+                <ArrowRight className="w-4 h-4 text-indigo-400" />
+              </Link>
+            </div>
+          </Reveal>
         </section>
 
         {/* 5. Guiding Principles & Engineering Approach */}
         <section aria-labelledby="principles-heading" className="space-y-6">
-          <div className="space-y-2">
-            <h2 id="principles-heading" className="text-xl font-bold text-white tracking-tight">
-              Building Principles
-            </h2>
-            <p className="text-xs sm:text-sm text-zinc-400">
-              The core principles guiding how software is designed, engineered, and maintained:
-            </p>
-          </div>
+          <Reveal direction="up" distance={14}>
+            <div className="space-y-2">
+              <h2 id="principles-heading" className="text-xl font-bold text-white tracking-tight">
+                Building Principles
+              </h2>
+              <p className="text-xs sm:text-sm text-zinc-400">
+                The core principles guiding how software is designed, engineered, and maintained:
+              </p>
+            </div>
+          </Reveal>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <RevealGroup staggerDelay={0.05} baseDelay={0.06} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {identity.creator.principles.map((principle: string, idx: number) => (
               <div
                 key={idx}
@@ -437,89 +447,95 @@ export default async function AboutPage() {
                 </span>
               </div>
             ))}
-          </div>
+          </RevealGroup>
         </section>
 
         {/* 6. Current Focus */}
-        <section aria-labelledby="focus-heading" className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Cpu className="w-4 h-4 text-purple-400" />
-            <h2 id="focus-heading" className="text-lg font-bold text-white tracking-tight">
-              Current Focus
-            </h2>
-          </div>
-          <div className="flex flex-wrap gap-2.5">
-            {identity.creator.focus.map((item: string, idx: number) => (
-              <span
-                key={idx}
-                className="text-xs py-1.5 px-3.5 rounded-xl border border-zinc-800 bg-zinc-900/60 text-zinc-200 font-medium font-mono"
-              >
-                {item}
-              </span>
-            ))}
-          </div>
-        </section>
+        <Reveal direction="up" distance={14}>
+          <section aria-labelledby="focus-heading" className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Cpu className="w-4 h-4 text-purple-400" />
+              <h2 id="focus-heading" className="text-lg font-bold text-white tracking-tight">
+                Current Focus
+              </h2>
+            </div>
+            <div className="flex flex-wrap gap-2.5">
+              {identity.creator.focus.map((item: string, idx: number) => (
+                <span
+                  key={idx}
+                  className="text-xs py-1.5 px-3.5 rounded-xl border border-zinc-800 bg-zinc-900/60 text-zinc-200 font-medium font-mono"
+                >
+                  {item}
+                </span>
+              ))}
+            </div>
+          </section>
+        </Reveal>
 
         {/* 7. Verified Social & Platform Channels */}
-        <section aria-labelledby="channels-heading" className="pt-6 border-t border-zinc-800/80 space-y-4">
-          <h2 id="channels-heading" className="text-sm font-bold text-white tracking-tight font-mono uppercase">
-            Platform & Social Channels
-          </h2>
-          <div className="flex flex-wrap items-center gap-3 text-xs font-medium">
-            {activeLinks.map((link) => (
-              <a
-                key={link.id}
-                href={link.url}
-                target={link.url.startsWith('mailto:') ? undefined : '_blank'}
-                rel={link.url.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-800 text-zinc-300 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
-              >
-                {getPlatformIcon(link.platform)}
-                <span>{link.label}</span>
-                {!link.url.startsWith('mailto:') && (
-                  <ExternalLink className="w-3 h-3 text-zinc-500" />
-                )}
-              </a>
-            ))}
-          </div>
-        </section>
+        <Reveal direction="up" distance={14}>
+          <section aria-labelledby="channels-heading" className="pt-6 border-t border-zinc-800/80 space-y-4">
+            <h2 id="channels-heading" className="text-sm font-bold text-white tracking-tight font-mono uppercase">
+              Platform & Social Channels
+            </h2>
+            <div className="flex flex-wrap items-center gap-3 text-xs font-medium">
+              {activeLinks.map((link) => (
+                <a
+                  key={link.id}
+                  href={link.url}
+                  target={link.url.startsWith('mailto:') ? undefined : '_blank'}
+                  rel={link.url.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
+                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-800 text-zinc-300 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                >
+                  {getPlatformIcon(link.platform)}
+                  <span>{link.label}</span>
+                  {!link.url.startsWith('mailto:') && (
+                    <ExternalLink className="w-3 h-3 text-zinc-500" />
+                  )}
+                </a>
+              ))}
+            </div>
+          </section>
+        </Reveal>
 
         {/* 8. Direct Contact & Support Channels */}
-        <section aria-labelledby="contact-heading" className="pt-4 border-t border-zinc-800/80 space-y-4">
-          <h2 id="contact-heading" className="text-sm font-bold text-white tracking-tight font-mono uppercase">
-            Direct Contact & Inquiries
-          </h2>
-          <p className="text-xs text-zinc-400">
-            Have questions, technical inquiries, or want to discuss software collaboration?
-          </p>
-          <div className="flex flex-wrap items-center gap-3 text-xs font-medium">
-            {activeContacts.map((contact) => (
-              <a
-                key={contact.id}
-                href={
-                  contact.value.includes('@') && !contact.value.startsWith('http')
-                    ? `mailto:${contact.value}`
-                    : contact.value
-                }
-                target={contact.value.startsWith('http') ? '_blank' : undefined}
-                rel={contact.value.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-indigo-500/30 bg-indigo-950/20 hover:bg-indigo-900/30 text-indigo-300 hover:text-indigo-200 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+        <Reveal direction="up" distance={14}>
+          <section aria-labelledby="contact-heading" className="pt-4 border-t border-zinc-800/80 space-y-4">
+            <h2 id="contact-heading" className="text-sm font-bold text-white tracking-tight font-mono uppercase">
+              Direct Contact & Inquiries
+            </h2>
+            <p className="text-xs text-zinc-400">
+              Have questions, technical inquiries, or want to discuss software collaboration?
+            </p>
+            <div className="flex flex-wrap items-center gap-3 text-xs font-medium">
+              {activeContacts.map((contact) => (
+                <a
+                  key={contact.id}
+                  href={
+                    contact.value.includes('@') && !contact.value.startsWith('http')
+                      ? `mailto:${contact.value}`
+                      : contact.value
+                  }
+                  target={contact.value.startsWith('http') ? '_blank' : undefined}
+                  rel={contact.value.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-indigo-500/30 bg-indigo-950/20 hover:bg-indigo-900/30 text-indigo-300 hover:text-indigo-200 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                >
+                  <Mail className="w-3.5 h-3.5" />
+                  <span>
+                    {contact.label}: {contact.value}
+                  </span>
+                </a>
+              ))}
+              <Link
+                href={ROUTES.SUPPORT}
+                className="text-xs text-indigo-400 hover:text-indigo-300 font-semibold px-2 py-1 transition-colors inline-flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded"
               >
-                <Mail className="w-3.5 h-3.5" />
-                <span>
-                  {contact.label}: {contact.value}
-                </span>
-              </a>
-            ))}
-            <Link
-              href={ROUTES.SUPPORT}
-              className="text-xs text-indigo-400 hover:text-indigo-300 font-semibold px-2 py-1 transition-colors inline-flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded"
-            >
-              <span>Support Desk</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-        </section>
+                <span>Support Desk</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </section>
+        </Reveal>
       </div>
     </PageShell>
   );

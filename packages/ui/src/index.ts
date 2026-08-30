@@ -53,3 +53,6 @@ export * from './components/table';
 export * from './components/stat';
 export * from './components/markdown-renderer';
 export * from './components/admin-markdown-editor';
+
+// Motion & Reveal
+export * from './components/reveal';

@@ -385,6 +385,11 @@ body {
   transition: all var(--duration-fast) var(--ease-smooth);
 }
 
+/* Scroll-Reveal Base & Graceful Fallback */
+.reveal-container {
+  will-change: opacity, transform;
+}
+
 /* ==========================================================================
    Reduced Motion Override
    ========================================================================== */
@@ -396,5 +401,12 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .reveal-container {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    will-change: auto !important;
   }
 }
