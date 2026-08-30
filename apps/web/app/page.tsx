@@ -162,19 +162,39 @@ export default async function HomePage() {
                 {/* 1. Small Identity/Context Badge */}
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-500/20 bg-indigo-950/30 text-xs font-mono text-indigo-300 font-medium tracking-wide">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>Software & Systems Studio</span>
+                  <span>{identity.homepage.heroBadge || 'Software & Systems Studio'}</span>
                 </div>
 
-                {/* 2. Strong Statement with harmonized "I am Sourav." opening */}
+                {/* 2. Strong Statement with dynamic "I am {creator.name}." opening and headline */}
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-[1.12]">
                   <span className="block text-2xl sm:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-indigo-300 to-white mb-2 sm:mb-3">
-                    I am Sourav.
+                    I am {identity.creator.name || 'Sourav'}.
                   </span>
-                  <span className="text-white">Building software, tools, games, and experiments</span>{' '}
-                  <span className="text-zinc-400 font-normal">that</span>{' '}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-cyan-200 to-white font-extrabold">
-                    solve real problems and spark new ideas.
-                  </span>
+                  {identity.homepage.heroHeadline ? (
+                    identity.homepage.heroHeadline.includes('that') ? (
+                      <>
+                        <span className="text-white">
+                          {identity.homepage.heroHeadline.split('that')[0]}
+                        </span>{' '}
+                        <span className="text-zinc-400 font-normal">that</span>{' '}
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-cyan-200 to-white font-extrabold">
+                          {identity.homepage.heroHeadline.split('that').slice(1).join('that')}
+                        </span>
+                      </>
+                    ) : (
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-zinc-100 to-indigo-200 font-extrabold">
+                        {identity.homepage.heroHeadline}
+                      </span>
+                    )
+                  ) : (
+                    <>
+                      <span className="text-white">Building software, tools, games, and experiments</span>{' '}
+                      <span className="text-zinc-400 font-normal">that</span>{' '}
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-cyan-200 to-white font-extrabold">
+                        solve real problems and spark new ideas.
+                      </span>
+                    </>
+                  )}
                 </h1>
 
                 {/* 3. Short Supporting Explanation */}

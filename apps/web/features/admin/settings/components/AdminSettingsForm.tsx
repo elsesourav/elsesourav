@@ -901,72 +901,72 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
       {activeTab === 'homepage' && (
         <Card className="p-5 sm:p-6 space-y-4 rounded-3xl border-zinc-800 bg-zinc-900/40">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField label="Hero Badge">
+            <FormField label="Hero Badge" description="Small pill badge above the hero headline">
               <Input
                 value={settings['hero_badge'] || ''}
                 onChange={(e) => handleChange('hero_badge', e.target.value)}
-                placeholder="Software Engineer & Independent Creator"
+                placeholder="Software & Systems Studio"
               />
             </FormField>
 
-            <FormField label="Announcement Banner">
+            <FormField label="Announcement Banner" description="Optional top-of-page alert banner">
               <Input
                 value={settings['announcement_banner'] || ''}
                 onChange={(e) => handleChange('announcement_banner', e.target.value)}
-                placeholder="New app release available now"
+                placeholder="e.g. SpectraLens AI v2.4 released with on-device WASM"
               />
             </FormField>
           </div>
 
-          <FormField label="Hero Headline">
+          <FormField label="Hero Headline" description="Main statement rendered below 'I am [Name].'">
             <Input
               value={settings['hero_headline'] || ''}
               onChange={(e) => handleChange('hero_headline', e.target.value)}
-              placeholder="Building tools that make software development faster and cleaner."
+              placeholder="Building software, tools, games, and experiments that solve real problems and spark new ideas."
             />
           </FormField>
 
-          <FormField label="Hero Positioning Paragraph">
+          <FormField label="Hero Positioning Paragraph" description="Supporting narrative below the main hero statement">
             <Textarea
               rows={3}
               value={settings['hero_subtitle'] || ''}
               onChange={(e) => handleChange('hero_subtitle', e.target.value)}
-              placeholder="Comprehensive positioning statement..."
+              placeholder="ElseSourav is my personal space for the applications I build, the ideas I explore, and the things I learn along the way."
             />
           </FormField>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField label="Primary CTA Label">
+            <FormField label="Primary CTA Label" description="First button linking to /apps">
               <Input
                 value={settings['primary_cta_label'] || ''}
                 onChange={(e) => handleChange('primary_cta_label', e.target.value)}
-                placeholder="Explore Applications"
+                placeholder="Explore Apps"
               />
             </FormField>
 
-            <FormField label="Secondary CTA Label">
+            <FormField label="Secondary CTA Label" description="Second button linking to /about">
               <Input
                 value={settings['secondary_cta_label'] || ''}
                 onChange={(e) => handleChange('secondary_cta_label', e.target.value)}
-                placeholder="Read Engineering Notes"
+                placeholder="About Me"
               />
             </FormField>
           </div>
 
           <div className="pt-3 border-t border-zinc-800 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField label="Apps Section Title">
+            <FormField label="Selected Apps Section Title">
               <Input
                 value={settings['homepage_apps_title'] || ''}
                 onChange={(e) => handleChange('homepage_apps_title', e.target.value)}
-                placeholder="Featured Software & Tools"
+                placeholder="Selected Apps"
               />
             </FormField>
 
-            <FormField label="Blog Section Title">
+            <FormField label="Field Notes Section Title">
               <Input
                 value={settings['homepage_blog_title'] || ''}
                 onChange={(e) => handleChange('homepage_blog_title', e.target.value)}
-                placeholder="Technical Writing & Exploration"
+                placeholder="Field Notes & Reflections"
               />
             </FormField>
           </div>
@@ -980,19 +980,19 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
           </FormField>
 
           <div className="pt-3 border-t border-zinc-800 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField label="Closing CTA / Pathways Title">
+            <FormField label="Closing Studio Doorway Title">
               <Input
                 value={settings['closing_cta_title'] || ''}
                 onChange={(e) => handleChange('closing_cta_title', e.target.value)}
-                placeholder="Explore the ElseSourav Archive"
+                placeholder="Explore the ElseSourav Studio"
               />
             </FormField>
 
-            <FormField label="Closing CTA / Pathways Subtitle">
+            <FormField label="Closing Studio Doorway Subtitle">
               <Input
                 value={settings['closing_cta_subtitle'] || ''}
                 onChange={(e) => handleChange('closing_cta_subtitle', e.target.value)}
-                placeholder="Discover software tools, read architectural writings, or get in touch directly."
+                placeholder="Every application, utility, and field note is built independently with a focus on craft, performance, and usability."
               />
             </FormField>
           </div>

@@ -42,27 +42,30 @@ export class SiteService {
     const footerLinks = parseFooterLinks(dbSettings['footer_links_json']);
 
     const heroBadge =
-      dbSettings['hero_badge'] || `Software & Digital Tools by ${CREATOR_CONFIG.name}`;
+      dbSettings['hero_badge'] || 'Software & Systems Studio';
     const heroHeadline =
-      dbSettings['hero_headline'] || 'Thoughtful software, practical tools, & engineering ideas.';
-    const heroSubtitle = dbSettings['hero_subtitle'] || CREATOR_CONFIG.positioning;
-    const primaryCtaLabel = dbSettings['primary_cta_label'] || 'Explore Applications';
-    const secondaryCtaLabel = dbSettings['secondary_cta_label'] || 'Read Engineering Notes';
+      dbSettings['hero_headline'] ||
+      'Building software, tools, games, and experiments that solve real problems and spark new ideas.';
+    const heroSubtitle =
+      dbSettings['hero_subtitle'] ||
+      'ElseSourav is my personal space for the applications I build, the ideas I explore, and the things I learn along the way.';
+    const primaryCtaLabel = dbSettings['primary_cta_label'] || 'Explore Apps';
+    const secondaryCtaLabel = dbSettings['secondary_cta_label'] || 'About Me';
     const announcementBanner = dbSettings['announcement_banner'] || undefined;
-    const appsTitle = dbSettings['homepage_apps_title'] || 'Featured Software & Tools';
+    const appsTitle = dbSettings['homepage_apps_title'] || 'Selected Apps';
     const appsSubtitle =
       dbSettings['homepage_apps_subtitle'] ||
-      'Practical utilities and digital tools crafted for real workflows.';
-    const blogTitle = dbSettings['homepage_blog_title'] || 'Technical Writing & Exploration';
+      'A curated selection of software, developer tools, games, and systems.';
+    const blogTitle = dbSettings['homepage_blog_title'] || 'Field Notes & Reflections';
     const blogSubtitle =
       dbSettings['homepage_blog_subtitle'] ||
-      'Deep-dives on software design, performance, and architecture lessons.';
+      'Things I write about while building software, learning tools, and solving architectural problems.';
 
     const closingCtaTitle =
-      dbSettings['closing_cta_title'] || 'Explore the ElseSourav Archive';
+      dbSettings['closing_cta_title'] || 'Explore the ElseSourav Studio';
     const closingCtaSubtitle =
       dbSettings['closing_cta_subtitle'] ||
-      'Discover software tools, read architectural writings, or get in touch directly.';
+      'Every application, utility, and field note is built independently with a focus on craft, performance, and usability.';
 
     const creatorName = dbSettings['creator_name'] || CREATOR_CONFIG.name;
     const creatorFullName = dbSettings['creator_full_name'] || CREATOR_CONFIG.fullName;
