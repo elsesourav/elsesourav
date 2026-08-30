@@ -76,7 +76,8 @@ export class SiteService {
       'I care about software that is understandable, useful, fast, and considerate.';
     const creatorShortBio = dbSettings['creator_short_bio'] || CREATOR_CONFIG.shortBio;
     const creatorLongBio = dbSettings['creator_long_bio'] || CREATOR_CONFIG.longBio;
-    const creatorPositioning = dbSettings['hero_subtitle'] || CREATOR_CONFIG.positioning;
+    const creatorPositioning =
+      dbSettings['creator_positioning'] || dbSettings['hero_subtitle'] || CREATOR_CONFIG.positioning;
 
     const creatorPrinciples = parseStringList(
       dbSettings['creator_principles_json'],

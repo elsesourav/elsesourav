@@ -695,7 +695,7 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField label="Display Name" required>
+            <FormField label="Display Name (Homepage)" required>
               <Input
                 value={settings['creator_name'] || ''}
                 onChange={(e) => handleChange('creator_name', e.target.value)}
@@ -703,6 +703,16 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
               />
             </FormField>
 
+            <FormField label="Full Name (About & Footer)">
+              <Input
+                value={settings['creator_full_name'] || ''}
+                onChange={(e) => handleChange('creator_full_name', e.target.value)}
+                placeholder="Sourav Barui"
+              />
+            </FormField>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField label="Professional Title" required>
               <Input
                 value={settings['creator_title'] || ''}
@@ -710,9 +720,7 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
                 placeholder="Software Engineer & Creator"
               />
             </FormField>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField label="Role / Specialization">
               <Input
                 value={settings['creator_role'] || ''}
@@ -720,12 +728,22 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
                 placeholder="Independent Software Creator"
               />
             </FormField>
+          </div>
 
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField label="Location / Timezone">
               <Input
                 value={settings['creator_location'] || ''}
                 onChange={(e) => handleChange('creator_location', e.target.value)}
                 placeholder="Remote / Worldwide"
+              />
+            </FormField>
+
+            <FormField label="Studio Positioning Statement">
+              <Input
+                value={settings['creator_positioning'] || ''}
+                onChange={(e) => handleChange('creator_positioning', e.target.value)}
+                placeholder="Exploring ideas across web architecture, AI, graphics, and systems..."
               />
             </FormField>
           </div>
@@ -744,9 +762,18 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
       {/* Tab 4: Creator Narrative & About Page */}
       {activeTab === 'creator_narrative' && (
         <Card className="p-5 sm:p-6 space-y-5 rounded-3xl border-zinc-800 bg-zinc-900/40">
+          <FormField label="About Page Introduction">
+            <Textarea
+              rows={2}
+              value={settings['about_intro'] || ''}
+              onChange={(e) => handleChange('about_intro', e.target.value)}
+              placeholder="Introduction paragraph displayed at the top of the About page..."
+            />
+          </FormField>
+
           {/* Full Narrative in Markdown */}
           <AdminMarkdownEditor
-            label="Full Creator Narrative & Engineering Journey"
+            label="Full Creator Narrative & Engineering Journey (Markdown)"
             value={settings['creator_long_bio'] || ''}
             onChange={(val: string) => handleChange('creator_long_bio', val)}
             placeholder="Write full biography and engineering journey in Markdown..."

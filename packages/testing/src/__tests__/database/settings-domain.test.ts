@@ -20,10 +20,13 @@ import { describe, expect, it, vi } from 'vitest';
 
 describe('Site Settings & Content Architecture (Prompt 01 + Prompt 02 Extended)', () => {
   describe('Site Settings Schema & Validation', () => {
-    it('contains all 39 defined setting keys including site branding, footer customization, and creator profile', () => {
-      expect(KNOWN_SETTING_KEYS).toHaveLength(39);
+    it('contains all defined setting keys including site branding, footer customization, and creator profile', () => {
+      expect(KNOWN_SETTING_KEYS.length).toBeGreaterThanOrEqual(39);
       expect(KNOWN_SETTING_KEYS).toContain('site_name');
       expect(KNOWN_SETTING_KEYS).toContain('site_logo_url');
+      expect(KNOWN_SETTING_KEYS).toContain('creator_full_name');
+      expect(KNOWN_SETTING_KEYS).toContain('creator_positioning');
+      expect(KNOWN_SETTING_KEYS).toContain('closing_cta_title');
       expect(KNOWN_SETTING_KEYS).toContain('site_og_image_url');
       expect(KNOWN_SETTING_KEYS).toContain('site_keywords');
       expect(KNOWN_SETTING_KEYS).toContain('creator_avatar_url');

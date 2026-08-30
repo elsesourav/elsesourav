@@ -93,18 +93,25 @@ export const SiteSettingsSchema = z.object({
   homepage_apps_subtitle: z.string().max(300).optional().or(z.literal('')),
   homepage_blog_title: z.string().max(150).optional().or(z.literal('')),
   homepage_blog_subtitle: z.string().max(300).optional().or(z.literal('')),
+  closing_cta_title: z.string().max(150).optional().or(z.literal('')),
+  closing_cta_subtitle: z.string().max(300).optional().or(z.literal('')),
 
   // ── Creator Identity & Profile ─────────────────────────────────────────────
   creator_name: z.string().min(1).max(100).optional(),
+  creator_full_name: z.string().max(100).optional().or(z.literal('')),
   creator_title: z.string().max(150).optional().or(z.literal('')),
   creator_role: z.string().max(150).optional().or(z.literal('')),
   creator_location: z.string().max(100).optional().or(z.literal('')),
   creator_avatar_url: z.string().url().optional().or(z.literal('')),
+  creator_positioning: z.string().max(500).optional().or(z.literal('')),
+  creator_statement: z.string().max(500).optional().or(z.literal('')),
   creator_short_bio: z.string().max(400).optional().or(z.literal('')),
 
   // ── Creator Narrative & About Page ─────────────────────────────────────────
   /** Supports Markdown — rendered via MarkdownRenderer on About page */
   creator_long_bio: z.string().max(8000).optional().or(z.literal('')),
+  about_intro: z.string().max(1000).optional().or(z.literal('')),
+  about_philosophy_markdown: z.string().max(8000).optional().or(z.literal('')),
   /** JSON array of creator principles (strings) */
   creator_principles_json: z.string().optional().or(z.literal('')),
   /** JSON array of creator focus tags (strings) */
