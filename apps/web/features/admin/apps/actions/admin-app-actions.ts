@@ -63,7 +63,6 @@ export async function createAppAction(data: AdminSaveAppSchemaInput) {
     revalidatePath('/admin');
     revalidatePath('/apps');
     revalidatePath('/archive');
-    revalidatePath('/lab');
     revalidatePath('/');
 
     return {
@@ -131,7 +130,6 @@ export async function updateAppAction(appId: string, data: AdminSaveAppSchemaInp
     revalidatePath('/apps');
     revalidatePath(`/apps/${updated.slug}`);
     revalidatePath('/archive');
-    revalidatePath('/lab');
     revalidatePath('/');
 
     return {
@@ -184,7 +182,6 @@ export async function publishAppAction(appId: string, data: PublishAppSchemaInpu
     revalidatePath('/apps');
     revalidatePath(`/apps/${published.slug}`);
     revalidatePath('/archive');
-    revalidatePath('/lab');
     revalidatePath('/');
 
     return {
@@ -220,7 +217,6 @@ export async function archiveAppAction(appId: string) {
     revalidatePath('/admin');
     revalidatePath('/apps');
     revalidatePath('/archive');
-    revalidatePath('/lab');
     revalidatePath('/');
 
     return { success: true };
@@ -252,7 +248,6 @@ export async function deleteAppAction(appId: string) {
     revalidatePath('/admin');
     revalidatePath('/apps');
     revalidatePath('/archive');
-    revalidatePath('/lab');
     revalidatePath('/');
 
     return { success: true };

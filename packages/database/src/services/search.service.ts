@@ -12,16 +12,13 @@ const MAX_QUERY_LENGTH = 80;
 const MAX_RESULTS = 25;
 /** Maximum results per content type group */
 const RESULTS_PER_GROUP = 5;
-/** Lab category slug used to separate lab experiments from projects */
-const LAB_CATEGORY_SLUG = 'simulations';
 
 /**
  * Static pages available for search matching.
  * These are hardcoded because there are only a handful of public pages.
  */
 const STATIC_PAGES: GlobalSearchResult[] = [
-  { type: 'page', title: 'Work', description: 'Browse all published projects and applications.', url: '/apps' },
-  { type: 'page', title: 'Lab', description: 'Interactive experiments, simulations, and creative demos.', url: '/lab' },
+  { type: 'page', title: 'Apps', description: 'Browse all published applications and software.', url: '/apps' },
   { type: 'page', title: 'Notes', description: 'Engineering field notes, technical writing, and ideas.', url: '/blog' },
   { type: 'page', title: 'About', description: 'About Sourav — independent software creator.', url: '/about' },
   { type: 'page', title: 'Help', description: 'Help center and documentation.', url: '/help' },
@@ -30,7 +27,7 @@ const STATIC_PAGES: GlobalSearchResult[] = [
 
 /**
  * Unified public search service.
- * Searches across projects, lab experiments, blog posts, and static pages.
+ * Searches across projects/apps, blog posts, and static pages.
  * Only returns published, non-deleted content.
  */
 export class SearchService {
@@ -85,7 +82,7 @@ export class SearchService {
   }
 
   /**
-   * Search published apps and lab experiments.
+   * Search published apps and projects.
    */
   private async searchApps(query: string): Promise<GlobalSearchResult[]> {
     try {
@@ -109,11 +106,8 @@ export class SearchService {
       });
 
       return records.map((record) => {
-        const isLab = record.category?.slug === LAB_CATEGORY_SLUG;
-        const type: GlobalSearchResultType = isLab ? 'lab' : 'project';
-
         return {
-          type,
+          type: 'project' as const,
           title: record.name,
           description: record.shortDescription || '',
           url: `/apps/${record.slug}`,
@@ -225,7 +219,7 @@ export class SearchService {
     }
 
     // Boost projects and notes over static pages
-    if (result.type === 'project' || result.type === 'lab') {
+    if (result.type === 'project') {
       score += 5;
     } else if (result.type === 'note') {
       score += 3;

@@ -1,7 +1,7 @@
 /**
  * Content type categories for global search results.
  */
-export type GlobalSearchResultType = 'project' | 'lab' | 'note' | 'page';
+export type GlobalSearchResultType = 'project' | 'note' | 'page';
 
 /**
  * Normalized search result that works across all content types.

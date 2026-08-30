@@ -2,7 +2,6 @@ export const ROUTES = {
   HOME: '/',
   APPS: '/apps',
   APP_DETAIL: (slug: string) => `/apps/${slug}`,
-  LAB: '/lab',
   ARCHIVE: '/archive',
   BLOG: '/blog',
   BLOG_POST: (slug: string) => `/blog/${slug}`,

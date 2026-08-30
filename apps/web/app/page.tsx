@@ -8,8 +8,8 @@ import { SiteService } from '@elsesourav/database';
 import { discoverPublishedApps } from '@/features/apps/queries/get-apps';
 import { getPublicBlogListing } from '@/features/blog/queries/get-blog';
 import { AppCard } from '@/features/apps/components/AppCard';
+import { HeroProjectVisual } from '@/features/home/components/HeroProjectVisual';
 import Link from 'next/link';
-import Image from 'next/image';
 import { PublicHeader } from '@/components/navigation/PublicHeader';
 import { PublicFooter } from '@/components/navigation/PublicFooter';
 import {
@@ -27,14 +27,14 @@ export const metadata: Metadata = {
     absolute: `${SITE_CONFIG.name} — Personal Software Studio & Digital Archive`,
   },
   description:
-    'The personal software studio and digital archive of Sourav. Discover independent applications, developer tools, and engineering field notes.',
+    'Building software, tools, games, and experiments that solve real problems and spark new ideas.',
   alternates: {
     canonical: SITE_CONFIG.url,
   },
   openGraph: {
     title: `${SITE_CONFIG.name} — Personal Software Studio & Digital Archive`,
     description:
-      'The personal software studio and digital archive of Sourav. Discover independent applications, developer tools, and engineering field notes.',
+      'Building software, tools, games, and experiments that solve real problems and spark new ideas.',
     url: SITE_CONFIG.url,
     siteName: SITE_CONFIG.name,
     locale: 'en_US',
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: `${SITE_CONFIG.name} — Personal Software Studio & Digital Archive`,
     description:
-      'The personal software studio and digital archive of Sourav. Discover independent applications, developer tools, and engineering field notes.',
+      'Building software, tools, games, and experiments that solve real problems and spark new ideas.',
     images: [SITE_CONFIG.ogImage],
   },
 };
@@ -63,8 +63,8 @@ export default async function HomePage() {
   const cookieStore = await cookies();
   const siteService = new SiteService();
 
-  // Curated data queries: 5 selected projects, 3 recent notes, 3 lab simulations, site/creator identity
-  const [appsResult, blogResult, labResult, identity, session] = await Promise.all([
+  // Curated data queries: 5 selected projects, 3 recent notes, site/creator identity
+  const [appsResult, blogResult, identity, session] = await Promise.all([
     discoverPublishedApps({ limit: 5, sort: 'popularity' }).catch(() => ({
       items: [],
       totalCount: 0,
@@ -75,10 +75,6 @@ export default async function HomePage() {
       page: 1,
       totalPages: 1,
     })),
-    discoverPublishedApps({ filters: { categorySlug: 'simulations' }, limit: 3 }).catch(() => ({
-      items: [],
-      totalCount: 0,
-    })),
     siteService.getSiteAndCreatorIdentity(),
     getServerSession({
       getAll: () => cookieStore.getAll(),
@@ -87,9 +83,6 @@ export default async function HomePage() {
 
   const featuredApps = appsResult.items || [];
   const recentPosts = blogResult.items || [];
-  const labProjects = labResult.items || [];
-  const activeLabApp = labProjects[0] || null;
-  const primaryFeaturedApp = featuredApps[0] || null;
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -153,7 +146,7 @@ export default async function HomePage() {
 
       {/* Main Content Landmark */}
       <main id="main-content" className="flex-1">
-        {/* 1. Hero Section: Identity-First Creator Studio */}
+        {/* 1. Hero Section: Direct Identity & Purpose */}
         <Section spacing="lg" className="relative pt-8 sm:pt-12 lg:pt-16 pb-16 sm:pb-20 lg:pb-24">
           <div
             aria-hidden="true"
@@ -164,191 +157,82 @@ export default async function HomePage() {
 
           <Container size="lg">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-              {/* Left Column: Creator Identity & Direct Positioning */}
+              {/* Left Column: Primary Hero Statement & Positioning */}
               <div className="lg:col-span-7 space-y-6 text-left">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/60 text-xs text-zinc-300 font-medium">
+                {/* 1. Small Identity/Context Badge */}
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/60 text-xs font-mono text-indigo-300 font-semibold tracking-wider uppercase">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>{identity.homepage.heroBadge || 'Software Creator & Engineer'}</span>
+                  <span>{identity.homepage.heroBadge || 'SOURAV / ELSESOURAV'}</span>
                 </div>
 
+                {/* 2. Strong Statement with Structured Visual Hierarchy */}
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-[1.12]">
-                  {identity.homepage.heroHeadline || `I'm ${identity.creator.name}. I build software, tools, games, and experiments.`}
+                  <span className="text-white">Building software, tools, games, and experiments</span>{' '}
+                  <span className="text-zinc-400 font-normal">that</span>{' '}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-indigo-200 to-white font-extrabold">
+                    solve real problems and spark new ideas.
+                  </span>
                 </h1>
 
+                {/* 3. Short Supporting Explanation */}
                 <p className="text-base sm:text-lg text-zinc-400 leading-relaxed max-w-xl">
-                  {identity.homepage.heroSubtitle || 'Exploring ideas across web architecture, AI, graphics, automation, and systems—built with a focus on usability, performance, and independent craft.'}
+                  {identity.homepage.heroSubtitle ||
+                    'ElseSourav is my personal space for the applications I build, the ideas I explore, and the things I learn along the way.'}
                 </p>
 
+                {/* 4. Action Buttons */}
                 <ActionGroup className="pt-2">
                   <Link href={ROUTES.APPS}>
                     <Button size="lg" className="gap-2 shadow-xl shadow-indigo-600/25 px-6 font-semibold min-h-[44px]">
                       <Layers className="w-4 h-4" />
-                      <span>{identity.homepage.primaryCtaLabel || 'Explore Work'}</span>
+                      <span>{identity.homepage.primaryCtaLabel || 'Explore Apps'}</span>
                     </Button>
                   </Link>
-                  <Link href={ROUTES.BLOG}>
+                  <Link href={ROUTES.ABOUT}>
                     <Button variant="secondary" size="lg" className="gap-2 px-6 min-h-[44px]">
-                      <BookOpen className="w-4 h-4" />
-                      <span>{identity.homepage.secondaryCtaLabel || 'Read Notes'}</span>
+                      <User className="w-4 h-4" />
+                      <span>{identity.homepage.secondaryCtaLabel || 'About Me'}</span>
                     </Button>
                   </Link>
                 </ActionGroup>
 
-                {/* Subtle Real-Data Scale Indicators */}
+                {/* Real-Data Scale Summary */}
                 <div className="pt-2 flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-zinc-500 font-mono">
                   <span className="text-zinc-400">Independent Studio</span>
                   <span>•</span>
-                  <span>{appsResult.totalCount} {appsResult.totalCount === 1 ? 'Project' : 'Projects'}</span>
+                  <span>{appsResult.totalCount} {appsResult.totalCount === 1 ? 'App' : 'Applications'}</span>
                   <span>•</span>
                   <span>{blogResult.totalCount} {blogResult.totalCount === 1 ? 'Note' : 'Field Notes'}</span>
                 </div>
               </div>
 
-              {/* Right Column: Quiet Editorial Real Work Snapshot */}
+              {/* Right Column: Visual Representation of Sourav's Work */}
               <div className="lg:col-span-5">
-                <div className="rounded-3xl border border-zinc-800/80 bg-zinc-900/40 backdrop-blur-md p-6 sm:p-7 shadow-xl space-y-5 hover:border-zinc-700/80 transition-colors">
-                  {/* Brand Logo Mark */}
-                  <div className="flex items-center gap-3 pb-3 border-b border-zinc-800/70">
-                    <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0">
-                      <Image
-                        src={SITE_CONFIG.logoSm}
-                        alt={`${SITE_CONFIG.name} Logo`}
-                        width={40}
-                        height={40}
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                    <div>
-                      <span className="font-mono text-xs font-semibold text-zinc-300 uppercase tracking-wider">
-                        Work Snapshot
-                      </span>
-                      <span className="block text-[11px] font-mono text-zinc-500">
-                        Live Studio
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* 1. Current / Selected Project */}
-                  {primaryFeaturedApp && (
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between text-[11px] font-mono">
-                        <span className="text-indigo-400 uppercase tracking-wider font-semibold">
-                          Current Project
-                        </span>
-                        <span className="text-zinc-500">v{primaryFeaturedApp.currentVersion || '1.0'}</span>
-                      </div>
-                      <h3 className="text-sm font-semibold text-white">
-                        <Link
-                          href={`/apps/${primaryFeaturedApp.slug}`}
-                          className="hover:text-indigo-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded"
-                        >
-                          {primaryFeaturedApp.name}
-                        </Link>
-                      </h3>
-                      <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
-                        {primaryFeaturedApp.shortDescription}
-                      </p>
-                      <Link
-                        href={`/apps/${primaryFeaturedApp.slug}`}
-                        className="inline-flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300 font-medium pt-0.5 group"
-                      >
-                        <span>Open project overview</span>
-                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                      </Link>
-                    </div>
-                  )}
-
-                  {/* Divider */}
-                  {primaryFeaturedApp && (recentPosts[0] || activeLabApp) && (
-                    <div className="border-t border-zinc-800/60" />
-                  )}
-
-                  {/* 2. Latest Published Note */}
-                  {recentPosts[0] && (
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between text-[11px] font-mono">
-                        <span className="text-cyan-400 uppercase tracking-wider font-semibold">
-                          Latest Note
-                        </span>
-                        <span className="text-zinc-500">{recentPosts[0].readingTime || 5} min read</span>
-                      </div>
-                      <h3 className="text-sm font-semibold text-white">
-                        <Link
-                          href={`/blog/${recentPosts[0].slug}`}
-                          className="hover:text-cyan-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded"
-                        >
-                          {recentPosts[0].title}
-                        </Link>
-                      </h3>
-                      <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
-                        {recentPosts[0].excerpt}
-                      </p>
-                      <Link
-                        href={`/blog/${recentPosts[0].slug}`}
-                        className="inline-flex items-center gap-1 text-xs text-cyan-400 hover:text-cyan-300 font-medium pt-0.5 group"
-                      >
-                        <span>Read field note</span>
-                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                      </Link>
-                    </div>
-                  )}
-
-                  {/* Divider */}
-                  {recentPosts[0] && activeLabApp && (
-                    <div className="border-t border-zinc-800/60" />
-                  )}
-
-                  {/* 3. Exploring / Lab Experiment */}
-                  {activeLabApp && (
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between text-[11px] font-mono">
-                        <span className="text-purple-400 uppercase tracking-wider font-semibold">
-                          Lab Experiment
-                        </span>
-                        <span className="text-zinc-500">Interactive</span>
-                      </div>
-                      <h3 className="text-sm font-semibold text-white">
-                        <Link
-                          href={`/apps/${activeLabApp.slug}`}
-                          className="hover:text-purple-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded"
-                        >
-                          {activeLabApp.name}
-                        </Link>
-                      </h3>
-                      <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
-                        {activeLabApp.shortDescription}
-                      </p>
-                      <Link
-                        href={`/apps/${activeLabApp.slug}`}
-                        className="inline-flex items-center gap-1 text-xs text-purple-400 hover:text-purple-300 font-medium pt-0.5 group"
-                      >
-                        <span>Run simulation</span>
-                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                      </Link>
-                    </div>
-                  )}
-                </div>
+                <HeroProjectVisual apps={featuredApps} />
               </div>
             </div>
           </Container>
         </Section>
 
-        {/* 2. Selected Work / Projects (Curated 4–5 Projects) */}
+        {/* 2. Selected Apps (Curated 4–5 Projects) */}
         {featuredApps.length > 0 && (
           <Section spacing="lg" surface="subtle">
             <Container size="lg">
               <Reveal direction="up" distance={14}>
                 <SectionHeader
                   align="split"
-                  caption="Selected Work"
-                  title={identity.homepage.appsTitle || "A few things I've built."}
-                  description={identity.homepage.appsSubtitle || 'A curated selection of software, developer tools, games, and systems.'}
+                  caption="Selected Apps"
+                  title={identity.homepage.appsTitle || 'Selected Apps'}
+                  description={
+                    identity.homepage.appsSubtitle ||
+                    'A curated selection of software, developer tools, games, and systems.'
+                  }
                   actions={
                     <Link
                       href={ROUTES.APPS}
                       className="text-sm font-medium text-indigo-400 hover:text-indigo-300 flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded p-1 group"
                     >
-                      <span>Explore all projects {appsResult.totalCount > 0 ? `(${appsResult.totalCount})` : ''}</span>
+                      <span>Explore all apps {appsResult.totalCount > 0 ? `(${appsResult.totalCount})` : ''}</span>
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                     </Link>
                   }
@@ -378,7 +262,7 @@ export default async function HomePage() {
                     href={ROUTES.APPS}
                     className="inline-flex items-center gap-2 text-sm font-medium text-zinc-300 hover:text-white px-5 py-2.5 rounded-2xl border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
                   >
-                    <span>Explore full software catalog ({appsResult.totalCount} projects)</span>
+                    <span>Explore full apps catalog ({appsResult.totalCount} applications)</span>
                     <ArrowRight className="w-4 h-4 text-indigo-400" />
                   </Link>
                 </div>
@@ -478,7 +362,7 @@ export default async function HomePage() {
                             <div className="flex items-center justify-between text-xs text-zinc-500 font-mono">
                               <div className="flex items-center gap-2">
                                 <span className="text-cyan-400 font-bold text-[11px]">
-                                  {formattedIdx}
+                                   {formattedIdx}
                                 </span>
                                 <span className="text-cyan-400/90 font-medium uppercase tracking-wider text-[11px]">
                                   {post.category?.name || 'Notes'}
@@ -580,89 +464,7 @@ export default async function HomePage() {
           </Section>
         )}
 
-        {/* 4. The Lab & Interactive Prototypes (Compact Sample) */}
-        {labProjects.length > 0 && (
-          <Section spacing="lg" surface="subtle">
-            <Container size="lg">
-              <Reveal direction="up" distance={14}>
-                <SectionHeader
-                  align="split"
-                  caption="The Lab"
-                  title="Small experiments, prototypes, and ideas."
-                  description="Built to explore algorithms, physics solvers, constraint satisfaction, and graphics."
-                  actions={
-                    <Link
-                      href={ROUTES.LAB}
-                      className="text-sm font-medium text-purple-400 hover:text-purple-300 flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded p-1 group"
-                    >
-                      <span>Explore the Lab {labResult.totalCount > 0 ? `(${labResult.totalCount})` : ''}</span>
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                    </Link>
-                  }
-                />
-              </Reveal>
-
-              <RevealGroup staggerDelay={0.05} baseDelay={0.06} className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                {labProjects.slice(0, 3).map((item: AppListItem, idx: number) => {
-                  const formattedIdx = String(idx + 1).padStart(2, '0');
-                  const categoryName = item.primaryCategory || 'Simulation';
-                  return (
-                    <Link
-                      key={item.id}
-                      href={`/apps/${item.slug}`}
-                      className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded-2xl"
-                    >
-                      <article className="h-full rounded-2xl border border-zinc-800/70 bg-zinc-900/30 hover:bg-zinc-900/70 hover:border-purple-500/40 p-5 transition-all duration-200 flex flex-col justify-between backdrop-blur-sm">
-                        <div className="space-y-2.5">
-                          <div className="flex items-center justify-between text-xs font-mono">
-                            <span className="text-purple-400 font-bold text-[11px] bg-purple-950/50 px-2 py-0.5 rounded border border-purple-800/30">
-                              {formattedIdx}
-                            </span>
-                            <span className="text-zinc-500 text-[11px] uppercase tracking-wider">
-                              {categoryName}
-                            </span>
-                          </div>
-
-                          <div>
-                            <h3 className="text-base font-semibold text-zinc-100 group-hover:text-white transition-colors">
-                              {item.name}
-                            </h3>
-                            <p className="text-xs text-zinc-400 line-clamp-2 mt-1 leading-relaxed">
-                              {item.shortDescription}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center justify-between pt-3 mt-3 border-t border-zinc-800/50 text-[11px] font-mono text-zinc-500">
-                          <span className="text-zinc-400">Interactive</span>
-                          <span className="text-purple-400 group-hover:translate-x-0.5 transition-transform flex items-center gap-1 font-sans text-xs">
-                            <span>Run experiment</span>
-                            <ArrowRight className="w-3 h-3" />
-                          </span>
-                        </div>
-                      </article>
-                    </Link>
-                  );
-                })}
-              </RevealGroup>
-
-              {/* Bottom Lab CTA link */}
-              <Reveal direction="up" distance={10} delay={0.12}>
-                <div className="text-center pt-8">
-                  <Link
-                    href={ROUTES.LAB}
-                    className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-purple-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded p-1"
-                  >
-                    <span>Explore full Lab & Simulation hub ({labResult.totalCount} active experiments)</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </Reveal>
-            </Container>
-          </Section>
-        )}
-
-        {/* 5. Creator Context & Guiding Philosophy */}
+        {/* 4. Creator Context & Guiding Philosophy */}
         <Section spacing="lg">
           <Container size="lg">
             <Reveal direction="up" distance={16}>
@@ -738,7 +540,7 @@ export default async function HomePage() {
           </Container>
         </Section>
 
-        {/* 6. Closing Invitation & Studio Pathways */}
+        {/* 5. Closing Invitation & Studio Pathways */}
         <Section spacing="lg" surface="subtle">
           <Container size="lg">
             <Reveal direction="up" distance={14}>
@@ -752,7 +554,8 @@ export default async function HomePage() {
                     {identity.homepage.closingCtaTitle || 'Explore the ElseSourav Studio'}
                   </h2>
                   <p className="text-sm text-zinc-400 leading-relaxed">
-                    {identity.homepage.closingCtaSubtitle || 'Every project, note, and experiment is built independently with a focus on craft, performance, and usability.'}
+                    {identity.homepage.closingCtaSubtitle ||
+                      'Every application, utility, and field note is built independently with a focus on craft, performance, and usability.'}
                   </p>
                 </div>
 
@@ -767,7 +570,7 @@ export default async function HomePage() {
                       <ArrowRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-indigo-400 group-hover:translate-x-0.5 transition-all" />
                     </div>
                     <h3 className="text-sm font-bold text-zinc-100 group-hover:text-white">
-                      Explore All Work
+                      Explore Apps
                     </h3>
                     <p className="text-xs text-zinc-400 line-clamp-2">
                       Browse full collection of software, utilities, and developer tools.
@@ -799,7 +602,7 @@ export default async function HomePage() {
                       <ArrowRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-purple-400 group-hover:translate-x-0.5 transition-all" />
                     </div>
                     <h3 className="text-sm font-bold text-zinc-100 group-hover:text-white">
-                      About the Journey
+                      About Me
                     </h3>
                     <p className="text-xs text-zinc-400 line-clamp-2">
                       Background, engineering evolution, and studio principles.

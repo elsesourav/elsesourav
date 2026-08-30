@@ -53,7 +53,7 @@ export function AppDetailHero({ app }: AppDetailHeroProps) {
       {/* Breadcrumb Navigation */}
       <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-mono text-zinc-400">
         <Link href="/apps" className="hover:text-white transition-colors">
-          Work
+          Apps
         </Link>
         <span className="text-zinc-600">/</span>
         <Link
@@ -100,11 +100,6 @@ export function AppDetailHero({ app }: AppDetailHeroProps) {
                   <Archive className="w-3 h-3 text-zinc-400" />
                   <span>Archived Project</span>
                 </span>
-              ) : isLab ? (
-                <span className="inline-flex items-center gap-1 text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-purple-950/60 border border-purple-800/50 text-purple-300">
-                  <Sparkles className="w-3 h-3 text-purple-400" />
-                  <span>Lab Experiment</span>
-                </span>
               ) : (
                 <span className="inline-flex items-center gap-1 text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-950/50 border border-emerald-800/40 text-emerald-300">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -137,7 +132,7 @@ export function AppDetailHero({ app }: AppDetailHeroProps) {
                     size="md"
                     className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-semibold px-5 py-2.5 shadow-lg shadow-indigo-600/25 gap-2"
                   >
-                    <span>{isLab ? 'Run Live Simulation' : 'Launch Application'}</span>
+                    <span>Launch Application</span>
                     <ArrowUpRight className="w-4 h-4" />
                   </Button>
                 </a>
@@ -210,7 +205,7 @@ export function AppDetailHero({ app }: AppDetailHeroProps) {
           <div>
             <span className="text-zinc-500 block">Status</span>
             <span className="text-zinc-200 font-medium">
-              {isArchived ? 'Archived Archive' : isLab ? 'Interactive Experiment' : 'Active Release'}
+              {isArchived ? 'Archived Archive' : 'Active Release'}
             </span>
           </div>
         </div>

@@ -25,8 +25,8 @@ describe('Global Search System', () => {
       expect(result.metadata).toBeDefined();
     });
 
-    it('supports all four content types', () => {
-      const types: GlobalSearchResultType[] = ['project', 'lab', 'note', 'page'];
+    it('supports canonical content types', () => {
+      const types: GlobalSearchResultType[] = ['project', 'note', 'page'];
       types.forEach((type) => {
         const result: GlobalSearchResult = {
           type,
@@ -55,7 +55,6 @@ describe('Global Search System', () => {
 
       expect(response.grouped.project).toHaveLength(1);
       expect(response.grouped.note).toHaveLength(1);
-      expect(response.grouped.lab).toBeUndefined();
       expect(response.grouped.page).toBeUndefined();
     });
   });
@@ -149,13 +148,11 @@ describe('Global Search System', () => {
     it('generates correct URLs for each content type', () => {
       const urlMap: Record<GlobalSearchResultType, string> = {
         project: '/apps/my-project',
-        lab: '/apps/my-simulation',
         note: '/blog/my-note',
         page: '/about',
       };
 
       expect(urlMap.project).toMatch(/^\/apps\//);
-      expect(urlMap.lab).toMatch(/^\/apps\//);
       expect(urlMap.note).toMatch(/^\/blog\//);
       expect(urlMap.page).toMatch(/^\//);
     });

@@ -12,7 +12,7 @@ import { AppsEmptyState } from '@/features/apps/components/AppsEmptyState';
 import { PageShell, PageHeader, Badge, Reveal, RevealGroup } from '@elsesourav/ui';
 import { SITE_CONFIG } from '@elsesourav/config';
 import type { AppSortOption, AppPlatform } from '@elsesourav/types';
-import { Sparkles, Beaker, ArrowRight, Layers, LayoutGrid } from 'lucide-react';
+import { Sparkles, ArrowRight, LayoutGrid, Archive, BookOpen } from 'lucide-react';
 
 interface AppsPageProps {
   searchParams: Promise<{
@@ -34,15 +34,15 @@ export async function generateMetadata({ searchParams }: AppsPageProps): Promise
   const hasFilterOrQuery = Boolean(query || category || platform || params.tag || params.page);
 
   const title = query
-    ? `Search: "${query}" in Work & Software`
+    ? `Search: "${query}" in Apps`
     : category
-      ? `${category.charAt(0).toUpperCase() + category.slice(1)} — Work`
+      ? `${category.charAt(0).toUpperCase() + category.slice(1)} — Apps`
       : platform
         ? `${platform.toUpperCase()} Software & Tools`
-        : 'Work — Software, Systems & Tools';
+        : 'Apps — Software, Tools & Systems';
 
   const description =
-    "Software, creative tools, web utilities, and interactive systems built, shipped, and explored by Sourav Barui.";
+    "Software applications, developer tools, games, and interactive systems built, shipped, and maintained by Sourav Barui.";
   const canonicalUrl = `${SITE_CONFIG.url}/apps`;
 
   return {
@@ -121,7 +121,7 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
       {
         '@type': 'CollectionPage',
         '@id': `${SITE_CONFIG.url}/apps/#collection`,
-        name: 'Work & Software Portfolio',
+        name: 'Apps & Software Catalog',
         description: 'Explore the complete collection of software, web applications, and developer utilities.',
         url: `${SITE_CONFIG.url}/apps`,
         publisher: {
@@ -152,7 +152,7 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
           {
             '@type': 'ListItem',
             position: 2,
-            name: 'Work',
+            name: 'Apps',
             item: `${SITE_CONFIG.url}/apps`,
           },
         ],
@@ -171,14 +171,14 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
         {/* Page Header */}
         <Reveal direction="down" distance={12}>
           <PageHeader
-            eyebrow="Portfolio & Systems"
+            eyebrow="Software & Applications"
             badge={
               <Badge variant="primary" className="text-xs px-2.5 py-0.5 font-medium font-mono">
                 {searchResult.totalCount} {searchResult.totalCount === 1 ? 'Project' : 'Projects'}
               </Badge>
             }
-            title="Work"
-            description="Software, creative tools, web utilities, and interactive systems I've built and shipped."
+            title="Apps"
+            description="Software, tools, games, and practical systems I've built and shipped."
           />
         </Reveal>
 
@@ -196,10 +196,10 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
           <div className="space-y-12">
             {/* Spotlight Section on Clean Default View */}
             {isDefaultView && spotlightItems.length > 0 && (
-              <section aria-labelledby="spotlight-work-heading" className="space-y-4">
+              <section aria-labelledby="spotlight-apps-heading" className="space-y-4">
                 <div className="flex items-center gap-2 text-xs font-mono text-zinc-400 uppercase tracking-wider font-semibold pb-2 border-b border-zinc-800/60">
                   <Sparkles className="w-4 h-4 text-indigo-400" />
-                  <h2 id="spotlight-work-heading" className="text-xs font-mono text-zinc-400 uppercase tracking-wider font-semibold">
+                  <h2 id="spotlight-apps-heading" className="text-xs font-mono text-zinc-400 uppercase tracking-wider font-semibold">
                     Featured Spotlight
                   </h2>
                 </div>
@@ -212,11 +212,11 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
             )}
 
             {/* Catalog Grid */}
-            <section aria-labelledby="catalog-work-heading" className="space-y-4">
+            <section aria-labelledby="catalog-apps-heading" className="space-y-4">
               <div className="flex items-center justify-between pb-2 border-b border-zinc-800/60 text-xs font-mono text-zinc-400">
                 <div className="flex items-center gap-2 uppercase tracking-wider font-semibold">
                   <LayoutGrid className="w-4 h-4 text-indigo-400" />
-                  <h2 id="catalog-work-heading" className="text-xs font-mono text-zinc-400 uppercase tracking-wider font-semibold">
+                  <h2 id="catalog-apps-heading" className="text-xs font-mono text-zinc-400 uppercase tracking-wider font-semibold">
                     {hasFilters ? `Filtered Projects (${searchResult.totalCount})` : 'All Software & Projects'}
                   </h2>
                 </div>
@@ -249,27 +249,27 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
           </div>
         )}
 
-        {/* Discovery Bridges: Lab & Archive */}
+        {/* Discovery Bridges: The Archive & Notes */}
         <Reveal direction="up" distance={14}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-10 border-t border-zinc-800/70">
-            {/* Lab Callout */}
+            {/* The Archive Callout */}
             <Link
-              href="/apps?category=simulations"
-              className="group p-6 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 hover:bg-zinc-900/60 hover:border-purple-500/40 transition-all flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
+              href="/archive"
+              className="group p-6 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 hover:bg-zinc-900/60 hover:border-indigo-500/40 transition-all flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
             >
               <div className="space-y-2">
-                <div className="w-10 h-10 rounded-2xl bg-purple-950/60 border border-purple-800/40 flex items-center justify-center text-purple-400">
-                  <Beaker className="w-5 h-5" />
+                <div className="w-10 h-10 rounded-2xl bg-indigo-950/60 border border-indigo-800/40 flex items-center justify-center text-indigo-400">
+                  <Archive className="w-5 h-5" />
                 </div>
-                <h3 className="text-base font-bold text-zinc-100 group-hover:text-purple-300 transition-colors">
-                  The Lab & Experiments
+                <h3 className="text-base font-bold text-zinc-100 group-hover:text-indigo-300 transition-colors">
+                  The Archive
                 </h3>
                 <p className="text-xs text-zinc-400 leading-relaxed">
-                  Small interactive prototypes, algorithms, sandbox physics, and canvas graphics simulations.
+                  Chronological timeline of earlier projects, legacy utilities, and exploratory implementations.
                 </p>
               </div>
-              <span className="text-xs font-mono text-purple-400 flex items-center gap-1 pt-4 group-hover:translate-x-1 transition-transform">
-                <span>Explore Lab prototypes</span>
+              <span className="text-xs font-mono text-indigo-400 flex items-center gap-1 pt-4 group-hover:translate-x-1 transition-transform">
+                <span>Explore historical archive</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </span>
             </Link>
@@ -277,20 +277,20 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
             {/* Notes / Architecture Callout */}
             <Link
               href="/blog"
-              className="group p-6 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 hover:bg-zinc-900/60 hover:border-indigo-500/40 transition-all flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              className="group p-6 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 hover:bg-zinc-900/60 hover:border-cyan-500/40 transition-all flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
             >
               <div className="space-y-2">
-                <div className="w-10 h-10 rounded-2xl bg-indigo-950/60 border border-indigo-800/40 flex items-center justify-center text-indigo-400">
-                  <Layers className="w-5 h-5" />
+                <div className="w-10 h-10 rounded-2xl bg-cyan-950/60 border border-cyan-800/40 flex items-center justify-center text-cyan-400">
+                  <BookOpen className="w-5 h-5" />
                 </div>
-                <h3 className="text-base font-bold text-zinc-100 group-hover:text-indigo-300 transition-colors">
-                  Engineering Notes & Field Logs
+                <h3 className="text-base font-bold text-zinc-100 group-hover:text-cyan-300 transition-colors">
+                  Engineering Field Notes
                 </h3>
                 <p className="text-xs text-zinc-400 leading-relaxed">
                   Technical write-ups, architecture decisions, postmortems, and lessons learned while building.
                 </p>
               </div>
-              <span className="text-xs font-mono text-indigo-400 flex items-center gap-1 pt-4 group-hover:translate-x-1 transition-transform">
+              <span className="text-xs font-mono text-cyan-400 flex items-center gap-1 pt-4 group-hover:translate-x-1 transition-transform">
                 <span>Read engineering notes</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </span>

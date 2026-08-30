@@ -2,20 +2,19 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, X, ArrowRight, Loader2, FileText, Beaker, Layout, Globe } from 'lucide-react';
+import { Search, X, ArrowRight, Loader2, FileText, Layout, Globe } from 'lucide-react';
 import type { GlobalSearchResponse, GlobalSearchResult, GlobalSearchResultType } from '@elsesourav/types';
 
 /** Per-category result limit */
 const RESULTS_PER_GROUP = 5;
 
 const TYPE_CONFIG: Record<GlobalSearchResultType, { label: string; icon: typeof Search; color: string }> = {
-  project: { label: 'Projects', icon: Layout, color: 'text-indigo-400' },
-  lab: { label: 'Lab', icon: Beaker, color: 'text-purple-400' },
+  project: { label: 'Apps', icon: Layout, color: 'text-indigo-400' },
   note: { label: 'Notes', icon: FileText, color: 'text-cyan-400' },
   page: { label: 'Pages', icon: Globe, color: 'text-zinc-400' },
 };
 
-const GROUP_ORDER: GlobalSearchResultType[] = ['project', 'lab', 'note', 'page'];
+const GROUP_ORDER: GlobalSearchResultType[] = ['project', 'note', 'page'];
 
 interface SearchOverlayProps {
   open: boolean;
@@ -231,7 +230,7 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
                 Search projects, notes, and experiments...
               </p>
               <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-[11px]">
-                {['Work', 'Lab', 'Notes', 'About'].map((hint) => (
+                {['Apps', 'Notes', 'About', 'Archive'].map((hint) => (
                   <button
                     key={hint}
                     type="button"

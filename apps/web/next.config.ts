@@ -79,6 +79,26 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: '/work',
+        destination: '/apps',
+        permanent: true,
+      },
+      {
+        source: '/work/:slug*',
+        destination: '/apps/:slug*',
+        permanent: true,
+      },
+      {
+        source: '/lab',
+        destination: '/apps',
+        permanent: true,
+      },
+      {
+        source: '/lab/:slug*',
+        destination: '/apps/:slug*',
+        permanent: true,
+      },
+      {
         source: '/docs',
         destination: '/help',
         permanent: true,

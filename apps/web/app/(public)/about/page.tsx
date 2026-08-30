@@ -83,15 +83,14 @@ function getPlatformIcon(platform: SiteLinkPlatform) {
 export default async function AboutPage() {
   const siteService = new SiteService();
 
-  const [identity, appsResult, labResult, blogResult] = await Promise.all([
+  const [identity, appsResult, blogResult] = await Promise.all([
     siteService.getSiteAndCreatorIdentity(),
-    discoverPublishedApps({ limit: 1, sort: 'popularity' }).catch(() => ({ items: [] })),
-    discoverPublishedApps({ filters: { categorySlug: 'simulations' }, limit: 1 }).catch(() => ({ items: [] })),
+    discoverPublishedApps({ limit: 2, sort: 'popularity' }).catch(() => ({ items: [] })),
     getPublicBlogListing({ limit: 1 }).catch(() => ({ items: [] })),
   ]);
 
   const activeApp = appsResult.items?.[0] || null;
-  const activeLab = labResult.items?.[0] || null;
+  const secondaryApp = appsResult.items?.[1] || null;
   const activePost = blogResult.items?.[0] || null;
 
   const activeLinks = identity.creator.links.filter((l) => l.isActive);
@@ -405,26 +404,26 @@ export default async function AboutPage() {
                 </div>
               )}
 
-              {/* Currently Exploring (The Lab) */}
-              {activeLab && (
+              {/* Featured Software / Systems */}
+              {secondaryApp && (
                 <div className="space-y-2 p-4 rounded-2xl bg-zinc-950/40 border border-zinc-800/60">
                   <span className="text-[10px] font-mono text-purple-400 uppercase tracking-wider font-semibold block">
-                    Currently Exploring
+                    Featured Software
                   </span>
                   <Link
-                    href={`/apps/${activeLab.slug}`}
+                    href={`/apps/${secondaryApp.slug}`}
                     className="font-bold text-sm text-zinc-100 hover:text-purple-300 transition-colors block line-clamp-1"
                   >
-                    {activeLab.name}
+                    {secondaryApp.name}
                   </Link>
                   <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
-                    {activeLab.shortDescription}
+                    {secondaryApp.shortDescription}
                   </p>
                   <Link
-                    href={`/apps/${activeLab.slug}`}
+                    href={`/apps/${secondaryApp.slug}`}
                     className="inline-flex items-center gap-1 text-[11px] text-purple-400 hover:text-purple-300 font-mono pt-1 group"
                   >
-                    <span>Launch experiment</span>
+                    <span>Launch application</span>
                     <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                   </Link>
                 </div>

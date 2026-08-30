@@ -119,7 +119,7 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
           {
             '@type': 'ListItem',
             position: 2,
-            name: 'Work',
+            name: 'Apps',
             item: `${SITE_CONFIG.url}/apps`,
           },
           {
@@ -132,11 +132,6 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
       },
     ],
   };
-
-  const isLab =
-    app.categorySlug === 'simulations' ||
-    app.primaryCategory.toLowerCase().includes('simulation') ||
-    app.primaryCategory.toLowerCase().includes('lab');
 
   return (
     <PageShell size="lg" glow>
@@ -254,17 +249,17 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
                 <div className="space-y-1">
                   <h2 id="related-projects-heading" className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
                     <Sparkles className="w-5 h-5 text-indigo-400" />
-                    <span>More {isLab ? 'Lab Experiments' : 'in ' + app.primaryCategory}</span>
+                    <span>More in {app.primaryCategory}</span>
                   </h2>
                   <p className="text-xs text-zinc-400">
-                    Explore related tools, systems, and prototypes built by Sourav.
+                    Explore related tools, systems, and applications built by Sourav.
                   </p>
                 </div>
                 <Link
-                  href={isLab ? '/apps?category=simulations' : ROUTES.APPS}
+                  href={ROUTES.APPS}
                   className="text-xs font-mono text-indigo-400 hover:text-indigo-300 flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded p-1"
                 >
-                  <span>{isLab ? 'Explore Lab' : 'View all work'}</span>
+                  <span>View all apps</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>

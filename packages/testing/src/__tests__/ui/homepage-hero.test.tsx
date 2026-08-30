@@ -19,18 +19,18 @@ describe('Homepage Hero & First-Viewport Architecture', () => {
   });
 
   it('guarantees complete fallback behavior when optional hero badges or counts are missing', () => {
-    const defaultBadge = 'Software Studio & Engineering';
+    const defaultBadge = 'SOURAV / ELSESOURAV';
     const fallbackCount = 0;
     const computedCtaText = (label: string, count: number) => {
       return count > 0 ? `${label} (${count})` : label;
     };
 
-    expect(computedCtaText('Browse Applications', fallbackCount)).toBe('Browse Applications');
-    expect(computedCtaText('Browse Applications', 12)).toBe('Browse Applications (12)');
+    expect(computedCtaText('Explore Apps', fallbackCount)).toBe('Explore Apps');
+    expect(computedCtaText('Explore Apps', 12)).toBe('Explore Apps (12)');
     expect(defaultBadge).toBeDefined();
   });
 
-  it('completely removes and prevents old "Studio Index & Archive" and fake dashboard counters (Prompt 24)', () => {
+  it('completely removes and prevents old "Studio Index & Archive" and fake dashboard counters', () => {
     const forbiddenDashboardTerms = [
       'studio index & archive',
       '05 apps',
@@ -39,38 +39,34 @@ describe('Homepage Hero & First-Viewport Architecture', () => {
       '∞ lab',
       'flagship utility',
       'apps archive',
+      'work snapshot',
+      'live studio',
     ];
 
-    // Simulated Work Snapshot structure
-    const workSnapshotLabels = ['Work Snapshot', 'Current Project', 'Latest Note', 'Lab Experiment'];
+    const currentHeroElements = ['SOURAV / ELSESOURAV', 'Explore Apps', 'About Me', 'Selected Apps'];
 
-    workSnapshotLabels.forEach((label) => {
+    currentHeroElements.forEach((label) => {
       forbiddenDashboardTerms.forEach((term) => {
         expect(label.toLowerCase()).not.toBe(term);
       });
     });
   });
 
-  it('renders authentic work snapshot items from canonical data with proper links and zero synthetic statistics', () => {
-    const mockSnapshot = {
-      project: { name: 'SpectraLens AI', slug: 'spectralens-ai', version: '2.4.0' },
-      note: { title: 'Cellular Automata in WebAssembly', slug: 'cellular-automata-wasm', readingTime: 5 },
-      lab: { name: 'Falling Sands', slug: 'falling-sands' },
-    };
+  it('renders authentic visual project composition from canonical data with proper links and zero synthetic statistics', () => {
+    const mockFeaturedApps = [
+      { name: 'SpectraLens AI', slug: 'spectralens-ai', version: '1.0.0', primaryCategory: 'AI & Machine Learning' },
+      { name: 'Breakout Ball', slug: 'breakout-ball', version: '1.0.0', primaryCategory: 'Algorithms & Simulations' },
+      { name: 'Img Editor', slug: 'img-editor', version: '1.0.0', primaryCategory: 'Media & Creative Tools' },
+    ];
 
-    expect(mockSnapshot.project.slug).toBe('spectralens-ai');
-    expect(mockSnapshot.note.slug).toBe('cellular-automata-wasm');
-    expect(mockSnapshot.lab.slug).toBe('falling-sands');
+    expect(mockFeaturedApps[0]!.slug).toBe('spectralens-ai');
+    expect(mockFeaturedApps[1]!.slug).toBe('breakout-ball');
+    expect(mockFeaturedApps[2]!.slug).toBe('img-editor');
 
-    // Verify graceful adaptation when lab or note is absent
-    const partialSnapshot = {
-      project: mockSnapshot.project,
-      note: null,
-      lab: null,
-    };
-
-    expect(partialSnapshot.project).toBeDefined();
-    expect(partialSnapshot.note).toBeNull();
-    expect(partialSnapshot.lab).toBeNull();
+    // Verify all display apps have valid slug links
+    mockFeaturedApps.forEach((app) => {
+      expect(app.slug).toMatch(/^[a-z0-9-]+$/);
+      expect(app.name.length).toBeGreaterThan(0);
+    });
   });
 });

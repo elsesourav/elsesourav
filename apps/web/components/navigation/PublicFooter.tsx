@@ -99,12 +99,7 @@ export async function PublicFooter() {
             <ul className="space-y-2.5 text-xs text-[hsl(var(--muted-foreground))]">
               <li>
                 <Link href={ROUTES.APPS} className="hover:text-[hsl(var(--foreground))] transition-colors">
-                  Work
-                </Link>
-              </li>
-              <li>
-                <Link href={ROUTES.LAB} className="hover:text-[hsl(var(--foreground))] transition-colors">
-                  The Lab
+                  Apps
                 </Link>
               </li>
               <li>

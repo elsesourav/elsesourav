@@ -9,7 +9,6 @@ import {
   BookOpen,
   ArrowRight,
   Layers,
-  Beaker,
   Calendar,
 } from 'lucide-react';
 import type { AppListItem } from '@elsesourav/types';
@@ -363,10 +362,10 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
           </div>
         )}
 
-        {/* Discovery Bridges: Work & The Lab */}
+        {/* Discovery Bridges: Apps & Field Notes */}
         <Reveal direction="up" distance={14}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-10 border-t border-zinc-800/70">
-            {/* Work Callout */}
+            {/* Apps Callout */}
             <Link
               href={ROUTES.APPS}
               className="group p-6 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 hover:bg-zinc-900/60 hover:border-indigo-500/40 transition-all flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
@@ -376,36 +375,36 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
                   <Layers className="w-5 h-5" />
                 </div>
                 <h3 className="text-base font-bold text-zinc-100 group-hover:text-indigo-300 transition-colors">
-                  Flagship Software & Systems
+                  Active Software & Systems
                 </h3>
                 <p className="text-xs text-zinc-400 leading-relaxed">
-                  Browse actively maintained web applications, developer workstations, and creative software.
+                  Browse actively maintained web applications, developer utilities, and creative software.
                 </p>
               </div>
               <span className="text-xs font-mono text-indigo-400 flex items-center gap-1 pt-4 group-hover:translate-x-1 transition-transform">
-                <span>Explore flagship work</span>
+                <span>Explore active apps</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </span>
             </Link>
 
-            {/* Lab Callout */}
+            {/* Notes Callout */}
             <Link
-              href={ROUTES.LAB}
-              className="group p-6 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 hover:bg-zinc-900/60 hover:border-purple-500/40 transition-all flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
+              href={ROUTES.BLOG}
+              className="group p-6 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 hover:bg-zinc-900/60 hover:border-cyan-500/40 transition-all flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
             >
               <div className="space-y-2">
-                <div className="w-10 h-10 rounded-2xl bg-purple-950/60 border border-purple-800/40 flex items-center justify-center text-purple-400">
-                  <Beaker className="w-5 h-5" />
+                <div className="w-10 h-10 rounded-2xl bg-cyan-950/60 border border-cyan-800/40 flex items-center justify-center text-cyan-400">
+                  <BookOpen className="w-5 h-5" />
                 </div>
-                <h3 className="text-base font-bold text-zinc-100 group-hover:text-purple-300 transition-colors">
-                  The Lab & Experiments
+                <h3 className="text-base font-bold text-zinc-100 group-hover:text-cyan-300 transition-colors">
+                  Engineering Field Notes
                 </h3>
                 <p className="text-xs text-zinc-400 leading-relaxed">
-                  Small interactive prototypes, algorithms, sandbox physics, and canvas graphics simulations.
+                  Technical write-ups, architecture decisions, and observations recorded while building.
                 </p>
               </div>
-              <span className="text-xs font-mono text-purple-400 flex items-center gap-1 pt-4 group-hover:translate-x-1 transition-transform">
-                <span>Explore Lab prototypes</span>
+              <span className="text-xs font-mono text-cyan-400 flex items-center gap-1 pt-4 group-hover:translate-x-1 transition-transform">
+                <span>Read field notes</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </span>
             </Link>

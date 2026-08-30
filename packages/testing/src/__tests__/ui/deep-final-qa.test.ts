@@ -25,7 +25,6 @@ describe('Deep Final QA Pass — Homepage & About Page (Prompt 29)', () => {
 
     it('verifies clean top-level discovery pathways (WHERE)', () => {
       expect(ROUTES.APPS).toBe('/apps');
-      expect(ROUTES.LAB).toBe('/lab');
       expect(ROUTES.BLOG).toBe('/blog');
       expect(ROUTES.ABOUT).toBe('/about');
       expect(ROUTES.ARCHIVE).toBe('/archive');
