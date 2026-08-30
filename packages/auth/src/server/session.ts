@@ -26,7 +26,17 @@ export async function getServerSession(
     const validRoles: UserRole[] = ['USER', 'ADMIN', 'STAFF'];
     const rawRole = (user.app_metadata?.['role'] || user.user_metadata?.['role']) as
       UserRole | undefined;
-    const role: UserRole = rawRole && validRoles.includes(rawRole) ? rawRole : 'USER';
+    const adminEmail = (
+      process.env['ADMIN_EMAIL'] ||
+      process.env['NEXT_PUBLIC_ADMIN_EMAIL'] ||
+      'elsesourav.auth@gmail.com'
+    ).trim().toLowerCase();
+    const isDesignatedAdmin = Boolean(user.email && user.email.trim().toLowerCase() === adminEmail);
+    const role: UserRole = isDesignatedAdmin
+      ? 'ADMIN'
+      : rawRole && validRoles.includes(rawRole)
+        ? rawRole
+        : 'USER';
 
     const authenticatedUser: AuthenticatedUser = {
       id: user.id,

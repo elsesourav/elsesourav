@@ -21,18 +21,27 @@ export class UserRepository {
       const email = input.email.trim().toLowerCase();
       const displayName = input.displayName?.trim() || email.split('@')[0] || 'Developer';
 
+      const adminEmail = (
+        process.env.ADMIN_EMAIL ||
+        process.env.NEXT_PUBLIC_ADMIN_EMAIL ||
+        'elsesourav.auth@gmail.com'
+      ).trim().toLowerCase();
+      const isDesignatedAdmin = email === adminEmail;
+      const initialRole = isDesignatedAdmin ? PrismaRole.ADMIN : PrismaRole.USER;
+
       const user = await this.prisma.user.upsert({
         where: { supabaseAuthId: input.supabaseAuthId },
         update: {
           email,
           ...(input.photoUrl ? { photoUrl: input.photoUrl } : {}),
+          ...(isDesignatedAdmin ? { role: PrismaRole.ADMIN } : {}),
         },
         create: {
           supabaseAuthId: input.supabaseAuthId,
           email,
           displayName,
           photoUrl: input.photoUrl,
-          role: PrismaRole.USER,
+          role: initialRole,
           preferences: {
             theme: 'dark',
             emailNotifications: true,
