@@ -52,7 +52,7 @@ export default async function HomePage() {
   const cookieStore = await cookies();
   const siteService = new SiteService();
 
-  // Query live selected apps (curated 5), latest blogs, active lab experiment, site/creator identity, and session
+  // Query live selected apps (curated 5), latest blogs, active lab experiments (up to 6), site/creator identity, and session
   const [appsResult, blogResult, labResult, identity, session] = await Promise.all([
     discoverPublishedApps({ limit: 5, sort: 'popularity' }).catch(() => ({
       items: [],
@@ -64,7 +64,7 @@ export default async function HomePage() {
       page: 1,
       totalPages: 1,
     })),
-    discoverPublishedApps({ filters: { categorySlug: 'simulations' }, limit: 1 }).catch(() => ({
+    discoverPublishedApps({ filters: { categorySlug: 'simulations' }, limit: 6 }).catch(() => ({
       items: [],
       totalCount: 0,
     })),
@@ -76,7 +76,8 @@ export default async function HomePage() {
 
   const featuredApps = appsResult.items || [];
   const recentPosts = blogResult.items || [];
-  const activeLabApp = labResult.items[0] || null;
+  const labProjects = labResult.items || [];
+  const activeLabApp = labProjects[0] || null;
   const primaryFeaturedApp = featuredApps[0] || null;
 
   const jsonLd = {
@@ -361,9 +362,87 @@ export default async function HomePage() {
           </Section>
         )}
 
-        {/* 3. Writing & Engineering Notes Section */}
-        {recentPosts.length > 0 && (
+        {/* 3. LAB / Experiments Preview Section */}
+        {labProjects.length > 0 && (
           <Section spacing="lg">
+            <Container size="lg">
+              <SectionHeader
+                align="split"
+                caption="Lab"
+                title="Small experiments, prototypes, and ideas."
+                description="Built to explore algorithms, physics solvers, constraint satisfaction, and graphics."
+                actions={
+                  <Link
+                    href="/apps?category=simulations"
+                    className="text-sm font-medium text-purple-400 hover:text-purple-300 flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded p-1 group"
+                  >
+                    <span>Explore the Lab {labResult.totalCount > 0 ? `(${labResult.totalCount})` : ''}</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                  </Link>
+                }
+              />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+                {labProjects.map((item, idx) => {
+                  const formattedIdx = String(idx + 1).padStart(2, '0');
+                  const categoryName = item.primaryCategory || 'Simulation';
+                  return (
+                    <Link
+                      key={item.id}
+                      href={`/apps/${item.slug}`}
+                      className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded-2xl"
+                    >
+                      <article className="h-full rounded-2xl border border-zinc-800/70 bg-zinc-900/30 hover:bg-zinc-900/70 hover:border-purple-500/40 p-5 transition-all duration-200 flex flex-col justify-between backdrop-blur-sm">
+                        <div className="space-y-2.5">
+                          <div className="flex items-center justify-between text-xs font-mono">
+                            <span className="text-purple-400 font-bold text-[11px] bg-purple-950/50 px-2 py-0.5 rounded border border-purple-800/30">
+                              {formattedIdx}
+                            </span>
+                            <span className="text-zinc-500 text-[11px] uppercase tracking-wider">
+                              {categoryName}
+                            </span>
+                          </div>
+
+                          <div>
+                            <h3 className="text-base font-semibold text-zinc-100 group-hover:text-white transition-colors">
+                              {item.name}
+                            </h3>
+                            <p className="text-xs text-zinc-400 line-clamp-2 mt-1 leading-relaxed">
+                              {item.shortDescription}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-3 mt-3 border-t border-zinc-800/50 text-[11px] font-mono text-zinc-500">
+                          <span className="text-zinc-400">Interactive</span>
+                          <span className="text-purple-400 group-hover:translate-x-0.5 transition-transform flex items-center gap-1 font-sans text-xs">
+                            <span>Run experiment</span>
+                            <ArrowRight className="w-3 h-3" />
+                          </span>
+                        </div>
+                      </article>
+                    </Link>
+                  );
+                })}
+              </div>
+
+              {/* Bottom Lab CTA link */}
+              <div className="text-center pt-8">
+                <Link
+                  href="/apps?category=simulations"
+                  className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-purple-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded p-1"
+                >
+                  <span>Explore full Lab & Simulation archive ({labResult.totalCount} active experiments)</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </Container>
+          </Section>
+        )}
+
+        {/* 4. Writing & Engineering Notes Section */}
+        {recentPosts.length > 0 && (
+          <Section spacing="lg" surface="subtle">
             <Container size="lg">
               <SectionHeader
                 align="split"
