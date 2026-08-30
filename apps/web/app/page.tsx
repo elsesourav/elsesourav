@@ -194,26 +194,25 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              {/* Right Column: Quiet Editorial Studio Workbench Artifact */}
+              {/* Right Column: Quiet Editorial Real Work Snapshot */}
               <div className="lg:col-span-5">
                 <div className="rounded-3xl border border-zinc-800/80 bg-zinc-900/40 backdrop-blur-md p-6 sm:p-7 shadow-xl space-y-5 hover:border-zinc-700/80 transition-colors">
-                  {/* Studio Status Header */}
+                  {/* Snapshot Header */}
                   <div className="flex items-center justify-between pb-3 border-b border-zinc-800/70 text-xs text-zinc-400">
                     <span className="font-mono text-xs font-semibold text-zinc-300 uppercase tracking-wider">
-                      Studio Workbench
+                      Work Snapshot
                     </span>
-                    <span className="text-[11px] font-mono text-emerald-400 flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                      <span>Active Focus</span>
+                    <span className="text-[11px] font-mono text-zinc-500">
+                      Live Studio
                     </span>
                   </div>
 
-                  {/* 1. Currently Building (Featured Project) */}
+                  {/* 1. Current / Selected Project */}
                   {primaryFeaturedApp && (
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between text-[11px] font-mono">
                         <span className="text-indigo-400 uppercase tracking-wider font-semibold">
-                          Currently Building
+                          Current Project
                         </span>
                         <span className="text-zinc-500">v{primaryFeaturedApp.currentVersion || '1.0'}</span>
                       </div>
@@ -232,7 +231,7 @@ export default async function HomePage() {
                         href={`/apps/${primaryFeaturedApp.slug}`}
                         className="inline-flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300 font-medium pt-0.5 group"
                       >
-                        <span>Launch & inspect</span>
+                        <span>Open project overview</span>
                         <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                       </Link>
                     </div>
@@ -267,7 +266,7 @@ export default async function HomePage() {
                         href={`/blog/${recentPosts[0].slug}`}
                         className="inline-flex items-center gap-1 text-xs text-cyan-400 hover:text-cyan-300 font-medium pt-0.5 group"
                       >
-                        <span>Read note</span>
+                        <span>Read field note</span>
                         <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                       </Link>
                     </div>
@@ -283,9 +282,9 @@ export default async function HomePage() {
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between text-[11px] font-mono">
                         <span className="text-purple-400 uppercase tracking-wider font-semibold">
-                          Exploring Lab
+                          Lab Experiment
                         </span>
-                        <span className="text-zinc-500">Experiment</span>
+                        <span className="text-zinc-500">Interactive</span>
                       </div>
                       <h3 className="text-sm font-semibold text-white">
                         <Link

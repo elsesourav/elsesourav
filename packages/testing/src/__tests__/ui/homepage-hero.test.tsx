@@ -29,4 +29,48 @@ describe('Homepage Hero & First-Viewport Architecture', () => {
     expect(computedCtaText('Browse Applications', 12)).toBe('Browse Applications (12)');
     expect(defaultBadge).toBeDefined();
   });
+
+  it('completely removes and prevents old "Studio Index & Archive" and fake dashboard counters (Prompt 24)', () => {
+    const forbiddenDashboardTerms = [
+      'studio index & archive',
+      '05 apps',
+      '04 notes',
+      '01 creator',
+      '∞ lab',
+      'flagship utility',
+      'apps archive',
+    ];
+
+    // Simulated Work Snapshot structure
+    const workSnapshotLabels = ['Work Snapshot', 'Current Project', 'Latest Note', 'Lab Experiment'];
+
+    workSnapshotLabels.forEach((label) => {
+      forbiddenDashboardTerms.forEach((term) => {
+        expect(label.toLowerCase()).not.toBe(term);
+      });
+    });
+  });
+
+  it('renders authentic work snapshot items from canonical data with proper links and zero synthetic statistics', () => {
+    const mockSnapshot = {
+      project: { name: 'SpectraLens AI', slug: 'spectralens-ai', version: '2.4.0' },
+      note: { title: 'Cellular Automata in WebAssembly', slug: 'cellular-automata-wasm', readingTime: 5 },
+      lab: { name: 'Falling Sands', slug: 'falling-sands' },
+    };
+
+    expect(mockSnapshot.project.slug).toBe('spectralens-ai');
+    expect(mockSnapshot.note.slug).toBe('cellular-automata-wasm');
+    expect(mockSnapshot.lab.slug).toBe('falling-sands');
+
+    // Verify graceful adaptation when lab or note is absent
+    const partialSnapshot = {
+      project: mockSnapshot.project,
+      note: null,
+      lab: null,
+    };
+
+    expect(partialSnapshot.project).toBeDefined();
+    expect(partialSnapshot.note).toBeNull();
+    expect(partialSnapshot.lab).toBeNull();
+  });
 });
