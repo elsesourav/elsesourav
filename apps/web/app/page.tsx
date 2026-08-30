@@ -59,6 +59,32 @@ export const metadata: Metadata = {
 
 export const dynamic = 'force-dynamic';
 
+function renderHighlightedHeadline(headline: string) {
+  const words = headline.trim().split(/\s+/);
+  if (words.length <= 4) {
+    return (
+      <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-cyan-200 to-white font-extrabold">
+        {headline}
+      </span>
+    );
+  }
+
+  // Dynamically highlight the final ~45% of words (between 3 and 8 words)
+  const highlightCount = Math.max(3, Math.min(8, Math.round(words.length * 0.45)));
+  const splitIndex = words.length - highlightCount;
+  const leadPart = words.slice(0, splitIndex).join(' ');
+  const highlightPart = words.slice(splitIndex).join(' ');
+
+  return (
+    <>
+      <span className="text-white">{leadPart}</span>{' '}
+      <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-cyan-200 to-white font-extrabold">
+        {highlightPart}
+      </span>
+    </>
+  );
+}
+
 export default async function HomePage() {
   const cookieStore = await cookies();
   const siteService = new SiteService();
@@ -170,30 +196,9 @@ export default async function HomePage() {
                   <span className="block text-2xl sm:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-indigo-300 to-white mb-2 sm:mb-3">
                     I am {identity.creator.name || 'Sourav'}.
                   </span>
-                  {identity.homepage.heroHeadline ? (
-                    identity.homepage.heroHeadline.includes('that') ? (
-                      <>
-                        <span className="text-white">
-                          {identity.homepage.heroHeadline.split('that')[0]}
-                        </span>{' '}
-                        <span className="text-zinc-400 font-normal">that</span>{' '}
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-cyan-200 to-white font-extrabold">
-                          {identity.homepage.heroHeadline.split('that').slice(1).join('that')}
-                        </span>
-                      </>
-                    ) : (
-                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-zinc-100 to-indigo-200 font-extrabold">
-                        {identity.homepage.heroHeadline}
-                      </span>
-                    )
-                  ) : (
-                    <>
-                      <span className="text-white">Building software, tools, games, and experiments</span>{' '}
-                      <span className="text-zinc-400 font-normal">that</span>{' '}
-                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-cyan-200 to-white font-extrabold">
-                        solve real problems and spark new ideas.
-                      </span>
-                    </>
+                  {renderHighlightedHeadline(
+                    identity.homepage.heroHeadline ||
+                      'Building software, tools, games, and experiments that solve real problems and spark new ideas.'
                   )}
                 </h1>
 
