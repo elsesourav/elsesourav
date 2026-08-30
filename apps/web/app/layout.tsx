@@ -18,9 +18,12 @@ export const metadata: Metadata = {
   description: SITE_CONFIG.description,
   metadataBase: new URL(SITE_CONFIG.url),
   icons: {
-    icon: '/favicon.svg',
-    shortcut: '/favicon.svg',
-    apple: '/favicon.svg',
+    icon: [
+      { url: '/favicon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+    shortcut: '/favicon.png',
+    apple: '/apple-touch-icon.png',
   },
   manifest: '/manifest.webmanifest',
   openGraph: {
@@ -30,11 +33,20 @@ export const metadata: Metadata = {
     siteName: SITE_CONFIG.name,
     locale: 'en_US',
     type: 'website',
+    images: [
+      {
+        url: SITE_CONFIG.ogImage,
+        width: 1024,
+        height: 576,
+        alt: `${SITE_CONFIG.name} — ${SITE_CONFIG.tagline}`,
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: SITE_CONFIG.name,
     description: SITE_CONFIG.description,
+    images: [SITE_CONFIG.ogImage],
   },
 };
 

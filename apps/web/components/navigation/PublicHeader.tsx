@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@elsesourav/ui';
 import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
-import { Sparkles, Menu, X, ArrowRight, LayoutDashboard, Shield } from 'lucide-react';
+import Image from 'next/image';
+import { Menu, X, ArrowRight, LayoutDashboard, Shield } from 'lucide-react';
 import { UserAvatarMenu } from '@/features/user/components/UserAvatarMenu';
 import type { AuthenticatedUser } from '@elsesourav/auth';
 
@@ -48,8 +49,15 @@ export function PublicHeader({ user }: PublicHeaderProps) {
           href={ROUTES.HOME}
           className="flex items-center gap-2.5 font-bold text-base sm:text-lg text-white group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg p-1"
         >
-          <div className="w-8 h-8 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 group-hover:scale-105 group-hover:bg-indigo-600/30 transition-all">
-            <Sparkles className="w-4 h-4" />
+          <div className="w-8 h-8 rounded-xl overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
+            <Image
+              src="/logo-sm.png"
+              alt={`${SITE_CONFIG.name} Logo`}
+              width={32}
+              height={32}
+              className="w-full h-full object-contain"
+              priority
+            />
           </div>
           <span className="tracking-tight">{SITE_CONFIG.name}</span>
         </Link>

@@ -69,7 +69,13 @@ export const SITE_CONFIG = {
 
   author: 'Sourav',
 
+  logo: '/logo.png',
+  logoSm: '/logo-sm.png',
+  ogImage: '/og-image.png',
+  brandBanner: '/brand-banner.png',
+
   creator: CREATOR_CONFIG,
 
   links: CREATOR_CONFIG.links,
 } as const;
+

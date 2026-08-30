@@ -9,6 +9,7 @@ import { discoverPublishedApps } from '@/features/apps/queries/get-apps';
 import { getPublicBlogListing } from '@/features/blog/queries/get-blog';
 import { AppCard } from '@/features/apps/components/AppCard';
 import Link from 'next/link';
+import Image from 'next/image';
 import { PublicHeader } from '@/components/navigation/PublicHeader';
 import { PublicFooter } from '@/components/navigation/PublicFooter';
 import {
@@ -38,12 +39,21 @@ export const metadata: Metadata = {
     siteName: SITE_CONFIG.name,
     locale: 'en_US',
     type: 'website',
+    images: [
+      {
+        url: SITE_CONFIG.ogImage,
+        width: 1024,
+        height: 576,
+        alt: `${SITE_CONFIG.name} — Personal Software Studio & Digital Archive`,
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: `${SITE_CONFIG.name} — Personal Software Studio & Digital Archive`,
     description:
       'The personal software studio and digital archive of Sourav. Discover independent applications, developer tools, and engineering field notes.',
+    images: [SITE_CONFIG.ogImage],
   },
 };
 
@@ -197,14 +207,25 @@ export default async function HomePage() {
               {/* Right Column: Quiet Editorial Real Work Snapshot */}
               <div className="lg:col-span-5">
                 <div className="rounded-3xl border border-zinc-800/80 bg-zinc-900/40 backdrop-blur-md p-6 sm:p-7 shadow-xl space-y-5 hover:border-zinc-700/80 transition-colors">
-                  {/* Snapshot Header */}
-                  <div className="flex items-center justify-between pb-3 border-b border-zinc-800/70 text-xs text-zinc-400">
-                    <span className="font-mono text-xs font-semibold text-zinc-300 uppercase tracking-wider">
-                      Work Snapshot
-                    </span>
-                    <span className="text-[11px] font-mono text-zinc-500">
-                      Live Studio
-                    </span>
+                  {/* Brand Logo Mark */}
+                  <div className="flex items-center gap-3 pb-3 border-b border-zinc-800/70">
+                    <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0">
+                      <Image
+                        src={SITE_CONFIG.logoSm}
+                        alt={`${SITE_CONFIG.name} Logo`}
+                        width={40}
+                        height={40}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <div>
+                      <span className="font-mono text-xs font-semibold text-zinc-300 uppercase tracking-wider">
+                        Work Snapshot
+                      </span>
+                      <span className="block text-[11px] font-mono text-zinc-500">
+                        Live Studio
+                      </span>
+                    </div>
                   </div>
 
                   {/* 1. Current / Selected Project */}

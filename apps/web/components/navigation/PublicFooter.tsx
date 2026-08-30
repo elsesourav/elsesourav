@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ROUTES } from '@elsesourav/config';
 import { SiteService } from '@elsesourav/database';
 import type { SiteLinkPlatform } from '@elsesourav/types';
@@ -12,7 +13,6 @@ import {
   Send,
   Mail,
   ArrowUp,
-  Sparkles,
 } from 'lucide-react';
 
 function getPlatformIcon(platform: SiteLinkPlatform) {
@@ -55,8 +55,14 @@ export async function PublicFooter() {
               href={ROUTES.HOME}
               className="inline-flex items-center gap-2.5 font-bold text-base sm:text-lg text-white group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg p-1"
             >
-              <div className="w-8 h-8 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 group-hover:scale-105 group-hover:bg-indigo-600/30 transition-all">
-                <Sparkles className="w-4 h-4" />
+              <div className="w-8 h-8 rounded-xl overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
+                <Image
+                  src="/logo-sm.png"
+                  alt={`${identity.site.name} Logo`}
+                  width={32}
+                  height={32}
+                  className="w-full h-full object-contain"
+                />
               </div>
               <span className="tracking-tight text-white font-bold">{identity.site.name}</span>
             </Link>

@@ -39,12 +39,21 @@ export const metadata: Metadata = {
     url: `${SITE_CONFIG.url}/about`,
     siteName: SITE_CONFIG.name,
     type: 'profile',
+    images: [
+      {
+        url: SITE_CONFIG.ogImage,
+        width: 1024,
+        height: 576,
+        alt: `About Sourav Barui — ${SITE_CONFIG.name}`,
+      },
+    ],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: `About Sourav Barui — ${SITE_CONFIG.name}`,
     description:
       'About Sourav Barui, an independent software creator building software, tools, games, and experiments across web architecture, AI, graphics, and systems.',
+    images: [SITE_CONFIG.ogImage],
   },
 };
 

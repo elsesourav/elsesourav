@@ -1,7 +1,7 @@
 {
   "name": "ElseSourav",
   "short_name": "ElseSourav",
-  "description": "Developer Portfolio & Web Software Ecosystem",
+  "description": "Personal software studio of Sourav Barui — software, tools, games, and experiments.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#09090b",
@@ -11,6 +11,22 @@
       "src": "/favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
