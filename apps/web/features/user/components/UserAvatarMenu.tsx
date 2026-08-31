@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { User, LogOut, Settings, LifeBuoy, Shield, AtSign } from 'lucide-react';
 import type { AuthenticatedUser } from '@elsesourav/auth';
 import { UserAvatar } from '@elsesourav/ui';
@@ -36,7 +35,7 @@ export function UserAvatarMenu({ user }: UserAvatarMenuProps) {
     }
   };
 
-  // Close on outside click
+  // Close on outside click/tap
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -80,7 +79,7 @@ export function UserAvatarMenu({ user }: UserAvatarMenuProps) {
         ref={triggerRef}
         type="button"
         onClick={handleToggle}
-        className="relative flex items-center gap-2 p-0.5 rounded-full hover:ring-2 hover:ring-primary/40 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer active:scale-95 duration-150"
+        className="relative flex items-center justify-center p-0.5 rounded-full hover:ring-2 hover:ring-primary/50 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer active:scale-95 duration-150"
         aria-label="User account menu"
         aria-expanded={open}
         aria-haspopup="menu"
@@ -111,7 +110,7 @@ export function UserAvatarMenu({ user }: UserAvatarMenuProps) {
                 {user.displayName || 'ElseSourav Member'}
               </p>
               {user.role === 'ADMIN' && (
-                <span className="text-[9px] font-mono px-1.5 py-0.5 rounded font-medium bg-amber-500/20 text-amber-600 dark:text-amber-300 border border-amber-500/30">
+                <span className="text-[9px] font-mono px-1.5 py-0.5 rounded font-medium bg-amber-500/20 text-amber-600 dark:text-amber-300 border border-amber-500/30 shrink-0">
                   ADMIN
                 </span>
               )}
@@ -128,45 +127,49 @@ export function UserAvatarMenu({ user }: UserAvatarMenuProps) {
           {/* Core Options */}
           <Link
             href="/profile"
+            role="menuitem"
             onClick={() => requestClose()}
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-foreground hover:bg-accent transition-colors"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-foreground hover:bg-accent transition-colors cursor-pointer"
           >
             <User className="w-3.5 h-3.5 text-primary" />
             <div className="flex flex-col">
               <span className="font-medium">View Profile</span>
-              <span className="text-[10px] text-muted-foreground">Identity & profile overview</span>
+              <span className="text-[10px] text-muted-foreground">Identity & overview</span>
             </div>
           </Link>
 
           <Link
             href="/settings"
+            role="menuitem"
             onClick={() => requestClose()}
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-foreground hover:bg-accent transition-colors"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-foreground hover:bg-accent transition-colors cursor-pointer"
           >
             <Settings className="w-3.5 h-3.5 text-primary" />
             <div className="flex flex-col">
               <span className="font-medium">Account Settings</span>
-              <span className="text-[10px] text-muted-foreground">Security, password & preferences</span>
+              <span className="text-[10px] text-muted-foreground">Security & preferences</span>
             </div>
           </Link>
 
           <Link
             href="/support/tickets"
+            role="menuitem"
             onClick={() => requestClose()}
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-foreground hover:bg-accent transition-colors"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-foreground hover:bg-accent transition-colors cursor-pointer"
           >
             <LifeBuoy className="w-3.5 h-3.5 text-primary" />
             <div className="flex flex-col">
               <span className="font-medium">Help & Support</span>
-              <span className="text-[10px] text-muted-foreground">Tickets & technical assistance</span>
+              <span className="text-[10px] text-muted-foreground">Tickets & assistance</span>
             </div>
           </Link>
 
           {user.role === 'ADMIN' && (
             <Link
               href="/admin"
+              role="menuitem"
               onClick={() => requestClose()}
-              className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-amber-600 dark:text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 transition-colors"
+              className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-amber-600 dark:text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 transition-colors cursor-pointer"
             >
               <Shield className="w-3.5 h-3.5 text-amber-500" />
               <div className="flex flex-col">
@@ -181,6 +184,7 @@ export function UserAvatarMenu({ user }: UserAvatarMenuProps) {
             <form action="/api/auth/logout" method="POST">
               <button
                 type="submit"
+                role="menuitem"
                 className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer text-left font-medium"
               >
                 <LogOut className="w-3.5 h-3.5 text-rose-500 dark:text-rose-400" />

@@ -19,7 +19,7 @@ export function PageShell({
   return (
     <div
       className={cn(
-        'relative min-h-[calc(100vh-4rem)] w-full',
+        'relative min-h-[calc(100vh-4rem)] w-full overflow-hidden',
         padded && 'py-8 sm:py-12 lg:py-16',
         className
       )}
@@ -28,9 +28,9 @@ export function PageShell({
       {glow && (
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96 overflow-hidden flex justify-center"
+          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96 overflow-hidden flex justify-center w-full"
         >
-          <div className="w-[600px] sm:w-[900px] h-[350px] bg-gradient-to-b from-indigo-500/10 via-indigo-600/5 to-transparent blur-3xl rounded-full transform -translate-y-1/2" />
+          <div className="w-full max-w-[600px] sm:max-w-[900px] h-[350px] bg-gradient-to-b from-indigo-500/10 via-indigo-600/5 to-transparent blur-3xl rounded-full transform -translate-y-1/2" />
         </div>
       )}
       <Container size={size}>{children}</Container>

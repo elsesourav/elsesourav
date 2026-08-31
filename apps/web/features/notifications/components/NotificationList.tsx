@@ -2,11 +2,11 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Card, Button, Badge } from '@elsesourav/ui';
+import { Card, Button } from '@elsesourav/ui';
 import type { NotificationItem } from '@elsesourav/types';
 import { NotificationItemCard } from './NotificationItemCard';
 import { markAllNotificationsAsReadAction } from '../actions/notification-actions';
-import { Bell, CheckCheck, Inbox, Loader2 } from 'lucide-react';
+import { CheckCheck, Inbox, Loader2 } from 'lucide-react';
 
 interface NotificationListProps {
   initialNotifications: readonly NotificationItem[];
@@ -61,16 +61,16 @@ export function NotificationList({
 
   return (
     <div className="space-y-6">
-      {/* Controls Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-800/80 pb-4">
-        <div className="flex items-center gap-1.5 bg-zinc-900/60 p-1 rounded-xl border border-zinc-800 text-xs">
+      {/* Filter Tabs Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
+        <div className="inline-flex items-center gap-1.5 bg-muted/60 p-1 rounded-xl border border-border text-xs">
           <button
             type="button"
             onClick={() => setFilter('all')}
-            className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
+            className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
               filter === 'all'
-                ? 'bg-zinc-800 text-white shadow-sm'
-                : 'text-zinc-400 hover:text-zinc-200'
+                ? 'bg-background text-foreground shadow-sm font-semibold'
+                : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             All ({notifications.length})
@@ -78,10 +78,10 @@ export function NotificationList({
           <button
             type="button"
             onClick={() => setFilter('unread')}
-            className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
+            className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
               filter === 'unread'
-                ? 'bg-zinc-800 text-white shadow-sm'
-                : 'text-zinc-400 hover:text-zinc-200'
+                ? 'bg-background text-foreground shadow-sm font-semibold'
+                : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             Unread ({unreadCount})
@@ -94,12 +94,12 @@ export function NotificationList({
             size="sm"
             onClick={handleMarkAllRead}
             disabled={isMarkingAll}
-            className="text-xs border-zinc-800 hover:bg-zinc-800 text-zinc-300 gap-1.5"
+            className="text-xs border-border hover:bg-accent text-foreground gap-1.5 rounded-xl cursor-pointer"
           >
             {isMarkingAll ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin" />
             ) : (
-              <CheckCheck className="w-3.5 h-3.5 text-indigo-400" />
+              <CheckCheck className="w-3.5 h-3.5 text-primary" />
             )}
             <span>Mark all as read</span>
           </Button>
@@ -108,13 +108,13 @@ export function NotificationList({
 
       {/* List or Empty State */}
       {filteredNotifications.length === 0 ? (
-        <Card className="card-obsidian-glass py-14 px-6 text-center space-y-4 max-w-md mx-auto">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center mx-auto text-indigo-400">
+        <Card className="bg-card text-card-foreground border-border shadow-sm rounded-2xl sm:rounded-3xl py-14 px-6 text-center space-y-4 max-w-md mx-auto">
+          <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto text-primary shadow-sm">
             <Inbox className="w-6 h-6" />
           </div>
           <div className="space-y-1.5">
-            <h3 className="text-base font-bold text-zinc-100">No notifications</h3>
-            <p className="text-xs text-zinc-400 max-w-xs mx-auto leading-relaxed">
+            <h3 className="text-base font-bold text-foreground">No notifications</h3>
+            <p className="text-xs text-muted-foreground max-w-xs mx-auto leading-relaxed">
               {filter === 'unread'
                 ? "You've read all your notifications! Nice and clean."
                 : "You don't have any unread notifications right now."}
@@ -125,7 +125,7 @@ export function NotificationList({
               <Button
                 variant="outline"
                 size="sm"
-                className="text-xs border-zinc-800 hover:bg-zinc-800 text-zinc-300 rounded-xl px-4 py-2"
+                className="text-xs border-border hover:bg-accent text-foreground rounded-xl px-4 py-2 cursor-pointer"
               >
                 <span>Adjust Notification Channels</span>
               </Button>

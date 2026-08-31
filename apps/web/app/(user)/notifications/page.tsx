@@ -51,9 +51,9 @@ export default async function NotificationsPage() {
             <Button
               variant="outline"
               size="sm"
-              className="text-xs text-zinc-300 border-zinc-800 hover:bg-zinc-800 gap-1.5 rounded-xl"
+              className="text-xs text-foreground border-border hover:bg-accent gap-1.5 rounded-xl cursor-pointer"
             >
-              <Settings className="w-3.5 h-3.5 text-indigo-400" />
+              <Settings className="w-3.5 h-3.5 text-primary" />
               <span>Notification Preferences</span>
             </Button>
           </Link>
