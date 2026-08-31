@@ -66,9 +66,9 @@ export default async function UserLayout({ children }: { children: React.ReactNo
       </header>
 
       {/* Main Authenticated Layout with Sticky Sidebar on Desktop & Menu on Mobile */}
-      <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-5 lg:py-6 flex flex-col lg:flex-row gap-5 lg:gap-6 lg:min-h-[calc(100vh-4rem)]">
+      <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-5 lg:py-6 flex flex-col lg:flex-row items-start gap-5 lg:gap-6">
         <UserSidebar />
-        <main id="main-content" className="flex-1 min-w-0">
+        <main id="main-content" className="flex-1 min-w-0 w-full">
           {children}
         </main>
       </div>
