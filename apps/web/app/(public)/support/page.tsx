@@ -76,11 +76,11 @@ export default async function SupportPage() {
               <Button
                 variant="outline"
                 size="sm"
-                className="border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 text-xs gap-2 rounded-xl"
+                className="border-border bg-card hover:bg-accent text-foreground text-xs gap-2 rounded-xl cursor-pointer"
               >
-                <MessageSquare className="w-3.5 h-3.5 text-indigo-400" />
+                <MessageSquare className="w-3.5 h-3.5 text-primary" />
                 <span>View My Existing Tickets</span>
-                <ArrowRight className="w-3 h-3 text-zinc-500" />
+                <ArrowRight className="w-3 h-3 text-muted-foreground" />
               </Button>
             </Link>
           </div>
@@ -89,10 +89,10 @@ export default async function SupportPage() {
         {/* Support Ticket Submission Card */}
         <div className="max-w-2xl mx-auto w-full">
           {isAuthenticated ? (
-            <Card className="p-6 sm:p-8 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 backdrop-blur-xl shadow-2xl space-y-6">
-              <div className="space-y-1 pb-4 border-b border-zinc-800/60">
-                <h2 className="text-lg font-bold text-zinc-100">Create Support Ticket</h2>
-                <p className="text-xs text-zinc-400">
+            <Card className="p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-border bg-card text-card-foreground shadow-sm space-y-6">
+              <div className="space-y-1 pb-4 border-b border-border">
+                <h2 className="text-lg font-bold text-foreground">Create Support Ticket</h2>
+                <p className="text-xs text-muted-foreground">
                   Our engineering team reviews and responds to all tickets directly through your account.
                 </p>
               </div>
@@ -100,14 +100,14 @@ export default async function SupportPage() {
               <CreateTicketForm />
             </Card>
           ) : (
-            <Card className="p-8 text-center rounded-3xl border border-zinc-800/80 bg-zinc-900/30 backdrop-blur-xl space-y-6 shadow-2xl">
-              <div className="w-14 h-14 rounded-2xl bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center mx-auto text-indigo-400 shadow-lg shadow-indigo-950/40">
+            <Card className="p-8 text-center rounded-2xl sm:rounded-3xl border border-border bg-card text-card-foreground shadow-sm space-y-6">
+              <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto text-primary shadow-sm">
                 <Lock className="w-7 h-7" />
               </div>
 
               <div className="space-y-2">
-                <h2 className="text-xl font-bold text-zinc-100">Sign in to Submit a Ticket</h2>
-                <p className="text-xs sm:text-sm text-zinc-400 max-w-sm mx-auto leading-relaxed">
+                <h2 className="text-xl font-bold text-foreground">Sign in to Submit a Ticket</h2>
+                <p className="text-xs sm:text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
                   Support tickets are linked directly to your authenticated user account so you can
                   track responses and maintain conversation history.
                 </p>
@@ -115,7 +115,7 @@ export default async function SupportPage() {
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
                 <Link href="/login?next=/support" className="w-full sm:w-auto">
-                  <Button className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-5 py-2.5 rounded-xl gap-2 shadow-lg shadow-indigo-600/20">
+                  <Button className="w-full sm:w-auto text-xs font-semibold px-5 py-2.5 rounded-xl gap-2 shadow-sm cursor-pointer">
                     <span>Sign In to Continue</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Button>
@@ -123,9 +123,9 @@ export default async function SupportPage() {
                 <Link href="/help" className="w-full sm:w-auto">
                   <Button
                     variant="outline"
-                    className="w-full sm:w-auto border-zinc-800 hover:bg-zinc-800 text-zinc-300 text-xs gap-2 rounded-xl"
+                    className="w-full sm:w-auto border-border hover:bg-accent text-foreground text-xs gap-2 rounded-xl cursor-pointer"
                   >
-                    <LifeBuoy className="w-3.5 h-3.5 text-indigo-400" />
+                    <LifeBuoy className="w-3.5 h-3.5 text-primary" />
                     <span>Browse Help Center</span>
                   </Button>
                 </Link>
@@ -135,14 +135,14 @@ export default async function SupportPage() {
         </div>
 
         {/* Knowledge Base Help-First Callout */}
-        <Card className="p-6 rounded-2xl border border-zinc-800/80 bg-zinc-900/20 backdrop-blur-sm max-w-2xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <Card className="p-6 rounded-2xl border border-border bg-card text-card-foreground shadow-sm max-w-2xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-indigo-950/40 border border-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
               <LifeBuoy className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-xs font-bold text-zinc-200">Looking for immediate answers?</h3>
-              <p className="text-[11px] text-zinc-400">
+              <h3 className="text-xs font-bold text-foreground">Looking for immediate answers?</h3>
+              <p className="text-[11px] text-muted-foreground">
                 Explore our Knowledge Base for troubleshooting steps and setup guides.
               </p>
             </div>
@@ -152,10 +152,10 @@ export default async function SupportPage() {
             <Button
               variant="outline"
               size="sm"
-              className="text-xs border-zinc-800 text-zinc-300 gap-1.5 rounded-xl"
+              className="text-xs border-border text-foreground hover:bg-accent gap-1.5 rounded-xl cursor-pointer"
             >
               <span>Help Center</span>
-              <ArrowRight className="w-3 h-3 text-zinc-500" />
+              <ArrowRight className="w-3 h-3 text-muted-foreground" />
             </Button>
           </Link>
         </Card>

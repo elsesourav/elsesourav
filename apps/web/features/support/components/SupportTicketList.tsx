@@ -6,12 +6,14 @@ import { Card, Badge, Button } from '@elsesourav/ui';
 import type { SupportTicketListItem, SupportTicketStatus } from '@elsesourav/types';
 import {
   Headphones,
-  MessageSquare,
   Plus,
   Clock,
   ArrowRight,
   CheckCircle2,
   AlertCircle,
+  Clock3,
+  HelpCircle,
+  Lock,
 } from 'lucide-react';
 
 interface SupportTicketListProps {
@@ -19,51 +21,56 @@ interface SupportTicketListProps {
   onOpenCreateModal?: () => void;
 }
 
-function getStatusBadge(status: SupportTicketStatus) {
+export function getStatusBadge(status: SupportTicketStatus) {
   switch (status) {
     case 'open':
       return (
         <Badge
           variant="info"
-          className="text-[10px] bg-sky-950/60 text-sky-300 border border-sky-500/30"
+          className="text-[10px] bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/30 gap-1 font-medium"
         >
-          Open
+          <Clock3 className="w-2.5 h-2.5" />
+          <span>Open</span>
         </Badge>
       );
     case 'in_progress':
       return (
         <Badge
           variant="warning"
-          className="text-[10px] bg-amber-950/60 text-amber-300 border border-amber-500/30"
+          className="text-[10px] bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30 gap-1 font-medium"
         >
-          In Progress
+          <AlertCircle className="w-2.5 h-2.5" />
+          <span>In Progress</span>
         </Badge>
       );
     case 'waiting_for_user':
       return (
         <Badge
           variant="warning"
-          className="text-[10px] bg-purple-950/60 text-purple-300 border border-purple-500/30"
+          className="text-[10px] bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/30 gap-1 font-medium"
         >
-          Waiting on You
+          <HelpCircle className="w-2.5 h-2.5" />
+          <span>Waiting on You</span>
         </Badge>
       );
     case 'resolved':
       return (
         <Badge
           variant="success"
-          className="text-[10px] bg-emerald-950/60 text-emerald-300 border border-emerald-500/30"
+          className="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 gap-1 font-medium"
         >
-          Resolved
+          <CheckCircle2 className="w-2.5 h-2.5" />
+          <span>Resolved</span>
         </Badge>
       );
     case 'closed':
       return (
         <Badge
           variant="default"
-          className="text-[10px] bg-zinc-800 text-zinc-400 border border-zinc-700"
+          className="text-[10px] bg-muted text-muted-foreground border border-border gap-1 font-medium"
         >
-          Closed
+          <Lock className="w-2.5 h-2.5" />
+          <span>Closed</span>
         </Badge>
       );
     default:
@@ -86,16 +93,16 @@ export function SupportTicketList({ tickets, onOpenCreateModal }: SupportTicketL
 
   return (
     <div className="space-y-6">
-      {/* Header & Filter Controls */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-800/80 pb-4">
-        <div className="flex items-center gap-1.5 bg-zinc-900/60 p-1 rounded-xl border border-zinc-800 text-xs">
+      {/* Filter Tabs Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
+        <div className="inline-flex items-center gap-1.5 bg-muted/60 p-1 rounded-xl border border-border text-xs">
           <button
             type="button"
             onClick={() => setFilter('all')}
-            className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
+            className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
               filter === 'all'
-                ? 'bg-zinc-800 text-white shadow-sm'
-                : 'text-zinc-400 hover:text-zinc-200'
+                ? 'bg-background text-foreground shadow-sm font-semibold'
+                : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             All ({tickets.length})
@@ -103,26 +110,24 @@ export function SupportTicketList({ tickets, onOpenCreateModal }: SupportTicketL
           <button
             type="button"
             onClick={() => setFilter('open')}
-            className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
+            className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
               filter === 'open'
-                ? 'bg-zinc-800 text-white shadow-sm'
-                : 'text-zinc-400 hover:text-zinc-200'
+                ? 'bg-background text-foreground shadow-sm font-semibold'
+                : 'text-muted-foreground hover:text-foreground'
             }`}
           >
-            Active ({tickets.filter((t) => t.status !== 'closed' && t.status !== 'resolved').length}
-            )
+            Active ({tickets.filter((t) => t.status !== 'closed' && t.status !== 'resolved').length})
           </button>
           <button
             type="button"
             onClick={() => setFilter('closed')}
-            className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
+            className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
               filter === 'closed'
-                ? 'bg-zinc-800 text-white shadow-sm'
-                : 'text-zinc-400 hover:text-zinc-200'
+                ? 'bg-background text-foreground shadow-sm font-semibold'
+                : 'text-muted-foreground hover:text-foreground'
             }`}
           >
-            Resolved (
-            {tickets.filter((t) => t.status === 'closed' || t.status === 'resolved').length})
+            Resolved ({tickets.filter((t) => t.status === 'closed' || t.status === 'resolved').length})
           </button>
         </div>
 
@@ -130,7 +135,7 @@ export function SupportTicketList({ tickets, onOpenCreateModal }: SupportTicketL
           <Button
             onClick={onOpenCreateModal}
             size="sm"
-            className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl gap-1.5 shrink-0"
+            className="text-xs font-semibold rounded-xl gap-1.5 shrink-0 shadow-sm cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>New Ticket</span>
@@ -140,15 +145,15 @@ export function SupportTicketList({ tickets, onOpenCreateModal }: SupportTicketL
 
       {/* Ticket List or Empty State */}
       {filteredTickets.length === 0 ? (
-        <Card className="card-obsidian-glass py-14 px-6 text-center space-y-4 max-w-md mx-auto">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center mx-auto text-indigo-400">
+        <Card className="bg-card text-card-foreground border-border shadow-sm rounded-2xl sm:rounded-3xl py-12 px-6 text-center space-y-4 max-w-md mx-auto">
+          <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto text-primary shadow-sm">
             <Headphones className="w-6 h-6" />
           </div>
           <div className="space-y-1.5">
-            <h3 className="text-base font-bold text-zinc-100">No support tickets</h3>
-            <p className="text-xs text-zinc-400 leading-relaxed">
+            <h3 className="text-base font-bold text-foreground">No support tickets</h3>
+            <p className="text-xs text-muted-foreground leading-relaxed">
               {filter === 'all'
-                ? "You haven't opened any support tickets yet. Need technical assistance? Submit a ticket below."
+                ? "You haven't opened any support requests yet. Need technical assistance? Submit a ticket below."
                 : `No ${filter} tickets found.`}
             </p>
           </div>
@@ -157,7 +162,7 @@ export function SupportTicketList({ tickets, onOpenCreateModal }: SupportTicketL
               <Button
                 onClick={onOpenCreateModal}
                 size="sm"
-                className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs gap-1.5 rounded-xl px-4 py-2 font-semibold shadow-lg shadow-indigo-600/20 active:scale-95 transition-all"
+                className="text-xs gap-1.5 rounded-xl px-4 py-2 font-semibold shadow-sm cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Create Ticket</span>
@@ -166,7 +171,7 @@ export function SupportTicketList({ tickets, onOpenCreateModal }: SupportTicketL
               <Link href="/support">
                 <Button
                   size="sm"
-                  className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs gap-1.5 rounded-xl px-4 py-2 font-semibold shadow-lg shadow-indigo-600/20 active:scale-95 transition-all"
+                  className="text-xs gap-1.5 rounded-xl px-4 py-2 font-semibold shadow-sm cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Open New Ticket</span>
@@ -187,31 +192,31 @@ export function SupportTicketList({ tickets, onOpenCreateModal }: SupportTicketL
 
             return (
               <Link key={ticket.id} href={`/support/tickets/${ticket.id}`} className="block group">
-                <Card className="card-obsidian-glass p-5 hover:border-indigo-500/40 transition-all">
+                <Card className="bg-card text-card-foreground border-border shadow-sm rounded-2xl p-5 hover:border-primary/40 hover:shadow-md transition-all duration-200">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="space-y-1.5 min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-mono text-xs text-indigo-400 font-semibold">
+                        <span className="font-mono text-xs text-primary font-semibold">
                           {ticket.ticketNumber}
                         </span>
                         {getStatusBadge(ticket.status)}
-                        <Badge variant="default" className="text-[10px] bg-zinc-800 text-zinc-400">
+                        <Badge variant="default" className="text-[10px] bg-muted text-muted-foreground border-border">
                           {ticket.category}
                         </Badge>
                       </div>
 
-                      <h4 className="font-semibold text-zinc-100 text-sm sm:text-base group-hover:text-indigo-300 transition-colors truncate">
+                      <h4 className="font-semibold text-foreground text-sm sm:text-base group-hover:text-primary transition-colors truncate">
                         {ticket.subject}
                       </h4>
                     </div>
 
-                    <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0 text-xs text-zinc-400">
-                      <div className="flex items-center gap-1 text-[11px] text-zinc-500">
-                        <Clock className="w-3.5 h-3.5" />
+                    <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0 text-xs text-muted-foreground">
+                      <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                        <Clock className="w-3.5 h-3.5 text-primary/70" />
                         <span>Active {updatedDate}</span>
                       </div>
 
-                      <div className="flex items-center gap-1 text-indigo-400 font-medium group-hover:translate-x-0.5 transition-transform">
+                      <div className="flex items-center gap-1 text-primary font-medium group-hover:translate-x-0.5 transition-transform">
                         <span>View</span>
                         <ArrowRight className="w-3.5 h-3.5" />
                       </div>

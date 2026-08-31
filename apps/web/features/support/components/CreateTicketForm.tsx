@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Input, Card } from '@elsesourav/ui';
+import { Button, Input } from '@elsesourav/ui';
 import { createSupportTicketAction } from '../actions/support-actions';
 import { Send, AlertCircle, Loader2 } from 'lucide-react';
 
@@ -80,7 +80,7 @@ export function CreateTicketForm({ onSuccess, onCancel }: CreateTicketFormProps)
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {error && (
-        <div className="p-4 rounded-xl bg-rose-950/40 border border-rose-500/30 flex items-center gap-2.5 text-xs text-rose-300">
+        <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center gap-2.5 text-xs text-rose-600 dark:text-rose-400">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>
@@ -88,13 +88,13 @@ export function CreateTicketForm({ onSuccess, onCancel }: CreateTicketFormProps)
 
       {/* Category Selection */}
       <div className="space-y-1.5">
-        <label className="block text-xs font-semibold text-zinc-300">
-          Issue Category <span className="text-rose-400">*</span>
+        <label className="block text-xs font-semibold text-foreground">
+          Issue Category <span className="text-rose-500">*</span>
         </label>
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs text-zinc-100 focus:border-indigo-500 focus:outline-none"
+          className="w-full bg-background border border-border rounded-xl px-3.5 py-2.5 text-xs text-foreground focus:border-primary focus:outline-none"
         >
           {CATEGORIES.map((cat) => (
             <option key={cat.value} value={cat.value}>
@@ -106,11 +106,11 @@ export function CreateTicketForm({ onSuccess, onCancel }: CreateTicketFormProps)
 
       {/* Priority Selection */}
       <div className="space-y-1.5">
-        <label className="block text-xs font-semibold text-zinc-300">Priority Level</label>
+        <label className="block text-xs font-semibold text-foreground">Priority Level</label>
         <select
           value={priority}
           onChange={(e) => setPriority(e.target.value)}
-          className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs text-zinc-100 focus:border-indigo-500 focus:outline-none"
+          className="w-full bg-background border border-border rounded-xl px-3.5 py-2.5 text-xs text-foreground focus:border-primary focus:outline-none"
         >
           {PRIORITIES.map((pri) => (
             <option key={pri.value} value={pri.value}>
@@ -122,8 +122,8 @@ export function CreateTicketForm({ onSuccess, onCancel }: CreateTicketFormProps)
 
       {/* Subject Input */}
       <div className="space-y-1.5">
-        <label className="block text-xs font-semibold text-zinc-300">
-          Subject Summary <span className="text-rose-400">*</span>
+        <label className="block text-xs font-semibold text-foreground">
+          Subject Summary <span className="text-rose-500">*</span>
         </label>
         <Input
           type="text"
@@ -132,14 +132,14 @@ export function CreateTicketForm({ onSuccess, onCancel }: CreateTicketFormProps)
           placeholder="Brief summary of the issue..."
           required
           maxLength={120}
-          className="bg-zinc-900 border-zinc-800 text-xs rounded-xl text-zinc-100 focus:border-indigo-500"
+          className="bg-background border-border text-xs rounded-xl text-foreground focus:border-primary"
         />
       </div>
 
       {/* Description Textarea */}
       <div className="space-y-1.5">
-        <label className="block text-xs font-semibold text-zinc-300">
-          Detailed Description <span className="text-rose-400">*</span>
+        <label className="block text-xs font-semibold text-foreground">
+          Detailed Description <span className="text-rose-500">*</span>
         </label>
         <textarea
           value={description}
@@ -148,9 +148,9 @@ export function CreateTicketForm({ onSuccess, onCancel }: CreateTicketFormProps)
           required
           rows={6}
           maxLength={3000}
-          className="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3.5 text-xs text-zinc-100 focus:border-indigo-500 focus:outline-none leading-relaxed"
+          className="w-full bg-background border border-border rounded-xl p-3.5 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed"
         />
-        <div className="flex justify-end text-[11px] text-zinc-500">
+        <div className="flex justify-end text-[11px] text-muted-foreground">
           {description.length}/3000 characters
         </div>
       </div>
@@ -163,7 +163,7 @@ export function CreateTicketForm({ onSuccess, onCancel }: CreateTicketFormProps)
             variant="ghost"
             onClick={onCancel}
             disabled={isSubmitting}
-            className="text-xs text-zinc-400 hover:text-zinc-200"
+            className="text-xs text-muted-foreground hover:text-foreground cursor-pointer rounded-xl"
           >
             Cancel
           </Button>
@@ -171,7 +171,7 @@ export function CreateTicketForm({ onSuccess, onCancel }: CreateTicketFormProps)
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-5 py-2.5 rounded-xl gap-2 shadow-lg shadow-indigo-600/20"
+          className="text-xs font-semibold px-5 py-2.5 rounded-xl gap-2 shadow-sm cursor-pointer"
         >
           {isSubmitting ? (
             <>

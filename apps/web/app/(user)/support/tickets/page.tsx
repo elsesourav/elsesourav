@@ -11,6 +11,10 @@ import Link from 'next/link';
 export const metadata: Metadata = {
   title: 'My Support Tickets | ElseSourav',
   description: 'Manage support inquiries, issue reports, and assistance requests.',
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default async function UserSupportTicketsPage() {
@@ -40,16 +44,16 @@ export default async function UserSupportTicketsPage() {
               <Button
                 variant="outline"
                 size="sm"
-                className="border-zinc-800 text-zinc-300 text-xs gap-1.5 rounded-xl"
+                className="border-border text-foreground hover:bg-accent text-xs gap-1.5 rounded-xl cursor-pointer"
               >
-                <LifeBuoy className="w-3.5 h-3.5 text-indigo-400" />
+                <LifeBuoy className="w-3.5 h-3.5 text-primary" />
                 <span>Knowledge Base</span>
               </Button>
             </Link>
             <Link href="/support">
               <Button
                 size="sm"
-                className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs gap-1.5 shadow-lg shadow-indigo-600/20 rounded-xl font-semibold"
+                className="text-xs gap-1.5 rounded-xl font-semibold shadow-sm cursor-pointer"
               >
                 <PlusCircle className="w-3.5 h-3.5" />
                 <span>New Ticket</span>
