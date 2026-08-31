@@ -7,7 +7,7 @@ import { User as UserIcon, Lock, LifeBuoy, ArrowRight } from 'lucide-react';
 const ACTIONS = [
   {
     title: 'Edit Profile',
-    subtitle: 'Update your avatar, display name, username, and bio.',
+    subtitle: 'Update your avatar, display name, username, and developer bio.',
     href: '/settings?tab=profile',
     icon: UserIcon,
     iconColor: 'bg-primary/10 text-primary border-primary/20',
@@ -21,7 +21,7 @@ const ACTIONS = [
   },
   {
     title: 'Help & Support',
-    subtitle: 'Get technical assistance, browse guides, or track your tickets.',
+    subtitle: 'Get technical assistance, browse guides, or track support tickets.',
     href: '/support/tickets',
     icon: LifeBuoy,
     iconColor: 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/20',
@@ -37,23 +37,23 @@ export function ProfileQuickActions() {
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
         {ACTIONS.map((action) => {
           const Icon = action.icon;
           return (
             <Link
               key={action.href}
               href={action.href}
-              className="group relative flex flex-col justify-between p-5 rounded-2xl bg-card text-card-foreground border border-border/80 shadow-sm hover:border-primary/40 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="group relative flex flex-col justify-between p-5 sm:p-6 rounded-2xl sm:rounded-3xl bg-card text-card-foreground border border-border/80 shadow-sm hover:border-primary/40 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
-              <div className="space-y-3.5">
+              <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div
                     className={`w-10 h-10 rounded-xl border flex items-center justify-center transition-transform duration-200 group-hover:scale-105 ${action.iconColor}`}
                   >
                     <Icon className="w-5 h-5" />
                   </div>
-                  <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all duration-200" />
+                  <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-200" />
                 </div>
 
                 <div className="space-y-1">
