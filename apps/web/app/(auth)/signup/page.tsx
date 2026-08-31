@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import {
@@ -30,7 +31,9 @@ export default function SignUpPage() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <SignUpForm />
+        <React.Suspense fallback={<div className="h-64 rounded-2xl bg-zinc-900/30 animate-pulse" />}>
+          <SignUpForm />
+        </React.Suspense>
       </CardContent>
       <CardFooter className="flex justify-center border-t border-[hsl(var(--border-subtle))] pt-4 pb-5">
         <p className="text-sm text-[hsl(var(--muted-foreground))]">

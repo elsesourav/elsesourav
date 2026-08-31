@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import {
@@ -25,7 +26,9 @@ export default function ForgotPasswordPage() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ForgotPasswordForm />
+        <React.Suspense fallback={<div className="h-48 rounded-2xl bg-zinc-900/30 animate-pulse" />}>
+          <ForgotPasswordForm />
+        </React.Suspense>
       </CardContent>
       <CardFooter className="flex justify-center border-t border-[hsl(var(--border-subtle))] pt-4">
         <p className="text-sm text-[hsl(var(--muted-foreground))]">
