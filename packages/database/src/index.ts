@@ -17,6 +17,7 @@ export * from './repositories/admin.repository';
 export * from './repositories/audit.repository';
 export * from './repositories/library.repository';
 export * from './repositories/media.repository';
+export * from './repositories/otp.repository';
 export * from './services/user.service';
 export * from './services/app.service';
 export * from './services/app-query.service';

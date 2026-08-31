@@ -373,3 +373,17 @@ model SiteSetting {
 
   @@index([key])
 }
+
+model EmailOtp {
+  id        String   @id @default(uuid())
+  email     String
+  otpHash   String
+  purpose   String   // 'EMAIL_VERIFY' | 'PASSWORD_RESET'
+  attempts  Int      @default(0)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email, purpose])
+  @@index([expiresAt])
+}
+

@@ -3,19 +3,15 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Input, Button, Label, Alert, AlertDescription } from '@elsesourav/ui';
-import { createAuthBrowserClient, AuthError } from '@elsesourav/auth';
 import {
   Mail,
   CheckCircle2,
   Lock,
   ArrowRight,
   ArrowLeft,
-  KeyRound,
   ShieldCheck,
   Eye,
   EyeOff,
-  Sparkles,
-  ChevronRight,
 } from 'lucide-react';
 
 function calculatePasswordStrength(pass: string): { score: number; label: string; color: string } {
@@ -117,6 +113,7 @@ export function ForgotPasswordForm() {
   // Form Fields
   const [identifier, setIdentifier] = React.useState('');
   const [targetEmail, setTargetEmail] = React.useState('');
+  const [resetToken, setResetToken] = React.useState('');
   const [otp, setOtp] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
@@ -148,57 +145,27 @@ export function ForgotPasswordForm() {
 
     try {
       setLoading(true);
-      let emailToSend = trimmed;
-
-      // Resolve username to email if needed
-      if (!trimmed.includes('@')) {
-        const resolveRes = await fetch('/api/auth/resolve-identifier', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ identifier: trimmed }),
-        });
-
-        if (!resolveRes.ok) {
-          const resData = await resolveRes.json();
-          setErrorMessage(
-            resData.error || `No account found with username "@${trimmed}"`
-          );
-          setLoading(false);
-          return;
-        }
-
-        const resolveData = await resolveRes.json();
-        if (!resolveData.email) {
-          setErrorMessage(`No account found with username "@${trimmed}"`);
-          setLoading(false);
-          return;
-        }
-
-        emailToSend = resolveData.email;
-      }
-
-      setTargetEmail(emailToSend);
-
-      const supabase = createAuthBrowserClient();
-      const { error } = await supabase.auth.signInWithOtp({
-        email: emailToSend,
-        options: {
-          shouldCreateUser: false,
-        },
+      const res = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'send-otp',
+          identifier: trimmed,
+        }),
       });
 
-      if (error) {
-        const translated = AuthError.fromSupabase(error);
-        setErrorMessage(translated.message);
-        setLoading(false);
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setErrorMessage(data.error || 'Failed to dispatch verification code');
         return;
       }
 
+      setTargetEmail(data.email || trimmed);
       setStep(2);
       setOtp('');
       setResendCooldown(45);
     } catch {
-      setErrorMessage('An unexpected error occurred. Please try again.');
+      setErrorMessage('An unexpected network error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -216,20 +183,23 @@ export function ForgotPasswordForm() {
 
     try {
       setLoading(true);
-      const supabase = createAuthBrowserClient();
-      const { error } = await supabase.auth.verifyOtp({
-        email: targetEmail,
-        token: otp,
-        type: 'email',
+      const res = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'verify-otp',
+          email: targetEmail,
+          otp,
+        }),
       });
 
-      if (error) {
-        const translated = AuthError.fromSupabase(error);
-        setErrorMessage(translated.message || 'Invalid or expired OTP code. Please try again.');
-        setLoading(false);
+      const data = await res.json();
+      if (!res.ok || !data.success || !data.resetToken) {
+        setErrorMessage(data.error || 'Invalid or expired OTP code. Please try again.');
         return;
       }
 
+      setResetToken(data.resetToken);
       setStep(3);
     } catch {
       setErrorMessage('Verification failed. Please check the code and try again.');
@@ -245,16 +215,18 @@ export function ForgotPasswordForm() {
 
     try {
       setLoading(true);
-      const supabase = createAuthBrowserClient();
-      const { error } = await supabase.auth.signInWithOtp({
-        email: targetEmail,
-        options: {
-          shouldCreateUser: false,
-        },
+      const res = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'send-otp',
+          identifier: targetEmail,
+        }),
       });
 
-      if (error) {
-        setErrorMessage(error.message);
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setErrorMessage(data.error || 'Failed to resend verification code');
       } else {
         setResendCooldown(45);
         setOtp('');
@@ -283,15 +255,20 @@ export function ForgotPasswordForm() {
 
     try {
       setLoading(true);
-      const supabase = createAuthBrowserClient();
-      const { error } = await supabase.auth.updateUser({
-        password,
+      const res = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'reset-password',
+          email: targetEmail,
+          resetToken,
+          newPassword: password,
+        }),
       });
 
-      if (error) {
-        const translated = AuthError.fromSupabase(error);
-        setErrorMessage(translated.message);
-        setLoading(false);
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setErrorMessage(data.error || 'Failed to update password');
         return;
       }
 
@@ -381,7 +358,7 @@ export function ForgotPasswordForm() {
               />
             </div>
             <p className="text-[11px] text-[hsl(var(--muted-foreground))]">
-              We will send a 6-digit verification OTP to your account email.
+              We will dispatch a 6-digit numeric verification code to your email.
             </p>
           </div>
 
@@ -424,7 +401,7 @@ export function ForgotPasswordForm() {
 
           <div className="space-y-2 text-center">
             <Label className="text-xs text-[hsl(var(--foreground))] block">
-              Enter 6-Digit OTP Code
+              Enter 6-Digit Verification Code
             </Label>
             <OtpBoxes value={otp} onChange={setOtp} disabled={loading} />
           </div>

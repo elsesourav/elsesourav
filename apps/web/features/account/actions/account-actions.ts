@@ -97,83 +97,84 @@ export async function updatePreferencesAction(data: {
   }
 }
 
+import { OtpRepository } from '@elsesourav/database';
+import { sendOtpEmail } from '@/lib/mailer';
+import crypto from 'node:crypto';
+
+const otpRepo = new OtpRepository();
+
 /**
- * Send a 6-digit OTP to the currently authenticated user's email address.
- * Uses Supabase's built-in signInWithOtp (email OTP mode).
+ * Send a genuine 6-digit numeric OTP to the currently authenticated user's email address.
+ * Dispatches via Nodemailer with zero magic links or sign-in buttons.
  */
-export async function sendEmailOtpAction() {
+export async function sendEmailOtpAction(purpose: 'EMAIL_VERIFY' | 'PASSWORD_RESET' = 'EMAIL_VERIFY') {
   const user = await getSessionUser();
   if (!user?.email) {
     return { success: false, error: 'Unauthorized' };
   }
 
   try {
-    const cookieStore = await cookies();
-    const supabase = createAuthServerClient({
-      getAll: () => cookieStore.getAll(),
-      setAll: () => {},
+    // Generate secure 6-digit numeric OTP
+    const otp = crypto.randomInt(100000, 999999).toString();
+
+    // Store in database with 10-min expiration
+    await otpRepo.createOtp(user.email, otp, purpose, 10);
+
+    // Send email with large 6-digit code box
+    const sendResult = await sendOtpEmail({
+      to: user.email,
+      otp,
+      purpose,
+      displayName: user.displayName || undefined,
     });
 
-    const { error } = await supabase.auth.signInWithOtp({
-      email: user.email,
-      options: {
-        shouldCreateUser: false,
-      },
-    });
-
-    if (error) {
-      return { success: false, error: error.message };
+    if (!sendResult.success) {
+      return { success: false, error: sendResult.error || 'Failed to send verification email' };
     }
 
     return { success: true };
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to send OTP',
+      error: error instanceof Error ? error.message : 'Failed to send verification code',
     };
   }
 }
 
 /**
- * Verify the 6-digit OTP entered by the user. On success, also marks
- * the email as verified in our database.
+ * Verify the entered 6-digit OTP against the database.
+ * If valid and purpose is EMAIL_VERIFY, marks the email as verified.
  */
-export async function verifyEmailOtpAction(otp: string) {
+export async function verifyEmailOtpAction(
+  otp: string,
+  purpose: 'EMAIL_VERIFY' | 'PASSWORD_RESET' = 'EMAIL_VERIFY'
+) {
   const user = await getSessionUser();
   if (!user?.email || !user?.id) {
     return { success: false, error: 'Unauthorized' };
   }
 
   if (!otp || otp.length !== 6 || !/^\d{6}$/.test(otp)) {
-    return { success: false, error: 'Please enter a valid 6-digit OTP' };
+    return { success: false, error: 'Please enter a valid 6-digit verification code' };
   }
 
   try {
-    const cookieStore = await cookies();
-    const supabase = createAuthServerClient({
-      getAll: () => cookieStore.getAll(),
-      setAll: () => {},
-    });
-
-    const { error } = await supabase.auth.verifyOtp({
-      email: user.email,
-      token: otp,
-      type: 'email',
-    });
-
-    if (error) {
-      return { success: false, error: 'Invalid or expired OTP. Please try again.' };
+    const result = await otpRepo.verifyOtp(user.email, otp, purpose);
+    if (!result.valid) {
+      return { success: false, error: result.error || 'Invalid or expired verification code' };
     }
 
-    // Mark email as verified in our DB
-    await userService.markEmailVerified(user.id, user.id);
-    revalidatePath('/settings');
+    // If verifying email identity, update DB flag
+    if (purpose === 'EMAIL_VERIFY') {
+      await userService.markEmailVerified(user.id, user.id);
+      revalidatePath('/settings');
+    }
 
     return { success: true };
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'OTP verification failed',
+      error: error instanceof Error ? error.message : 'Verification failed',
     };
   }
 }

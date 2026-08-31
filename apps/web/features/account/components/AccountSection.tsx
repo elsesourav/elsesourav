@@ -1,34 +1,34 @@
 'use client';
 
-import * as React from 'react';
-import { Card, CardHeader, CardTitle, CardDescription, Badge, Button, Input } from '@elsesourav/ui';
+import { createAuthBrowserClient } from '@elsesourav/auth';
 import type { User } from '@elsesourav/types';
+import { Button, Card, CardDescription, CardHeader, CardTitle, Input } from '@elsesourav/ui';
 import {
-  ShieldCheck,
-  Mail,
+  AlertCircle,
+  AlertTriangle,
   Calendar,
-  Shield,
+  Check,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  KeyRound,
+  Loader2,
   Lock,
   LogOut,
-  CheckCircle2,
-  AlertCircle,
-  Check,
-  Loader2,
-  Trash2,
-  AlertTriangle,
+  Mail,
   Pencil,
-  X,
-  KeyRound,
-  ChevronRight,
-  ChevronLeft,
+  Shield,
+  ShieldCheck,
   Sparkles,
+  Trash2,
+  X,
 } from 'lucide-react';
-import { createAuthBrowserClient } from '@elsesourav/auth';
+import * as React from 'react';
 import {
+  cancelAccountDeletionAction,
+  scheduleAccountDeletionAction,
   sendEmailOtpAction,
   verifyEmailOtpAction,
-  scheduleAccountDeletionAction,
-  cancelAccountDeletionAction,
 } from '../actions/account-actions';
 
 interface AccountSectionProps {
@@ -113,13 +113,17 @@ export function AccountSection({ user }: AccountSectionProps) {
 
   // ── Email state ───────────────────────────────────────────────────────────
   const [isEditingEmail, setIsEditingEmail] = React.useState(false);
-  const [emailStep, setEmailStep] = React.useState<'idle' | 'sending' | 'otp' | 'verifying' | 'done'>('idle');
+  const [emailStep, setEmailStep] = React.useState<
+    'idle' | 'sending' | 'otp' | 'verifying' | 'done'
+  >('idle');
   const [emailOtp, setEmailOtp] = React.useState('');
   const [emailError, setEmailError] = React.useState<string | null>(null);
   const [isEmailVerified, setIsEmailVerified] = React.useState(user.emailVerified);
 
   // ── Password state ────────────────────────────────────────────────────────
-  const [pwStep, setPwStep] = React.useState<'idle' | 'sending' | 'otp' | 'verifying' | 'form' | 'saving' | 'done'>('idle');
+  const [pwStep, setPwStep] = React.useState<
+    'idle' | 'sending' | 'otp' | 'verifying' | 'form' | 'saving' | 'done'
+  >('idle');
   const [pwOtp, setPwOtp] = React.useState('');
   const [newPassword, setNewPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
@@ -161,7 +165,7 @@ export function AccountSection({ user }: AccountSectionProps) {
   const handleSendEmailOtp = async () => {
     setEmailError(null);
     setEmailStep('sending');
-    const res = await sendEmailOtpAction();
+    const res = await sendEmailOtpAction('EMAIL_VERIFY');
     if (res.success) {
       setEmailStep('otp');
       setEmailOtp('');
@@ -179,7 +183,7 @@ export function AccountSection({ user }: AccountSectionProps) {
     }
     setEmailError(null);
     setEmailStep('verifying');
-    const res = await verifyEmailOtpAction(emailOtp);
+    const res = await verifyEmailOtpAction(emailOtp, 'EMAIL_VERIFY');
     if (res.success) {
       setIsEmailVerified(true);
       setEmailStep('done');
@@ -194,7 +198,7 @@ export function AccountSection({ user }: AccountSectionProps) {
   const handleSendPwOtp = async () => {
     setPwError(null);
     setPwStep('sending');
-    const res = await sendEmailOtpAction();
+    const res = await sendEmailOtpAction('PASSWORD_RESET');
     if (res.success) {
       setPwStep('otp');
       setPwOtp('');
@@ -212,7 +216,7 @@ export function AccountSection({ user }: AccountSectionProps) {
     }
     setPwError(null);
     setPwStep('verifying');
-    const res = await verifyEmailOtpAction(pwOtp);
+    const res = await verifyEmailOtpAction(pwOtp, 'PASSWORD_RESET');
     if (res.success) {
       setIsEmailVerified(true); // OTP verified → email is verified as well
       setPwStep('form');
@@ -300,7 +304,6 @@ export function AccountSection({ user }: AccountSectionProps) {
         </CardHeader>
 
         <div className="p-4 sm:p-5 space-y-3.5">
-
           {/* ── 1. Primary Email ──────────────────────────────────────────── */}
           <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-muted/20 border border-border/80 space-y-3 transition-colors">
             <div className="flex items-center justify-between gap-2">
@@ -495,22 +498,24 @@ export function AccountSection({ user }: AccountSectionProps) {
                     <KeyRound className="w-3 h-3" />
                     <span>Change Password</span>
                   </Button>
-                ) : pwStep !== 'done' && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setPwStep('idle');
-                      setPwOtp('');
-                      setPwError(null);
-                      setPwSuccess(null);
-                      setNewPassword('');
-                      setConfirmPassword('');
-                    }}
-                    className="p-1 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-                    aria-label="Cancel"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
+                ) : (
+                  pwStep !== 'done' && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPwStep('idle');
+                        setPwOtp('');
+                        setPwError(null);
+                        setPwSuccess(null);
+                        setNewPassword('');
+                        setConfirmPassword('');
+                      }}
+                      className="p-1 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                      aria-label="Cancel"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )
                 )}
               </div>
 
@@ -518,7 +523,9 @@ export function AccountSection({ user }: AccountSectionProps) {
               {pwStep === 'idle' && (
                 <div className="flex items-center justify-between text-xs text-muted-foreground p-2.5 rounded-xl bg-background/80 border border-border/70 font-mono">
                   <span>••••••••••••••••</span>
-                  <span className="text-[11px] text-muted-foreground font-sans">Protected by OTP</span>
+                  <span className="text-[11px] text-muted-foreground font-sans">
+                    Protected by OTP
+                  </span>
                 </div>
               )}
 
@@ -529,15 +536,24 @@ export function AccountSection({ user }: AccountSectionProps) {
                   {pwStep !== 'done' && (
                     <div className="flex items-center justify-between text-[11px] text-muted-foreground pb-1 border-b border-border/60">
                       {['Send OTP', 'Verify Code', 'New Password'].map((label, i) => {
-                        const stepIdx = pwStep === 'sending' || pwStep === 'otp' ? 0 : pwStep === 'verifying' ? 1 : 2;
+                        const stepIdx =
+                          pwStep === 'sending' || pwStep === 'otp'
+                            ? 0
+                            : pwStep === 'verifying'
+                              ? 1
+                              : 2;
                         const isDone = i < stepIdx;
                         const isActive = i === stepIdx;
                         return (
                           <div key={label} className="flex items-center gap-1">
-                            <span className={`font-semibold ${isActive ? 'text-primary' : isDone ? 'text-emerald-500' : 'text-muted-foreground/50'}`}>
+                            <span
+                              className={`font-semibold ${isActive ? 'text-primary' : isDone ? 'text-emerald-500' : 'text-muted-foreground/50'}`}
+                            >
                               {isDone ? '✓' : `${i + 1}.`} {label}
                             </span>
-                            {i < 2 && <ChevronRight className="w-3 h-3 text-muted-foreground/30 ml-1" />}
+                            {i < 2 && (
+                              <ChevronRight className="w-3 h-3 text-muted-foreground/30 ml-1" />
+                            )}
                           </div>
                         );
                       })}
@@ -562,7 +578,9 @@ export function AccountSection({ user }: AccountSectionProps) {
                     <div className="space-y-3">
                       <p className="text-xs text-muted-foreground text-center">
                         Enter the 6-digit code sent to{' '}
-                        <span className="font-semibold text-foreground font-mono">{user.email}</span>
+                        <span className="font-semibold text-foreground font-mono">
+                          {user.email}
+                        </span>
                       </p>
                       <OtpInput
                         value={pwOtp}
@@ -596,7 +614,9 @@ export function AccountSection({ user }: AccountSectionProps) {
                     <form onSubmit={handleSetPassword} className="space-y-3">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-foreground">New Password</label>
+                          <label className="text-[11px] font-semibold text-foreground">
+                            New Password
+                          </label>
                           <Input
                             type="password"
                             value={newPassword}
@@ -607,7 +627,9 @@ export function AccountSection({ user }: AccountSectionProps) {
                           />
                         </div>
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-foreground">Confirm Password</label>
+                          <label className="text-[11px] font-semibold text-foreground">
+                            Confirm Password
+                          </label>
                           <Input
                             type="password"
                             value={confirmPassword}
@@ -621,7 +643,10 @@ export function AccountSection({ user }: AccountSectionProps) {
                       <div className="flex items-center justify-between pt-1 border-t border-border/60">
                         <button
                           type="button"
-                          onClick={() => { setPwStep('otp'); setPwOtp(''); }}
+                          onClick={() => {
+                            setPwStep('otp');
+                            setPwOtp('');
+                          }}
                           className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1 cursor-pointer"
                         >
                           <ChevronLeft className="w-3.5 h-3.5" />
@@ -650,7 +675,10 @@ export function AccountSection({ user }: AccountSectionProps) {
                       </span>
                       <button
                         type="button"
-                        onClick={() => { setPwStep('idle'); setPwSuccess(null); }}
+                        onClick={() => {
+                          setPwStep('idle');
+                          setPwSuccess(null);
+                        }}
                         className="text-muted-foreground hover:text-foreground text-xs underline cursor-pointer"
                       >
                         Done
@@ -667,7 +695,8 @@ export function AccountSection({ user }: AccountSectionProps) {
             <div className="p-3.5 rounded-xl bg-muted/20 border border-border/80 flex items-center gap-2 text-xs text-muted-foreground">
               <Lock className="w-4 h-4 text-primary shrink-0" />
               <span>
-                Signed in with {user.provider === 'google' ? 'Google' : 'GitHub'} OAuth. Credentials are managed by your provider.
+                Signed in with {user.provider === 'google' ? 'Google' : 'GitHub'} OAuth. Credentials
+                are managed by your provider.
               </span>
             </div>
           )}
@@ -712,10 +741,8 @@ export function AccountSection({ user }: AccountSectionProps) {
                   </h4>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     Your account will be permanently deleted on{' '}
-                    <span className="font-semibold text-rose-400">
-                      {deletionDate}
-                    </span>
-                    . You can cancel at any time during this 30-day grace period.
+                    <span className="font-semibold text-rose-400">{deletionDate}</span>. You can
+                    cancel at any time during this 30-day grace period.
                   </p>
                 </div>
               </div>
@@ -735,9 +762,7 @@ export function AccountSection({ user }: AccountSectionProps) {
           ) : (
             <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-rose-500/5 border border-rose-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="space-y-0.5">
-                <h4 className="text-xs font-semibold text-rose-500">
-                  Delete Account
-                </h4>
+                <h4 className="text-xs font-semibold text-rose-500">Delete Account</h4>
                 <p className="text-xs text-muted-foreground">
                   Schedule your account for permanent deletion with a 30-day recovery grace period.
                 </p>
@@ -783,7 +808,9 @@ export function AccountSection({ user }: AccountSectionProps) {
                   Schedule Account Deletion
                 </h3>
                 <p className="text-xs text-muted-foreground">
-                  Your account enters a <span className="font-semibold text-foreground">30-day grace period</span> before permanent deletion.
+                  Your account enters a{' '}
+                  <span className="font-semibold text-foreground">30-day grace period</span> before
+                  permanent deletion.
                 </p>
               </div>
             </div>
@@ -797,7 +824,11 @@ export function AccountSection({ user }: AccountSectionProps) {
             <form onSubmit={handleScheduleDelete} className="space-y-3.5 text-xs">
               <div className="space-y-1.5 p-3 rounded-xl bg-rose-500/10 border border-rose-500/25">
                 <label className="block text-[11px] font-semibold text-rose-300">
-                  Type your username <span className="font-mono text-white bg-rose-950/80 px-1.5 py-0.5 rounded border border-rose-500/40">@{targetUsername}</span> to confirm:
+                  Type your username{' '}
+                  <span className="font-mono text-white bg-rose-950/80 px-1.5 py-0.5 rounded border border-rose-500/40">
+                    {targetUsername}
+                  </span>{' '}
+                  to confirm:
                 </label>
                 <div className="relative">
                   <Input
@@ -824,7 +855,8 @@ export function AccountSection({ user }: AccountSectionProps) {
 
               <div className="space-y-1">
                 <label className="block font-semibold text-foreground text-[11px]">
-                  Reason for closure <span className="text-muted-foreground font-normal">(optional)</span>
+                  Reason for closure{' '}
+                  <span className="text-muted-foreground font-normal">(optional)</span>
                 </label>
                 <Input
                   type="text"
