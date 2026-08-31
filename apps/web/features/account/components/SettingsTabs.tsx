@@ -41,7 +41,7 @@ export function SettingsTabs({ user }: SettingsTabsProps) {
   return (
     <div className="space-y-8">
       {/* Tabs Switcher */}
-      <div className="flex items-center gap-1.5 bg-zinc-900/60 p-1.5 rounded-2xl border border-zinc-800 text-xs overflow-x-auto no-scrollbar shadow-lg">
+      <div className="inline-flex items-center gap-1.5 bg-zinc-900/60 p-1.5 rounded-2xl border border-zinc-800 text-xs overflow-x-auto no-scrollbar shadow-lg max-w-full">
         <button
           type="button"
           onClick={() => handleSelectTab('profile')}

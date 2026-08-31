@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import { Card, Button, Badge } from '@elsesourav/ui';
 import type { NotificationItem } from '@elsesourav/types';
 import { NotificationItemCard } from './NotificationItemCard';
@@ -107,17 +108,28 @@ export function NotificationList({
 
       {/* List or Empty State */}
       {filteredNotifications.length === 0 ? (
-        <Card className="py-16 px-4 text-center rounded-3xl border-zinc-800/80 bg-zinc-900/30 backdrop-blur-sm space-y-4 max-w-md mx-auto">
+        <Card className="py-14 px-6 text-center rounded-3xl border-zinc-800/80 bg-zinc-900/30 backdrop-blur-sm space-y-4 max-w-md mx-auto shadow-xl">
           <div className="w-12 h-12 rounded-2xl bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center mx-auto text-indigo-400">
             <Inbox className="w-6 h-6" />
           </div>
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <h3 className="text-base font-bold text-zinc-100">No notifications</h3>
-            <p className="text-xs text-zinc-400 max-w-xs mx-auto">
+            <p className="text-xs text-zinc-400 max-w-xs mx-auto leading-relaxed">
               {filter === 'unread'
                 ? "You've read all your notifications! Nice and clean."
-                : "You don't have any notifications right now."}
+                : "You don't have any unread notifications right now."}
             </p>
+          </div>
+          <div className="pt-1">
+            <Link href="/settings?tab=preferences">
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-xs border-zinc-800 hover:bg-zinc-800 text-zinc-300 rounded-xl px-4 py-2"
+              >
+                <span>Adjust Notification Channels</span>
+              </Button>
+            </Link>
           </div>
         </Card>
       ) : (

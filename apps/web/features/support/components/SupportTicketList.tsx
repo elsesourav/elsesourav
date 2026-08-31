@@ -140,28 +140,41 @@ export function SupportTicketList({ tickets, onOpenCreateModal }: SupportTicketL
 
       {/* Ticket List or Empty State */}
       {filteredTickets.length === 0 ? (
-        <div className="py-16 text-center rounded-3xl border border-zinc-800/80 bg-zinc-900/30 p-8 space-y-4 max-w-md mx-auto">
+        <Card className="py-14 px-6 text-center rounded-3xl border border-zinc-800/80 bg-zinc-900/30 backdrop-blur-sm space-y-4 max-w-md mx-auto shadow-xl">
           <div className="w-12 h-12 rounded-2xl bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center mx-auto text-indigo-400">
             <Headphones className="w-6 h-6" />
           </div>
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <h3 className="text-base font-bold text-zinc-100">No support tickets</h3>
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-zinc-400 leading-relaxed">
               {filter === 'all'
-                ? "You haven't opened any support tickets yet. Need help? Create a new ticket below."
+                ? "You haven't opened any support tickets yet. Need technical assistance? Submit a ticket below."
                 : `No ${filter} tickets found.`}
             </p>
           </div>
-          {onOpenCreateModal && (
-            <Button
-              onClick={onOpenCreateModal}
-              size="sm"
-              className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs gap-1.5"
-            >
-              <Plus className="w-3.5 h-3.5" /> Create Ticket
-            </Button>
-          )}
-        </div>
+          <div className="pt-2">
+            {onOpenCreateModal ? (
+              <Button
+                onClick={onOpenCreateModal}
+                size="sm"
+                className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs gap-1.5 rounded-xl px-4 py-2 font-semibold shadow-lg shadow-indigo-600/20 active:scale-95 transition-all"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>Create Ticket</span>
+              </Button>
+            ) : (
+              <Link href="/support">
+                <Button
+                  size="sm"
+                  className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs gap-1.5 rounded-xl px-4 py-2 font-semibold shadow-lg shadow-indigo-600/20 active:scale-95 transition-all"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Open New Ticket</span>
+                </Button>
+              </Link>
+            )}
+          </div>
+        </Card>
       ) : (
         <div className="space-y-3">
           {filteredTickets.map((ticket) => {
