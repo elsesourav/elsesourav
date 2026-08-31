@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { User, LogOut, Settings, LifeBuoy, Shield, AtSign } from 'lucide-react';
+import { LayoutDashboard, User, UserCheck, LogOut, Lock, LifeBuoy, Shield, AtSign } from 'lucide-react';
 import type { AuthenticatedUser } from '@elsesourav/auth';
 import { UserAvatar } from '@elsesourav/ui';
 
@@ -99,7 +99,7 @@ export function UserAvatarMenu({ user }: UserAvatarMenuProps) {
         <div
           role="menu"
           aria-label="User menu"
-          className={`absolute right-0 mt-2 w-64 rounded-2xl bg-popover text-popover-foreground border border-border shadow-xl p-1.5 z-50 text-xs space-y-1 backdrop-blur-2xl ${
+          className={`absolute right-0 mt-2 w-60 rounded-2xl bg-popover text-popover-foreground border border-border shadow-xl p-1.5 z-50 text-xs space-y-1 backdrop-blur-2xl ${
             isClosing ? 'animate-popup-out' : 'animate-popup-in'
           }`}
         >
@@ -124,30 +124,56 @@ export function UserAvatarMenu({ user }: UserAvatarMenuProps) {
             <p className="text-[11px] text-muted-foreground truncate mt-0.5">{user.email}</p>
           </div>
 
-          {/* Core Options */}
+          {/* Account Options */}
           <Link
             href="/profile"
             role="menuitem"
             onClick={() => requestClose()}
             className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-foreground hover:bg-accent transition-colors cursor-pointer"
           >
-            <User className="w-3.5 h-3.5 text-primary" />
+            <LayoutDashboard className="w-3.5 h-3.5 text-primary" />
             <div className="flex flex-col">
-              <span className="font-medium">View Profile</span>
-              <span className="text-[10px] text-muted-foreground">Identity & overview</span>
+              <span className="font-medium">Dashboard</span>
+              <span className="text-[10px] text-muted-foreground">Profile & overview</span>
             </div>
           </Link>
 
           <Link
-            href="/settings"
+            href="/settings?tab=profile"
             role="menuitem"
             onClick={() => requestClose()}
             className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-foreground hover:bg-accent transition-colors cursor-pointer"
           >
-            <Settings className="w-3.5 h-3.5 text-primary" />
+            <User className="w-3.5 h-3.5 text-primary" />
             <div className="flex flex-col">
-              <span className="font-medium">Account Settings</span>
-              <span className="text-[10px] text-muted-foreground">Security & preferences</span>
+              <span className="font-medium">Profile</span>
+              <span className="text-[10px] text-muted-foreground">Identity & avatar</span>
+            </div>
+          </Link>
+
+          <Link
+            href="/settings?tab=account"
+            role="menuitem"
+            onClick={() => requestClose()}
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-foreground hover:bg-accent transition-colors cursor-pointer"
+          >
+            <UserCheck className="w-3.5 h-3.5 text-primary" />
+            <div className="flex flex-col">
+              <span className="font-medium">Account</span>
+              <span className="text-[10px] text-muted-foreground">Credentials & details</span>
+            </div>
+          </Link>
+
+          <Link
+            href="/settings?tab=security"
+            role="menuitem"
+            onClick={() => requestClose()}
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-foreground hover:bg-accent transition-colors cursor-pointer"
+          >
+            <Lock className="w-3.5 h-3.5 text-primary" />
+            <div className="flex flex-col">
+              <span className="font-medium">Password & Security</span>
+              <span className="text-[10px] text-muted-foreground">Security & access</span>
             </div>
           </Link>
 
@@ -174,7 +200,7 @@ export function UserAvatarMenu({ user }: UserAvatarMenuProps) {
               <Shield className="w-3.5 h-3.5 text-amber-500" />
               <div className="flex flex-col">
                 <span className="font-medium">Admin Portal</span>
-                <span className="text-[10px] text-amber-600/70 dark:text-amber-400/70">Management & system audit</span>
+                <span className="text-[10px] text-amber-600/70 dark:text-amber-400/70">System management</span>
               </div>
             </Link>
           )}

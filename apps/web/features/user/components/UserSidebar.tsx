@@ -3,25 +3,49 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { LayoutDashboard, User, Lock, Sliders, LifeBuoy, Bell } from 'lucide-react';
+import { LayoutDashboard, User, UserCheck, Lock, LifeBuoy } from 'lucide-react';
 
 interface NavItem {
   label: string;
   href: string;
   icon: React.ComponentType<{ className?: string }>;
-  matchExact?: boolean;
-  matchPrefix?: string;
-  matchPath?: string;
-  matchTab?: (string | null)[];
+  isActive: (pathname: string, tab: string | null) => boolean;
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { label: 'Overview', href: '/profile', icon: LayoutDashboard, matchExact: true },
-  { label: 'Account & Profile', href: '/settings?tab=profile', icon: User, matchPath: '/settings', matchTab: ['profile', null] },
-  { label: 'Password & Security', href: '/settings?tab=security', icon: Lock, matchPath: '/settings', matchTab: ['security'] },
-  { label: 'Preferences', href: '/settings?tab=preferences', icon: Sliders, matchPath: '/settings', matchTab: ['preferences'] },
-  { label: 'Support Tickets', href: '/support/tickets', icon: LifeBuoy, matchPrefix: '/support' },
-  { label: 'Notifications', href: '/notifications', icon: Bell, matchExact: true },
+  {
+    label: 'Dashboard',
+    href: '/profile',
+    icon: LayoutDashboard,
+    isActive: (pathname) => pathname === '/profile' || pathname === '/dashboard',
+  },
+  {
+    label: 'Profile',
+    href: '/settings?tab=profile',
+    icon: User,
+    isActive: (pathname, tab) =>
+      pathname === '/settings' && (!tab || tab === 'profile'),
+  },
+  {
+    label: 'Account',
+    href: '/settings?tab=account',
+    icon: UserCheck,
+    isActive: (pathname, tab) =>
+      pathname === '/settings' && tab === 'account',
+  },
+  {
+    label: 'Password & Security',
+    href: '/settings?tab=security',
+    icon: Lock,
+    isActive: (pathname, tab) =>
+      pathname === '/settings' && (tab === 'security' || tab === 'danger'),
+  },
+  {
+    label: 'Help & Support',
+    href: '/support/tickets',
+    icon: LifeBuoy,
+    isActive: (pathname) => pathname.startsWith('/support'),
+  },
 ];
 
 export function UserSidebar() {
@@ -29,26 +53,12 @@ export function UserSidebar() {
   const searchParams = useSearchParams();
   const currentTab = searchParams.get('tab');
 
-  const isActive = (item: NavItem) => {
-    if (item.matchExact) {
-      return pathname === item.href.split('?')[0];
-    }
-    if (item.matchPrefix) {
-      return pathname.startsWith(item.matchPrefix);
-    }
-    if (item.matchPath && item.matchTab) {
-      if (pathname !== item.matchPath) return false;
-      return item.matchTab.includes(currentTab);
-    }
-    return false;
-  };
-
   return (
     <aside className="w-56 shrink-0 hidden lg:block sticky top-24 self-start">
       <nav className="rounded-2xl border border-border/80 bg-card text-card-foreground p-2 space-y-1 shadow-sm">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
-          const active = isActive(item);
+          const active = item.isActive(pathname, currentTab);
           return (
             <Link
               key={item.label}

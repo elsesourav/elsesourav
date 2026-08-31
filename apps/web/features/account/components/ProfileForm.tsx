@@ -1,18 +1,19 @@
 'use client';
 
 import * as React from 'react';
-import type { User } from '@elsesourav/types';
+import type { User, UserPreferences } from '@elsesourav/types';
 import { Button, Card, CardDescription, CardHeader, CardTitle, Input, UserAvatar } from '@elsesourav/ui';
 import {
   AlertCircle,
   CheckCircle2,
-  Crop,
+  Image as ImageIcon,
   Loader2,
   Save,
   User as UserIcon,
   Sparkles,
+  Bell,
 } from 'lucide-react';
-import { updateProfileFormAction } from '../actions/account-actions';
+import { updateProfileFormAction, updatePreferencesAction } from '../actions/account-actions';
 import { ImageCropperModal } from '@/components/media/ImageCropperModal';
 
 interface ProfileFormProps {
@@ -29,10 +30,14 @@ const PRESET_AVATARS = [
 ];
 
 export function ProfileForm({ user }: ProfileFormProps) {
+  const userPrefs = (user.preferences as UserPreferences) || {};
   const [displayName, setDisplayName] = React.useState(user.displayName || '');
   const [username, setUsername] = React.useState(user.username || '');
   const [bio, setBio] = React.useState(user.bio || '');
   const [photoUrl, setPhotoUrl] = React.useState(user.photoUrl || '');
+  const [emailNotifications, setEmailNotifications] = React.useState(
+    userPrefs.emailNotifications ?? true
+  );
   const [isSaving, setIsSaving] = React.useState(false);
   const [success, setSuccess] = React.useState<string | null>(null);
   const [error, setError] = React.useState<string | null>(null);
@@ -43,7 +48,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
   >('idle');
   const [usernameError, setUsernameError] = React.useState<string | null>(null);
 
-  // Cropper Modal state
+  // Image Cropper Modal state
   const [isCropperOpen, setIsCropperOpen] = React.useState(false);
 
   // Debounced server check for username
@@ -98,28 +103,47 @@ export function ProfileForm({ user }: ProfileFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (usernameStatus === 'invalid' || usernameStatus === 'taken') {
-      setError(usernameError || 'Please choose a valid and available username');
-      return;
-    }
-
     setIsSaving(true);
     setSuccess(null);
     setError(null);
 
+    const trimmedName = displayName.trim();
+    const trimmedUser = username.trim().toLowerCase();
+    const trimmedBio = bio.trim();
+
+    if (!trimmedName) {
+      setError('Display name is required');
+      setIsSaving(false);
+      return;
+    }
+
+    if (usernameStatus === 'taken' || usernameStatus === 'invalid') {
+      setError('Please choose a valid and available username');
+      setIsSaving(false);
+      return;
+    }
+
     try {
+      // 1. Update Profile Information
       const res = await updateProfileFormAction({
-        displayName: displayName.trim() || undefined,
-        username: username.trim() ? username.trim().toLowerCase() : undefined,
-        bio: bio.trim() || undefined,
-        photoUrl: photoUrl.trim() || undefined,
+        displayName: trimmedName,
+        username: trimmedUser || undefined,
+        bio: trimmedBio || undefined,
+        photoUrl: photoUrl || undefined,
       });
 
-      if (res.success) {
-        setSuccess('Profile updated successfully.');
-      } else {
+      if (!res.success) {
         setError(res.error || 'Failed to update profile.');
+        setIsSaving(false);
+        return;
       }
+
+      // 2. Update Notification Preference
+      await updatePreferencesAction({
+        emailNotifications,
+      });
+
+      setSuccess('Profile updated successfully.');
     } catch {
       setError('An unexpected error occurred. Please try again.');
     } finally {
@@ -132,10 +156,10 @@ export function ProfileForm({ user }: ProfileFormProps) {
       <CardHeader className="pb-4">
         <div className="flex items-center gap-2">
           <UserIcon className="w-4 h-4 text-primary" />
-          <CardTitle className="text-base text-foreground">Public Profile & Avatar</CardTitle>
+          <CardTitle className="text-base text-foreground">Profile Information</CardTitle>
         </div>
         <CardDescription className="text-xs text-muted-foreground">
-          Manage your public avatar, display name, unique username, and developer bio.
+          Update your public name, username handle, developer bio, and avatar identity.
         </CardDescription>
       </CardHeader>
 
@@ -154,7 +178,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
           </div>
         )}
 
-        {/* Avatar Section: Active Preview + 6 Preset Avatars + 1:1 Custom Cropper */}
+        {/* Avatar Section: Active Preview + Presets + Choose Image Button */}
         <div className="p-4 rounded-2xl bg-muted/40 border border-border space-y-4">
           <div className="flex items-center justify-between">
             <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
@@ -163,9 +187,9 @@ export function ProfileForm({ user }: ProfileFormProps) {
             <button
               type="button"
               onClick={() => setIsCropperOpen(true)}
-              className="inline-flex items-center gap-1 text-xs text-primary hover:underline font-medium cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline font-semibold cursor-pointer"
             >
-              <Crop className="w-3.5 h-3.5" /> Upload & Crop (1:1)
+              <ImageIcon className="w-3.5 h-3.5" /> Choose Image
             </button>
           </div>
 
@@ -304,6 +328,27 @@ export function ProfileForm({ user }: ProfileFormProps) {
           <div className="flex justify-end text-[11px] text-muted-foreground">{bio.length}/250 characters</div>
         </div>
 
+        {/* Email Notifications Toggle in Profile */}
+        <div className="p-4 rounded-2xl bg-muted/40 border border-border">
+          <label className="flex items-center justify-between gap-4 cursor-pointer">
+            <div className="space-y-0.5">
+              <div className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+                <Bell className="w-3.5 h-3.5 text-primary" />
+                <span>Email Notifications</span>
+              </div>
+              <div className="text-[11px] text-muted-foreground leading-relaxed">
+                Receive email alerts for support ticket replies and platform updates.
+              </div>
+            </div>
+            <input
+              type="checkbox"
+              checked={emailNotifications}
+              onChange={(e) => setEmailNotifications(e.target.checked)}
+              className="rounded border-border bg-background text-primary focus:ring-primary w-4 h-4 cursor-pointer shrink-0"
+            />
+          </label>
+        </div>
+
         {/* Submit Button */}
         <div className="pt-2">
           <Button
@@ -327,13 +372,13 @@ export function ProfileForm({ user }: ProfileFormProps) {
         </div>
       </form>
 
-      {/* Image Cropper Modal for Custom Avatars (1:1 Ratio Locked) */}
+      {/* Image Adjuster Modal for Custom Avatars */}
       <ImageCropperModal
         isOpen={isCropperOpen}
         onClose={() => setIsCropperOpen(false)}
         aspectRatio="1:1"
         lockRatio={true}
-        title="Crop Profile Avatar (1:1 Square)"
+        title="Choose & Adjust Profile Photo"
         onCropComplete={(croppedData) => {
           setPhotoUrl(croppedData);
         }}
