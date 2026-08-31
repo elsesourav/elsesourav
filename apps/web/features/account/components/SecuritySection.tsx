@@ -106,36 +106,36 @@ export function SecuritySection({ user }: SecuritySectionProps) {
   };
 
   return (
-    <Card className="card-obsidian-glass">
+    <Card className="bg-card text-card-foreground border-border shadow-sm rounded-2xl sm:rounded-3xl">
       <CardHeader className="pb-4">
         <div className="flex items-center gap-2">
-          <Shield className="w-4 h-4 text-emerald-400" />
-          <CardTitle className="text-base text-zinc-100">Security & Authentication</CardTitle>
+          <Shield className="w-4 h-4 text-emerald-500" />
+          <CardTitle className="text-base text-foreground">Password & Security</CardTitle>
         </div>
-        <CardDescription className="text-xs text-zinc-400">
-          Manage credentials, email address, connected login providers, and active sessions.
+        <CardDescription className="text-xs text-muted-foreground">
+          Manage your login credentials, connected authentication provider, and active session.
         </CardDescription>
       </CardHeader>
 
       <div className="p-6 pt-2 space-y-6 max-w-xl">
         {/* Email Address Management */}
-        <div className="p-4 rounded-2xl bg-zinc-950/40 border border-zinc-800/60 space-y-3">
+        <div className="p-4 rounded-2xl bg-muted/40 border border-border space-y-3">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <Mail className="w-4 h-4 text-zinc-400" />
-              <span className="text-xs font-semibold text-zinc-200">Email Address</span>
+              <Mail className="w-4 h-4 text-primary" />
+              <span className="text-xs font-semibold text-foreground">Email Address</span>
             </div>
             {isOAuth ? (
               <Badge
                 variant="info"
-                className="text-[10px] bg-indigo-950/60 text-indigo-300 border-indigo-500/30 gap-1 font-mono uppercase"
+                className="text-[10px] bg-primary/10 text-primary border-primary/30 gap-1 font-mono uppercase"
               >
                 <Lock className="w-2.5 h-2.5" /> OAuth ({user.provider})
               </Badge>
             ) : (
               <Badge
                 variant="success"
-                className="text-[10px] bg-emerald-950/60 text-emerald-300 border-emerald-500/30 gap-1"
+                className="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 gap-1"
               >
                 <CheckCircle2 className="w-2.5 h-2.5" /> Verified
               </Badge>
@@ -144,23 +144,23 @@ export function SecuritySection({ user }: SecuritySectionProps) {
 
           {isOAuth ? (
             <div className="space-y-1.5">
-              <p className="text-xs text-zinc-200 font-mono bg-zinc-900/80 p-2.5 rounded-xl border border-zinc-800">
+              <p className="text-xs text-foreground font-mono bg-background p-2.5 rounded-xl border border-border">
                 {user.email}
               </p>
-              <p className="text-[11px] text-zinc-400 leading-relaxed">
-                Your email is linked to your {user.provider === 'google' ? 'Google' : 'GitHub'} account and cannot be modified here.
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                Your email is linked to your {user.provider === 'google' ? 'Google' : 'GitHub'} account and cannot be modified directly.
               </p>
             </div>
           ) : (
             <form onSubmit={handleUpdateEmail} className="space-y-3 pt-1">
               {emailSuccess && (
-                <div className="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-center gap-2 text-xs text-emerald-300">
+                <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400">
                   <Check className="w-3.5 h-3.5" />
                   <span>{emailSuccess}</span>
                 </div>
               )}
               {emailError && (
-                <div className="p-2.5 rounded-xl bg-rose-950/40 border border-rose-500/30 flex items-center gap-2 text-xs text-rose-300">
+                <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center gap-2 text-xs text-rose-600 dark:text-rose-400">
                   <AlertCircle className="w-3.5 h-3.5" />
                   <span>{emailError}</span>
                 </div>
@@ -171,14 +171,14 @@ export function SecuritySection({ user }: SecuritySectionProps) {
                   value={newEmail}
                   onChange={(e) => setNewEmail(e.target.value)}
                   placeholder="name@domain.com"
-                  className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100 flex-1 font-mono"
+                  className="bg-background border-border text-xs rounded-xl text-foreground flex-1 font-mono"
                 />
                 <Button
                   type="submit"
                   disabled={isUpdatingEmail || newEmail.trim() === user.email}
                   size="sm"
                   variant="outline"
-                  className="border-zinc-800 text-xs text-zinc-200 hover:bg-zinc-800 rounded-xl shrink-0"
+                  className="border-border text-xs text-foreground hover:bg-accent rounded-xl shrink-0"
                 >
                   {isUpdatingEmail ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Update Email'}
                 </Button>
@@ -189,15 +189,15 @@ export function SecuritySection({ user }: SecuritySectionProps) {
 
         {/* Password Management for Email/Password Users */}
         {!isOAuth && (
-          <div className="p-4 rounded-2xl bg-zinc-950/40 border border-zinc-800/60 space-y-4">
+          <div className="p-4 rounded-2xl bg-muted/40 border border-border space-y-4">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
-                <Lock className="w-4 h-4 text-zinc-400" />
-                <span className="text-xs font-semibold text-zinc-200">Update Password</span>
+                <Lock className="w-4 h-4 text-primary" />
+                <span className="text-xs font-semibold text-foreground">Update Password</span>
               </div>
               <Link
                 href="/forgot-password"
-                className="text-[11px] text-indigo-400 hover:text-indigo-300 hover:underline flex items-center gap-1"
+                className="text-[11px] text-primary hover:underline flex items-center gap-1"
               >
                 <Key className="w-3 h-3" /> Forgot password?
               </Link>
@@ -205,13 +205,13 @@ export function SecuritySection({ user }: SecuritySectionProps) {
 
             <form onSubmit={handleUpdatePassword} className="space-y-3">
               {passwordSuccess && (
-                <div className="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-center gap-2 text-xs text-emerald-300">
+                <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400">
                   <Check className="w-3.5 h-3.5" />
                   <span>{passwordSuccess}</span>
                 </div>
               )}
               {passwordError && (
-                <div className="p-2.5 rounded-xl bg-rose-950/40 border border-rose-500/30 flex items-center gap-2 text-xs text-rose-300">
+                <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center gap-2 text-xs text-rose-600 dark:text-rose-400">
                   <AlertCircle className="w-3.5 h-3.5" />
                   <span>{passwordError}</span>
                 </div>
@@ -223,14 +223,14 @@ export function SecuritySection({ user }: SecuritySectionProps) {
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="New password (min 8 characters)"
-                  className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100"
+                  className="bg-background border-border text-xs rounded-xl text-foreground"
                 />
                 <Input
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Confirm new password"
-                  className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100"
+                  className="bg-background border-border text-xs rounded-xl text-foreground"
                 />
               </div>
 
@@ -238,7 +238,7 @@ export function SecuritySection({ user }: SecuritySectionProps) {
                 type="submit"
                 disabled={isUpdatingPassword || !newPassword || !confirmPassword}
                 size="sm"
-                className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2 rounded-xl gap-1.5 shadow-lg shadow-indigo-600/20"
+                className="text-xs font-semibold px-4 py-2 rounded-xl gap-1.5 shadow-sm"
               >
                 {isUpdatingPassword ? (
                   <>
@@ -257,10 +257,10 @@ export function SecuritySection({ user }: SecuritySectionProps) {
         )}
 
         {/* Connected Auth Providers */}
-        <div className="p-4 rounded-2xl bg-zinc-950/40 border border-zinc-800/60 space-y-3">
+        <div className="p-4 rounded-2xl bg-muted/40 border border-border space-y-3">
           <div className="flex items-center gap-2">
-            <Globe className="w-4 h-4 text-zinc-400" />
-            <span className="text-xs font-semibold text-zinc-200">Authentication Infrastructure</span>
+            <Globe className="w-4 h-4 text-primary" />
+            <span className="text-xs font-semibold text-foreground">Authentication Infrastructure</span>
           </div>
 
           <div className="flex items-center gap-2">
@@ -268,17 +268,17 @@ export function SecuritySection({ user }: SecuritySectionProps) {
               {isOAuth ? `${user.provider === 'google' ? 'Google' : 'GitHub'} OAuth Identity` : 'Supabase Email/Password Auth'}
             </Badge>
           </div>
-          <p className="text-[11px] text-zinc-500">
-            Authentication is securely managed with encrypted session cookies and token rotation.
+          <p className="text-[11px] text-muted-foreground">
+            Authentication is securely managed with encrypted HTTP-only session cookies and token rotation.
           </p>
         </div>
 
         {/* Active Session Sign Out */}
-        <div className="pt-2 border-t border-zinc-800/60 flex items-center justify-between">
+        <div className="pt-2 border-t border-border flex items-center justify-between">
           <div>
-            <div className="text-xs font-semibold text-zinc-200">Sign Out of Session</div>
-            <div className="text-[11px] text-zinc-400">
-              Terminate your current authenticated session on this device.
+            <div className="text-xs font-semibold text-foreground">Sign Out of Session</div>
+            <div className="text-[11px] text-muted-foreground">
+              Terminate your active authenticated session on this device.
             </div>
           </div>
 
@@ -287,7 +287,7 @@ export function SecuritySection({ user }: SecuritySectionProps) {
               type="submit"
               variant="outline"
               size="sm"
-              className="text-xs border-zinc-800 hover:border-rose-500/50 hover:bg-rose-950/20 text-rose-300 gap-1.5"
+              className="text-xs border-border hover:border-rose-500/50 hover:bg-rose-500/10 text-rose-600 dark:text-rose-400 gap-1.5 rounded-xl cursor-pointer"
             >
               <LogOut className="w-3.5 h-3.5" />
               <span>Sign Out</span>
