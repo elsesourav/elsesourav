@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Card, Badge, Input, Button } from '@elsesourav/ui';
+import { Card, Badge, Input, Button, UserAvatar } from '@elsesourav/ui';
 import type { AdminUserListItem, UserRole } from '@elsesourav/types';
 import {
   Users,
@@ -170,17 +170,13 @@ export function AdminUsersTable({ initialUsers, total, totalPages }: AdminUsersT
                       {/* User Avatar & Name */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-xl bg-zinc-800 border border-zinc-700/60 overflow-hidden flex items-center justify-center shrink-0">
-                            {user.photoUrl ? (
-                              <img
-                                src={user.photoUrl}
-                                alt={user.displayName}
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <Users className="w-3.5 h-3.5 text-zinc-500" />
-                            )}
-                          </div>
+                          <UserAvatar
+                            src={user.photoUrl}
+                            name={user.displayName}
+                            identifier={user.id || user.email}
+                            alt={user.displayName}
+                            size="sm"
+                          />
                           <div className="min-w-0">
                             <div className="font-semibold text-zinc-100 truncate group-hover:text-indigo-300 transition-colors max-w-[140px] sm:max-w-[200px]">
                               {user.displayName}

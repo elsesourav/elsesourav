@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { User, LogOut, Settings, LifeBuoy, Shield, AtSign } from 'lucide-react';
 import type { AuthenticatedUser } from '@elsesourav/auth';
+import { UserAvatar } from '@elsesourav/ui';
 
 interface UserAvatarMenuProps {
   user: AuthenticatedUser;
@@ -84,21 +85,15 @@ export function UserAvatarMenu({ user }: UserAvatarMenuProps) {
         aria-expanded={open}
         aria-haspopup="menu"
       >
-        <div className="w-8 h-8 rounded-full overflow-hidden bg-muted border border-border flex items-center justify-center text-xs font-semibold text-foreground shadow-sm">
-          {user.photoUrl ? (
-            <Image
-              src={user.photoUrl}
-              alt={user.displayName || 'User avatar'}
-              width={32}
-              height={32}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <span>{user.displayName?.slice(0, 2).toUpperCase() || 'U'}</span>
-          )}
-        </div>
-        {/* Active status indicator dot */}
-        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-background" />
+        <UserAvatar
+          src={user.photoUrl}
+          name={user.displayName}
+          identifier={user.id || user.email}
+          alt={user.displayName || 'User avatar'}
+          size="sm"
+          showStatus={true}
+          statusColor="emerald"
+        />
       </button>
 
       {open && (

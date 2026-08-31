@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Card, Badge, Button } from '@elsesourav/ui';
+import { Card, Badge, Button, UserAvatar } from '@elsesourav/ui';
 import type { AdminUserDetail, UserRole } from '@elsesourav/types';
 import { adminUpdateUserRoleAction, adminDeleteUserAction } from '../actions/admin-users-actions';
 import {
@@ -120,17 +120,13 @@ export function AdminUserDetailView({ user: initialUser }: AdminUserDetailViewPr
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-zinc-800 border border-zinc-700/60 overflow-hidden flex items-center justify-center shrink-0">
-              {user.photoUrl ? (
-                <img
-                  src={user.photoUrl}
-                  alt={user.displayName}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <Users className="w-6 h-6 text-zinc-500" />
-              )}
-            </div>
+            <UserAvatar
+              src={user.photoUrl}
+              name={user.displayName}
+              identifier={user.id || user.email}
+              alt={user.displayName}
+              size="lg"
+            />
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-xl sm:text-2xl font-bold text-zinc-100 tracking-tight">

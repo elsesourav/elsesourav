@@ -41,17 +41,17 @@ export function SettingsTabs({ user }: SettingsTabsProps) {
   return (
     <div className="space-y-8">
       {/* Tabs Switcher */}
-      <div className="inline-flex items-center gap-1.5 bg-zinc-900/60 p-1.5 rounded-2xl border border-zinc-800 text-xs overflow-x-auto no-scrollbar shadow-lg max-w-full">
+      <div className="inline-flex items-center gap-1.5 bg-muted/60 p-1.5 rounded-2xl border border-border text-xs overflow-x-auto no-scrollbar shadow-sm max-w-full">
         <button
           type="button"
           onClick={() => handleSelectTab('profile')}
           className={`flex items-center gap-1.5 px-4 py-2 rounded-xl font-medium transition-all shrink-0 cursor-pointer ${
             activeTab === 'profile'
-              ? 'bg-zinc-800 text-white shadow-sm font-semibold ring-1 ring-zinc-700'
-              : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
+              ? 'bg-background text-foreground shadow-sm font-semibold ring-1 ring-border'
+              : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
           }`}
         >
-          <UserIcon className="w-3.5 h-3.5 text-indigo-400" />
+          <UserIcon className="w-3.5 h-3.5 text-primary" />
           <span>Edit Profile</span>
         </button>
 
@@ -60,11 +60,11 @@ export function SettingsTabs({ user }: SettingsTabsProps) {
           onClick={() => handleSelectTab('security')}
           className={`flex items-center gap-1.5 px-4 py-2 rounded-xl font-medium transition-all shrink-0 cursor-pointer ${
             activeTab === 'security'
-              ? 'bg-zinc-800 text-white shadow-sm font-semibold ring-1 ring-zinc-700'
-              : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
+              ? 'bg-background text-foreground shadow-sm font-semibold ring-1 ring-border'
+              : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
           }`}
         >
-          <Shield className="w-3.5 h-3.5 text-indigo-400" />
+          <Shield className="w-3.5 h-3.5 text-primary" />
           <span>Password & Security</span>
         </button>
 
@@ -73,11 +73,11 @@ export function SettingsTabs({ user }: SettingsTabsProps) {
           onClick={() => handleSelectTab('preferences')}
           className={`flex items-center gap-1.5 px-4 py-2 rounded-xl font-medium transition-all shrink-0 cursor-pointer ${
             activeTab === 'preferences'
-              ? 'bg-zinc-800 text-white shadow-sm font-semibold ring-1 ring-zinc-700'
-              : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
+              ? 'bg-background text-foreground shadow-sm font-semibold ring-1 ring-border'
+              : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
           }`}
         >
-          <Sliders className="w-3.5 h-3.5 text-indigo-400" />
+          <Sliders className="w-3.5 h-3.5 text-primary" />
           <span>Preferences</span>
         </button>
 
@@ -86,11 +86,11 @@ export function SettingsTabs({ user }: SettingsTabsProps) {
           onClick={() => handleSelectTab('danger')}
           className={`flex items-center gap-1.5 px-4 py-2 rounded-xl font-medium transition-all shrink-0 cursor-pointer ${
             activeTab === 'danger'
-              ? 'bg-rose-950/60 border border-rose-500/30 text-rose-300 shadow-sm font-semibold'
-              : 'text-zinc-400 hover:text-rose-300 hover:bg-rose-950/20'
+              ? 'bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 shadow-sm font-semibold'
+              : 'text-muted-foreground hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-500/5'
           }`}
         >
-          <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
+          <ShieldAlert className="w-3.5 h-3.5 text-rose-500" />
           <span>Danger Zone</span>
         </button>
       </div>

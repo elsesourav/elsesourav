@@ -4,7 +4,7 @@ import * as React from 'react';
 import type { User } from '@elsesourav/types';
 import Link from 'next/link';
 import { Mail, Calendar, Pencil } from 'lucide-react';
-import { Button } from '@elsesourav/ui';
+import { Button, UserAvatar } from '@elsesourav/ui';
 
 interface ProfileHeroSectionProps {
   user: User;
@@ -20,26 +20,14 @@ export function ProfileHeroSection({ user, joinedDate }: ProfileHeroSectionProps
       <div className="relative z-10 flex flex-col sm:flex-row items-center sm:items-start justify-between gap-5 sm:gap-6">
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 text-center sm:text-left w-full sm:w-auto">
           {/* Avatar */}
-          <div className="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full overflow-hidden bg-muted border-2 border-border shadow-md shrink-0 flex items-center justify-center">
-            {user.photoUrl ? (
-              <img
-                src={user.photoUrl}
-                alt={user.displayName || 'Profile avatar'}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <span className="text-xl sm:text-2xl md:text-3xl font-bold text-primary">
-                {user.displayName
-                  ? user.displayName
-                      .split(' ')
-                      .map((n) => n[0])
-                      .join('')
-                      .toUpperCase()
-                      .slice(0, 2)
-                  : 'U'}
-              </span>
-            )}
-          </div>
+          <UserAvatar
+            src={user.photoUrl}
+            name={user.displayName}
+            identifier={user.id || user.email}
+            alt={user.displayName || 'Profile avatar'}
+            size="xl"
+            className="border-2 border-border shadow-md"
+          />
 
           {/* Identity Information */}
           <div className="space-y-1.5 sm:space-y-2 flex-1 min-w-0">

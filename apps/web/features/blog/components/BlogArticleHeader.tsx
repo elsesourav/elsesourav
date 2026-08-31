@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Badge } from '@elsesourav/ui';
+import { Badge, UserAvatar } from '@elsesourav/ui';
 import { getBlogCoverUrl } from '@elsesourav/media';
 import type { PublicBlogPost } from '@elsesourav/types';
 import { BlogShareButtons } from './BlogShareButtons';
@@ -62,19 +62,13 @@ export function BlogArticleHeader({ post, postUrl }: BlogArticleHeaderProps) {
       {/* Author and Metadata Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 pb-4 border-y border-[hsl(var(--border-subtle))]">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full overflow-hidden bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] flex items-center justify-center text-xs font-bold text-[hsl(var(--foreground))] shrink-0">
-            {post.author.photoUrl ? (
-              <Image
-                src={post.author.photoUrl}
-                alt={post.author.displayName}
-                width={40}
-                height={40}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <span>{post.author.displayName.slice(0, 1).toUpperCase()}</span>
-            )}
-          </div>
+          <UserAvatar
+            src={post.author.photoUrl}
+            name={post.author.displayName}
+            identifier={post.author.username || post.author.displayName}
+            alt={post.author.displayName}
+            size="md"
+          />
           <div>
             <div className="font-semibold text-xs text-[hsl(var(--foreground))]">{post.author.displayName}</div>
             <div className="flex items-center gap-2 text-[11px] text-[hsl(var(--muted-foreground))]">
