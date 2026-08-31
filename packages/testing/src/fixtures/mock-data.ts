@@ -14,6 +14,7 @@ export const mockStandardUser: User = {
   displayName: 'Regular User',
   role: 'USER',
   status: 'active',
+  emailVerified: true,
   preferences: {
     theme: 'dark',
     emailNotifications: true,
@@ -31,6 +32,7 @@ export const mockAdminUser: User = {
   displayName: 'Admin User',
   role: 'ADMIN',
   status: 'active',
+  emailVerified: true,
   preferences: {
     theme: 'dark',
     emailNotifications: true,
@@ -48,6 +50,7 @@ export const mockStaffUser: User = {
   displayName: 'Support Staff',
   role: 'STAFF',
   status: 'active',
+  emailVerified: true,
   preferences: {
     theme: 'dark',
     emailNotifications: true,

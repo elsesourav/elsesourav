@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { getUserAccountData } from '@/features/account/queries/get-account';
-import { PageShell } from '@elsesourav/ui';
 import { ProfileHeroSection } from '@/features/account/components/ProfileHeroSection';
 import { ProfileQuickActions } from '@/features/account/components/ProfileQuickActions';
 
@@ -27,14 +26,12 @@ export default async function ProfilePage() {
   });
 
   return (
-    <PageShell size="lg" glow padded={false}>
-      <div className="space-y-6 sm:space-y-8">
-        {/* Profile Identity Card */}
-        <ProfileHeroSection user={user} joinedDate={joinedDate} />
+    <div className="w-full space-y-4 sm:space-y-5">
+      {/* Profile Identity Card */}
+      <ProfileHeroSection user={user} joinedDate={joinedDate} />
 
-        {/* Account Actions */}
-        <ProfileQuickActions />
-      </div>
-    </PageShell>
+      {/* Account Actions */}
+      <ProfileQuickActions />
+    </div>
   );
 }

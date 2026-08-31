@@ -167,20 +167,35 @@ export class UserService {
   async requestAccountDeletion(
     requestingUserId: string,
     targetUserId: string,
-    confirmation: string,
+    _confirmation: string,
     reason?: string
   ): Promise<void> {
     if (requestingUserId !== targetUserId) {
       throw AppError.forbidden('You do not have permission to delete this account');
     }
 
-    if (confirmation !== 'DELETE MY ACCOUNT') {
-      throw AppError.validation(
-        'Invalid confirmation phrase. Please type "DELETE MY ACCOUNT" exactly'
-      );
-    }
+    // Schedule 30-day grace period deletion
+    return this.userRepo.scheduleAccountDeletion(targetUserId, reason);
+  }
 
-    return this.userRepo.softDeleteUserTransaction(targetUserId, reason);
+  async cancelScheduledDeletion(
+    requestingUserId: string,
+    targetUserId: string
+  ): Promise<void> {
+    if (requestingUserId !== targetUserId) {
+      throw AppError.forbidden('You do not have permission to modify this account');
+    }
+    return this.userRepo.cancelScheduledDeletion(targetUserId);
+  }
+
+  async markEmailVerified(
+    requestingUserId: string,
+    targetUserId: string
+  ): Promise<import('@elsesourav/types').User> {
+    if (requestingUserId !== targetUserId) {
+      throw AppError.forbidden('You do not have permission to modify this account');
+    }
+    return this.userRepo.markEmailVerified(targetUserId);
   }
 
   // ==========================================

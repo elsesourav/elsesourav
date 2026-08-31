@@ -45,6 +45,7 @@ export async function getUserAccountData(): Promise<
         bio: undefined,
         role: session.user.role || 'USER',
         status: 'active',
+        emailVerified: false,
         preferences: {
           theme: 'dark',
           emailNotifications: true,
@@ -73,6 +74,7 @@ export async function getUserAccountData(): Promise<
       bio: undefined,
       role: session.user.role || 'USER',
       status: 'active',
+      emailVerified: false,
       preferences: {
         theme: 'dark',
         emailNotifications: true,

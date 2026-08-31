@@ -116,25 +116,22 @@ describe('User Identity & Profile Architecture', () => {
     ).rejects.toThrowError(AppError);
   });
 
-  it('enforces exact confirmation phrase for account deletion', async () => {
+  it('schedules 30-day grace period deletion and enforces ownership', async () => {
     const mockRepo = {
-      softDeleteUserTransaction: vi.fn().mockResolvedValue(undefined),
+      scheduleAccountDeletion: vi.fn().mockResolvedValue(undefined),
     } as unknown as UserRepository;
 
     const service = new UserService(mockRepo);
 
-    // Invalid confirmation
+    // Cross-user deletion is forbidden
     await expect(
-      service.requestAccountDeletion('usr-123', 'usr-123', 'delete please')
+      service.requestAccountDeletion('attacker', 'victim', '')
     ).rejects.toThrowError(AppError);
 
-    // Valid confirmation
-    await service.requestAccountDeletion(
-      'usr-123',
-      'usr-123',
-      'DELETE MY ACCOUNT',
-      'Leaving service'
-    );
-    expect(mockRepo.softDeleteUserTransaction).toHaveBeenCalledWith('usr-123', 'Leaving service');
+    expect(mockRepo.scheduleAccountDeletion).not.toHaveBeenCalled();
+
+    // Self-deletion schedules the 30-day grace period
+    await service.requestAccountDeletion('usr-123', 'usr-123', '', 'Leaving service');
+    expect(mockRepo.scheduleAccountDeletion).toHaveBeenCalledWith('usr-123', 'Leaving service');
   });
 });

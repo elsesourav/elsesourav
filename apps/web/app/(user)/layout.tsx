@@ -1,14 +1,14 @@
-import * as React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
-import { getServerSession } from '@elsesourav/auth';
-import { UserAvatarMenu } from '@/features/user/components/UserAvatarMenu';
-import { UserSidebar } from '@/features/user/components/UserSidebar';
 import { SearchButton } from '@/components/search/SearchButton';
 import { ThemePopup } from '@/components/theme/ThemePopup';
+import { UserAvatarMenu } from '@/features/user/components/UserAvatarMenu';
+import { UserSidebar } from '@/features/user/components/UserSidebar';
+import { getServerSession } from '@elsesourav/auth';
 import type { Metadata } from 'next';
+import { cookies } from 'next/headers';
+import Image from 'next/image';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import * as React from 'react';
 
 export const metadata: Metadata = {
   robots: {
@@ -38,7 +38,7 @@ export default async function UserLayout({ children }: { children: React.ReactNo
               href="/"
               className="flex items-center gap-2.5 font-bold text-base text-foreground tracking-tight hover:opacity-90 transition-opacity group shrink-0"
             >
-              <div className="w-8 h-8 rounded-xl overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform duration-200 ring-1 ring-border shrink-0">
+              <div className="w-8 h-8 flex items-center justify-center group-hover:scale-105 transition-transform duration-200 shrink-0">
                 <Image
                   src="/logo-sm.png"
                   alt="ElseSourav Logo"
@@ -65,8 +65,8 @@ export default async function UserLayout({ children }: { children: React.ReactNo
         </div>
       </header>
 
-      {/* Main Authenticated Layout with Sticky Sidebar */}
-      <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 lg:py-8 flex gap-6 lg:gap-8">
+      {/* Main Authenticated Layout with Sticky Sidebar on Desktop & Menu on Mobile */}
+      <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-5 lg:py-6 flex flex-col lg:flex-row gap-5 lg:gap-6 lg:min-h-[calc(100vh-4rem)]">
         <UserSidebar />
         <main id="main-content" className="flex-1 min-w-0">
           {children}

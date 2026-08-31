@@ -12,6 +12,7 @@ describe('Admin User Management & Role Authorization Security', () => {
     username: 'alexdev',
     role: 'USER',
     status: 'active',
+    emailVerified: true,
     preferences: {
       theme: 'dark',
       emailNotifications: true,

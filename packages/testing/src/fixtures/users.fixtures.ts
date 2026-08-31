@@ -10,6 +10,7 @@ export const fixtureStandardUser: User = {
   bio: 'Full stack TypeScript engineer building developer automation tools.',
   role: 'USER',
   status: 'active',
+  emailVerified: true,
   preferences: {
     theme: 'dark',
     emailNotifications: true,
@@ -32,6 +33,7 @@ export const fixtureAdminUser: User = {
   bio: 'Platform Creator & Principal Architect.',
   role: 'ADMIN',
   status: 'active',
+  emailVerified: true,
   preferences: {
     theme: 'dark',
     emailNotifications: true,
@@ -54,6 +56,7 @@ export const fixtureStaffUser: User = {
   bio: 'Developer Operations & Support Engineer.',
   role: 'STAFF',
   status: 'active',
+  emailVerified: true,
   preferences: {
     theme: 'system',
     emailNotifications: true,
@@ -74,6 +77,7 @@ export const fixtureSuspendedUser: User = {
   photoUrl: '/avatars/avatar-4.svg',
   role: 'USER',
   status: 'suspended',
+  emailVerified: false,
   preferences: {
     theme: 'dark',
     emailNotifications: false,
@@ -93,6 +97,7 @@ export const fixtureMinimalUser: User = {
   photoUrl: '/avatars/avatar-5.svg',
   role: 'USER',
   status: 'active',
+  emailVerified: false,
   preferences: {
     theme: 'dark',
     emailNotifications: false,

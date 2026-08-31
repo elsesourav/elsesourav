@@ -104,6 +104,8 @@ describe('Prisma Model Mappers', () => {
         reduceMotion: false,
         compactView: false,
       },
+      emailVerified: true,
+      scheduledDeletionAt: null,
       createdAt: new Date('2026-01-01T00:00:00Z'),
       updatedAt: new Date('2026-01-01T00:00:00Z'),
       deletedAt: null,

@@ -30,6 +30,10 @@ export function mapPrismaUserToDomain(prismaUser: PrismaUser): DomainUser {
     role: prismaUser.role as PrismaRole as DomainRole,
     status: prismaUser.deletedAt ? 'deleted' : 'active',
     preferences,
+    emailVerified: prismaUser.emailVerified,
+    scheduledDeletionAt: prismaUser.scheduledDeletionAt
+      ? prismaUser.scheduledDeletionAt.getTime()
+      : undefined,
     createdAt: prismaUser.createdAt.getTime(),
     updatedAt: prismaUser.updatedAt.getTime(),
     deletedAt: prismaUser.deletedAt ? prismaUser.deletedAt.getTime() : undefined,

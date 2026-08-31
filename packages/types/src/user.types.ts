@@ -23,6 +23,8 @@ export interface User {
   readonly role: UserRole;
   readonly status: UserStatus;
   readonly preferences: UserPreferences;
+  readonly emailVerified: boolean;
+  readonly scheduledDeletionAt?: Timestamp;
   readonly lastLoginAt?: Timestamp;
   readonly createdAt: Timestamp;
   readonly updatedAt: Timestamp;
@@ -64,6 +66,10 @@ export interface UpdatePreferencesInput {
 
 export interface DeleteAccountInput {
   readonly confirmation: string; // Must match "DELETE MY ACCOUNT"
+  readonly reason?: string;
+}
+
+export interface ScheduleAccountDeletionInput {
   readonly reason?: string;
 }
 

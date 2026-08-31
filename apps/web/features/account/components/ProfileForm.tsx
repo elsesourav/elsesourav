@@ -1,23 +1,23 @@
 'use client';
 
-import * as React from 'react';
+import { ImageCropperModal } from '@/components/media/ImageCropperModal';
 import type { User, UserPreferences } from '@elsesourav/types';
 import { Card, CardDescription, CardHeader, CardTitle, Input, UserAvatar } from '@elsesourav/ui';
 import {
   AlertCircle,
+  Camera,
   Check,
   CheckCircle2,
-  Image as ImageIcon,
   Loader2,
   Pencil,
+  RotateCcw,
   Sparkles,
   UploadCloud,
   User as UserIcon,
   X,
-  Bell,
 } from 'lucide-react';
-import { updateProfileFormAction, updatePreferencesAction } from '../actions/account-actions';
-import { ImageCropperModal } from '@/components/media/ImageCropperModal';
+import * as React from 'react';
+import { updateProfileFormAction } from '../actions/account-actions';
 
 interface ProfileFormProps {
   user: User;
@@ -39,10 +39,15 @@ export function ProfileForm({ user }: ProfileFormProps) {
   const [displayName, setDisplayName] = React.useState(user.displayName || '');
   const [username, setUsername] = React.useState(user.username || '');
   const [bio, setBio] = React.useState(user.bio || '');
+
+  // Profile Image State (Draft preview vs committed photoUrl)
   const [photoUrl, setPhotoUrl] = React.useState(user.photoUrl || '');
-  const [emailNotifications, setEmailNotifications] = React.useState(
-    userPrefs.emailNotifications ?? true
-  );
+  const [draftPhotoUrl, setDraftPhotoUrl] = React.useState(user.photoUrl || '');
+  const [isSavingPhoto, setIsSavingPhoto] = React.useState(false);
+  const [photoSaveSuccess, setPhotoSaveSuccess] = React.useState(false);
+  const [photoSaveError, setPhotoSaveError] = React.useState<string | null>(null);
+
+  const hasPhotoChanged = draftPhotoUrl !== (photoUrl || '');
 
   // Edit Modes for individual fields
   const [isEditingName, setIsEditingName] = React.useState(false);
@@ -63,11 +68,6 @@ export function ProfileForm({ user }: ProfileFormProps) {
   const [isSavingBio, setIsSavingBio] = React.useState(false);
   const [bioError, setBioError] = React.useState<string | null>(null);
 
-  // Avatar and Preference status indicators
-  const [avatarStatus, setAvatarStatus] = React.useState<'idle' | 'saving' | 'saved' | 'error'>(
-    'idle'
-  );
-  const [prefStatus, setPrefStatus] = React.useState<'idle' | 'saving' | 'saved'>('idle');
 
   // Cropper Modal & Drag-and-Drop state
   const [isCropperOpen, setIsCropperOpen] = React.useState(false);
@@ -218,22 +218,39 @@ export function ProfileForm({ user }: ProfileFormProps) {
     }
   };
 
-  // Handle Avatar Selection / Preset Auto-Save
-  const handleSelectAvatar = async (newUrl: string) => {
-    setPhotoUrl(newUrl);
-    setAvatarStatus('saving');
+  // Handle Preset or Upload Draft Selection (Does NOT auto-save)
+  const handleSelectPresetOrDraft = (newUrl: string) => {
+    setDraftPhotoUrl(newUrl);
+    setPhotoSaveSuccess(false);
+    setPhotoSaveError(null);
+  };
+
+  // Explicit Save Profile Image Action
+  const handleSavePhoto = async () => {
+    setIsSavingPhoto(true);
+    setPhotoSaveError(null);
+    setPhotoSaveSuccess(false);
 
     try {
-      const res = await updateProfileFormAction({ photoUrl: newUrl });
+      const res = await updateProfileFormAction({ photoUrl: draftPhotoUrl });
       if (res.success) {
-        setAvatarStatus('saved');
-        setTimeout(() => setAvatarStatus('idle'), 2500);
+        setPhotoUrl(draftPhotoUrl);
+        setPhotoSaveSuccess(true);
+        setTimeout(() => setPhotoSaveSuccess(false), 3000);
       } else {
-        setAvatarStatus('error');
+        setPhotoSaveError(res.error || 'Failed to update profile image');
       }
     } catch {
-      setAvatarStatus('error');
+      setPhotoSaveError('An unexpected error occurred while saving profile image');
+    } finally {
+      setIsSavingPhoto(false);
     }
+  };
+
+  // Reset Draft Image back to currently saved image
+  const handleResetPhoto = () => {
+    setDraftPhotoUrl(photoUrl);
+    setPhotoSaveError(null);
   };
 
   // Handle Drag & Drop File Upload
@@ -277,161 +294,211 @@ export function ProfileForm({ user }: ProfileFormProps) {
     }
   };
 
-  // Handle Email Notifications Toggle Auto-Save (Debounced / Optimistic)
-  const handleToggleNotifications = async (checked: boolean) => {
-    setEmailNotifications(checked);
-    setPrefStatus('saving');
-
-    try {
-      const res = await updatePreferencesAction({ emailNotifications: checked });
-      if (res.success) {
-        setPrefStatus('saved');
-        setTimeout(() => setPrefStatus('idle'), 2500);
-      } else {
-        setPrefStatus('idle');
-      }
-    } catch {
-      setPrefStatus('idle');
-    }
-  };
 
   return (
-    <div className="w-full max-w-2xl">
+    <div className="w-full">
       <Card className="bg-card text-card-foreground border-border shadow-sm rounded-2xl sm:rounded-3xl overflow-hidden">
-        <CardHeader className="pb-4">
+        <CardHeader className="pb-2.5 sm:pb-3">
           <div className="flex items-center gap-2">
             <UserIcon className="w-4 h-4 text-primary" />
-            <CardTitle className="text-base text-foreground">Profile Information</CardTitle>
+            <CardTitle className="text-sm sm:text-base font-bold text-foreground">
+              Profile Information
+            </CardTitle>
           </div>
           <CardDescription className="text-xs text-muted-foreground">
-            Update your public name, username handle, developer bio, and avatar identity.
+            Update your public name, username handle, developer bio, and profile image.
           </CardDescription>
         </CardHeader>
 
-        <div className="p-5 sm:p-6 pt-2 space-y-6">
-          {/* 1. Modern Avatar Section: Square User Image on Left, Drag & Drop on Right, Presets at Bottom */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-muted/40 border border-border space-y-4">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-primary" /> Profile Avatar
-              </label>
-              {avatarStatus === 'saving' && (
-                <span className="text-[11px] text-primary flex items-center gap-1">
-                  <Loader2 className="w-3 h-3 animate-spin" /> Saving...
-                </span>
-              )}
-              {avatarStatus === 'saved' && (
-                <span className="text-[11px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-medium">
-                  <Check className="w-3 h-3" /> Avatar updated
-                </span>
-              )}
+        <div className="p-4 sm:p-5 pt-1 space-y-3">
+          {/* 1. Studio-Quality Profile Image Section */}
+          <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-muted/30 border border-border/80 space-y-3.5">
+            {/* Header: Title + Status + Action Buttons */}
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-3.5 h-3.5 text-primary" />
+                <span className="text-xs font-semibold text-foreground">Profile Image</span>
+                {hasPhotoChanged && (
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-primary/15 text-primary border border-primary/25">
+                    Unsaved changes
+                  </span>
+                )}
+              </div>
+
+              {/* Status & Save Button */}
+              <div className="flex items-center gap-2">
+                {photoSaveSuccess && (
+                  <span className="text-[11px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-medium animate-in fade-in">
+                    <Check className="w-3 h-3" /> Image saved
+                  </span>
+                )}
+                {photoSaveError && (
+                  <span className="text-[11px] text-rose-600 dark:text-rose-400 flex items-center gap-1 font-medium animate-in fade-in">
+                    <AlertCircle className="w-3 h-3" /> {photoSaveError}
+                  </span>
+                )}
+
+                {hasPhotoChanged && (
+                  <button
+                    type="button"
+                    onClick={handleResetPhoto}
+                    disabled={isSavingPhoto}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-border bg-background hover:bg-accent text-muted-foreground hover:text-foreground text-xs font-medium transition-colors cursor-pointer"
+                    title="Reset to current saved image"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                    <span>Reset</span>
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={handleSavePhoto}
+                  disabled={!hasPhotoChanged || isSavingPhoto}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold shadow-sm transition-all duration-200 ${
+                    hasPhotoChanged
+                      ? 'bg-primary text-primary-foreground hover:opacity-90 cursor-pointer shadow-primary/20 shadow-md ring-2 ring-primary/40'
+                      : 'bg-muted text-muted-foreground/60 border border-border/60 cursor-not-allowed opacity-60'
+                  }`}
+                >
+                  {isSavingPhoto ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Saving...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Check className="w-3.5 h-3.5" />
+                      <span>Save Image</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
 
-            {/* Top Row: Left = Square User Image, Right = Drag & Drop / Click to Upload */}
-            <div className="flex flex-col sm:flex-row items-center gap-4">
-              {/* Left: Square Profile Image */}
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-primary/30 relative flex items-center justify-center bg-muted/60 shadow-md shrink-0">
-                {photoUrl ? (
+            {/* Seamless 2-Column Studio Layout */}
+            <div className="flex flex-col sm:flex-row items-center sm:items-stretch gap-4 sm:gap-5">
+              {/* Left Hero: Large Profile Image Squircle with Hover Overlay */}
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className="group relative w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-[25%] overflow-hidden border-2 border-primary/30 bg-muted/60 shadow-md shrink-0 cursor-pointer transition-all duration-200 hover:border-primary hover:shadow-lg flex items-center justify-center"
+                title="Click to upload new photo"
+              >
+                {draftPhotoUrl ? (
                   <img
-                    src={photoUrl}
-                    alt={displayName || 'Avatar preview'}
-                    className="w-full h-full object-cover"
+                    src={draftPhotoUrl}
+                    alt={displayName || 'Profile preview'}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 ) : (
                   <UserAvatar
                     src={null}
                     name={displayName}
                     identifier={user.id || user.email}
-                    size="lg"
-                    className="w-full h-full rounded-2xl text-xl font-bold"
+                    size="xl"
+                    className="w-full h-full rounded-2xl sm:rounded-3xl text-3xl md:text-4xl font-bold"
                   />
                 )}
+
+                {/* Hover camera upload overlay */}
+                <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center text-white gap-1 p-2 text-center">
+                  <Camera className="w-6 h-6" />
+                  <span className="text-[10px] font-semibold">Change Photo</span>
+                </div>
               </div>
 
-              {/* Right: Drag & Drop / Click to Upload Zone */}
-              <div
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-                onClick={() => fileInputRef.current?.click()}
-                className={`flex-1 w-full h-24 sm:h-28 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center p-3 text-center cursor-pointer transition-all duration-200 group ${
-                  isDraggingOver
-                    ? 'border-primary bg-primary/10 scale-[1.01]'
-                    : 'border-border/80 hover:border-primary/60 hover:bg-primary/5 bg-background/50'
-                }`}
-              >
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileInputChange}
-                  className="hidden"
-                />
-                <UploadCloud className="w-6 h-6 text-primary mb-1 group-hover:scale-110 transition-transform duration-200" />
-                <p className="text-xs font-semibold text-foreground">
-                  Drop image here, or <span className="text-primary underline">browse</span>
-                </p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">
-                  JPG, PNG, WEBP (Square 1:1 format)
-                </p>
-              </div>
-            </div>
-
-            {/* Bottom Row: Preset Images Strip */}
-            <div className="pt-2 border-t border-border/60 space-y-2">
-              <p className="text-[11px] text-muted-foreground font-medium">
-                Select a preset or default monogram:
-              </p>
-              <div className="flex flex-wrap items-center gap-2">
-                {/* Default Monogram */}
-                <button
-                  type="button"
-                  onClick={() => handleSelectAvatar('')}
-                  title="Default Branded Monogram"
-                  className={`relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden border-2 transition-all cursor-pointer flex items-center justify-center ${
-                    !photoUrl
-                      ? 'border-primary ring-2 ring-primary/40 shadow-sm scale-105'
-                      : 'border-border hover:border-foreground/40 opacity-75 hover:opacity-100'
+              {/* Right Panel: Upload Zone (Top) + Presets Strip (Bottom) */}
+              <div className="flex-1 w-full flex flex-col justify-between gap-3 min-w-0">
+                {/* Drag & Drop Upload Zone */}
+                <div
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  onClick={() => fileInputRef.current?.click()}
+                  className={`w-full rounded-xl sm:rounded-2xl border border-dashed flex items-center gap-3.5 p-3 sm:p-3.5 text-left cursor-pointer transition-all duration-200 group ${
+                    isDraggingOver
+                      ? 'border-primary bg-primary/10 scale-[1.01]'
+                      : 'border-border/90 hover:border-primary/60 hover:bg-primary/5 bg-background/50'
                   }`}
                 >
-                  <UserAvatar
-                    src={null}
-                    name={displayName}
-                    identifier={user.id || user.email}
-                    size="sm"
-                    className="w-full h-full rounded-none text-[10px]"
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileInputChange}
+                    className="hidden"
                   />
-                </button>
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-200">
+                    <UploadCloud className="w-5 h-5 text-primary" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-semibold text-foreground truncate">
+                      Drop an image here, or <span className="text-primary underline">browse</span>
+                    </p>
+                    <p className="text-[11px] text-muted-foreground mt-0.5 truncate">
+                      Square JPG, PNG, WEBP • Max 5MB (1:1 recommended)
+                    </p>
+                  </div>
+                </div>
 
-                {/* Preset Options */}
-                {PRESET_AVATARS.map((preset) => {
-                  const isSelected = photoUrl === preset.url;
-                  return (
+                {/* Preset Avatars Row */}
+                <div className="space-y-1.5 pt-0.5">
+                  <div className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+                    Or select a preset:
+                  </div>
+
+                  <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                    {/* Default Monogram */}
                     <button
-                      key={preset.id}
                       type="button"
-                      onClick={() => handleSelectAvatar(preset.url)}
-                      title={preset.name}
-                      className={`relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden border-2 transition-all cursor-pointer ${
-                        isSelected
-                          ? 'border-primary ring-2 ring-primary/40 shadow-sm scale-105'
+                      onClick={() => handleSelectPresetOrDraft('')}
+                      title="Default Monogram"
+                      className={`relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden border transition-all duration-200 cursor-pointer flex items-center justify-center shrink-0 hover:scale-105 active:scale-95 ${
+                        !draftPhotoUrl
+                          ? 'border-primary ring-2 ring-primary/50 shadow-md scale-105 font-bold'
                           : 'border-border hover:border-foreground/40 opacity-75 hover:opacity-100'
                       }`}
                     >
-                      <img
-                        src={preset.url}
-                        alt={preset.name}
-                        className="w-full h-full object-cover"
+                      <UserAvatar
+                        src={null}
+                        name={displayName}
+                        identifier={user.id || user.email}
+                        size="sm"
+                        className="w-full h-full rounded-none text-[10px]"
                       />
                     </button>
-                  );
-                })}
+
+                    {/* Preset SVG Colors */}
+                    {PRESET_AVATARS.map((preset) => {
+                      const isSelected = draftPhotoUrl === preset.url;
+                      return (
+                        <button
+                          key={preset.id}
+                          type="button"
+                          onClick={() => handleSelectPresetOrDraft(preset.url)}
+                          title={preset.name}
+                          className={`relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden border transition-all duration-200 cursor-pointer shrink-0 hover:scale-105 active:scale-95 ${
+                            isSelected
+                              ? 'border-primary ring-2 ring-primary/50 shadow-md scale-105'
+                              : 'border-border hover:border-foreground/40 opacity-75 hover:opacity-100'
+                          }`}
+                        >
+                          <img
+                            src={preset.url}
+                            alt={preset.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
           {/* 2. Full Name (Display Name) Field with Inline Edit */}
-          <div className="p-4 rounded-2xl bg-muted/40 border border-border space-y-2">
+          <div className="p-3 sm:p-3.5 rounded-xl bg-muted/30 border border-border/80 space-y-1.5">
             <div className="flex items-center justify-between">
               <label className="text-xs font-semibold text-foreground">
                 Display Name <span className="text-rose-500">*</span>
@@ -453,7 +520,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
             </div>
 
             {isEditingName ? (
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <div className="flex items-center gap-2">
                   <Input
                     type="text"
@@ -462,18 +529,18 @@ export function ProfileForm({ user }: ProfileFormProps) {
                     placeholder="Your name"
                     autoFocus
                     maxLength={60}
-                    className="bg-background border-border text-xs rounded-xl text-foreground flex-1"
+                    className="bg-background border-border text-xs rounded-lg text-foreground flex-1 h-8 sm:h-9"
                   />
                   <button
                     type="button"
                     onClick={handleApplyName}
                     disabled={isSavingName}
-                    className="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer shrink-0 shadow-sm"
+                    className="inline-flex items-center gap-1 px-3 h-8 sm:h-9 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer shrink-0 shadow-sm"
                   >
                     {isSavingName ? (
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <Loader2 className="w-3 h-3 animate-spin" />
                     ) : (
-                      <Check className="w-3.5 h-3.5" />
+                      <Check className="w-3 h-3" />
                     )}
                     <span>Apply</span>
                   </button>
@@ -483,7 +550,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                       setIsEditingName(false);
                       setNameError(null);
                     }}
-                    className="inline-flex items-center p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-background border border-border transition-colors cursor-pointer shrink-0"
+                    className="inline-flex items-center p-1.5 h-8 sm:h-9 rounded-lg text-muted-foreground hover:text-foreground hover:bg-background border border-border transition-colors cursor-pointer shrink-0"
                     title="Cancel"
                   >
                     <X className="w-3.5 h-3.5" />
@@ -494,14 +561,14 @@ export function ProfileForm({ user }: ProfileFormProps) {
                 )}
               </div>
             ) : (
-              <div className="text-xs font-medium text-foreground py-1">
+              <div className="text-xs font-medium text-foreground py-0.5">
                 {displayName || <span className="text-muted-foreground italic">Not set</span>}
               </div>
             )}
           </div>
 
           {/* 3. Username Handle Field with Inline Edit */}
-          <div className="p-4 rounded-2xl bg-muted/40 border border-border space-y-2">
+          <div className="p-3 sm:p-3.5 rounded-xl bg-muted/30 border border-border/80 space-y-1.5">
             <div className="flex items-center justify-between">
               <label className="text-xs font-semibold text-foreground">Username</label>
 
@@ -539,9 +606,9 @@ export function ProfileForm({ user }: ProfileFormProps) {
             </div>
 
             {isEditingUsername ? (
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <div className="flex items-center gap-2">
-                  <div className="flex items-center flex-1 rounded-xl bg-background border border-border focus-within:border-primary px-3">
+                  <div className="flex items-center flex-1 h-8 sm:h-9 rounded-lg bg-background border border-border focus-within:border-primary px-2.5">
                     <span className="text-xs text-muted-foreground select-none font-mono">@</span>
                     <input
                       type="text"
@@ -550,7 +617,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                       placeholder="username"
                       autoFocus
                       maxLength={30}
-                      className="bg-transparent border-0 text-xs text-foreground px-1 py-2 w-full focus:outline-none font-mono"
+                      className="bg-transparent border-0 text-xs text-foreground px-1 w-full focus:outline-none font-mono"
                     />
                   </div>
 
@@ -563,7 +630,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                       usernameStatus === 'taken' ||
                       usernameStatus === 'checking'
                     }
-                    className="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer shrink-0 shadow-sm"
+                    className="inline-flex items-center gap-1 px-3 h-8 sm:h-9 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer shrink-0 shadow-sm"
                   >
                     {isSavingUsername ? (
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -579,7 +646,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                       setIsEditingUsername(false);
                       setUsernameError(null);
                     }}
-                    className="inline-flex items-center p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-background border border-border transition-colors cursor-pointer shrink-0"
+                    className="inline-flex items-center p-1.5 h-8 sm:h-9 rounded-lg text-muted-foreground hover:text-foreground hover:bg-background border border-border transition-colors cursor-pointer shrink-0"
                     title="Cancel"
                   >
                     <X className="w-3.5 h-3.5" />
@@ -595,7 +662,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                 )}
               </div>
             ) : (
-              <div className="text-xs font-mono text-primary font-medium py-1">
+              <div className="text-xs font-mono text-primary font-medium py-0.5">
                 {username ? (
                   `@${username}`
                 ) : (
@@ -606,7 +673,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
           </div>
 
           {/* 4. Bio Field with Inline Edit */}
-          <div className="p-4 rounded-2xl bg-muted/40 border border-border space-y-2">
+          <div className="p-3 sm:p-3.5 rounded-xl bg-muted/30 border border-border/80 space-y-1.5">
             <div className="flex items-center justify-between">
               <label className="text-xs font-semibold text-foreground">Bio</label>
 
@@ -626,28 +693,28 @@ export function ProfileForm({ user }: ProfileFormProps) {
             </div>
 
             {isEditingBio ? (
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <textarea
                   value={editBioValue}
                   onChange={(e) => setEditBioValue(e.target.value)}
-                  placeholder="Brief bio or developer statement..."
+                  placeholder="Brief developer bio or summary..."
                   autoFocus
-                  rows={3}
+                  rows={2}
                   maxLength={250}
-                  className="w-full bg-background border border-border rounded-xl p-3 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed"
+                  className="w-full bg-background border border-border rounded-lg p-2.5 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed"
                 />
 
-                <div className="flex items-center justify-between">
-                  <div className="text-[11px] text-muted-foreground">
+                <div className="flex items-center justify-between pt-0.5">
+                  <div className="text-[10px] text-muted-foreground">
                     {editBioValue.length}/250 characters
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5">
                     <button
                       type="button"
                       onClick={handleApplyBio}
                       disabled={isSavingBio}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-primary text-primary-foreground text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer shadow-sm"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer shadow-sm"
                     >
                       {isSavingBio ? (
                         <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -663,7 +730,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                         setIsEditingBio(false);
                         setBioError(null);
                       }}
-                      className="inline-flex items-center px-2.5 py-1.5 rounded-xl text-muted-foreground hover:text-foreground hover:bg-background border border-border text-xs transition-colors cursor-pointer"
+                      className="inline-flex items-center px-2 py-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-background border border-border text-xs transition-colors cursor-pointer"
                     >
                       Cancel
                     </button>
@@ -675,51 +742,12 @@ export function ProfileForm({ user }: ProfileFormProps) {
                 )}
               </div>
             ) : (
-              <div className="text-xs text-muted-foreground leading-relaxed py-1">
+              <div className="text-xs text-muted-foreground leading-relaxed py-0.5">
                 {bio || <span className="italic">No bio added yet.</span>}
               </div>
             )}
           </div>
 
-          {/* 5. Email Notifications Toggle Switch (Animated, Auto-saving) */}
-          <div className="p-4 rounded-2xl bg-muted/40 border border-border">
-            <div className="flex items-center justify-between gap-4">
-              <div className="space-y-0.5">
-                <div className="text-xs font-semibold text-foreground flex items-center gap-1.5">
-                  <Bell className="w-3.5 h-3.5 text-primary" />
-                  <span>Email Notifications</span>
-                  {prefStatus === 'saving' && (
-                    <Loader2 className="w-3 h-3 animate-spin text-primary ml-1" />
-                  )}
-                  {prefStatus === 'saved' && (
-                    <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-0.5 ml-1">
-                      <Check className="w-3 h-3" /> Saved
-                    </span>
-                  )}
-                </div>
-                <div className="text-[11px] text-muted-foreground leading-relaxed">
-                  Receive email alerts for support ticket replies and platform updates.
-                </div>
-              </div>
-
-              {/* Animated Toggle Switch */}
-              <button
-                type="button"
-                role="switch"
-                aria-checked={emailNotifications}
-                onClick={() => handleToggleNotifications(!emailNotifications)}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                  emailNotifications ? 'bg-primary' : 'bg-muted-foreground/30'
-                }`}
-              >
-                <span
-                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
-                    emailNotifications ? 'translate-x-5' : 'translate-x-0'
-                  }`}
-                />
-              </button>
-            </div>
-          </div>
         </div>
       </Card>
 
@@ -735,7 +763,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
         lockRatio={true}
         title="Choose & Adjust Profile Photo"
         onCropComplete={(croppedData) => {
-          handleSelectAvatar(croppedData);
+          handleSelectPresetOrDraft(croppedData);
         }}
       />
     </div>

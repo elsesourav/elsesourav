@@ -18,9 +18,6 @@ export function PreferencesForm({ user }: PreferencesFormProps) {
   const [theme, setTheme] = React.useState<'light' | 'dark' | 'system'>(
     (prefs.theme as 'light' | 'dark' | 'system') || activeClientTheme || 'dark'
   );
-  const [emailNotifications, setEmailNotifications] = React.useState(
-    prefs.emailNotifications ?? true
-  );
   const [reduceMotion, setReduceMotion] = React.useState(prefs.reduceMotion ?? false);
   const [compactView, setCompactView] = React.useState(prefs.compactView ?? false);
   const [isSaving, setIsSaving] = React.useState(false);
@@ -41,7 +38,6 @@ export function PreferencesForm({ user }: PreferencesFormProps) {
     try {
       const res = await updatePreferencesAction({
         theme,
-        emailNotifications,
         reduceMotion,
         compactView,
       });
@@ -66,7 +62,7 @@ export function PreferencesForm({ user }: PreferencesFormProps) {
           <CardTitle className="text-base text-foreground">Application Preferences</CardTitle>
         </div>
         <CardDescription className="text-xs text-muted-foreground">
-          Customize your interface theme, accessibility settings, and notification delivery options.
+          Customize your interface theme and accessibility settings.
         </CardDescription>
       </CardHeader>
 
@@ -113,22 +109,6 @@ export function PreferencesForm({ user }: PreferencesFormProps) {
 
         {/* Toggle Controls */}
         <div className="space-y-4 pt-2 border-t border-border">
-          {/* Email Notifications */}
-          <label className="flex items-center justify-between gap-4 cursor-pointer p-3 rounded-xl hover:bg-muted/50 transition-colors">
-            <div>
-              <div className="text-xs font-semibold text-foreground">Email Notifications</div>
-              <div className="text-[11px] text-muted-foreground">
-                Receive email alerts for support ticket replies and platform updates.
-              </div>
-            </div>
-            <input
-              type="checkbox"
-              checked={emailNotifications}
-              onChange={(e) => setEmailNotifications(e.target.checked)}
-              className="rounded border-border bg-background text-primary focus:ring-primary w-4 h-4 cursor-pointer"
-            />
-          </label>
-
           {/* Reduce Motion */}
           <label className="flex items-center justify-between gap-4 cursor-pointer p-3 rounded-xl hover:bg-muted/50 transition-colors">
             <div>

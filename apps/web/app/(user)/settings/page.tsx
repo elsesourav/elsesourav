@@ -3,7 +3,6 @@ import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { getUserAccountData } from '@/features/account/queries/get-account';
 import { SettingsTabs } from '@/features/account/components/SettingsTabs';
-import { PageShell } from '@elsesourav/ui';
 
 export const metadata: Metadata = {
   title: 'Settings | ElseSourav',
@@ -22,14 +21,14 @@ export default async function SettingsPage() {
   }
 
   return (
-    <PageShell size="lg" glow padded={false}>
+    <div className="w-full">
       <React.Suspense
         fallback={
-          <div className="h-64 rounded-3xl bg-muted/30 border border-border animate-pulse" />
+          <div className="h-64 rounded-2xl sm:rounded-3xl bg-muted/30 border border-border animate-pulse" />
         }
       >
         <SettingsTabs user={user} />
       </React.Suspense>
-    </PageShell>
+    </div>
   );
 }

@@ -96,6 +96,7 @@ export const fixtureUnicodeUser: User = {
   bio: 'Specialist in UTF-8, bidirectional text (مرحبا بالعالم), and typographic ligatures.',
   role: 'USER',
   status: 'active',
+  emailVerified: true,
   preferences: {
     theme: 'system',
     emailNotifications: true,

@@ -13,20 +13,20 @@ interface ProfileHeroSectionProps {
 
 export function ProfileHeroSection({ user, joinedDate }: ProfileHeroSectionProps) {
   return (
-    <div className="relative rounded-2xl sm:rounded-3xl border border-border/80 bg-card/90 backdrop-blur-xl text-card-foreground shadow-sm p-6 sm:p-8 md:p-9 overflow-hidden transition-all">
+    <div className="relative rounded-2xl sm:rounded-3xl border border-border/80 bg-card/90 backdrop-blur-xl text-card-foreground shadow-sm p-5 sm:p-6 md:p-7 overflow-hidden transition-all">
       {/* Subtle atmospheric ambient glow */}
       <div className="pointer-events-none absolute -top-12 -right-12 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
       <div className="pointer-events-none absolute -bottom-12 -left-12 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
 
-      <div className="relative z-10 flex flex-col sm:flex-row items-center sm:items-start justify-between gap-6">
-        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 sm:gap-7 text-center sm:text-left w-full sm:w-auto">
+      <div className="relative z-10 flex flex-col sm:flex-row items-center sm:items-start justify-between gap-5">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-5 text-center sm:text-left w-full sm:w-auto">
           {/* Avatar with deterministic fallback and crisp border */}
           <UserAvatar
             src={user.photoUrl}
             name={user.displayName}
             identifier={user.id || user.email}
             alt={user.displayName || 'Profile avatar'}
-            size="xl"
+            size="lg"
             className="border-2 border-border shadow-md shrink-0"
           />
 

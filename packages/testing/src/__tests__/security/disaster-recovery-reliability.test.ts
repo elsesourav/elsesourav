@@ -53,18 +53,22 @@ describe('Disaster Recovery & Reliability Test Suite (Prompt 47)', () => {
       ).rejects.toThrow(/authenticated/i);
     });
 
-    it('UserService: enforces exact confirmation phrase before executing account deletion transaction', async () => {
+    it('UserService: prevents cross-user account deletion and schedules 30-day grace period deletion', async () => {
       const mockRepo: Partial<UserRepository> = {
-        softDeleteUserTransaction: vi.fn(),
+        scheduleAccountDeletion: vi.fn().mockResolvedValue(undefined),
       };
       const userService = new UserService(mockRepo as UserRepository);
 
-      // Wrong confirmation phrase fails safely without mutating database
+      // Cross-user deletion attempt fails safely
       await expect(
-        userService.requestAccountDeletion('user-1', 'user-1', 'delete account')
-      ).rejects.toThrow(/exact/i);
+        userService.requestAccountDeletion('attacker', 'victim', '')
+      ).rejects.toThrow(/permission/i);
 
-      expect(mockRepo.softDeleteUserTransaction).not.toHaveBeenCalled();
+      expect(mockRepo.scheduleAccountDeletion).not.toHaveBeenCalled();
+
+      // Self-deletion schedules the 30-day grace period
+      await userService.requestAccountDeletion('user-1', 'user-1', '');
+      expect(mockRepo.scheduleAccountDeletion).toHaveBeenCalledWith('user-1', undefined);
     });
   });
 

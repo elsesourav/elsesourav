@@ -37,6 +37,8 @@ export function createUser(overrides?: Partial<User>): User {
     preferences: overrides?.preferences
       ? { ...defaultUserPreferences, ...overrides.preferences }
       : defaultUserPreferences,
+    emailVerified: overrides?.emailVerified ?? true,
+    scheduledDeletionAt: overrides?.scheduledDeletionAt,
     lastLoginAt: overrides?.lastLoginAt ?? 1704067200000,
     createdAt: overrides?.createdAt ?? 1704067200000,
     updatedAt: overrides?.updatedAt ?? 1704067200000,

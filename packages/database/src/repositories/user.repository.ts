@@ -223,6 +223,57 @@ export class UserRepository {
     }
   }
 
+  async scheduleAccountDeletion(userId: string, reason = 'User requested account closure'): Promise<void> {
+    try {
+      // 30-day grace period from now
+      const scheduledDeletionAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+
+      await this.prisma.$transaction(async (tx) => {
+        await tx.user.update({
+          where: { id: userId },
+          data: { scheduledDeletionAt },
+        });
+
+        await tx.auditLog.create({
+          data: {
+            userId,
+            action: 'USER_ACCOUNT_DELETION_SCHEDULED',
+            entityType: 'User',
+            entityId: userId,
+            details: { reason, scheduledDeletionAt: scheduledDeletionAt.toISOString() },
+          },
+        });
+      });
+    } catch (error) {
+      throw AppError.database(`Failed to schedule account deletion: ${userId}`, error);
+    }
+  }
+
+  async cancelScheduledDeletion(userId: string): Promise<void> {
+    try {
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: { scheduledDeletionAt: null },
+      });
+    } catch (error) {
+      throw AppError.database(`Failed to cancel scheduled deletion: ${userId}`, error);
+    }
+  }
+
+  async markEmailVerified(userId: string): Promise<DomainUser> {
+    try {
+      const existing = await this.findByIdOrAuthId(userId);
+      if (!existing) throw AppError.notFound('User');
+      const updated = await this.prisma.user.update({
+        where: { id: existing.id },
+        data: { emailVerified: true },
+      });
+      return mapPrismaUserToDomain(updated);
+    } catch (error) {
+      throw AppError.database(`Failed to mark email verified: ${userId}`, error);
+    }
+  }
+
   async softDeleteUserTransaction(
     userId: string,
     reason = 'User requested account closure'
