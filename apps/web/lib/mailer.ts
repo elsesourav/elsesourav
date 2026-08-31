@@ -119,12 +119,9 @@ export async function sendOtpEmail({
       });
     } else {
       // In development when SMTP is not configured, log clearly to console
-      console.log(`\n========================================`);
-      console.log(`[DEVELOPMENT EMAIL OTP]`);
-      console.log(`To: ${to}`);
-      console.log(`Purpose: ${purpose}`);
-      console.log(`6-Digit OTP Code: >>> ${otp} <<<`);
-      console.log(`========================================\n`);
+      console.info(
+        `\n[DEVELOPMENT EMAIL OTP]\nTo: ${to}\nPurpose: ${purpose}\n6-Digit OTP Code: >>> ${otp} <<<\n`
+      );
     }
 
     return { success: true };

@@ -92,10 +92,11 @@ export class OtpRepository {
       }
 
       const expectedHash = hashOtp(enteredOtp.trim(), normalizedEmail);
-      const isValid = crypto.timingSafeEqual(
-        Buffer.from(record.otpHash),
-        Buffer.from(expectedHash)
-      );
+      const bufRecord = Buffer.from(record.otpHash, 'hex');
+      const bufExpected = Buffer.from(expectedHash, 'hex');
+      const isValid =
+        bufRecord.length === bufExpected.length &&
+        crypto.timingSafeEqual(bufRecord, bufExpected);
 
       if (!isValid) {
         // Increment attempts

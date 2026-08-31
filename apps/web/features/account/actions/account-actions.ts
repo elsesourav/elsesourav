@@ -1,14 +1,16 @@
 'use server';
 
-import { UserRepository, UserService } from '@elsesourav/database';
-import { getServerSession } from '@elsesourav/auth';
+import crypto from 'node:crypto';
 import { cookies } from 'next/headers';
-import { UpdateProfileSchema, UpdatePreferencesSchema } from '@elsesourav/validation';
 import { revalidatePath } from 'next/cache';
-import { createAuthServerClient } from '@elsesourav/auth';
+import { UserRepository, UserService, OtpRepository } from '@elsesourav/database';
+import { getServerSession } from '@elsesourav/auth';
+import { UpdateProfileSchema, UpdatePreferencesSchema } from '@elsesourav/validation';
+import { sendOtpEmail } from '@/lib/mailer';
 
 const userRepo = new UserRepository();
 const userService = new UserService(userRepo);
+const otpRepo = new OtpRepository();
 
 async function getSessionUser() {
   const cookieStore = await cookies();
@@ -96,12 +98,6 @@ export async function updatePreferencesAction(data: {
     };
   }
 }
-
-import { OtpRepository } from '@elsesourav/database';
-import { sendOtpEmail } from '@/lib/mailer';
-import crypto from 'node:crypto';
-
-const otpRepo = new OtpRepository();
 
 /**
  * Send a genuine 6-digit numeric OTP to the currently authenticated user's email address.
