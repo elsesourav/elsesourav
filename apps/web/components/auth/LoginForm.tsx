@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { Input, Button, Label, Alert, AlertDescription, Separator } from '@elsesourav/ui';
 import { createAuthBrowserClient, sanitizeRedirectUrl, AuthError } from '@elsesourav/auth';
 import { OAuthButtons } from './OAuthButtons';
-import { Eye, EyeOff, Lock, UserCheck, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Lock, UserCheck } from 'lucide-react';
 
 export function LoginForm() {
   const searchParams = useSearchParams();
@@ -193,16 +193,9 @@ export function LoginForm() {
         <Button
           type="submit"
           isLoading={loading}
-          className="w-full bg-[hsl(var(--primary))] hover:opacity-90 text-white text-sm font-medium py-2.5 rounded-xl shadow-lg shadow-indigo-600/20"
+          className="w-full bg-[hsl(var(--primary))] hover:opacity-90 text-white text-sm font-medium py-2.5 rounded-xl shadow-lg shadow-indigo-600/20 cursor-pointer"
         >
-          {loading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin mr-2" />
-              <span>Signing in...</span>
-            </>
-          ) : (
-            <span>Sign In to ElseSourav</span>
-          )}
+          <span>{loading ? 'Signing in...' : 'Sign In to ElseSourav'}</span>
         </Button>
       </form>
     </div>

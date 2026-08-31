@@ -131,8 +131,12 @@ export function AccountSection({ user }: AccountSectionProps) {
   // ── Delete state ──────────────────────────────────────────────────────────
   const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
   const [deleteReason, setDeleteReason] = React.useState('');
+  const [typedUsername, setTypedUsername] = React.useState('');
   const [isDeletingAccount, setIsDeletingAccount] = React.useState(false);
   const [deleteError, setDeleteError] = React.useState<string | null>(null);
+
+  const targetUsername = user.username || user.email.split('@')[0] || 'user';
+  const isUsernameMatched = typedUsername.trim().toLowerCase() === targetUsername.toLowerCase();
 
   const isPendingDeletion = !!user.scheduledDeletionAt;
   const deletionDate = user.scheduledDeletionAt
@@ -796,9 +800,36 @@ export function AccountSection({ user }: AccountSectionProps) {
               </div>
             )}
 
-            <form onSubmit={handleScheduleDelete} className="space-y-3 text-xs">
+            <form onSubmit={handleScheduleDelete} className="space-y-3.5 text-xs">
+              <div className="space-y-1.5 p-3 rounded-xl bg-rose-500/10 border border-rose-500/25">
+                <label className="block text-[11px] font-semibold text-rose-300">
+                  To confirm, please type your username <span className="font-mono text-white bg-rose-950/80 px-1.5 py-0.5 rounded border border-rose-500/40">@{targetUsername}</span>:
+                </label>
+                <div className="relative">
+                  <Input
+                    type="text"
+                    value={typedUsername}
+                    onChange={(e) => setTypedUsername(e.target.value)}
+                    placeholder={targetUsername}
+                    autoComplete="off"
+                    autoCapitalize="none"
+                    spellCheck={false}
+                    className={`bg-background border text-xs rounded-lg text-foreground h-8 sm:h-9 font-mono pr-8 ${
+                      isUsernameMatched
+                        ? 'border-emerald-500/60 focus:border-emerald-500 ring-1 ring-emerald-500/20'
+                        : 'border-border focus:border-rose-500'
+                    }`}
+                  />
+                  {isUsernameMatched && (
+                    <div className="absolute right-2.5 top-1/2 -translate-y-1/2 text-emerald-500 pointer-events-none">
+                      <Check className="w-3.5 h-3.5" />
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <div className="space-y-1">
-                <label className="block font-semibold text-foreground">
+                <label className="block font-semibold text-foreground text-[11px]">
                   Reason for closure{' '}
                   <span className="text-muted-foreground font-normal">(optional)</span>
                 </label>
@@ -817,7 +848,7 @@ export function AccountSection({ user }: AccountSectionProps) {
                   variant="ghost"
                   size="sm"
                   disabled={isDeletingAccount}
-                  onClick={() => { setIsDeleteModalOpen(false); setDeleteError(null); }}
+                  onClick={() => { setIsDeleteModalOpen(false); setTypedUsername(''); setDeleteError(null); }}
                   className="text-xs text-muted-foreground hover:text-foreground cursor-pointer rounded-lg h-8 px-3"
                 >
                   Cancel
@@ -825,21 +856,16 @@ export function AccountSection({ user }: AccountSectionProps) {
 
                 <Button
                   type="submit"
-                  disabled={isDeletingAccount}
-                  size="sm"
-                  className="bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold px-3 h-8 rounded-lg gap-1.5 shadow-sm cursor-pointer"
+                  disabled={isDeletingAccount || !isUsernameMatched}
+                  isLoading={isDeletingAccount}
+                  className={`text-xs font-semibold px-3 h-8 rounded-lg gap-1.5 shadow-sm transition-all ${
+                    isUsernameMatched
+                      ? 'bg-rose-600 hover:bg-rose-500 text-white cursor-pointer'
+                      : 'bg-zinc-800 text-zinc-500 opacity-60 cursor-not-allowed border border-zinc-700'
+                  }`}
                 >
-                  {isDeletingAccount ? (
-                    <>
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      <span>Scheduling…</span>
-                    </>
-                  ) : (
-                    <>
-                      <Trash2 className="w-3.5 h-3.5" />
-                      <span>Schedule Deletion</span>
-                    </>
-                  )}
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>{isDeletingAccount ? 'Scheduling…' : 'Schedule Deletion'}</span>
                 </Button>
               </div>
             </form>
