@@ -2,15 +2,16 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { LayoutDashboard, User, UserCheck, LogOut, Lock, LifeBuoy, Shield, AtSign } from 'lucide-react';
+import { User, LogOut, Shield, AtSign } from 'lucide-react';
 import type { AuthenticatedUser } from '@elsesourav/auth';
 import { UserAvatar } from '@elsesourav/ui';
 
 interface UserAvatarMenuProps {
   user: AuthenticatedUser;
+  hasImportantAlert?: boolean;
 }
 
-export function UserAvatarMenu({ user }: UserAvatarMenuProps) {
+export function UserAvatarMenu({ user, hasImportantAlert = false }: UserAvatarMenuProps) {
   const [open, setOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
   const menuRef = React.useRef<HTMLDivElement>(null);
@@ -90,7 +91,7 @@ export function UserAvatarMenu({ user }: UserAvatarMenuProps) {
           identifier={user.id || user.email}
           alt={user.displayName || 'User avatar'}
           size="sm"
-          showStatus={true}
+          showStatus={hasImportantAlert}
           statusColor="emerald"
         />
       </button>
@@ -99,7 +100,7 @@ export function UserAvatarMenu({ user }: UserAvatarMenuProps) {
         <div
           role="menu"
           aria-label="User menu"
-          className={`absolute right-0 mt-2 w-60 rounded-2xl bg-popover text-popover-foreground border border-border shadow-xl p-1.5 z-50 text-xs space-y-1 backdrop-blur-2xl ${
+          className={`absolute right-0 mt-2 w-56 rounded-2xl bg-popover text-popover-foreground border border-border shadow-xl p-1.5 z-50 text-xs space-y-1 backdrop-blur-2xl ${
             isClosing ? 'animate-popup-out' : 'animate-popup-in'
           }`}
         >
@@ -124,22 +125,9 @@ export function UserAvatarMenu({ user }: UserAvatarMenuProps) {
             <p className="text-[11px] text-muted-foreground truncate mt-0.5">{user.email}</p>
           </div>
 
-          {/* Account Options */}
+          {/* Profile Option Only */}
           <Link
             href="/profile"
-            role="menuitem"
-            onClick={() => requestClose()}
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-foreground hover:bg-accent transition-colors cursor-pointer"
-          >
-            <LayoutDashboard className="w-3.5 h-3.5 text-primary" />
-            <div className="flex flex-col">
-              <span className="font-medium">Dashboard</span>
-              <span className="text-[10px] text-muted-foreground">Profile & overview</span>
-            </div>
-          </Link>
-
-          <Link
-            href="/settings?tab=profile"
             role="menuitem"
             onClick={() => requestClose()}
             className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-foreground hover:bg-accent transition-colors cursor-pointer"
@@ -147,46 +135,7 @@ export function UserAvatarMenu({ user }: UserAvatarMenuProps) {
             <User className="w-3.5 h-3.5 text-primary" />
             <div className="flex flex-col">
               <span className="font-medium">Profile</span>
-              <span className="text-[10px] text-muted-foreground">Identity & avatar</span>
-            </div>
-          </Link>
-
-          <Link
-            href="/settings?tab=account"
-            role="menuitem"
-            onClick={() => requestClose()}
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-foreground hover:bg-accent transition-colors cursor-pointer"
-          >
-            <UserCheck className="w-3.5 h-3.5 text-primary" />
-            <div className="flex flex-col">
-              <span className="font-medium">Account</span>
-              <span className="text-[10px] text-muted-foreground">Credentials & details</span>
-            </div>
-          </Link>
-
-          <Link
-            href="/settings?tab=security"
-            role="menuitem"
-            onClick={() => requestClose()}
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-foreground hover:bg-accent transition-colors cursor-pointer"
-          >
-            <Lock className="w-3.5 h-3.5 text-primary" />
-            <div className="flex flex-col">
-              <span className="font-medium">Password & Security</span>
-              <span className="text-[10px] text-muted-foreground">Security & access</span>
-            </div>
-          </Link>
-
-          <Link
-            href="/support/tickets"
-            role="menuitem"
-            onClick={() => requestClose()}
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-foreground hover:bg-accent transition-colors cursor-pointer"
-          >
-            <LifeBuoy className="w-3.5 h-3.5 text-primary" />
-            <div className="flex flex-col">
-              <span className="font-medium">Help & Support</span>
-              <span className="text-[10px] text-muted-foreground">Tickets & assistance</span>
+              <span className="text-[10px] text-muted-foreground">View profile & overview</span>
             </div>
           </Link>
 
