@@ -106,7 +106,7 @@ export function SecuritySection({ user }: SecuritySectionProps) {
   };
 
   return (
-    <Card className="rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl">
+    <Card className="card-obsidian-glass">
       <CardHeader className="pb-4">
         <div className="flex items-center gap-2">
           <Shield className="w-4 h-4 text-emerald-400" />

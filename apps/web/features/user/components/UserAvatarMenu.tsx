@@ -79,7 +79,7 @@ export function UserAvatarMenu({ user }: UserAvatarMenuProps) {
         ref={triggerRef}
         type="button"
         onClick={handleToggle}
-        className="flex items-center gap-2 p-0.5 rounded-full hover:ring-2 hover:ring-indigo-500/40 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 cursor-pointer active:scale-95 duration-150"
+        className="relative flex items-center gap-2 p-0.5 rounded-full hover:ring-2 hover:ring-indigo-500/40 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 cursor-pointer active:scale-95 duration-150"
         aria-label="User account menu"
         aria-expanded={open}
         aria-haspopup="menu"
@@ -97,13 +97,15 @@ export function UserAvatarMenu({ user }: UserAvatarMenuProps) {
             <span>{user.displayName?.slice(0, 2).toUpperCase() || 'U'}</span>
           )}
         </div>
+        {/* Green active status dot */}
+        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-[#08090d]" />
       </button>
 
       {open && (
         <div
           role="menu"
           aria-label="User menu"
-          className={`absolute right-0 mt-2 w-64 rounded-2xl bg-zinc-950/95 border border-zinc-800 shadow-2xl p-1.5 z-50 text-xs space-y-1 backdrop-blur-2xl ${
+          className={`absolute right-0 mt-2 w-64 rounded-2xl bg-[#0c0d14]/95 border border-indigo-500/15 shadow-neon-card p-1.5 z-50 text-xs space-y-1 backdrop-blur-2xl ${
             isClosing ? 'animate-popup-out' : 'animate-popup-in'
           }`}
         >

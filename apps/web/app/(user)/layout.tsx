@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { getServerSession } from '@elsesourav/auth';
 import { UserNav } from '@/features/user/components/UserNav';
 import { UserAvatarMenu } from '@/features/user/components/UserAvatarMenu';
+import { UserSidebar } from '@/features/user/components/UserSidebar';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -26,15 +27,15 @@ export default async function UserLayout({ children }: { children: React.ReactNo
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-zinc-950 text-white">
-      <header className="border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-xl sticky top-0 z-50">
+    <div className="min-h-screen flex flex-col bg-[#08090d] text-white">
+      <header className="border-b border-indigo-500/10 bg-[#08090d]/90 backdrop-blur-2xl sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
           <div className="flex items-center gap-6">
             <Link
               href="/"
               className="flex items-center gap-2.5 font-bold text-base text-white tracking-tight hover:opacity-90 transition-opacity group"
             >
-              <div className="w-8 h-8 rounded-xl overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
+              <div className="w-8 h-8 rounded-xl overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform duration-200 ring-1 ring-indigo-500/20">
                 <Image
                   src="/logo-sm.png"
                   alt="ElseSourav Logo"
@@ -55,9 +56,12 @@ export default async function UserLayout({ children }: { children: React.ReactNo
           </div>
         </div>
       </header>
-      <main id="main-content" className="flex-1">
-        {children}
-      </main>
+      <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 lg:py-8 flex gap-6 lg:gap-8">
+        <UserSidebar />
+        <main id="main-content" className="flex-1 min-w-0">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }

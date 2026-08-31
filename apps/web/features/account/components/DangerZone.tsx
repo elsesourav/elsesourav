@@ -41,7 +41,7 @@ export function DangerZone() {
   };
 
   return (
-    <Card className="rounded-3xl border-rose-950/60 bg-rose-950/10 backdrop-blur-xl">
+    <Card className="card-obsidian-glass border-rose-900/30 bg-rose-950/10">
       <CardHeader className="pb-4">
         <div className="flex items-center gap-2">
           <ShieldAlert className="w-4 h-4 text-rose-400" />

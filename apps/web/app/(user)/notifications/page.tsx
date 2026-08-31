@@ -30,8 +30,8 @@ export default async function NotificationsPage() {
   const notificationData = await getUserNotificationsData();
 
   return (
-    <PageShell size="lg" glow>
-      <div className="max-w-4xl mx-auto space-y-8">
+    <PageShell size="lg" glow padded={false}>
+      <div className="space-y-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <PageHeader

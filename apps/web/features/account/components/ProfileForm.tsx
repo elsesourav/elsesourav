@@ -128,7 +128,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
   };
 
   return (
-    <Card className="rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl">
+    <Card className="card-obsidian-glass">
       <CardHeader className="pb-4">
         <div className="flex items-center gap-2">
           <UserIcon className="w-4 h-4 text-indigo-400" />
@@ -163,7 +163,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
             <button
               type="button"
               onClick={() => setIsCropperOpen(true)}
-              className="inline-flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300 hover:underline font-medium"
+              className="inline-flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300 hover:underline font-medium cursor-pointer"
             >
               <Crop className="w-3.5 h-3.5" /> Upload & Crop (1:1)
             </button>
@@ -171,7 +171,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
 
           {/* Current Avatar & Presets Strip */}
           <div className="flex flex-col sm:flex-row items-center gap-4">
-            <div className="w-16 h-16 rounded-full border-2 border-indigo-500/40 overflow-hidden bg-zinc-900 shrink-0 shadow-lg shadow-indigo-950/50 flex items-center justify-center">
+            <div className="w-16 h-16 rounded-full border-2 border-indigo-500/40 overflow-hidden bg-zinc-900 shrink-0 shadow-lg shadow-indigo-950/50 flex items-center justify-center avatar-neon-concentric">
               {photoUrl ? (
                 <img src={photoUrl} alt="Avatar" className="w-full h-full object-cover" />
               ) : (
@@ -192,9 +192,9 @@ export function ProfileForm({ user }: ProfileFormProps) {
                       type="button"
                       onClick={() => setPhotoUrl(preset.url)}
                       title={preset.name}
-                      className={`relative w-10 h-10 rounded-full overflow-hidden border-2 transition-all ${
+                      className={`relative w-10 h-10 rounded-full overflow-hidden border-2 transition-all cursor-pointer ${
                         isSelected
-                          ? 'border-indigo-500 ring-2 ring-indigo-500/40 scale-105'
+                          ? 'border-indigo-500 ring-2 ring-indigo-500/40 shadow-neon-glow-sm scale-105'
                           : 'border-zinc-800 hover:border-zinc-600 opacity-75 hover:opacity-100'
                       }`}
                     >

@@ -140,7 +140,7 @@ export function SupportTicketList({ tickets, onOpenCreateModal }: SupportTicketL
 
       {/* Ticket List or Empty State */}
       {filteredTickets.length === 0 ? (
-        <Card className="py-14 px-6 text-center rounded-3xl border border-zinc-800/80 bg-zinc-900/30 backdrop-blur-sm space-y-4 max-w-md mx-auto shadow-xl">
+        <Card className="card-obsidian-glass py-14 px-6 text-center space-y-4 max-w-md mx-auto">
           <div className="w-12 h-12 rounded-2xl bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center mx-auto text-indigo-400">
             <Headphones className="w-6 h-6" />
           </div>
@@ -187,7 +187,7 @@ export function SupportTicketList({ tickets, onOpenCreateModal }: SupportTicketL
 
             return (
               <Link key={ticket.id} href={`/support/tickets/${ticket.id}`} className="block group">
-                <Card className="p-5 rounded-2xl border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-zinc-700/80 transition-all backdrop-blur-sm">
+                <Card className="card-obsidian-glass p-5 hover:border-indigo-500/40 transition-all">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="space-y-1.5 min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">

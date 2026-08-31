@@ -113,12 +113,27 @@ const config: Config = {
           '0%': { opacity: '0', transform: 'scale(0.96)' },
           '100%': { opacity: '1', transform: 'scale(1)' },
         },
+        'neon-pulse': {
+          '0%, 100%': {
+            boxShadow: '0 0 0 2.5px rgba(99,102,241,0.85), 0 0 24px rgba(99,102,241,0.4), 0 0 0 7px rgba(139,92,246,0.25), 0 0 40px rgba(139,92,246,0.3)',
+          },
+          '50%': {
+            boxShadow: '0 0 0 3px rgba(99,102,241,0.95), 0 0 32px rgba(99,102,241,0.55), 0 0 0 8.5px rgba(139,92,246,0.35), 0 0 50px rgba(139,92,246,0.4)',
+          },
+        },
       },
       animation: {
         'fade-in': 'fade-in var(--duration-fast) var(--ease-smooth)',
         'slide-up': 'slide-up var(--duration-smooth) var(--ease-smooth)',
         'slide-down': 'slide-down var(--duration-smooth) var(--ease-smooth)',
         'scale-in': 'scale-in var(--duration-fast) var(--ease-smooth)',
+        'neon-pulse': 'neon-pulse 4s ease-in-out infinite',
+      },
+      boxShadow: {
+        'neon-ring': '0 0 0 2.5px rgba(99,102,241,0.85), 0 0 24px rgba(99,102,241,0.4), 0 0 0 7px rgba(139,92,246,0.25), 0 0 40px rgba(139,92,246,0.3)',
+        'neon-card': '0 20px 50px rgba(0,0,0,0.6)',
+        'neon-card-hover': '0 20px 60px rgba(99,102,241,0.1), 0 0 0 1px rgba(99,102,241,0.25)',
+        'neon-glow-sm': '0 0 15px rgba(99,102,241,0.2)',
       },
     },
   },

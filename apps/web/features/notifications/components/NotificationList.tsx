@@ -108,7 +108,7 @@ export function NotificationList({
 
       {/* List or Empty State */}
       {filteredNotifications.length === 0 ? (
-        <Card className="py-14 px-6 text-center rounded-3xl border-zinc-800/80 bg-zinc-900/30 backdrop-blur-sm space-y-4 max-w-md mx-auto shadow-xl">
+        <Card className="card-obsidian-glass py-14 px-6 text-center space-y-4 max-w-md mx-auto">
           <div className="w-12 h-12 rounded-2xl bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center mx-auto text-indigo-400">
             <Inbox className="w-6 h-6" />
           </div>

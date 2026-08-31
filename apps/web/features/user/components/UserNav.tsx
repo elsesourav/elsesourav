@@ -33,21 +33,25 @@ export function UserNav({ user }: UserNavProps) {
   return (
     <>
       {/* Desktop Navigation Links */}
-      <nav className="hidden md:flex items-center gap-1 text-xs font-medium text-zinc-400">
+      <nav className="hidden md:flex items-center gap-0.5 text-xs font-medium text-zinc-400">
         {NAV_LINKS.map(({ href, label, icon: Icon }) => {
           const isActive = pathname === href || pathname.startsWith(`${href}/`);
           return (
             <Link
               key={href}
               href={href}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all ${
+              className={`relative flex items-center gap-1.5 px-3.5 py-2 rounded-xl transition-all duration-200 ${
                 isActive
-                  ? 'bg-zinc-800/90 text-white font-semibold shadow-sm'
+                  ? 'text-white font-semibold'
                   : 'hover:text-zinc-200 hover:bg-zinc-900/60'
               }`}
             >
-              <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-indigo-400' : 'text-zinc-400'}`} />
+              <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-indigo-400' : 'text-zinc-500'}`} />
               <span>{label}</span>
+              {/* Active glow underline */}
+              {isActive && (
+                <span className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 shadow-[0_0_12px_rgba(99,102,241,0.6)]" />
+              )}
             </Link>
           );
         })}
@@ -75,8 +79,8 @@ export function UserNav({ user }: UserNavProps) {
 
       {/* Mobile Dropdown Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-x-0 top-16 bg-zinc-950/95 border-b border-zinc-800/80 p-4 space-y-2 backdrop-blur-xl z-50">
-          <div className="pb-2 mb-2 border-b border-zinc-800 flex items-center justify-between text-xs text-zinc-400">
+        <div className="md:hidden fixed inset-x-0 top-16 bg-[#08090d]/95 border-b border-indigo-500/10 p-4 space-y-2 backdrop-blur-2xl z-50">
+          <div className="pb-2 mb-2 border-b border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400">
             <span>
               Signed in as <strong className="text-zinc-200">{user.email}</strong>
             </span>
@@ -95,11 +99,11 @@ export function UserNav({ user }: UserNavProps) {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-medium transition-all ${
                     isActive
-                      ? 'bg-indigo-600 text-white'
-                      : 'bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800'
+                      ? 'bg-indigo-600/20 text-white border border-indigo-500/40 shadow-neon-glow-sm'
+                      : 'bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 border border-zinc-800/60'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-indigo-400' : 'text-zinc-500'}`} />
                   <span>{label}</span>
                 </Link>
               );
@@ -117,7 +121,7 @@ export function UserNav({ user }: UserNavProps) {
             </Link>
           )}
 
-          <div className="pt-2 border-t border-zinc-800">
+          <div className="pt-2 border-t border-zinc-800/60">
             <form action="/api/auth/logout" method="POST">
               <button
                 type="submit"

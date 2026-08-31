@@ -26,8 +26,8 @@ export default async function UserSupportTicketsPage() {
   const tickets = await getUserSupportTickets();
 
   return (
-    <PageShell size="lg" glow>
-      <div className="space-y-8 max-w-4xl mx-auto">
+    <PageShell size="lg" glow padded={false}>
+      <div className="space-y-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <PageHeader
             eyebrow="Help & Support"

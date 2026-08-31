@@ -23,8 +23,8 @@ export default async function SettingsPage() {
   }
 
   return (
-    <PageShell size="lg" glow>
-      <div className="max-w-4xl mx-auto space-y-8">
+    <PageShell size="lg" glow padded={false}>
+      <div className="space-y-8">
         <PageHeader
           eyebrow="Account Control"
           title="Account Settings"
