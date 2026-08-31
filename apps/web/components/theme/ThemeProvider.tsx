@@ -36,11 +36,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = React.useState<Theme>('dark');
   const [resolvedTheme, setResolvedTheme] = React.useState<'light' | 'dark'>('dark');
 
-  // Initialize from localStorage on mount
+  // Initialize from URL param or localStorage on mount
   React.useEffect(() => {
     try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const queryTheme = urlParams.get('theme') as Theme | null;
       const stored = localStorage.getItem('theme') as Theme | null;
-      const t = stored === 'light' || stored === 'system' ? stored : 'dark';
+      const t = queryTheme === 'light' || queryTheme === 'dark' || queryTheme === 'system'
+        ? queryTheme
+        : (stored === 'light' || stored === 'system' ? stored : 'dark');
       setThemeState(t);
 
       const resolved = t === 'system' ? getSystemTheme() : t;

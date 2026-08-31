@@ -45,7 +45,7 @@ export function UserSidebar() {
 
   return (
     <aside className="w-56 shrink-0 hidden lg:block sticky top-24 self-start">
-      <nav className="card-obsidian-glass p-2.5 space-y-1">
+      <nav className="rounded-2xl border border-border/80 bg-card text-card-foreground p-2 space-y-1 shadow-sm">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
           const active = isActive(item);
@@ -53,13 +53,13 @@ export function UserSidebar() {
             <Link
               key={item.label}
               href={item.href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all duration-200 ${
+              className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all duration-200 ${
                 active
-                  ? 'bg-indigo-600/20 text-white border border-indigo-500/35 shadow-neon-glow-sm font-semibold'
-                  : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 border border-transparent'
+                  ? 'bg-primary/10 text-primary border border-primary/25 shadow-sm font-semibold'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-accent/60 border border-transparent'
               }`}
             >
-              <Icon className={`w-4 h-4 shrink-0 ${active ? 'text-indigo-400' : 'text-zinc-500'}`} />
+              <Icon className={`w-4 h-4 shrink-0 ${active ? 'text-primary' : 'text-muted-foreground'}`} />
               <span>{item.label}</span>
             </Link>
           );

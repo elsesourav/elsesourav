@@ -2,14 +2,13 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Input, Button, Label, Alert, AlertDescription, Separator } from '@elsesourav/ui';
 import { createAuthBrowserClient, sanitizeRedirectUrl, AuthError } from '@elsesourav/auth';
 import { OAuthButtons } from './OAuthButtons';
 import { Eye, EyeOff, Lock, UserCheck, Loader2 } from 'lucide-react';
 
 export function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get('next');
   const safeRedirect = sanitizeRedirectUrl(next, '/');

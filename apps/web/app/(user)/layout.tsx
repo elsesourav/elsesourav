@@ -27,15 +27,15 @@ export default async function UserLayout({ children }: { children: React.ReactNo
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#08090d] text-white">
-      <header className="border-b border-indigo-500/10 bg-[#08090d]/90 backdrop-blur-2xl sticky top-0 z-50">
+    <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors">
+      <header className="border-b border-border/80 bg-background/85 backdrop-blur-2xl sticky top-0 z-50 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
           <div className="flex items-center gap-6">
             <Link
               href="/"
-              className="flex items-center gap-2.5 font-bold text-base text-white tracking-tight hover:opacity-90 transition-opacity group"
+              className="flex items-center gap-2.5 font-bold text-base text-foreground tracking-tight hover:opacity-90 transition-opacity group"
             >
-              <div className="w-8 h-8 rounded-xl overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform duration-200 ring-1 ring-indigo-500/20">
+              <div className="w-8 h-8 rounded-xl overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform duration-200 ring-1 ring-border">
                 <Image
                   src="/logo-sm.png"
                   alt="ElseSourav Logo"

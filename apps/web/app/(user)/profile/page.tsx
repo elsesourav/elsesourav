@@ -3,12 +3,11 @@ import { redirect } from 'next/navigation';
 import { getUserAccountData } from '@/features/account/queries/get-account';
 import { PageShell } from '@elsesourav/ui';
 import { ProfileHeroSection } from '@/features/account/components/ProfileHeroSection';
-import { ProfileMetadataGrid } from '@/features/account/components/ProfileMetadataGrid';
 import { ProfileQuickActions } from '@/features/account/components/ProfileQuickActions';
 
 export const metadata: Metadata = {
-  title: 'Profile & Account Identity | ElseSourav',
-  description: 'Manage your ElseSourav user profile, identity, and personal credentials.',
+  title: 'User Profile | ElseSourav',
+  description: 'Manage your ElseSourav profile, identity, and account preferences.',
   robots: {
     index: false,
     follow: false,
@@ -24,20 +23,16 @@ export default async function ProfilePage() {
 
   const joinedDate = new Date(user.createdAt).toLocaleDateString('en-US', {
     month: 'long',
-    day: 'numeric',
     year: 'numeric',
   });
 
   return (
     <PageShell size="lg" glow padded={false}>
-      <div className="space-y-8">
-        {/* Hero: Concentric Neon Avatar + Identity */}
-        <ProfileHeroSection user={user} />
+      <div className="space-y-6 sm:space-y-8">
+        {/* Profile Identity Card */}
+        <ProfileHeroSection user={user} joinedDate={joinedDate} />
 
-        {/* 4-Tile Credentials Grid */}
-        <ProfileMetadataGrid user={user} joinedDate={joinedDate} />
-
-        {/* 3-Card Quick Action Hub */}
+        {/* Account Actions */}
         <ProfileQuickActions />
       </div>
     </PageShell>

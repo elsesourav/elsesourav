@@ -79,16 +79,16 @@ export function UserAvatarMenu({ user }: UserAvatarMenuProps) {
         ref={triggerRef}
         type="button"
         onClick={handleToggle}
-        className="relative flex items-center gap-2 p-0.5 rounded-full hover:ring-2 hover:ring-indigo-500/40 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 cursor-pointer active:scale-95 duration-150"
+        className="relative flex items-center gap-2 p-0.5 rounded-full hover:ring-2 hover:ring-primary/40 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer active:scale-95 duration-150"
         aria-label="User account menu"
         aria-expanded={open}
         aria-haspopup="menu"
       >
-        <div className="w-8 h-8 rounded-full overflow-hidden bg-zinc-900 border border-zinc-700/80 flex items-center justify-center text-xs font-semibold text-zinc-300 shadow-sm shadow-black/40">
+        <div className="w-8 h-8 rounded-full overflow-hidden bg-muted border border-border flex items-center justify-center text-xs font-semibold text-foreground shadow-sm">
           {user.photoUrl ? (
             <Image
               src={user.photoUrl}
-              alt={user.displayName || 'User'}
+              alt={user.displayName || 'User avatar'}
               width={32}
               height={32}
               className="w-full h-full object-cover"
@@ -97,77 +97,73 @@ export function UserAvatarMenu({ user }: UserAvatarMenuProps) {
             <span>{user.displayName?.slice(0, 2).toUpperCase() || 'U'}</span>
           )}
         </div>
-        {/* Green active status dot */}
-        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-[#08090d]" />
+        {/* Active status indicator dot */}
+        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-background" />
       </button>
 
       {open && (
         <div
           role="menu"
           aria-label="User menu"
-          className={`absolute right-0 mt-2 w-64 rounded-2xl bg-[#0c0d14]/95 border border-indigo-500/15 shadow-neon-card p-1.5 z-50 text-xs space-y-1 backdrop-blur-2xl ${
+          className={`absolute right-0 mt-2 w-64 rounded-2xl bg-popover text-popover-foreground border border-border shadow-xl p-1.5 z-50 text-xs space-y-1 backdrop-blur-2xl ${
             isClosing ? 'animate-popup-out' : 'animate-popup-in'
           }`}
         >
           {/* Identity Header */}
-          <div className="px-3 py-2.5 bg-zinc-900/60 rounded-xl border border-zinc-800/60 mb-1">
+          <div className="px-3 py-2.5 bg-muted/60 rounded-xl border border-border/60 mb-1">
             <div className="flex items-center justify-between gap-2">
-              <p className="font-semibold text-white truncate text-xs">
+              <p className="font-semibold text-foreground truncate text-xs">
                 {user.displayName || 'ElseSourav Member'}
               </p>
-              <span
-                className={`text-[9px] font-mono px-1.5 py-0.5 rounded font-medium ${
-                  user.role === 'ADMIN'
-                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                    : 'bg-zinc-800 text-zinc-400'
-                }`}
-              >
-                {user.role}
-              </span>
+              {user.role === 'ADMIN' && (
+                <span className="text-[9px] font-mono px-1.5 py-0.5 rounded font-medium bg-amber-500/20 text-amber-600 dark:text-amber-300 border border-amber-500/30">
+                  ADMIN
+                </span>
+              )}
             </div>
             {rawUsername && (
-              <p className="text-[11px] font-mono text-indigo-400 truncate flex items-center gap-0.5 mt-0.5">
+              <p className="text-[11px] font-mono text-primary truncate flex items-center gap-0.5 mt-0.5">
                 <AtSign className="w-3 h-3 inline" />
                 <span>{rawUsername}</span>
               </p>
             )}
-            <p className="text-[11px] text-zinc-400 truncate mt-0.5">{user.email}</p>
+            <p className="text-[11px] text-muted-foreground truncate mt-0.5">{user.email}</p>
           </div>
 
           {/* Core Options */}
           <Link
             href="/profile"
             onClick={() => requestClose()}
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-zinc-800/80 transition-colors"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-foreground hover:bg-accent transition-colors"
           >
-            <User className="w-3.5 h-3.5 text-indigo-400" />
+            <User className="w-3.5 h-3.5 text-primary" />
             <div className="flex flex-col">
               <span className="font-medium">View Profile</span>
-              <span className="text-[10px] text-zinc-500">Identity & public information</span>
+              <span className="text-[10px] text-muted-foreground">Identity & profile overview</span>
             </div>
           </Link>
 
           <Link
             href="/settings"
             onClick={() => requestClose()}
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-zinc-800/80 transition-colors"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-foreground hover:bg-accent transition-colors"
           >
-            <Settings className="w-3.5 h-3.5 text-indigo-400" />
+            <Settings className="w-3.5 h-3.5 text-primary" />
             <div className="flex flex-col">
               <span className="font-medium">Account Settings</span>
-              <span className="text-[10px] text-zinc-500">Security, password & preferences</span>
+              <span className="text-[10px] text-muted-foreground">Security, password & preferences</span>
             </div>
           </Link>
 
           <Link
             href="/support/tickets"
             onClick={() => requestClose()}
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-zinc-800/80 transition-colors"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-foreground hover:bg-accent transition-colors"
           >
-            <LifeBuoy className="w-3.5 h-3.5 text-indigo-400" />
+            <LifeBuoy className="w-3.5 h-3.5 text-primary" />
             <div className="flex flex-col">
               <span className="font-medium">Help & Support</span>
-              <span className="text-[10px] text-zinc-500">Tickets & technical assistance</span>
+              <span className="text-[10px] text-muted-foreground">Tickets & technical assistance</span>
             </div>
           </Link>
 
@@ -175,25 +171,25 @@ export function UserAvatarMenu({ user }: UserAvatarMenuProps) {
             <Link
               href="/admin"
               onClick={() => requestClose()}
-              className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 transition-colors"
+              className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-amber-600 dark:text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 transition-colors"
             >
-              <Shield className="w-3.5 h-3.5 text-amber-400" />
+              <Shield className="w-3.5 h-3.5 text-amber-500" />
               <div className="flex flex-col">
                 <span className="font-medium">Admin Portal</span>
-                <span className="text-[10px] text-amber-400/70">Management & system audit</span>
+                <span className="text-[10px] text-amber-600/70 dark:text-amber-400/70">Management & system audit</span>
               </div>
             </Link>
           )}
 
           {/* Sign Out */}
-          <div className="pt-1 border-t border-zinc-800/80">
+          <div className="pt-1 border-t border-border/80">
             <form action="/api/auth/logout" method="POST">
               <button
                 type="submit"
-                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer text-left"
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer text-left font-medium"
               >
-                <LogOut className="w-3.5 h-3.5 text-rose-400" />
-                <span className="font-medium">Sign Out</span>
+                <LogOut className="w-3.5 h-3.5 text-rose-500 dark:text-rose-400" />
+                <span>Sign Out</span>
               </button>
             </form>
           </div>
