@@ -422,15 +422,13 @@ export function SignUpForm() {
         });
 
         if (!signInError && signInData?.session) {
-          router.push('/');
-          router.refresh();
+          window.location.href = '/';
           return;
         }
       }
 
       // 6. Direct entry without email verification barrier
-      router.push('/');
-      router.refresh();
+      window.location.href = '/';
     } catch {
       setErrorMessage('An unexpected error occurred during account creation.');
       setLoading(false);

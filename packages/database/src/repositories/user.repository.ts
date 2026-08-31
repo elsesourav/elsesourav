@@ -99,6 +99,20 @@ export class UserRepository {
     }
   }
 
+  async findByIdOrAuthId(identifier: string): Promise<DomainUser | null> {
+    try {
+      const user = await this.prisma.user.findFirst({
+        where: {
+          OR: [{ supabaseAuthId: identifier }, { id: identifier }],
+        },
+      });
+      if (!user) return null;
+      return mapPrismaUserToDomain(user);
+    } catch (error) {
+      throw AppError.database(`Failed to find user by identifier: ${identifier}`, error);
+    }
+  }
+
   async findByUsername(username: string): Promise<DomainUser | null> {
     try {
       const user = await this.prisma.user.findUnique({
@@ -128,10 +142,15 @@ export class UserRepository {
 
   async updateProfile(userId: string, data: UpdateProfileInput): Promise<DomainUser> {
     try {
+      const existing = await this.findByIdOrAuthId(userId);
+      if (!existing) {
+        throw AppError.notFound('User');
+      }
+
       const normalizedUsername = data.username ? data.username.trim().toLowerCase() : undefined;
 
       const updated = await this.prisma.user.update({
-        where: { id: userId },
+        where: { id: existing.id },
         data: {
           ...(data.displayName ? { displayName: data.displayName.trim() } : {}),
           ...(normalizedUsername !== undefined ? { username: normalizedUsername } : {}),
@@ -154,7 +173,7 @@ export class UserRepository {
     preferences: UpdatePreferencesInput
   ): Promise<DomainUser> {
     try {
-      const existing = await this.findById(userId);
+      const existing = await this.findByIdOrAuthId(userId);
       if (!existing) {
         throw AppError.notFound('User');
       }
@@ -165,15 +184,14 @@ export class UserRepository {
       };
 
       const updated = await this.prisma.user.update({
-        where: { id: userId },
+        where: { id: existing.id },
         data: {
-          preferences: mergedPreferences as object,
+          preferences: mergedPreferences,
         },
       });
 
       return mapPrismaUserToDomain(updated);
     } catch (error) {
-      if (error instanceof AppError) throw error;
       throw AppError.database(`Failed to update preferences for user: ${userId}`, error);
     }
   }

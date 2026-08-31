@@ -65,7 +65,7 @@ export function LoginForm() {
       }
 
       const supabase = createAuthBrowserClient();
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data: authData, error } = await supabase.auth.signInWithPassword({
         email: targetEmail,
         password,
       });
@@ -77,8 +77,29 @@ export function LoginForm() {
         return;
       }
 
-      router.push(safeRedirect);
-      router.refresh();
+      if (authData?.user) {
+        try {
+          await fetch('/api/auth/sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              supabaseAuthId: authData.user.id,
+              email: authData.user.email || targetEmail,
+              displayName:
+                authData.user.user_metadata?.full_name ||
+                authData.user.user_metadata?.name ||
+                authData.user.email?.split('@')[0],
+              username:
+                authData.user.user_metadata?.username ||
+                authData.user.user_metadata?.user_name,
+            }),
+          });
+        } catch {
+          // Non-blocking sync fallback
+        }
+      }
+
+      window.location.href = safeRedirect;
     } catch {
       setErrorMessage('An unexpected authentication error occurred. Please try again.');
       setLoading(false);
