@@ -26,7 +26,9 @@ export class UserRepository {
         process.env.ADMIN_EMAIL ||
         process.env.NEXT_PUBLIC_ADMIN_EMAIL ||
         'elsesourav.auth@gmail.com'
-      ).trim().toLowerCase();
+      )
+        .trim()
+        .toLowerCase();
       const isDesignatedAdmin = email === adminEmail;
       const initialRole = isDesignatedAdmin ? PrismaRole.ADMIN : PrismaRole.USER;
 

@@ -3,17 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  User,
-  Settings,
-  LifeBuoy,
-  Bell,
-  Menu,
-  X,
-  LogOut,
-  Shield,
-  ArrowRight,
-} from 'lucide-react';
+import { User, Settings, LifeBuoy, Bell, Menu, X, LogOut, Shield, ArrowRight } from 'lucide-react';
 import type { AuthenticatedUser } from '@elsesourav/auth';
 
 interface UserNavProps {
@@ -24,9 +14,24 @@ interface UserNavProps {
 
 const NAV_LINKS = [
   { href: '/profile', label: 'Profile', icon: User, description: 'View & manage your identity' },
-  { href: '/settings', label: 'Settings', icon: Settings, description: 'Security, password & preferences' },
-  { href: '/support/tickets', label: 'Support', icon: LifeBuoy, description: 'Tickets & help assistance' },
-  { href: '/notifications', label: 'Notifications', icon: Bell, description: 'Activity & system alerts' },
+  {
+    href: '/settings',
+    label: 'Settings',
+    icon: Settings,
+    description: 'Security, password & preferences',
+  },
+  {
+    href: '/support/tickets',
+    label: 'Support',
+    icon: LifeBuoy,
+    description: 'Tickets & help assistance',
+  },
+  {
+    href: '/notifications',
+    label: 'Notifications',
+    icon: Bell,
+    description: 'Activity & system alerts',
+  },
 ] as const;
 
 export function UserNav({ user, desktopOnly = false, mobileOnly = false }: UserNavProps) {
@@ -110,7 +115,10 @@ export function UserNav({ user, desktopOnly = false, mobileOnly = false }: UserN
     <>
       {/* Desktop Navigation Links */}
       {!mobileOnly && (
-        <nav aria-label="Primary authenticated navigation" className="hidden md:flex items-center gap-1 text-xs font-medium text-muted-foreground">
+        <nav
+          aria-label="Primary authenticated navigation"
+          className="hidden md:flex items-center gap-1 text-xs font-medium text-muted-foreground"
+        >
           {NAV_LINKS.slice(0, 3).map(({ href, label, icon: Icon }) => {
             const isActive = pathname === href || pathname.startsWith(`${href}/`);
             return (
@@ -124,7 +132,9 @@ export function UserNav({ user, desktopOnly = false, mobileOnly = false }: UserN
                     : 'hover:text-foreground hover:bg-accent/40'
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-primary' : 'text-muted-foreground'}`} />
+                <Icon
+                  className={`w-3.5 h-3.5 ${isActive ? 'text-primary' : 'text-muted-foreground'}`}
+                />
                 <span>{label}</span>
                 {isActive && (
                   <span className="absolute bottom-0.5 left-3 right-3 h-[2px] rounded-full bg-primary" />

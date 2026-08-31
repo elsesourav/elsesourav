@@ -93,7 +93,8 @@ export default async function SupportPage() {
               <div className="space-y-1 pb-4 border-b border-border">
                 <h2 className="text-lg font-bold text-foreground">Create Support Ticket</h2>
                 <p className="text-xs text-muted-foreground">
-                  Our engineering team reviews and responds to all tickets directly through your account.
+                  Our engineering team reviews and responds to all tickets directly through your
+                  account.
                 </p>
               </div>
 

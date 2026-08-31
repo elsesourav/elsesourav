@@ -108,49 +108,56 @@ async function main() {
     {
       name: 'AI & Machine Learning',
       slug: 'ai-ml',
-      description: 'Neural networks, multi-model AI assistants, computer vision, and on-device machine intelligence.',
+      description:
+        'Neural networks, multi-model AI assistants, computer vision, and on-device machine intelligence.',
       icon: 'Sparkles',
       orderIndex: 0,
     },
     {
       name: 'Automation & E-Commerce',
       slug: 'automation',
-      description: 'Marketplace seller automation, SKU mapping, batch data pipelines, and workflow optimizations.',
+      description:
+        'Marketplace seller automation, SKU mapping, batch data pipelines, and workflow optimizations.',
       icon: 'Cpu',
       orderIndex: 1,
     },
     {
       name: 'Web Applications & CMS',
       slug: 'web-apps',
-      description: 'Production web platforms, custom content management systems, and specialized client platforms.',
+      description:
+        'Production web platforms, custom content management systems, and specialized client platforms.',
       icon: 'Globe',
       orderIndex: 2,
     },
     {
       name: 'Algorithms & Simulations',
       slug: 'simulations',
-      description: 'Cellular automata, physics solvers, constraint satisfaction, and interactive canvas graphics.',
+      description:
+        'Cellular automata, physics solvers, constraint satisfaction, and interactive canvas graphics.',
       icon: 'Layers',
       orderIndex: 3,
     },
     {
       name: 'Hardware & Embedded IoT',
       slug: 'hardware-iot',
-      description: 'Microcontroller firmware, real-time video streaming, robotics control, and sensor telemetry.',
+      description:
+        'Microcontroller firmware, real-time video streaming, robotics control, and sensor telemetry.',
       icon: 'Radio',
       orderIndex: 4,
     },
     {
       name: 'Media & Design Tools',
       slug: 'media-design',
-      description: 'Layer-based photo editors, canvas tools, SVG pipelines, and creative utilities.',
+      description:
+        'Layer-based photo editors, canvas tools, SVG pipelines, and creative utilities.',
       icon: 'Palette',
       orderIndex: 5,
     },
     {
       name: 'Developer Utilities & Mobile',
       slug: 'utilities',
-      description: 'Client-side PDF processors, invoice makers, mobile apps, and privacy-first helpers.',
+      description:
+        'Client-side PDF processors, invoice makers, mobile apps, and privacy-first helpers.',
       icon: 'Wrench',
       orderIndex: 6,
     },
@@ -160,7 +167,12 @@ async function main() {
   for (const cat of categories) {
     const created = await prisma.category.upsert({
       where: { slug: cat.slug },
-      update: { name: cat.name, description: cat.description, icon: cat.icon, orderIndex: cat.orderIndex },
+      update: {
+        name: cat.name,
+        description: cat.description,
+        icon: cat.icon,
+        orderIndex: cat.orderIndex,
+      },
       create: cat,
     });
     catMap[cat.slug] = created.id;
@@ -214,7 +226,8 @@ async function main() {
     {
       name: 'SpectraLens AI',
       slug: 'spectralens-ai',
-      shortDescription: 'Multi-engine parallel AI browser assistant, visual DOM element scanner, and on-device WASM OCR.',
+      shortDescription:
+        'Multi-engine parallel AI browser assistant, visual DOM element scanner, and on-device WASM OCR.',
       description:
         'A Manifest V3 Chrome extension enabling simultaneous multi-model AI querying across active web sessions with zero API token costs, point-and-click DOM inspection, and offline WebAssembly OCR.',
       documentationMd: `## Overview
@@ -247,7 +260,8 @@ async function main() {
     {
       name: 'ES Automation',
       slug: 'es-automation',
-      shortDescription: 'Multi-seller marketplace automation platform for product mapping, bulk catalog generation, and SKU management.',
+      shortDescription:
+        'Multi-seller marketplace automation platform for product mapping, bulk catalog generation, and SKU management.',
       description:
         'A Chrome extension and operational platform built for Flipkart and Shopsy sellers to automate catalog operations, sync internal SKU codes, process bulk inventory, and eliminate manual order workflows.',
       documentationMd: `## Overview
@@ -278,7 +292,8 @@ async function main() {
     {
       name: 'Dr. Debayan Ganguly Portfolio & CMS',
       slug: 'debayan-ganguly-portfolio',
-      shortDescription: 'Bilingual academic and research portfolio platform with custom CMS and LaTeX math typesetting.',
+      shortDescription:
+        'Bilingual academic and research portfolio platform with custom CMS and LaTeX math typesetting.',
       description:
         'An academic portfolio and administrative CMS built for Dr. Debayan Ganguly (Deputy Director OSD & Ex-officio, Govt of West Bengal), featuring Bengali/English i18n, KaTeX math rendering, and Cloud Firestore.',
       documentationMd: `## Overview
@@ -313,7 +328,8 @@ An academic and research portfolio website engineered for **Dr. Debayan Ganguly*
     {
       name: 'Breakout Ball',
       slug: 'breakout-ball',
-      shortDescription: 'WebAssembly and C++ arcade game with AABB collision physics, custom level builder, and gyroscope controls.',
+      shortDescription:
+        'WebAssembly and C++ arcade game with AABB collision physics, custom level builder, and gyroscope controls.',
       description:
         'An arcade brick-breaking game built with C++ compiled to WebAssembly, featuring high frame-rate physics, in-game level editor, gyroscope tilt controls, and Firebase ranking.',
       documentationMd: `## Overview
@@ -345,7 +361,8 @@ An academic and research portfolio website engineered for **Dr. Debayan Ganguly*
     {
       name: 'Meal Tracker Mobile',
       slug: 'meal-tracker',
-      shortDescription: 'React Native & Expo mobile application with smart reminder notifications, offline storage, and calendar views.',
+      shortDescription:
+        'React Native & Expo mobile application with smart reminder notifications, offline storage, and calendar views.',
       description:
         'A cross-platform mobile application for tracking daily dietary consumption with intelligent notification scheduling, intentional meal skipping states, and offline JSON data portability.',
       documentationMd: `## Overview
@@ -376,7 +393,8 @@ An academic and research portfolio website engineered for **Dr. Debayan Ganguly*
     {
       name: 'Neural Network Number Recognition',
       slug: 'nn-number-rec',
-      shortDescription: 'Handwritten digit recognition neural network built from scratch in C++ and compiled to WebAssembly.',
+      shortDescription:
+        'Handwritten digit recognition neural network built from scratch in C++ and compiled to WebAssembly.',
       description:
         'A machine learning demonstration featuring a custom matrix math and backpropagation engine written in C++, compiled with Emscripten SIMD optimizations, with live drawing and neural layer visualization.',
       documentationMd: `## Overview
@@ -402,7 +420,8 @@ This project implements a Feedforward Neural Network with Backpropagation from s
     {
       name: 'ESP32-CAM WiFi RC Vehicle',
       slug: 'esp32-cam-with-car-control',
-      shortDescription: 'Single-board WiFi vehicle control system with real-time MJPEG streaming and MPU6050 telemetry.',
+      shortDescription:
+        'Single-board WiFi vehicle control system with real-time MJPEG streaming and MPU6050 telemetry.',
       description:
         'A standalone microcontroller robotics project eliminating secondary Arduino Uno hardware. Serves an embedded web controller and drives an L298N motor controller using a 4-pin PWM technique.',
       documentationMd: `## Overview
@@ -428,7 +447,8 @@ A standalone WiFi car control system where the **ESP32-CAM** functions as the co
     {
       name: 'ES GST Return',
       slug: 'gst-return',
-      shortDescription: 'Web application for marketplace sales report parsing and GST return discrepancy reconciliation.',
+      shortDescription:
+        'Web application for marketplace sales report parsing and GST return discrepancy reconciliation.',
       description:
         'A web application for parsing multi-channel marketplace reports (Flipkart, Amazon), validating GST tax liabilities, diffing mismatch records, and rendering interactive sales analytics.',
       documentationMd: `## Overview
@@ -453,7 +473,8 @@ A specialized financial reconciliation tool designed to parse marketplace sales 
     {
       name: 'Img Editor',
       slug: 'img-editor',
-      shortDescription: 'Modular, layer-based browser image and graphics editor with non-destructive adjustments.',
+      shortDescription:
+        'Modular, layer-based browser image and graphics editor with non-destructive adjustments.',
       description:
         'A modular web graphic editor featuring layer hierarchy, pan/zoom canvas, crop and rotate tools, filter pipelines, undo/redo history manager, and JSON template workflows.',
       documentationMd: `## Overview
@@ -480,7 +501,8 @@ A modular browser photo and graphics editor built using vanilla JavaScript modul
     {
       name: 'Seller PDF Cropper',
       slug: 'seller-pdf-cropper',
-      shortDescription: 'Client-side shipping label and invoice PDF cropper with dynamic text measurement.',
+      shortDescription:
+        'Client-side shipping label and invoice PDF cropper with dynamic text measurement.',
       description:
         'A client-side privacy-first utility for cropping multi-page marketplace shipping labels, adding sequential numbering, and rendering print-ready PDFs without uploading data to servers.',
       documentationMd: `## Overview
@@ -505,7 +527,8 @@ Processes multi-page shipping PDFs directly in the browser using \`pdf-lib\` and
     {
       name: 'Professional Invoice Maker',
       slug: 'professional-invoice-maker',
-      shortDescription: 'Print-ready invoice generation web utility with automatic GST calculations and custom branding.',
+      shortDescription:
+        'Print-ready invoice generation web utility with automatic GST calculations and custom branding.',
       description:
         'A responsive React 19 web utility for generating clean A4 invoice documents with automatic itemized tax breakdown, company branding, and client-side print formatting.',
       documentationMd: `## Overview
@@ -534,7 +557,8 @@ A responsive web utility for generating clean, print-optimized A4 invoices.
     {
       name: 'Particle Chain WASM',
       slug: 'particle-chain-wasm',
-      shortDescription: 'Real-time particle physics chain simulation in C++ compiled to WebAssembly.',
+      shortDescription:
+        'Real-time particle physics chain simulation in C++ compiled to WebAssembly.',
       description:
         'Physics simulation implementing Verlet integration and particle chain constraints in C++, compiled via Emscripten to WebAssembly with HTML5 canvas output.',
       documentationMd: `## Overview
@@ -558,7 +582,8 @@ Real-time particle chain dynamics written in modern C++ and compiled to WebAssem
     {
       name: 'Wave Function Collapse Visualizer',
       slug: 'wave-function-collapse',
-      shortDescription: 'Procedural tile and texture generation using the quantum-inspired Wave Function Collapse algorithm.',
+      shortDescription:
+        'Procedural tile and texture generation using the quantum-inspired Wave Function Collapse algorithm.',
       description:
         'An interactive JavaScript visualization of constraint satisfaction and entropy reduction generating continuous seamless procedural maps and tile grids.',
       documentationMd: `## Overview
@@ -582,7 +607,8 @@ Visualizes the **Wave Function Collapse (WFC)** algorithm for 2D bitmap and tile
     {
       name: 'Falling Sands Sandbox',
       slug: 'falling-sands',
-      shortDescription: 'Cellular automata physics simulation for particulate materials (sand, water, solids).',
+      shortDescription:
+        'Cellular automata physics simulation for particulate materials (sand, water, solids).',
       description:
         'A real-time cellular automata engine modeling gravity, dispersion, and liquid displacement across thousands of particles on canvas.',
       documentationMd: `## Overview
@@ -605,7 +631,8 @@ Simulates granular materials and fluids using grid-based neighborhood rules.
     {
       name: 'GCELT Automate',
       slug: 'gcelt-automate',
-      shortDescription: 'Chrome extension automating form submissions, PDF document uploads, and marks tabulation for faculty.',
+      shortDescription:
+        'Chrome extension automating form submissions, PDF document uploads, and marks tabulation for faculty.',
       description:
         'A browser extension developed for GCELT faculty to automate repetitive academic portal tasks including PDF document uploads, form auto-filling, and answer sheet tabulation.',
       documentationMd: `## Overview
@@ -630,7 +657,8 @@ Simulates granular materials and fluids using grid-based neighborhood rules.
     {
       name: 'Auto Flipkart OTP',
       slug: 'auto-flipkart-otp',
-      shortDescription: 'Chrome extension integrating Gmail API and OAuth 2.0 to detect and auto-fill seller verification OTPs.',
+      shortDescription:
+        'Chrome extension integrating Gmail API and OAuth 2.0 to detect and auto-fill seller verification OTPs.',
       description:
         'A browser extension using Google OAuth 2.0 and the Gmail API to securely read incoming verification emails and automatically paste OTP codes into Flipkart Seller login pages.',
       documentationMd: `## Overview
@@ -655,7 +683,8 @@ Simulates granular materials and fluids using grid-based neighborhood rules.
     {
       name: 'Typing Test Speed Calculator',
       slug: 'typing-test',
-      shortDescription: 'Real-time typing speed and accuracy testing utility with dynamic WPM calculation and mistake highlighting.',
+      shortDescription:
+        'Real-time typing speed and accuracy testing utility with dynamic WPM calculation and mistake highlighting.',
       description:
         'A responsive web utility for measuring typing speed (Words Per Minute), accuracy percentages, and keystroke metrics with real-time text diffing and error analysis.',
       documentationMd: `## Overview
@@ -681,7 +710,8 @@ A browser typing speed test measuring WPM and keystroke accuracy in real time.
     {
       name: 'Edu Khel Games',
       slug: 'edu-khel-games',
-      shortDescription: 'Interactive educational canvas mini-games designed for elementary learning and cognitive development.',
+      shortDescription:
+        'Interactive educational canvas mini-games designed for elementary learning and cognitive development.',
       description:
         'A collection of lightweight educational mini-games built with HTML5 Canvas and JavaScript to teach foundational math, memory recall, and pattern recognition.',
       documentationMd: `## Overview
@@ -707,7 +737,8 @@ A browser typing speed test measuring WPM and keystroke accuracy in real time.
     {
       name: 'Travel Plans Planner',
       slug: 'travel-plans',
-      shortDescription: 'Interactive travel itinerary planner with map coordinates, destination notes, and expense tracking.',
+      shortDescription:
+        'Interactive travel itinerary planner with map coordinates, destination notes, and expense tracking.',
       description:
         'A responsive web application for organizing multi-day trip itineraries, mapping destination coordinates, cataloging packing checklists, and tracking estimated travel expenses.',
       documentationMd: `## Overview
@@ -736,7 +767,8 @@ A travel itinerary planning utility for structuring multi-destination journeys.
     {
       name: 'NEO CLI Utility',
       slug: 'neo',
-      shortDescription: 'Experimental developer command-line interface tool for personal workspace automation.',
+      shortDescription:
+        'Experimental developer command-line interface tool for personal workspace automation.',
       description:
         'A command-line interface prototype exploring task automation, terminal formatting, and developer workflow shortcuts.',
       documentationMd: `## Overview
@@ -759,7 +791,8 @@ Archived experimental prototype for terminal automation patterns.`,
     {
       name: 'User Manager Prototype',
       slug: 'user-manager',
-      shortDescription: 'Full-stack user management prototype exploring CRUD workflows, pagination, and role-based permissions.',
+      shortDescription:
+        'Full-stack user management prototype exploring CRUD workflows, pagination, and role-based permissions.',
       description:
         'A prototype web application evaluating user directory interfaces, search query debouncing, and permission administration.',
       documentationMd: `## Overview
@@ -841,7 +874,8 @@ Prototype interface exploring administrative user table controls and search perf
     create: {
       name: 'Architecture & Design',
       slug: 'architecture-design',
-      description: 'System design, monorepos, and architectural lessons learned from building software.',
+      description:
+        'System design, monorepos, and architectural lessons learned from building software.',
     },
   });
 
@@ -861,7 +895,8 @@ Prototype interface exploring administrative user table controls and search perf
     create: {
       name: 'Hardware & Robotics',
       slug: 'hardware-robotics',
-      description: 'Microcontroller engineering, ESP32, motor controllers, and real-time telemetry.',
+      description:
+        'Microcontroller engineering, ESP32, motor controllers, and real-time telemetry.',
     },
   });
 
@@ -968,7 +1003,8 @@ Instead of relying on SD card filesystems, all HTML, CSS, and WebSocket controll
       publishedAt: new Date('2026-07-28T09:00:00Z'),
     },
     {
-      title: 'Architecting E-Commerce Automation: Reverse Engineering Seller Workflows & Bulk Data Transforms',
+      title:
+        'Architecting E-Commerce Automation: Reverse Engineering Seller Workflows & Bulk Data Transforms',
       slug: 'architecting-marketplace-seller-automation',
       excerpt:
         'Building tools to solve real seller friction: mapping legacy SKU codes, batching XLSX catalog transformations, and automating cross-marketplace synchronization.',
@@ -1018,7 +1054,8 @@ Handling thousands of catalog rows without server timeouts requires client-side 
     create: {
       name: 'Getting Started & Studio Overview',
       slug: 'getting-started',
-      description: 'Overview of ElseSourav, navigating the catalog, and understanding project architectures.',
+      description:
+        'Overview of ElseSourav, navigating the catalog, and understanding project architectures.',
       icon: 'BookOpen',
       orderIndex: 0,
     },
@@ -1042,7 +1079,8 @@ Handling thousands of catalog rows without server timeouts requires client-side 
     create: {
       name: 'Privacy & User Accounts',
       slug: 'privacy-account',
-      description: 'Account settings, notification preferences, and local-first data privacy guarantees.',
+      description:
+        'Account settings, notification preferences, and local-first data privacy guarantees.',
       icon: 'Shield',
       orderIndex: 2,
     },
@@ -1052,7 +1090,8 @@ Handling thousands of catalog rows without server timeouts requires client-side 
     {
       title: 'Exploring the Studio Catalog & Launching Applications',
       slug: 'exploring-the-studio-catalog',
-      excerpt: 'Learn how to discover, filter, inspect, and launch tools in the ElseSourav software archive.',
+      excerpt:
+        'Learn how to discover, filter, inspect, and launch tools in the ElseSourav software archive.',
       content: `# Exploring the Studio Catalog
 
 Welcome to the **ElseSourav** application catalog. This archive contains software applications, browser extensions, developer utilities, and technical simulations created by Sourav.
@@ -1069,7 +1108,8 @@ Welcome to the **ElseSourav** application catalog. This archive contains softwar
     {
       title: 'Installing SpectraLens AI Chrome Extension',
       slug: 'installing-spectralens-ai-chrome-extension',
-      excerpt: 'Step-by-step instructions for loading the unpacked SpectraLens AI browser extension in developer mode.',
+      excerpt:
+        'Step-by-step instructions for loading the unpacked SpectraLens AI browser extension in developer mode.',
       content: `# Installing SpectraLens AI (Unpacked Extension)
 
 To install SpectraLens AI in any Chromium-based browser (Chrome, Edge, Brave, Opera):
@@ -1086,7 +1126,8 @@ To install SpectraLens AI in any Chromium-based browser (Chrome, Edge, Brave, Op
     {
       title: 'Using the Client-Side Seller PDF Cropper',
       slug: 'using-the-seller-pdf-cropper',
-      excerpt: 'How to crop marketplace shipping labels with zero server uploads and complete privacy.',
+      excerpt:
+        'How to crop marketplace shipping labels with zero server uploads and complete privacy.',
       content: `# Using the Seller PDF Cropper
 
 The **Seller PDF Cropper** processes shipping documents 100% inside your browser using WebAssembly and canvas text measurement.
@@ -1103,7 +1144,8 @@ The **Seller PDF Cropper** processes shipping documents 100% inside your browser
     {
       title: 'Data Privacy & Local-First Philosophy',
       slug: 'data-privacy-and-local-first-storage',
-      excerpt: 'Why ElseSourav tools prioritize client-side processing, zero telemetry, and user privacy.',
+      excerpt:
+        'Why ElseSourav tools prioritize client-side processing, zero telemetry, and user privacy.',
       content: `# Data Privacy & Local-First Philosophy
 
 ElseSourav is built with respect for user privacy:
@@ -1141,14 +1183,29 @@ ElseSourav is built with respect for user privacy:
     { key: 'site_tagline', value: 'Software, Tools & Ideas' },
     { key: 'site_description', value: SITE_CONFIG.description },
     { key: 'hero_badge', value: 'SOURAV / ELSESOURAV' },
-    { key: 'hero_headline', value: 'Building software, tools, games, and experiments that solve real problems and spark new ideas.' },
-    { key: 'hero_subtitle', value: 'ElseSourav is my personal space for the applications I build, the ideas I explore, and the things I learn along the way.' },
+    {
+      key: 'hero_headline',
+      value:
+        'Building software, tools, games, and experiments that solve real problems and spark new ideas.',
+    },
+    {
+      key: 'hero_subtitle',
+      value:
+        'ElseSourav is my personal space for the applications I build, the ideas I explore, and the things I learn along the way.',
+    },
     { key: 'primary_cta_label', value: 'Explore Apps' },
     { key: 'secondary_cta_label', value: 'About Me' },
     { key: 'homepage_apps_title', value: 'Selected Apps' },
-    { key: 'homepage_apps_subtitle', value: 'A curated selection of software, developer tools, games, and systems.' },
+    {
+      key: 'homepage_apps_subtitle',
+      value: 'A curated selection of software, developer tools, games, and systems.',
+    },
     { key: 'homepage_blog_title', value: 'Field Notes & Reflections' },
-    { key: 'homepage_blog_subtitle', value: 'Things I write about while building software, learning tools, and solving architectural problems.' },
+    {
+      key: 'homepage_blog_subtitle',
+      value:
+        'Things I write about while building software, learning tools, and solving architectural problems.',
+    },
     { key: 'creator_name', value: 'Sourav' },
     { key: 'creator_full_name', value: 'Sourav Barui' },
     { key: 'creator_title', value: CREATOR_CONFIG.identity.title },

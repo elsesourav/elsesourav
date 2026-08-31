@@ -111,7 +111,9 @@ export function BlogDiscoveryBar({ categories = [], tags = [] }: BlogDiscoveryBa
               {cat.postCount !== undefined && cat.postCount > 0 && (
                 <span
                   className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                    isActive ? 'bg-indigo-900 text-indigo-100' : 'bg-[hsl(var(--surface))] text-[hsl(var(--muted-foreground))]'
+                    isActive
+                      ? 'bg-indigo-900 text-indigo-100'
+                      : 'bg-[hsl(var(--surface))] text-[hsl(var(--muted-foreground))]'
                   }`}
                 >
                   {cat.postCount}

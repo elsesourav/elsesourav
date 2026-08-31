@@ -918,7 +918,10 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
             </FormField>
           </div>
 
-          <FormField label="Hero Headline" description="Main statement rendered below 'I am [Name].'">
+          <FormField
+            label="Hero Headline"
+            description="Main statement rendered below 'I am [Name].'"
+          >
             <Input
               value={settings['hero_headline'] || ''}
               onChange={(e) => handleChange('hero_headline', e.target.value)}
@@ -926,7 +929,10 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
             />
           </FormField>
 
-          <FormField label="Hero Positioning Paragraph" description="Supporting narrative below the main hero statement">
+          <FormField
+            label="Hero Positioning Paragraph"
+            description="Supporting narrative below the main hero statement"
+          >
             <Textarea
               rows={3}
               value={settings['hero_subtitle'] || ''}

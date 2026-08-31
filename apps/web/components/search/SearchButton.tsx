@@ -13,11 +13,7 @@ export function SearchButton() {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Don't trigger when typing in inputs/textareas
       const target = e.target as HTMLElement;
-      if (
-        target.tagName === 'INPUT' ||
-        target.tagName === 'TEXTAREA' ||
-        target.isContentEditable
-      ) {
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
         return;
       }
 

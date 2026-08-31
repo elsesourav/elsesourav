@@ -42,9 +42,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       const urlParams = new URLSearchParams(window.location.search);
       const queryTheme = urlParams.get('theme') as Theme | null;
       const stored = localStorage.getItem('theme') as Theme | null;
-      const t = queryTheme === 'light' || queryTheme === 'dark' || queryTheme === 'system'
-        ? queryTheme
-        : (stored === 'light' || stored === 'system' ? stored : 'dark');
+      const t =
+        queryTheme === 'light' || queryTheme === 'dark' || queryTheme === 'system'
+          ? queryTheme
+          : stored === 'light' || stored === 'system'
+            ? stored
+            : 'dark';
       setThemeState(t);
 
       const resolved = t === 'system' ? getSystemTheme() : t;
@@ -95,9 +98,5 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     [theme, resolvedTheme, setTheme]
   );
 
-  return (
-    <ThemeContext.Provider value={value}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }

@@ -14,7 +14,7 @@ interface PreferencesFormProps {
 export function PreferencesForm({ user }: PreferencesFormProps) {
   const { theme: activeClientTheme, setTheme: setClientTheme } = useTheme();
   const prefs = (user.preferences as UserPreferences) || {};
-  
+
   const [theme, setTheme] = React.useState<'light' | 'dark' | 'system'>(
     (prefs.theme as 'light' | 'dark' | 'system') || activeClientTheme || 'dark'
   );

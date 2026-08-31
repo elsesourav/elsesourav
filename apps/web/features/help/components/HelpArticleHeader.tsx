@@ -24,7 +24,10 @@ export function HelpArticleHeader({ article, categorySlug }: HelpArticleHeaderPr
         className="flex items-center gap-2 text-xs text-[hsl(var(--muted-foreground))] overflow-x-auto no-scrollbar"
         aria-label="Breadcrumb"
       >
-        <Link href="/help" className="hover:text-[hsl(var(--foreground))] transition-colors shrink-0">
+        <Link
+          href="/help"
+          className="hover:text-[hsl(var(--foreground))] transition-colors shrink-0"
+        >
           Help Center
         </Link>
         <ChevronRight className="w-3.5 h-3.5 text-[hsl(var(--subtle-foreground))] shrink-0" />
@@ -41,10 +44,7 @@ export function HelpArticleHeader({ article, categorySlug }: HelpArticleHeaderPr
       {/* Category Pill */}
       <div>
         <Link href={`/help/${categorySlug}`}>
-          <Badge
-            variant="info"
-            className="text-xs px-2.5 py-0.5"
-          >
+          <Badge variant="info" className="text-xs px-2.5 py-0.5">
             {article.category.name}
           </Badge>
         </Link>

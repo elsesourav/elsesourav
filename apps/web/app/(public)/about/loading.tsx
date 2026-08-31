@@ -65,7 +65,10 @@ export default function AboutLoading() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 3 }).map((_, idx) => (
-              <Card key={idx} className="p-5 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] space-y-4">
+              <Card
+                key={idx}
+                className="p-5 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] space-y-4"
+              >
                 <div className="flex items-center gap-3">
                   <Skeleton className="w-10 h-10 rounded-xl" />
                   <Skeleton className="h-5 w-32 rounded" />
@@ -90,7 +93,10 @@ export default function AboutLoading() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {Array.from({ length: 4 }).map((_, idx) => (
-              <Card key={idx} className="p-6 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] space-y-3">
+              <Card
+                key={idx}
+                className="p-6 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] space-y-3"
+              >
                 <Skeleton className="h-5 w-40 rounded-lg" />
                 <Skeleton className="h-3.5 w-full rounded" />
                 <Skeleton className="h-3.5 w-4/5 rounded" />

@@ -23,7 +23,9 @@ export default function AppDetailError({ error, reset }: AppDetailErrorProps) {
         </div>
 
         <div className="space-y-1.5">
-          <h2 className="text-xl font-bold text-[hsl(var(--foreground))]">Unable to display application</h2>
+          <h2 className="text-xl font-bold text-[hsl(var(--foreground))]">
+            Unable to display application
+          </h2>
           <p className="text-xs text-[hsl(var(--muted-foreground))]">
             An unexpected error occurred while rendering the application details.
           </p>
@@ -37,7 +39,10 @@ export default function AppDetailError({ error, reset }: AppDetailErrorProps) {
             <RefreshCw className="w-3.5 h-3.5" /> Try again
           </Button>
           <Link href="/apps">
-            <Button variant="outline" className="border-[hsl(var(--border))] text-[hsl(var(--foreground))] text-xs gap-1.5">
+            <Button
+              variant="outline"
+              className="border-[hsl(var(--border))] text-[hsl(var(--foreground))] text-xs gap-1.5"
+            >
               <ArrowLeft className="w-3.5 h-3.5" /> Back to catalog
             </Button>
           </Link>

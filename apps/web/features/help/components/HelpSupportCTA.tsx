@@ -16,8 +16,8 @@ export function HelpSupportCTA() {
               Still have questions or need technical support?
             </h3>
             <p className="text-xs text-[hsl(var(--muted-foreground))] max-w-xl leading-relaxed">
-              If you can&apos;t find what you are looking for in the documentation, submit a request on
-              the Support Desk to get direct assistance.
+              If you can&apos;t find what you are looking for in the documentation, submit a request
+              on the Support Desk to get direct assistance.
             </p>
           </div>
         </div>

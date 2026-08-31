@@ -48,7 +48,9 @@ export function LoginForm() {
 
         if (!resolveRes.ok) {
           const resData = await resolveRes.json();
-          setErrorMessage(resData.error || `No account found with username "@${trimmedIdentifier}"`);
+          setErrorMessage(
+            resData.error || `No account found with username "@${trimmedIdentifier}"`
+          );
           setLoading(false);
           return;
         }
@@ -89,8 +91,7 @@ export function LoginForm() {
                 authData.user.user_metadata?.name ||
                 authData.user.email?.split('@')[0],
               username:
-                authData.user.user_metadata?.username ||
-                authData.user.user_metadata?.user_name,
+                authData.user.user_metadata?.username || authData.user.user_metadata?.user_name,
             }),
           });
         } catch {
@@ -124,7 +125,11 @@ export function LoginForm() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1.5">
-          <Label htmlFor="login-identifier" required className="text-xs text-[hsl(var(--foreground))]">
+          <Label
+            htmlFor="login-identifier"
+            required
+            className="text-xs text-[hsl(var(--foreground))]"
+          >
             Email Address or Username
           </Label>
           <div className="relative">
@@ -146,7 +151,11 @@ export function LoginForm() {
 
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <Label htmlFor="login-password" required className="text-xs text-[hsl(var(--foreground))]">
+            <Label
+              htmlFor="login-password"
+              required
+              className="text-xs text-[hsl(var(--foreground))]"
+            >
               Password
             </Label>
             <Link

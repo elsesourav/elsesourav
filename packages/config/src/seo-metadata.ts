@@ -167,9 +167,7 @@ export function buildPageMetadata(options: PageMetadataOptions) {
     alternates: {
       canonical: canonicalUrl,
     },
-    robots: options.noIndex
-      ? { index: false, follow: false }
-      : { index: true, follow: true },
+    robots: options.noIndex ? { index: false, follow: false } : { index: true, follow: true },
     openGraph: {
       title,
       description,
@@ -250,9 +248,7 @@ export function buildAppMetadata(app: AppMetadataSource) {
 export function buildNoteMetadata(post: NoteMetadataSource) {
   const title = post.seoTitle || `${post.title} — ${SITE_CONFIG.name} Journal`;
   const description =
-    post.seoDescription ||
-    post.excerpt ||
-    `Read ${post.title} on ${SITE_CONFIG.name}.`;
+    post.seoDescription || post.excerpt || `Read ${post.title} on ${SITE_CONFIG.name}.`;
   const canonicalUrl = toAbsoluteUrl(`/notes/${post.slug}`);
   const image = resolveNoteShareImage(post);
 

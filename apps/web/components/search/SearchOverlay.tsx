@@ -5,12 +5,19 @@ import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { Search, X, ArrowRight, FileText, Layout, Globe } from 'lucide-react';
 import { Skeleton } from '@elsesourav/ui';
-import type { GlobalSearchResponse, GlobalSearchResult, GlobalSearchResultType } from '@elsesourav/types';
+import type {
+  GlobalSearchResponse,
+  GlobalSearchResult,
+  GlobalSearchResultType,
+} from '@elsesourav/types';
 
 /** Per-category result limit */
 const RESULTS_PER_GROUP = 5;
 
-const TYPE_CONFIG: Record<GlobalSearchResultType, { label: string; icon: typeof Search; color: string }> = {
+const TYPE_CONFIG: Record<
+  GlobalSearchResultType,
+  { label: string; icon: typeof Search; color: string }
+> = {
   project: { label: 'Apps', icon: Layout, color: 'text-indigo-400' },
   note: { label: 'Notes', icon: FileText, color: 'text-cyan-400' },
   page: { label: 'Pages', icon: Globe, color: 'text-zinc-400' },
@@ -168,12 +175,15 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
   }, [data]);
 
   // Navigate to result
-  const navigateTo = React.useCallback((url: string) => {
-    requestClose();
-    setTimeout(() => {
-      router.push(url);
-    }, 150);
-  }, [requestClose, router]);
+  const navigateTo = React.useCallback(
+    (url: string) => {
+      requestClose();
+      setTimeout(() => {
+        router.push(url);
+      }, 150);
+    },
+    [requestClose, router]
+  );
 
   // Keyboard navigation
   React.useEffect(() => {
@@ -315,7 +325,10 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
         </div>
 
         {/* Results Area */}
-        <div ref={resultsRef} className="max-h-[min(60vh,480px)] overflow-y-auto overscroll-contain">
+        <div
+          ref={resultsRef}
+          className="max-h-[min(60vh,480px)] overflow-y-auto overscroll-contain"
+        >
           {/* Empty State — hints */}
           {state === 'empty' && (
             <div className="px-5 py-6 text-center">
@@ -388,12 +401,8 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
           {/* Error */}
           {state === 'error' && (
             <div className="px-5 py-8 text-center space-y-1.5">
-              <p className="text-sm font-medium text-rose-400">
-                Something went wrong.
-              </p>
-              <p className="text-xs text-[hsl(var(--muted-foreground))]">
-                Please try again.
-              </p>
+              <p className="text-sm font-medium text-rose-400">Something went wrong.</p>
+              <p className="text-xs text-[hsl(var(--muted-foreground))]">Please try again.</p>
             </div>
           )}
 
@@ -409,7 +418,9 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
                 return (
                   <div key={type} className="mb-1" role="group" aria-label={config.label}>
                     {/* Group Header */}
-                    <div className={`px-5 py-1.5 text-[11px] font-semibold uppercase tracking-wider ${config.color}`}>
+                    <div
+                      className={`px-5 py-1.5 text-[11px] font-semibold uppercase tracking-wider ${config.color}`}
+                    >
                       {config.label}
                     </div>
 
@@ -436,9 +447,13 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
                           aria-label={`${result.title}${result.category ? `, ${result.category}` : ''}`}
                         >
                           {/* Icon */}
-                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
-                            isActive ? 'bg-[hsl(var(--surface-elevated))]' : 'bg-[hsl(var(--surface-subtle))]'
-                          }`}>
+                          <div
+                            className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+                              isActive
+                                ? 'bg-[hsl(var(--surface-elevated))]'
+                                : 'bg-[hsl(var(--surface-subtle))]'
+                            }`}
+                          >
                             <Icon className={`w-4 h-4 ${config.color}`} />
                           </div>
 
@@ -462,9 +477,13 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
                           )}
 
                           {/* Arrow indicator for active item */}
-                          <ArrowRight className={`w-3.5 h-3.5 shrink-0 transition-opacity ${
-                            isActive ? 'opacity-70 text-[hsl(var(--muted-foreground))]' : 'opacity-0'
-                          }`} />
+                          <ArrowRight
+                            className={`w-3.5 h-3.5 shrink-0 transition-opacity ${
+                              isActive
+                                ? 'opacity-70 text-[hsl(var(--muted-foreground))]'
+                                : 'opacity-0'
+                            }`}
+                          />
                         </button>
                       );
                     })}
@@ -485,12 +504,18 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
             </span>
             <span className="hidden sm:flex items-center gap-2">
               <span className="flex items-center gap-1">
-                <kbd className="inline-flex items-center justify-center w-5 h-5 bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] rounded text-[10px] font-mono">↑</kbd>
-                <kbd className="inline-flex items-center justify-center w-5 h-5 bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] rounded text-[10px] font-mono">↓</kbd>
+                <kbd className="inline-flex items-center justify-center w-5 h-5 bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] rounded text-[10px] font-mono">
+                  ↑
+                </kbd>
+                <kbd className="inline-flex items-center justify-center w-5 h-5 bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] rounded text-[10px] font-mono">
+                  ↓
+                </kbd>
                 <span className="ml-0.5">navigate</span>
               </span>
               <span className="flex items-center gap-1">
-                <kbd className="inline-flex items-center justify-center px-1.5 h-5 bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] rounded text-[10px] font-mono">↵</kbd>
+                <kbd className="inline-flex items-center justify-center px-1.5 h-5 bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] rounded text-[10px] font-mono">
+                  ↵
+                </kbd>
                 <span className="ml-0.5">open</span>
               </span>
             </span>

@@ -17,7 +17,10 @@ export function AppVersionHistory({ versions }: AppVersionHistoryProps) {
       <div className="flex items-center justify-between pb-3 border-b border-[hsl(var(--border-subtle))]">
         <div className="flex items-center gap-2 text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold">
           <History className="w-4 h-4" />
-          <h2 id="release-history-heading" className="text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold">
+          <h2
+            id="release-history-heading"
+            className="text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold"
+          >
             Release History & Changelog
           </h2>
         </div>

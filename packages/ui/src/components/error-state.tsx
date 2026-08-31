@@ -35,7 +35,9 @@ export function ErrorState({
       >
         <div className="flex items-center gap-2.5 text-rose-200">
           <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
-          <span className="font-medium">{title} — {description}</span>
+          <span className="font-medium">
+            {title} — {description}
+          </span>
         </div>
         {onRetry && (
           <Button
@@ -65,8 +67,12 @@ export function ErrorState({
         <div className="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center mb-2">
           <AlertCircle className="w-6 h-6 text-rose-500" />
         </div>
-        <CardTitle className="text-lg text-[hsl(var(--foreground))] font-semibold">{title}</CardTitle>
-        <CardDescription className="max-w-sm text-xs text-[hsl(var(--muted-foreground))] leading-relaxed">{description}</CardDescription>
+        <CardTitle className="text-lg text-[hsl(var(--foreground))] font-semibold">
+          {title}
+        </CardTitle>
+        <CardDescription className="max-w-sm text-xs text-[hsl(var(--muted-foreground))] leading-relaxed">
+          {description}
+        </CardDescription>
       </CardHeader>
       {(onRetry || action) && (
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">

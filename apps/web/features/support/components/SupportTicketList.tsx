@@ -116,7 +116,8 @@ export function SupportTicketList({ tickets, onOpenCreateModal }: SupportTicketL
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
-            Active ({tickets.filter((t) => t.status !== 'closed' && t.status !== 'resolved').length})
+            Active ({tickets.filter((t) => t.status !== 'closed' && t.status !== 'resolved').length}
+            )
           </button>
           <button
             type="button"
@@ -127,7 +128,8 @@ export function SupportTicketList({ tickets, onOpenCreateModal }: SupportTicketL
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
-            Resolved ({tickets.filter((t) => t.status === 'closed' || t.status === 'resolved').length})
+            Resolved (
+            {tickets.filter((t) => t.status === 'closed' || t.status === 'resolved').length})
           </button>
         </div>
 
@@ -200,7 +202,10 @@ export function SupportTicketList({ tickets, onOpenCreateModal }: SupportTicketL
                           {ticket.ticketNumber}
                         </span>
                         {getStatusBadge(ticket.status)}
-                        <Badge variant="default" className="text-[10px] bg-muted text-muted-foreground border-border">
+                        <Badge
+                          variant="default"
+                          className="text-[10px] bg-muted text-muted-foreground border-border"
+                        >
                           {ticket.category}
                         </Badge>
                       </div>

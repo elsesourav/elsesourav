@@ -17,15 +17,18 @@ export function ThemePopup() {
   const menuRef = React.useRef<HTMLDivElement>(null);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
 
-  const requestClose = React.useCallback((callback?: () => void) => {
-    if (isClosing) return;
-    setIsClosing(true);
-    setTimeout(() => {
-      setIsClosing(false);
-      setOpen(false);
-      callback?.();
-    }, 130);
-  }, [isClosing]);
+  const requestClose = React.useCallback(
+    (callback?: () => void) => {
+      if (isClosing) return;
+      setIsClosing(true);
+      setTimeout(() => {
+        setIsClosing(false);
+        setOpen(false);
+        callback?.();
+      }, 130);
+    },
+    [isClosing]
+  );
 
   const handleToggle = () => {
     if (open) {

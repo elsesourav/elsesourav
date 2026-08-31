@@ -42,9 +42,11 @@ describe('Admin Content Management Layer — Homepage, Creator, About (Prompt 26
       creator_location: 'Kolkata, India / Worldwide',
       creator_avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80',
       creator_positioning: 'Independent software creator building practical tools.',
-      creator_statement: 'I care about software that is understandable, useful, fast, and considerate.',
+      creator_statement:
+        'I care about software that is understandable, useful, fast, and considerate.',
       creator_short_bio: 'Software engineer building tools and games.',
-      creator_long_bio: '### My Journey\n\nI started programming by exploring low-level algorithms...',
+      creator_long_bio:
+        '### My Journey\n\nI started programming by exploring low-level algorithms...',
       about_intro: 'About Sourav Barui, an independent software creator.',
       about_philosophy_markdown: '### Philosophy\n\n- Deterministic builds\n- Zero vanity metrics',
     };
@@ -83,8 +85,22 @@ describe('Admin Content Management Layer — Homepage, Creator, About (Prompt 26
     expect(parsedPrinciples).toEqual(principles);
 
     const links = [
-      { id: 'l1', label: 'GitHub', url: 'https://github.com/elsesourav', platform: 'github' as const, priority: 0, isActive: true },
-      { id: 'l2', label: 'Twitter', url: 'https://x.com/elsesourav', platform: 'twitter' as const, priority: 1, isActive: true },
+      {
+        id: 'l1',
+        label: 'GitHub',
+        url: 'https://github.com/elsesourav',
+        platform: 'github' as const,
+        priority: 0,
+        isActive: true,
+      },
+      {
+        id: 'l2',
+        label: 'Twitter',
+        url: 'https://x.com/elsesourav',
+        platform: 'twitter' as const,
+        priority: 1,
+        isActive: true,
+      },
     ];
     const serializedLinks = JSON.stringify(links);
     const parsedLinks = parseSiteLinks(serializedLinks);
@@ -93,7 +109,14 @@ describe('Admin Content Management Layer — Homepage, Creator, About (Prompt 26
     expect(parsedLinks[1]?.platform).toBe('twitter');
 
     const contacts = [
-      { id: 'c1', label: 'Email', value: 'hello@sourav.dev', type: 'email' as const, priority: 0, isActive: true },
+      {
+        id: 'c1',
+        label: 'Email',
+        value: 'hello@sourav.dev',
+        type: 'email' as const,
+        priority: 0,
+        isActive: true,
+      },
     ];
     const serializedContacts = JSON.stringify(contacts);
     const parsedContacts = parseContactMethods(serializedContacts);

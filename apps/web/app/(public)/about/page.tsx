@@ -129,7 +129,10 @@ export default async function AboutPage() {
                   </div>
                 )}
                 <div>
-                  <h2 id="creator-bio-heading" className="text-xl font-bold text-[hsl(var(--foreground))]">
+                  <h2
+                    id="creator-bio-heading"
+                    className="text-xl font-bold text-[hsl(var(--foreground))]"
+                  >
                     {identity.creator.fullName || `${identity.creator.name} Barui`}
                   </h2>
                   <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 font-mono">
@@ -147,7 +150,9 @@ export default async function AboutPage() {
                 <BlogContentRenderer content={identity.creator.longBio} />
               ) : (
                 <p>
-                  Sourav Barui is an independent software creator who enjoys turning ideas into useful software, tools, games, and experiments. ElseSourav is his personal software studio, digital workshop, and engineering archive.
+                  Sourav Barui is an independent software creator who enjoys turning ideas into
+                  useful software, tools, games, and experiments. ElseSourav is his personal
+                  software studio, digital workshop, and engineering archive.
                 </p>
               )}
             </div>
@@ -177,14 +182,23 @@ export default async function AboutPage() {
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Core Motivation</span>
               </div>
-              <h2 id="why-projects-heading" className="text-2xl font-bold text-[hsl(var(--foreground))] tracking-tight">
+              <h2
+                id="why-projects-heading"
+                className="text-2xl font-bold text-[hsl(var(--foreground))] tracking-tight"
+              >
                 &ldquo;I like understanding ideas by building them.&rdquo;
               </h2>
               <p className="text-sm text-[hsl(var(--foreground))] leading-relaxed">
-                Rather than viewing software engineering through a single narrow framework, Sourav approaches programming as a medium for understanding systems from first principles. When exploring computer graphics, he writes canvas renderers and physics loops. When studying AI, he builds browser extensions with local WebAssembly models. When solving data management bottlenecks, he develops batch automation tools.
+                Rather than viewing software engineering through a single narrow framework, Sourav
+                approaches programming as a medium for understanding systems from first principles.
+                When exploring computer graphics, he writes canvas renderers and physics loops. When
+                studying AI, he builds browser extensions with local WebAssembly models. When
+                solving data management bottlenecks, he develops batch automation tools.
               </p>
               <p className="text-sm text-[hsl(var(--muted-foreground))] leading-relaxed">
-                Every project in this portfolio represents an intentional exploration: exploring new paradigms, testing performance boundaries, and crafting tools that solve concrete real-world problems.
+                Every project in this portfolio represents an intentional exploration: exploring new
+                paradigms, testing performance boundaries, and crafting tools that solve concrete
+                real-world problems.
               </p>
             </div>
           </section>
@@ -198,11 +212,15 @@ export default async function AboutPage() {
                 <Layers className="w-4 h-4" />
                 <span>Evolution</span>
               </div>
-              <h2 id="journey-heading" className="text-xl sm:text-2xl font-bold text-[hsl(var(--foreground))] tracking-tight">
+              <h2
+                id="journey-heading"
+                className="text-xl sm:text-2xl font-bold text-[hsl(var(--foreground))] tracking-tight"
+              >
                 Project Journey & Technical Progression
               </h2>
               <p className="text-xs sm:text-sm text-[hsl(var(--muted-foreground))] max-w-2xl leading-relaxed">
-                Organized conceptually by the engineering challenges and paradigms explored across different stages:
+                Organized conceptually by the engineering challenges and paradigms explored across
+                different stages:
               </p>
             </div>
           </Reveal>
@@ -220,15 +238,32 @@ export default async function AboutPage() {
                 Foundations, Calculators & Web Utilities
               </h3>
               <p className="text-xs sm:text-sm text-[hsl(var(--foreground))] leading-relaxed">
-                Early exploration focused on mastering native browser APIs, client-side input validation, asynchronous state machines, and building tools with zero external dependencies.
+                Early exploration focused on mastering native browser APIs, client-side input
+                validation, asynchronous state machines, and building tools with zero external
+                dependencies.
               </p>
               <div className="pt-1 flex flex-wrap items-center gap-2 text-xs font-mono text-[hsl(var(--muted-foreground))]">
                 <span className="text-[hsl(var(--muted-foreground))]">Representative work:</span>
-                <Link href="/apps/typing-test" className="text-indigo-600 dark:text-indigo-300 hover:underline">Typing Test</Link>
+                <Link
+                  href="/apps/typing-test"
+                  className="text-indigo-600 dark:text-indigo-300 hover:underline"
+                >
+                  Typing Test
+                </Link>
                 <span>·</span>
-                <Link href="/apps/gst-return" className="text-indigo-600 dark:text-indigo-300 hover:underline">GST Return Ledger</Link>
+                <Link
+                  href="/apps/gst-return"
+                  className="text-indigo-600 dark:text-indigo-300 hover:underline"
+                >
+                  GST Return Ledger
+                </Link>
                 <span>·</span>
-                <Link href="/apps/professional-invoice-maker" className="text-indigo-600 dark:text-indigo-300 hover:underline">Invoice Maker</Link>
+                <Link
+                  href="/apps/professional-invoice-maker"
+                  className="text-indigo-600 dark:text-indigo-300 hover:underline"
+                >
+                  Invoice Maker
+                </Link>
               </div>
             </div>
 
@@ -244,17 +279,39 @@ export default async function AboutPage() {
                 Interactive Systems, Canvas Graphics & Simulations
               </h3>
               <p className="text-xs sm:text-sm text-[hsl(var(--foreground))] leading-relaxed">
-                Exploring real-time 60 FPS animation loops, physics constraints, particle dynamics, and cellular automata to understand computer graphics and procedural generation from first principles.
+                Exploring real-time 60 FPS animation loops, physics constraints, particle dynamics,
+                and cellular automata to understand computer graphics and procedural generation from
+                first principles.
               </p>
               <div className="pt-1 flex flex-wrap items-center gap-2 text-xs font-mono text-[hsl(var(--muted-foreground))]">
                 <span className="text-[hsl(var(--muted-foreground))]">Representative work:</span>
-                <Link href="/apps/breakout-ball" className="text-purple-600 dark:text-purple-300 hover:underline">Breakout Ball</Link>
+                <Link
+                  href="/apps/breakout-ball"
+                  className="text-purple-600 dark:text-purple-300 hover:underline"
+                >
+                  Breakout Ball
+                </Link>
                 <span>·</span>
-                <Link href="/apps/particle-chain-wasm" className="text-purple-600 dark:text-purple-300 hover:underline">Particle Chain WASM</Link>
+                <Link
+                  href="/apps/particle-chain-wasm"
+                  className="text-purple-600 dark:text-purple-300 hover:underline"
+                >
+                  Particle Chain WASM
+                </Link>
                 <span>·</span>
-                <Link href="/apps/wave-function-collapse" className="text-purple-600 dark:text-purple-300 hover:underline">Wave Function Collapse</Link>
+                <Link
+                  href="/apps/wave-function-collapse"
+                  className="text-purple-600 dark:text-purple-300 hover:underline"
+                >
+                  Wave Function Collapse
+                </Link>
                 <span>·</span>
-                <Link href="/apps/falling-sands" className="text-purple-600 dark:text-purple-300 hover:underline">Falling Sands</Link>
+                <Link
+                  href="/apps/falling-sands"
+                  className="text-purple-600 dark:text-purple-300 hover:underline"
+                >
+                  Falling Sands
+                </Link>
               </div>
             </div>
 
@@ -270,15 +327,32 @@ export default async function AboutPage() {
                 Systems Programming, WebAssembly & Machine Learning
               </h3>
               <p className="text-xs sm:text-sm text-[hsl(var(--foreground))] leading-relaxed">
-                Stepping below high-level frameworks—compiling C++ to WebAssembly with Emscripten, implementing matrix mathematics for on-device neural networks, and writing embedded microcontroller firmware.
+                Stepping below high-level frameworks—compiling C++ to WebAssembly with Emscripten,
+                implementing matrix mathematics for on-device neural networks, and writing embedded
+                microcontroller firmware.
               </p>
               <div className="pt-1 flex flex-wrap items-center gap-2 text-xs font-mono text-[hsl(var(--muted-foreground))]">
                 <span className="text-[hsl(var(--muted-foreground))]">Representative work:</span>
-                <Link href="/apps/nn-number-rec" className="text-cyan-600 dark:text-cyan-300 hover:underline">Neural Network Number Recognition</Link>
+                <Link
+                  href="/apps/nn-number-rec"
+                  className="text-cyan-600 dark:text-cyan-300 hover:underline"
+                >
+                  Neural Network Number Recognition
+                </Link>
                 <span>·</span>
-                <Link href="/apps/esp32-cam-with-car-control" className="text-cyan-600 dark:text-cyan-300 hover:underline">ESP32-CAM WiFi Car</Link>
+                <Link
+                  href="/apps/esp32-cam-with-car-control"
+                  className="text-cyan-600 dark:text-cyan-300 hover:underline"
+                >
+                  ESP32-CAM WiFi Car
+                </Link>
                 <span>·</span>
-                <Link href="/apps/spectralens-ai" className="text-cyan-600 dark:text-cyan-300 hover:underline">SpectraLens AI WASM OCR</Link>
+                <Link
+                  href="/apps/spectralens-ai"
+                  className="text-cyan-600 dark:text-cyan-300 hover:underline"
+                >
+                  SpectraLens AI WASM OCR
+                </Link>
               </div>
             </div>
 
@@ -294,17 +368,39 @@ export default async function AboutPage() {
                 Full-Stack Applications, Mobile & Automation Platforms
               </h3>
               <p className="text-xs sm:text-sm text-[hsl(var(--foreground))] leading-relaxed">
-                Shipping resilient end-to-end software tools: multi-seller e-commerce batch reconciliation engines, browser extensions, client-side photo editors, and local-first mobile applications.
+                Shipping resilient end-to-end software tools: multi-seller e-commerce batch
+                reconciliation engines, browser extensions, client-side photo editors, and
+                local-first mobile applications.
               </p>
               <div className="pt-1 flex flex-wrap items-center gap-2 text-xs font-mono text-[hsl(var(--muted-foreground))]">
                 <span className="text-[hsl(var(--muted-foreground))]">Representative work:</span>
-                <Link href="/apps/es-automation" className="text-emerald-600 dark:text-emerald-300 hover:underline">ES Automation</Link>
+                <Link
+                  href="/apps/es-automation"
+                  className="text-emerald-600 dark:text-emerald-300 hover:underline"
+                >
+                  ES Automation
+                </Link>
                 <span>·</span>
-                <Link href="/apps/img-editor" className="text-emerald-600 dark:text-emerald-300 hover:underline">Img Editor</Link>
+                <Link
+                  href="/apps/img-editor"
+                  className="text-emerald-600 dark:text-emerald-300 hover:underline"
+                >
+                  Img Editor
+                </Link>
                 <span>·</span>
-                <Link href="/apps/meal-tracker" className="text-emerald-600 dark:text-emerald-300 hover:underline">Meal Tracker Mobile</Link>
+                <Link
+                  href="/apps/meal-tracker"
+                  className="text-emerald-600 dark:text-emerald-300 hover:underline"
+                >
+                  Meal Tracker Mobile
+                </Link>
                 <span>·</span>
-                <Link href="/apps/gcelt-automate" className="text-emerald-600 dark:text-emerald-300 hover:underline">GCELT Automate</Link>
+                <Link
+                  href="/apps/gcelt-automate"
+                  className="text-emerald-600 dark:text-emerald-300 hover:underline"
+                >
+                  GCELT Automate
+                </Link>
               </div>
             </div>
           </RevealGroup>
@@ -317,7 +413,10 @@ export default async function AboutPage() {
         <section aria-labelledby="principles-heading" className="space-y-6">
           <Reveal direction="up" distance={14}>
             <div className="space-y-2">
-              <h2 id="principles-heading" className="text-xl font-bold text-[hsl(var(--foreground))] tracking-tight">
+              <h2
+                id="principles-heading"
+                className="text-xl font-bold text-[hsl(var(--foreground))] tracking-tight"
+              >
                 Building Principles
               </h2>
               <p className="text-xs sm:text-sm text-[hsl(var(--muted-foreground))]">
@@ -326,7 +425,11 @@ export default async function AboutPage() {
             </div>
           </Reveal>
 
-          <RevealGroup staggerDelay={0.05} baseDelay={0.06} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <RevealGroup
+            staggerDelay={0.05}
+            baseDelay={0.06}
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+          >
             {identity.creator.principles.map((principle: string, idx: number) => (
               <div
                 key={idx}
@@ -343,11 +446,17 @@ export default async function AboutPage() {
 
         {/* 6. Current Focus / Now */}
         <Reveal direction="up" distance={14}>
-          <section aria-labelledby="now-focus-heading" className="space-y-6 p-6 sm:p-8 rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] backdrop-blur-sm shadow-xl">
+          <section
+            aria-labelledby="now-focus-heading"
+            className="space-y-6 p-6 sm:p-8 rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] backdrop-blur-sm shadow-xl"
+          >
             <div className="flex items-center justify-between pb-3 border-b border-[hsl(var(--border-subtle))]">
               <div className="flex items-center gap-2">
                 <Radio className="w-4 h-4 text-emerald-500 animate-pulse" />
-                <h2 id="now-focus-heading" className="text-lg font-bold text-[hsl(var(--foreground))] tracking-tight">
+                <h2
+                  id="now-focus-heading"
+                  className="text-lg font-bold text-[hsl(var(--foreground))] tracking-tight"
+                >
                   Studio Focus // Now
                 </h2>
               </div>
@@ -456,8 +565,14 @@ export default async function AboutPage() {
 
         {/* 7. Verified Social & Platform Channels */}
         <Reveal direction="up" distance={14}>
-          <section aria-labelledby="channels-heading" className="pt-6 border-t border-[hsl(var(--border-subtle))] space-y-4">
-            <h2 id="channels-heading" className="text-sm font-bold text-[hsl(var(--foreground))] tracking-tight font-mono uppercase">
+          <section
+            aria-labelledby="channels-heading"
+            className="pt-6 border-t border-[hsl(var(--border-subtle))] space-y-4"
+          >
+            <h2
+              id="channels-heading"
+              className="text-sm font-bold text-[hsl(var(--foreground))] tracking-tight font-mono uppercase"
+            >
               Platform & Social Channels
             </h2>
             <div className="flex flex-wrap items-center gap-3 text-xs font-medium">
@@ -482,8 +597,14 @@ export default async function AboutPage() {
 
         {/* 8. Direct Contact & Support Channels */}
         <Reveal direction="up" distance={14}>
-          <section aria-labelledby="contact-heading" className="pt-4 border-t border-[hsl(var(--border-subtle))] space-y-4">
-            <h2 id="contact-heading" className="text-sm font-bold text-[hsl(var(--foreground))] tracking-tight font-mono uppercase">
+          <section
+            aria-labelledby="contact-heading"
+            className="pt-4 border-t border-[hsl(var(--border-subtle))] space-y-4"
+          >
+            <h2
+              id="contact-heading"
+              className="text-sm font-bold text-[hsl(var(--foreground))] tracking-tight font-mono uppercase"
+            >
               Direct Contact & Inquiries
             </h2>
             <p className="text-xs text-[hsl(var(--muted-foreground))]">

@@ -2,7 +2,16 @@ import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import { getServerSession } from '@elsesourav/auth';
 import type { AppListItem, BlogPostListItem, SiteLinkItem } from '@elsesourav/types';
-import { Button, Section, SectionHeader, ActionGroup, Container, Reveal, RevealGroup, AmbientBackground } from '@elsesourav/ui';
+import {
+  Button,
+  Section,
+  SectionHeader,
+  ActionGroup,
+  Container,
+  Reveal,
+  RevealGroup,
+  AmbientBackground,
+} from '@elsesourav/ui';
 import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
 import { SiteService } from '@elsesourav/database';
 import { discoverPublishedApps } from '@/features/apps/queries/get-apps';
@@ -165,7 +174,8 @@ export default async function HomePage() {
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-500/25 bg-indigo-500/10 text-xs font-mono text-indigo-600 dark:text-indigo-300 font-medium tracking-wide">
                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 dark:bg-indigo-400" />
                   <span>
-                    {identity.homepage.heroBadge && identity.homepage.heroBadge !== 'SOURAV / ELSESOURAV'
+                    {identity.homepage.heroBadge &&
+                    identity.homepage.heroBadge !== 'SOURAV / ELSESOURAV'
                       ? identity.homepage.heroBadge
                       : 'Personal Software Studio'}
                   </span>
@@ -191,7 +201,10 @@ export default async function HomePage() {
                 {/* 4. Action Buttons */}
                 <ActionGroup className="pt-2">
                   <Link href={ROUTES.APPS}>
-                    <Button size="lg" className="gap-2 shadow-xl shadow-indigo-600/25 px-6 font-semibold min-h-[48px]">
+                    <Button
+                      size="lg"
+                      className="gap-2 shadow-xl shadow-indigo-600/25 px-6 font-semibold min-h-[48px]"
+                    >
                       <Layers className="w-4 h-4" />
                       <span>{identity.homepage.primaryCtaLabel || 'Explore Apps'}</span>
                     </Button>
@@ -231,7 +244,10 @@ export default async function HomePage() {
                       href={ROUTES.APPS}
                       className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded p-1 group"
                     >
-                      <span>Explore all apps {appsResult.totalCount > 0 ? `(${appsResult.totalCount})` : ''}</span>
+                      <span>
+                        Explore all apps{' '}
+                        {appsResult.totalCount > 0 ? `(${appsResult.totalCount})` : ''}
+                      </span>
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                     </Link>
                   }
@@ -246,7 +262,11 @@ export default async function HomePage() {
 
                 {/* 2. Supporting Projects Grid (up to 4 projects in 2x2) */}
                 {featuredApps.length > 1 && (
-                  <RevealGroup staggerDelay={0.06} baseDelay={0.08} className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+                  <RevealGroup
+                    staggerDelay={0.06}
+                    baseDelay={0.08}
+                    className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch"
+                  >
                     {featuredApps.slice(1, 5).map((app: AppListItem, idx: number) => (
                       <AppCard key={app.id} app={app} index={idx + 1} />
                     ))}
@@ -288,7 +308,10 @@ export default async function HomePage() {
                       href={ROUTES.BLOG}
                       className="text-sm font-medium text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded p-1 group"
                     >
-                      <span>Read all notes {blogResult.totalCount > 0 ? `(${blogResult.totalCount})` : ''}</span>
+                      <span>
+                        Read all notes{' '}
+                        {blogResult.totalCount > 0 ? `(${blogResult.totalCount})` : ''}
+                      </span>
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                     </Link>
                   }
@@ -336,7 +359,9 @@ export default async function HomePage() {
                               })}
                             </time>
                           ) : (
-                            <span className="text-[hsl(var(--muted-foreground))] font-mono">Published Recently</span>
+                            <span className="text-[hsl(var(--muted-foreground))] font-mono">
+                              Published Recently
+                            </span>
                           )}
                           <span className="text-cyan-600 dark:text-cyan-400 font-semibold flex items-center gap-1.5 group-hover:translate-x-1 transition-transform">
                             <span>Read note</span>
@@ -348,7 +373,12 @@ export default async function HomePage() {
                   </Reveal>
 
                   {/* Right: Archival Index Stream of Supporting Notes */}
-                  <Reveal direction="up" distance={16} delay={0.12} className="lg:col-span-5 flex flex-col justify-between divide-y divide-[hsl(var(--border-subtle))] rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-6 sm:p-7 backdrop-blur-sm">
+                  <Reveal
+                    direction="up"
+                    distance={16}
+                    delay={0.12}
+                    className="lg:col-span-5 flex flex-col justify-between divide-y divide-[hsl(var(--border-subtle))] rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-6 sm:p-7 backdrop-blur-sm"
+                  >
                     {recentPosts.slice(1, 3).map((post: BlogPostListItem, idx: number) => {
                       const formattedIdx = String(idx + 1).padStart(2, '0');
                       return (
@@ -361,14 +391,17 @@ export default async function HomePage() {
                             <div className="flex items-center justify-between text-xs text-[hsl(var(--muted-foreground))] font-mono">
                               <div className="flex items-center gap-2">
                                 <span className="text-cyan-600 dark:text-cyan-400 font-bold text-[11px]">
-                                   {formattedIdx}
+                                  {formattedIdx}
                                 </span>
                                 <span className="text-cyan-600 dark:text-cyan-400 font-medium uppercase tracking-wider text-[11px]">
                                   {post.category?.name || 'Notes'}
                                 </span>
                               </div>
                               {post.publishedAt ? (
-                                <time dateTime={new Date(post.publishedAt).toISOString()} className="uppercase">
+                                <time
+                                  dateTime={new Date(post.publishedAt).toISOString()}
+                                  className="uppercase"
+                                >
                                   {new Date(post.publishedAt).toLocaleDateString('en-US', {
                                     month: 'short',
                                     day: '2-digit',
@@ -435,7 +468,9 @@ export default async function HomePage() {
                             })}
                           </time>
                         ) : (
-                          <span className="text-[hsl(var(--muted-foreground))] font-mono">Published Recently</span>
+                          <span className="text-[hsl(var(--muted-foreground))] font-mono">
+                            Published Recently
+                          </span>
                         )}
                         <span className="text-cyan-600 dark:text-cyan-400 font-semibold flex items-center gap-1.5 group-hover:translate-x-1 transition-transform">
                           <span>Read note</span>
@@ -491,7 +526,8 @@ export default async function HomePage() {
                   </div>
 
                   <h2 className="text-h2 font-bold tracking-tight text-[hsl(var(--foreground))] leading-snug">
-                    {identity.creator.statement || 'I care about software that is understandable, useful, fast, and considerate.'}
+                    {identity.creator.statement ||
+                      'I care about software that is understandable, useful, fast, and considerate.'}
                   </h2>
 
                   <p className="text-body text-[hsl(var(--muted-foreground))] leading-relaxed">
@@ -500,11 +536,7 @@ export default async function HomePage() {
 
                   <div className="pt-2">
                     <Link href={ROUTES.ABOUT}>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="text-xs gap-1.5"
-                      >
+                      <Button variant="outline" size="sm" className="text-xs gap-1.5">
                         <span>Read about the journey & background</span>
                         <ArrowRight className="w-3.5 h-3.5" />
                       </Button>

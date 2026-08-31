@@ -60,9 +60,7 @@ export function ProfileQuickActions() {
                   <h3 className="font-semibold text-foreground text-sm sm:text-base group-hover:text-primary transition-colors">
                     {action.title}
                   </h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    {action.subtitle}
-                  </p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{action.subtitle}</p>
                 </div>
               </div>
             </Link>

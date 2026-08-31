@@ -37,9 +37,10 @@ export function AppPagination({ currentPage, totalPages, totalMatches }: AppPagi
       aria-label="Pagination Navigation"
     >
       <span className="text-xs text-[hsl(var(--muted-foreground))] order-2 sm:order-1 font-mono">
-        Showing page <span className="text-[hsl(var(--foreground))] font-semibold">{currentPage}</span> of{' '}
-        <span className="text-[hsl(var(--foreground))] font-semibold">{totalPages}</span> ({totalMatches} total
-        results)
+        Showing page{' '}
+        <span className="text-[hsl(var(--foreground))] font-semibold">{currentPage}</span> of{' '}
+        <span className="text-[hsl(var(--foreground))] font-semibold">{totalPages}</span> (
+        {totalMatches} total results)
       </span>
 
       <div className="flex items-center gap-2 order-1 sm:order-2">

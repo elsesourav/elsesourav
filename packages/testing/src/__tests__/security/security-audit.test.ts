@@ -121,14 +121,12 @@ describe('Comprehensive Security Hardening & Audit Test Suite', () => {
 
     it('LibraryService & NotificationService: enforces authenticated user isolation', async () => {
       const mockLibRepo: Partial<LibraryRepository> = {
-        saveApp: vi
-          .fn()
-          .mockResolvedValue({
-            id: 'lib-1',
-            userId: 'user-1',
-            appId: 'app-1',
-            createdAt: new Date(),
-          }),
+        saveApp: vi.fn().mockResolvedValue({
+          id: 'lib-1',
+          userId: 'user-1',
+          appId: 'app-1',
+          createdAt: new Date(),
+        }),
         unsaveApp: vi.fn().mockResolvedValue(undefined),
       };
       const libService = new LibraryService(mockLibRepo as LibraryRepository);

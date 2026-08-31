@@ -7,7 +7,8 @@ describe('Apps Classification & Simulation Unification', () => {
       id: 'app-sim-1',
       slug: 'falling-sands',
       name: 'Falling Sands Sandbox',
-      shortDescription: 'Cellular automata physics simulation for particulate materials (sand, water, solids).',
+      shortDescription:
+        'Cellular automata physics simulation for particulate materials (sand, water, solids).',
       iconUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=200&q=80',
       primaryCategory: 'Algorithms & Simulations',
       categorySlug: 'simulations',
@@ -21,7 +22,8 @@ describe('Apps Classification & Simulation Unification', () => {
       id: 'app-sim-2',
       slug: 'wave-function-collapse',
       name: 'Wave Function Collapse Visualizer',
-      shortDescription: 'Procedural tile and texture generation using the quantum-inspired Wave Function Collapse algorithm.',
+      shortDescription:
+        'Procedural tile and texture generation using the quantum-inspired Wave Function Collapse algorithm.',
       iconUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=200&q=80',
       primaryCategory: 'Algorithms & Simulations',
       categorySlug: 'simulations',
@@ -35,7 +37,8 @@ describe('Apps Classification & Simulation Unification', () => {
       id: 'app-sim-3',
       slug: 'particle-chain-wasm',
       name: 'Particle Chain WASM',
-      shortDescription: 'Real-time particle physics chain simulation in C++ compiled to WebAssembly.',
+      shortDescription:
+        'Real-time particle physics chain simulation in C++ compiled to WebAssembly.',
       iconUrl: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=200&q=80',
       primaryCategory: 'Algorithms & Simulations',
       categorySlug: 'simulations',
@@ -63,7 +66,9 @@ describe('Apps Classification & Simulation Unification', () => {
 
   it('unifies simulations seamlessly into the canonical Apps portfolio', () => {
     const simulationApps = mockApps.filter(
-      (app) => app.categorySlug === 'simulations' || app.primaryCategory.toLowerCase().includes('simulation')
+      (app) =>
+        app.categorySlug === 'simulations' ||
+        app.primaryCategory.toLowerCase().includes('simulation')
     );
 
     expect(simulationApps).toHaveLength(3);

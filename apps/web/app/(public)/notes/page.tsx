@@ -76,7 +76,8 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     '@context': 'https://schema.org',
     '@type': 'Blog',
     name: 'ElseSourav Notes & Writing',
-    description: 'Technical observations, architecture notes, and lessons learned while building software.',
+    description:
+      'Technical observations, architecture notes, and lessons learned while building software.',
     url: 'https://elsesourav.com/notes',
     blogPost: posts.map((post) => ({
       '@type': 'BlogPosting',

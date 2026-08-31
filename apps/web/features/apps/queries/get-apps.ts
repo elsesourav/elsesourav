@@ -83,9 +83,7 @@ export async function getRelatedProjects(
     }
 
     // 2. Matching platforms
-    const sharedPlatforms = candidate.platforms.filter((p) =>
-      currentApp.platforms.includes(p)
-    );
+    const sharedPlatforms = candidate.platforms.filter((p) => currentApp.platforms.includes(p));
     score += sharedPlatforms.length * 2;
 
     // 3. Lab / Simulation affinity

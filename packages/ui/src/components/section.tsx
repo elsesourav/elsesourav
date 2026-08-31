@@ -84,9 +84,13 @@ export function SectionHeader({
               {caption}
             </span>
           )}
-          <h2 className="text-h2 font-bold text-[hsl(var(--foreground))] tracking-tight leading-tight">{title}</h2>
+          <h2 className="text-h2 font-bold text-[hsl(var(--foreground))] tracking-tight leading-tight">
+            {title}
+          </h2>
           {description && (
-            <p className="text-body text-[hsl(var(--muted-foreground))] leading-relaxed text-sm">{description}</p>
+            <p className="text-body text-[hsl(var(--muted-foreground))] leading-relaxed text-sm">
+              {description}
+            </p>
           )}
         </div>
         {actions && <div className="flex items-center gap-3 shrink-0">{actions}</div>}
@@ -109,9 +113,13 @@ export function SectionHeader({
           {caption}
         </span>
       )}
-      <h2 className="text-h2 font-bold text-[hsl(var(--foreground))] tracking-tight leading-tight">{title}</h2>
+      <h2 className="text-h2 font-bold text-[hsl(var(--foreground))] tracking-tight leading-tight">
+        {title}
+      </h2>
       {description && (
-        <p className="text-body text-[hsl(var(--muted-foreground))] leading-relaxed max-w-2xl">{description}</p>
+        <p className="text-body text-[hsl(var(--muted-foreground))] leading-relaxed max-w-2xl">
+          {description}
+        </p>
       )}
       {actions && <div className="pt-3 flex items-center gap-3">{actions}</div>}
     </div>
@@ -159,9 +167,13 @@ export function PageHeader({
             {badge}
           </div>
         )}
-        <h1 className="text-h1 font-extrabold text-[hsl(var(--foreground))] tracking-tight leading-tight">{title}</h1>
+        <h1 className="text-h1 font-extrabold text-[hsl(var(--foreground))] tracking-tight leading-tight">
+          {title}
+        </h1>
         {description && (
-          <p className="text-body text-[hsl(var(--muted-foreground))] leading-relaxed">{description}</p>
+          <p className="text-body text-[hsl(var(--muted-foreground))] leading-relaxed">
+            {description}
+          </p>
         )}
         {metadata && <div className="pt-1">{metadata}</div>}
       </div>
@@ -170,14 +182,6 @@ export function PageHeader({
   );
 }
 
-export function ActionGroup({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={cn('flex flex-wrap items-center gap-3', className)}
-      {...props}
-    />
-  );
+export function ActionGroup({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return <div className={cn('flex flex-wrap items-center gap-3', className)} {...props} />;
 }

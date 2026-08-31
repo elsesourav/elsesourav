@@ -7,7 +7,8 @@ describe('Public Archive Experience Integration', () => {
       id: 'app-arch-1',
       slug: 'neo',
       name: 'NEO CLI Utility',
-      shortDescription: 'Experimental developer command-line interface tool for personal workspace automation.',
+      shortDescription:
+        'Experimental developer command-line interface tool for personal workspace automation.',
       iconUrl: 'https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=200&q=80',
       primaryCategory: 'Developer Tools',
       categorySlug: 'dev-tools',
@@ -49,7 +50,9 @@ describe('Public Archive Experience Integration', () => {
 
   it('groups archived projects chronologically by year', () => {
     const grouped = mockArchiveApps.reduce<Record<string, AppListItem[]>>((acc, project) => {
-      const yr = project.publishedAt ? new Date(project.publishedAt).getFullYear().toString() : 'Legacy';
+      const yr = project.publishedAt
+        ? new Date(project.publishedAt).getFullYear().toString()
+        : 'Legacy';
       if (!acc[yr]) acc[yr] = [];
       acc[yr].push(project);
       return acc;

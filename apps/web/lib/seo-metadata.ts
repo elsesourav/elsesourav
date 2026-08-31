@@ -18,11 +18,7 @@ export type {
   PageMetadataOptions,
 } from '@elsesourav/config';
 
-export {
-  toAbsoluteUrl,
-  resolveAppShareImage,
-  resolveNoteShareImage,
-} from '@elsesourav/config';
+export { toAbsoluteUrl, resolveAppShareImage, resolveNoteShareImage } from '@elsesourav/config';
 
 export function buildPageMetadata(options: PageMetadataOptions): Metadata {
   return baseBuildPageMetadata(options) as Metadata;

@@ -23,7 +23,9 @@ export default function AppsError({ error, reset }: AppsErrorProps) {
         </div>
 
         <div className="space-y-1.5">
-          <h2 className="text-xl font-bold text-[hsl(var(--foreground))]">Unable to load applications</h2>
+          <h2 className="text-xl font-bold text-[hsl(var(--foreground))]">
+            Unable to load applications
+          </h2>
           <p className="text-xs text-[hsl(var(--muted-foreground))]">
             A temporary service disruption occurred while querying the catalog. Please try again.
           </p>

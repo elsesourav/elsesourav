@@ -196,7 +196,11 @@ export function PublicHeader({ user }: PublicHeaderProps) {
                 <div className="w-px h-5 bg-[hsl(var(--border))] mx-0.5" />
                 {user.role === 'ADMIN' && (
                   <Link href={ROUTES.ADMIN.ROOT}>
-                    <Button variant="ghost" size="sm" className="gap-1.5 text-xs text-amber-400 hover:text-amber-300 hover:bg-amber-950/30">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="gap-1.5 text-xs text-amber-400 hover:text-amber-300 hover:bg-amber-950/30"
+                    >
                       <Shield className="w-3.5 h-3.5" />
                       <span>Admin</span>
                     </Button>
@@ -208,7 +212,11 @@ export function PublicHeader({ user }: PublicHeaderProps) {
               <div className="hidden md:flex items-center gap-2 ml-1">
                 <div className="w-px h-5 bg-[hsl(var(--border))] mx-0.5" />
                 <Link href={ROUTES.LOGIN}>
-                  <Button variant="ghost" size="sm" className="text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] text-xs">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] text-xs"
+                  >
                     Sign In
                   </Button>
                 </Link>
@@ -244,7 +252,11 @@ export function PublicHeader({ user }: PublicHeaderProps) {
                 aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
                 aria-expanded={mobileMenuOpen}
               >
-                {mobileMenuOpen ? <X className="w-5 h-5 text-[hsl(var(--foreground))]" /> : <Menu className="w-5 h-5" />}
+                {mobileMenuOpen ? (
+                  <X className="w-5 h-5 text-[hsl(var(--foreground))]" />
+                ) : (
+                  <Menu className="w-5 h-5" />
+                )}
               </button>
             </div>
           </div>
@@ -285,17 +297,27 @@ export function PublicHeader({ user }: PublicHeaderProps) {
                       }`}
                     >
                       <div className="flex items-center gap-3.5 min-w-0">
-                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-                          isActive ? 'bg-[hsl(var(--primary))]/15 text-[hsl(var(--primary))]' : 'bg-[hsl(var(--surface-subtle))] text-[hsl(var(--muted-foreground))]'
-                        }`}>
+                        <div
+                          className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+                            isActive
+                              ? 'bg-[hsl(var(--primary))]/15 text-[hsl(var(--primary))]'
+                              : 'bg-[hsl(var(--surface-subtle))] text-[hsl(var(--muted-foreground))]'
+                          }`}
+                        >
                           <Icon className="w-4 h-4" />
                         </div>
                         <div className="min-w-0 text-left">
-                          <span className="block text-base font-semibold leading-tight">{link.label}</span>
-                          <span className="block text-xs text-[hsl(var(--muted-foreground))] truncate mt-0.5">{link.description}</span>
+                          <span className="block text-base font-semibold leading-tight">
+                            {link.label}
+                          </span>
+                          <span className="block text-xs text-[hsl(var(--muted-foreground))] truncate mt-0.5">
+                            {link.description}
+                          </span>
                         </div>
                       </div>
-                      <ArrowRight className={`w-4 h-4 shrink-0 transition-transform ${isActive ? 'text-[hsl(var(--primary))] translate-x-0.5' : 'text-[hsl(var(--subtle-foreground))]'}`} />
+                      <ArrowRight
+                        className={`w-4 h-4 shrink-0 transition-transform ${isActive ? 'text-[hsl(var(--primary))] translate-x-0.5' : 'text-[hsl(var(--subtle-foreground))]'}`}
+                      />
                     </Link>
                   );
                 })}
@@ -361,7 +383,11 @@ export function PublicHeader({ user }: PublicHeaderProps) {
           <div className="pt-6 mt-6 border-t border-[hsl(var(--border))]/80 space-y-4">
             {!user ? (
               <div className="space-y-2.5">
-                <Link href={ROUTES.SIGNUP} onClick={() => requestCloseMobileMenu()} className="block">
+                <Link
+                  href={ROUTES.SIGNUP}
+                  onClick={() => requestCloseMobileMenu()}
+                  className="block"
+                >
                   <Button
                     size="lg"
                     className="w-full justify-center bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/90 text-white font-semibold min-h-[48px] rounded-xl shadow-lg active:scale-[0.99] text-base cursor-pointer"
@@ -369,7 +395,11 @@ export function PublicHeader({ user }: PublicHeaderProps) {
                     Get Started
                   </Button>
                 </Link>
-                <Link href={ROUTES.LOGIN} onClick={() => requestCloseMobileMenu()} className="block">
+                <Link
+                  href={ROUTES.LOGIN}
+                  onClick={() => requestCloseMobileMenu()}
+                  className="block"
+                >
                   <Button
                     variant="outline"
                     size="lg"
@@ -381,21 +411,38 @@ export function PublicHeader({ user }: PublicHeaderProps) {
               </div>
             ) : (
               <div className="flex items-center justify-between px-2 text-xs text-[hsl(var(--muted-foreground))]">
-                <span>Signed in as <strong className="text-[hsl(var(--foreground))] font-semibold">{user.displayName || user.email}</strong></span>
+                <span>
+                  Signed in as{' '}
+                  <strong className="text-[hsl(var(--foreground))] font-semibold">
+                    {user.displayName || user.email}
+                  </strong>
+                </span>
               </div>
             )}
 
             <div className="flex items-center justify-between px-2 pt-2 text-[11px] text-[hsl(var(--subtle-foreground))]">
-              <Link href={ROUTES.SUPPORT} onClick={() => requestCloseMobileMenu()} className="hover:text-[hsl(var(--foreground))] transition-colors flex items-center gap-1.5">
+              <Link
+                href={ROUTES.SUPPORT}
+                onClick={() => requestCloseMobileMenu()}
+                className="hover:text-[hsl(var(--foreground))] transition-colors flex items-center gap-1.5"
+              >
                 <LifeBuoy className="w-3.5 h-3.5" />
                 <span>Support</span>
               </Link>
               <span>•</span>
-              <Link href={ROUTES.PRIVACY} onClick={() => requestCloseMobileMenu()} className="hover:text-[hsl(var(--foreground))] transition-colors">
+              <Link
+                href={ROUTES.PRIVACY}
+                onClick={() => requestCloseMobileMenu()}
+                className="hover:text-[hsl(var(--foreground))] transition-colors"
+              >
                 Privacy
               </Link>
               <span>•</span>
-              <Link href={ROUTES.TERMS} onClick={() => requestCloseMobileMenu()} className="hover:text-[hsl(var(--foreground))] transition-colors">
+              <Link
+                href={ROUTES.TERMS}
+                onClick={() => requestCloseMobileMenu()}
+                className="hover:text-[hsl(var(--foreground))] transition-colors"
+              >
                 Terms
               </Link>
             </div>

@@ -167,7 +167,10 @@ export function renderInlineMarkdown(text: string): React.ReactNode {
       );
     } else if (isStrikethrough) {
       nodes.push(
-        <del key={`strike-${keyIndex++}`} className="line-through text-[hsl(var(--muted-foreground))]">
+        <del
+          key={`strike-${keyIndex++}`}
+          className="line-through text-[hsl(var(--muted-foreground))]"
+        >
           {strikeText}
         </del>
       );
@@ -367,7 +370,9 @@ export function MarkdownRenderer({
 
       // 3. Horizontal Rules
       if (line.trim() === '---' || line.trim() === '***' || line.trim() === '___') {
-        result.push(<hr key={`hr-${blockIndex++}`} className="my-8 border-[hsl(var(--border-subtle))]" />);
+        result.push(
+          <hr key={`hr-${blockIndex++}`} className="my-8 border-[hsl(var(--border-subtle))]" />
+        );
         i++;
         continue;
       }
@@ -457,7 +462,10 @@ export function MarkdownRenderer({
                 </thead>
                 <tbody className="divide-y divide-[hsl(var(--border-subtle))] text-[hsl(var(--foreground))]">
                   {dataRows.map((row, rIdx) => (
-                    <tr key={rIdx} className="hover:bg-[hsl(var(--surface-subtle))] transition-colors">
+                    <tr
+                      key={rIdx}
+                      className="hover:bg-[hsl(var(--surface-subtle))] transition-colors"
+                    >
                       {row.map((cell, cIdx) => (
                         <td key={cIdx} className={`px-4 py-2.5 text-${alignRow[cIdx] || 'left'}`}>
                           {renderInlineMarkdown(cell)}
@@ -574,13 +582,19 @@ export function MarkdownRenderer({
 
   if (!blocks) {
     if (fallbackText) {
-      return <div className="py-6 text-center text-xs text-[hsl(var(--muted-foreground))] italic">{fallbackText}</div>;
+      return (
+        <div className="py-6 text-center text-xs text-[hsl(var(--muted-foreground))] italic">
+          {fallbackText}
+        </div>
+      );
     }
     return null;
   }
 
   return (
-    <article className={`max-w-none text-[hsl(var(--foreground))] leading-relaxed break-words ${className}`}>
+    <article
+      className={`max-w-none text-[hsl(var(--foreground))] leading-relaxed break-words ${className}`}
+    >
       {blocks}
     </article>
   );

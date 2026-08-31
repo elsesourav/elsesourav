@@ -43,7 +43,12 @@ describe('Homepage Hero & First-Viewport Architecture', () => {
       'live studio',
     ];
 
-    const currentHeroElements = ['Personal Software Studio', 'Explore Apps', 'About Me', 'Selected Apps'];
+    const currentHeroElements = [
+      'Personal Software Studio',
+      'Explore Apps',
+      'About Me',
+      'Selected Apps',
+    ];
 
     currentHeroElements.forEach((label) => {
       forbiddenDashboardTerms.forEach((term) => {
@@ -54,9 +59,24 @@ describe('Homepage Hero & First-Viewport Architecture', () => {
 
   it('renders authentic visual project composition from canonical data with proper links and zero synthetic statistics', () => {
     const mockFeaturedApps = [
-      { name: 'SpectraLens AI', slug: 'spectralens-ai', version: '1.0.0', primaryCategory: 'AI & Machine Learning' },
-      { name: 'Breakout Ball', slug: 'breakout-ball', version: '1.0.0', primaryCategory: 'Algorithms & Simulations' },
-      { name: 'Img Editor', slug: 'img-editor', version: '1.0.0', primaryCategory: 'Media & Creative Tools' },
+      {
+        name: 'SpectraLens AI',
+        slug: 'spectralens-ai',
+        version: '1.0.0',
+        primaryCategory: 'AI & Machine Learning',
+      },
+      {
+        name: 'Breakout Ball',
+        slug: 'breakout-ball',
+        version: '1.0.0',
+        primaryCategory: 'Algorithms & Simulations',
+      },
+      {
+        name: 'Img Editor',
+        slug: 'img-editor',
+        version: '1.0.0',
+        primaryCategory: 'Media & Creative Tools',
+      },
     ];
 
     expect(mockFeaturedApps[0]!.slug).toBe('spectralens-ai');

@@ -131,7 +131,9 @@ describe('PROMPT 5 OF 5: Final Favicon, SEO, Social Sharing and Release Audit', 
 
       expect(home.alternates.canonical).toBe('https://elsesourav.com/');
       expect(about.alternates.canonical).toBe('https://elsesourav.com/about');
-      expect(help.alternates.canonical).toBe('https://elsesourav.com/help/security/account-security');
+      expect(help.alternates.canonical).toBe(
+        'https://elsesourav.com/help/security/account-security'
+      );
       expect(about.openGraph.type).toBe('profile');
       expect(help.openGraph.type).toBe('article');
       expect(home.openGraph.type).toBe('website');
@@ -197,12 +199,18 @@ describe('PROMPT 5 OF 5: Final Favicon, SEO, Social Sharing and Release Audit', 
     });
 
     it('intercepts accidental localhost/127.0.0.1 development URLs and normalizes them', () => {
-      expect(toAbsoluteUrl('http://localhost:3000/apps/audio-dsp')).toBe('https://elsesourav.com/apps/audio-dsp');
-      expect(toAbsoluteUrl('http://127.0.0.1:8080/notes/post-one')).toBe('https://elsesourav.com/notes/post-one');
+      expect(toAbsoluteUrl('http://localhost:3000/apps/audio-dsp')).toBe(
+        'https://elsesourav.com/apps/audio-dsp'
+      );
+      expect(toAbsoluteUrl('http://127.0.0.1:8080/notes/post-one')).toBe(
+        'https://elsesourav.com/notes/post-one'
+      );
     });
 
     it('preserves valid external HTTPS URLs', () => {
-      expect(toAbsoluteUrl('https://images.unsplash.com/photo-123')).toBe('https://images.unsplash.com/photo-123');
+      expect(toAbsoluteUrl('https://images.unsplash.com/photo-123')).toBe(
+        'https://images.unsplash.com/photo-123'
+      );
     });
   });
 

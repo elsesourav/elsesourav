@@ -89,7 +89,10 @@ describe('Public Apps Listing Integration', () => {
     } as unknown as AppRepository;
 
     const queryService = new AppQueryService(mockRepo);
-    const sortedByNewest = await queryService.listPublicApps({ sortField: 'publishedAt', sortDirection: 'desc' });
+    const sortedByNewest = await queryService.listPublicApps({
+      sortField: 'publishedAt',
+      sortDirection: 'desc',
+    });
     expect(sortedByNewest).toHaveLength(2);
     expect(mockRepo.listPublic).toHaveBeenCalledWith(
       expect.objectContaining({ sortField: 'publishedAt', sortDirection: 'desc' })

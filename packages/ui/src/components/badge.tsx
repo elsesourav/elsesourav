@@ -3,27 +3,17 @@ import { cn } from '../lib/utils';
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?:
-    | 'default'
-    | 'primary'
-    | 'secondary'
-    | 'success'
-    | 'warning'
-    | 'error'
-    | 'info'
-    | 'outline';
+    'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'outline';
   size?: 'sm' | 'md';
 }
 
-export function Badge({
-  className,
-  variant = 'default',
-  size = 'md',
-  ...props
-}: BadgeProps) {
+export function Badge({ className, variant = 'default', size = 'md', ...props }: BadgeProps) {
   const variants = {
-    default: 'bg-[hsl(var(--secondary))] text-[hsl(var(--secondary-foreground))] border-[hsl(var(--border))]',
+    default:
+      'bg-[hsl(var(--secondary))] text-[hsl(var(--secondary-foreground))] border-[hsl(var(--border))]',
     primary: 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border-indigo-500/30',
-    secondary: 'bg-[hsl(var(--surface-subtle))] text-[hsl(var(--muted-foreground))] border-[hsl(var(--border-subtle))]',
+    secondary:
+      'bg-[hsl(var(--surface-subtle))] text-[hsl(var(--muted-foreground))] border-[hsl(var(--border-subtle))]',
     success: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30',
     warning: 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30',
     error: 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/30',

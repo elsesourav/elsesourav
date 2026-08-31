@@ -69,13 +69,18 @@ export function DialogContent({
 }
 
 export function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('flex flex-col space-y-1.5 text-left mb-4 pr-8', className)} {...props} />;
+  return (
+    <div className={cn('flex flex-col space-y-1.5 text-left mb-4 pr-8', className)} {...props} />
+  );
 }
 
 export function DialogTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h3
-      className={cn('text-lg sm:text-xl font-semibold leading-tight tracking-tight text-[hsl(var(--foreground))]', className)}
+      className={cn(
+        'text-lg sm:text-xl font-semibold leading-tight tracking-tight text-[hsl(var(--foreground))]',
+        className
+      )}
       {...props}
     />
   );
@@ -85,7 +90,12 @@ export function DialogDescription({
   className,
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn('text-sm text-[hsl(var(--muted-foreground))] leading-relaxed', className)} {...props} />;
+  return (
+    <p
+      className={cn('text-sm text-[hsl(var(--muted-foreground))] leading-relaxed', className)}
+      {...props}
+    />
+  );
 }
 
 export function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {

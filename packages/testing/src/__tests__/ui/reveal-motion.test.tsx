@@ -57,4 +57,3 @@ describe('Global Scroll-Reveal Motion System', () => {
     expect(container.textContent).toContain('Fade In Content');
   });
 });
-

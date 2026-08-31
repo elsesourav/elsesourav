@@ -20,13 +20,17 @@ export default function ForgotPasswordPage() {
   return (
     <Card className="w-full max-w-md border-[hsl(var(--border))] bg-[hsl(var(--card))] backdrop-blur-md shadow-2xl rounded-3xl">
       <CardHeader className="text-center pb-2">
-        <CardTitle className="text-2xl font-bold text-[hsl(var(--foreground))]">Reset Password</CardTitle>
+        <CardTitle className="text-2xl font-bold text-[hsl(var(--foreground))]">
+          Reset Password
+        </CardTitle>
         <CardDescription className="text-[hsl(var(--muted-foreground))]">
           Enter your registered email address or username to receive a password reset link
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <React.Suspense fallback={<div className="h-48 rounded-2xl bg-zinc-900/30 animate-pulse" />}>
+        <React.Suspense
+          fallback={<div className="h-48 rounded-2xl bg-zinc-900/30 animate-pulse" />}
+        >
           <ForgotPasswordForm />
         </React.Suspense>
       </CardContent>

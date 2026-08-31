@@ -1,10 +1,10 @@
 'use client';
 
-import * as React from 'react';
-import Link from 'next/link';
-import { User, LogOut, Shield, AtSign } from 'lucide-react';
 import type { AuthenticatedUser } from '@elsesourav/auth';
 import { UserAvatar } from '@elsesourav/ui';
+import { AtSign, LogOut, Shield, User } from 'lucide-react';
+import Link from 'next/link';
+import * as React from 'react';
 
 interface UserAvatarMenuProps {
   user: AuthenticatedUser;
@@ -17,15 +17,18 @@ export function UserAvatarMenu({ user, hasImportantAlert = false }: UserAvatarMe
   const menuRef = React.useRef<HTMLDivElement>(null);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
 
-  const requestClose = React.useCallback((callback?: () => void) => {
-    if (isClosing) return;
-    setIsClosing(true);
-    setTimeout(() => {
-      setIsClosing(false);
-      setOpen(false);
-      callback?.();
-    }, 130);
-  }, [isClosing]);
+  const requestClose = React.useCallback(
+    (callback?: () => void) => {
+      if (isClosing) return;
+      setIsClosing(true);
+      setTimeout(() => {
+        setIsClosing(false);
+        setOpen(false);
+        callback?.();
+      }, 130);
+    },
+    [isClosing]
+  );
 
   const handleToggle = () => {
     if (open) {
@@ -70,8 +73,10 @@ export function UserAvatarMenu({ user, hasImportantAlert = false }: UserAvatarMe
 
   const rawUsername =
     (user as { username?: string }).username ||
-    (user as unknown as { user_metadata?: { username?: string; user_name?: string } }).user_metadata?.username ||
-    (user as unknown as { user_metadata?: { username?: string; user_name?: string } }).user_metadata?.user_name ||
+    (user as unknown as { user_metadata?: { username?: string; user_name?: string } }).user_metadata
+      ?.username ||
+    (user as unknown as { user_metadata?: { username?: string; user_name?: string } }).user_metadata
+      ?.user_name ||
     null;
 
   return (
@@ -149,7 +154,9 @@ export function UserAvatarMenu({ user, hasImportantAlert = false }: UserAvatarMe
               <Shield className="w-3.5 h-3.5 text-amber-500" />
               <div className="flex flex-col">
                 <span className="font-medium">Admin Portal</span>
-                <span className="text-[10px] text-amber-600/70 dark:text-amber-400/70">System management</span>
+                <span className="text-[10px] text-amber-600/70 dark:text-amber-400/70">
+                  System management
+                </span>
               </div>
             </Link>
           )}

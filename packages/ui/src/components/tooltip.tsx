@@ -10,12 +10,7 @@ export interface TooltipProps {
   className?: string;
 }
 
-export function Tooltip({
-  content,
-  children,
-  side = 'top',
-  className,
-}: TooltipProps) {
+export function Tooltip({ content, children, side = 'top', className }: TooltipProps) {
   const [isVisible, setIsVisible] = React.useState(false);
 
   const sideStyles = {

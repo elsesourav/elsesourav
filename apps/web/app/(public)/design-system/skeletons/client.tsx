@@ -29,7 +29,9 @@ export function SkeletonShowcaseClient() {
           </div>
 
           <div className="flex items-center gap-2 overflow-x-auto pb-1">
-            <span className="text-xs font-mono text-[hsl(var(--subtle-foreground))] uppercase">View:</span>
+            <span className="text-xs font-mono text-[hsl(var(--subtle-foreground))] uppercase">
+              View:
+            </span>
           </div>
         </div>
 
@@ -46,39 +48,66 @@ export function SkeletonShowcaseClient() {
             <TabsTrigger value="admin">Admin Dashboard</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="home" className="rounded-3xl border border-[hsl(var(--border))] overflow-hidden bg-[hsl(var(--surface-subtle))]/20 p-2 sm:p-4">
+          <TabsContent
+            value="home"
+            className="rounded-3xl border border-[hsl(var(--border))] overflow-hidden bg-[hsl(var(--surface-subtle))]/20 p-2 sm:p-4"
+          >
             <HomepageSkeleton />
           </TabsContent>
 
-          <TabsContent value="apps" className="rounded-3xl border border-[hsl(var(--border))] overflow-hidden bg-[hsl(var(--surface-subtle))]/20 p-2 sm:p-4">
+          <TabsContent
+            value="apps"
+            className="rounded-3xl border border-[hsl(var(--border))] overflow-hidden bg-[hsl(var(--surface-subtle))]/20 p-2 sm:p-4"
+          >
             <AppsLoading />
           </TabsContent>
 
-          <TabsContent value="app-detail" className="rounded-3xl border border-[hsl(var(--border))] overflow-hidden bg-[hsl(var(--surface-subtle))]/20 p-2 sm:p-4">
+          <TabsContent
+            value="app-detail"
+            className="rounded-3xl border border-[hsl(var(--border))] overflow-hidden bg-[hsl(var(--surface-subtle))]/20 p-2 sm:p-4"
+          >
             <AppDetailLoading />
           </TabsContent>
 
-          <TabsContent value="notes" className="rounded-3xl border border-[hsl(var(--border))] overflow-hidden bg-[hsl(var(--surface-subtle))]/20 p-2 sm:p-4">
+          <TabsContent
+            value="notes"
+            className="rounded-3xl border border-[hsl(var(--border))] overflow-hidden bg-[hsl(var(--surface-subtle))]/20 p-2 sm:p-4"
+          >
             <BlogLoading />
           </TabsContent>
 
-          <TabsContent value="note-detail" className="rounded-3xl border border-[hsl(var(--border))] overflow-hidden bg-[hsl(var(--surface-subtle))]/20 p-2 sm:p-4">
+          <TabsContent
+            value="note-detail"
+            className="rounded-3xl border border-[hsl(var(--border))] overflow-hidden bg-[hsl(var(--surface-subtle))]/20 p-2 sm:p-4"
+          >
             <BlogPostLoading />
           </TabsContent>
 
-          <TabsContent value="about" className="rounded-3xl border border-[hsl(var(--border))] overflow-hidden bg-[hsl(var(--surface-subtle))]/20 p-2 sm:p-4">
+          <TabsContent
+            value="about"
+            className="rounded-3xl border border-[hsl(var(--border))] overflow-hidden bg-[hsl(var(--surface-subtle))]/20 p-2 sm:p-4"
+          >
             <AboutLoading />
           </TabsContent>
 
-          <TabsContent value="help" className="rounded-3xl border border-[hsl(var(--border))] overflow-hidden bg-[hsl(var(--surface-subtle))]/20 p-2 sm:p-4">
+          <TabsContent
+            value="help"
+            className="rounded-3xl border border-[hsl(var(--border))] overflow-hidden bg-[hsl(var(--surface-subtle))]/20 p-2 sm:p-4"
+          >
             <HelpLoading />
           </TabsContent>
 
-          <TabsContent value="user" className="rounded-3xl border border-[hsl(var(--border))] overflow-hidden bg-[hsl(var(--surface-subtle))]/20 p-2 sm:p-4">
+          <TabsContent
+            value="user"
+            className="rounded-3xl border border-[hsl(var(--border))] overflow-hidden bg-[hsl(var(--surface-subtle))]/20 p-2 sm:p-4"
+          >
             <UserLoading />
           </TabsContent>
 
-          <TabsContent value="admin" className="rounded-3xl border border-[hsl(var(--border))] overflow-hidden bg-[hsl(var(--surface-subtle))]/20 p-2 sm:p-4">
+          <TabsContent
+            value="admin"
+            className="rounded-3xl border border-[hsl(var(--border))] overflow-hidden bg-[hsl(var(--surface-subtle))]/20 p-2 sm:p-4"
+          >
             <AdminLoading />
           </TabsContent>
         </Tabs>

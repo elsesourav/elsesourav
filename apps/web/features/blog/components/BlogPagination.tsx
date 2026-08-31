@@ -34,8 +34,8 @@ export function BlogPagination({ currentPage, totalPages, totalMatches }: BlogPa
     >
       <div className="text-xs text-[hsl(var(--muted-foreground))]">
         Page <span className="font-semibold text-[hsl(var(--foreground))]">{currentPage}</span> of{' '}
-        <span className="font-semibold text-[hsl(var(--foreground))]">{totalPages}</span> ({totalMatches} total
-        notes)
+        <span className="font-semibold text-[hsl(var(--foreground))]">{totalPages}</span> (
+        {totalMatches} total notes)
       </div>
 
       <div className="flex items-center gap-1.5">

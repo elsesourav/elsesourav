@@ -52,11 +52,32 @@ describe('SiteService & Unified Identity Architecture (Prompt 03)', () => {
         creator_principles_json: JSON.stringify(['Simplicity first', 'Zero technical debt']),
         creator_focus_json: JSON.stringify(['Distributed Systems', 'UI Architecture']),
         social_links_json: JSON.stringify([
-          { id: '1', label: 'GitHub', url: 'https://github.com/custom', platform: 'github', priority: 0, isActive: true },
-          { id: '2', label: 'X', url: 'https://x.com/custom', platform: 'twitter', priority: 1, isActive: true },
+          {
+            id: '1',
+            label: 'GitHub',
+            url: 'https://github.com/custom',
+            platform: 'github',
+            priority: 0,
+            isActive: true,
+          },
+          {
+            id: '2',
+            label: 'X',
+            url: 'https://x.com/custom',
+            platform: 'twitter',
+            priority: 1,
+            isActive: true,
+          },
         ]),
         contact_methods_json: JSON.stringify([
-          { id: 'c1', label: 'Direct Email', value: 'hello@custom.com', type: 'email', priority: 0, isActive: true },
+          {
+            id: 'c1',
+            label: 'Direct Email',
+            value: 'hello@custom.com',
+            type: 'email',
+            priority: 0,
+            isActive: true,
+          },
         ]),
         footer_copyright: '© 2026 ElseSourav Custom',
         footer_text: 'Built for builders.',
@@ -64,7 +85,14 @@ describe('SiteService & Unified Identity Architecture (Prompt 03)', () => {
         footer_show_socials: 'true',
         footer_show_back_to_top: 'false',
         footer_links_json: JSON.stringify([
-          { id: 'f1', label: 'Privacy Portal', url: '/privacy', isExternal: false, priority: 0, isActive: true },
+          {
+            id: 'f1',
+            label: 'Privacy Portal',
+            url: '/privacy',
+            isExternal: false,
+            priority: 0,
+            isActive: true,
+          },
         ]),
       }),
     } as unknown as AdminRepository;

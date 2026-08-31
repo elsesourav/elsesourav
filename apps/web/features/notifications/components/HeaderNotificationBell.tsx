@@ -22,11 +22,7 @@ export function HeaderNotificationBell({ initialUnreadCount = 0 }: HeaderNotific
           ? 'bg-accent text-foreground font-semibold shadow-inner'
           : 'text-muted-foreground hover:text-foreground hover:bg-accent/60'
       }`}
-      aria-label={
-        unreadCount > 0
-          ? `Notifications, ${unreadCount} unread`
-          : 'Notifications'
-      }
+      aria-label={unreadCount > 0 ? `Notifications, ${unreadCount} unread` : 'Notifications'}
       aria-current={isActive ? 'page' : undefined}
     >
       <Bell className="w-4 h-4" />

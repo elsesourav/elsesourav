@@ -77,7 +77,9 @@ describe('Current Focus / Now Architecture (Prompt 23)', () => {
     expect(partialData.writing).toBeNull();
 
     // Verify empty state fallback logic
-    const hasAnyActive = Boolean(partialData.building || partialData.exploring || partialData.writing);
+    const hasAnyActive = Boolean(
+      partialData.building || partialData.exploring || partialData.writing
+    );
     expect(hasAnyActive).toBe(true);
   });
 
@@ -94,7 +96,8 @@ describe('Current Focus / Now Architecture (Prompt 23)', () => {
 
   it('contains zero artificial status slogans or fake activity meters', () => {
     const forbiddenPhrases = ['working 24/7', 'always shipping', 'building the future'];
-    const renderedCopy = `${mockPublishedApp.shortDescription} ${mockLabApp.shortDescription} ${mockNote.excerpt}`.toLowerCase();
+    const renderedCopy =
+      `${mockPublishedApp.shortDescription} ${mockLabApp.shortDescription} ${mockNote.excerpt}`.toLowerCase();
 
     forbiddenPhrases.forEach((phrase) => {
       expect(renderedCopy.includes(phrase)).toBe(false);

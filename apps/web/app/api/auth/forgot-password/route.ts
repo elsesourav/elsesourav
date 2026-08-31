@@ -39,7 +39,8 @@ export async function POST(request: NextRequest) {
         // Return generic success to prevent email/username enumeration attacks
         return NextResponse.json({
           success: true,
-          message: 'If an account matches that email or username, a reset link has been dispatched.',
+          message:
+            'If an account matches that email or username, a reset link has been dispatched.',
         });
       }
     }
@@ -70,7 +71,9 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'An error occurred processing your request' },
+      {
+        error: error instanceof Error ? error.message : 'An error occurred processing your request',
+      },
       { status: 500 }
     );
   }

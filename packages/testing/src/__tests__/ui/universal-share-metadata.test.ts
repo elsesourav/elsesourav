@@ -13,8 +13,12 @@ import {
 describe('Universal Content-Aware Share Preview Metadata System', () => {
   describe('toAbsoluteUrl helper', () => {
     it('prepends canonical SITE_CONFIG.url to relative paths', () => {
-      expect(toAbsoluteUrl('/apps/spectralens-ai')).toBe('https://elsesourav.com/apps/spectralens-ai');
-      expect(toAbsoluteUrl('notes/nextjs-deepdive')).toBe('https://elsesourav.com/notes/nextjs-deepdive');
+      expect(toAbsoluteUrl('/apps/spectralens-ai')).toBe(
+        'https://elsesourav.com/apps/spectralens-ai'
+      );
+      expect(toAbsoluteUrl('notes/nextjs-deepdive')).toBe(
+        'https://elsesourav.com/notes/nextjs-deepdive'
+      );
     });
 
     it('preserves valid absolute HTTPS URLs', () => {
@@ -99,14 +103,18 @@ describe('Universal Content-Aware Share Preview Metadata System', () => {
       expect(meta.alternates?.canonical).toBe('https://elsesourav.com/apps/spectralens-ai');
 
       // Open Graph
-      expect(meta.openGraph?.title).toBe(`SpectraLens AI — ${SITE_CONFIG.name} | ${SITE_CONFIG.name}`);
+      expect(meta.openGraph?.title).toBe(
+        `SpectraLens AI — ${SITE_CONFIG.name} | ${SITE_CONFIG.name}`
+      );
       expect(meta.openGraph?.url).toBe('https://elsesourav.com/apps/spectralens-ai');
       expect(meta.openGraph?.type).toBe('article');
       expect(meta.openGraph?.images).toBeDefined();
 
       // Twitter
       expect(meta.twitter?.card).toBe('summary_large_image');
-      expect(meta.twitter?.title).toBe(`SpectraLens AI — ${SITE_CONFIG.name} | ${SITE_CONFIG.name}`);
+      expect(meta.twitter?.title).toBe(
+        `SpectraLens AI — ${SITE_CONFIG.name} | ${SITE_CONFIG.name}`
+      );
     });
   });
 
@@ -122,8 +130,12 @@ describe('Universal Content-Aware Share Preview Metadata System', () => {
         updatedAt: new Date('2026-08-29T15:00:00Z'),
       });
 
-      expect(meta.title).toBe(`Understanding React Server Components Architecture — ${SITE_CONFIG.name} Journal`);
-      expect(meta.description).toBe('A deep exploration into streaming SSR and server action lifecycles.');
+      expect(meta.title).toBe(
+        `Understanding React Server Components Architecture — ${SITE_CONFIG.name} Journal`
+      );
+      expect(meta.description).toBe(
+        'A deep exploration into streaming SSR and server action lifecycles.'
+      );
       expect(meta.alternates?.canonical).toBe('https://elsesourav.com/notes/rsc-architecture');
 
       expect(meta.openGraph?.type).toBe('article');
@@ -141,7 +153,9 @@ describe('Universal Content-Aware Share Preview Metadata System', () => {
         path: '/',
       });
 
-      expect(homeMeta.title).toBe(`${SITE_CONFIG.name} — Personal Software Studio & Digital Archive`);
+      expect(homeMeta.title).toBe(
+        `${SITE_CONFIG.name} — Personal Software Studio & Digital Archive`
+      );
       expect(homeMeta.alternates?.canonical).toBe('https://elsesourav.com/');
       expect(homeMeta.robots).toEqual({ index: true, follow: true });
 
@@ -174,7 +188,9 @@ describe('Universal Content-Aware Share Preview Metadata System', () => {
         summary: 'Step-by-step resolution for authentication cookie states.',
       });
 
-      expect(helpMeta.title).toBe(`Authentication & Session Troubleshooting — ${SITE_CONFIG.name} Help`);
+      expect(helpMeta.title).toBe(
+        `Authentication & Session Troubleshooting — ${SITE_CONFIG.name} Help`
+      );
       expect(helpMeta.alternates?.canonical).toBe(
         'https://elsesourav.com/help/troubleshooting/auth-troubleshooting'
       );

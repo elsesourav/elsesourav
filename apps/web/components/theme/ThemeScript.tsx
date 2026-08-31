@@ -8,10 +8,5 @@
 export function ThemeScript() {
   const themeScript = `(function(){try{var urlParams=new URLSearchParams(window.location.search);var qTheme=urlParams.get('theme');var t=qTheme||localStorage.getItem('theme');var d=document.documentElement;var c=d.classList;c.remove('dark','light');if(t==='light'){c.add('light');d.setAttribute('data-theme','light')}else if(t==='system'){var m=window.matchMedia('(prefers-color-scheme:dark)').matches;c.add(m?'dark':'light');d.setAttribute('data-theme',m?'dark':'light')}else{c.add('dark');d.setAttribute('data-theme','dark')}}catch(e){d.classList.add('dark');d.setAttribute('data-theme','dark')}})();`;
 
-  return (
-    <script
-      dangerouslySetInnerHTML={{ __html: themeScript }}
-      suppressHydrationWarning
-    />
-  );
+  return <script dangerouslySetInnerHTML={{ __html: themeScript }} suppressHydrationWarning />;
 }

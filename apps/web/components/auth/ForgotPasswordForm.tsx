@@ -33,7 +33,8 @@ export function ForgotPasswordForm() {
       const data = await res.json();
       if (res.ok && data.success) {
         setSuccessMessage(
-          data.message || 'If an account exists, a password reset link has been dispatched to your email.'
+          data.message ||
+            'If an account exists, a password reset link has been dispatched to your email.'
         );
         setIdentifier('');
       } else {
@@ -56,13 +57,17 @@ export function ForgotPasswordForm() {
               <p className="font-semibold text-emerald-200">Reset Email Dispatched</p>
               <p className="leading-relaxed">{successMessage}</p>
               <p className="text-[11px] text-emerald-400/80 pt-1">
-                Please check your inbox (and spam folder) for the password reset instructions from <strong>elsesourav.auth@gmail.com</strong>.
+                Please check your inbox (and spam folder) for the password reset instructions from{' '}
+                <strong>elsesourav.auth@gmail.com</strong>.
               </p>
             </div>
           </div>
 
           <Link href="/login">
-            <Button variant="outline" className="w-full text-xs border-zinc-800 text-zinc-300 gap-1.5 rounded-xl">
+            <Button
+              variant="outline"
+              className="w-full text-xs border-zinc-800 text-zinc-300 gap-1.5 rounded-xl"
+            >
               <span>Return to Sign In</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Button>
@@ -77,7 +82,11 @@ export function ForgotPasswordForm() {
           )}
 
           <div className="space-y-1.5">
-            <Label htmlFor="forgot-email" required className="text-xs text-[hsl(var(--foreground))]">
+            <Label
+              htmlFor="forgot-email"
+              required
+              className="text-xs text-[hsl(var(--foreground))]"
+            >
               Email Address or Username
             </Label>
             <div className="relative">

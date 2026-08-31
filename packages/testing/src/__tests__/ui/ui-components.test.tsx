@@ -445,7 +445,9 @@ describe('Navigation & Data Display Components', () => {
           actions={
             <ActionGroup>
               <Button size="sm">Launch App</Button>
-              <Button size="sm" variant="outline">Docs</Button>
+              <Button size="sm" variant="outline">
+                Docs
+              </Button>
             </ActionGroup>
           }
           metadata={

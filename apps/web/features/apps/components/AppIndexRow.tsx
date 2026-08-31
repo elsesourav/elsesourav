@@ -77,9 +77,7 @@ export function AppIndexRow({ app, index }: AppIndexRowProps) {
                 </span>
               )}
             </div>
-            <p className="text-xs text-zinc-400 truncate leading-relaxed">
-              {app.shortDescription}
-            </p>
+            <p className="text-xs text-zinc-400 truncate leading-relaxed">{app.shortDescription}</p>
           </div>
         </div>
 

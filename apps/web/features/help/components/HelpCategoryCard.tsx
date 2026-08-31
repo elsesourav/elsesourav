@@ -20,7 +20,10 @@ export function HelpCategoryCard({ category }: HelpCategoryCardProps) {
           <div className="w-10 h-10 rounded-2xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
             <Folder className="w-5 h-5" />
           </div>
-          <Badge variant="info" className="text-[10px] px-2.5 py-0.5 bg-[hsl(var(--surface-subtle))] text-[hsl(var(--muted-foreground))]">
+          <Badge
+            variant="info"
+            className="text-[10px] px-2.5 py-0.5 bg-[hsl(var(--surface-subtle))] text-[hsl(var(--muted-foreground))]"
+          >
             {totalCount} {totalCount === 1 ? 'Article' : 'Articles'}
           </Badge>
         </div>

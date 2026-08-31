@@ -15,11 +15,13 @@ export interface RevealProps extends React.HTMLAttributes<HTMLDivElement> {
   readonly className?: string;
 }
 
-export function useScrollReveal(options: {
-  threshold?: number;
-  once?: boolean;
-  rootMargin?: string;
-} = {}) {
+export function useScrollReveal(
+  options: {
+    threshold?: number;
+    once?: boolean;
+    rootMargin?: string;
+  } = {}
+) {
   const { threshold = 0.05, once = true, rootMargin = '50px 0px 50px 0px' } = options;
   const ref = useRef<HTMLDivElement | null>(null);
   const [isRevealed, setIsRevealed] = useState(false);

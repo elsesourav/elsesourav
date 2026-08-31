@@ -5,7 +5,9 @@ import type { User } from '@elsesourav/types';
 
 const userRepo = new UserRepository();
 
-export async function getUserAccountData(): Promise<(User & { provider?: 'email' | 'google' | 'github' }) | null> {
+export async function getUserAccountData(): Promise<
+  (User & { provider?: 'email' | 'google' | 'github' }) | null
+> {
   const cookieStore = await cookies();
   const session = await getServerSession({
     getAll: () => cookieStore.getAll(),

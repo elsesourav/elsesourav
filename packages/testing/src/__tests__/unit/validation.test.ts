@@ -96,8 +96,15 @@ describe('Validation Schemas Contract Test', () => {
   });
 
   it('validates UniversalLoginSchema with email or username', () => {
-    expect(UniversalLoginSchema.safeParse({ identifier: 'user@example.com', password: 'password123' }).success).toBe(true);
-    expect(UniversalLoginSchema.safeParse({ identifier: 'elsesourav', password: 'password123' }).success).toBe(true);
-    expect(UniversalLoginSchema.safeParse({ identifier: 'usr', password: 'password123' }).success).toBe(false);
+    expect(
+      UniversalLoginSchema.safeParse({ identifier: 'user@example.com', password: 'password123' })
+        .success
+    ).toBe(true);
+    expect(
+      UniversalLoginSchema.safeParse({ identifier: 'elsesourav', password: 'password123' }).success
+    ).toBe(true);
+    expect(
+      UniversalLoginSchema.safeParse({ identifier: 'usr', password: 'password123' }).success
+    ).toBe(false);
   });
 });

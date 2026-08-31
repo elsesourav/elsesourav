@@ -65,7 +65,9 @@ describe('Share Experience & Canonical URL Handling (Prompt 4 of 5)', () => {
       };
 
       expect(sharePayload.title).toBe('Building WASM Pipelines with Rust and Next.js');
-      expect(sharePayload.text).toBe('How we achieved sub-millisecond tensor processing in the browser.');
+      expect(sharePayload.text).toBe(
+        'How we achieved sub-millisecond tensor processing in the browser.'
+      );
       expect(sharePayload.url).toBe('https://elsesourav.com/notes/wasm-rust-nextjs');
     });
   });

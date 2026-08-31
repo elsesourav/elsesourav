@@ -23,7 +23,9 @@ export default function HelpError({
         </div>
 
         <div className="space-y-2">
-          <h2 className="text-xl font-bold text-[hsl(var(--foreground))]">Unable to load help documentation</h2>
+          <h2 className="text-xl font-bold text-[hsl(var(--foreground))]">
+            Unable to load help documentation
+          </h2>
           <p className="text-xs text-[hsl(var(--muted-foreground))] leading-relaxed">
             We encountered a problem while retrieving knowledge base articles. Please try
             refreshing.

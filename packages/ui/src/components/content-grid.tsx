@@ -36,10 +36,7 @@ export function ContentGrid({
   };
 
   return (
-    <Component
-      className={cn('grid', columnStyles[columns], gapStyles[gap], className)}
-      {...props}
-    >
+    <Component className={cn('grid', columnStyles[columns], gapStyles[gap], className)} {...props}>
       {children}
     </Component>
   );

@@ -100,7 +100,8 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
         '@type': 'CollectionPage',
         '@id': `${SITE_CONFIG.url}/apps/#collection`,
         name: 'Apps & Software Catalog',
-        description: 'Explore the complete collection of software, web applications, and developer utilities.',
+        description:
+          'Explore the complete collection of software, web applications, and developer utilities.',
         url: `${SITE_CONFIG.url}/apps`,
         publisher: {
           '@type': 'Person',
@@ -177,7 +178,10 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
               <section aria-labelledby="spotlight-apps-heading" className="space-y-4">
                 <div className="flex items-center gap-2 text-xs font-mono text-[hsl(var(--muted-foreground))] uppercase tracking-wider font-semibold pb-2 border-b border-[hsl(var(--border-subtle))]">
                   <Sparkles className="w-4 h-4 text-indigo-500" />
-                  <h2 id="spotlight-apps-heading" className="text-xs font-mono text-[hsl(var(--muted-foreground))] uppercase tracking-wider font-semibold">
+                  <h2
+                    id="spotlight-apps-heading"
+                    className="text-xs font-mono text-[hsl(var(--muted-foreground))] uppercase tracking-wider font-semibold"
+                  >
                     Featured Spotlight
                   </h2>
                 </div>
@@ -194,8 +198,13 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
               <div className="flex items-center justify-between pb-2 border-b border-[hsl(var(--border-subtle))] text-xs font-mono text-[hsl(var(--muted-foreground))]">
                 <div className="flex items-center gap-2 uppercase tracking-wider font-semibold">
                   <LayoutGrid className="w-4 h-4 text-indigo-500" />
-                  <h2 id="catalog-apps-heading" className="text-xs font-mono text-[hsl(var(--muted-foreground))] uppercase tracking-wider font-semibold">
-                    {hasFilters ? `Filtered Projects (${searchResult.totalCount})` : 'All Software & Projects'}
+                  <h2
+                    id="catalog-apps-heading"
+                    className="text-xs font-mono text-[hsl(var(--muted-foreground))] uppercase tracking-wider font-semibold"
+                  >
+                    {hasFilters
+                      ? `Filtered Projects (${searchResult.totalCount})`
+                      : 'All Software & Projects'}
                   </h2>
                 </div>
                 <span className="text-[hsl(var(--subtle-foreground))]">
@@ -203,12 +212,19 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
                 </span>
               </div>
 
-              <RevealGroup staggerDelay={0.04} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <RevealGroup
+                staggerDelay={0.04}
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+              >
                 {catalogItems.map((app, idx) => (
                   <AppCard
                     key={app.id}
                     app={app}
-                    index={(searchResult.page - 1) * 12 + idx + (isDefaultView ? spotlightItems.length : 0)}
+                    index={
+                      (searchResult.page - 1) * 12 +
+                      idx +
+                      (isDefaultView ? spotlightItems.length : 0)
+                    }
                   />
                 ))}
               </RevealGroup>
@@ -243,7 +259,8 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
                   The Archive
                 </h3>
                 <p className="text-xs text-[hsl(var(--muted-foreground))] leading-relaxed">
-                  Chronological timeline of earlier projects, legacy utilities, and exploratory implementations.
+                  Chronological timeline of earlier projects, legacy utilities, and exploratory
+                  implementations.
                 </p>
               </div>
               <span className="text-xs font-mono text-indigo-600 dark:text-indigo-400 flex items-center gap-1 pt-4 group-hover:translate-x-1 transition-transform">
@@ -265,7 +282,8 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
                   Engineering Field Notes
                 </h3>
                 <p className="text-xs text-[hsl(var(--muted-foreground))] leading-relaxed">
-                  Technical write-ups, architecture decisions, postmortems, and lessons learned while building.
+                  Technical write-ups, architecture decisions, postmortems, and lessons learned
+                  while building.
                 </p>
               </div>
               <span className="text-xs font-mono text-cyan-600 dark:text-cyan-400 flex items-center gap-1 pt-4 group-hover:translate-x-1 transition-transform">

@@ -51,7 +51,7 @@ export function HeroProjectVisual({ apps }: HeroProjectVisualProps) {
             </div>
 
             {/* Visual Cover / Interface Preview */}
-            {(flagshipApp.featuredImageUrl || flagshipApp.iconUrl) ? (
+            {flagshipApp.featuredImageUrl || flagshipApp.iconUrl ? (
               <div className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border-subtle))] mb-3.5 shadow-inner">
                 <Image
                   src={flagshipApp.featuredImageUrl || flagshipApp.iconUrl}
@@ -86,7 +86,11 @@ export function HeroProjectVisual({ apps }: HeroProjectVisualProps) {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 min-w-0">
-                    <span role="heading" aria-level={3} className="font-bold text-base sm:text-lg text-[hsl(var(--foreground))] group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors truncate block">
+                    <span
+                      role="heading"
+                      aria-level={3}
+                      className="font-bold text-base sm:text-lg text-[hsl(var(--foreground))] group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors truncate block"
+                    >
                       {flagshipApp.name}
                     </span>
                     {flagshipApp.currentVersion && (
@@ -144,7 +148,11 @@ export function HeroProjectVisual({ apps }: HeroProjectVisualProps) {
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-1">
-                      <span role="heading" aria-level={3} className="font-bold text-sm text-[hsl(var(--foreground))] group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors truncate block">
+                      <span
+                        role="heading"
+                        aria-level={3}
+                        className="font-bold text-sm text-[hsl(var(--foreground))] group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors truncate block"
+                      >
                         {secondaryApp.name}
                       </span>
                       <ArrowUpRight className="w-3.5 h-3.5 text-[hsl(var(--muted-foreground))] group-hover:text-cyan-600 dark:group-hover:text-cyan-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0" />
@@ -181,7 +189,11 @@ export function HeroProjectVisual({ apps }: HeroProjectVisualProps) {
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-1">
-                      <span role="heading" aria-level={3} className="font-bold text-sm text-[hsl(var(--foreground))] group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors truncate block">
+                      <span
+                        role="heading"
+                        aria-level={3}
+                        className="font-bold text-sm text-[hsl(var(--foreground))] group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors truncate block"
+                      >
                         {tertiaryApp.name}
                       </span>
                       <ArrowUpRight className="w-3.5 h-3.5 text-[hsl(var(--muted-foreground))] group-hover:text-purple-600 dark:group-hover:text-purple-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0" />

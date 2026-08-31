@@ -80,7 +80,8 @@ export default async function AdminDashboardPage() {
             </div>
             <div>
               <h3 className="text-xs sm:text-sm font-semibold text-amber-200">
-                Action Required: {stats.openTickets} Unresolved Support {stats.openTickets === 1 ? 'Ticket' : 'Tickets'}
+                Action Required: {stats.openTickets} Unresolved Support{' '}
+                {stats.openTickets === 1 ? 'Ticket' : 'Tickets'}
               </h3>
               <p className="text-[11px] sm:text-xs text-amber-400/80">
                 Customer inquiries and technical assistance requests are waiting for triage.

@@ -109,7 +109,10 @@ export default async function HelpCategoryPage({ params }: HelpCategoryPageProps
       <div className="space-y-12">
         {/* Navigation & Breadcrumbs */}
         <div className="space-y-4">
-          <nav className="flex items-center gap-2 text-xs text-[hsl(var(--muted-foreground))]" aria-label="Breadcrumb">
+          <nav
+            className="flex items-center gap-2 text-xs text-[hsl(var(--muted-foreground))]"
+            aria-label="Breadcrumb"
+          >
             <Link href="/help" className="hover:text-[hsl(var(--foreground))] transition-colors">
               Help Center
             </Link>
@@ -133,7 +136,9 @@ export default async function HelpCategoryPage({ params }: HelpCategoryPageProps
               </div>
 
               {category.description && (
-                <p className="text-sm text-[hsl(var(--muted-foreground))] max-w-2xl">{category.description}</p>
+                <p className="text-sm text-[hsl(var(--muted-foreground))] max-w-2xl">
+                  {category.description}
+                </p>
               )}
             </div>
 

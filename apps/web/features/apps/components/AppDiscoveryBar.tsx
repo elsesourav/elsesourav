@@ -54,10 +54,10 @@ export function AppDiscoveryBar({ categories = [], tags = [] }: AppDiscoveryBarP
 
   const hasActiveFilters = Boolean(
     currentCategory ||
-      currentTag ||
-      currentPlatform ||
-      currentSearch ||
-      (currentSort && currentSort !== 'sortOrder')
+    currentTag ||
+    currentPlatform ||
+    currentSearch ||
+    (currentSort && currentSort !== 'sortOrder')
   );
 
   return (

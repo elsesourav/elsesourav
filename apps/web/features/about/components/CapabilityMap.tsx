@@ -46,16 +46,24 @@ export function CapabilityMap() {
             <Cpu className="w-4 h-4" />
             <span>Capability Map</span>
           </div>
-          <h2 id="capability-map-heading" className="text-xl sm:text-2xl font-bold text-[hsl(var(--foreground))] tracking-tight">
+          <h2
+            id="capability-map-heading"
+            className="text-xl sm:text-2xl font-bold text-[hsl(var(--foreground))] tracking-tight"
+          >
             Areas I Like Building In
           </h2>
           <p className="text-xs sm:text-sm text-[hsl(var(--muted-foreground))] max-w-2xl leading-relaxed">
-            Every capability is grounded directly in verified, working implementations across the portfolio—with zero artificial skill meters or percentage bars.
+            Every capability is grounded directly in verified, working implementations across the
+            portfolio—with zero artificial skill meters or percentage bars.
           </p>
         </div>
       </Reveal>
 
-      <RevealGroup staggerDelay={0.05} baseDelay={0.06} className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <RevealGroup
+        staggerDelay={0.05}
+        baseDelay={0.06}
+        className="grid grid-cols-1 lg:grid-cols-2 gap-5"
+      >
         {CAPABILITY_GROUPS_CONFIG.map((group) => (
           <div
             key={group.id}

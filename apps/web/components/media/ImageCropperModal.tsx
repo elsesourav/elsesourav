@@ -1,7 +1,14 @@
 'use client';
 
 import * as React from 'react';
-import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@elsesourav/ui';
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@elsesourav/ui';
 import { Crop, ZoomIn, RotateCw, Check, Upload } from 'lucide-react';
 
 export interface ImageCropperModalProps {
@@ -163,11 +170,18 @@ export function ImageCropperModal({
           {!imageSrc ? (
             <div className="border-2 border-dashed border-zinc-800 hover:border-indigo-500/60 rounded-2xl p-8 text-center transition-colors">
               <Upload className="w-10 h-10 text-zinc-500 mx-auto mb-3" />
-              <p className="text-xs text-zinc-300 font-medium mb-1">Select an image to crop and adjust</p>
+              <p className="text-xs text-zinc-300 font-medium mb-1">
+                Select an image to crop and adjust
+              </p>
               <p className="text-[11px] text-zinc-500 mb-4">PNG, JPG, WebP supported</p>
               <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/20">
                 <span>Choose Image</span>
-                <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
               </label>
             </div>
           ) : (
@@ -249,7 +263,12 @@ export function ImageCropperModal({
 
                   <label className="cursor-pointer inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-[11px] font-medium">
                     <Upload className="w-3.5 h-3.5" /> Change File
-                    <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
                   </label>
                 </div>
               </div>
@@ -266,7 +285,12 @@ export function ImageCropperModal({
         </div>
 
         <DialogFooter className="flex items-center justify-end gap-2 pt-2 border-t border-zinc-800/80">
-          <Button variant="ghost" size="sm" onClick={onClose} className="text-zinc-400 hover:text-zinc-200 text-xs">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onClose}
+            className="text-zinc-400 hover:text-zinc-200 text-xs"
+          >
             Cancel
           </Button>
           {imageSrc && (

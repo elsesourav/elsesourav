@@ -2,7 +2,11 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
-import { getPublicAppBySlug, getPublishedApps, getRelatedProjects } from '@/features/apps/queries/get-apps';
+import {
+  getPublicAppBySlug,
+  getPublishedApps,
+  getRelatedProjects,
+} from '@/features/apps/queries/get-apps';
 import { AppDetailHero } from '@/features/apps/components/AppDetailHero';
 import { AppScreenshotGallery } from '@/features/apps/components/AppScreenshotGallery';
 import { AppDetailLinks } from '@/features/apps/components/AppDetailLinks';
@@ -56,7 +60,8 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
   // Find adjacent items for sequence navigation
   const currentIndex = allApps.findIndex((item) => item.id === app.id);
   const prevApp = currentIndex > 0 ? allApps[currentIndex - 1] : null;
-  const nextApp = currentIndex >= 0 && currentIndex < allApps.length - 1 ? allApps[currentIndex + 1] : null;
+  const nextApp =
+    currentIndex >= 0 && currentIndex < allApps.length - 1 ? allApps[currentIndex + 1] : null;
 
   const appUrl = `${SITE_CONFIG.url}/apps/${app.slug}`;
 
@@ -141,11 +146,16 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
               <div className="flex items-center justify-between pb-3 border-b border-[hsl(var(--border-subtle))]">
                 <div className="flex items-center gap-2 text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold">
                   <BookOpen className="w-4 h-4" />
-                  <h2 id="technical-architecture-heading" className="text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold">
+                  <h2
+                    id="technical-architecture-heading"
+                    className="text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold"
+                  >
                     Technical Architecture & Implementation
                   </h2>
                 </div>
-                <span className="text-xs font-mono text-[hsl(var(--muted-foreground))]">Verified Implementation</span>
+                <span className="text-xs font-mono text-[hsl(var(--muted-foreground))]">
+                  Verified Implementation
+                </span>
               </div>
               <div className="p-6 sm:p-10 rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] backdrop-blur-xl shadow-2xl">
                 <BlogContentRenderer content={app.documentationMd} />
@@ -157,7 +167,10 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
             <section aria-labelledby="project-story-heading" className="space-y-4">
               <div className="flex items-center gap-2 text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold pb-3 border-b border-[hsl(var(--border-subtle))]">
                 <FileText className="w-4 h-4" />
-                <h2 id="project-story-heading" className="text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold">
+                <h2
+                  id="project-story-heading"
+                  className="text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold"
+                >
                   About the Project
                 </h2>
               </div>
@@ -225,11 +238,17 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
 
         {/* 7. Related Projects Section */}
         {fallbackRelated.length > 0 && (
-          <section aria-labelledby="related-projects-heading" className="space-y-6 pt-8 border-t border-[hsl(var(--border-subtle))]">
+          <section
+            aria-labelledby="related-projects-heading"
+            className="space-y-6 pt-8 border-t border-[hsl(var(--border-subtle))]"
+          >
             <Reveal direction="up" distance={14}>
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
-                  <h2 id="related-projects-heading" className="text-xl font-bold text-[hsl(var(--foreground))] tracking-tight flex items-center gap-2">
+                  <h2
+                    id="related-projects-heading"
+                    className="text-xl font-bold text-[hsl(var(--foreground))] tracking-tight flex items-center gap-2"
+                  >
                     <Sparkles className="w-5 h-5 text-indigo-500" />
                     <span>More in {app.primaryCategory}</span>
                   </h2>
@@ -247,7 +266,11 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
               </div>
             </Reveal>
 
-            <RevealGroup staggerDelay={0.06} baseDelay={0.08} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <RevealGroup
+              staggerDelay={0.06}
+              baseDelay={0.08}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
               {fallbackRelated.map((related, idx) => (
                 <AppCard key={related.id} app={related} index={idx} />
               ))}

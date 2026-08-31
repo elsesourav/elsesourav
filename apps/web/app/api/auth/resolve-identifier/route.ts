@@ -31,10 +31,7 @@ export async function POST(request: NextRequest) {
     // Look up email by username
     const user = await userRepo.findByUsername(identifier);
     if (!user || !user.email) {
-      return NextResponse.json(
-        { error: 'No account found with this username' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'No account found with this username' }, { status: 404 });
     }
 
     return NextResponse.json({ email: user.email });

@@ -27,10 +27,7 @@ export function ShareButton({
   iconOnly = false,
 }: ShareButtonProps) {
   const [copied, setCopied] = React.useState(false);
-  const canonicalUrl = React.useMemo(
-    () => toAbsoluteUrl(canonicalPathOrUrl),
-    [canonicalPathOrUrl]
-  );
+  const canonicalUrl = React.useMemo(() => toAbsoluteUrl(canonicalPathOrUrl), [canonicalPathOrUrl]);
 
   const handleShare = async () => {
     // 1. Prefer native Web Share API on supported devices (Mobile & Modern Desktop)
@@ -101,9 +98,7 @@ export function ShareButton({
       ) : (
         <>
           <Share2 className="w-4 h-4 text-zinc-400 shrink-0" />
-          {!iconOnly && (
-            <span className="text-xs sm:text-sm font-medium">{label}</span>
-          )}
+          {!iconOnly && <span className="text-xs sm:text-sm font-medium">{label}</span>}
         </>
       )}
     </Button>

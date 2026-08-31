@@ -332,16 +332,14 @@ describe('Full System QA and Regression Test Suite', () => {
   describe('Task 14: Cloudinary Media Reference Integrity & Deletion Safety', () => {
     it('rejects deletion of media assets currently referenced by active apps or blog posts', async () => {
       const mockMediaRepo = {
-        checkAssetReferences: vi
-          .fn()
-          .mockResolvedValue([
-            {
-              resourceType: 'App',
-              resourceId: 'app-terminal-1',
-              resourceName: 'Terminal Pro',
-              field: 'iconUrl',
-            },
-          ]),
+        checkAssetReferences: vi.fn().mockResolvedValue([
+          {
+            resourceType: 'App',
+            resourceId: 'app-terminal-1',
+            resourceName: 'Terminal Pro',
+            field: 'iconUrl',
+          },
+        ]),
         logMediaAudit: vi.fn(),
       } as unknown as MediaRepository;
 

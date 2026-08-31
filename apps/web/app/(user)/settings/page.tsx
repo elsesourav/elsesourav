@@ -7,8 +7,7 @@ import { PageShell } from '@elsesourav/ui';
 
 export const metadata: Metadata = {
   title: 'Settings | ElseSourav',
-  description:
-    'Manage your profile, public identity, security credentials, and account settings.',
+  description: 'Manage your profile, public identity, security credentials, and account settings.',
   robots: {
     index: false,
     follow: false,

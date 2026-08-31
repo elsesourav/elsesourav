@@ -78,4 +78,3 @@ export const SITE_CONFIG = {
 
   links: CREATOR_CONFIG.links,
 } as const;
-

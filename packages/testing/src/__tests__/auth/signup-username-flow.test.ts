@@ -78,13 +78,7 @@ describe('Signup Username & Live Validation Suite', () => {
     });
 
     it('accepts any password with at least 8 characters (e.g. 11111111, simple passwords)', () => {
-      const allowedPasswords = [
-        '11111111',
-        'password',
-        'onlyletters',
-        '12345678',
-        'Complex@2026!',
-      ];
+      const allowedPasswords = ['11111111', 'password', 'onlyletters', '12345678', 'Complex@2026!'];
 
       for (const password of allowedPasswords) {
         const result = SignUpSchema.safeParse({
@@ -288,25 +282,27 @@ describe('Signup Username & Live Validation Suite', () => {
 
     it('skips taken usernames and falls back to next available candidates', async () => {
       // sourav_barui is taken, but next candidates are available
-      mockPrisma.user.findUnique.mockImplementation(({ where }: { where: { username?: string } }) => {
-        if (where.username === 'sourav_barui') {
-          return Promise.resolve({
-            id: 'taken-1',
-            supabaseAuthId: 'sb-taken',
-            email: 'taken@example.com',
-            displayName: 'Taken',
-            username: 'sourav_barui',
-            photoUrl: null,
-            bio: null,
-            role: 'USER',
-            preferences: {},
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            deletedAt: null,
-          });
+      mockPrisma.user.findUnique.mockImplementation(
+        ({ where }: { where: { username?: string } }) => {
+          if (where.username === 'sourav_barui') {
+            return Promise.resolve({
+              id: 'taken-1',
+              supabaseAuthId: 'sb-taken',
+              email: 'taken@example.com',
+              displayName: 'Taken',
+              username: 'sourav_barui',
+              photoUrl: null,
+              bio: null,
+              role: 'USER',
+              preferences: {},
+              createdAt: new Date(),
+              updatedAt: new Date(),
+              deletedAt: null,
+            });
+          }
+          return Promise.resolve(null);
         }
-        return Promise.resolve(null);
-      });
+      );
 
       const suggestions = await userService.suggestAvailableUsernames('Sourav Barui', 2);
       expect(suggestions).toHaveLength(2);
@@ -315,4 +311,3 @@ describe('Signup Username & Live Validation Suite', () => {
     });
   });
 });
-

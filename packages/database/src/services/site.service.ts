@@ -20,7 +20,7 @@ export class SiteService {
   async getSiteAndCreatorIdentity(): Promise<SiteAndCreatorIdentity> {
     const dbSettings = await this.adminRepo
       .getAllSettings()
-      .catch(() => ({} as Record<string, string>));
+      .catch(() => ({}) as Record<string, string>);
 
     const siteName = dbSettings['site_name'] || SITE_CONFIG.name;
     const siteTagline = dbSettings['site_tagline'] || SITE_CONFIG.tagline;
@@ -41,8 +41,7 @@ export class SiteService {
     const footerShowBackToTop = dbSettings['footer_show_back_to_top'] !== 'false';
     const footerLinks = parseFooterLinks(dbSettings['footer_links_json']);
 
-    const heroBadge =
-      dbSettings['hero_badge'] || 'Software & Systems Studio';
+    const heroBadge = dbSettings['hero_badge'] || 'Software & Systems Studio';
     const heroHeadline =
       dbSettings['hero_headline'] ||
       'Building software, tools, games, and experiments that solve real problems and spark new ideas.';
@@ -61,8 +60,7 @@ export class SiteService {
       dbSettings['homepage_blog_subtitle'] ||
       'Things I write about while building software, learning tools, and solving architectural problems.';
 
-    const closingCtaTitle =
-      dbSettings['closing_cta_title'] || 'Explore the ElseSourav Studio';
+    const closingCtaTitle = dbSettings['closing_cta_title'] || 'Explore the ElseSourav Studio';
     const closingCtaSubtitle =
       dbSettings['closing_cta_subtitle'] ||
       'Every application, utility, and field note is built independently with a focus on craft, performance, and usability.';
@@ -80,16 +78,15 @@ export class SiteService {
     const creatorShortBio = dbSettings['creator_short_bio'] || CREATOR_CONFIG.shortBio;
     const creatorLongBio = dbSettings['creator_long_bio'] || CREATOR_CONFIG.longBio;
     const creatorPositioning =
-      dbSettings['creator_positioning'] || dbSettings['hero_subtitle'] || CREATOR_CONFIG.positioning;
+      dbSettings['creator_positioning'] ||
+      dbSettings['hero_subtitle'] ||
+      CREATOR_CONFIG.positioning;
 
     const creatorPrinciples = parseStringList(
       dbSettings['creator_principles_json'],
       CREATOR_CONFIG.principles
     );
-    const creatorFocus = parseStringList(
-      dbSettings['creator_focus_json'],
-      CREATOR_CONFIG.focus
-    );
+    const creatorFocus = parseStringList(dbSettings['creator_focus_json'], CREATOR_CONFIG.focus);
     const creatorTechnologies = CREATOR_CONFIG.technologies;
 
     const creatorLinks = parseSiteLinks(dbSettings['social_links_json'], dbSettings);

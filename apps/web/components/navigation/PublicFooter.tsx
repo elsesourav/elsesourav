@@ -68,7 +68,8 @@ export async function PublicFooter() {
             </Link>
 
             <p className="text-xs text-[hsl(var(--muted-foreground))] leading-relaxed max-w-sm">
-              {identity.footer.text || `${identity.site.name} is the personal software studio and archive of ${identity.creator.fullName}. Practical tools, simulations, and engineering notes.`}
+              {identity.footer.text ||
+                `${identity.site.name} is the personal software studio and archive of ${identity.creator.fullName}. Practical tools, simulations, and engineering notes.`}
             </p>
 
             {/* Social / External Links */}
@@ -98,17 +99,26 @@ export async function PublicFooter() {
             </h4>
             <ul className="space-y-2.5 text-xs text-[hsl(var(--muted-foreground))]">
               <li>
-                <Link href={ROUTES.APPS} className="hover:text-[hsl(var(--foreground))] transition-colors">
+                <Link
+                  href={ROUTES.APPS}
+                  className="hover:text-[hsl(var(--foreground))] transition-colors"
+                >
                   Apps
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.ARCHIVE} className="hover:text-[hsl(var(--foreground))] transition-colors">
+                <Link
+                  href={ROUTES.ARCHIVE}
+                  className="hover:text-[hsl(var(--foreground))] transition-colors"
+                >
                   The Archive
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.BLOG} className="hover:text-[hsl(var(--foreground))] transition-colors">
+                <Link
+                  href={ROUTES.BLOG}
+                  className="hover:text-[hsl(var(--foreground))] transition-colors"
+                >
                   Notes
                 </Link>
               </li>
@@ -122,17 +132,26 @@ export async function PublicFooter() {
             </h4>
             <ul className="space-y-2.5 text-xs text-[hsl(var(--muted-foreground))]">
               <li>
-                <Link href={ROUTES.ABOUT} className="hover:text-[hsl(var(--foreground))] transition-colors">
+                <Link
+                  href={ROUTES.ABOUT}
+                  className="hover:text-[hsl(var(--foreground))] transition-colors"
+                >
                   About Creator
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.ACCESSIBILITY} className="hover:text-[hsl(var(--foreground))] transition-colors">
+                <Link
+                  href={ROUTES.ACCESSIBILITY}
+                  className="hover:text-[hsl(var(--foreground))] transition-colors"
+                >
                   Accessibility
                 </Link>
               </li>
               <li>
-                <Link href="/design-system" className="hover:text-[hsl(var(--foreground))] transition-colors">
+                <Link
+                  href="/design-system"
+                  className="hover:text-[hsl(var(--foreground))] transition-colors"
+                >
                   Design System
                 </Link>
               </li>
@@ -146,17 +165,26 @@ export async function PublicFooter() {
             </h4>
             <ul className="space-y-2.5 text-xs text-[hsl(var(--muted-foreground))]">
               <li>
-                <Link href={ROUTES.HELP} className="hover:text-[hsl(var(--foreground))] transition-colors">
+                <Link
+                  href={ROUTES.HELP}
+                  className="hover:text-[hsl(var(--foreground))] transition-colors"
+                >
                   Help Center
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.SUPPORT} className="hover:text-[hsl(var(--foreground))] transition-colors">
+                <Link
+                  href={ROUTES.SUPPORT}
+                  className="hover:text-[hsl(var(--foreground))] transition-colors"
+                >
                   Support Desk
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.SETTINGS} className="hover:text-[hsl(var(--foreground))] transition-colors">
+                <Link
+                  href={ROUTES.SETTINGS}
+                  className="hover:text-[hsl(var(--foreground))] transition-colors"
+                >
                   Account Settings
                 </Link>
               </li>
@@ -169,7 +197,9 @@ export async function PublicFooter() {
                     className="inline-flex items-center gap-1 hover:text-[hsl(var(--foreground))] transition-colors"
                   >
                     <span>{cLink.label}</span>
-                    {cLink.isExternal && <ExternalLink className="w-3 h-3 text-[hsl(var(--subtle-foreground))]" />}
+                    {cLink.isExternal && (
+                      <ExternalLink className="w-3 h-3 text-[hsl(var(--subtle-foreground))]" />
+                    )}
                   </a>
                 </li>
               ))}
@@ -183,12 +213,18 @@ export async function PublicFooter() {
             </h4>
             <ul className="space-y-2.5 text-xs text-[hsl(var(--muted-foreground))]">
               <li>
-                <Link href={ROUTES.PRIVACY} className="hover:text-[hsl(var(--foreground))] transition-colors">
+                <Link
+                  href={ROUTES.PRIVACY}
+                  className="hover:text-[hsl(var(--foreground))] transition-colors"
+                >
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.TERMS} className="hover:text-[hsl(var(--foreground))] transition-colors">
+                <Link
+                  href={ROUTES.TERMS}
+                  className="hover:text-[hsl(var(--foreground))] transition-colors"
+                >
                   Terms of Service
                 </Link>
               </li>
@@ -198,7 +234,10 @@ export async function PublicFooter() {
 
         {/* Bottom Sub-Footer Row */}
         <div className="pt-8 border-t border-[hsl(var(--border-subtle))] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[hsl(var(--subtle-foreground))]">
-          <p>{identity.footer.copyright || `© ${new Date().getFullYear()} ${identity.site.name} • Built by ${identity.creator.fullName}`}</p>
+          <p>
+            {identity.footer.copyright ||
+              `© ${new Date().getFullYear()} ${identity.site.name} • Built by ${identity.creator.fullName}`}
+          </p>
 
           {identity.footer.showBackToTop && (
             <a

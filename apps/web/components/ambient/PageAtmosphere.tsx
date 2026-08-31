@@ -19,7 +19,12 @@ export function PageAtmosphere({ forcedVariant }: PageAtmosphereProps) {
     if (pathname.startsWith('/notes')) return 'notes';
     if (pathname.startsWith('/about')) return 'about';
     if (pathname.startsWith('/help')) return 'help';
-    if (pathname.startsWith('/login') || pathname.startsWith('/signup') || pathname.startsWith('/forgot-password') || pathname.startsWith('/verify')) {
+    if (
+      pathname.startsWith('/login') ||
+      pathname.startsWith('/signup') ||
+      pathname.startsWith('/forgot-password') ||
+      pathname.startsWith('/verify')
+    ) {
       return 'minimal';
     }
     return 'apps';

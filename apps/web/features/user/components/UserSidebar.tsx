@@ -23,15 +23,13 @@ const NAV_ITEMS: NavItem[] = [
     label: 'Profile',
     href: '/settings?tab=profile',
     icon: User,
-    isActive: (pathname, tab) =>
-      pathname === '/settings' && (!tab || tab === 'profile'),
+    isActive: (pathname, tab) => pathname === '/settings' && (!tab || tab === 'profile'),
   },
   {
     label: 'Account',
     href: '/settings?tab=account',
     icon: UserCheck,
-    isActive: (pathname, tab) =>
-      pathname === '/settings' && tab === 'account',
+    isActive: (pathname, tab) => pathname === '/settings' && tab === 'account',
   },
   {
     label: 'Password & Security',
@@ -69,7 +67,9 @@ export function UserSidebar() {
                   : 'text-muted-foreground hover:text-foreground hover:bg-accent/60 border border-transparent'
               }`}
             >
-              <Icon className={`w-4 h-4 shrink-0 ${active ? 'text-primary' : 'text-muted-foreground'}`} />
+              <Icon
+                className={`w-4 h-4 shrink-0 ${active ? 'text-primary' : 'text-muted-foreground'}`}
+              />
               <span>{item.label}</span>
             </Link>
           );

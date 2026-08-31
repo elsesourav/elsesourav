@@ -4,12 +4,7 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { Input, Button, Label, Alert, AlertDescription, Separator } from '@elsesourav/ui';
 import { createAuthBrowserClient, AuthError } from '@elsesourav/auth';
-import {
-  SignUpSchema,
-  NAME_REGEX,
-  USERNAME_REGEX,
-  EMAIL_REGEX,
-} from '@elsesourav/validation';
+import { SignUpSchema, NAME_REGEX, USERNAME_REGEX, EMAIL_REGEX } from '@elsesourav/validation';
 import { OAuthButtons } from './OAuthButtons';
 import {
   Eye,
@@ -436,9 +431,7 @@ export function SignUpForm() {
   };
 
   const isStep1Valid =
-    displayName.trim().length >= 2 &&
-    displayNameError === null &&
-    usernameStatus === 'available';
+    displayName.trim().length >= 2 && displayNameError === null && usernameStatus === 'available';
 
   const passwordStrength = calculatePasswordStrength(password);
 
@@ -484,9 +477,7 @@ export function SignUpForm() {
           />
           <div
             className={`h-1 w-5 rounded-full transition-all duration-300 ${
-              step === 2
-                ? 'bg-indigo-500 shadow-sm shadow-indigo-500/50'
-                : 'bg-zinc-800'
+              step === 2 ? 'bg-indigo-500 shadow-sm shadow-indigo-500/50' : 'bg-zinc-800'
             }`}
           />
         </div>
@@ -688,8 +679,7 @@ export function SignUpForm() {
                   {displayName}
                 </p>
                 <p className="text-[11px] font-mono text-emerald-400 truncate flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3 text-emerald-400 inline shrink-0" />
-                  @{username}
+                  <CheckCircle2 className="w-3 h-3 text-emerald-400 inline shrink-0" />@{username}
                 </p>
               </div>
             </div>

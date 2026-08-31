@@ -26,11 +26,9 @@ interface AppDetailHeroProps {
 
 export function AppDetailHero({ app }: AppDetailHeroProps) {
   const iconUrl = app.iconUrl ? getAppIconUrl(app.iconUrl, 160) : null;
-  
+
   // Find GitHub repository link
-  const githubLink = app.links.find(
-    (l) => l.platform === 'github' || l.url.includes('github.com')
-  );
+  const githubLink = app.links.find((l) => l.platform === 'github' || l.url.includes('github.com'));
 
   // Find primary web/demo link
   const webDemoLink =
@@ -45,14 +43,15 @@ export function AppDetailHero({ app }: AppDetailHeroProps) {
     app.primaryCategory.toLowerCase().includes('lab');
 
   const isArchived =
-    app.tags.includes('archived') ||
-    app.tags.includes('legacy') ||
-    app.tags.includes('inactive');
+    app.tags.includes('archived') || app.tags.includes('legacy') || app.tags.includes('inactive');
 
   return (
     <header className="space-y-6">
       {/* Breadcrumb Navigation */}
-      <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-mono text-[hsl(var(--muted-foreground))]">
+      <nav
+        aria-label="Breadcrumb"
+        className="flex items-center gap-2 text-xs font-mono text-[hsl(var(--muted-foreground))]"
+      >
         <Link href="/apps" className="hover:text-[hsl(var(--foreground))] transition-colors">
           Apps
         </Link>
@@ -64,7 +63,9 @@ export function AppDetailHero({ app }: AppDetailHeroProps) {
           {app.primaryCategory}
         </Link>
         <span className="text-[hsl(var(--subtle-foreground))]">/</span>
-        <span className="text-[hsl(var(--foreground))] truncate max-w-[200px] sm:max-w-xs">{app.name}</span>
+        <span className="text-[hsl(var(--foreground))] truncate max-w-[200px] sm:max-w-xs">
+          {app.name}
+        </span>
       </nav>
 
       {/* Main Hero Card */}

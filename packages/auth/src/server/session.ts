@@ -51,7 +51,9 @@ export async function getServerSession(
       process.env['ADMIN_EMAIL'] ||
       process.env['NEXT_PUBLIC_ADMIN_EMAIL'] ||
       'elsesourav.auth@gmail.com'
-    ).trim().toLowerCase();
+    )
+      .trim()
+      .toLowerCase();
     const isDesignatedAdmin = Boolean(user.email && user.email.trim().toLowerCase() === adminEmail);
     const role: UserRole = isDesignatedAdmin
       ? 'ADMIN'

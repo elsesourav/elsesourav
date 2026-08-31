@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from '@elsesourav/ui';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@elsesourav/ui';
 import { LoginForm } from '@/components/auth/LoginForm';
 import { ShieldCheck } from 'lucide-react';
 
@@ -31,7 +25,9 @@ export default function LoginPage() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <React.Suspense fallback={<div className="h-64 rounded-2xl bg-zinc-900/30 animate-pulse" />}>
+        <React.Suspense
+          fallback={<div className="h-64 rounded-2xl bg-zinc-900/30 animate-pulse" />}
+        >
           <LoginForm />
         </React.Suspense>
       </CardContent>

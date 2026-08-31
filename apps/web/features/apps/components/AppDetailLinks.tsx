@@ -34,7 +34,10 @@ export function AppDetailLinks({ links }: AppDetailLinksProps) {
       <div className="flex items-center justify-between pb-3 border-b border-[hsl(var(--border-subtle))]">
         <div className="flex items-center gap-2 text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold">
           <ExternalLink className="w-4 h-4" />
-          <h2 id="platforms-downloads-heading" className="text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold">
+          <h2
+            id="platforms-downloads-heading"
+            className="text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold"
+          >
             Platforms & Distribution Links
           </h2>
         </div>

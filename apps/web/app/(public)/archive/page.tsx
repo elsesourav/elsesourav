@@ -3,14 +3,7 @@ import Link from 'next/link';
 import { getArchivedApps } from '@/features/apps/queries/get-apps';
 import { PageShell, PageHeader, Badge, Reveal, Button } from '@elsesourav/ui';
 import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
-import {
-  Archive,
-  RefreshCw,
-  BookOpen,
-  ArrowRight,
-  Layers,
-  Calendar,
-} from 'lucide-react';
+import { Archive, RefreshCw, BookOpen, ArrowRight, Layers, Calendar } from 'lucide-react';
 import type { AppListItem } from '@elsesourav/types';
 
 interface ArchivePageProps {
@@ -87,7 +80,9 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
 
   // Group filtered projects by Year
   const groupedByYear = filteredProjects.reduce<Record<string, AppListItem[]>>((acc, project) => {
-    const yr = project.publishedAt ? new Date(project.publishedAt).getFullYear().toString() : 'Legacy';
+    const yr = project.publishedAt
+      ? new Date(project.publishedAt).getFullYear().toString()
+      : 'Legacy';
     if (!acc[yr]) {
       acc[yr] = [];
     }
@@ -104,7 +99,8 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
         '@type': 'CollectionPage',
         '@id': `${SITE_CONFIG.url}/archive/#collection`,
         name: 'The Archive — Historical Software Index',
-        description: 'Chronological timeline of software projects and utilities built by Sourav Barui.',
+        description:
+          'Chronological timeline of software projects and utilities built by Sourav Barui.',
         url: `${SITE_CONFIG.url}/archive`,
         publisher: {
           '@type': 'Person',
@@ -172,7 +168,11 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
               <div className="flex items-center gap-2 overflow-x-auto no-scrollbar text-xs">
                 <span className="text-zinc-500 font-mono text-xs mr-1 hidden sm:inline">Year:</span>
                 <Link
-                  href={selectedCategory !== 'all' ? `/archive?category=${encodeURIComponent(selectedCategory)}` : '/archive'}
+                  href={
+                    selectedCategory !== 'all'
+                      ? `/archive?category=${encodeURIComponent(selectedCategory)}`
+                      : '/archive'
+                  }
                   className={`px-3 py-1.5 rounded-xl font-mono text-xs transition-all border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                     selectedYear === 'all'
                       ? 'bg-indigo-600 border-indigo-500 text-white shadow-md'
@@ -183,7 +183,10 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
                 </Link>
                 {availableYears.map((yr) => {
                   const isActive = selectedYear === yr;
-                  const href = selectedCategory !== 'all' ? `/archive?year=${yr}&category=${encodeURIComponent(selectedCategory)}` : `/archive?year=${yr}`;
+                  const href =
+                    selectedCategory !== 'all'
+                      ? `/archive?year=${yr}&category=${encodeURIComponent(selectedCategory)}`
+                      : `/archive?year=${yr}`;
                   return (
                     <Link
                       key={yr}
@@ -202,7 +205,10 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
 
               {/* Clear filters trigger if active */}
               {(selectedYear !== 'all' || selectedCategory !== 'all' || query) && (
-                <Link href="/archive" className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-mono">
+                <Link
+                  href="/archive"
+                  className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-mono"
+                >
                   <RefreshCw className="w-3.5 h-3.5" />
                   <span>Reset timeline</span>
                 </Link>
@@ -212,7 +218,9 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
             {/* Category filter pills */}
             {availableCategories.length > 0 && (
               <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs pt-2 border-t border-zinc-800/60">
-                <span className="text-zinc-500 font-mono text-xs mr-1 hidden sm:inline">Category:</span>
+                <span className="text-zinc-500 font-mono text-xs mr-1 hidden sm:inline">
+                  Category:
+                </span>
                 <Link
                   href={selectedYear !== 'all' ? `/archive?year=${selectedYear}` : '/archive'}
                   className={`px-2.5 py-1 rounded-lg font-mono text-[11px] transition-all border ${
@@ -225,7 +233,10 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
                 </Link>
                 {availableCategories.map((cat) => {
                   const isActive = selectedCategory === cat;
-                  const href = selectedYear !== 'all' ? `/archive?year=${selectedYear}&category=${encodeURIComponent(cat)}` : `/archive?category=${encodeURIComponent(cat)}`;
+                  const href =
+                    selectedYear !== 'all'
+                      ? `/archive?year=${selectedYear}&category=${encodeURIComponent(cat)}`
+                      : `/archive?category=${encodeURIComponent(cat)}`;
                   return (
                     <Link
                       key={cat}
@@ -260,7 +271,11 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
               </div>
               <div className="pt-2">
                 <Link href="/archive">
-                  <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-300 text-xs gap-1.5">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-zinc-700 text-zinc-300 text-xs gap-1.5"
+                  >
                     <RefreshCw className="w-3.5 h-3.5" /> Reset archive timeline
                   </Button>
                 </Link>
@@ -279,11 +294,15 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
                       <div className="w-8 h-8 rounded-xl bg-indigo-950/60 border border-indigo-800/40 flex items-center justify-center text-indigo-400 font-mono font-bold text-xs">
                         <Calendar className="w-4 h-4" />
                       </div>
-                      <h2 id={`year-heading-${year}`} className="text-xl font-bold font-mono text-white tracking-tight">
+                      <h2
+                        id={`year-heading-${year}`}
+                        className="text-xl font-bold font-mono text-white tracking-tight"
+                      >
                         {year}
                       </h2>
                       <span className="text-xs font-mono text-zinc-500">
-                        ({projectsInYear.length} {projectsInYear.length === 1 ? 'record' : 'records'})
+                        ({projectsInYear.length}{' '}
+                        {projectsInYear.length === 1 ? 'record' : 'records'})
                       </span>
                     </div>
 
@@ -365,7 +384,8 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
                   Active Software & Systems
                 </h3>
                 <p className="text-xs text-zinc-400 leading-relaxed">
-                  Browse actively maintained web applications, developer utilities, and creative software.
+                  Browse actively maintained web applications, developer utilities, and creative
+                  software.
                 </p>
               </div>
               <span className="text-xs font-mono text-indigo-400 flex items-center gap-1 pt-4 group-hover:translate-x-1 transition-transform">
@@ -387,7 +407,8 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
                   Engineering Field Notes
                 </h3>
                 <p className="text-xs text-zinc-400 leading-relaxed">
-                  Technical write-ups, architecture decisions, and observations recorded while building.
+                  Technical write-ups, architecture decisions, and observations recorded while
+                  building.
                 </p>
               </div>
               <span className="text-xs font-mono text-cyan-400 flex items-center gap-1 pt-4 group-hover:translate-x-1 transition-transform">

@@ -70,7 +70,9 @@ export function BlogArticleHeader({ post, postUrl }: BlogArticleHeaderProps) {
             size="md"
           />
           <div>
-            <div className="font-semibold text-xs text-[hsl(var(--foreground))]">{post.author.displayName}</div>
+            <div className="font-semibold text-xs text-[hsl(var(--foreground))]">
+              {post.author.displayName}
+            </div>
             <div className="flex items-center gap-2 text-[11px] text-[hsl(var(--muted-foreground))]">
               <span className="flex items-center gap-1">
                 <Calendar className="w-3 h-3 text-[hsl(var(--subtle-foreground))]" />

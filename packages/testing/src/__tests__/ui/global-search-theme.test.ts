@@ -1,5 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import type { GlobalSearchResponse, GlobalSearchResult, GlobalSearchResultType } from '@elsesourav/types';
+import type {
+  GlobalSearchResponse,
+  GlobalSearchResult,
+  GlobalSearchResultType,
+} from '@elsesourav/types';
 
 // ============================================================================
 // GLOBAL SEARCH TESTS
@@ -43,12 +47,8 @@ describe('Global Search System', () => {
         query: 'test',
         results: [],
         grouped: {
-          project: [
-            { type: 'project', title: 'P1', description: '', url: '/apps/p1' },
-          ],
-          note: [
-            { type: 'note', title: 'N1', description: '', url: '/notes/n1' },
-          ],
+          project: [{ type: 'project', title: 'P1', description: '', url: '/apps/p1' }],
+          note: [{ type: 'note', title: 'N1', description: '', url: '/notes/n1' }],
         },
         totalCount: 2,
       };

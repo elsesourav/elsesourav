@@ -8,9 +8,5 @@ import * as React from 'react';
  * across all top-level and nested routes.
  */
 export default function RootTemplate({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="animate-page-in flex-1 flex flex-col w-full min-h-0">
-      {children}
-    </div>
-  );
+  return <div className="animate-page-in flex-1 flex flex-col w-full min-h-0">{children}</div>;
 }

@@ -12,8 +12,7 @@ interface RadioGroupContextValue {
 
 const RadioGroupContext = React.createContext<RadioGroupContextValue | null>(null);
 
-export interface RadioGroupProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+export interface RadioGroupProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   value?: string;
   defaultValue?: string;
   name?: string;
@@ -102,7 +101,9 @@ export function RadioGroupItem({
       {label && (
         <label htmlFor={itemId} className="cursor-pointer text-xs font-medium text-zinc-200">
           <div>{label}</div>
-          {description && <div className="text-[11px] text-zinc-500 mt-0.5 font-normal">{description}</div>}
+          {description && (
+            <div className="text-[11px] text-zinc-500 mt-0.5 font-normal">{description}</div>
+          )}
         </label>
       )}
     </div>

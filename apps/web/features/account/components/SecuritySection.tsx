@@ -101,9 +101,9 @@ export function SecuritySection({ user }: SecuritySectionProps) {
   };
 
   return (
-    <div className="space-y-6 max-w-xl">
+    <div className="w-full max-w-2xl space-y-6">
       {/* Password & Authentication Credentials */}
-      <Card className="bg-card text-card-foreground border-border shadow-sm rounded-2xl sm:rounded-3xl">
+      <Card className="bg-card text-card-foreground border-border shadow-sm rounded-2xl sm:rounded-3xl overflow-hidden">
         <CardHeader className="pb-4">
           <div className="flex items-center gap-2">
             <Shield className="w-4 h-4 text-emerald-500" />
@@ -189,7 +189,8 @@ export function SecuritySection({ user }: SecuritySectionProps) {
                 <span>Managed by {user.provider === 'google' ? 'Google' : 'GitHub'}</span>
               </div>
               <p className="text-[11px] text-muted-foreground leading-relaxed">
-                Your account signs in via {user.provider === 'google' ? 'Google' : 'GitHub'} OAuth single sign-on. Password updates are managed through your provider.
+                Your account signs in via {user.provider === 'google' ? 'Google' : 'GitHub'} OAuth
+                single sign-on. Password updates are managed through your provider.
               </p>
             </div>
           )}
@@ -223,7 +224,9 @@ export function SecuritySection({ user }: SecuritySectionProps) {
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2">
             <ShieldAlert className="w-4 h-4 text-rose-500" />
-            <CardTitle className="text-base text-rose-600 dark:text-rose-400">Delete Account</CardTitle>
+            <CardTitle className="text-base text-rose-600 dark:text-rose-400">
+              Delete Account
+            </CardTitle>
           </div>
           <CardDescription className="text-xs text-muted-foreground">
             Permanently delete your account and personal profile data.

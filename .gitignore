@@ -55,4 +55,7 @@ prisma/*.db-journal
 .firebase/
 *.log
 .DS_Store
+*.zip
+*.tar.gz
+*.tgz
 

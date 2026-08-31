@@ -1,12 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import {
-  Avatar,
-  UserAvatar,
-  getAvatarInitials,
-  getDefaultAvatarUrl,
-} from '@elsesourav/ui';
+import { Avatar, UserAvatar, getAvatarInitials, getDefaultAvatarUrl } from '@elsesourav/ui';
 
 describe('Avatar & UserAvatar System', () => {
   describe('1. Initials Computation', () => {
@@ -85,11 +80,7 @@ describe('Avatar & UserAvatar System', () => {
 
     it('renders status dot when showStatus is true', () => {
       const { container } = render(
-        <Avatar
-          name="Alex Rivers"
-          showStatus={true}
-          statusColor="emerald"
-        />
+        <Avatar name="Alex Rivers" showStatus={true} statusColor="emerald" />
       );
       const statusDot = container.querySelector('.bg-emerald-500');
       expect(statusDot).not.toBeNull();

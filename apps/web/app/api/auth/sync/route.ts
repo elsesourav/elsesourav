@@ -11,10 +11,7 @@ export async function POST(request: NextRequest) {
     const rateLimit = checkRateLimit(`auth-sync:${clientIp}`, 30, 60000);
 
     if (!rateLimit.success) {
-      return NextResponse.json(
-        { error: 'Too many sync requests. Please wait.' },
-        { status: 429 }
-      );
+      return NextResponse.json({ error: 'Too many sync requests. Please wait.' }, { status: 429 });
     }
 
     const rawBody = await request.json();

@@ -62,7 +62,9 @@ export function HelpArticleFeedback({
     <div className="p-6 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] flex flex-col sm:flex-row items-center justify-between gap-4 backdrop-blur-sm shadow-sm">
       <div className="space-y-0.5 text-center sm:text-left">
         <h4 className="text-sm font-bold text-[hsl(var(--foreground))]">Was this guide helpful?</h4>
-        <p className="text-xs text-[hsl(var(--muted-foreground))]">Let us know if this article resolved your question.</p>
+        <p className="text-xs text-[hsl(var(--muted-foreground))]">
+          Let us know if this article resolved your question.
+        </p>
       </div>
 
       <div className="flex items-center gap-2">

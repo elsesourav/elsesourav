@@ -40,7 +40,11 @@ export function TableRow({ className, ...props }: React.HTMLAttributes<HTMLTable
   );
 }
 
-export function TableHead({ className, scope = 'col', ...props }: React.ThHTMLAttributes<HTMLTableCellElement>) {
+export function TableHead({
+  className,
+  scope = 'col',
+  ...props
+}: React.ThHTMLAttributes<HTMLTableCellElement>) {
   return (
     <th
       scope={scope}
@@ -56,7 +60,10 @@ export function TableHead({ className, scope = 'col', ...props }: React.ThHTMLAt
 export function TableCell({ className, ...props }: React.TdHTMLAttributes<HTMLTableCellElement>) {
   return (
     <td
-      className={cn('p-4 align-middle text-[hsl(var(--foreground))] break-words [&:has([role=checkbox])]:pr-0', className)}
+      className={cn(
+        'p-4 align-middle text-[hsl(var(--foreground))] break-words [&:has([role=checkbox])]:pr-0',
+        className
+      )}
       {...props}
     />
   );

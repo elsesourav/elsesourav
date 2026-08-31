@@ -29,12 +29,10 @@ export const UsernameSchema = z
     /^[a-z0-9_-]+$/,
     'Username can only contain lowercase letters, numbers, hyphens, and underscores'
   )
-  .regex(
-    /^[a-z0-9].*[a-z0-9]$/,
-    'Username must start and end with a letter or number'
-  )
+  .regex(/^[a-z0-9].*[a-z0-9]$/, 'Username must start and end with a letter or number')
   .refine(
-    (val) => !val.includes('__') && !val.includes('--') && !val.includes('_-') && !val.includes('-_'),
+    (val) =>
+      !val.includes('__') && !val.includes('--') && !val.includes('_-') && !val.includes('-_'),
     { message: 'Username cannot contain consecutive hyphens or underscores' }
   )
   .refine(
@@ -51,10 +49,7 @@ export const NameSchema = z
   .trim()
   .min(2, 'Name must be at least 2 characters long')
   .max(60, 'Name cannot exceed 60 characters')
-  .regex(
-    NAME_REGEX,
-    'Name can only contain letters, spaces, hyphens, and apostrophes'
-  )
+  .regex(NAME_REGEX, 'Name can only contain letters, spaces, hyphens, and apostrophes')
   .refine((val) => !/[0-9]/.test(val), {
     message: 'Name cannot contain numbers',
   });

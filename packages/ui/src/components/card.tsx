@@ -8,12 +8,7 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   depth?: SurfaceDepth;
 }
 
-export function Card({
-  className,
-  variant = 'default',
-  depth,
-  ...props
-}: CardProps) {
+export function Card({ className, variant = 'default', depth, ...props }: CardProps) {
   const variants = {
     default: 'border-[hsl(var(--border))] bg-[hsl(var(--card))] shadow-sm',
     solid: 'border-[hsl(var(--border))] bg-[hsl(var(--surface))] shadow-sm',
@@ -51,7 +46,10 @@ export function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDiv
 export function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h3
-      className={cn('text-lg font-semibold leading-tight tracking-tight text-[hsl(var(--foreground))]', className)}
+      className={cn(
+        'text-lg font-semibold leading-tight tracking-tight text-[hsl(var(--foreground))]',
+        className
+      )}
       {...props}
     />
   );
@@ -61,17 +59,30 @@ export function CardDescription({
   className,
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn('text-sm text-[hsl(var(--muted-foreground))] leading-relaxed', className)} {...props} />;
+  return (
+    <p
+      className={cn('text-sm text-[hsl(var(--muted-foreground))] leading-relaxed', className)}
+      {...props}
+    />
+  );
 }
 
 export function CardContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('pt-0 text-sm text-[hsl(var(--foreground))] leading-relaxed', className)} {...props} />;
+  return (
+    <div
+      className={cn('pt-0 text-sm text-[hsl(var(--foreground))] leading-relaxed', className)}
+      {...props}
+    />
+  );
 }
 
 export function CardFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn('flex items-center pt-4 border-t border-[hsl(var(--border-subtle))] mt-4', className)}
+      className={cn(
+        'flex items-center pt-4 border-t border-[hsl(var(--border-subtle))] mt-4',
+        className
+      )}
       {...props}
     />
   );

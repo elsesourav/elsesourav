@@ -90,7 +90,10 @@ export function AppScreenshotGallery({
       <div className="flex items-center justify-between pb-3 border-b border-[hsl(var(--border-subtle))]">
         <div className="flex items-center gap-2 text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold">
           <ImageIcon className="w-4 h-4" />
-          <h2 id="interface-showcase-heading" className="text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold">
+          <h2
+            id="interface-showcase-heading"
+            className="text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold"
+          >
             Interface Showcase & Visuals
           </h2>
         </div>
@@ -262,11 +265,13 @@ export function AppScreenshotGallery({
 
           {/* Bottom Hint / Touch status */}
           <div className="text-center text-xs font-mono text-zinc-400 pt-3">
-            <span className="sm:hidden">
-              Swipe or tap arrows to navigate • Tap ✕ to close
-            </span>
+            <span className="sm:hidden">Swipe or tap arrows to navigate • Tap ✕ to close</span>
             <span className="hidden sm:inline">
-              Press <kbd className="px-1.5 py-0.5 rounded bg-zinc-800 border border-zinc-700 text-zinc-200">Esc</kbd> to close, arrow keys to navigate
+              Press{' '}
+              <kbd className="px-1.5 py-0.5 rounded bg-zinc-800 border border-zinc-700 text-zinc-200">
+                Esc
+              </kbd>{' '}
+              to close, arrow keys to navigate
             </span>
           </div>
         </div>

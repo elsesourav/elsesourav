@@ -64,7 +64,8 @@ export default async function HelpPage({ searchParams }: HelpPageProps) {
               <div className="flex items-center gap-2">
                 <span className="text-sm text-[hsl(var(--muted-foreground))]">
                   Search results for &ldquo;
-                  <span className="text-[hsl(var(--foreground))] font-semibold">{searchQuery}</span>&rdquo;
+                  <span className="text-[hsl(var(--foreground))] font-semibold">{searchQuery}</span>
+                  &rdquo;
                 </span>
                 <Badge variant="primary" className="text-xs px-2 py-0.5">
                   {searchResult.totalCount} {searchResult.totalCount === 1 ? 'guide' : 'guides'}
@@ -167,7 +168,10 @@ export default async function HelpPage({ searchParams }: HelpPageProps) {
           <section className="space-y-6" aria-labelledby="popular-guides-heading">
             <div className="flex items-center gap-2 border-b border-[hsl(var(--border-subtle))] pb-4">
               <Sparkles className="w-5 h-5 text-indigo-500" />
-              <h2 id="popular-guides-heading" className="text-xl font-bold text-[hsl(var(--foreground))]">
+              <h2
+                id="popular-guides-heading"
+                className="text-xl font-bold text-[hsl(var(--foreground))]"
+              >
                 Popular Guides & Tutorials
               </h2>
             </div>

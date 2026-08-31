@@ -69,7 +69,8 @@ export function DangerZone() {
           <div className="space-y-1">
             <h4 className="text-xs font-semibold text-foreground">Delete Account</h4>
             <p className="text-[11px] text-muted-foreground">
-              Permanently delete your account, wipe personal profile data, and invalidate active sessions.
+              Permanently delete your account, wipe personal profile data, and invalidate active
+              sessions.
             </p>
           </div>
 

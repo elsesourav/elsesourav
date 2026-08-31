@@ -10,8 +10,8 @@ describe('Dynamic Content-Aware Social Image System (Prompt 3 of 5)', () => {
     expect(fs.existsSync(rootOgPath)).toBe(true);
 
     const content = fs.readFileSync(rootOgPath, 'utf8');
-    expect(content).toContain("width: 1200");
-    expect(content).toContain("height: 630");
+    expect(content).toContain('width: 1200');
+    expect(content).toContain('height: 630');
     expect(content).toContain("contentType = 'image/png'");
     expect(content).toContain('ImageResponse');
   });
@@ -21,8 +21,8 @@ describe('Dynamic Content-Aware Social Image System (Prompt 3 of 5)', () => {
     expect(fs.existsSync(appOgPath)).toBe(true);
 
     const content = fs.readFileSync(appOgPath, 'utf8');
-    expect(content).toContain("width: 1200");
-    expect(content).toContain("height: 630");
+    expect(content).toContain('width: 1200');
+    expect(content).toContain('height: 630');
     expect(content).toContain('getPublicAppBySlug');
     expect(content).toContain('ImageResponse');
   });
@@ -32,8 +32,8 @@ describe('Dynamic Content-Aware Social Image System (Prompt 3 of 5)', () => {
     expect(fs.existsSync(blogOgPath)).toBe(true);
 
     const content = fs.readFileSync(blogOgPath, 'utf8');
-    expect(content).toContain("width: 1200");
-    expect(content).toContain("height: 630");
+    expect(content).toContain('width: 1200');
+    expect(content).toContain('height: 630');
     expect(content).toContain('getPublicBlogPostBySlug');
     expect(content).toContain('ImageResponse');
   });
@@ -43,8 +43,8 @@ describe('Dynamic Content-Aware Social Image System (Prompt 3 of 5)', () => {
     expect(fs.existsSync(aboutOgPath)).toBe(true);
 
     const content = fs.readFileSync(aboutOgPath, 'utf8');
-    expect(content).toContain("width: 1200");
-    expect(content).toContain("height: 630");
+    expect(content).toContain('width: 1200');
+    expect(content).toContain('height: 630');
     expect(content).toContain('ImageResponse');
   });
 

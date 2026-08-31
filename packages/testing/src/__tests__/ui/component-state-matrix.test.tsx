@@ -216,11 +216,21 @@ describe('UI Component State Matrix & Edge Cases', () => {
     it('renders Card across all 5 depth levels (0 through 4)', () => {
       render(
         <div>
-          <Card depth={0} data-testid="card-depth-0">Level 0 Canvas</Card>
-          <Card depth={1} data-testid="card-depth-1">Level 1 Surface</Card>
-          <Card depth={2} data-testid="card-depth-2">Level 2 Elevated</Card>
-          <Card depth={3} data-testid="card-depth-3">Level 3 Overlay</Card>
-          <Card depth={4} data-testid="card-depth-4">Level 4 Focused</Card>
+          <Card depth={0} data-testid="card-depth-0">
+            Level 0 Canvas
+          </Card>
+          <Card depth={1} data-testid="card-depth-1">
+            Level 1 Surface
+          </Card>
+          <Card depth={2} data-testid="card-depth-2">
+            Level 2 Elevated
+          </Card>
+          <Card depth={3} data-testid="card-depth-3">
+            Level 3 Overlay
+          </Card>
+          <Card depth={4} data-testid="card-depth-4">
+            Level 4 Focused
+          </Card>
         </div>
       );
 

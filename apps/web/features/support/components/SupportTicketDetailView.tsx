@@ -160,10 +160,16 @@ export function SupportTicketDetailView({ ticket }: SupportTicketDetailViewProps
                 {ticket.ticketNumber}
               </span>
               {getStatusBadge(ticket.status)}
-              <Badge variant="default" className="text-[10px] bg-muted text-muted-foreground border-border">
+              <Badge
+                variant="default"
+                className="text-[10px] bg-muted text-muted-foreground border-border"
+              >
                 {ticket.category}
               </Badge>
-              <Badge variant="default" className="text-[10px] bg-muted text-muted-foreground uppercase border-border">
+              <Badge
+                variant="default"
+                className="text-[10px] bg-muted text-muted-foreground uppercase border-border"
+              >
                 {ticket.priority} priority
               </Badge>
             </div>
@@ -208,7 +214,9 @@ export function SupportTicketDetailView({ ticket }: SupportTicketDetailViewProps
       <section className="space-y-5" aria-label="Ticket Conversation">
         <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
           <span>Conversation History</span>
-          <span className="text-xs text-muted-foreground font-normal">({ticket.messages.length} messages)</span>
+          <span className="text-xs text-muted-foreground font-normal">
+            ({ticket.messages.length} messages)
+          </span>
         </h2>
 
         <div className="space-y-4">
@@ -298,7 +306,9 @@ export function SupportTicketDetailView({ ticket }: SupportTicketDetailViewProps
             />
 
             <div className="flex items-center justify-between text-xs">
-              <span className="text-[11px] text-muted-foreground">{replyText.length}/2000 characters</span>
+              <span className="text-[11px] text-muted-foreground">
+                {replyText.length}/2000 characters
+              </span>
 
               <Button
                 type="submit"

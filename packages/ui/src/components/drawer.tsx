@@ -42,9 +42,7 @@ export function Drawer({ open, onOpenChange, position = 'right', children }: Dra
         <div
           className={cn(
             'w-screen max-w-md bg-[hsl(var(--surface-elevated))] text-[hsl(var(--foreground))] border-[hsl(var(--border))] p-6 shadow-2xl flex flex-col justify-between animate-in duration-300',
-            position === 'right'
-              ? 'border-l slide-in-from-right'
-              : 'border-r slide-in-from-left'
+            position === 'right' ? 'border-l slide-in-from-right' : 'border-r slide-in-from-left'
           )}
         >
           {children}
@@ -62,7 +60,10 @@ export function DrawerHeader({
 }: React.HTMLAttributes<HTMLDivElement> & { onClose?: () => void }) {
   return (
     <div
-      className={cn('flex items-center justify-between pb-4 border-b border-[hsl(var(--border-subtle))]', className)}
+      className={cn(
+        'flex items-center justify-between pb-4 border-b border-[hsl(var(--border-subtle))]',
+        className
+      )}
       {...props}
     >
       <div>{children}</div>

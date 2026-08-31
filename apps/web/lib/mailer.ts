@@ -12,8 +12,10 @@ export async function sendPasswordResetEmail({
   displayName,
 }: SendPasswordResetEmailOptions): Promise<{ success: boolean; error?: string }> {
   try {
-    const smtpUser = process.env.NODEMAILER_USER || process.env.SMTP_USER || 'elsesourav.auth@gmail.com';
-    const smtpPass = process.env.NODEMAILER_PASS || process.env.SMTP_PASS || process.env.GMAIL_APP_PASSWORD;
+    const smtpUser =
+      process.env.NODEMAILER_USER || process.env.SMTP_USER || 'elsesourav.auth@gmail.com';
+    const smtpPass =
+      process.env.NODEMAILER_PASS || process.env.SMTP_PASS || process.env.GMAIL_APP_PASSWORD;
     const smtpHost = process.env.NODEMAILER_HOST || process.env.SMTP_HOST || 'smtp.gmail.com';
     const smtpPort = Number(process.env.NODEMAILER_PORT || process.env.SMTP_PORT || 465);
 

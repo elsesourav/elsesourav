@@ -16,7 +16,8 @@ export const CAPABILITY_GROUPS_CONFIG: readonly CapabilityGroupConfig[] = [
   {
     id: 'interactive-games',
     title: 'Interactive Software & Games',
-    summary: 'Real-time animation loops, continuous collision detection, and arcade physics engines.',
+    summary:
+      'Real-time animation loops, continuous collision detection, and arcade physics engines.',
     technologies: ['C++', 'Canvas 2D', 'Emscripten', 'AABB Physics'],
     projects: [
       {
@@ -34,7 +35,8 @@ export const CAPABILITY_GROUPS_CONFIG: readonly CapabilityGroupConfig[] = [
   {
     id: 'creative-tools',
     title: 'Creative Tools & Canvas',
-    summary: 'Client-side photo manipulation, non-destructive adjustment matrices, and pixel transformations.',
+    summary:
+      'Client-side photo manipulation, non-destructive adjustment matrices, and pixel transformations.',
     technologies: ['HTML5 Canvas', 'ImageData API', 'TypeScript', 'Web Workers'],
     projects: [
       {
@@ -47,7 +49,8 @@ export const CAPABILITY_GROUPS_CONFIG: readonly CapabilityGroupConfig[] = [
   {
     id: 'ai-ml',
     title: 'AI & Machine Learning Experimentation',
-    summary: 'Browser extension AI pipelines, on-device OCR, and matrix-based neural network implementations.',
+    summary:
+      'Browser extension AI pipelines, on-device OCR, and matrix-based neural network implementations.',
     technologies: ['Manifest V3', 'WebAssembly OCR', 'LLM Streaming', 'Matrix Math'],
     projects: [
       {
@@ -65,7 +68,8 @@ export const CAPABILITY_GROUPS_CONFIG: readonly CapabilityGroupConfig[] = [
   {
     id: 'automation',
     title: 'Automation & Workflow Engines',
-    summary: 'Batch data reconciliation, multi-seller SKU parsing, and institutional process automation.',
+    summary:
+      'Batch data reconciliation, multi-seller SKU parsing, and institutional process automation.',
     technologies: ['Web Workers', 'Regex Engines', 'CSV/Excel Pipelines', 'Async I/O'],
     projects: [
       {
@@ -88,7 +92,8 @@ export const CAPABILITY_GROUPS_CONFIG: readonly CapabilityGroupConfig[] = [
   {
     id: 'systems-wasm',
     title: 'Systems Programming & WebAssembly',
-    summary: 'Compiling low-level C++ architectures for native-speed execution in modern browser runtimes.',
+    summary:
+      'Compiling low-level C++ architectures for native-speed execution in modern browser runtimes.',
     technologies: ['C++', 'WebAssembly', 'Emscripten', 'Memory Buffers'],
     projects: [
       {
@@ -106,7 +111,8 @@ export const CAPABILITY_GROUPS_CONFIG: readonly CapabilityGroupConfig[] = [
   {
     id: 'graphics-simulations',
     title: 'Graphics & Simulations (The Lab)',
-    summary: 'Procedural generation, cellular automata sandboxes, and mathematical physics simulations.',
+    summary:
+      'Procedural generation, cellular automata sandboxes, and mathematical physics simulations.',
     technologies: ['Cellular Automata', 'WFC Algorithm', 'Constraint Solvers', 'Canvas'],
     projects: [
       {
@@ -124,7 +130,8 @@ export const CAPABILITY_GROUPS_CONFIG: readonly CapabilityGroupConfig[] = [
   {
     id: 'mobile-offline',
     title: 'Mobile & Offline-First Systems',
-    summary: 'Cross-platform mobile applications with offline persistence and structured state management.',
+    summary:
+      'Cross-platform mobile applications with offline persistence and structured state management.',
     technologies: ['React Native', 'AsyncStorage', 'Local State', 'Notifications'],
     projects: [
       {
@@ -137,7 +144,8 @@ export const CAPABILITY_GROUPS_CONFIG: readonly CapabilityGroupConfig[] = [
   {
     id: 'web-applications',
     title: 'Full-Stack Web Applications',
-    summary: 'High-performance web applications with end-to-end type safety, accessible UI, and relational data.',
+    summary:
+      'High-performance web applications with end-to-end type safety, accessible UI, and relational data.',
     technologies: ['TypeScript', 'Next.js 15', 'PostgreSQL', 'Prisma', 'Tailwind CSS'],
     projects: [
       {

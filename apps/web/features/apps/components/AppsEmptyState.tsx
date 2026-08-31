@@ -31,7 +31,11 @@ export function AppsEmptyState({ hasFilters }: AppsEmptyStateProps) {
             </Button>
           </Link>
           <Link href="/archive">
-            <Button variant="ghost" size="sm" className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 text-xs gap-1.5">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 text-xs gap-1.5"
+            >
               <span>Explore the Archive</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Button>

@@ -11,8 +11,24 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-sans)', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-        mono: ['var(--font-mono)', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+        sans: [
+          'var(--font-sans)',
+          'system-ui',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
+          'Roboto',
+          'sans-serif',
+        ],
+        mono: [
+          'var(--font-mono)',
+          'ui-monospace',
+          'SFMono-Regular',
+          'Menlo',
+          'Monaco',
+          'Consolas',
+          'monospace',
+        ],
       },
       colors: {
         border: {
@@ -115,10 +131,12 @@ const config: Config = {
         },
         'neon-pulse': {
           '0%, 100%': {
-            boxShadow: '0 0 0 2.5px rgba(99,102,241,0.85), 0 0 24px rgba(99,102,241,0.4), 0 0 0 7px rgba(139,92,246,0.25), 0 0 40px rgba(139,92,246,0.3)',
+            boxShadow:
+              '0 0 0 2.5px rgba(99,102,241,0.85), 0 0 24px rgba(99,102,241,0.4), 0 0 0 7px rgba(139,92,246,0.25), 0 0 40px rgba(139,92,246,0.3)',
           },
           '50%': {
-            boxShadow: '0 0 0 3px rgba(99,102,241,0.95), 0 0 32px rgba(99,102,241,0.55), 0 0 0 8.5px rgba(139,92,246,0.35), 0 0 50px rgba(139,92,246,0.4)',
+            boxShadow:
+              '0 0 0 3px rgba(99,102,241,0.95), 0 0 32px rgba(99,102,241,0.55), 0 0 0 8.5px rgba(139,92,246,0.35), 0 0 50px rgba(139,92,246,0.4)',
           },
         },
       },
@@ -130,7 +148,8 @@ const config: Config = {
         'neon-pulse': 'neon-pulse 4s ease-in-out infinite',
       },
       boxShadow: {
-        'neon-ring': '0 0 0 2.5px rgba(99,102,241,0.85), 0 0 24px rgba(99,102,241,0.4), 0 0 0 7px rgba(139,92,246,0.25), 0 0 40px rgba(139,92,246,0.3)',
+        'neon-ring':
+          '0 0 0 2.5px rgba(99,102,241,0.85), 0 0 24px rgba(99,102,241,0.4), 0 0 0 7px rgba(139,92,246,0.25), 0 0 40px rgba(139,92,246,0.3)',
         'neon-card': '0 20px 50px rgba(0,0,0,0.6)',
         'neon-card-hover': '0 20px 60px rgba(99,102,241,0.1), 0 0 0 1px rgba(99,102,241,0.25)',
         'neon-glow-sm': '0 0 15px rgba(99,102,241,0.2)',

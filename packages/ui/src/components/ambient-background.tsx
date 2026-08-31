@@ -4,13 +4,7 @@ import * as React from 'react';
 import { cn } from '../lib/utils';
 
 export type AmbientBackgroundVariant =
-  | 'home'
-  | 'apps'
-  | 'project'
-  | 'notes'
-  | 'about'
-  | 'help'
-  | 'minimal';
+  'home' | 'apps' | 'project' | 'notes' | 'about' | 'help' | 'minimal';
 
 export interface AmbientBackgroundProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: AmbientBackgroundVariant;
@@ -272,7 +266,8 @@ export function AmbientBackground({
           style={{
             left: `${pointerPos.x}px`,
             top: `${pointerPos.y}px`,
-            background: 'radial-gradient(circle at center, var(--ambient-pointer-glow) 0%, transparent 70%)',
+            background:
+              'radial-gradient(circle at center, var(--ambient-pointer-glow) 0%, transparent 70%)',
             opacity: pointerPos.active ? 1 : 0,
           }}
         />
