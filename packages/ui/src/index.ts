@@ -57,3 +57,5 @@ export * from './components/admin-markdown-editor';
 
 // Motion & Reveal
 export * from './components/reveal';
+export * from './components/animations';
+export * from './components/micro';
