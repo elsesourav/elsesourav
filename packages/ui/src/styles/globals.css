@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @import './micro.css';
+@import './interior.css';
 
 @layer base {
   :root,

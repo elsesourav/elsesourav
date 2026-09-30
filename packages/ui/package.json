@@ -16,8 +16,14 @@
       "import": "./src/components/micro/index.ts",
       "default": "./src/components/micro/index.ts"
     },
+    "./interior": {
+      "types": "./src/components/interior/index.ts",
+      "import": "./src/components/interior/index.ts",
+      "default": "./src/components/interior/index.ts"
+    },
     "./styles.css": "./src/styles/globals.css",
-    "./micro.css": "./src/styles/micro.css"
+    "./micro.css": "./src/styles/micro.css",
+    "./interior.css": "./src/styles/interior.css"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

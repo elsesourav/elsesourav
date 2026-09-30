@@ -1,0 +1,70 @@
+/* ==========================================================================
+   Interior Micro-Interactions - Global Theme & CSS Variable System
+   Adapts to Light & Dark themes via :root and .dark / [data-theme="dark"]
+   Harmonizes with micro.css and design system tokens.
+   ========================================================================== */
+
+:root {
+  /* Typography */
+  --interior-font-sans: var(--micro-font-sans, var(--font-sans, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif));
+  --interior-font-mono: var(--micro-font-mono, var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace));
+
+  /* Light Theme Colors */
+  --interior-bg: var(--micro-bg, #ffffff);
+  --interior-bg-subtle: var(--micro-bg-subtle, #f4f4f5);
+  --interior-bg-elevated: var(--micro-bg-elevated, #fbfbfb);
+  --interior-bg-card: var(--micro-bg-card, #ffffff);
+  --interior-bg-hover: #f4f4f5;
+  --interior-fg: var(--micro-fg, #09090b);
+  --interior-fg-muted: var(--micro-fg-muted, #71717a);
+  --interior-fg-subtle: var(--micro-fg-subtle, #a1a1aa);
+  --interior-border: var(--micro-border, #e4e4e7);
+  --interior-border-subtle: var(--micro-border-subtle, #f4f4f5);
+  --interior-border-strong: var(--micro-border-strong, #d4d4d8);
+  --interior-primary: var(--micro-primary, #6366f1);
+  --interior-primary-fg: var(--micro-primary-fg, #ffffff);
+  --interior-accent: var(--micro-accent, #f5a524);
+  --interior-destructive: var(--micro-destructive, #ef4444);
+  --interior-success: var(--micro-success, #10b981);
+  --interior-warning: var(--micro-warning, #f59e0b);
+  --interior-ring: rgba(99, 102, 241, 0.35);
+  --interior-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.dark,
+[data-theme="dark"] {
+  /* Dark Theme Colors */
+  --interior-bg: var(--micro-bg, #09090b);
+  --interior-bg-subtle: var(--micro-bg-subtle, #18181b);
+  --interior-bg-elevated: var(--micro-bg-elevated, #27272a);
+  --interior-bg-card: var(--micro-bg-card, #18181b);
+  --interior-bg-hover: #27272a;
+  --interior-fg: var(--micro-fg, #fafafa);
+  --interior-fg-muted: var(--micro-fg-muted, #a1a1aa);
+  --interior-fg-subtle: var(--micro-fg-subtle, #71717a);
+  --interior-border: var(--micro-border, #27272a);
+  --interior-border-subtle: var(--micro-border-subtle, #18181b);
+  --interior-border-strong: var(--micro-border-strong, #3f3f46);
+  --interior-primary: var(--micro-primary, #818cf8);
+  --interior-primary-fg: var(--micro-primary-fg, #ffffff);
+  --interior-accent: var(--micro-accent, #fbbf24);
+  --interior-destructive: var(--micro-destructive, #f87171);
+  --interior-success: var(--micro-success, #34d399);
+  --interior-warning: var(--micro-warning, #fbbf24);
+  --interior-ring: rgba(129, 140, 248, 0.35);
+  --interior-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 16px rgba(0, 0, 0, 0.45);
+}
+
+/* Interior component typography & base styles */
+[data-interior],
+[class*="interior-"] {
+  font-family: var(--interior-font-sans);
+  color: var(--interior-fg);
+}
+
+[data-interior] kbd,
+[data-interior] code,
+[class*="interior-"] kbd,
+[class*="interior-"] code {
+  font-family: var(--interior-font-mono);
+}

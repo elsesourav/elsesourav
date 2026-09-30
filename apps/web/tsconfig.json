@@ -22,7 +22,9 @@
     "paths": {
       "@/*": ["./*"],
       "@/components/micro": ["../../packages/ui/src/components/micro"],
-      "@/components/micro/*": ["../../packages/ui/src/components/micro/*"]
+      "@/components/micro/*": ["../../packages/ui/src/components/micro/*"],
+      "@/components/interior": ["../../packages/ui/src/components/interior"],
+      "@/components/interior/*": ["../../packages/ui/src/components/interior/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
