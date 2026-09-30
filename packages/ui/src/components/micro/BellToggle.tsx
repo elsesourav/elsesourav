@@ -1,20 +1,25 @@
-// @ts-nocheck
 'use client';
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { animate, motion, useMotionValue, useReducedMotion, useTransform } from 'motion/react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Notification03Icon } from '@hugeicons/core-free-icons';
-const SPRING_UI = { type: 'spring', duration: 0.3, bounce: 0 };
+
+const SPRING_UI = { type: 'spring' as const, duration: 0.3, bounce: 0 };
 const SEG_EASE = 'cubic-bezier(0.77, 0, 0.175, 1)';
 const WARP = 0.6;
-const SIZES = { sm: [36, 12.5, 14, 15, 8], md: [44, 13.5, 16, 19, 9], lg: [52, 15, 18, 23, 10] };
+const SIZES: Record<string, [number, number, number, number, number]> = {
+  sm: [36, 12.5, 14, 15, 8],
+  md: [44, 13.5, 16, 19, 9],
+  lg: [52, 15, 18, 23, 10]
+};
 const WOBBLE = { amplitude: 0.4, passes: 3, duration: 420 };
 const BELL_BODY = 'M6 16.5V10a6 6 0 0 1 12 0v6.5l1.6 2.3H4.4L6 16.5z';
 
-const passOffset = (k, passes) => 1 - Math.pow(1 - (k + 2 / 3) / (passes + 1), WARP);
-const ringKeyframes = (from, amplitude, passes, decay) => {
-  const frames = [{ transform: `rotate(${from}deg)`, offset: 0, easing: SEG_EASE }];
+const passOffset = (k: number, passes: number): number => 1 - Math.pow(1 - (k + 2 / 3) / (passes + 1), WARP);
+
+const ringKeyframes = (from: number, amplitude: number, passes: number, decay: number): Keyframe[] => {
+  const frames: Keyframe[] = [{ transform: `rotate(${from}deg)`, offset: 0, easing: SEG_EASE }];
   for (let k = 0; k < passes; k++) {
     const angle = amplitude * Math.pow(1 - k / passes, decay) * (k % 2 ? 1 : -1);
     frames.push({ transform: `rotate(${angle.toFixed(2)}deg)`, offset: passOffset(k, passes), easing: SEG_EASE });
@@ -22,24 +27,25 @@ const ringKeyframes = (from, amplitude, passes, decay) => {
   frames.push({ transform: 'rotate(0deg)', offset: 1 });
   return frames;
 };
-const liveAngle = el => {
+
+const liveAngle = (el: Element | null): number => {
+  if (!el || typeof window === 'undefined') return 0;
   const tf = getComputedStyle(el).transform;
   if (!tf || tf === 'none') return 0;
   const m = new DOMMatrix(tf);
   return (Math.atan2(m.b, m.a) * 180) / Math.PI;
 };
 
-
 export interface BellToggleProps {
-  offLabel?: string;
-  onLabel?: (...args: any[]) => any;
-  icon?: any;
-  label?: any;
+  offLabel?: React.ReactNode;
+  onLabel?: React.ReactNode;
+  icon?: React.ReactNode;
+  label?: string;
   color?: string;
   background?: string;
-  onColor?: (...args: any[]) => any;
-  onBackground?: (...args: any[]) => any;
-  size?: string;
+  onColor?: string;
+  onBackground?: string;
+  size?: 'sm' | 'md' | 'lg';
   radius?: number;
   ringAmplitude?: number;
   ringPasses?: number;
@@ -54,24 +60,22 @@ export interface BellToggleProps {
   badgeTextColor?: string;
   waves?: boolean;
   clapper?: boolean;
-  pressed?: any;
+  pressed?: boolean;
   defaultPressed?: boolean;
-  onChange?: (...args: any[]) => any;
+  onChange?: (pressed: boolean) => void;
   disabled?: boolean;
   className?: string;
-  [key: string]: any;
 }
 
 export default function BellToggle({
-
   offLabel = 'Notify me',
   onLabel = "You'll be notified",
   icon,
   label,
-  color = '#f5f5f5',
-  background = '#27272a',
-  onColor = '#18181b',
-  onBackground = '#f5f5f5',
+  color = 'var(--micro-fg, #f5f5f5)',
+  background = 'var(--micro-bg-elevated, #27272a)',
+  onColor = 'var(--micro-bg, #18181b)',
+  onBackground = 'var(--micro-fg, #f5f5f5)',
   size = 'md',
   radius = 22,
   ringAmplitude = 17,
@@ -96,23 +100,27 @@ export default function BellToggle({
   const [inner, setInner] = useState(defaultPressed);
   const on = pressed ?? inner;
   const reduce = useReducedMotion();
-  const rootRef = useRef(null);
-  const glyphRef = useRef(null);
-  const clapperRef = useRef(null);
-  const waveLeft = useRef(null);
-  const waveRight = useRef(null);
-  const offRef = useRef(null);
-  const onRef = useRef(null);
-  const lastInput = useRef('pointer');
-  const pending = useRef(null);
-  const spring = useRef(null);
+  const rootRef = useRef<HTMLSpanElement | null>(null);
+  const glyphRef = useRef<HTMLSpanElement | null>(null);
+  const clapperRef = useRef<HTMLSpanElement | null>(null);
+  const waveLeft = useRef<SVGSVGElement | null>(null);
+  const waveRight = useRef<SVGSVGElement | null>(null);
+  const offRef = useRef<HTMLSpanElement | null>(null);
+  const onRef = useRef<HTMLSpanElement | null>(null);
+  const lastInput = useRef<'pointer' | 'keyboard'>('pointer');
+  const pending = useRef<'pointer' | 'keyboard' | null>(null);
+  const spring = useRef<{ stop: () => void } | null>(null);
   const prevCount = useRef(count);
-  const [h, fs, iconSize, px, gap] = SIZES[size] ?? SIZES.md;
+  const defaultSize: [number, number, number, number, number] = [44, 13.5, 16, 19, 9];
+  const [h, fs, iconSize, px, gap] = SIZES[size] ?? defaultSize;
 
-  const t = useMotionValue(on ? 1 : 0);
-  const wOff = useMotionValue(0);
-  const wOn = useMotionValue(0);
-  const clip = useTransform([t, wOff, wOn], ([v, a, b]) => `${Math.max(a, b) - (a + (b - a) * v)}px`);
+  const t = useMotionValue<number>(on ? 1 : 0);
+  const wOff = useMotionValue<number>(0);
+  const wOn = useMotionValue<number>(0);
+  const clip = useTransform([t, wOff, wOn], (latest: number[]) => {
+    const [v = 0, a = 0, b = 0] = latest;
+    return `${Math.max(a, b) - (a + (b - a) * v)}px`;
+  });
 
   useLayoutEffect(() => {
     const measure = () => {
@@ -125,17 +133,16 @@ export default function BellToggle({
     if (onRef.current) observer.observe(onRef.current);
     document.fonts?.ready.then(measure);
     return () => observer.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [offLabel, onLabel, size]);
+  }, [offLabel, onLabel, size, wOff, wOn]);
 
-  const swing = (amplitude, passes, duration) => {
+  const swing = React.useCallback((amplitude: number, passes: number, duration: number) => {
     const el = glyphRef.current;
     if (!el) return;
-    el.getAnimations().forEach(a => a.cancel());
+    el.getAnimations().forEach((a: Animation) => a.cancel());
     el.animate(ringKeyframes(liveAngle(el), amplitude, passes, ringDecay), { duration, easing: 'linear' });
     const c = clapperRef.current;
     if (c) {
-      c.getAnimations().forEach(a => a.cancel());
+      c.getAnimations().forEach((a: Animation) => a.cancel());
       c.animate(ringKeyframes(liveAngle(c), amplitude * 1.6, passes, ringDecay), {
         duration,
         delay: 70,
@@ -156,39 +163,44 @@ export default function BellToggle({
         { duration: 380, delay: passOffset(k, passes) * duration, easing: 'ease-out' }
       );
     }
-  };
+  }, [ringDecay, waves]);
 
   useLayoutEffect(() => {
     const pointer = pending.current === 'pointer' && !reduce;
     pending.current = null;
     spring.current?.stop();
-    if (pointer) spring.current = animate(t, on ? 1 : 0, { ...SPRING_UI, bounce: revealBounce });
-    else t.jump(on ? 1 : 0);
+    if (pointer) {
+      spring.current = animate(t, on ? 1 : 0, { ...SPRING_UI, bounce: revealBounce });
+    } else {
+      t.set(on ? 1 : 0);
+    }
     if (on && pointer) swing(ringAmplitude, ringPasses, ringDuration);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [on]);
+  }, [on, reduce, revealBounce, ringAmplitude, ringDuration, ringPasses, swing, t]);
+
   useLayoutEffect(() => () => spring.current?.stop(), []);
 
   useEffect(() => {
     const was = prevCount.current;
     prevCount.current = count;
     if (count > was && on && !reduce) swing(ringAmplitude * WOBBLE.amplitude, WOBBLE.passes, WOBBLE.duration);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [count]);
+  }, [count, on, reduce, ringAmplitude, swing]);
 
   const toggle = () => {
     pending.current = lastInput.current;
     if (pressed === undefined) setInner(!on);
     onChange?.(!on);
   };
-  const press = e => {
+
+  const press = (e: React.PointerEvent<HTMLButtonElement>) => {
     lastInput.current = 'pointer';
     if (e.button === 0 && !disabled && rootRef.current) rootRef.current.dataset.pressed = '';
   };
+
   const release = () => {
     if (rootRef.current) delete rootRef.current.dataset.pressed;
   };
-  const key = e => {
+
+  const key = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === 'Enter' || e.key === ' ') lastInput.current = 'keyboard';
   };
 
@@ -216,13 +228,13 @@ export default function BellToggle({
         '--bt-icon': `${iconSize}px`,
         '--bt-px': `${px}px`,
         '--bt-gap': `${gap}px`
-      }}
+      } as React.CSSProperties}
     >
       <button
         type="button"
         className="bell-toggle__button"
         aria-pressed={on}
-        aria-label={label ?? offLabel}
+        aria-label={label ?? (typeof offLabel === 'string' ? offLabel : 'Notify me')}
         disabled={disabled}
         onPointerDown={press}
         onPointerUp={release}

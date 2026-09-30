@@ -1,26 +1,29 @@
-// @ts-nocheck
 'use client';
 
-import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 
 const TAP_MS = 250;
 const HIT_PAD = 10;
-const LINEAR = t => t;
-const EASE_OUT = t => 1 - Math.pow(1 - t, 3);
+const LINEAR = (t: number): number => t;
+const EASE_OUT = (t: number): number => 1 - Math.pow(1 - t, 3);
 
+export type HoldButtonSize = 'sm' | 'md' | 'lg' | string;
+export type HoldPhase = 'idle' | 'holding' | 'done';
+export type HoldInput = 'pointer' | 'key' | null;
+export type HoldFillDirection = 'right' | 'up';
 
 export interface HoldButtonProps {
   children?: React.ReactNode;
   doneLabel?: string;
-  icon?: any;
-  doneIcon?: any;
+  icon?: React.ReactNode;
+  doneIcon?: React.ReactNode;
   backgroundColor?: string;
   fillColor?: string;
   textColor?: string;
   fillTextColor?: string;
-  size?: string;
+  size?: HoldButtonSize;
   radius?: number;
-  fillDirection?: string;
+  fillDirection?: HoldFillDirection | string;
   holdTime?: number;
   releaseTime?: number;
   pressScale?: number;
@@ -29,14 +32,13 @@ export interface HoldButtonProps {
   glow?: boolean;
   resetAfter?: number;
   disabled?: boolean;
-  onHold?: (...args: any[]) => any;
-  onTap?: (...args: any[]) => any;
+  onHold?: () => void;
+  onTap?: () => void;
   className?: string;
-  [key: string]: any;
+  style?: React.CSSProperties;
 }
 
 export default function HoldButton({
-
   children = 'Hold to delete',
   doneLabel = 'Deleted',
   icon = null,
@@ -58,37 +60,38 @@ export default function HoldButton({
   disabled = false,
   onHold,
   onTap,
-  className = ''
+  className = '',
+  style
 }: HoldButtonProps) {
-  const [phase, setPhase] = useState('idle');
-  const [input, setInput] = useState(null);
-  const phaseRef = useRef('idle');
-  const inputRef = useRef(null);
-  const buttonRef = useRef(null);
-  const gesture = useRef({ pointerId: null, start: 0, rect: null });
-  const timers = useRef({ complete: 0, reset: 0 });
+  const [phase, setPhase] = useState<HoldPhase>('idle');
+  const [input, setInput] = useState<HoldInput>(null);
+  const phaseRef = useRef<HoldPhase>('idle');
+  const inputRef = useRef<HoldInput>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const gesture = useRef<{ pointerId: number | null; start: number; rect: DOMRect | null }>({ pointerId: null, start: 0, rect: null });
+  const timers = useRef<{ complete: ReturnType<typeof setTimeout> | number; reset: ReturnType<typeof setTimeout> | number }>({ complete: 0, reset: 0 });
   const hintId = useId();
 
-  const go = (next, kind = null) => {
+  const go = (next: HoldPhase, kind: HoldInput = null): void => {
     phaseRef.current = next;
     inputRef.current = kind;
     setPhase(next);
     setInput(kind);
   };
 
-  const clearTimers = () => {
+  const clearTimers = (): void => {
     clearTimeout(timers.current.complete);
     clearTimeout(timers.current.reset);
   };
 
-  const motion = useRef({ raf: 0, p: 0, from: 0, to: 0, start: 0 });
-  const drive = (to, duration, ease) => {
+  const motion = useRef<{ raf: number; p: number; from: number; to: number; start: number }>({ raf: 0, p: 0, from: 0, to: 0, start: 0 });
+  const drive = (to: number, duration: number, ease: (t: number) => number): void => {
     const m = motion.current;
     cancelAnimationFrame(m.raf);
     m.from = m.p;
     m.to = to;
     m.start = performance.now();
-    const step = now => {
+    const step = (now: number): void => {
       const t = duration > 0 ? Math.min(1, (now - m.start) / duration) : 1;
       m.p = m.from + (m.to - m.from) * ease(t);
       buttonRef.current?.style.setProperty('--hb-p', m.p.toFixed(4));
@@ -102,7 +105,7 @@ export default function HoldButton({
     m.raf = requestAnimationFrame(step);
   };
 
-  const complete = () => {
+  const complete = (): void => {
     if (phaseRef.current !== 'holding') return;
     if (performance.now() - gesture.current.start < holdTime - 50) return;
     clearTimers();
@@ -116,7 +119,7 @@ export default function HoldButton({
     }
   };
 
-  const begin = kind => {
+  const begin = (kind: 'pointer' | 'key'): boolean => {
     if (disabled || phaseRef.current !== 'idle') return false;
     const button = buttonRef.current;
     if (!button) return false;
@@ -128,7 +131,7 @@ export default function HoldButton({
     return true;
   };
 
-  const release = ({ drifted = false } = {}) => {
+  const release = ({ drifted = false }: { drifted?: boolean } = {}): void => {
     if (phaseRef.current !== 'holding') return;
     clearTimers();
     const held = performance.now() - gesture.current.start;
@@ -139,25 +142,29 @@ export default function HoldButton({
   const releaseRef = useRef(release);
   releaseRef.current = release;
 
-  const handlePointerDown = e => {
+  const handlePointerDown = (e: React.PointerEvent<HTMLButtonElement>): void => {
     if (e.button !== 0 || !e.isPrimary || gesture.current.pointerId !== null) return;
     if (!begin('pointer')) return;
     gesture.current.pointerId = e.pointerId;
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
   };
 
-  const endPointer = (e, options) => {
+  const endPointer = (e: React.PointerEvent<HTMLButtonElement>, options?: { drifted?: boolean }): void => {
     if (e.pointerId !== gesture.current.pointerId) return;
     gesture.current.pointerId = null;
     try {
       if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     release(options);
   };
 
-  const handlePointerMove = e => {
+  const handlePointerMove = (e: React.PointerEvent<HTMLButtonElement>): void => {
     if (e.pointerId !== gesture.current.pointerId) return;
     const r = gesture.current.rect;
     if (!r) return;
@@ -169,11 +176,11 @@ export default function HoldButton({
     if (out) endPointer(e, { drifted: true });
   };
 
-  const handlePointerLeave = e => {
+  const handlePointerLeave = (e: React.PointerEvent<HTMLButtonElement>): void => {
     if (e.pointerType !== 'touch') endPointer(e, { drifted: true });
   };
 
-  const handleKeyDown = e => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>): void => {
     if (e.key === 'Escape') {
       if (inputRef.current === 'key') release({ drifted: true });
       return;
@@ -184,7 +191,7 @@ export default function HoldButton({
     }
   };
 
-  const handleKeyUp = e => {
+  const handleKeyUp = (e: React.KeyboardEvent<HTMLButtonElement>): void => {
     if (e.key === ' ' || e.key === 'Enter') {
       e.preventDefault();
       if (inputRef.current === 'key') release();
@@ -194,7 +201,7 @@ export default function HoldButton({
   useLayoutEffect(() => {
     const button = buttonRef.current;
     if (!button) return undefined;
-    const measure = () => {
+    const measure = (): void => {
       button.style.setProperty('--hb-w', `${button.offsetWidth}px`);
       button.style.setProperty('--hb-h', `${button.offsetHeight}px`);
     };
@@ -206,8 +213,8 @@ export default function HoldButton({
 
   useEffect(() => {
     if (phase !== 'holding') return undefined;
-    const cancel = () => releaseRef.current({ drifted: true });
-    const onVisibility = () => {
+    const cancel = (): void => releaseRef.current({ drifted: true });
+    const onVisibility = (): void => {
       if (document.hidden) cancel();
     };
     window.addEventListener('blur', cancel);
@@ -253,18 +260,21 @@ export default function HoldButton({
       data-direction={direction}
       data-glow={glow ? 'true' : undefined}
       aria-describedby={hintId}
-      style={{
-        '--hb-radius': `${radius}px`,
-        '--hb-bg': backgroundColor,
-        '--hb-fill': fillColor,
-        '--hb-text': textColor,
-        '--hb-fill-text': fillTextColor,
-        '--hb-hold': `${holdTime}ms`,
-        '--hb-cycles': holdTime / 1100,
-        '--hb-release': `${releaseTime}ms`,
-        '--hb-press': pressScale,
-        '--hb-wave': `${wave ? waveAmplitude : 0}px`
-      }}
+      style={
+        {
+          '--hb-radius': `${radius}px`,
+          '--hb-bg': backgroundColor,
+          '--hb-fill': fillColor,
+          '--hb-text': textColor,
+          '--hb-fill-text': fillTextColor,
+          '--hb-hold': `${holdTime}ms`,
+          '--hb-cycles': holdTime / 1100,
+          '--hb-release': `${releaseTime}ms`,
+          '--hb-press': pressScale,
+          '--hb-wave': `${wave ? waveAmplitude : 0}px`,
+          ...style
+        } as React.CSSProperties
+      }
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={e => endPointer(e)}

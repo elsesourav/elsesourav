@@ -1,7 +1,6 @@
-// @ts-nocheck
 'use client';
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Matter from 'matter-js';
 const { Bodies, Body, Composite, Engine } = Matter;
 
@@ -13,14 +12,73 @@ const ROW = 52;
 const DRAG_MIN = 4;
 const ZONE_PAD = 8;
 
-const jitter = i => {
+export interface FolderFloatItem {
+  label: string;
+  value: string;
+  [key: string]: unknown;
+}
+
+export interface FolderFloatSize {
+  w: number;
+  h: number;
+}
+
+export interface FolderFloatPos {
+  x: number;
+  y: number;
+  r: number;
+}
+
+export interface FolderFloatZone {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+}
+
+export interface FolderFloatDrag {
+  i: number;
+  id: number;
+  dx: number;
+  dy: number;
+  sx: number;
+  sy: number;
+  moved: boolean;
+}
+
+interface PhysicsBody extends Matter.Body {
+  plugin: {
+    phase: number;
+    [key: string]: unknown;
+  };
+}
+
+export interface FolderFloatWorld {
+  engine: Matter.Engine | null;
+  bodies: PhysicsBody[];
+  sizes: FolderFloatSize[];
+  raf: number;
+  last: number;
+  t0: number;
+  drag: FolderFloatDrag | null;
+  zone: FolderFloatZone | null;
+  live: boolean;
+}
+
+const jitter = (i: number): number => {
   const x = Math.sin(i * 12.9898 + 4.1414) * 43758.5453;
   return x - Math.floor(x);
 };
 
-const layout = (list, spread, lift, tilt, sizes) => {
-  const rows = [];
-  let row = [];
+const layout = (
+  list: FolderFloatItem[],
+  spread: number,
+  lift: number,
+  tilt: number,
+  sizes: FolderFloatSize[]
+): FolderFloatPos[] => {
+  const rows: { items: { i: number; pw: number }[]; width: number }[] = [];
+  let row: { i: number; pw: number }[] = [];
   let width = 0;
   list.forEach((item, i) => {
     const pw = sizes[i]?.w ?? PAD + item.label.length * CHAR;
@@ -33,7 +91,7 @@ const layout = (list, spread, lift, tilt, sizes) => {
     width += (row.length > 1 ? GAP : 0) + pw;
   });
   if (row.length) rows.push({ items: row, width });
-  const pos = [];
+  const pos: FolderFloatPos[] = [];
   rows.forEach((r, ri) => {
     let x = -r.width / 2;
     const shift = (ri % 2 ? 1 : -1) * Math.min(16, spread * 0.1);
@@ -46,18 +104,17 @@ const layout = (list, spread, lift, tilt, sizes) => {
   return pos;
 };
 
-
 export interface FolderFloatProps {
-  items?: any;
+  items?: (string | FolderFloatItem)[];
   label?: string;
   sublabel?: string;
-  trigger?: string;
+  trigger?: 'hover' | 'click' | string;
   defaultOpen?: boolean;
   closeOnSelect?: boolean;
   physics?: boolean;
   drift?: number;
-  onSelect?: (...args: any[]) => any;
-  onOpenChange?: (...args: any[]) => any;
+  onSelect?: (value: string, index: number) => void;
+  onOpenChange?: (open: boolean) => void;
   folderColor?: string;
   frontColor?: string;
   paperColor?: string;
@@ -76,11 +133,10 @@ export interface FolderFloatProps {
   stagger?: number;
   bounce?: number;
   className?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export default function FolderFloat({
-
   items = DEFAULT_ITEMS,
   label = 'Design feedback',
   sublabel = '',
@@ -113,10 +169,10 @@ export default function FolderFloat({
   const [open, setOpen] = useState(defaultOpen);
   const [popped, setPopped] = useState(-1);
   const [live, setLive] = useState(false);
-  const [sizes, setSizes] = useState([]);
-  const anchorRef = useRef(null);
-  const pillRefs = useRef([]);
-  const world = useRef({
+  const [sizes, setSizes] = useState<FolderFloatSize[]>([]);
+  const anchorRef = useRef<HTMLDivElement | null>(null);
+  const pillRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const world = useRef<FolderFloatWorld>({
     engine: null,
     bodies: [],
     sizes: [],
@@ -127,11 +183,18 @@ export default function FolderFloat({
     zone: null,
     live: false
   });
-  const latest = useRef({});
+  const latest = useRef<{
+    onSelect?: (value: string, index: number) => void;
+    onOpenChange?: (open: boolean) => void;
+    drift: number;
+    reduce: boolean;
+  }>({ onSelect, onOpenChange, drift, reduce: false });
   latest.current = { onSelect, onOpenChange, drift, reduce: false };
-  const popTimer = useRef(undefined);
-  const liveTimer = useRef(undefined);
-  const list = items.map(item => (typeof item === 'string' ? { label: item, value: item } : item));
+  const popTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const liveTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const list: FolderFloatItem[] = items.map(item =>
+    typeof item === 'string' ? { label: item, value: item } : item
+  );
   const n = list.length;
   const sub = sublabel || `${n} ${n === 1 ? 'note' : 'notes'}`;
   const pos = layout(list, spread, lift, tilt, sizes);
@@ -139,15 +202,22 @@ export default function FolderFloat({
   const labelsKey = list.map(item => item.label).join('|');
   useLayoutEffect(() => {
     const measure = () => {
-      const next = pillRefs.current.slice(0, n).map(el => (el ? { w: el.offsetWidth, h: el.offsetHeight } : null));
+      const next = pillRefs.current
+        .slice(0, n)
+        .map(el => (el ? { w: el.offsetWidth, h: el.offsetHeight } : null));
       if (next.some(s => !s)) return;
+      const validNext = next as FolderFloatSize[];
       setSizes(prev =>
-        prev.length === next.length && prev.every((s, i) => s.w === next[i].w && s.h === next[i].h) ? prev : next
+        prev.length === validNext.length &&
+        prev.every((s, i) => s.w === validNext[i]?.w && s.h === validNext[i]?.h)
+          ? prev
+          : validNext
       );
     };
     measure();
-    document.fonts?.ready.then(measure);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (typeof document !== 'undefined' && 'fonts' in document) {
+      void document.fonts.ready.then(measure);
+    }
   }, [n, labelsKey]);
 
   const stopPhysics = useCallback(() => {
@@ -158,9 +228,10 @@ export default function FolderFloat({
     if (w.engine) {
       w.bodies.forEach((b, i) => {
         const el = pillRefs.current[i];
-        if (!el) return;
+        const s = w.sizes[i];
+        if (!el || !s) return;
         el.style.setProperty('--x', `${b.position.x.toFixed(1)}px`);
-        el.style.setProperty('--y', `${(b.position.y - w.sizes[i].h / 2).toFixed(1)}px`);
+        el.style.setProperty('--y', `${(b.position.y - s.h / 2).toFixed(1)}px`);
       });
       Composite.clear(w.engine.world, false, true);
       Engine.clear(w.engine);
@@ -177,10 +248,11 @@ export default function FolderFloat({
     if (w.engine) return;
     const els = pillRefs.current.slice(0, n);
     if (els.some(el => !el)) return;
+    const validEls = els as HTMLButtonElement[];
     const engine = Engine.create({ gravity: { x: 0, y: 0 } });
     engine.enableSleeping = false;
     w.engine = engine;
-    w.sizes = els.map(el => ({ w: el.offsetWidth, h: el.offsetHeight }));
+    w.sizes = validEls.map(el => ({ w: el.offsetWidth, h: el.offsetHeight }));
     const ys = pos.map(p => p.y);
     const zone = {
       left: -spread - ZONE_PAD,
@@ -189,15 +261,17 @@ export default function FolderFloat({
       bottom: -lift + Math.max(...w.sizes.map(s => s.h))
     };
     w.zone = zone;
-    w.bodies = els.map((el, i) => {
-      const { w: bw, h: bh } = w.sizes[i];
-      const b = Bodies.rectangle(pos[i].x, pos[i].y + bh / 2, bw, bh, {
+    w.bodies = validEls.map((_, i) => {
+      const size = w.sizes[i] ?? { w: 60, h: 28 };
+      const { w: bw, h: bh } = size;
+      const currentPos = pos[i] ?? { x: 0, y: 0, r: 0 };
+      const b = Bodies.rectangle(currentPos.x, currentPos.y + bh / 2, bw, bh, {
         chamfer: { radius: Math.min(bh / 2 - 1, 16) },
         restitution: 0.55,
         friction: 0,
         frictionAir: 0.08,
         inertia: Infinity
-      });
+      }) as PhysicsBody;
       b.plugin = { phase: jitter(i) * Math.PI * 2 };
       return b;
     });
@@ -221,7 +295,7 @@ export default function FolderFloat({
     w.last = 0;
     w.t0 = performance.now();
     setLive(true);
-    const tick = now => {
+    const tick = (now: number) => {
       const s = world.current;
       if (!s.engine) return;
       const dt = s.last ? Math.min(32, now - s.last) : 16;
@@ -239,18 +313,18 @@ export default function FolderFloat({
       Engine.update(s.engine, dt);
       s.bodies.forEach((b, i) => {
         const el = pillRefs.current[i];
-        if (!el) return;
+        const sz = s.sizes[i];
+        if (!el || !sz) return;
         el.style.setProperty('--x', `${b.position.x.toFixed(1)}px`);
-        el.style.setProperty('--y', `${(b.position.y - s.sizes[i].h / 2).toFixed(1)}px`);
+        el.style.setProperty('--y', `${(b.position.y - sz.h / 2).toFixed(1)}px`);
       });
       s.raf = requestAnimationFrame(tick);
     };
     w.raf = requestAnimationFrame(tick);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [n, spread, lift, pos.map(p => `${p.x},${p.y}`).join('|')]);
+  }, [n, spread, lift, pos]);
 
   const set = useCallback(
-    next => {
+    (next: boolean) => {
       if (!next) stopPhysics();
       setOpen(prev => {
         if (prev === next) return prev;
@@ -290,7 +364,7 @@ export default function FolderFloat({
     [stopPhysics]
   );
 
-  const pick = (item, i) => {
+  const pick = (item: FolderFloatItem, i: number) => {
     latest.current.onSelect?.(item.value, i);
     clearTimeout(popTimer.current);
     setPopped(i);
@@ -298,11 +372,12 @@ export default function FolderFloat({
     if (closeOnSelect) set(false);
   };
 
-  const pointerAt = e => {
+  const pointerAt = (e: React.PointerEvent<HTMLButtonElement>) => {
     const r = anchorRef.current?.getBoundingClientRect();
     return r ? { x: e.clientX - r.left, y: e.clientY - r.top } : { x: 0, y: 0 };
   };
-  const down = (e, i) => {
+
+  const down = (e: React.PointerEvent<HTMLButtonElement>, i: number) => {
     const w = world.current;
     if (!w.live || e.button !== 0) return;
     const b = w.bodies[i];
@@ -319,9 +394,12 @@ export default function FolderFloat({
     };
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
   };
-  const move = (e, i) => {
+
+  const move = (e: React.PointerEvent<HTMLButtonElement>, i: number) => {
     const w = world.current;
     const d = w.drag;
     if (!d || d.i !== i || d.id !== e.pointerId) return;
@@ -331,15 +409,18 @@ export default function FolderFloat({
     }
     if (!d.moved) return;
     const b = w.bodies[i];
-    const { w: bw, h: bh } = w.sizes[i];
+    const size = w.sizes[i];
     const z = w.zone;
+    if (!b || !size || !z) return;
+    const { w: bw, h: bh } = size;
     const p = pointerAt(e);
     const x = Math.min(z.right - bw / 2, Math.max(z.left + bw / 2, p.x + d.dx));
     const y = Math.min(z.bottom - bh / 2, Math.max(z.top + bh / 2, p.y + d.dy));
     Body.setVelocity(b, { x: (x - b.position.x) * 0.6, y: (y - b.position.y) * 0.6 });
     Body.setPosition(b, { x, y });
   };
-  const up = (e, i, item) => {
+
+  const up = (e: React.PointerEvent<HTMLButtonElement>, i: number, item: FolderFloatItem) => {
     const w = world.current;
     const d = w.drag;
     if (!d || d.i !== i || d.id !== e.pointerId) return;
@@ -347,7 +428,9 @@ export default function FolderFloat({
     e.currentTarget.removeAttribute('data-drag');
     try {
       e.currentTarget.releasePointerCapture(e.pointerId);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     if (!d.moved && e.type === 'pointerup') pick(item, i);
   };
 
@@ -374,30 +457,32 @@ export default function FolderFloat({
           set(false);
         }
       }}
-      style={{
-        '--ff-w': `${width}px`,
-        '--ff-h': `${height}px`,
-        '--ff-r': `${radius}px`,
-        '--ff-back': folderColor,
-        '--ff-front': frontColor,
-        '--ff-paper': paperColor,
-        '--ff-item': itemColor,
-        '--ff-item-ink': itemTextColor,
-        '--ff-label': labelColor,
-        '--ff-spread': `${spread}px`,
-        '--ff-lift': `${lift}px`,
-        '--ff-angle': `${flapAngle}deg`,
-        '--ff-rest': `${restAngle}deg`,
-        '--ff-open': `${openDuration}ms`,
-        '--ff-close': `${Math.round(openDuration * 0.6)}ms`,
-        '--ff-stagger': `${stagger}ms`,
-        '--ff-n': n,
-        '--ff-spring': `cubic-bezier(0.34, ${(1 + bounce * 1.9).toFixed(2)}, 0.64, 1)`
-      }}
+      style={
+        {
+          '--ff-w': `${width}px`,
+          '--ff-h': `${height}px`,
+          '--ff-r': `${radius}px`,
+          '--ff-back': folderColor,
+          '--ff-front': frontColor,
+          '--ff-paper': paperColor,
+          '--ff-item': itemColor,
+          '--ff-item-ink': itemTextColor,
+          '--ff-label': labelColor,
+          '--ff-spread': `${spread}px`,
+          '--ff-lift': `${lift}px`,
+          '--ff-angle': `${flapAngle}deg`,
+          '--ff-rest': `${restAngle}deg`,
+          '--ff-open': `${openDuration}ms`,
+          '--ff-close': `${Math.round(openDuration * 0.6)}ms`,
+          '--ff-stagger': `${stagger}ms`,
+          '--ff-n': n,
+          '--ff-spring': `cubic-bezier(0.34, ${(1 + bounce * 1.9).toFixed(2)}, 0.64, 1)`
+        } as React.CSSProperties
+      }
     >
       <div ref={anchorRef} className="folder-float__items">
         {list.map((item, i) => {
-          const p = pos[i];
+          const p = pos[i] ?? { x: 0, y: 0, r: 0 };
           return (
             <button
               key={`${item.value}-${i}`}
@@ -409,12 +494,14 @@ export default function FolderFloat({
               tabIndex={open ? 0 : -1}
               aria-hidden={!open}
               data-pop={popped === i ? '' : undefined}
-              style={{
-                '--i': i,
-                '--x': `${p.x.toFixed(1)}px`,
-                '--y': `${p.y.toFixed(1)}px`,
-                '--r': `${p.r.toFixed(2)}deg`
-              }}
+              style={
+                {
+                  '--i': i,
+                  '--x': `${p.x.toFixed(1)}px`,
+                  '--y': `${p.y.toFixed(1)}px`,
+                  '--r': `${p.r.toFixed(2)}deg`
+                } as React.CSSProperties
+              }
               onPointerDown={e => down(e, i)}
               onPointerMove={e => move(e, i)}
               onPointerUp={e => up(e, i, item)}

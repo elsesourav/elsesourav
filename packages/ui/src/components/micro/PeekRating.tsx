@@ -1,26 +1,27 @@
-// @ts-nocheck
 'use client';
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { FavouriteIcon, FlashIcon, StarIcon } from '@hugeicons/core-free-icons';
 
 const EASE_OUT = 'cubic-bezier(0.23, 1, 0.32, 1)';
 const SHAPES = { star: StarIcon, heart: FavouriteIcon, bolt: FlashIcon };
 
-const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-const reducedMotion = () =>
+const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
+const reducedMotion = (): boolean =>
   typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
+export type PeekRatingShape = 'star' | 'heart' | 'bolt';
 
 export interface PeekRatingProps {
+  value?: number;
   defaultValue?: number;
-  onChange?: (...args: any[]) => any;
-  onPreview?: (...args: any[]) => any;
+  onChange?: (value: number) => void;
+  onPreview?: (value: number | null) => void;
   count?: number;
-  shape?: string;
-  icon?: any;
-  labels?: any[];
+  shape?: PeekRatingShape;
+  icon?: React.ReactNode;
+  labels?: string[];
   activeColor?: string;
   idleColor?: string;
   tipColor?: string;
@@ -36,11 +37,19 @@ export interface PeekRatingProps {
   disabled?: boolean;
   ariaLabel?: string;
   className?: string;
-  [key: string]: any;
+  style?: React.CSSProperties;
+}
+
+interface PeekState {
+  hover: number | null;
+  pressing: boolean;
+  pointerId: number | null;
+  settled: boolean;
+  rect: DOMRect | null;
+  rtl: boolean;
 }
 
 export default function PeekRating({
-
   value: valueProp,
   defaultValue = 0,
   onChange,
@@ -63,21 +72,22 @@ export default function PeekRating({
   readOnly = false,
   disabled = false,
   ariaLabel = 'Rating',
-  className = ''
+  className = '',
+  style
 }: PeekRatingProps) {
   const [inner, setInner] = useState(defaultValue);
   const value = clamp(valueProp ?? inner, 0, count);
   const interactive = !readOnly && !disabled;
 
-  const rootRef = useRef(null);
-  const rowRef = useRef(null);
-  const tipEl = useRef(null);
-  const starEls = useRef([]);
-  const liftEls = useRef([]);
-  const glyphEls = useRef([]);
-  const st = useRef({ hover: null, pressing: false, pointerId: null, settled: false, rect: null, rtl: false });
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const rowRef = useRef<HTMLDivElement | null>(null);
+  const tipEl = useRef<HTMLSpanElement | null>(null);
+  const starEls = useRef<(HTMLElement | null)[]>([]);
+  const liftEls = useRef<(HTMLSpanElement | null)[]>([]);
+  const glyphEls = useRef<(HTMLSpanElement | null)[]>([]);
+  const st = useRef<PeekState>({ hover: null, pressing: false, pointerId: null, settled: false, rect: null, rtl: false });
 
-  const paint = () => {
+  const paint = (): void => {
     const { hover, settled, rtl } = st.current;
     const previewing = hover !== null && !settled;
     const shown = previewing ? hover + 1 : value;
@@ -91,7 +101,7 @@ export default function PeekRating({
       liftEl.style.transform = lifted
         ? `translateY(${-lift}px) scale(${i === hover ? magnify : 1})`
         : 'translateY(0px) scale(1)';
-      glyphEl.dataset.lit = i < shown;
+      glyphEl.dataset.lit = String(i < shown);
     }
 
     const tip = tipEl.current;
@@ -115,7 +125,7 @@ export default function PeekRating({
   };
   useLayoutEffect(paint);
 
-  const setHover = index => {
+  const setHover = (index: number | null): void => {
     if (index === st.current.hover) return;
     st.current.hover = index;
     if (index !== null) st.current.settled = false;
@@ -125,14 +135,14 @@ export default function PeekRating({
   const setHoverRef = useRef(setHover);
   setHoverRef.current = setHover;
 
-  const measure = () => {
+  const measure = (): void => {
     const row = rowRef.current;
     if (!row) return;
     st.current.rect = row.getBoundingClientRect();
     st.current.rtl = getComputedStyle(row).direction === 'rtl';
   };
 
-  const indexAt = (x, y) => {
+  const indexAt = (x: number, y: number): number | null => {
     const { rect, pressing, rtl } = st.current;
     if (!rect || !rect.width) return null;
     if (pressing && (y < rect.top - size || y > rect.bottom + size)) return null;
@@ -140,7 +150,7 @@ export default function PeekRating({
     return rtl ? count - 1 - index : index;
   };
 
-  const commit = (next, pop = true) => {
+  const commit = (next: number, pop = true): void => {
     if (valueProp === undefined) setInner(next);
     onChange?.(next);
     st.current.settled = true;
@@ -159,25 +169,27 @@ export default function PeekRating({
     }
   };
 
-  const handlePointerEnter = e => {
+  const handlePointerEnter = (e: React.PointerEvent<HTMLDivElement>): void => {
     if (!interactive || e.pointerType !== 'mouse') return;
     rootRef.current?.removeAttribute('data-instant');
     measure();
   };
 
-  const handlePointerDown = e => {
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>): void => {
     if (!interactive || e.button !== 0 || st.current.pointerId !== null) return;
     rootRef.current?.removeAttribute('data-instant');
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     st.current.pointerId = e.pointerId;
     st.current.pressing = true;
     measure();
     setHover(indexAt(e.clientX, e.clientY));
   };
 
-  const handlePointerMove = e => {
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>): void => {
     if (!interactive) return;
     const { pressing, pointerId } = st.current;
     if (e.pointerType !== 'mouse' && !pressing) return;
@@ -186,7 +198,7 @@ export default function PeekRating({
     setHover(indexAt(e.clientX, e.clientY));
   };
 
-  const endPress = e => {
+  const endPress = (e: React.PointerEvent<HTMLDivElement>): void => {
     const { pressing, pointerId, hover } = st.current;
     if (!pressing || e.pointerId !== pointerId) return;
     st.current.pressing = false;
@@ -198,14 +210,14 @@ export default function PeekRating({
     if (e.pointerType !== 'mouse') setHover(null);
   };
 
-  const handlePointerLeave = () => {
+  const handlePointerLeave = (): void => {
     if (!st.current.pressing) setHover(null);
   };
 
-  const handleKeyDown = e => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>): void => {
     if (!interactive) return;
     const min = allowClear ? 0 : 1;
-    let next;
+    let next: number;
     switch (e.key) {
       case 'ArrowRight':
       case 'ArrowUp':
@@ -228,7 +240,7 @@ export default function PeekRating({
         break;
       case ' ':
       case 'Enter': {
-        const index = starEls.current.indexOf(e.target);
+        const index = starEls.current.indexOf(e.target as HTMLElement);
         if (index === -1) return;
         next = allowClear && index + 1 === value ? 0 : index + 1;
         break;
@@ -244,12 +256,12 @@ export default function PeekRating({
   };
 
   useEffect(() => {
-    const reset = () => {
+    const reset = (): void => {
       st.current.pressing = false;
       st.current.pointerId = null;
       setHoverRef.current(null);
     };
-    const onVisibility = () => {
+    const onVisibility = (): void => {
       if (document.hidden) reset();
     };
     document.addEventListener('visibilitychange', onVisibility);
@@ -271,16 +283,19 @@ export default function PeekRating({
       aria-label={readOnly ? `${value} of ${count}` : ariaLabel}
       aria-disabled={disabled || undefined}
       className={`peek-rating${className ? ` ${className}` : ''}`}
-      style={{
-        '--pr-active': activeColor,
-        '--pr-idle': idleColor,
-        '--pr-tip': tipColor,
-        '--pr-tip-text': tipTextColor,
-        '--pr-size': `${size}px`,
-        '--pr-gap': `${Math.round(size * 0.22)}px`,
-        '--pr-room': `${lift + tipRoom}px`,
-        '--pr-rise': `${riseDuration}ms`
-      }}
+      style={
+        {
+          '--pr-active': activeColor,
+          '--pr-idle': idleColor,
+          '--pr-tip': tipColor,
+          '--pr-tip-text': tipTextColor,
+          '--pr-size': `${size}px`,
+          '--pr-gap': `${Math.round(size * 0.22)}px`,
+          '--pr-room': `${lift + tipRoom}px`,
+          '--pr-rise': `${riseDuration}ms`,
+          ...style
+        } as React.CSSProperties
+      }
       onKeyDown={readOnly ? undefined : handleKeyDown}
     >
       <div

@@ -1,7 +1,6 @@
-// @ts-nocheck
 'use client';
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { motion, useMotionTemplate, useReducedMotion, useSpring, useTransform } from 'motion/react';
 
 const TILT_SPRING = { stiffness: 220, damping: 24, mass: 0.6 };
@@ -10,10 +9,10 @@ const ART_INSET = 8;
 const ART_SPAN = 0.78;
 const RETRACT = 0.17;
 
-const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
-const rad = deg => (deg * Math.PI) / 180;
-const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
-const noise = seed => {
+const clamp = (v: number, lo: number, hi: number): number => Math.min(hi, Math.max(lo, v));
+const rad = (deg: number): number => (deg * Math.PI) / 180;
+const wrap = (a: number): number => Math.atan2(Math.sin(a), Math.cos(a));
+const noise = (seed: number) => {
   let s = seed | 0;
   return () => {
     s = (s + 0x6d2b79f5) | 0;
@@ -22,9 +21,45 @@ const noise = seed => {
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 };
-const f = n => n.toFixed(2);
+const f = (n: number): string => n.toFixed(2);
 
-const buildGeometry = (W, H, S, R, holes, hole, notch, rough, vertical) => {
+export interface TearTicketBridge {
+  y0: number;
+  y1: number;
+  mid: number;
+  pts: [number, number][];
+  x: number;
+  y: number;
+}
+
+export interface TearTicketEnd {
+  x: number;
+  y: number;
+  v: number;
+}
+
+export interface TearTicketGeometry {
+  vertical: boolean;
+  cross: number;
+  body: string;
+  stub: string;
+  bridges: TearTicketBridge[];
+  ends: [TearTicketEnd, TearTicketEnd];
+  bodyOutline: string;
+  stubOutline: string;
+}
+
+const buildGeometry = (
+  W: number,
+  H: number,
+  S: number,
+  R: number,
+  holes: number,
+  hole: number,
+  notch: number,
+  rough: number,
+  vertical: boolean
+): TearTicketGeometry => {
   const main = vertical ? H : W;
   const cross = vertical ? W : H;
   const x = main - S;
@@ -33,16 +68,19 @@ const buildGeometry = (W, H, S, R, holes, hole, notch, rough, vertical) => {
   const span = cross - 2 * notch;
   const bridge = Math.max(2, (span - n * hole) / (n + 1));
   const random = noise(n * 7919 + Math.round(cross));
-  const at = (u, v) => (vertical ? { x: v, y: u } : { x: u, y: v });
-  const pt = (u, v) => (vertical ? `${f(v)},${f(u)}` : `${f(u)},${f(v)}`);
-  const arc = (r, sweep, u, v) => `A${f(r)},${f(r)} 0 0 ${vertical ? 1 - sweep : sweep} ${pt(u, v)}`;
-  const bridges = [];
+  const at = (u: number, v: number): { x: number; y: number } => (vertical ? { x: v, y: u } : { x: u, y: v });
+  const pt = (u: number, v: number): string => (vertical ? `${f(v)},${f(u)}` : `${f(u)},${f(v)}`);
+  const arc = (r: number, sweep: number, u: number, v: number): string =>
+    `A${f(r)},${f(r)} 0 0 ${vertical ? 1 - sweep : sweep} ${pt(u, v)}`;
+  const bridges: TearTicketBridge[] = [];
   for (let i = 0; i <= n; i += 1) {
     const y0 = notch + i * (bridge + hole);
     const y1 = y0 + bridge;
     const steps = Math.max(2, Math.round(bridge / 2.2));
-    const pts = [];
-    for (let k = 1; k < steps; k += 1) pts.push([x + (random() - 0.5) * 2 * rough, y0 + (bridge * k) / steps]);
+    const pts: [number, number][] = [];
+    for (let k = 1; k < steps; k += 1) {
+      pts.push([x + (random() - 0.5) * 2 * rough, y0 + (bridge * k) / steps]);
+    }
     bridges.push({ y0, y1, mid: (y0 + y1) / 2, pts, ...at(x, (y0 + y1) / 2) });
   }
   let body = `M${pt(R, 0)}L${pt(x - notch, 0)}${arc(notch, 0, x, notch)}`;
@@ -57,12 +95,17 @@ const buildGeometry = (W, H, S, R, holes, hole, notch, rough, vertical) => {
   let stub = `M${pt(x + notch, 0)}L${pt(main - R, 0)}${arc(R, 1, main, R)}L${pt(main, cross - R)}${arc(R, 1, main - R, cross)}L${pt(x + notch, cross)}${arc(notch, 0, x, cross - notch)}`;
   for (let i = n; i >= 0; i -= 1) {
     const b = bridges[i];
-    for (let k = b.pts.length - 1; k >= 0; k -= 1) stub += `L${pt(b.pts[k][0], b.pts[k][1])}`;
-    stub += `L${pt(x, b.y0)}`;
-    if (i > 0) stub += arc(hr, 0, x, b.y0 - hole);
+    if (b) {
+      for (let k = b.pts.length - 1; k >= 0; k -= 1) {
+        const p = b.pts[k];
+        if (p) stub += `L${pt(p[0], p[1])}`;
+      }
+      stub += `L${pt(x, b.y0)}`;
+      if (i > 0) stub += arc(hr, 0, x, b.y0 - hole);
+    }
   }
   stub += `${arc(notch, 0, x + notch, 0)}Z`;
-  const ends = [
+  const ends: [TearTicketEnd, TearTicketEnd] = [
     { ...at(x, notch), v: notch },
     { ...at(x, cross - notch), v: cross - notch }
   ];
@@ -71,18 +114,60 @@ const buildGeometry = (W, H, S, R, holes, hole, notch, rough, vertical) => {
   return { vertical, cross, body, stub, bridges, ends, bodyOutline, stubOutline };
 };
 
+export interface TearTicketSim {
+  raf: number;
+  last: number;
+  phase: 'idle' | 'held' | 'free' | 'drop' | 'return';
+  id: number | null;
+  sign: number;
+  hinge: { x: number; y: number };
+  hingeV: number;
+  grab: { x: number; y: number };
+  start: { x: number; y: number };
+  point: { x: number; y: number };
+  a0: number;
+  theta: number;
+  thetaV: number;
+  sx: number;
+  sy: number;
+  vx: number;
+  vy: number;
+  spin: number;
+  pvx: number;
+  pvy: number;
+  pt: number;
+  fade: number;
+  age: number;
+  bx: number;
+  bv: number;
+  snapped: boolean[];
+  snapAt: number[];
+  span: number[];
+}
+
+export interface TearTicketCfg {
+  geo: TearTicketGeometry;
+  tearAngle: number;
+  stretch: number;
+  resistance: number;
+  height: number;
+  notch: number;
+  reduce: boolean | null;
+  onTear?: () => void;
+  controlled: boolean;
+}
 
 export interface TearTicketProps {
   children?: React.ReactNode;
-  stub?: any;
+  stub?: React.ReactNode;
   image?: string;
   imageAlt?: string;
   scrim?: boolean;
   imageRadius?: number;
-  orientation?: string;
-  torn?: any;
+  orientation?: 'horizontal' | 'vertical' | string;
+  torn?: boolean;
   defaultTorn?: boolean;
-  onTear?: (...args: any[]) => any;
+  onTear?: () => void;
   width?: number;
   height?: number;
   stubSize?: number;
@@ -110,11 +195,10 @@ export interface TearTicketProps {
   disabled?: boolean;
   ariaLabel?: string;
   className?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export default function TearTicket({
-
   children = null,
   stub = null,
   image = '',
@@ -155,24 +239,34 @@ export default function TearTicket({
 }: TearTicketProps) {
   const reduce = useReducedMotion();
   const controlled = torn !== undefined;
-  const [inner, setInner] = useState(defaultTorn);
-  const used = controlled ? torn : inner;
+  const [inner, setInner] = useState<boolean>(defaultTorn);
+  const used = controlled ? (torn ?? false) : inner;
   const [grabbing, setGrabbing] = useState(false);
   const [instant, setInstant] = useState(used);
   const [fit, setFit] = useState(1);
-  const rootRef = useRef(null);
-  const stageRef = useRef(null);
-  const bodyRef = useRef(null);
-  const stubRef = useRef(null);
-  const fibres = useRef([]);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const stageRef = useRef<HTMLDivElement | null>(null);
+  const bodyRef = useRef<HTMLDivElement | null>(null);
+  const stubRef = useRef<HTMLDivElement | null>(null);
+  const fibres = useRef<(SVGPathElement | null)[]>([]);
   const vertical = orientation === 'vertical';
   const geo = useMemo(
     () => buildGeometry(width, height, stubSize, radius, holes, holeSize, notch, roughness, vertical),
     [width, height, stubSize, radius, holes, holeSize, notch, roughness, vertical]
   );
-  const cfg = useRef({});
+  const cfg = useRef<TearTicketCfg>({
+    geo,
+    tearAngle,
+    stretch,
+    resistance,
+    height,
+    notch,
+    reduce,
+    onTear,
+    controlled
+  });
   cfg.current = { geo, tearAngle, stretch, resistance, height, notch, reduce, onTear, controlled };
-  const sim = useRef({
+  const sim = useRef<TearTicketSim>({
     raf: 0,
     last: 0,
     phase: 'idle',
@@ -207,11 +301,11 @@ export default function TearTicket({
   const tiltY = useSpring(0, TILT_SPRING);
   const plane = useMotionTemplate`perspective(${perspective}px) rotate(${rotate}deg) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
   const depth = tiltMax > 0 ? parallax / tiltMax : 0;
-  const artX = useTransform(tiltY, v => -v * depth);
-  const artY = useTransform(tiltX, v => v * depth);
+  const artX = useTransform(tiltY, (v: number) => -v * depth);
+  const artY = useTransform(tiltX, (v: number) => v * depth);
   const art = useMotionTemplate`translate(${artX}px, ${artY}px)`;
-  const inkX = useTransform(tiltY, v => v * depth * 0.22);
-  const inkY = useTransform(tiltX, v => -v * depth * 0.22);
+  const inkX = useTransform(tiltY, (v: number) => v * depth * 0.22);
+  const inkY = useTransform(tiltX, (v: number) => -v * depth * 0.22);
   const ink = useMotionTemplate`translate(${inkX}px, ${inkY}px)`;
 
   useLayoutEffect(() => {
@@ -224,7 +318,14 @@ export default function TearTicket({
     return () => ro.disconnect();
   }, [width]);
 
-  const paint = now => {
+  const finish = () => {
+    const c = cfg.current;
+    if (stubRef.current) stubRef.current.style.visibility = 'hidden';
+    if (!c.controlled) setInner(true);
+    c.onTear?.();
+  };
+
+  const paint = (now: number): boolean => {
     const s = sim.current;
     const c = cfg.current;
     const stubEl = stubRef.current;
@@ -280,8 +381,9 @@ export default function TearTicket({
         s.span[i] = gap;
         return;
       }
-      const t = (now - s.snapAt[i]) / 1000 / RETRACT;
-      if (!live || t >= 1 || !s.snapAt[i]) {
+      const snapTime = s.snapAt[i] ?? 0;
+      const t = (now - snapTime) / 1000 / RETRACT;
+      if (!live || t >= 1 || !snapTime) {
         near.style.opacity = '0';
         far.style.opacity = '0';
         return;
@@ -301,14 +403,7 @@ export default function TearTicket({
     return busy;
   };
 
-  const finish = () => {
-    const c = cfg.current;
-    if (stubRef.current) stubRef.current.style.visibility = 'hidden';
-    if (!c.controlled) setInner(true);
-    c.onTear?.();
-  };
-
-  const step = now => {
+  const step = (now: number) => {
     const s = sim.current;
     const c = cfg.current;
     const dt = clamp((now - s.last) / 1000, 0.001, 0.034);
@@ -384,14 +479,16 @@ export default function TearTicket({
     s.bx += s.bv * dt;
     const busy = paint(now);
     const moving = Math.abs(s.bx) > 0.02 || Math.abs(s.bv) > 0.5;
-    if (s.phase !== 'idle' || moving || busy) s.raf = requestAnimationFrame(step);
-    else {
+    if (s.phase !== 'idle' || moving || busy) {
+      s.raf = requestAnimationFrame(step);
+    } else {
       s.bx = 0;
       s.bv = 0;
       paint(now);
       s.raf = 0;
     }
   };
+
   const run = () => {
     const s = sim.current;
     if (s.raf) return;
@@ -432,20 +529,25 @@ export default function TearTicket({
     reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [used]);
+
   useEffect(() => {
     reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geo]);
+
   useEffect(() => {
     const s = sim.current;
     return () => cancelAnimationFrame(s.raf);
   }, []);
 
-  const local = e => {
-    const r = stageRef.current.getBoundingClientRect();
+  const local = (e: React.PointerEvent) => {
+    const stage = stageRef.current;
+    if (!stage) return { x: 0, y: 0 };
+    const r = stage.getBoundingClientRect();
     const k = r.width / width || 1;
     return { x: (e.clientX - r.left) / k, y: (e.clientY - r.top) / k };
   };
+
   const tearNow = () => {
     const s = sim.current;
     cancelAnimationFrame(s.raf);
@@ -454,12 +556,15 @@ export default function TearTicket({
     setInstant(true);
     finish();
   };
-  const onStubDown = e => {
+
+  const onStubDown = (e: React.PointerEvent<HTMLDivElement>) => {
     const s = sim.current;
     if (disabled || used || e.button !== 0 || s.id !== null || s.phase === 'drop') return;
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     const p = local(e);
     s.id = e.pointerId;
     s.start = p;
@@ -488,7 +593,8 @@ export default function TearTicket({
     setGrabbing(true);
     run();
   };
-  const onStubMove = e => {
+
+  const onStubMove = (e: React.PointerEvent<HTMLDivElement>) => {
     const s = sim.current;
     if (s.id !== e.pointerId) return;
     const p = local(e);
@@ -504,13 +610,16 @@ export default function TearTicket({
       tearNow();
     }
   };
-  const onStubUp = e => {
+
+  const onStubUp = (e: React.PointerEvent<HTMLDivElement>) => {
     const s = sim.current;
     if (s.id !== e.pointerId) return;
     s.id = null;
     try {
       if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     setGrabbing(false);
     if (s.phase === 'free') {
       const still = performance.now() - s.pt > 80;
@@ -524,7 +633,8 @@ export default function TearTicket({
     }
     run();
   };
-  const onStubKey = e => {
+
+  const onStubKey = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (disabled || used || (e.key !== 'Enter' && e.key !== ' ')) return;
     e.preventDefault();
     if (!e.repeat) tearNow();
@@ -532,7 +642,7 @@ export default function TearTicket({
 
   useEffect(() => {
     if (!tilt || reduce || disabled) return undefined;
-    const move = e => {
+    const move = (e: PointerEvent) => {
       const el = rootRef.current;
       if (!el || e.pointerType === 'touch' || sim.current.id !== null) return;
       const r = el.getBoundingClientRect();
@@ -555,24 +665,26 @@ export default function TearTicket({
       data-instant={instant ? '' : undefined}
       data-grabbing={grabbing ? '' : undefined}
       data-disabled={disabled ? '' : undefined}
-      style={{
-        '--tt-w': `${width}px`,
-        '--tt-h': `${height}px`,
-        '--tt-stub': `${stubSize}px`,
-        '--tt-bg': background,
-        '--tt-stub-bg': stubBackground || background,
-        '--tt-ink': color,
-        '--tt-edge': borderColor || `color-mix(in srgb, ${color} 16%, transparent)`,
-        '--tt-edge-w': borderWidth,
-        '--tt-parallax': `${parallax}px`,
-        '--tt-body-w': `${vertical ? width : width - stubSize}px`,
-        '--tt-body-h': `${vertical ? height - stubSize : height}px`,
-        '--tt-inset': `${ART_INSET}px`,
-        '--tt-span': ART_SPAN,
-        '--tt-art-radius': `${imageRadius}px`,
-        '--tt-fit': fit,
-        height: `${height * fit}px`
-      }}
+      style={
+        {
+          '--tt-w': `${width}px`,
+          '--tt-h': `${height}px`,
+          '--tt-stub': `${stubSize}px`,
+          '--tt-bg': background,
+          '--tt-stub-bg': stubBackground || background,
+          '--tt-ink': color,
+          '--tt-edge': borderColor || `color-mix(in srgb, ${color} 16%, transparent)`,
+          '--tt-edge-w': borderWidth,
+          '--tt-parallax': `${parallax}px`,
+          '--tt-body-w': `${vertical ? width : width - stubSize}px`,
+          '--tt-body-h': `${vertical ? height - stubSize : height}px`,
+          '--tt-inset': `${ART_INSET}px`,
+          '--tt-span': ART_SPAN,
+          '--tt-art-radius': `${imageRadius}px`,
+          '--tt-fit': fit,
+          height: `${height * fit}px`
+        } as React.CSSProperties
+      }
     >
       <div ref={stageRef} className="tear-ticket__stage">
         <motion.div className="tear-ticket__plane" style={{ transform: plane }}>
@@ -601,7 +713,7 @@ export default function TearTicket({
             </div>
           </div>
           <svg className="tear-ticket__fibres" aria-hidden="true">
-            {geo.bridges.map((b, i) => (
+            {geo.bridges.map((_, i) => (
               <g key={i}>
                 <path
                   ref={el => {

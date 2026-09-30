@@ -1,7 +1,6 @@
-// @ts-nocheck
 'use client';
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
   CommandLineIcon,
@@ -11,22 +10,28 @@ import {
   Search01Icon,
   Tick02Icon
 } from '@hugeicons/core-free-icons';
+import type { IconSvgElement } from '@hugeicons/react';
 
 const HOLD_AT = 0.9;
 const SHAKE = [0, -1, 1, -0.66, 0.66, -0.33, 0];
-const ICONS = { terminal: CommandLineIcon, file: File02Icon, search: Search01Icon, edit: PencilEdit01Icon };
-const WORDS = { running: 'running', done: 'done', error: 'failed', idle: 'queued' };
+const ICONS: Record<string, IconSvgElement> = {
+  terminal: CommandLineIcon,
+  file: File02Icon,
+  search: Search01Icon,
+  edit: PencilEdit01Icon
+};
+const WORDS: Record<string, string> = { running: 'running', done: 'done', error: 'failed', idle: 'queued' };
 
-const fmt = ms => (ms < 10000 ? `${Math.round(ms)} ms` : `${(ms / 1000).toFixed(1)} s`);
-const reduceMotion = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
-const glyphOf = s => (s === 'done' ? 'check' : s === 'error' ? 'retry' : 'tool');
-
+const fmt = (ms: number): string => (ms < 10000 ? `${Math.round(ms)} ms` : `${(ms / 1000).toFixed(1)} s`);
+const reduceMotion = (): boolean =>
+  typeof window !== 'undefined' ? (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false) : false;
+const glyphOf = (s: string): string => (s === 'done' ? 'check' : s === 'error' ? 'retry' : 'tool');
 
 export interface CallChipProps {
-  icon?: string;
+  icon?: string | React.ReactNode;
   name?: string;
   argument?: string;
-  status?: string;
+  status?: 'running' | 'done' | 'error' | 'idle' | string;
   expectedMs?: number;
   size?: number;
   radius?: number;
@@ -39,14 +44,12 @@ export interface CallChipProps {
   washOpacity?: number;
   shake?: number;
   showTimer?: boolean;
-  onRetry?: (...args: any[]) => any;
+  onRetry?: () => void;
   className?: string;
-  style?: any;
-  [key: string]: any;
+  style?: React.CSSProperties;
 }
 
 export default function CallChip({
-
   icon = 'terminal',
   name = 'bash',
   argument = 'npm test',
@@ -55,11 +58,11 @@ export default function CallChip({
   size = 34,
   radius = 10,
   color = 'currentColor',
-  surfaceColor = '#27272a',
+  surfaceColor = 'var(--micro-bg-elevated, #27272a)',
   progressColor = 'currentColor',
   progressOpacity = 0.08,
-  doneColor = '#22c55e',
-  errorColor = '#ef4444',
+  doneColor = 'var(--micro-success, #22c55e)',
+  errorColor = 'var(--micro-destructive, #ef4444)',
   washOpacity = 0.14,
   shake = 6,
   showTimer = true,
@@ -67,22 +70,22 @@ export default function CallChip({
   className = '',
   style
 }: CallChipProps) {
-  const rootRef = useRef(null);
-  const fillRef = useRef(null);
-  const timerRef = useRef(null);
+  const rootRef = useRef<HTMLSpanElement | null>(null);
+  const fillRef = useRef<HTMLSpanElement | null>(null);
+  const timerRef = useRef<HTMLSpanElement | null>(null);
   const mountedRef = useRef(false);
   const fraction = useRef(0);
   const clock = useRef({ ms: 0 });
-  const shakeAnim = useRef(null);
+  const shakeAnim = useRef<Animation | null>(null);
   const statusRef = useRef(status);
   statusRef.current = status;
   const [mounted, setMounted] = useState(false);
   const [pressed, setPressed] = useState(false);
   const [announce, setAnnounce] = useState('');
-  const roll = useRef({ cur: glyphOf(status), prev: null });
+  const roll = useRef<{ cur: string; prev: string | null }>({ cur: glyphOf(status), prev: null });
   if (glyphOf(status) !== roll.current.cur) roll.current = { cur: glyphOf(status), prev: roll.current.cur };
 
-  const setFraction = (f, instant) => {
+  const setFraction = (f: number, instant: boolean) => {
     const fill = fillRef.current;
     if (!fill) return;
     fraction.current = f;
@@ -93,7 +96,8 @@ export default function CallChip({
       fill.style.transition = '';
     }
   };
-  const apply = (s, animate) => {
+
+  const apply = (s: string, animate: boolean) => {
     if (s === 'running') {
       shakeAnim.current?.cancel();
       setFraction(0, true);
@@ -110,7 +114,9 @@ export default function CallChip({
           { duration: 450, composite: 'add' }
         );
       }
-    } else setFraction(0, true);
+    } else {
+      setFraction(0, true);
+    }
   };
 
   useEffect(() => {
@@ -123,13 +129,14 @@ export default function CallChip({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   useLayoutEffect(() => {
     if (mountedRef.current) apply(status, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   useEffect(() => {
-    const write = ms => {
+    const write = (ms: number) => {
       clock.current.ms = ms;
       if (timerRef.current) timerRef.current.textContent = fmt(ms);
     };
@@ -157,15 +164,15 @@ export default function CallChip({
       write(performance.now() - startedAt);
     };
   }, [status]);
+
   useEffect(() => {
     const ms = showTimer && clock.current.ms ? Math.round(clock.current.ms) : 0;
     const when = status === 'done' && ms ? ` in ${ms} ms` : status === 'error' && ms ? ` after ${ms} ms` : '';
     setAnnounce(`${name} ${argument}, ${WORDS[status] ?? status}${when}`);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status]);
+  }, [argument, name, showTimer, status]);
 
   const font = Math.max(11, Math.round(size * 0.38));
-  const glyphState = g => (g === roll.current.cur ? 'in' : g === roll.current.prev ? 'out' : undefined);
+  const glyphState = (g: string) => (g === roll.current.cur ? 'in' : g === roll.current.prev ? 'out' : undefined);
   const toolIcon = typeof icon === 'string' ? (ICONS[icon] ?? ICONS.terminal) : null;
   const iconSize = font + 2;
 
@@ -193,7 +200,7 @@ export default function CallChip({
         '--cc-wash-pct': `${washOpacity * 100}%`,
         '--cc-expected': `${expectedMs}ms`,
         ...style
-      }}
+      } as React.CSSProperties}
     >
       <span ref={fillRef} className="call-chip__fill" aria-hidden="true" />
       <span className="call-chip__slot" aria-hidden="true">

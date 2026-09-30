@@ -1,8 +1,8 @@
-// @ts-nocheck
 'use client';
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+
+const clamp = (v: number, a: number, b: number): number => Math.min(b, Math.max(a, v));
 const H = 1 / 120;
 const DT_MAX = 0.05;
 const TILT_GAIN = 0.07;
@@ -13,7 +13,7 @@ const STEP = 2;
 const BIG = 10;
 const BAND = 10;
 
-const onColor = hex => {
+const onColor = (hex: string): string => {
   const raw = hex.replace('#', '');
   const full = raw.length === 3 ? [...raw].map(c => c + c).join('') : raw;
   const n = parseInt(full, 16);
@@ -21,11 +21,10 @@ const onColor = hex => {
   return (((n >> 16) & 255) * 299 + ((n >> 8) & 255) * 587 + (n & 255) * 114) / 1000 >= 150 ? '#111111' : '#ffffff';
 };
 
-
 export interface SloshGaugeProps {
-  value?: any;
+  value?: number;
   defaultValue?: number;
-  onChange?: (...args: any[]) => any;
+  onChange?: (value: number) => void;
   interactive?: boolean;
   showValue?: boolean;
   disabled?: boolean;
@@ -41,11 +40,31 @@ export interface SloshGaugeProps {
   unit?: string;
   ariaLabel?: string;
   className?: string;
-  [key: string]: any;
+  style?: React.CSSProperties;
+}
+
+interface GripState {
+  id: number;
+  rect: DOMRect;
+  scale: number;
+  band: boolean;
+  grab: number | null;
+  at: number;
+  sent: number;
+}
+
+interface LiveState {
+  viscosity: number;
+  tilt: number;
+  splash: number;
+  width: number;
+  height: number;
+  value?: number;
+  onChange?: (value: number) => void;
+  unit: string;
 }
 
 export default function SloshGauge({
-
   value,
   defaultValue = 60,
   onChange,
@@ -63,22 +82,23 @@ export default function SloshGauge({
   splash = 0.42,
   unit = '%',
   ariaLabel = 'Level',
-  className = ''
+  className = '',
+  style
 }: SloshGaugeProps) {
-  const root = useRef(null);
-  const liquid = useRef(null);
-  const marker = useRef(null);
-  const textA = useRef(null);
-  const textB = useRef(null);
+  const root = useRef<HTMLDivElement | null>(null);
+  const liquid = useRef<HTMLDivElement | null>(null);
+  const marker = useRef<HTMLDivElement | null>(null);
+  const textA = useRef<HTMLSpanElement | null>(null);
+  const textB = useRef<HTMLSpanElement | null>(null);
   const start = clamp(value ?? defaultValue, 0, 100);
-  const sim = useRef({ x: start, v: 0, L: start, raf: 0, last: 0 });
-  const grip = useRef(null);
+  const sim = useRef<{ x: number; v: number; L: number; raf: number; last: number }>({ x: start, v: 0, L: start, raf: 0, last: 0 });
+  const grip = useRef<GripState | null>(null);
   const reduce = useRef(false);
   const [held, setHeld] = useState(false);
-  const live = useRef({});
+  const live = useRef<LiveState>({ viscosity, tilt, splash, width, height, value, onChange, unit });
   live.current = { viscosity, tilt, splash, width, height, value, onChange, unit };
 
-  const paint = () => {
+  const paint = (): void => {
     const { x, v, L } = sim.current;
     const { tilt: t, width: W, height: Hh } = live.current;
     const th = reduce.current ? 0 : clamp(t * v * TILT_GAIN, -TILT_MAX, TILT_MAX);
@@ -90,7 +110,7 @@ export default function SloshGauge({
     if (marker.current) marker.current.style.transform = `translateY(${((100 - L) * Hh) / 100}px)`;
   };
 
-  const say = () => {
+  const say = (): void => {
     const n = Math.round(sim.current.L);
     const s = `${n}${live.current.unit}`;
     root.current?.setAttribute('aria-valuenow', String(n));
@@ -98,7 +118,7 @@ export default function SloshGauge({
     if (textB.current) textB.current.textContent = s;
   };
 
-  const tick = now => {
+  const tick = (now: number): void => {
     const s = sim.current;
     const { viscosity: vis, splash: give } = live.current;
     const dt = s.last ? Math.min((now - s.last) / 1000, DT_MAX) : H;
@@ -136,10 +156,10 @@ export default function SloshGauge({
       s.raf = requestAnimationFrame(tick);
     }
   };
-  const wake = () => {
+  const wake = (): void => {
     if (!sim.current.raf) sim.current.raf = requestAnimationFrame(tick);
   };
-  const setLevel = (L, instant) => {
+  const setLevel = (L: number, instant?: boolean): void => {
     const s = sim.current;
     s.L = clamp(L, 0, 100);
     if (instant) {
@@ -159,7 +179,7 @@ export default function SloshGauge({
 
   useLayoutEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const sync = () => {
+    const sync = (): void => {
       reduce.current = mq.matches;
     };
     sync();
@@ -171,17 +191,15 @@ export default function SloshGauge({
       mq.removeEventListener('change', sync);
       cancelAnimationFrame(s.raf);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     paint();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [width, height, tilt, showValue, interactive, disabled]);
 
-  const levelAt = (clientY, g) =>
+  const levelAt = (clientY: number, g: GripState): number =>
     clamp(((g.rect.bottom - clientY) / g.scale / (root.current?.offsetHeight || g.rect.height)) * 100, 0, 100);
-  const report = () => {
+  const report = (): void => {
     const g = grip.current;
     const n = Math.round(sim.current.L);
     if (g && n !== g.sent) {
@@ -190,13 +208,14 @@ export default function SloshGauge({
     }
   };
 
-  const down = e => {
+  const down = (e: React.PointerEvent<HTMLDivElement>): void => {
     if (!interactive || disabled || grip.current || e.button !== 0) return;
     const el = root.current;
+    if (!el) return;
     const rect = el.getBoundingClientRect();
     const scale = rect.height / (el.offsetHeight || rect.height) || 1;
     const markerY = rect.top + ((100 - sim.current.L) / 100) * rect.height;
-    const g = {
+    const g: GripState = {
       id: e.pointerId,
       rect,
       scale,
@@ -208,7 +227,9 @@ export default function SloshGauge({
     grip.current = g;
     try {
       el.setPointerCapture(e.pointerId);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     setHeld(true);
     if (g.band) {
       wake();
@@ -217,7 +238,7 @@ export default function SloshGauge({
       report();
     }
   };
-  const move = e => {
+  const move = (e: React.PointerEvent<HTMLDivElement>): void => {
     const g = grip.current;
     if (!g || g.id !== e.pointerId) return;
     const at = levelAt(e.clientY, g);
@@ -228,13 +249,15 @@ export default function SloshGauge({
     setLevel(at + (g.grab ?? 0));
     report();
   };
-  const up = (e, reason) => {
+  const up = (e: { pointerId: number }, reason?: string): void => {
     const g = grip.current;
     if (!g || g.id !== e.pointerId) return;
     grip.current = null;
     try {
       root.current?.releasePointerCapture(e.pointerId);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     setHeld(false);
     if (reason === 'escape') {
       setLevel(g.at);
@@ -244,7 +267,7 @@ export default function SloshGauge({
     }
     wake();
   };
-  const key = e => {
+  const key = (e: React.KeyboardEvent<HTMLDivElement>): void => {
     if (!interactive || disabled) return;
     if (e.key === 'Escape') {
       if (grip.current) up({ pointerId: grip.current.id }, 'escape');
@@ -252,7 +275,7 @@ export default function SloshGauge({
     }
     const L = sim.current.L;
     const d = e.shiftKey ? BIG : STEP;
-    const next = {
+    const next: number | undefined = {
       ArrowUp: L + d,
       ArrowRight: L + d,
       ArrowDown: L - d,
@@ -286,16 +309,19 @@ export default function SloshGauge({
       data-interactive={interactive ? 'true' : 'false'}
       data-held={held ? 'true' : 'false'}
       data-disabled={disabled ? 'true' : 'false'}
-      style={{
-        '--sg-w': `${width}px`,
-        '--sg-h': `${height}px`,
-        '--sg-r': `${r}px`,
-        '--sg-glass': glassColor,
-        '--sg-liquid': liquidColor,
-        '--sg-on-liquid': onColor(liquidColor),
-        '--sg-ticks': ticks,
-        '--sg-font': `${clamp(Math.round(width * 0.16), 12, 20)}px`
-      }}
+      style={
+        {
+          '--sg-w': `${width}px`,
+          '--sg-h': `${height}px`,
+          '--sg-r': `${r}px`,
+          '--sg-glass': glassColor,
+          '--sg-liquid': liquidColor,
+          '--sg-on-liquid': onColor(liquidColor),
+          '--sg-ticks': ticks,
+          '--sg-font': `${clamp(Math.round(width * 0.16), 12, 20)}px`,
+          ...style
+        } as React.CSSProperties
+      }
       onPointerDown={down}
       onPointerMove={move}
       onPointerUp={e => up(e)}

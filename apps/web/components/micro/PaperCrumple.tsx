@@ -1,17 +1,20 @@
-// @ts-nocheck
-
-export interface springProps {
-  [key: string]: any;
-}
-
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-const spring = (value = 0) => ({ value, target: value, velocity: 0 });
-const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-const finite = (value, fallback) => (Number.isFinite(value) ? value : fallback);
-function advance(s, dt, duration, instant) {
+
+export interface Spring {
+  value: number;
+  target: number;
+  velocity: number;
+}
+
+const spring = (value = 0): Spring => ({ value, target: value, velocity: 0 });
+const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
+const finite = (value: number | undefined, fallback: number): number =>
+  typeof value === 'number' && Number.isFinite(value) ? value : fallback;
+
+function advance(s: Spring, dt: number, duration: number, instant: boolean): boolean {
   if (instant || duration <= 0) {
     s.value = s.target;
     s.velocity = 0;
@@ -30,7 +33,8 @@ function advance(s, dt, duration, instant) {
   }
   return true;
 }
-function randomSource(seed) {
+
+function randomSource(seed: number): () => number {
   let value = seed | 0;
   return () => {
     value |= 0;
@@ -40,14 +44,28 @@ function randomSource(seed) {
     return ((n ^ (n >>> 14)) >>> 0) / 4294967296;
   };
 }
-function createPaperPath(rest, triangles, shortSide, density, sharpness, depth, seed) {
+
+export interface PaperPath {
+  samples: Float32Array[];
+  creased: Float32Array;
+}
+
+function createPaperPath(
+  rest: Float32Array,
+  triangles: number[],
+  shortSide: number,
+  density: number,
+  sharpness: number,
+  depth: number,
+  seed: number
+): PaperPath {
   const count = rest.length / 3;
   const points = Float64Array.from(rest);
   const previous = Float64Array.from(rest);
   const before = Float64Array.from(rest);
-  const edges = [];
-  const hinges = [];
-  const adjacency = new Map();
+  const edges: number[] = [];
+  const hinges: number[] = [];
+  const adjacency = new Map<number, { a: number; b: number; opposite: number }>();
   const random = randomSource(seed);
   const guides = Array.from({ length: density }, () => {
     const angle = random() * Math.PI * 2;
@@ -55,21 +73,29 @@ function createPaperPath(rest, triangles, shortSide, density, sharpness, depth, 
   });
   for (let t = 0; t < triangles.length; t += 3) {
     for (let k = 0; k < 3; k++) {
-      const a = triangles[t + k],
-        b = triangles[t + ((k + 1) % 3)],
-        opposite = triangles[t + ((k + 2) % 3)];
+      const a = triangles[t + k] ?? 0;
+      const b = triangles[t + ((k + 1) % 3)] ?? 0;
+      const opposite = triangles[t + ((k + 2) % 3)] ?? 0;
       const key = Math.min(a, b) * count + Math.max(a, b);
       const other = adjacency.get(key);
+      const restA0 = rest[a * 3] ?? 0;
+      const restA1 = rest[a * 3 + 1] ?? 0;
+      const restB0 = rest[b * 3] ?? 0;
+      const restB1 = rest[b * 3 + 1] ?? 0;
       if (!other) {
         adjacency.set(key, { a, b, opposite });
-        const length = Math.hypot(rest[a * 3] - rest[b * 3], rest[a * 3 + 1] - rest[b * 3 + 1]);
+        const length = Math.hypot(restA0 - restB0, restA1 - restB1);
         edges.push(a * 3, b * 3, length);
       } else {
-        const c = other.opposite * 3,
-          d = opposite * 3;
-        const length = Math.hypot(rest[c] - rest[d], rest[c + 1] - rest[d + 1]);
-        const mx = (rest[c] + rest[d]) * 0.5,
-          my = (rest[c + 1] + rest[d + 1]) * 0.5;
+        const c = other.opposite * 3;
+        const d = opposite * 3;
+        const restC0 = rest[c] ?? 0;
+        const restC1 = rest[c + 1] ?? 0;
+        const restD0 = rest[d] ?? 0;
+        const restD1 = rest[d + 1] ?? 0;
+        const length = Math.hypot(restC0 - restD0, restC1 - restD1);
+        const mx = (restC0 + restD0) * 0.5;
+        const my = (restC1 + restD1) * 0.5;
         let weakness = 0;
         for (const guide of guides) {
           const distance = Math.abs(Math.sin(((mx * guide.x + my * guide.y) / shortSide) * 4 + guide.phase));
@@ -81,92 +107,117 @@ function createPaperPath(rest, triangles, shortSide, density, sharpness, depth, 
   }
   const spacing = Math.sqrt((shortSide * shortSide) / count);
   const thickness = shortSide * 0.008;
-  const samples = [rest.slice()];
+  const samples: Float32Array[] = [rest.slice()];
   const frameCount = 64;
   const stepsPerFrame = 3;
   const totalSteps = frameCount * stepsPerFrame;
   let initialRadius = 0;
-  for (let i = 0; i < rest.length; i += 3)
-    initialRadius = Math.max(initialRadius, Math.hypot(rest[i] / 0.94, rest[i + 1] / 1.02));
+  for (let i = 0; i < rest.length; i += 3) {
+    initialRadius = Math.max(initialRadius, Math.hypot((rest[i] ?? 0) / 0.94, (rest[i + 1] ?? 0) / 1.02));
+  }
   initialRadius *= 1.02;
-  function constrain(list, stride, stiffness, reverse) {
+
+  function constrain(list: number[], stride: number, stiffness: number, reverse: boolean) {
     for (let n = 0; n < list.length; n += stride) {
       const edge = reverse ? list.length - stride - n : n;
-      const a = list[edge],
-        b = list[edge + 1];
-      const dx = points[b] - points[a],
-        dy = points[b + 1] - points[a + 1],
-        dz = points[b + 2] - points[a + 2];
+      const a = list[edge] ?? 0;
+      const b = list[edge + 1] ?? 0;
+      const pA0 = points[a] ?? 0;
+      const pA1 = points[a + 1] ?? 0;
+      const pA2 = points[a + 2] ?? 0;
+      const pB0 = points[b] ?? 0;
+      const pB1 = points[b + 1] ?? 0;
+      const pB2 = points[b + 2] ?? 0;
+      const dx = pB0 - pA0;
+      const dy = pB1 - pA1;
+      const dz = pB2 - pA2;
       const length = Math.sqrt(dx * dx + dy * dy + dz * dz);
       if (length < 0.000001) continue;
-      const weight = stride === 4 ? list[edge + 3] : 1;
-      const amount = (1 - list[edge + 2] / length) * 0.5 * stiffness * weight;
-      points[a] += dx * amount;
-      points[b] -= dx * amount;
-      points[a + 1] += dy * amount;
-      points[b + 1] -= dy * amount;
-      points[a + 2] += dz * amount;
-      points[b + 2] -= dz * amount;
+      const weight = stride === 4 ? (list[edge + 3] ?? 1) : 1;
+      const targetLen = list[edge + 2] ?? 0;
+      const amount = (1 - targetLen / length) * 0.5 * stiffness * weight;
+      points[a] = pA0 + dx * amount;
+      points[b] = pB0 - dx * amount;
+      points[a + 1] = pA1 + dy * amount;
+      points[b + 1] = pB1 - dy * amount;
+      points[a + 2] = pA2 + dz * amount;
+      points[b + 2] = pB2 - dz * amount;
     }
   }
+
   function separateLayers() {
     const margin = thickness * 2;
     for (let t = 0; t < triangles.length; t += 3) {
-      const a = triangles[t] * 3,
-        b = triangles[t + 1] * 3,
-        c = triangles[t + 2] * 3;
-      const ax = points[a],
-        ay = points[a + 1],
-        az = points[a + 2];
-      const bx = points[b] - ax,
-        by = points[b + 1] - ay,
-        bz = points[b + 2] - az;
-      const cx = points[c] - ax,
-        cy = points[c + 1] - ay,
-        cz = points[c + 2] - az;
-      let nx = by * cz - bz * cy,
-        ny = bz * cx - bx * cz,
-        nz = bx * cy - by * cx;
+      const a = (triangles[t] ?? 0) * 3;
+      const b = (triangles[t + 1] ?? 0) * 3;
+      const c = (triangles[t + 2] ?? 0) * 3;
+      const ax = points[a] ?? 0;
+      const ay = points[a + 1] ?? 0;
+      const az = points[a + 2] ?? 0;
+      const pB0 = points[b] ?? 0;
+      const pB1 = points[b + 1] ?? 0;
+      const pB2 = points[b + 2] ?? 0;
+      const pC0 = points[c] ?? 0;
+      const pC1 = points[c + 1] ?? 0;
+      const pC2 = points[c + 2] ?? 0;
+      const bx = pB0 - ax;
+      const by = pB1 - ay;
+      const bz = pB2 - az;
+      const cx = pC0 - ax;
+      const cy = pC1 - ay;
+      const cz = pC2 - az;
+      let nx = by * cz - bz * cy;
+      let ny = bz * cx - bx * cz;
+      let nz = bx * cy - by * cx;
       const length = Math.hypot(nx, ny, nz);
       if (length < 0.0000001) continue;
       nx /= length;
       ny /= length;
       nz /= length;
-      const minX = Math.min(ax, points[b], points[c]) - margin;
-      const maxX = Math.max(ax, points[b], points[c]) + margin;
-      const minY = Math.min(ay, points[b + 1], points[c + 1]) - margin;
-      const maxY = Math.max(ay, points[b + 1], points[c + 1]) + margin;
-      const minZ = Math.min(az, points[b + 2], points[c + 2]) - margin;
-      const maxZ = Math.max(az, points[b + 2], points[c + 2]) + margin;
-      const bb = bx * bx + by * by + bz * bz,
-        cc = cx * cx + cy * cy + cz * cz;
+      const minX = Math.min(ax, pB0, pC0) - margin;
+      const maxX = Math.max(ax, pB0, pC0) + margin;
+      const minY = Math.min(ay, pB1, pC1) - margin;
+      const maxY = Math.max(ay, pB1, pC1) + margin;
+      const minZ = Math.min(az, pB2, pC2) - margin;
+      const maxZ = Math.max(az, pB2, pC2) + margin;
+      const bb = bx * bx + by * by + bz * bz;
+      const cc = cx * cx + cy * cy + cz * cz;
       const bc = bx * cx + by * cy + bz * cz;
       const determinant = bb * cc - bc * bc;
       if (determinant < 0.0000000001) continue;
       for (let p = 0; p < points.length; p += 3) {
         if (p === a || p === b || p === c) continue;
+        const pP0 = points[p] ?? 0;
+        const pP1 = points[p + 1] ?? 0;
+        const pP2 = points[p + 2] ?? 0;
         if (
-          points[p] < minX ||
-          points[p] > maxX ||
-          points[p + 1] < minY ||
-          points[p + 1] > maxY ||
-          points[p + 2] < minZ ||
-          points[p + 2] > maxZ
-        )
+          pP0 < minX ||
+          pP0 > maxX ||
+          pP1 < minY ||
+          pP1 > maxY ||
+          pP2 < minZ ||
+          pP2 > maxZ
+        ) {
           continue;
-        const rx = rest[p] - (rest[a] + rest[b] + rest[c]) / 3;
-        const ry = rest[p + 1] - (rest[a + 1] + rest[b + 1] + rest[c + 1]) / 3;
+        }
+        const rx = (rest[p] ?? 0) - ((rest[a] ?? 0) + (rest[b] ?? 0) + (rest[c] ?? 0)) / 3;
+        const ry = (rest[p + 1] ?? 0) - ((rest[a + 1] ?? 0) + (rest[b + 1] ?? 0) + (rest[c + 1] ?? 0)) / 3;
         if (rx * rx + ry * ry < spacing * spacing * 6) continue;
-        const dx = points[p] - ax,
-          dy = points[p + 1] - ay,
-          dz = points[p + 2] - az;
+        const dx = pP0 - ax;
+        const dy = pP1 - ay;
+        const dz = pP2 - az;
         const distance = dx * nx + dy * ny + dz * nz;
-        const previousDistance =
-          (before[p] - before[a]) * nx + (before[p + 1] - before[a + 1]) * ny + (before[p + 2] - before[a + 2]) * nz;
+        const bP0 = before[p] ?? 0;
+        const bP1 = before[p + 1] ?? 0;
+        const bP2 = before[p + 2] ?? 0;
+        const bA0 = before[a] ?? 0;
+        const bA1 = before[a + 1] ?? 0;
+        const bA2 = before[a + 2] ?? 0;
+        const previousDistance = (bP0 - bA0) * nx + (bP1 - bA1) * ny + (bP2 - bA2) * nz;
         const side = previousDistance >= 0 ? 1 : -1;
         if (distance * side >= thickness || Math.abs(distance) > margin) continue;
-        const pb = dx * bx + dy * by + dz * bz,
-          pc = dx * cx + dy * cy + dz * cz;
+        const pb = dx * bx + dy * by + dz * bz;
+        const pc = dx * cx + dy * cy + dz * cz;
         const u = (cc * pb - bc * pc) / determinant;
         const v = (bb * pc - bc * pb) / determinant;
         if (u < 0 || v < 0 || u + v > 1) continue;
@@ -175,53 +226,64 @@ function createPaperPath(rest, triangles, shortSide, density, sharpness, depth, 
         for (let axis = 0; axis < 3; axis++) {
           const normal = axis === 0 ? nx : axis === 1 ? ny : nz;
           const movement = normal * correction;
-          points[p + axis] += movement;
-          points[a + axis] -= movement * w;
-          points[b + axis] -= movement * u;
-          points[c + axis] -= movement * v;
+          points[p + axis] = (points[p + axis] ?? 0) + movement;
+          points[a + axis] = (points[a + axis] ?? 0) - movement * w;
+          points[b + axis] = (points[b + axis] ?? 0) - movement * u;
+          points[c + axis] = (points[c + axis] ?? 0) - movement * v;
         }
       }
     }
   }
+
   for (let step = 1; step <= totalSteps; step++) {
     const progress = step / totalSteps;
     const compression = progress * progress * (3 - 2 * progress);
     const radius = initialRadius * (1 - compression) + shortSide * (0.19 - depth * 0.025) * compression;
     before.set(points);
     for (let i = 0; i < points.length; i += 3) {
-      const x = rest[i] / shortSide,
-        y = rest[i + 1] / shortSide;
+      const x = (rest[i] ?? 0) / shortSide;
+      const y = (rest[i + 1] ?? 0) / shortSide;
       let buckle = 0;
       for (const guide of guides) buckle += Math.sin((x * guide.x + y * guide.y) * 5 + guide.phase) * guide.weight;
       for (let axis = 0; axis < 3; axis++) {
-        const velocity = (points[i + axis] - previous[i + axis]) * 0.55;
-        previous[i + axis] = points[i + axis];
-        points[i + axis] += clamp(velocity, -spacing * 0.15, spacing * 0.15);
+        const idx = i + axis;
+        const pVal = points[idx] ?? 0;
+        const prevVal = previous[idx] ?? 0;
+        const velocity = (pVal - prevVal) * 0.55;
+        previous[idx] = pVal;
+        points[idx] = pVal + clamp(velocity, -spacing * 0.15, spacing * 0.15);
       }
-      points[i + 2] += (buckle / density) * shortSide * 0.0007 * Math.sin(progress * Math.PI);
+      points[i + 2] = (points[i + 2] ?? 0) + (buckle / density) * shortSide * 0.0007 * Math.sin(progress * Math.PI);
     }
     for (let pass = 0; pass < 18; pass++) {
       constrain(hinges, 4, 0.45 * (1 - sharpness * 0.4), pass % 2 === 0);
       for (let i = 0; i < points.length; i += 3) {
-        const x = points[i] / 0.94,
-          y = points[i + 1] / 1.02,
-          z = points[i + 2] / 0.86;
+        const x = (points[i] ?? 0) / 0.94;
+        const y = (points[i + 1] ?? 0) / 1.02;
+        const z = (points[i + 2] ?? 0) / 0.86;
         const distance = Math.hypot(x, y, z);
         if (distance > radius) {
           const push = (1 - radius / distance) * 0.55;
-          points[i] -= points[i] * push;
-          points[i + 1] -= points[i + 1] * push;
-          points[i + 2] -= points[i + 2] * push;
+          points[i] = (points[i] ?? 0) - (points[i] ?? 0) * push;
+          points[i + 1] = (points[i + 1] ?? 0) - (points[i + 1] ?? 0) * push;
+          points[i + 2] = (points[i + 2] ?? 0) - (points[i + 2] ?? 0) * push;
         }
       }
       constrain(edges, 3, 1, pass % 2 !== 0);
       if (pass === 8 || pass === 17) separateLayers();
     }
     for (let h = 0; h < hinges.length; h += 4) {
-      const a = hinges[h],
-        b = hinges[h + 1];
-      const length = Math.hypot(points[a] - points[b], points[a + 1] - points[b + 1], points[a + 2] - points[b + 2]);
-      if (length < hinges[h + 2] * 0.86) hinges[h + 2] += (length - hinges[h + 2]) * 0.12;
+      const a = hinges[h] ?? 0;
+      const b = hinges[h + 1] ?? 0;
+      const targetLen = hinges[h + 2] ?? 0;
+      const length = Math.hypot(
+        (points[a] ?? 0) - (points[b] ?? 0),
+        (points[a + 1] ?? 0) - (points[b + 1] ?? 0),
+        (points[a + 2] ?? 0) - (points[b + 2] ?? 0)
+      );
+      if (length < targetLen * 0.86) {
+        hinges[h + 2] = targetLen + (length - targetLen) * 0.12;
+      }
     }
     if (step % stepsPerFrame === 0) samples.push(Float32Array.from(points));
   }
@@ -231,8 +293,11 @@ function createPaperPath(rest, triangles, shortSide, density, sharpness, depth, 
     const unfold = t * t * (3 - 2 * t);
     for (let pass = 0; pass < 12; pass++) {
       for (let i = 0; i < points.length; i++) {
-        const target = folded[i] + (rest[i] - folded[i]) * unfold;
-        points[i] += (target - points[i]) * (i % 3 === 2 ? 0.04 : 0.22);
+        const foldVal = folded[i] ?? 0;
+        const restVal = rest[i] ?? 0;
+        const ptVal = points[i] ?? 0;
+        const target = foldVal + (restVal - foldVal) * unfold;
+        points[i] = ptVal + (target - ptVal) * (i % 3 === 2 ? 0.04 : 0.22);
       }
       constrain(hinges, 4, 0.7, pass % 2 === 0);
       constrain(edges, 3, 1, pass % 2 !== 0);
@@ -241,7 +306,46 @@ function createPaperPath(rest, triangles, shortSide, density, sharpness, depth, 
   const creased = Float32Array.from(points);
   return { samples, creased };
 }
-const PaperCrumple = ({
+
+export interface PaperCrumpleProps {
+  src?: string;
+  alt?: string;
+  backSrc?: string;
+  width?: number;
+  height?: number;
+  sceneHeight?: number;
+  imageFit?: 'cover' | 'contain';
+  releaseBehavior?: 'restore' | 'stay' | 'creased';
+  crumpleAmount?: number;
+  crumpleDuration?: number;
+  releaseDuration?: number;
+  foldCount?: number;
+  foldSharpness?: number;
+  wrinkleDepth?: number;
+  creaseStrength?: number;
+  paperColor?: string;
+  roughness?: number;
+  paperTexture?: number;
+  lightIntensity?: number;
+  lightAngle?: number;
+  shadow?: boolean;
+  shadowOpacity?: number;
+  draggable?: boolean;
+  dragRotation?: number;
+  dragRadius?: number;
+  returnToOrigin?: boolean;
+  rotation?: number;
+  seed?: number;
+  detail?: number;
+  disabled?: boolean;
+  resetKey?: number | string;
+  onStateChange?: (state: string) => void;
+  onError?: (error: Error) => void;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export default function PaperCrumple({
   src,
   alt = 'Crumplable image',
   backSrc = '',
@@ -277,14 +381,14 @@ const PaperCrumple = ({
   onError,
   className = '',
   style
-}) => {
-  const pathCache = useRef(null);
-  const rootRef = useRef(null);
-  const canvasRef = useRef(null);
-  const hitRef = useRef(null);
-  const resetRef = useRef(null);
-  const cancelRef = useRef(null);
-  const [status, setStatus] = useState('loading');
+}: PaperCrumpleProps) {
+  const pathCache = useRef<{ key: string; value: PaperPath } | null>(null);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const hitRef = useRef<HTMLButtonElement | null>(null);
+  const resetRef = useRef<(() => void) | null>(null);
+  const cancelRef = useRef<(() => void) | null>(null);
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const options = useRef({
     releaseBehavior,
     crumpleAmount,
@@ -313,10 +417,11 @@ const PaperCrumple = ({
     onStateChange,
     onError
   };
+
   useEffect(() => {
-    const root = rootRef.current,
-      canvas = canvasRef.current,
-      hit = hitRef.current;
+    const root = rootRef.current;
+    const canvas = canvasRef.current;
+    const hit = hitRef.current;
     if (!root || !canvas || !hit) return;
     setStatus('loading');
     hit.disabled = true;
@@ -332,7 +437,7 @@ const PaperCrumple = ({
     );
     root.style.setProperty('--pc-image-width', `${initialWidth * initialScale}px`);
     root.style.setProperty('--pc-image-height', `${initialHeight * initialScale}px`);
-    let renderer;
+    let renderer: THREE.WebGLRenderer;
     try {
       renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' });
     } catch (error) {
@@ -355,23 +460,23 @@ const PaperCrumple = ({
     const original = new Float32Array(count * 3);
     const positions = new Float32Array(count * 3);
     const uvs = new Float32Array(count * 2);
-    const indices = [];
+    const indices: number[] = [];
     for (let row = 0; row <= rows; row++) {
       for (let col = 0; col <= columns; col++) {
         const index = row * (columns + 1) + col;
         const u = (col + (col > 0 && col < columns ? (rng() - 0.5) * 0.5 : 0)) / columns;
         const v = (row + (row > 0 && row < rows ? (rng() - 0.5) * 0.5 : 0)) / rows;
-        const x = u - 0.5,
-          y = (v - 0.5) * aspect;
+        const x = u - 0.5;
+        const y = (v - 0.5) * aspect;
         original[index * 3] = x;
         original[index * 3 + 1] = y;
         uvs[index * 2] = u;
         uvs[index * 2 + 1] = v;
         if (col < columns && row < rows) {
-          const a = index,
-            b = index + 1,
-            c = index + columns + 1,
-            d = c + 1;
+          const a = index;
+          const b = index + 1;
+          const c = index + columns + 1;
+          const d = c + 1;
           if (rng() > 0.5) indices.push(a, b, d, a, d, c);
           else indices.push(a, b, c, b, d, c);
         }
@@ -389,11 +494,12 @@ const PaperCrumple = ({
     const renderNormals = new Float32Array(indices.length * 3);
     const renderUvs = new Float32Array(indices.length * 2);
     const faceNormals = new Float32Array(indices.length);
-    const incidentFaces = Array.from({ length: count }, () => []);
+    const incidentFaces: number[][] = Array.from({ length: count }, () => []);
     for (let i = 0; i < indices.length; i++) {
-      renderUvs[i * 2] = uvs[indices[i] * 2];
-      renderUvs[i * 2 + 1] = uvs[indices[i] * 2 + 1];
-      incidentFaces[indices[i]].push(Math.floor(i / 3) * 3);
+      const idx = indices[i] ?? 0;
+      renderUvs[i * 2] = uvs[idx * 2] ?? 0;
+      renderUvs[i * 2 + 1] = uvs[idx * 2 + 1] ?? 0;
+      incidentFaces[idx]?.push(Math.floor(i / 3) * 3);
     }
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.BufferAttribute(renderPositions, 3).setUsage(THREE.DynamicDrawUsage));
@@ -429,7 +535,7 @@ const PaperCrumple = ({
     const lighting = { value: 0 };
     for (const material of [frontMaterial, backMaterial]) {
       material.onBeforeCompile = shader => {
-        shader.uniforms.paperLighting = lighting;
+        shader.uniforms['paperLighting'] = lighting;
         shader.fragmentShader = 'uniform float paperLighting;\n' + shader.fragmentShader;
         shader.fragmentShader = shader.fragmentShader.replace(
           '#include <map_fragment>',
@@ -517,7 +623,7 @@ const PaperCrumple = ({
       b = new THREE.Vector3(),
       c = new THREE.Vector3();
     const weights = new THREE.Vector3(1, 0, 0);
-    let gripIndices = [Math.floor(count / 2), 0, 0];
+    let gripIndices: [number, number, number] = [Math.floor(count / 2), 0, 0];
     let viewportWidth = 1,
       viewportHeight = 1,
       scale = paperWidth;
@@ -530,7 +636,7 @@ const PaperCrumple = ({
       speedY = 0;
     let held = false,
       keyboard = false,
-      pointerId = null;
+      pointerId: number | null = null;
     let peak = 0,
       disposed = false,
       ready = false,
@@ -539,81 +645,93 @@ const PaperCrumple = ({
     let frame = 0,
       lastTime = 0,
       state = 'flat';
-    const textures = new Set();
+    const textures = new Set<THREE.Texture>();
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
     let reduceMotion = media.matches;
     let previousAmount = -1,
       previousMemory = -1;
     const baseRotation = THREE.MathUtils.degToRad(finite(rotation, 0));
-    function publish(next) {
+
+    function publish(next: string) {
       if (next === state) return;
       state = next;
       options.current.onStateChange?.(next);
     }
+
     function deform() {
       if (amount.value === previousAmount && memory.value === previousMemory) return;
       previousAmount = amount.value;
       previousMemory = memory.value;
       const fold = clamp(amount.value, 0, 1);
-      const frame = fold * (paperPath.samples.length - 1);
-      const lower = Math.floor(frame);
+      const fFrame = fold * (paperPath.samples.length - 1);
+      const lower = Math.floor(fFrame);
       const upper = Math.min(lower + 1, paperPath.samples.length - 1);
-      const mix = frame - lower;
-      const from = paperPath.samples[lower];
-      const to = paperPath.samples[upper];
+      const mix = fFrame - lower;
+      const from = paperPath.samples[lower] ?? paperPath.samples[0]!;
+      const to = paperPath.samples[upper] ?? from;
       for (let i = 0; i < positions.length; i++) {
-        positions[i] = from[i] + (to[i] - from[i]) * mix;
-        positions[i] += (paperPath.creased[i] - original[i]) * memory.value * (1 - fold);
+        const fromVal = from[i] ?? 0;
+        const toVal = to[i] ?? 0;
+        const crVal = paperPath.creased[i] ?? 0;
+        const origVal = original[i] ?? 0;
+        positions[i] = fromVal + (toVal - fromVal) * mix + (crVal - origVal) * memory.value * (1 - fold);
       }
       for (let face = 0; face < indices.length; face += 3) {
-        const a = indices[face] * 3,
-          b = indices[face + 1] * 3,
-          c = indices[face + 2] * 3;
-        const bx = positions[b] - positions[a],
-          by = positions[b + 1] - positions[a + 1],
-          bz = positions[b + 2] - positions[a + 2];
-        const cx = positions[c] - positions[a],
-          cy = positions[c + 1] - positions[a + 1],
-          cz = positions[c + 2] - positions[a + 2];
-        const nx = by * cz - bz * cy,
-          ny = bz * cx - bx * cz,
-          nz = bx * cy - by * cx;
+        const aIdx = (indices[face] ?? 0) * 3;
+        const bIdx = (indices[face + 1] ?? 0) * 3;
+        const cIdx = (indices[face + 2] ?? 0) * 3;
+        const bx = (positions[bIdx] ?? 0) - (positions[aIdx] ?? 0);
+        const by = (positions[bIdx + 1] ?? 0) - (positions[aIdx + 1] ?? 0);
+        const bz = (positions[bIdx + 2] ?? 0) - (positions[aIdx + 2] ?? 0);
+        const cx = (positions[cIdx] ?? 0) - (positions[aIdx] ?? 0);
+        const cy = (positions[cIdx + 1] ?? 0) - (positions[aIdx + 1] ?? 0);
+        const cz = (positions[cIdx + 2] ?? 0) - (positions[aIdx + 2] ?? 0);
+        const nx = by * cz - bz * cy;
+        const ny = bz * cx - bx * cz;
+        const nz = bx * cy - by * cx;
         const length = Math.hypot(nx, ny, nz) || 1;
         faceNormals[face] = nx / length;
         faceNormals[face + 1] = ny / length;
         faceNormals[face + 2] = nz / length;
       }
       for (let i = 0; i < indices.length; i++) {
-        const source = indices[i] * 3;
+        const idx = indices[i] ?? 0;
+        const source = idx * 3;
         const face = Math.floor(i / 3) * 3;
         let nx = 0,
           ny = 0,
           nz = 0;
-        for (const neighbor of incidentFaces[indices[i]]) {
-          const dot =
-            faceNormals[face] * faceNormals[neighbor] +
-            faceNormals[face + 1] * faceNormals[neighbor + 1] +
-            faceNormals[face + 2] * faceNormals[neighbor + 2];
+        const neighbors = incidentFaces[idx] ?? [];
+        for (const neighbor of neighbors) {
+          const fn0 = faceNormals[face] ?? 0;
+          const fn1 = faceNormals[face + 1] ?? 0;
+          const fn2 = faceNormals[face + 2] ?? 0;
+          const nn0 = faceNormals[neighbor] ?? 0;
+          const nn1 = faceNormals[neighbor + 1] ?? 0;
+          const nn2 = faceNormals[neighbor + 2] ?? 0;
+          const dot = fn0 * nn0 + fn1 * nn1 + fn2 * nn2;
           const weight = THREE.MathUtils.smoothstep(dot, 0.88 - (1 - sharpness) * 0.18, 0.98);
-          nx += faceNormals[neighbor] * weight;
-          ny += faceNormals[neighbor + 1] * weight;
-          nz += faceNormals[neighbor + 2] * weight;
+          nx += nn0 * weight;
+          ny += nn1 * weight;
+          nz += nn2 * weight;
         }
         const length = Math.hypot(nx, ny, nz) || 1;
-        renderPositions[i * 3] = positions[source];
-        renderPositions[i * 3 + 1] = positions[source + 1];
-        renderPositions[i * 3 + 2] = positions[source + 2];
+        renderPositions[i * 3] = positions[source] ?? 0;
+        renderPositions[i * 3 + 1] = positions[source + 1] ?? 0;
+        renderPositions[i * 3 + 2] = positions[source + 2] ?? 0;
         renderNormals[i * 3] = nx / length;
         renderNormals[i * 3 + 1] = ny / length;
         renderNormals[i * 3 + 2] = nz / length;
       }
-      geometry.attributes.position.needsUpdate = true;
-      geometry.attributes.normal.needsUpdate = true;
+      geometry.attributes['position']!.needsUpdate = true;
+      geometry.attributes['normal']!.needsUpdate = true;
       geometry.computeBoundingSphere();
       geometry.computeBoundingBox();
       lighting.value = THREE.MathUtils.smoothstep(fold + memory.value, 0, 0.4);
     }
+
     function placeHitTarget() {
+      if (!hit) return;
       const bounds = geometry.boundingBox;
       if (!bounds) return;
       let minX = Infinity,
@@ -627,8 +745,8 @@ const PaperCrumple = ({
           i & 4 ? bounds.max.z : bounds.min.z
         );
         corner.applyMatrix4(sheet.matrixWorld).project(camera);
-        const x = ((corner.x + 1) * viewportWidth) / 2,
-          y = ((1 - corner.y) * viewportHeight) / 2;
+        const x = ((corner.x + 1) * viewportWidth) / 2;
+        const y = ((1 - corner.y) * viewportHeight) / 2;
         minX = Math.min(minX, x);
         maxX = Math.max(maxX, x);
         minY = Math.min(minY, y);
@@ -638,11 +756,13 @@ const PaperCrumple = ({
       hit.style.width = `${Math.max(24, maxX - minX)}px`;
       hit.style.height = `${Math.max(24, maxY - minY)}px`;
     }
-    function setPointer(x, y) {
+
+    function setPointer(x: number, y: number) {
       pointer.set((x / viewportWidth) * 2 - 1, 1 - (y / viewportHeight) * 2);
       raycaster.setFromCamera(pointer, camera);
     }
-    function render(time) {
+
+    function render(time: number) {
       frame = 0;
       if (disposed || !ready || contextLost || !inView || document.hidden) return;
       const dt = lastTime ? Math.min(0.04, (time - lastTime) / 1000) : 1 / 60;
@@ -650,16 +770,17 @@ const PaperCrumple = ({
       const opts = options.current;
       let moving = false;
       const duration = held ? finite(opts.crumpleDuration, 0.55) : finite(opts.releaseDuration, 0.4);
-      for (const s of springs)
+      for (const s of springs) {
         moving = advance(s, dt, s === amount || s === memory ? duration : 0.42, reduceMotion || keyboard) || moving;
+      }
       peak = Math.max(peak, amount.value);
       deform();
       sheet.rotation.set(tiltX.value, tiltY.value, baseRotation);
       if (held && !keyboard && opts.draggable) {
-        const attribute = geometry.attributes.position;
+        const attribute = geometry.attributes['position'] as THREE.BufferAttribute;
         anchor.set(0, 0, 0);
         for (let i = 0; i < 3; i++) {
-          a.fromBufferAttribute(attribute, gripIndices[i]);
+          a.fromBufferAttribute(attribute, gripIndices[i] ?? 0);
           anchor.addScaledVector(a, weights.getComponent(i));
         }
         anchor.multiplyScalar(scale).applyEuler(sheet.rotation);
@@ -691,11 +812,15 @@ const PaperCrumple = ({
       placeHitTarget();
       if (moving) wake();
     }
+
     function wake() {
-      if (!frame && !disposed && ready && inView && !document.hidden && !contextLost)
+      if (!frame && !disposed && ready && inView && !document.hidden && !contextLost) {
         frame = requestAnimationFrame(render);
+      }
     }
+
     function resize() {
+      if (!root) return;
       const rect = root.getBoundingClientRect();
       viewportWidth = Math.max(1, rect.width);
       viewportHeight = Math.max(1, rect.height);
@@ -729,8 +854,9 @@ const PaperCrumple = ({
       }
       wake();
     }
+
     function finish(instant = false) {
-      if (!held) return;
+      if (!held || !hit) return;
       const opts = options.current;
       held = false;
       hit.setAttribute('aria-pressed', 'false');
@@ -771,7 +897,9 @@ const PaperCrumple = ({
         posX.target = clamp(posX.value + speedX * coast, -limitX, limitX);
         posY.target = clamp(posY.value - speedY * coast, -limitY, limitY);
       }
-      if (instant || keyboard || reduceMotion) for (const s of springs) advance(s, 0, 0, true);
+      if (instant || keyboard || reduceMotion) {
+        for (const s of springs) advance(s, 0, 0, true);
+      }
       keyboard = false;
       publish(
         opts.releaseBehavior === 'stay' && amount.target > 0.001
@@ -782,6 +910,7 @@ const PaperCrumple = ({
       );
       wake();
     }
+
     function reset() {
       finish(true);
       for (const s of springs) s.target = s.value = s.velocity = 0;
@@ -791,7 +920,9 @@ const PaperCrumple = ({
     }
     resetRef.current = reset;
     cancelRef.current = () => finish(true);
+
     function start() {
+      if (!hit) return;
       held = true;
       peak = amount.value;
       amount.target = clamp(finite(options.current.crumpleAmount, 0.85), 0, 1);
@@ -800,8 +931,9 @@ const PaperCrumple = ({
       publish('holding');
       wake();
     }
-    function pointerDown(event) {
-      if (!ready || options.current.disabled || held || event.button !== 0 || !event.isPrimary) return;
+
+    function pointerDown(event: PointerEvent) {
+      if (!ready || options.current.disabled || held || event.button !== 0 || !event.isPrimary || !root || !hit) return;
       const rect = root.getBoundingClientRect();
       pointerX = lastX = event.clientX - rect.left;
       pointerY = lastY = event.clientY - rect.top;
@@ -814,7 +946,7 @@ const PaperCrumple = ({
       hit.focus({ preventScroll: true });
       const { face } = intersection;
       gripIndices = [face.a, face.b, face.c];
-      const attribute = geometry.attributes.position;
+      const attribute = geometry.attributes['position'] as THREE.BufferAttribute;
       a.fromBufferAttribute(attribute, face.a);
       b.fromBufferAttribute(attribute, face.b);
       c.fromBufferAttribute(attribute, face.c);
@@ -826,18 +958,19 @@ const PaperCrumple = ({
       hit.setPointerCapture(event.pointerId);
       start();
     }
-    function pointerMove(event) {
-      if (!held || event.pointerId !== pointerId || !options.current.draggable) return;
+
+    function pointerMove(event: PointerEvent) {
+      if (!held || event.pointerId !== pointerId || !options.current.draggable || !root) return;
       const rect = root.getBoundingClientRect();
-      const now = performance.now();
-      const x = event.clientX - rect.left,
-        y = event.clientY - rect.top;
-      const dt = Math.max(0.008, (now - lastMove) / 1000);
+      const nowMs = performance.now();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const dt = Math.max(0.008, (nowMs - lastMove) / 1000);
       speedX = (x - lastX) / dt;
       speedY = (y - lastY) / dt;
       lastX = x;
       lastY = y;
-      lastMove = now;
+      lastMove = nowMs;
       pointerX = clamp(x, 12, viewportWidth - 12);
       pointerY = clamp(y, 12, viewportHeight - 12);
       const maxTilt = reduceMotion
@@ -847,21 +980,26 @@ const PaperCrumple = ({
       tiltY.target = clamp(speedX / 1800, -1, 1) * maxTilt;
       wake();
     }
-    function pointerUp(event) {
+
+    function pointerUp(event: PointerEvent) {
       if (event.pointerId === pointerId) finish();
     }
-    function pointerCancel(event) {
+
+    function pointerCancel(event: PointerEvent) {
       if (event.pointerId === pointerId) finish(true);
     }
+
     function cancel() {
       finish(true);
     }
+
     function blur() {
-      hit.dataset.pointer = 'false';
+      if (hit) hit.dataset.pointer = 'false';
       cancel();
     }
-    function keyDown(event) {
-      if (options.current.disabled || !ready) return;
+
+    function keyDown(event: KeyboardEvent) {
+      if (options.current.disabled || !ready || !hit) return;
       hit.dataset.pointer = 'false';
       if (event.key === 'Escape') {
         event.preventDefault();
@@ -897,38 +1035,44 @@ const PaperCrumple = ({
         wake();
       }
     }
-    function keyUp(event) {
+
+    function keyUp(event: KeyboardEvent) {
       if (keyboard && (event.key === ' ' || event.key === 'Enter')) {
         event.preventDefault();
         finish(true);
       }
     }
+
     function visibility() {
       lastTime = 0;
       if (document.hidden) cancel();
       else wake();
     }
+
     function motionChange() {
       reduceMotion = media.matches;
       if (reduceMotion) tiltX.target = tiltY.target = 0;
       wake();
     }
-    function loseContext(event) {
+
+    function loseContext(event: Event) {
       event.preventDefault();
       contextLost = true;
       cancel();
-      hit.disabled = true;
+      if (hit) hit.disabled = true;
       setStatus('error');
       options.current.onError?.(new Error('The WebGL context was lost.'));
     }
+
     function restoreContext() {
       contextLost = false;
       if (ready) {
         setStatus('ready');
-        hit.disabled = options.current.disabled;
+        if (hit) hit.disabled = options.current.disabled;
         wake();
       }
     }
+
     hit.addEventListener('pointerdown', pointerDown);
     hit.addEventListener('pointermove', pointerMove);
     hit.addEventListener('pointerup', pointerUp);
@@ -945,7 +1089,7 @@ const PaperCrumple = ({
     const observer = new ResizeObserver(resize);
     observer.observe(root);
     const intersectionObserver = new IntersectionObserver(entries => {
-      inView = entries[0].isIntersecting;
+      inView = entries[0]?.isIntersecting ?? false;
       lastTime = 0;
       if (!inView) cancel();
       else wake();
@@ -953,9 +1097,10 @@ const PaperCrumple = ({
     intersectionObserver.observe(root);
     deform();
     resize();
+
     const loader = new THREE.TextureLoader();
     loader.setCrossOrigin('anonymous');
-    function load(url) {
+    function load(url: string): Promise<THREE.Texture> {
       return new Promise((resolve, reject) => {
         loader.load(
           url,
@@ -968,7 +1113,7 @@ const PaperCrumple = ({
             textures.add(texture);
             texture.colorSpace = THREE.SRGBColorSpace;
             texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
-            const image = texture.image;
+            const image = texture.image as HTMLImageElement;
             const imageAspect = image.width / image.height;
             const targetAspect = paperWidth / paperHeight;
             let rx = 1,
@@ -989,6 +1134,7 @@ const PaperCrumple = ({
         );
       });
     }
+
     if (src) {
       Promise.all([load(src), backSrc ? load(backSrc) : Promise.resolve(null)])
         .then(([frontTexture, backTexture]) => {
@@ -1003,22 +1149,23 @@ const PaperCrumple = ({
           frontMaterial.needsUpdate = backMaterial.needsUpdate = depthMaterial.needsUpdate = true;
           ready = true;
           setStatus('ready');
-          hit.disabled = options.current.disabled;
+          if (hit) hit.disabled = options.current.disabled;
           wake();
         })
-        .catch(error => {
+        .catch((error: unknown) => {
           if (disposed) return;
           setStatus('error');
-          options.current.onError?.(error);
+          options.current.onError?.(error instanceof Error ? error : new Error(String(error)));
         });
     } else {
       setStatus('error');
       options.current.onError?.(new Error('PaperCrumple requires an image src.'));
     }
+
     return () => {
       disposed = true;
       cancelAnimationFrame(frame);
-      if (pointerId !== null && hit.hasPointerCapture(pointerId)) hit.releasePointerCapture(pointerId);
+      if (hit && pointerId !== null && hit.hasPointerCapture(pointerId)) hit.releasePointerCapture(pointerId);
       resetRef.current = cancelRef.current = null;
       observer.disconnect();
       intersectionObserver.disconnect();
@@ -1066,15 +1213,19 @@ const PaperCrumple = ({
     seed,
     detail
   ]);
+
   useEffect(() => {
     resetRef.current?.();
   }, [resetKey]);
+
   useEffect(() => {
     if (disabled) cancelRef.current?.();
   }, [disabled]);
+
   const shadowFilter = shadow
     ? `drop-shadow(0 6px 10px rgb(0 0 0 / ${clamp(finite(shadowOpacity, 0.08), 0, 1)}))`
     : undefined;
+
   return (
     <div
       ref={rootRef}
@@ -1120,7 +1271,6 @@ const PaperCrumple = ({
       </span>
     </div>
   );
-};
-export default PaperCrumple;
+}
 
-export { spring };
+export { PaperCrumple, spring };

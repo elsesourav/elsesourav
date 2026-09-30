@@ -1,28 +1,29 @@
-// @ts-nocheck
 'use client';
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { FavouriteIcon, StarIcon, ThumbsUpIcon } from '@hugeicons/core-free-icons';
 
 const OUT = 0.4;
 const ICONS = { heart: FavouriteIcon, star: StarIcon, thumb: ThumbsUpIcon };
 
-const back = (k, c) => {
+const back = (k: number, c: number): number => {
   const u = k - 1;
   return 1 + (c + 1) * u ** 3 + c * u ** 2;
 };
-const swellOf = (t, c) => (t <= 0 ? 0 : t < OUT ? 1 - (1 - t / OUT) ** 3 : 1 - back((t - OUT) / (1 - OUT), c));
-const format = n => new Intl.NumberFormat().format(n);
-const reducedMotion = () =>
+const swellOf = (t: number, c: number): number => (t <= 0 ? 0 : t < OUT ? 1 - (1 - t / OUT) ** 3 : 1 - back((t - OUT) / (1 - OUT), c));
+const format = (n: number): string => new Intl.NumberFormat().format(n);
+const reducedMotion = (): boolean =>
   typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
+export type PulseHeartIcon = 'heart' | 'star' | 'thumb';
 
 export interface PulseHeartProps {
+  liked?: boolean;
   defaultLiked?: boolean;
   count?: number;
-  onChange?: (...args: any[]) => any;
+  onChange?: (liked: boolean, count: number) => void;
   showCount?: boolean;
-  icon?: string;
+  icon?: PulseHeartIcon | React.ReactNode;
   idleOutline?: boolean;
   size?: number;
   corner?: number;
@@ -38,11 +39,17 @@ export interface PulseHeartProps {
   disabled?: boolean;
   label?: string;
   className?: string;
-  [key: string]: any;
+  style?: React.CSSProperties;
+}
+
+interface RollState {
+  a: string;
+  b: string;
+  at: number;
+  up: boolean;
 }
 
 export default function PulseHeart({
-
   liked: likedProp,
   defaultLiked = false,
   count = 0,
@@ -63,22 +70,23 @@ export default function PulseHeart({
   rollDuration = 350,
   disabled = false,
   label = 'Like',
-  className = ''
+  className = '',
+  style
 }: PulseHeartProps) {
   const controlled = likedProp !== undefined;
   const [inner, setInner] = useState(defaultLiked);
   const [total, setTotal] = useState(count);
-  const liked = controlled ? likedProp : inner;
-  const [shown, setShown] = useState({ liked, count });
-  const [roll, setRoll] = useState(null);
+  const liked = controlled ? Boolean(likedProp) : inner;
+  const [shown, setShown] = useState<{ liked: boolean; count: number }>({ liked, count });
+  const [roll, setRoll] = useState<RollState | null>(null);
 
-  const rootRef = useRef(null);
-  const pillRef = useRef(null);
-  const heartRef = useRef(null);
-  const glyphRef = useRef(null);
-  const rollRef = useRef(null);
+  const rootRef = useRef<HTMLButtonElement | null>(null);
+  const pillRef = useRef<HTMLSpanElement | null>(null);
+  const heartRef = useRef<HTMLSpanElement | null>(null);
+  const glyphRef = useRef<SVGGElement | null>(null);
+  const rollRef = useRef<HTMLSpanElement | null>(null);
   const raf = useRef(0);
-  const rollTimer = useRef(0);
+  const rollTimer = useRef<ReturnType<typeof setTimeout> | number>(0);
   const viaPointer = useRef(false);
   const shownRef = useRef(shown);
   const logical = useRef({ liked, count: total });
@@ -122,17 +130,17 @@ export default function PulseHeart({
     []
   );
 
-  const startRoll = (from, to) => {
+  const startRoll = (from: number, to: number): void => {
     if (from === to) return;
     const a = format(from);
     const b = format(to);
     const changed = a.length === b.length ? [...b].flatMap((ch, i) => (ch !== a[i] ? [i] : [])) : [];
-    setRoll({ a, b, at: changed.length === 1 ? changed[0] : -1, up: to > from });
+    setRoll({ a, b, at: changed.length === 1 && changed[0] !== undefined ? changed[0] : -1, up: to > from });
     clearTimeout(rollTimer.current);
     rollTimer.current = setTimeout(() => setRoll(null), cfg.current.rollDuration);
   };
 
-  const run = (nextLiked, nextCount) => {
+  const run = (nextLiked: boolean, nextCount: number): void => {
     const root = rootRef.current;
     const heart = heartRef.current;
     const pill = pillRef.current;
@@ -142,7 +150,7 @@ export default function PulseHeart({
     let swapped = false;
     let prev = 0;
     const t0 = performance.now();
-    const tick = now => {
+    const tick = (now: number): void => {
       const { duration: D, dotSize: dot, overshoot: c, beat: B } = cfg.current;
       const t = Math.min(1, (now - t0) / D);
       const step = prev ? now - prev : 1000 / 60;
@@ -177,22 +185,22 @@ export default function PulseHeart({
     raf.current = requestAnimationFrame(tick);
   };
 
-  const handlePointerDown = e => {
+  const handlePointerDown = (e: React.PointerEvent<HTMLButtonElement>): void => {
     if (e.button !== 0 || disabled) return;
     viaPointer.current = true;
     if (!reducedMotion() && rootRef.current) rootRef.current.dataset.pressed = '';
   };
-  const handlePointerUp = () => {
+  const handlePointerUp = (): void => {
     if (rootRef.current) delete rootRef.current.dataset.pressed;
   };
-  const handlePointerCancel = () => {
+  const handlePointerCancel = (): void => {
     viaPointer.current = false;
     handlePointerUp();
   };
-  const handleKeyDown = () => {
+  const handleKeyDown = (): void => {
     viaPointer.current = false;
   };
-  const handleClick = e => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
     if (disabled || raf.current) return;
     const pointer = viaPointer.current && e.detail !== 0;
     viaPointer.current = false;
@@ -205,7 +213,8 @@ export default function PulseHeart({
     else if (rootRef.current) rootRef.current.dataset.instant = '';
   };
 
-  const paths = typeof icon === 'string' ? ICONS[icon] || ICONS.heart : null;
+  const iconKey = typeof icon === 'string' && icon in ICONS ? (icon as PulseHeartIcon) : 'heart';
+  const paths = typeof icon === 'string' ? ICONS[iconKey] : null;
   const text = format(shown.count);
   const cells = roll
     ? roll.at === -1
@@ -225,16 +234,19 @@ export default function PulseHeart({
       data-solid={idleOutline ? undefined : ''}
       data-no-count={showCount ? undefined : ''}
       className={`pulse-heart${className ? ` ${className}` : ''}`}
-      style={{
-        '--ph-size': `${size}px`,
-        '--ph-corner': `${corner}px`,
-        '--ph-pill': pillColor,
-        '--ph-idle': idleColor,
-        '--ph-liked': likedColor,
-        '--ph-text': textColor,
-        '--ph-roll': `${rollDuration}ms`,
-        '--ph-stroke': `${(1.5 * size) / 24}px`
-      }}
+      style={
+        {
+          '--ph-size': `${size}px`,
+          '--ph-corner': `${corner}px`,
+          '--ph-pill': pillColor,
+          '--ph-idle': idleColor,
+          '--ph-liked': likedColor,
+          '--ph-text': textColor,
+          '--ph-roll': `${rollDuration}ms`,
+          '--ph-stroke': `${(1.5 * size) / 24}px`,
+          ...style
+        } as React.CSSProperties
+      }
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onPointerLeave={handlePointerUp}
@@ -248,7 +260,7 @@ export default function PulseHeart({
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <g ref={glyphRef}>
                 {paths.map(([, attrs]) => (
-                  <path key={String(attrs.key)} d={String(attrs.d)} vectorEffect="non-scaling-stroke" />
+                  <path key={String((attrs as { key?: string }).key)} d={String((attrs as { d?: string }).d)} vectorEffect="non-scaling-stroke" />
                 ))}
               </g>
             </svg>

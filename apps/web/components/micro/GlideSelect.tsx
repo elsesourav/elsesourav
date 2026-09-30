@@ -1,11 +1,10 @@
-// @ts-nocheck
 'use client';
 
-import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { ArrowDown01Icon, Tick02Icon } from '@hugeicons/core-free-icons';
 
-const SIZES = {
+const SIZES: Record<string, { chip: number; row: number; font: number }> = {
   sm: { chip: 28, row: 26, font: 12 },
   md: { chip: 32, row: 30, font: 13 },
   lg: { chip: 44, row: 40, font: 14 }
@@ -13,48 +12,55 @@ const SIZES = {
 const PAD = 4;
 const GAP = 1;
 const MENU_GAP = 6;
-const DEFAULT_OPTIONS = ['One', 'Two', 'Three'];
+const DEFAULT_OPTIONS: string[] = ['One', 'Two', 'Three'];
 
-const norm = o => (typeof o === 'string' ? { value: o, label: o } : o);
-const textOf = it => (typeof it.label === 'string' ? it.label : it.value);
-const typeaheadIndex = (items, from, ch) => {
+export interface GlideOption {
+  value: string;
+  label: React.ReactNode;
+  tag?: string;
+}
+
+export type GlideOptionItem = string | GlideOption;
+
+const norm = (o: GlideOptionItem): GlideOption => (typeof o === 'string' ? { value: o, label: o } : o);
+const textOf = (it: GlideOption): string => (typeof it.label === 'string' ? it.label : it.value);
+const typeaheadIndex = (items: GlideOption[], from: number, ch: string): number => {
   const c = ch.toLowerCase();
   const n = items.length;
   for (let k = 1; k <= n; k++) {
     const i = (from + k) % n;
-    if (textOf(items[i]).toLowerCase().startsWith(c)) return i;
+    const item = items[i];
+    if (item && textOf(item).toLowerCase().startsWith(c)) return i;
   }
   return from;
 };
 
-
 export interface GlideSelectProps {
-  options?: any;
-  value?: any;
-  defaultValue?: any;
-  onChange?: (...args: any[]) => any;
+  options?: GlideOptionItem[];
+  value?: string;
+  defaultValue?: string;
+  onChange?: (value: string, item: GlideOption) => void;
   placeholder?: string;
   showTags?: boolean;
   accentColor?: string;
   surfaceColor?: string;
   highlightColor?: string;
   textColor?: string;
-  size?: string;
+  size?: 'sm' | 'md' | 'lg' | string;
   radius?: number;
   menuWidth?: number;
-  placement?: string;
-  align?: string;
+  placement?: 'bottom' | 'top' | string;
+  align?: 'left' | 'right' | string;
   popDuration?: number;
   glideDuration?: number;
   rememberPosition?: boolean;
   disabled?: boolean;
   ariaLabel?: string;
   className?: string;
-  [key: string]: any;
+  style?: React.CSSProperties;
 }
 
 export default function GlideSelect({
-
   options = DEFAULT_OPTIONS,
   value,
   defaultValue,
@@ -75,24 +81,25 @@ export default function GlideSelect({
   rememberPosition = true,
   disabled = false,
   ariaLabel = 'Select',
-  className = ''
+  className = '',
+  style
 }: GlideSelectProps) {
   const items = options.map(norm);
   const [inner, setInner] = useState(defaultValue ?? '');
   const current = value ?? inner;
   const selected = items.findIndex(it => it.value === current);
-  const [phase, setPhase] = useState('closed');
-  const [active, setActive] = useState(null);
+  const [phase, setPhase] = useState<'closed' | 'open' | 'closing'>('closed');
+  const [active, setActive] = useState<number | null>(null);
   const [side, setSide] = useState(placement);
-  const rootRef = useRef(null);
-  const triggerRef = useRef(null);
-  const menuRef = useRef(null);
-  const pillRef = useRef(null);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  const pillRef = useRef<HTMLSpanElement | null>(null);
   const instant = useRef(false);
-  const closeTimer = useRef(undefined);
-  const scrub = useRef(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const scrub = useRef<{ id: number; top: number } | null>(null);
   const id = useId();
-  const S = SIZES[size] ?? SIZES.md;
+  const S = SIZES[size] ?? SIZES.md ?? { chip: 32, row: 30, font: 13 };
   const step = S.row + GAP;
   const popOut = Math.round((popDuration * 2) / 3);
 
@@ -139,14 +146,14 @@ export default function GlideSelect({
     instant.current = false;
   }, [active, phase, step]);
 
-  const open = viaKey => {
+  const open = (viaKey: boolean): void => {
     if (disabled) return;
     clearTimeout(closeTimer.current);
     instant.current = true;
     setActive(selected >= 0 ? selected : viaKey ? 0 : null);
     setPhase('open');
   };
-  const close = mode => {
+  const close = (mode: 'instant' | 'pop'): void => {
     setActive(null);
     clearTimeout(closeTimer.current);
     const el = menuRef.current;
@@ -159,7 +166,7 @@ export default function GlideSelect({
     setPhase('closing');
     closeTimer.current = setTimeout(() => setPhase('closed'), popOut + 20);
   };
-  const pick = (i, viaKey) => {
+  const pick = (i: number, viaKey: boolean): void => {
     const it = items[i];
     if (!it) {
       close('instant');
@@ -174,7 +181,7 @@ export default function GlideSelect({
     triggerRef.current?.focus({ preventScroll: true });
   };
 
-  const onTriggerKey = e => {
+  const onTriggerKey = (e: React.KeyboardEvent<HTMLButtonElement>): void => {
     const k = e.key;
     const n = items.length;
     const cur = active ?? Math.max(0, selected);
@@ -185,7 +192,7 @@ export default function GlideSelect({
       }
       return;
     }
-    const go = i => {
+    const go = (i: number): void => {
       e.preventDefault();
       instant.current = true;
       setActive(Math.min(n - 1, Math.max(0, i)));
@@ -203,8 +210,8 @@ export default function GlideSelect({
 
   useEffect(() => {
     if (phase === 'closed') return undefined;
-    const onDown = e => {
-      if (rootRef.current && !rootRef.current.contains(e.target)) close('pop');
+    const onDown = (e: PointerEvent): void => {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node | null)) close('pop');
     };
     document.addEventListener('pointerdown', onDown, true);
     return () => document.removeEventListener('pointerdown', onDown, true);
@@ -216,64 +223,70 @@ export default function GlideSelect({
   }, [disabled]);
   useEffect(() => () => clearTimeout(closeTimer.current), []);
 
-  const rowAt = y => {
+  const rowAt = (y: number): number | null => {
     const s = scrub.current;
     if (!s) return null;
     const i = Math.floor((y - s.top - PAD) / step);
     return i >= 0 && i < items.length ? i : null;
   };
-  const onListDown = e => {
+  const onListDown = (e: React.PointerEvent<HTMLDivElement>): void => {
     if (scrub.current) return;
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     scrub.current = { id: e.pointerId, top: e.currentTarget.getBoundingClientRect().top };
     instant.current = true;
     setActive(rowAt(e.clientY));
   };
-  const onListMove = e => {
+  const onListMove = (e: React.PointerEvent<HTMLDivElement>): void => {
     if (!scrub.current || scrub.current.id !== e.pointerId) return;
     const i = rowAt(e.clientY);
     if (i !== active) setActive(i);
   };
-  const onListUp = e => {
+  const onListUp = (e: React.PointerEvent<HTMLDivElement>): void => {
     if (!scrub.current || scrub.current.id !== e.pointerId) return;
     const i = e.type === 'pointerup' ? rowAt(e.clientY) : null;
     scrub.current = null;
     if (i !== null) pick(i, false);
     else if (!rememberPosition) setActive(null);
   };
-  const onListOver = e => {
+  const onListOver = (e: React.PointerEvent<HTMLDivElement>): void => {
     if (e.pointerType === 'touch' || scrub.current) return;
-    const row = e.target.closest('[data-index]');
-    if (!row) return;
+    const row = (e.target as HTMLElement).closest('[data-index]') as HTMLElement | null;
+    if (!row || !row.dataset.index) return;
     const i = Number(row.dataset.index);
     if (i !== active) setActive(i);
   };
 
   const origin = `${side === 'bottom' ? 'top' : 'bottom'} ${align}`;
+  const selectedItem = selected >= 0 ? items[selected] : undefined;
   return (
     <div
       ref={rootRef}
       className={`glide-select${className ? ` ${className}` : ''}`}
       data-size={size}
       data-disabled={disabled ? '' : undefined}
-      style={{
-        '--gs-accent': accentColor,
-        '--gs-surface': surfaceColor,
-        '--gs-highlight': highlightColor,
-        '--gs-text': textColor,
-        '--gs-radius': `${radius}px`,
-        '--gs-inner-radius': `${Math.max(3, radius - 4)}px`,
-        '--gs-chip': `${S.chip}px`,
-        '--gs-row': `${S.row}px`,
-        '--gs-font': `${S.font}px`,
-        '--gs-menu-w': `${menuWidth}px`,
-        '--gs-pop': `${popDuration}ms`,
-        '--gs-pop-out': `${popOut}ms`,
-        '--gs-glide': `${glideDuration}ms`,
-        '--gs-origin': origin
-      }}
+      style={
+        {
+          '--gs-accent': accentColor,
+          '--gs-surface': surfaceColor,
+          '--gs-highlight': highlightColor,
+          '--gs-text': textColor,
+          '--gs-radius': `${radius}px`,
+          '--gs-inner-radius': `${Math.max(3, radius - 4)}px`,
+          '--gs-chip': `${S.chip}px`,
+          '--gs-row': `${S.row}px`,
+          '--gs-font': `${S.font}px`,
+          '--gs-menu-w': `${menuWidth}px`,
+          '--gs-pop': `${popDuration}ms`,
+          '--gs-pop-out': `${popOut}ms`,
+          '--gs-glide': `${glideDuration}ms`,
+          '--gs-origin': origin,
+          ...style
+        } as React.CSSProperties
+      }
       onAnimationEnd={e => {
         if (e.animationName === 'gs-swap' && rootRef.current) delete rootRef.current.dataset.swap;
       }}
@@ -298,7 +311,7 @@ export default function GlideSelect({
         onKeyDown={onTriggerKey}
       >
         <span className="glide-select__label" key={current} data-empty={selected < 0 ? '' : undefined}>
-          {selected >= 0 ? items[selected].label : placeholder}
+          {selectedItem ? selectedItem.label : placeholder}
         </span>
         <span className="glide-select__chevron" aria-hidden="true">
           <HugeiconsIcon icon={ArrowDown01Icon} size={12} strokeWidth={2.5} />

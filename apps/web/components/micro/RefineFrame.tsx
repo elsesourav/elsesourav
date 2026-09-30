@@ -1,30 +1,58 @@
-// @ts-nocheck
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Alert02Icon, Loading03Icon, RefreshIcon, Tick02Icon } from '@hugeicons/core-free-icons';
-const STAGES = {
+
+export type RefineStage = 'queued' | 'generating' | 'refining' | 'complete' | 'error';
+
+export interface RefineStageConfig {
+  blur: number;
+  sat: number;
+  scale: number;
+  opacity: number;
+}
+
+const STAGES: Record<RefineStage, RefineStageConfig> = {
   queued: { blur: 4, sat: 0.6, scale: 1.04, opacity: 0.55 },
   generating: { blur: 1.5, sat: 0.8, scale: 1.02, opacity: 0.85 },
   refining: { blur: 0.5, sat: 0.95, scale: 1.005, opacity: 1 },
   complete: { blur: 0, sat: 1, scale: 1, opacity: 1 },
   error: { blur: 2, sat: 0.5, scale: 1, opacity: 0.28 }
 };
-const TARGET = { queued: 0, generating: 0.5, refining: 0.875, complete: 1 };
+const TARGET: Record<string, number> = { queued: 0, generating: 0.5, refining: 0.875, complete: 1 };
 const LEVELS = [48, 32, 20, 12, 8, 5, 3, 2, 1];
 const EDGE = 28;
 const STRIPS = 14;
-const DEFAULT_LABELS = {
+const DEFAULT_LABELS: Record<RefineStage, string> = {
   queued: 'Queued',
   generating: 'Generating',
   refining: 'Refining',
   complete: 'Ready',
   error: 'Failed'
 };
-const ACTIVE = new Set(['queued', 'generating', 'refining']);
+const ACTIVE = new Set<RefineStage>(['queued', 'generating', 'refining']);
 
-const build = (s, canvas, img, dpr) => {
+export interface RefineSimState {
+  p: number;
+  raf: number;
+  last: number;
+  key: string;
+  w: number;
+  h: number;
+  levels: HTMLCanvasElement[];
+  glint: CanvasGradient | null;
+  sent: boolean;
+}
+
+export interface RefineLiveState {
+  status: RefineStage;
+  stageDuration: number;
+  sweep: boolean;
+  reduce: boolean;
+}
+
+const build = (s: RefineSimState, canvas: HTMLCanvasElement, img: HTMLImageElement, dpr: number): void => {
   const rect = canvas.getBoundingClientRect();
   const W = Math.max(1, Math.round(rect.width * dpr));
   const H = Math.max(1, Math.round(rect.height * dpr));
@@ -44,7 +72,7 @@ const build = (s, canvas, img, dpr) => {
   const sy = (ih - sh) / 2;
   const glint = canvas.getContext('2d')?.createLinearGradient(0, 0, W, 0) ?? null;
   if (glint) {
-    for (const [at, a] of [
+    const stops: [number, number][] = [
       [0, 0],
       [0.08, 0.1],
       [0.2, 0.7],
@@ -53,7 +81,8 @@ const build = (s, canvas, img, dpr) => {
       [0.8, 0.7],
       [0.92, 0.1],
       [1, 0]
-    ]) {
+    ];
+    for (const [at, a] of stops) {
       glint.addColorStop(at, `rgba(255, 255, 255, ${a})`);
     }
   }
@@ -86,9 +115,8 @@ const build = (s, canvas, img, dpr) => {
   });
 };
 
-
 export interface RefineFrameProps {
-  status?: string;
+  status?: RefineStage;
   children?: React.ReactNode;
   aspectRatio?: string;
   width?: number;
@@ -99,15 +127,14 @@ export interface RefineFrameProps {
   sweep?: boolean;
   showStatus?: boolean;
   hideAfter?: number;
-  labels?: any;
+  labels?: Partial<Record<RefineStage, string>>;
   retryLabel?: string;
-  onRetry?: (...args: any[]) => any;
+  onRetry?: () => void;
   className?: string;
-  [key: string]: any;
+  style?: React.CSSProperties;
 }
 
 export default function RefineFrame({
-
   status = 'generating',
   children,
   aspectRatio = '4 / 3',
@@ -122,21 +149,22 @@ export default function RefineFrame({
   labels = DEFAULT_LABELS,
   retryLabel = 'Retry',
   onRetry,
-  className = ''
+  className = '',
+  style
 }: RefineFrameProps) {
   const stage = STAGES[status] ?? STAGES.generating;
   const active = ACTIVE.has(status);
   const text = { ...DEFAULT_LABELS, ...labels };
-  const printRef = useRef(null);
-  const canvasRef = useRef(null);
-  const sim = useRef({ p: 0, raf: 0, last: 0, key: '', w: 0, h: 0, levels: [], glint: null, sent: false });
-  const live = useRef({});
-  live.current = { status, stageDuration, sweep, reduce: false };
+  const printRef = useRef<HTMLDivElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const sim = useRef<RefineSimState>({ p: 0, raf: 0, last: 0, key: '', w: 0, h: 0, levels: [], glint: null, sent: false });
+  const live = useRef<RefineLiveState>({ status, stageDuration, sweep, reduce: false });
+  live.current = { status, stageDuration, sweep, reduce: live.current.reduce };
   const [mosaic, setMosaic] = useState(false);
   const [resolved, setResolved] = useState(false);
 
   const [chip, setChip] = useState(showStatus);
-  const timer = useRef(undefined);
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   useEffect(() => {
     clearTimeout(timer.current);
     if (!showStatus) {
@@ -150,7 +178,7 @@ export default function RefineFrame({
     return () => clearTimeout(timer.current);
   }, [status, showStatus, hideAfter]);
 
-  const tick = now => {
+  const tick = (now: number): void => {
     const s = sim.current;
     const c = live.current;
     const canvas = canvasRef.current;
@@ -171,17 +199,19 @@ export default function RefineFrame({
     else if (target - s.p <= step) s.p = target;
     else s.p += step;
     const ctx = canvas.getContext('2d');
-    if (ctx) {
+    if (ctx && s.levels[0]) {
       const L = s.p * n;
       const i = Math.min(n, Math.floor(L + 1e-6));
       const frac = L - i;
       ctx.globalAlpha = 1;
-      ctx.drawImage(s.levels[i], 0, 0);
-      if (i < n && frac > 0) {
+      const currentLevel = s.levels[i];
+      if (currentLevel) ctx.drawImage(currentLevel, 0, 0);
+      const nextLevel = s.levels[i + 1];
+      if (i < n && frac > 0 && nextLevel) {
         const edge = EDGE * dpr;
         const front = frac * (s.h + edge) - edge / 2;
         const top = Math.max(0, Math.floor(front - edge / 2));
-        if (top > 0) ctx.drawImage(s.levels[i + 1], 0, 0, s.w, top, 0, 0, s.w, top);
+        if (top > 0) ctx.drawImage(nextLevel, 0, 0, s.w, top, 0, 0, s.w, top);
         const sh = edge / STRIPS;
         for (let k = 0; k < STRIPS; k += 1) {
           const y = front - edge / 2 + k * sh;
@@ -190,7 +220,7 @@ export default function RefineFrame({
           ctx.globalAlpha = t * t * (3 - 2 * t);
           const y0 = Math.max(0, y);
           const h0 = Math.min(s.h, y + sh) - y0;
-          if (h0 > 0) ctx.drawImage(s.levels[i + 1], 0, y0, s.w, h0, 0, y0, s.w, h0);
+          if (h0 > 0) ctx.drawImage(nextLevel, 0, y0, s.w, h0, 0, y0, s.w, h0);
         }
         ctx.globalAlpha = 1;
         if (c.sweep && !c.reduce && s.glint && front > 0 && front < s.h) {
@@ -212,14 +242,14 @@ export default function RefineFrame({
     s.raf = keep ? requestAnimationFrame(tick) : 0;
     if (!keep) s.last = 0;
   };
-  const wake = () => {
+  const wake = (): void => {
     const s = sim.current;
     if (!s.raf) s.raf = requestAnimationFrame(tick);
   };
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const sync = () => {
+    const sync = (): void => {
       live.current.reduce = mq.matches;
     };
     sync();
@@ -234,7 +264,7 @@ export default function RefineFrame({
       return undefined;
     }
     let gone = false;
-    const start = () => {
+    const start = (): void => {
       if (gone) return;
       setMosaic(true);
       wake();
@@ -269,18 +299,21 @@ export default function RefineFrame({
       data-sweep={sweep && active ? '' : undefined}
       data-mosaic={mosaic ? '' : undefined}
       data-resolved={mosaic && resolved ? '' : undefined}
-      style={{
-        '--rf-w': `${width}px`,
-        '--rf-aspect': aspectRatio,
-        '--rf-radius': `${radius}px`,
-        '--rf-bg': background,
-        '--rf-ink': color,
-        '--rf-stage': `${stageDuration}ms`,
-        '--rf-blur': `${mosaic ? 0 : stage.blur}px`,
-        '--rf-sat': stage.sat,
-        '--rf-scale': mosaic ? 1 : stage.scale,
-        '--rf-opacity': stage.opacity
-      }}
+      style={
+        {
+          '--rf-w': `${width}px`,
+          '--rf-aspect': aspectRatio,
+          '--rf-radius': `${radius}px`,
+          '--rf-bg': background,
+          '--rf-ink': color,
+          '--rf-stage': `${stageDuration}ms`,
+          '--rf-blur': `${mosaic ? 0 : stage.blur}px`,
+          '--rf-sat': stage.sat,
+          '--rf-scale': mosaic ? 1 : stage.scale,
+          '--rf-opacity': stage.opacity,
+          ...style
+        } as React.CSSProperties
+      }
     >
       <div className="refine-frame__media" aria-hidden="true">
         <div ref={printRef} className="refine-frame__print">

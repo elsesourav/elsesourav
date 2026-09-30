@@ -1,7 +1,6 @@
-// @ts-nocheck
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { animate, motion, useMotionValue, useMotionValueEvent, useReducedMotion, useTransform } from 'motion/react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { ArrowRight02Icon, Tick02Icon } from '@hugeicons/core-free-icons';
@@ -11,11 +10,11 @@ const SQUASH_MAX = 0.08;
 const SQUASH_DIV = 110;
 const SWELL = 1.03;
 const MIN_PENDING = 300;
-const EASE_OUT = [0.23, 1, 0.32, 1];
+const EASE_OUT = [0.23, 1, 0.32, 1] as [number, number, number, number];
 const SHAKE = [0, -5, 5, -3, 3, -1, 0];
 
-const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-const onColor = hex => {
+const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
+const onColor = (hex: string): string => {
   const raw = hex.replace('#', '');
   const full = raw.length === 3 ? [...raw].map(ch => ch + ch).join('') : raw.slice(0, 6);
   const n = parseInt(full, 16);
@@ -23,30 +22,34 @@ const onColor = hex => {
   const yiq = (((n >> 16) & 255) * 299 + ((n >> 8) & 255) * 587 + (n & 255) * 114) / 1000;
   return yiq >= 128 ? '#111111' : '#ffffff';
 };
-const velocityOf = hist => {
+const velocityOf = (hist: [number, number][]): number => {
   if (hist.length < 2) return 0;
-  const [t0, x0] = hist[0];
-  const [t1, x1] = hist[hist.length - 1];
+  const first = hist[0];
+  const last = hist[hist.length - 1];
+  if (!first || !last) return 0;
+  const [t0, x0] = first;
+  const [t1, x1] = last;
   return ((x1 - x0) / Math.max(1, t1 - t0)) * 1000;
 };
-const finePointer = () =>
+const finePointer = (): boolean =>
   typeof window !== 'undefined' && !!window.matchMedia?.('(hover: hover) and (pointer: fine)').matches;
 
-const Spinner = ({ size }) => (
+const Spinner = ({ size }: { size: number }) => (
   <svg className="slide-commit__spinner" width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
     <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" strokeWidth="2.4" strokeOpacity="0.25" />
     <path d="M12 3a9 9 0 0 1 9 9" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
   </svg>
 );
 
+export type SlideCommitPhase = 'idle' | 'pending' | 'done' | 'error';
 
 export interface SlideCommitProps {
-  label?: string;
+  label?: React.ReactNode;
   doneLabel?: string;
   errorLabel?: string;
-  onConfirm?: (...args: any[]) => any;
-  onDone?: (...args: any[]) => any;
-  onError?: (...args: any[]) => any;
+  onConfirm?: () => Promise<unknown> | void;
+  onDone?: () => void;
+  onError?: (reason: unknown) => void;
   trackColor?: string;
   handleColor?: string;
   successColor?: string;
@@ -59,13 +62,19 @@ export interface SlideCommitProps {
   landingDip?: number;
   holdMs?: number;
   disabled?: boolean;
-  icon?: any;
+  icon?: React.ReactNode;
   className?: string;
-  [key: string]: any;
+  style?: React.CSSProperties;
+}
+
+interface GripState {
+  id: number;
+  grab: number | null;
+  moved: boolean;
+  hist: [number, number][];
 }
 
 export default function SlideCommit({
-
   label = 'Slide to pay',
   doneLabel = 'Paid',
   errorLabel = 'Payment failed',
@@ -85,21 +94,22 @@ export default function SlideCommit({
   holdMs = 1500,
   disabled = false,
   icon,
-  className = ''
+  className = '',
+  style
 }: SlideCommitProps) {
   const reduce = useReducedMotion();
-  const [phase, setPhase] = useState('idle');
+  const [phase, setPhase] = useState<SlideCommitPhase>('idle');
   const [held, setHeld] = useState(false);
   const [hot, setHot] = useState(false);
 
-  const trackRef = useRef(null);
-  const capsuleRef = useRef(null);
-  const grip = useRef(null);
-  const timer = useRef(0);
-  const homeTimer = useRef(0);
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const capsuleRef = useRef<HTMLDivElement | null>(null);
+  const grip = useRef<GripState | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | number>(0);
+  const homeTimer = useRef<ReturnType<typeof setTimeout> | number>(0);
   const run = useRef(0);
-  const unwatch = useRef(null);
-  const live = useRef({ move: () => {}, up: () => {} });
+  const unwatch = useRef<(() => void) | null>(null);
+  const live = useRef<{ move: (e: PointerEvent) => void; up: (e: PointerEvent) => void }>({ move: () => {}, up: () => {} });
   const lastPercent = useRef(0);
 
   const GRIP = height - PAD * 2;
@@ -110,7 +120,7 @@ export default function SlideCommit({
   const k = 260 + (clamp(speed, 0, 100) / 100) * 640;
   const mass = 0.9;
   const critical = 2 * Math.sqrt(k * mass);
-  const commitSpring = { type: 'spring', stiffness: k, damping: critical, mass };
+  const commitSpring = { type: 'spring' as const, stiffness: k, damping: critical, mass };
   const homeSpring = { ...commitSpring, damping: critical * (1 - clamp(returnBounce, 0, 0.5)) };
 
   const x = useMotionValue(0);
@@ -120,9 +130,9 @@ export default function SlideCommit({
   const pulse = useMotionValue(1);
   const shake = useMotionValue(0);
   const seen = useTransform(x, v => clamp(v, 0, TRAVEL));
-  const edge = useTransform([seen, anchor], ([v, a]) => v + GRIP + clamp(a - v, 0, TRAVEL));
-  const clip = useTransform(edge, R => `inset(0 ${INNER - R}px 0 0 round ${gripR}px)`);
-  const content = useTransform([seen, edge], ([v, R]) => `translateX(${(v + R) / 2 - INNER / 2}px)`);
+  const edge = useTransform([seen, anchor], ([v, a]: number[]) => (v ?? 0) + GRIP + clamp((a ?? 0) - (v ?? 0), 0, TRAVEL));
+  const clip = useTransform(edge, R => `inset(0 ${INNER - Number(R)}px 0 0 round ${gripR}px)`);
+  const content = useTransform([seen, edge], ([v, R]: (number | string)[]) => `translateX(${(Number(v) + Number(R)) / 2 - INNER / 2}px)`);
   const swell = hot && !held && phase === 'idle' && !reduce ? SWELL : 1;
   const shape = useTransform(x, v => {
     const q = 1 - Math.min(SQUASH_MAX, Math.max(0, -v) / SQUASH_DIV);
@@ -130,8 +140,8 @@ export default function SlideCommit({
   });
   const origin = useTransform(seen, v => `${v}px 50%`);
   const say = useTransform(seen, [0, TRAVEL * 0.55], [1, 0]);
-  const arrow = useTransform([seen, shown], ([v, on]) => on * clamp(1 - (v - TRAVEL * 0.55) / (TRAVEL * 0.4), 0, 1));
-  const trackTransform = useTransform([shake, pulse], ([s, p]) => `translateX(${s}px) scale(${p})`);
+  const arrow = useTransform([seen, shown], ([v, on]: number[]) => (on ?? 1) * clamp(1 - ((v ?? 0) - TRAVEL * 0.55) / (TRAVEL * 0.4), 0, 1));
+  const trackTransform = useTransform([shake, pulse], ([s, p]: number[]) => `translateX(${s ?? 0}px) scale(${p ?? 1})`);
 
   const labelText = typeof label === 'string' ? label : 'Slide to confirm';
   useMotionValueEvent(seen, 'change', v => {
@@ -152,25 +162,25 @@ export default function SlideCommit({
     []
   );
 
-  const local = clientX => {
+  const local = (clientX: number): number => {
     const rect = trackRef.current?.getBoundingClientRect();
     if (!rect) return 0;
     return (clientX - rect.left) / (rect.width / width || 1);
   };
 
-  const goHome = velocity => {
+  const goHome = (velocity: number): void => {
     if (reduce) animate(x, 0, { duration: 0.2, ease: EASE_OUT });
     else animate(x, 0, { ...homeSpring, velocity: Math.min(0, velocity) });
   };
 
-  const settle = () => {
+  const settle = (): void => {
     setPhase('idle');
     animate(shown, 1, { duration: 0.2, delay: 0.12 });
     if (reduce) anchor.set(0);
     else animate(anchor, 0, { type: 'spring', duration: 0.3, bounce: 0 });
   };
 
-  const resolve = viaKey => {
+  const resolve = (viaKey: boolean): void => {
     setPhase('done');
     anchor.set(x.get());
     animate(spin, 0, { duration: 0.12 });
@@ -185,7 +195,7 @@ export default function SlideCommit({
     if (holdMs > 0) timer.current = setTimeout(settle, holdMs);
   };
 
-  const reject = reason => {
+  const reject = (reason: unknown): void => {
     setPhase('error');
     onError?.(reason);
     animate(spin, 0, { duration: 0.12 });
@@ -200,18 +210,18 @@ export default function SlideCommit({
     timer.current = setTimeout(() => setPhase('idle'), Math.max(holdMs, 1500));
   };
 
-  const commit = viaKey => {
+  const commit = (viaKey: boolean): void => {
     clearTimeout(timer.current);
     const id = ++run.current;
     x.set(TRAVEL);
-    let out;
+    let out: unknown;
     try {
       out = onConfirm?.();
     } catch (reason) {
       reject(reason);
       return;
     }
-    const pending = out && typeof out.then === 'function' ? out : null;
+    const pending = out && typeof (out as Promise<unknown>).then === 'function' ? (out as Promise<unknown>) : null;
     if (!pending) {
       animate(shown, 0, { duration: 0.12 });
       resolve(viaKey);
@@ -221,7 +231,7 @@ export default function SlideCommit({
     animate(shown, 0, { duration: 0.2 });
     animate(spin, 1, { duration: 0.2 });
     const t0 = performance.now();
-    const later = fn => {
+    const later = (fn: () => void): void => {
       setTimeout(
         () => {
           if (id === run.current) fn();
@@ -235,17 +245,23 @@ export default function SlideCommit({
     );
   };
 
-  const down = e => {
+  const down = (e: React.PointerEvent<HTMLDivElement>): void => {
     if (disabled || grip.current || phase === 'pending' || phase === 'done' || e.button !== 0) return;
     x.stop();
     grip.current = { id: e.pointerId, grab: null, moved: false, hist: [] };
     setHeld(true);
     try {
       trackRef.current?.setPointerCapture(e.pointerId);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     unwatch.current?.();
-    const onMove = ev => ev.isTrusted && live.current.move(ev);
-    const onUp = ev => ev.isTrusted && live.current.up(ev);
+    const onMove = (ev: PointerEvent): void => {
+      if (ev.isTrusted) live.current.move(ev);
+    };
+    const onUp = (ev: PointerEvent): void => {
+      if (ev.isTrusted) live.current.up(ev);
+    };
     window.addEventListener('pointermove', onMove);
     window.addEventListener('pointerup', onUp);
     window.addEventListener('pointercancel', onUp);
@@ -257,7 +273,7 @@ export default function SlideCommit({
     };
   };
 
-  const move = e => {
+  const move = (e: PointerEvent): void => {
     const g = grip.current;
     if (!g || g.id !== e.pointerId) return;
     const at = local(e.clientX);
@@ -272,21 +288,23 @@ export default function SlideCommit({
     x.set(next);
   };
 
-  const up = e => {
+  const up = (e: { pointerId: number }): void => {
     const g = grip.current;
     if (!g || g.id !== e.pointerId) return;
     grip.current = null;
     unwatch.current?.();
     try {
       trackRef.current?.releasePointerCapture(e.pointerId);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     setHeld(false);
     if (x.get() >= TRAVEL) commit(false);
     else if (g.moved) goHome(velocityOf(g.hist));
   };
   live.current = { move, up };
 
-  const onKeyDown = e => {
+  const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>): void => {
     if (disabled || phase === 'pending' || phase === 'done') return;
     const step = TRAVEL / 10;
     if (e.key === 'End') {
@@ -317,21 +335,24 @@ export default function SlideCommit({
       data-phase={phase}
       data-held={held ? '' : undefined}
       data-disabled={disabled ? '' : undefined}
-      style={{
-        width,
-        height,
-        '--sc-track': trackColor,
-        '--sc-ink': handleColor,
-        '--sc-ok': successColor,
-        '--sc-no': dangerColor,
-        '--sc-on-ink': onColor(handleColor),
-        '--sc-on-ok': onColor(successColor),
-        '--sc-on-no': onColor(dangerColor),
-        '--sc-radius': `${r}px`,
-        '--sc-grip-r': `${gripR}px`,
-        '--sc-pad': `${PAD}px`,
-        '--sc-font': `${fontSize}px`
-      }}
+      style={
+        {
+          width,
+          height,
+          '--sc-track': trackColor,
+          '--sc-ink': handleColor,
+          '--sc-ok': successColor,
+          '--sc-no': dangerColor,
+          '--sc-on-ink': onColor(handleColor),
+          '--sc-on-ok': onColor(successColor),
+          '--sc-on-no': onColor(dangerColor),
+          '--sc-radius': `${r}px`,
+          '--sc-grip-r': `${gripR}px`,
+          '--sc-pad': `${PAD}px`,
+          '--sc-font': `${fontSize}px`,
+          ...style
+        } as React.CSSProperties
+      }
     >
       <motion.div
         ref={trackRef}

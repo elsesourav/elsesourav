@@ -1,7 +1,6 @@
-// @ts-nocheck
 'use client';
 
-import { useEffect, useId, useRef, useState } from 'react';
+import React, { useEffect, useId, useRef, useState } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Archive02Icon, Tick02Icon, Undo02Icon } from '@hugeicons/core-free-icons';
 
@@ -11,38 +10,42 @@ const SIZES = {
   sm: { height: 36, font: 13, icon: 14, px: 16 },
   md: { height: 44, font: 14, icon: 15, px: 20 },
   lg: { height: 52, font: 15, icon: 17, px: 24 }
-};
+} as const;
 
+export type FuseButtonSize = 'sm' | 'md' | 'lg';
+export type FusePhase = 'idle' | 'armed' | 'settled';
+export type FuseStyle = 'outline' | 'line';
+export type FuseCommitOn = 'press' | 'fuseEnd';
+export type FuseSettle = 'reset' | 'stay';
 
 export interface FuseButtonProps {
   label?: string;
   undoLabel?: string;
   doneLabel?: string;
-  icon?: any;
+  icon?: React.ReactNode;
   color?: string;
   background?: string;
   fuseColor?: string;
-  size?: string;
+  size?: FuseButtonSize;
   radius?: number;
   undoWindow?: number;
-  fuse?: string;
+  fuse?: FuseStyle;
   fuseThickness?: number;
   crossfadeMs?: number;
-  commitOn?: string;
+  commitOn?: FuseCommitOn;
   pauseOnHover?: boolean;
-  settle?: string;
+  settle?: FuseSettle;
   disabled?: boolean;
-  onCommit?: (...args: any[]) => any;
-  onUndo?: (...args: any[]) => any;
-  onFuseEnd?: (...args: any[]) => any;
-  onPhaseChange?: (...args: any[]) => any;
+  onCommit?: (trigger: FuseCommitOn) => void;
+  onUndo?: () => void;
+  onFuseEnd?: () => void;
+  onPhaseChange?: (phase: FusePhase) => void;
   className?: string;
-  type?: string;
-  [key: string]: any;
+  type?: 'button' | 'submit' | 'reset';
+  style?: React.CSSProperties;
 }
 
 export default function FuseButton({
-
   label = 'Archive',
   undoLabel = 'Undo',
   doneLabel = 'Archived',
@@ -65,31 +68,32 @@ export default function FuseButton({
   onFuseEnd,
   onPhaseChange,
   className = '',
-  type = 'button'
+  type = 'button',
+  style
 }: FuseButtonProps) {
-  const [phase, setPhase] = useState('idle');
+  const [phase, setPhase] = useState<FusePhase>('idle');
   const [instant, setInstant] = useState(false);
-  const rootRef = useRef(null);
-  const idleRef = useRef(null);
-  const undoRef = useRef(null);
-  const lineRef = useRef(null);
-  const rimRef = useRef(null);
-  const anim = useRef(null);
-  const pause = useRef({ hover: false, hidden: false, canHoverPause: false });
-  const lastInput = useRef('pointer');
+  const rootRef = useRef<HTMLSpanElement | null>(null);
+  const idleRef = useRef<HTMLButtonElement | null>(null);
+  const undoRef = useRef<HTMLButtonElement | null>(null);
+  const lineRef = useRef<HTMLElement | null>(null);
+  const rimRef = useRef<SVGRectElement | null>(null);
+  const anim = useRef<Animation | null>(null);
+  const pause = useRef<{ hover: boolean; hidden: boolean; canHoverPause: boolean }>({ hover: false, hidden: false, canHoverPause: false });
+  const lastInput = useRef<'pointer' | 'keyboard'>('pointer');
   const windowRef = useRef(undoWindow);
-  const latest = useRef({ commitOn, settle });
+  const latest = useRef({ commitOn, settle, onCommit, onUndo, onFuseEnd, onPhaseChange });
   latest.current = { onCommit, onUndo, onFuseEnd, onPhaseChange, commitOn, settle };
   const statusId = useId();
   const preset = SIZES[size] || SIZES.md;
 
-  const go = next => {
+  const go = (next: FusePhase): void => {
     setInstant(lastInput.current === 'keyboard');
     setPhase(next);
     latest.current.onPhaseChange?.(next);
   };
 
-  const syncPlayState = () => {
+  const syncPlayState = (): void => {
     const a = anim.current;
     if (!a) return;
     const { hover, hidden } = pause.current;
@@ -100,7 +104,7 @@ export default function FuseButton({
     }
   };
 
-  const light = (from = 0) => {
+  const light = (from = 0): void => {
     const el = fuse === 'outline' ? rimRef.current : lineRef.current;
     if (!el) return;
     anim.current?.cancel();
@@ -110,7 +114,7 @@ export default function FuseButton({
       fill: 'forwards'
     });
     if (from) a.currentTime = from;
-    a.onfinish = () => {
+    a.onfinish = (): void => {
       const l = latest.current;
       l.onFuseEnd?.();
       if (l.commitOn === 'fuseEnd') l.onCommit?.('fuseEnd');
@@ -121,7 +125,7 @@ export default function FuseButton({
     syncPlayState();
   };
 
-  const arm = () => {
+  const arm = (): void => {
     if (disabled || phase !== 'idle') return;
     windowRef.current = undoWindow;
     light();
@@ -131,7 +135,7 @@ export default function FuseButton({
     go('armed');
   };
 
-  const undo = () => {
+  const undo = (): void => {
     if (phase !== 'armed') return;
     const a = anim.current;
     if (a) {
@@ -149,7 +153,7 @@ export default function FuseButton({
   }, [phase]);
 
   useEffect(() => {
-    const onVisibility = () => {
+    const onVisibility = (): void => {
       pause.current.hidden = document.hidden;
       syncPlayState();
     };
@@ -158,7 +162,6 @@ export default function FuseButton({
       document.removeEventListener('visibilitychange', onVisibility);
       anim.current?.cancel();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -172,31 +175,30 @@ export default function FuseButton({
     if (pauseOnHover) return;
     pause.current.hover = false;
     syncPlayState();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pauseOnHover]);
 
-  const handlePointerDown = e => {
+  const handlePointerDown = (e: React.PointerEvent<HTMLSpanElement>): void => {
     lastInput.current = 'pointer';
     const pressable = phase === 'armed' || (phase === 'idle' && !disabled);
     if (e.button === 0 && pressable && rootRef.current) rootRef.current.dataset.pressed = '';
   };
-  const release = () => {
+  const release = (): void => {
     if (rootRef.current) delete rootRef.current.dataset.pressed;
   };
-  const handlePointerEnter = e => {
+  const handlePointerEnter = (e: React.PointerEvent<HTMLSpanElement>): void => {
     if (pauseOnHover && e.pointerType === 'mouse' && pause.current.canHoverPause) {
       pause.current.hover = true;
       syncPlayState();
     }
   };
-  const handlePointerLeave = e => {
+  const handlePointerLeave = (e: React.PointerEvent<HTMLSpanElement>): void => {
     release();
     if (e.pointerType !== 'mouse') return;
     pause.current.canHoverPause = true;
     pause.current.hover = false;
     syncPlayState();
   };
-  const handleKeyDown = e => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLSpanElement>): void => {
     if (e.key === 'Enter' || e.key === ' ') lastInput.current = 'keyboard';
     if (e.key === 'Escape' && phase === 'armed') {
       e.preventDefault();
@@ -217,18 +219,21 @@ export default function FuseButton({
       data-fuse={fuse}
       data-instant={instant ? '' : undefined}
       aria-disabled={phase === 'settled' || undefined}
-      style={{
-        '--fb-ink': color,
-        '--fb-bg': background,
-        '--fb-fuse': fuseColor,
-        '--fb-fuse-h': `${fuseThickness}px`,
-        '--fb-radius': `${radius}px`,
-        '--fb-fade': `${crossfadeMs}ms`,
-        '--fb-h': `${preset.height}px`,
-        '--fb-fs': `${preset.font}px`,
-        '--fb-icon': `${preset.icon}px`,
-        '--fb-px': `${preset.px}px`
-      }}
+      style={
+        {
+          '--fb-ink': color,
+          '--fb-bg': background,
+          '--fb-fuse': fuseColor,
+          '--fb-fuse-h': `${fuseThickness}px`,
+          '--fb-radius': `${radius}px`,
+          '--fb-fade': `${crossfadeMs}ms`,
+          '--fb-h': `${preset.height}px`,
+          '--fb-fs': `${preset.font}px`,
+          '--fb-icon': `${preset.icon}px`,
+          '--fb-px': `${preset.px}px`,
+          ...style
+        } as React.CSSProperties
+      }
       onPointerDown={handlePointerDown}
       onPointerUp={release}
       onPointerCancel={release}

@@ -1,11 +1,11 @@
-// @ts-nocheck
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { ArrowLeft01Icon, Mic01Icon } from '@hugeicons/core-free-icons';
+
 const LOOP = 4.8;
-const SYLLABLES = [
+const SYLLABLES: [number, number, number][] = [
   [0.1, 0.16, 0.9],
   [0.3, 0.12, 0.7],
   [0.5, 0.2, 1],
@@ -20,7 +20,7 @@ const SYLLABLES = [
   [3.4, 0.12, 0.75],
   [3.6, 0.16, 0.9]
 ];
-const MIC_BINS = [
+const MIC_BINS: [number, number][] = [
   [1, 4],
   [4, 11],
   [11, 33]
@@ -31,7 +31,7 @@ const SLIDE_MIN = 4;
 const WAVE_EVERY = 4;
 const WAVE_MAX = 80;
 
-const simulatedLevel = t => {
+const simulatedLevel = (t: number): number => {
   const u = t % LOOP;
   let a = 0.06;
   for (const [s, d, p] of SYLLABLES) {
@@ -40,17 +40,45 @@ const simulatedLevel = t => {
   }
   return a * (0.7 + 0.3 * Math.abs(Math.sin(2 * Math.PI * 7.1 * u)));
 };
-const micLevel = (analyser, buf) => {
+
+const micLevel = (analyser: AnalyserNode, buf: Uint8Array<ArrayBuffer>): number => {
   analyser.getByteFrequencyData(buf);
   let total = 0;
   for (const [lo, hi] of MIC_BINS) {
     let s = 0;
-    for (let i = lo; i < hi; i += 1) s += buf[i];
+    for (let i = lo; i < hi; i += 1) s += buf[i] ?? 0;
     total += s / ((hi - lo) * 255);
   }
   return (total / MIC_BINS.length) * MIC_GAIN;
 };
-const drawWave = (s, canvas, level, color, floor) => {
+
+interface VoiceAudioContext {
+  ctx: AudioContext;
+  stream?: MediaStream | null;
+  src?: MediaStreamAudioSourceNode | null;
+  analyser?: AnalyserNode | null;
+  buf?: Uint8Array<ArrayBuffer> | null;
+}
+
+interface VoicePillState {
+  listening: boolean;
+  pointerId: number | null;
+  ownPress: boolean;
+  downX: number;
+  sliding: boolean;
+  hist: number[];
+  tick: number;
+  acc: number;
+  downAt: number;
+  startedAt: number;
+  raf: number;
+  last: number;
+  env: number;
+  t0: number;
+  audio: VoiceAudioContext | null;
+}
+
+const drawWave = (s: VoicePillState, canvas: HTMLCanvasElement, level: number, color: string, floor: number): void => {
   const dpr = Math.min(2, window.devicePixelRatio || 1);
   const rect = canvas.getBoundingClientRect();
   const W = Math.max(1, Math.round(rect.width * dpr));
@@ -74,7 +102,7 @@ const drawWave = (s, canvas, level, color, floor) => {
   ctx.clearRect(0, 0, W, H);
   ctx.fillStyle = color;
   for (let i = 0; i < s.hist.length; i += 1) {
-    const v = s.hist[s.hist.length - 1 - i];
+    const v = s.hist[s.hist.length - 1 - i] ?? 0;
     const x = W - (i + 1) * step - shift;
     if (x + bw < 0) break;
     const h = Math.max(bw, (floor + (1 - floor) * v) * H);
@@ -87,17 +115,18 @@ const drawWave = (s, canvas, level, color, floor) => {
   }
   ctx.globalAlpha = 1;
 };
-const clock = ms => {
+
+const clock = (ms: number): string => {
   const s = Math.floor(ms / 1000);
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 };
 
-const openMic = async s => {
-  const Ctx = window.AudioContext || window.webkitAudioContext;
+const openMic = async (s: VoicePillState): Promise<void> => {
+  const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
   if (!Ctx || !navigator.mediaDevices?.getUserMedia) throw new Error('unsupported');
-  s.audio ??= { ctx: new Ctx() };
+  if (!s.audio) s.audio = { ctx: new Ctx() };
   const a = s.audio;
-  if (a.ctx.state === 'suspended') a.ctx.resume();
+  if (a.ctx.state === 'suspended') await a.ctx.resume();
   const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
   if (!s.listening) {
     stream.getTracks().forEach(t => t.stop());
@@ -109,9 +138,10 @@ const openMic = async s => {
   a.analyser.fftSize = 256;
   a.analyser.smoothingTimeConstant = 0;
   a.src.connect(a.analyser);
-  a.buf = new Uint8Array(a.analyser.frequencyBinCount);
+  a.buf = new Uint8Array(new ArrayBuffer(a.analyser.frequencyBinCount));
 };
-const closeMic = s => {
+
+const closeMic = (s: VoicePillState): void => {
   const a = s.audio;
   if (!a?.stream) return;
   a.stream.getTracks().forEach(t => t.stop());
@@ -122,13 +152,25 @@ const closeMic = s => {
   a.buf = null;
 };
 
+export type VoicePillShape = 'pill' | 'rounded';
+export type VoicePillMode = 'auto' | 'hold' | 'toggle';
+export type VoicePillReactive = 'simulated' | 'mic';
+
+export interface VoicePillStartEvent {
+  source: VoicePillReactive | string;
+}
+
+export interface VoicePillStopEvent {
+  reason: string;
+  duration: number;
+}
 
 export interface VoicePillProps {
   accentColor?: string;
   iconColor?: string;
   background?: string;
   size?: number;
-  shape?: string;
+  shape?: VoicePillShape | string;
   reach?: number;
   showTime?: boolean;
   waveform?: boolean;
@@ -140,19 +182,35 @@ export interface VoicePillProps {
   floor?: number;
   openDuration?: number;
   pressScale?: number;
-  mode?: string;
+  mode?: VoicePillMode | string;
   holdAfter?: number;
-  reactive?: string;
+  reactive?: VoicePillReactive | string;
   disabled?: boolean;
   ariaLabel?: string;
-  onStart?: (...args: any[]) => any;
-  onStop?: (...args: any[]) => any;
+  onStart?: (e: VoicePillStartEvent) => void;
+  onStop?: (e: VoicePillStopEvent) => void;
   className?: string;
-  [key: string]: any;
+  style?: React.CSSProperties;
+}
+
+interface VoiceCfg {
+  attack: number;
+  release: number;
+  sensitivity: number;
+  floor: number;
+  mode: string;
+  holdAfter: number;
+  reactive: string;
+  showTime: boolean;
+  waveform: boolean;
+  slideToCancel: boolean;
+  cancelDistance: number;
+  accentColor: string;
+  onStart?: (e: VoicePillStartEvent) => void;
+  onStop?: (e: VoicePillStopEvent) => void;
 }
 
 export default function VoicePill({
-
   accentColor = '#f5f5f5',
   iconColor = '#a1a1aa',
   background = '#27272a',
@@ -176,15 +234,16 @@ export default function VoicePill({
   ariaLabel = 'Dictate',
   onStart,
   onStop,
-  className = ''
+  className = '',
+  style
 }: VoicePillProps) {
   const [listening, setListening] = useState(false);
   const [pressed, setPressed] = useState(false);
   const [input, setInput] = useState('pointer');
-  const timeRef = useRef(null);
-  const rootRef = useRef(null);
-  const waveRef = useRef(null);
-  const st = useRef({
+  const timeRef = useRef<HTMLSpanElement | null>(null);
+  const rootRef = useRef<HTMLButtonElement | null>(null);
+  const waveRef = useRef<HTMLCanvasElement | null>(null);
+  const st = useRef<VoicePillState>({
     listening: false,
     pointerId: null,
     ownPress: false,
@@ -201,7 +260,22 @@ export default function VoicePill({
     t0: 0,
     audio: null
   });
-  const cfg = useRef({});
+  const cfg = useRef<VoiceCfg>({
+    attack,
+    release,
+    sensitivity,
+    floor,
+    mode,
+    holdAfter,
+    reactive,
+    showTime,
+    waveform,
+    slideToCancel,
+    cancelDistance,
+    accentColor,
+    onStart,
+    onStop
+  });
   cfg.current = {
     attack,
     release,
@@ -219,14 +293,25 @@ export default function VoicePill({
     onStop
   };
 
-  const frame = now => {
+  const end = (reason: string): void => {
+    const s = st.current;
+    const c = cfg.current;
+    if (!s.listening) return;
+    s.listening = false;
+    closeMic(s);
+    setListening(false);
+    setInput(reason === 'key' || reason === 'escape' ? 'key' : 'pointer');
+    c.onStop?.({ reason, duration: Math.round(performance.now() - s.startedAt) });
+  };
+
+  const frame = (now: number): void => {
     const s = st.current;
     const c = cfg.current;
     const dt = Math.min((now - s.last) / 1000, DT_MAX);
     s.last = now;
     let target = 0;
     if (s.listening) {
-      if (s.audio?.analyser) target = micLevel(s.audio.analyser, s.audio.buf);
+      if (s.audio?.analyser && s.audio.buf) target = micLevel(s.audio.analyser, s.audio.buf);
       else if (c.reactive !== 'mic') target = simulatedLevel((now - s.t0) / 1000);
     }
     target = Math.min(1, target * c.sensitivity);
@@ -240,7 +325,7 @@ export default function VoicePill({
     s.raf = s.listening ? requestAnimationFrame(frame) : 0;
   };
 
-  const begin = kind => {
+  const begin = (kind: string): void => {
     const s = st.current;
     const c = cfg.current;
     if (s.listening || disabled) return;
@@ -259,18 +344,8 @@ export default function VoicePill({
     c.onStart?.({ source: c.reactive });
     if (c.reactive === 'mic') openMic(s).catch(() => end('mic-denied'));
   };
-  const end = reason => {
-    const s = st.current;
-    const c = cfg.current;
-    if (!s.listening) return;
-    s.listening = false;
-    closeMic(s);
-    setListening(false);
-    setInput(reason === 'key' || reason === 'escape' ? 'key' : 'pointer');
-    c.onStop?.({ reason, duration: Math.round(performance.now() - s.startedAt) });
-  };
 
-  const settleSlide = () => {
+  const settleSlide = (): void => {
     const s = st.current;
     const root = rootRef.current;
     s.sliding = false;
@@ -279,7 +354,8 @@ export default function VoicePill({
     root.style.setProperty('--vp-slide', '0px');
     root.style.setProperty('--vp-cancel', '0');
   };
-  const onPointerMove = e => {
+
+  const onPointerMove = (e: React.PointerEvent<HTMLButtonElement>): void => {
     const s = st.current;
     const c = cfg.current;
     const root = rootRef.current;
@@ -297,7 +373,7 @@ export default function VoicePill({
       end('cancel');
     }
   };
-  const onPointerDown = e => {
+  const onPointerDown = (e: React.PointerEvent<HTMLButtonElement>): void => {
     const s = st.current;
     if (disabled || e.button !== 0 || !e.isPrimary || s.pointerId !== null) return;
     s.pointerId = e.pointerId;
@@ -305,12 +381,14 @@ export default function VoicePill({
     s.downAt = performance.now();
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     setPressed(true);
     s.ownPress = !s.listening;
     if (!s.listening) begin('pointer');
   };
-  const onPointerUp = e => {
+  const onPointerUp = (e: React.PointerEvent<HTMLButtonElement>): void => {
     const s = st.current;
     const c = cfg.current;
     if (e.pointerId !== s.pointerId) return;
@@ -319,7 +397,9 @@ export default function VoicePill({
     if (s.sliding) settleSlide();
     try {
       if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     if (!s.listening) return;
     const held = performance.now() - s.downAt;
     const isHold = c.mode === 'hold' || (c.mode === 'auto' && held >= c.holdAfter);
@@ -329,7 +409,7 @@ export default function VoicePill({
       end(held < c.holdAfter ? 'tap' : 'release');
     }
   };
-  const onKeyDown = e => {
+  const onKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>): void => {
     if (e.key === 'Escape') {
       end('escape');
       return;
@@ -340,8 +420,10 @@ export default function VoicePill({
       else begin('key');
     }
   };
-  const onClick = e => {
-    if (e.detail === 0 && st.current.pointerId === null && !e.nativeEvent.pointerType) {
+  const onClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    const nativeEvt = e.nativeEvent;
+    const pointerType = 'pointerType' in nativeEvt ? (nativeEvt as PointerEvent).pointerType : undefined;
+    if (e.detail === 0 && st.current.pointerId === null && !pointerType) {
       if (st.current.listening) end('key');
       else begin('key');
     }
@@ -349,8 +431,8 @@ export default function VoicePill({
 
   useEffect(() => {
     if (!pressed) return undefined;
-    const stop = () => end('blur');
-    const onVis = () => {
+    const stop = (): void => end('blur');
+    const onVis = (): void => {
       if (document.hidden) stop();
     };
     window.addEventListener('blur', stop);
@@ -359,11 +441,9 @@ export default function VoicePill({
       window.removeEventListener('blur', stop);
       document.removeEventListener('visibilitychange', onVis);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pressed]);
   useEffect(() => {
     if (disabled) end('disabled');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [disabled]);
   useEffect(() => {
     const s = st.current;
@@ -372,7 +452,6 @@ export default function VoicePill({
       cancelAnimationFrame(s.raf);
       s.audio?.ctx.close();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const radius = shape === 'rounded' ? Math.round(size * 0.29) : size / 2;
@@ -402,23 +481,26 @@ export default function VoicePill({
       onKeyDown={onKeyDown}
       onClick={onClick}
       onContextMenu={e => e.preventDefault()}
-      style={{
-        '--vp-accent': accentColor,
-        '--vp-icon': iconColor,
-        '--vp-bg': background,
-        '--vp-size': `${size}px`,
-        '--vp-radius': `${radius}px`,
-        '--vp-reach': `${reach}px`,
-        '--vp-extra': `${extra}px`,
-        '--vp-clock-w': `${clockW}px`,
-        '--vp-wave-w': `${waveW}px`,
-        '--vp-stop': `${Math.round(size * 0.32)}px`,
-        '--vp-icon-size': `${Math.round(size * 0.54)}px`,
-        '--vp-time-size': `${timeSize}px`,
-        '--vp-open': `${openDuration}ms`,
-        '--vp-press': pressScale,
-        '--vp-hit': `${hit}px`
-      }}
+      style={
+        {
+          '--vp-accent': accentColor,
+          '--vp-icon': iconColor,
+          '--vp-bg': background,
+          '--vp-size': `${size}px`,
+          '--vp-radius': `${radius}px`,
+          '--vp-reach': `${reach}px`,
+          '--vp-extra': `${extra}px`,
+          '--vp-clock-w': `${clockW}px`,
+          '--vp-wave-w': `${waveW}px`,
+          '--vp-stop': `${Math.round(size * 0.32)}px`,
+          '--vp-icon-size': `${Math.round(size * 0.54)}px`,
+          '--vp-time-size': `${timeSize}px`,
+          '--vp-open': `${openDuration}ms`,
+          '--vp-press': pressScale,
+          '--vp-hit': `${hit}px`,
+          ...style
+        } as React.CSSProperties
+      }
     >
       <span className="voice-pill__capsule" aria-hidden="true" />
       {waveform ? <canvas ref={waveRef} className="voice-pill__wave" aria-hidden="true" /> : null}

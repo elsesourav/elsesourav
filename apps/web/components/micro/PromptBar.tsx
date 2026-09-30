@@ -1,7 +1,6 @@
-// @ts-nocheck
 'use client';
 
-import { isValidElement, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { isValidElement, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { animate, useMotionValue, useMotionValueEvent, useReducedMotion } from 'motion/react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
@@ -19,13 +18,43 @@ import {
   SparklesIcon,
   Tick02Icon
 } from '@hugeicons/core-free-icons';
+
 const ARROW_UP = [12, 4.5, 18.5, 11, 14.25, 11, 14.25, 19.5, 9.75, 19.5, 9.75, 11, 5.5, 11];
 const SQUARE = [12, 6, 18, 6, 18, 12, 18, 18, 6, 18, 6, 12, 6, 6];
-const EASE_IN_OUT = [0.77, 0, 0.175, 1];
+const EASE_IN_OUT = [0.77, 0, 0.175, 1] as [number, number, number, number];
 const LINE = 22;
 const EDGE = 11;
 
-const DEFAULT_SOURCES = [
+export interface PromptSource {
+  key: string;
+  name: string;
+  description?: string;
+  icon?: unknown;
+  attach?: boolean;
+}
+
+export interface PromptCommand {
+  key: string;
+  name: string;
+  description?: string;
+}
+
+export interface PromptModel {
+  key: string;
+  name: string;
+  tag?: string;
+}
+
+export interface PromptItemRow {
+  key: string;
+  name: string;
+  description?: string;
+  icon?: unknown;
+  attach?: boolean;
+  tag?: string;
+}
+
+const DEFAULT_SOURCES: PromptSource[] = [
   {
     key: 'files',
     name: 'Photos & files',
@@ -39,42 +68,55 @@ const DEFAULT_SOURCES = [
   { key: 'mail', name: 'Mail', description: 'Read and draft mail', icon: Mail01Icon },
   { key: 'calendar', name: 'Calendar', description: 'Events and availability', icon: Calendar03Icon }
 ];
-const DEFAULT_COMMANDS = [
+const DEFAULT_COMMANDS: PromptCommand[] = [
   { key: 'summarize', name: '/summarize', description: 'Digest the thread so far' },
   { key: 'compare', name: '/compare', description: 'Two options side by side' },
   { key: 'draft', name: '/draft', description: 'Write a first version' },
   { key: 'explain', name: '/explain', description: 'A plain-language walkthrough' },
   { key: 'tasks', name: '/tasks', description: 'Turn this into a to-do list' }
 ];
-const DEFAULT_MODELS = [
+const DEFAULT_MODELS: PromptModel[] = [
   { key: 'nova-3', name: 'Nova 3', tag: 'Flagship' },
   { key: 'nova-mini', name: 'Nova Mini', tag: 'Fast' },
   { key: 'nova-2', name: 'Nova 2', tag: 'Legacy' }
 ];
 const DEFAULT_EFFORTS = ['Low', 'Medium', 'High', 'Extra', 'Max'];
 
-const mix = (a, b, t) => a + (b - a) * t;
-const pathAt = (a, b, t) => {
+const mix = (a: number, b: number, t: number): number => a + (b - a) * t;
+const pathAt = (a: number[], b: number[], t: number): string => {
   let d = '';
   for (let i = 0; i < a.length; i += 2) {
-    d += `${i ? 'L' : 'M'}${mix(a[i], b[i], t).toFixed(2)} ${mix(a[i + 1], b[i + 1], t).toFixed(2)}`;
+    const x = a[i];
+    const y = a[i + 1];
+    const bx = b[i];
+    const by = b[i + 1];
+    if (x !== undefined && y !== undefined && bx !== undefined && by !== undefined) {
+      d += `${i ? 'L' : 'M'}${mix(x, bx, t).toFixed(2)} ${mix(y, by, t).toFixed(2)}`;
+    }
   }
   return `${d}Z`;
 };
 
-const parseToken = draft => {
+const parseToken = (draft: string): { kind: 'at' | 'slash'; query: string; start: number } | null => {
   const m = /(^|\s)([@/])([\w-]*)$/.exec(draft);
-  if (!m) return null;
+  if (!m || m.index === undefined || !m[1] || !m[2] || !m[3]) return null;
   return { kind: m[2] === '@' ? 'at' : 'slash', query: m[3].toLowerCase(), start: m.index + m[1].length };
 };
 
-const renderIcon = (icon, size) =>
-  isValidElement(icon) ? icon : <HugeiconsIcon icon={icon} size={size} strokeWidth={1.8} />;
+const renderIcon = (icon: unknown, size: number): React.ReactNode =>
+  isValidElement(icon) ? icon : <HugeiconsIcon icon={icon as Parameters<typeof HugeiconsIcon>[0]['icon']} size={size} strokeWidth={1.8} />;
 
-function SendGlyph({ busy, morphDuration, squash, tilt }) {
+interface SendGlyphProps {
+  busy: boolean;
+  morphDuration: number;
+  squash: number;
+  tilt: number;
+}
+
+function SendGlyph({ busy, morphDuration, squash, tilt }: SendGlyphProps) {
   const reduce = useReducedMotion();
-  const svgRef = useRef(null);
-  const pathRef = useRef(null);
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const pathRef = useRef<SVGPathElement | null>(null);
   const dir = useRef(busy ? 1 : -1);
   const t = useMotionValue(busy ? 1 : 0);
 
@@ -115,21 +157,26 @@ function SendGlyph({ busy, morphDuration, squash, tilt }) {
   );
 }
 
+export interface PromptSendPayload {
+  attachments: string[];
+  model?: PromptModel;
+  effort: string;
+}
 
 export interface PromptBarProps {
   placeholder?: string;
-  sources?: any;
-  commands?: any;
-  models?: any;
+  sources?: PromptSource[];
+  commands?: PromptCommand[];
+  models?: PromptModel[];
   defaultModel?: string;
-  efforts?: any;
+  efforts?: string[];
   defaultEffort?: string;
-  onEffortChange?: (...args: any[]) => any;
+  onEffortChange?: (effort: string) => void;
   busy?: boolean;
-  onSend?: (...args: any[]) => any;
-  onStop?: (...args: any[]) => any;
-  onAttach?: (...args: any[]) => any;
-  onDictate?: (...args: any[]) => any;
+  onSend?: (prompt: string, payload: PromptSendPayload) => void;
+  onStop?: () => void;
+  onAttach?: () => string[] | string | Promise<string[] | string | null | undefined> | null | undefined;
+  onDictate?: () => string | Promise<string | null | undefined> | null | undefined;
   background?: string;
   color?: string;
   menuBackground?: string;
@@ -143,11 +190,21 @@ export interface PromptBarProps {
   tilt?: number;
   pressScale?: number;
   className?: string;
-  [key: string]: any;
+  style?: React.CSSProperties;
+}
+
+interface Particle {
+  x: number;
+  y: number;
+  r: number;
+  vy: number;
+  sway: number;
+  phase: number;
+  life: number;
+  span: number;
 }
 
 export default function PromptBar({
-
   placeholder = 'Ask anything',
   sources = DEFAULT_SOURCES,
   commands = DEFAULT_COMMANDS,
@@ -173,24 +230,25 @@ export default function PromptBar({
   squash = 0.12,
   tilt = 8,
   pressScale = 0.96,
-  className = ''
+  className = '',
+  style
 }: PromptBarProps) {
   const reduce = useReducedMotion();
-  const rootRef = useRef(null);
-  const inputRef = useRef(null);
-  const glowRef = useRef(null);
-  const sparkRef = useRef(null);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLTextAreaElement | null>(null);
+  const glowRef = useRef<HTMLSpanElement | null>(null);
+  const sparkRef = useRef<HTMLCanvasElement | null>(null);
   const typing = useRef({ energy: 0, strokes: 0 });
   const boost = useRef(sparkBoost);
   boost.current = sparkBoost;
-  const rowRefs = useRef([]);
-  const lastOpen = useRef(null);
+  const rowRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const lastOpen = useRef<string | null>(null);
   const dictation = useRef(0);
-  const latest = useRef({});
+  const latest = useRef({ onSend, onStop, onAttach, onDictate, onEffortChange });
   latest.current = { onSend, onStop, onAttach, onDictate, onEffortChange };
 
   const [draft, setDraft] = useState('');
-  const [attachments, setAttachments] = useState([]);
+  const [attachments, setAttachments] = useState<string[]>([]);
   const [modelKey, setModelKey] = useState(defaultModel);
   const [plusOpen, setPlusOpen] = useState(false);
   const [modelOpen, setModelOpen] = useState(false);
@@ -208,7 +266,7 @@ export default function PromptBar({
   const token = dismissed ? null : parseToken(draft);
   const open = plusOpen ? 'at' : (token?.kind ?? (modelOpen ? 'model' : effortOpen ? 'effort' : null));
   const query = plusOpen ? '' : (token?.query ?? '');
-  const list = useMemo(() => {
+  const list: PromptItemRow[] = useMemo(() => {
     if (open === 'at') return sources.filter(s => s.name.toLowerCase().includes(query));
     if (open === 'slash') return commands.filter(c => c.name.replace(/^\//, '').toLowerCase().startsWith(query));
     if (open === 'model') return models;
@@ -220,8 +278,8 @@ export default function PromptBar({
   const level = efforts[effortIndex] ?? '';
   const maxed = efforts.length > 1 && effortIndex === efforts.length - 1;
 
-  const focusInput = () => inputRef.current?.focus({ preventScroll: true });
-  const closeMenus = useCallback(() => {
+  const focusInput = (): void => inputRef.current?.focus({ preventScroll: true });
+  const closeMenus = useCallback((): void => {
     setPlusOpen(false);
     setModelOpen(false);
     setEffortOpen(false);
@@ -252,8 +310,8 @@ export default function PromptBar({
 
   useEffect(() => {
     if (!plusOpen && !modelOpen && !effortOpen) return undefined;
-    const onDown = e => {
-      if (!rootRef.current?.contains(e.target)) closeMenus();
+    const onDown = (e: PointerEvent): void => {
+      if (!rootRef.current?.contains(e.target as Node | null)) closeMenus();
     };
     document.addEventListener('pointerdown', onDown);
     return () => document.removeEventListener('pointerdown', onDown);
@@ -288,8 +346,8 @@ export default function PromptBar({
     let due = 0;
     let speed = 1;
     let pulse = 0;
-    const parts = [];
-    const resize = () => {
+    const parts: Particle[] = [];
+    const resize = (): void => {
       const rect = canvas.getBoundingClientRect();
       const dpr = Math.min(2, window.devicePixelRatio || 1);
       w = rect.width;
@@ -298,7 +356,7 @@ export default function PromptBar({
       canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
-    const spawn = burst => {
+    const spawn = (burst: boolean): void => {
       parts.push({
         x: Math.random() * w,
         y: burst ? h * (0.2 + Math.random() * 0.8) : h + 3,
@@ -310,7 +368,7 @@ export default function PromptBar({
         span: 2.4 + Math.random() * 2.4
       });
     };
-    const tick = now => {
+    const tick = (now: number): void => {
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
       const typed = typing.current;
@@ -334,6 +392,7 @@ export default function PromptBar({
       ctx.shadowBlur = 6 + energy * 10 + pulse * 6;
       for (let i = parts.length - 1; i >= 0; i -= 1) {
         const p = parts[i];
+        if (!p) continue;
         p.life += dt;
         if (p.life > p.span) {
           parts.splice(i, 1);
@@ -372,18 +431,19 @@ export default function PromptBar({
     };
   }, [maxed, reduce, sparkColor]);
 
-  const setEffort = i => {
+  const setEffort = (i: number): void => {
     const next = Math.max(0, Math.min(efforts.length - 1, i));
     if (next === effortIndex) return;
     setEffortIndex(next);
-    latest.current.onEffortChange?.(efforts[next]);
+    const targetEffort = efforts[next];
+    if (targetEffort) latest.current.onEffortChange?.(targetEffort);
   };
-  const effortFromPointer = e => {
+  const effortFromPointer = (e: React.PointerEvent<HTMLDivElement>): void => {
     const rect = e.currentTarget.getBoundingClientRect();
     const k = (e.clientX - rect.left - EDGE) / Math.max(1, rect.width - 2 * EDGE);
     setEffort(Math.round(k * (efforts.length - 1)));
   };
-  const onEffortKey = e => {
+  const onEffortKey = (e: React.KeyboardEvent<HTMLDivElement>): void => {
     const step =
       e.key === 'ArrowRight' || e.key === 'ArrowUp' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowDown' ? -1 : 0;
     if (step) {
@@ -400,10 +460,10 @@ export default function PromptBar({
       focusInput();
     }
   };
-  const stepAt = i => `calc(${EDGE}px + (100% - ${EDGE * 2}px) * ${i / Math.max(1, efforts.length - 1)})`;
-  const fillAt = i => (i === efforts.length - 1 ? '100%' : `calc(${stepAt(i)} + 7px)`);
+  const stepAt = (i: number): string => `calc(${EDGE}px + (100% - ${EDGE * 2}px) * ${i / Math.max(1, efforts.length - 1)})`;
+  const fillAt = (i: number): string => (i === efforts.length - 1 ? '100%' : `calc(${stepAt(i)} + 7px)`);
 
-  const pick = row => {
+  const pick = (row: PromptItemRow): void => {
     if (open === 'model') {
       setModelKey(row.key);
       setModelOpen(false);
@@ -427,7 +487,7 @@ export default function PromptBar({
     focusInput();
   };
 
-  const send = () => {
+  const send = (): void => {
     if (!canSend || busy) return;
     latest.current.onSend?.(draft.trim(), { attachments, model, effort: level });
     setDraft('');
@@ -437,7 +497,7 @@ export default function PromptBar({
     focusInput();
   };
 
-  const toggleListen = () => {
+  const toggleListen = (): void => {
     if (listening) {
       dictation.current += 1;
       setListening(false);
@@ -458,7 +518,7 @@ export default function PromptBar({
     );
   };
 
-  const onKeyDown = e => {
+  const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>): void => {
     if (open && list.length) {
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
         e.preventDefault();
@@ -467,7 +527,8 @@ export default function PromptBar({
       }
       if ((e.key === 'Enter' && !e.shiftKey) || e.key === 'Tab') {
         e.preventDefault();
-        pick(list[cursor]);
+        const selectedRow = list[cursor];
+        if (selectedRow) pick(selectedRow);
         return;
       }
     }
@@ -485,11 +546,11 @@ export default function PromptBar({
     }
   };
 
-  const down = e => {
+  const down = (e: React.PointerEvent<HTMLButtonElement>): void => {
     if (e.button !== 0 || !armed) return;
     setPressed(true);
   };
-  const up = () => setPressed(false);
+  const up = (): void => setPressed(false);
 
   return (
     <div
@@ -497,15 +558,18 @@ export default function PromptBar({
       className={`prompt-bar${className ? ` ${className}` : ''}`}
       data-busy={busy ? '' : undefined}
       data-max={maxed ? '' : undefined}
-      style={{
-        '--pb-bg': background,
-        '--pb-ink': color,
-        '--pb-menu': menuBackground,
-        '--pb-w': `${width}px`,
-        '--pb-radius': `${radius}px`,
-        '--pb-spark': sparkColor,
-        '--pb-press': pressScale
-      }}
+      style={
+        {
+          '--pb-bg': background,
+          '--pb-ink': color,
+          '--pb-menu': menuBackground,
+          '--pb-w': `${width}px`,
+          '--pb-radius': `${radius}px`,
+          '--pb-spark': sparkColor,
+          '--pb-press': pressScale,
+          ...style
+        } as React.CSSProperties
+      }
     >
       {open ? (
         <div
@@ -538,12 +602,19 @@ export default function PromptBar({
                 aria-valuemax={efforts.length - 1}
                 aria-valuenow={effortIndex}
                 aria-valuetext={level}
-                style={{ '--pb-effort-x': stepAt(effortIndex), '--pb-effort-fill': fillAt(effortIndex) }}
+                style={
+                  {
+                    '--pb-effort-x': stepAt(effortIndex),
+                    '--pb-effort-fill': fillAt(effortIndex)
+                  } as React.CSSProperties
+                }
                 onPointerDown={e => {
                   if (e.button !== 0) return;
                   try {
                     e.currentTarget.setPointerCapture(e.pointerId);
-                  } catch {}
+                  } catch {
+                    /* ignore */
+                  }
                   e.currentTarget.focus({ preventScroll: true });
                   effortFromPointer(e);
                 }}
@@ -553,8 +624,8 @@ export default function PromptBar({
                 onKeyDown={onEffortKey}
               >
                 <span className="prompt-bar__effort-fill" />
-                {efforts.map((label, i) => (
-                  <i key={label} className="prompt-bar__effort-dot" style={{ left: stepAt(i) }} />
+                {efforts.map((effortLabel, i) => (
+                  <i key={effortLabel} className="prompt-bar__effort-dot" style={{ left: stepAt(i) }} />
                 ))}
                 <span className="prompt-bar__effort-thumb" />
               </div>
@@ -661,7 +732,7 @@ export default function PromptBar({
           >
             <HugeiconsIcon icon={PlusSignIcon} size={16} strokeWidth={2} />
           </button>
-          {models.length > 0 ? (
+          {models.length > 0 && model ? (
             <button
               type="button"
               className="prompt-bar__pick"

@@ -1,7 +1,6 @@
-// @ts-nocheck
 'use client';
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { animate, useMotionValue, useReducedMotion } from 'motion/react';
 
 const R = 80;
@@ -15,31 +14,36 @@ const DECEL = 0.99;
 const DRAG_PX = 10;
 const STALE_MS = 80;
 
-const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
-const velocityOf = hist => {
+const clamp = (v: number, lo: number, hi: number): number => Math.min(hi, Math.max(lo, v));
+const velocityOf = (hist: [number, number][]): number => {
   if (hist.length < 2) return 0;
   const a = hist[0];
   const b = hist[hist.length - 1];
+  if (!a || !b) return 0;
   return ((b[1] - a[1]) / Math.max(1, b[0] - a[0])) * 1000;
 };
-const decimalsOf = step => {
+const decimalsOf = (step: number): number => {
   const s = String(step);
   const i = s.indexOf('.');
   return i === -1 ? 0 : s.length - i - 1;
 };
-const pointAt = deg => {
+const pointAt = (deg: number): [number, number] => {
   const a = (deg * Math.PI) / 180;
   return [100 + Math.cos(a) * R, 100 + Math.sin(a) * R];
 };
-const arcPath = (a0, a1) => {
+const arcPath = (a0: number, a1: number): string => {
   const [x0, y0] = pointAt(a0);
   const [x1, y1] = pointAt(a1);
   return `M ${x0.toFixed(3)} ${y0.toFixed(3)} A ${R} ${R} 0 ${a1 - a0 > 180 ? 1 : 0} 1 ${x1.toFixed(3)} ${y1.toFixed(3)}`;
 };
 
+export interface CommitDetail {
+  velocity?: number;
+  bounce?: number;
+}
 
 export interface CometDialProps {
-  value?: any;
+  value?: number;
   defaultValue?: number;
   min?: number;
   max?: number;
@@ -58,14 +62,36 @@ export interface CometDialProps {
   cometReach?: number;
   cometWidth?: number;
   disabled?: boolean;
-  onChange?: (...args: any[]) => any;
-  onChangeEnd?: (...args: any[]) => any;
+  onChange?: (value: number) => void;
+  onChangeEnd?: (value: number, detail?: CommitDetail) => void;
   className?: string;
-  [key: string]: any;
+}
+
+interface GripState {
+  id: number;
+  at: number | null;
+  hist: [number, number][];
+  side: 'hi' | 'lo' | null;
+  moved: boolean;
+  x0: number;
+  y0: number;
+}
+
+interface LoopState {
+  raf: number;
+  last: number;
+  v: number;
+  rPrev: number | null;
+  text: string;
+  valueText: string;
+}
+
+interface LiveState {
+  move?: (e: PointerEvent) => void;
+  up?: (e: PointerEvent) => void;
 }
 
 export default function CometDial({
-
   value,
   defaultValue = 62,
   min = 0,
@@ -91,16 +117,16 @@ export default function CometDial({
 }: CometDialProps) {
   const reduce = useReducedMotion();
   const [dragging, setDragging] = useState(false);
-  const svgRef = useRef(null);
-  const litRef = useRef(null);
-  const headRef = useRef(null);
-  const comet = useRef([]);
-  const figure = useRef(null);
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const litRef = useRef<SVGPathElement | null>(null);
+  const headRef = useRef<SVGCircleElement | null>(null);
+  const comet = useRef<(SVGPathElement | null)[]>([]);
+  const figure = useRef<HTMLSpanElement | null>(null);
   const target = useRef(clamp(value ?? defaultValue, min, max));
-  const grip = useRef(null);
-  const unbind = useRef(null);
-  const loop = useRef({ raf: 0, last: 0, v: 0, rPrev: null, text: '', valueText: '' });
-  const live = useRef({});
+  const grip = useRef<GripState | null>(null);
+  const unbind = useRef<(() => void) | null>(null);
+  const loop = useRef<LoopState>({ raf: 0, last: 0, v: 0, rPrev: null, text: '', valueText: '' });
+  const live = useRef<LiveState>({});
   const reading = useMotionValue(target.current);
 
   const range = Math.max(1e-9, max - min);
@@ -110,9 +136,9 @@ export default function CometDial({
   const decimals = decimalsOf(step);
   const k = 200 + (clamp(speed, 0, 100) / 100) * 700;
   const crit = 2 * Math.sqrt(k);
-  const snap = v => (step > 0 ? clamp(Math.round((v - min) / step) * step + min, min, max) : clamp(v, min, max));
+  const snap = (v: number): number => (step > 0 ? clamp(Math.round((v - min) / step) * step + min, min, max) : clamp(v, min, max));
 
-  const commit = (v, finished, detail) => {
+  const commit = (v: number, finished: boolean, detail?: CommitDetail): void => {
     const s = snap(v);
     if (s !== target.current) {
       target.current = s;
@@ -121,16 +147,16 @@ export default function CometDial({
     if (finished) onChangeEnd?.(s, detail ?? { velocity: 0, bounce: tapBounce });
   };
 
-  const paintRef = useRef(null);
-  const tick = useCallback(now => paintRef.current?.(now), []);
-  const wake = () => {
+  const paintRef = useRef<((now: number) => void) | null>(null);
+  const tick = useCallback((now: number) => paintRef.current?.(now), []);
+  const wake = (): void => {
     const L = loop.current;
     if (L.raf) return;
     L.last = performance.now();
     L.rPrev = null;
     L.raf = requestAnimationFrame(tick);
   };
-  const launch = (to, bounce, velocity = reading.getVelocity()) => {
+  const launch = (to: number, bounce: number, velocity = reading.getVelocity()): void => {
     reading.stop();
     if (reduce) {
       reading.jump(to);
@@ -147,7 +173,7 @@ export default function CometDial({
     wake();
   };
 
-  const paint = now => {
+  const paint = (now: number): void => {
     const L = loop.current;
     const svg = svgRef.current;
     if (!svg) {
@@ -180,10 +206,10 @@ export default function CometDial({
     for (let j = 0; j < K; j++) {
       const el = comet.current[j];
       if (!el) continue;
-      let a0 = dir > 0 ? ang - (j + 1) * seg : ang + j * seg;
-      let a1 = dir > 0 ? ang - j * seg : ang + (j + 1) * seg;
-      a0 = clamp(a0, start, end);
-      a1 = clamp(a1, start, end);
+      const a0Raw = dir > 0 ? ang - (j + 1) * seg : ang + j * seg;
+      const a1Raw = dir > 0 ? ang - j * seg : ang + (j + 1) * seg;
+      const a0 = clamp(a0Raw, start, end);
+      const a1 = clamp(a1Raw, start, end);
       if (seg < 0.01 || a1 - a0 < 0.01) {
         if (el.style.opacity !== '0') el.style.opacity = '0';
         continue;
@@ -212,11 +238,13 @@ export default function CometDial({
   };
   paintRef.current = paint;
 
-  const localPoint = (cx, cy) => {
-    const b = svgRef.current.getBoundingClientRect();
+  const localPoint = (cx: number, cy: number): [number, number] => {
+    const svg = svgRef.current;
+    if (!svg) return [0, 0];
+    const b = svg.getBoundingClientRect();
     return [((cx - b.left) / b.width) * 200 - 100, ((cy - b.top) / b.height) * 200 - 100];
   };
-  const angleAt = (cx, cy) => {
+  const angleAt = (cx: number, cy: number): number => {
     const [x, y] = localPoint(cx, cy);
     let rel = ((Math.atan2(y, x) * 180) / Math.PI - start + 720) % 360;
     const g = grip.current;
@@ -225,7 +253,7 @@ export default function CometDial({
     return min + (rel / sweep) * range;
   };
 
-  const move = e => {
+  const move = (e: PointerEvent): void => {
     const g = grip.current;
     if (!g || g.id !== e.pointerId) return;
     if (!g.moved) {
@@ -239,7 +267,7 @@ export default function CometDial({
     commit(g.at, false);
     wake();
   };
-  const up = e => {
+  const up = (e: PointerEvent): void => {
     const g = grip.current;
     if (!g || g.id !== e.pointerId) return;
     grip.current = null;
@@ -248,12 +276,15 @@ export default function CometDial({
     setDragging(false);
     try {
       svgRef.current?.releasePointerCapture(e.pointerId);
-    } catch {}
+    } catch {
+      // ignore
+    }
     if (!g.moved) {
       commit(target.current, true);
       return;
     }
-    const stale = performance.now() - g.hist[g.hist.length - 1][0] > STALE_MS;
+    const lastHist = g.hist[g.hist.length - 1];
+    const stale = lastHist ? performance.now() - lastHist[0] > STALE_MS : true;
     const v = e.type === 'pointercancel' || stale ? 0 : velocityOf(g.hist);
     const bounce = tapBounce + (flickBounce - tapBounce) * clamp(Math.abs(v) / range / V_FLICK, 0, 1);
     const to = snap((g.at ?? target.current) + (v / 1000) * (DECEL / (1 - DECEL)) * momentum);
@@ -262,27 +293,29 @@ export default function CometDial({
   };
   live.current = { move, up };
 
-  const down = e => {
+  const down = (e: React.PointerEvent<SVGSVGElement>): void => {
     if (disabled || grip.current || e.button > 0) return;
     const [x, y] = localPoint(e.clientX, e.clientY);
     if (Math.hypot(x, y) < DEAD) return;
     e.preventDefault();
     const svg = svgRef.current;
     try {
-      svg.setPointerCapture(e.pointerId);
-    } catch {}
-    svg.focus({ preventScroll: true });
+      svg?.setPointerCapture(e.pointerId);
+    } catch {
+      // ignore
+    }
+    svg?.focus({ preventScroll: true });
     grip.current = { id: e.pointerId, at: null, hist: [], side: null, moved: false, x0: e.clientX, y0: e.clientY };
     const at = angleAt(e.clientX, e.clientY);
     grip.current.hist.push([performance.now(), at]);
     setDragging(true);
     commit(at, false);
     launch(snap(at), tapBounce);
-    const onMove = ev => {
-      if (ev.isTrusted) live.current.move(ev);
+    const onMove = (ev: PointerEvent): void => {
+      if (ev.isTrusted) live.current.move?.(ev);
     };
-    const onUp = ev => {
-      if (ev.isTrusted) live.current.up(ev);
+    const onUp = (ev: PointerEvent): void => {
+      if (ev.isTrusted) live.current.up?.(ev);
     };
     window.addEventListener('pointermove', onMove);
     window.addEventListener('pointerup', onUp);
@@ -294,11 +327,11 @@ export default function CometDial({
     };
   };
 
-  const key = e => {
+  const key = (e: React.KeyboardEvent<SVGSVGElement>): void => {
     if (disabled) return;
     const t = target.current;
     const big = e.shiftKey ? 10 : 1;
-    let to;
+    let to: number;
     switch (e.key) {
       case 'ArrowRight':
       case 'ArrowUp':
@@ -336,8 +369,8 @@ export default function CometDial({
     L.text = '';
     L.valueText = '';
     paintRef.current?.(performance.now());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [min, max, step, sweep, thickness, cometReach, cometWidth, unit]);
+
   useEffect(() => {
     if (value === undefined || grip.current) return;
     const s = snap(value);
@@ -346,6 +379,7 @@ export default function CometDial({
     launch(s, tapBounce);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
+
   useEffect(
     () => () => {
       cancelAnimationFrame(loop.current.raf);
@@ -360,12 +394,14 @@ export default function CometDial({
       className={`comet-dial${className ? ` ${className}` : ''}`}
       data-dragging={dragging ? '' : undefined}
       data-disabled={disabled ? '' : undefined}
-      style={{
-        '--cd-accent': accent,
-        '--cd-ink': ink,
-        '--cd-size': `${size}px`,
-        '--cd-figure': `${Math.round(size * 0.16)}px`
-      }}
+      style={
+        {
+          '--cd-accent': accent,
+          '--cd-ink': ink,
+          '--cd-size': `${size}px`,
+          '--cd-figure': `${Math.round(size * 0.16)}px`
+        } as React.CSSProperties
+      }
     >
       <svg
         ref={svgRef}

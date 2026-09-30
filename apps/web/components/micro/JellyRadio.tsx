@@ -1,39 +1,57 @@
-// @ts-nocheck
 'use client';
 
-import { forwardRef, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { animate, motion, motionValue, useReducedMotion, useTransform } from 'motion/react';
 
-const DEFAULT_ITEMS = ['Off', 'Low', 'Medium', 'High', 'Max'];
-const SIZES = { sm: [28, 12, 12], md: [36, 13, 16], lg: [44, 14, 20] };
+const DEFAULT_ITEMS: string[] = ['Off', 'Low', 'Medium', 'High', 'Max'];
+const SIZES: Record<string, [number, number, number]> = { sm: [28, 12, 12], md: [36, 13, 16], lg: [44, 14, 20] };
 
-const spring = (k, m, bounce) => ({
-  type: 'spring',
+const spring = (k: number, m: number, bounce: number) => ({
+  type: 'spring' as const,
   stiffness: k,
   damping: 2 * Math.sqrt(k * m) * (1 - bounce),
   mass: m
 });
 
-const Chip = forwardRef(function Chip({ mv, children, ...rest }, ref) {
+export interface ChipMotionValues {
+  x: ReturnType<typeof motionValue<number>>;
+  sx: ReturnType<typeof motionValue<number>>;
+  sy: ReturnType<typeof motionValue<number>>;
+}
+
+export interface ChipProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  mv: ChipMotionValues;
+  children: React.ReactNode;
+}
+
+const Chip = forwardRef<HTMLButtonElement, ChipProps>(function Chip({ mv, children, ...rest }, ref) {
   const transform = useTransform(() => `translateX(${mv.x.get()}px) scale(${mv.sx.get()}, ${mv.sy.get()})`);
   return (
-    <motion.button ref={ref} style={{ transform }} {...rest}>
+    <motion.button ref={ref} style={{ transform }} {...(rest as React.ComponentProps<typeof motion.button>)}>
       {children}
     </motion.button>
   );
 });
 
+export interface JellyRadioItem {
+  value: string;
+  label: React.ReactNode;
+  icon?: React.ReactNode;
+  disabled?: boolean;
+}
+
+export type JellyRadioOption = string | JellyRadioItem;
 
 export interface JellyRadioProps {
-  items?: any;
-  value?: any;
-  defaultValue?: any;
-  onChange?: (...args: any[]) => any;
+  items?: JellyRadioOption[];
+  value?: string;
+  defaultValue?: string;
+  onChange?: (value: string, index: number) => void;
   chipColor?: string;
   activeColor?: string;
   textColor?: string;
   activeTextColor?: string;
-  size?: string;
+  size?: 'sm' | 'md' | 'lg' | string;
   gap?: number;
   radius?: number;
   swell?: number;
@@ -46,11 +64,22 @@ export interface JellyRadioProps {
   disabled?: boolean;
   ariaLabel?: string;
   className?: string;
-  [key: string]: any;
+  style?: React.CSSProperties;
+}
+
+interface CfgState {
+  swell: number;
+  barge: number;
+  shrink: number;
+  jelly: number;
+  bounce: number;
+  stagger: number;
+  stiffness: number;
+  reduce: boolean | null;
+  count: number;
 }
 
 export default function JellyRadio({
-
   items = DEFAULT_ITEMS,
   value,
   defaultValue,
@@ -71,27 +100,28 @@ export default function JellyRadio({
   stiffness = 580,
   disabled = false,
   ariaLabel = 'Options',
-  className = ''
+  className = '',
+  style
 }: JellyRadioProps) {
-  const list = items.map(it => (typeof it === 'string' ? { value: it, label: it } : it));
-  const [inner, setInner] = useState(() => defaultValue ?? list[0]?.value);
+  const list: JellyRadioItem[] = items.map(it => (typeof it === 'string' ? { value: it, label: it } : it));
+  const [inner, setInner] = useState<string>(() => defaultValue ?? list[0]?.value ?? '');
   const current = value ?? inner;
   const at = Math.max(
     0,
     list.findIndex(it => it.value === current)
   );
   const reduce = useReducedMotion();
-  const groupRef = useRef(null);
-  const chipRefs = useRef([]);
-  const widths = useRef([]);
-  const mvs = useRef([]);
-  const applied = useRef(at);
-  const cfg = useRef({});
+  const groupRef = useRef<HTMLDivElement | null>(null);
+  const chipRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const widths = useRef<number[]>([]);
+  const mvs = useRef<ChipMotionValues[]>([]);
+  const applied = useRef<number>(at);
+  const cfg = useRef<CfgState>({ swell, barge, shrink, jelly, bounce, stagger, stiffness, reduce, count: list.length });
   cfg.current = { swell, barge, shrink, jelly, bounce, stagger, stiffness, reduce, count: list.length };
-  const [h, font, px] = SIZES[size] ?? SIZES.md;
+  const [h, font, px] = SIZES[size] ?? SIZES.md ?? [36, 13, 16];
   const itemsKey = list.map(it => it.value).join('|');
 
-  const mvFor = i => {
+  const mvFor = (i: number): ChipMotionValues => {
     let mv = mvs.current[i];
     if (!mv) {
       mv = { x: motionValue(0), sx: motionValue(1), sy: motionValue(1) };
@@ -100,7 +130,7 @@ export default function JellyRadio({
     return mv;
   };
 
-  const apply = (sel, instant) => {
+  const apply = (sel: number, instant: boolean): void => {
     const C = cfg.current;
     const group = groupRef.current;
     const rtl = group ? getComputedStyle(group).direction === 'rtl' : false;
@@ -131,7 +161,7 @@ export default function JellyRadio({
     }
   };
 
-  const measure = () => {
+  const measure = (): void => {
     const group = groupRef.current;
     if (!group) return;
     widths.current = chipRefs.current.map(el => el?.offsetWidth ?? 0);
@@ -141,7 +171,7 @@ export default function JellyRadio({
     group.style.setProperty('--jr-pad-y', `${Math.ceil((chipH * swell) / 2) + 2}px`);
   };
   useLayoutEffect(() => {
-    const settle = () => {
+    const settle = (): void => {
       measure();
       apply(applied.current, true);
     };
@@ -168,24 +198,26 @@ export default function JellyRadio({
     []
   );
 
-  const commit = (i, instant) => {
-    if (disabled || i === at || !list[i] || list[i].disabled) return;
+  const commit = (i: number, instant: boolean): void => {
+    const targetItem = list[i];
+    if (disabled || i === at || !targetItem || targetItem.disabled) return;
     applied.current = i;
     apply(i, instant);
-    if (value === undefined) setInner(list[i].value);
-    onChange?.(list[i].value, i);
+    if (value === undefined) setInner(targetItem.value);
+    onChange?.(targetItem.value, i);
   };
-  const stepFrom = (i, dir) => {
+  const stepFrom = (i: number, dir: number): number => {
     const n = list.length;
     let j = i;
     for (let tries = 0; tries < n; tries++) {
       j = (j + dir + n) % n;
-      if (!list[j].disabled) return j;
+      const item = list[j];
+      if (item && !item.disabled) return j;
     }
     return i;
   };
-  const onKeyDown = (e, i) => {
-    let next = null;
+  const onKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>, i: number): void => {
+    let next: number | null = null;
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = stepFrom(i, 1);
     else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = stepFrom(i, -1);
     else if (e.key === 'Home') next = stepFrom(-1, 1);
@@ -204,17 +236,20 @@ export default function JellyRadio({
       aria-label={ariaLabel}
       data-disabled={disabled ? '' : undefined}
       className={`jelly-radio${className ? ` ${className}` : ''}`}
-      style={{
-        '--jr-chip': chipColor,
-        '--jr-active': activeColor,
-        '--jr-text': textColor,
-        '--jr-active-text': activeTextColor,
-        '--jr-gap': `${gap}px`,
-        '--jr-radius': `${radius}px`,
-        '--jr-h': `${h}px`,
-        '--jr-font': `${font}px`,
-        '--jr-px': `${px}px`
-      }}
+      style={
+        {
+          '--jr-chip': chipColor,
+          '--jr-active': activeColor,
+          '--jr-text': textColor,
+          '--jr-active-text': activeTextColor,
+          '--jr-gap': `${gap}px`,
+          '--jr-radius': `${radius}px`,
+          '--jr-h': `${h}px`,
+          '--jr-font': `${font}px`,
+          '--jr-px': `${px}px`,
+          ...style
+        } as React.CSSProperties
+      }
     >
       {list.map((it, i) => (
         <Chip
@@ -227,7 +262,7 @@ export default function JellyRadio({
           role="radio"
           aria-checked={i === at}
           tabIndex={i === at ? 0 : -1}
-          disabled={disabled || !!it.disabled}
+          disabled={disabled || Boolean(it.disabled)}
           className="jelly-radio__chip"
           data-on={i === at ? 'true' : 'false'}
           onClick={e => commit(i, e.detail === 0)}
