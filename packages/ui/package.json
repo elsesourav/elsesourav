@@ -11,6 +11,11 @@
       "import": "./src/index.ts",
       "default": "./src/index.ts"
     },
+    "./micro": {
+      "types": "./src/components/micro/index.ts",
+      "import": "./src/components/micro/index.ts",
+      "default": "./src/components/micro/index.ts"
+    },
     "./styles.css": "./src/styles/globals.css",
     "./micro.css": "./src/styles/micro.css"
   },
