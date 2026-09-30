@@ -25,40 +25,44 @@ jobs:
     env:
       CI: true
       NODE_ENV: production
-      VITE_APP_ENV: production
-      VITE_SITE_ORIGIN: https://elsesourav.com
-      VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY || 'mock-prod-key' }}
-      VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN || 'elsesourav-8c9ad.firebaseapp.com' }}
-      VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID || 'elsesourav-8c9ad' }}
-      VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID || '1:1234567890:web:abcdef123456' }}
-      VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID || '' }}
-      VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID || '' }}
+      NEXT_PUBLIC_SITE_URL: https://elsesourav.com
+      NEXT_PUBLIC_SUPABASE_URL: https://srfevooktrqjzjuddmko.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DIRECT_URL: ${{ secrets.DIRECT_URL }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 22 with npm cache
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+
+      - name: Setup Node.js 22 with pnpm cache
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
+          cache: 'pnpm'
 
-      - name: Deterministic dependency installation
-        run: npm ci
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: pnpm db:generate
 
       - name: Pre-deployment quality validation
         run: |
-          npm run typecheck
-          npm run lint
-          npm run test
-          npm run test:security
-          npm run test:a11y
+          pnpm typecheck
+          pnpm turbo lint
+          pnpm turbo test
 
       - name: Build verified production bundle & sitemap
-        run: npm run build
+        run: pnpm --filter @elsesourav/web build
 
-      - name: Deploy to Firebase Hosting & Rules (Live Production)
+      - name: Deploy to Firebase Hosting (Live Production)
         if: env.FIREBASE_SERVICE_ACCOUNT != ''
         uses: FirebaseExtended/action-hosting-deploy@v0
         env:
@@ -66,5 +70,5 @@ jobs:
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ELSESOURAV }}
-          projectId: elsesourav-8c9ad
+          projectId: elsesourav
           channelId: live

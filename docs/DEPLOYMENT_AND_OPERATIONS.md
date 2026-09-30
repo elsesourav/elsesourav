@@ -87,8 +87,8 @@ To ensure tests never mutate production Firestore or query production users:
 ### Public Client Configuration (Safe in repository)
 
 - `VITE_FIREBASE_API_KEY`: Client identifier
-- `VITE_FIREBASE_AUTH_DOMAIN`: `elsesourav-8c9ad.firebaseapp.com`
-- `VITE_FIREBASE_PROJECT_ID`: `elsesourav-8c9ad`
+- `VITE_FIREBASE_AUTH_DOMAIN`: `elsesourav.firebaseapp.com`
+- `VITE_FIREBASE_PROJECT_ID`: `elsesourav`
 - `VITE_FIREBASE_APP_ID`: Web app identifier
 - `VITE_SITE_ORIGIN`: `https://elsesourav.com`
 
