@@ -1,6 +1,18 @@
 {
   "hosting": {
     "site": "elsesourav",
-    "source": "apps/web"
+    "public": "public-firebase",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "redirects": [
+      {
+        "source": "/**",
+        "destination": "http://20.244.48.139",
+        "type": 302
+      }
+    ]
   }
 }
