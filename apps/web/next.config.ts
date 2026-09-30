@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
     // Turborepo runs separate cached linting via `pnpm lint`
     ignoreDuringBuilds: true,
   },
+  output: 'standalone',
   outputFileTracingRoot: path.resolve(__dirname, '../../'),
   poweredByHeader: false,
   serverExternalPackages: ['@prisma/client', 'pg', '@prisma/adapter-pg'],
