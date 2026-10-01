@@ -1,4 +1,5 @@
 import { SearchButton } from '@/components/search/SearchButton';
+import { ThemePopup } from '@/components/theme/ThemePopup';
 import { UserAvatarMenu } from '@/features/user/components/UserAvatarMenu';
 import { UserSidebar } from '@/features/user/components/UserSidebar';
 import { getServerSession } from '@elsesourav/auth';
@@ -27,9 +28,17 @@ export default async function UserLayout({ children }: { children: React.ReactNo
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground dark transition-colors overflow-x-hidden">
+    <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors overflow-x-hidden relative">
+      {/* Dynamic Ambient Background Elements */}
+      <div
+        className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
+        aria-hidden="true"
+      >
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] bg-gradient-to-b from-primary/10 via-primary/5 to-transparent blur-3xl opacity-70 dark:opacity-40" />
+      </div>
+
       {/* Streamlined Authenticated Global Header */}
-      <header className="border-b border-border/80 bg-background/85 backdrop-blur-2xl sticky top-0 z-50 transition-colors w-full">
+      <header className="border-b border-border/80 bg-background/80 backdrop-blur-xl sticky top-0 z-50 transition-colors w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
           {/* Brand Logo & Name */}
           <div className="flex items-center gap-4 sm:gap-6 shrink-0">
@@ -51,8 +60,9 @@ export default async function UserLayout({ children }: { children: React.ReactNo
             </Link>
           </div>
 
-          {/* Action Cluster: Search & User Avatar Menu (Strict Dark Mode) */}
+          {/* Action Cluster: Theme Switcher, Search & User Avatar Menu */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <ThemePopup />
             <SearchButton />
             <UserAvatarMenu user={session.user} />
           </div>

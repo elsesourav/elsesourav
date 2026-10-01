@@ -9,6 +9,7 @@ import { BlurUpImage } from '@/components/interior/BlurUpImage';
 import { CopyButton } from '@/components/interior/CopyButton';
 import { PressDepth } from '@/components/interior/PressDepth';
 import { ShowMore } from '@/components/interior/ShowMore';
+import StatusMark from '@/components/micro/StatusMark';
 
 interface ProfileHeroSectionProps {
   user: User;
@@ -45,6 +46,17 @@ export function ProfileHeroSection({ user, joinedDate }: ProfileHeroSectionProps
                 className="border-2 border-border shadow-md shrink-0 w-20 h-20 sm:w-24 sm:h-24 text-2xl"
               />
             )}
+            <div
+              className="absolute -bottom-1 -right-1 bg-card rounded-full p-1 shadow-md border border-border flex items-center justify-center"
+              title={user.emailVerified ? 'Account Verified' : 'Verification Pending'}
+            >
+              <StatusMark
+                status={user.emailVerified ? 'done' : 'pending'}
+                size={16}
+                strokeWidth={2.4}
+                doneColor="#22c55e"
+              />
+            </div>
           </div>
 
           <div className="space-y-2 flex-1 min-w-0 w-full sm:w-auto">
@@ -59,7 +71,7 @@ export function ProfileHeroSection({ user, joinedDate }: ProfileHeroSectionProps
                   </span>
                   <CopyButton
                     value={`@${user.username}`}
-                    label="Copy handle"
+                    label="Copy"
                     copiedLabel="Copied"
                     className="h-6 px-2 text-[11px] rounded-md"
                   />
@@ -80,20 +92,20 @@ export function ProfileHeroSection({ user, joinedDate }: ProfileHeroSectionProps
               </div>
             ) : null}
 
-            <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center sm:justify-start gap-y-1.5 gap-x-5 pt-2 text-xs text-muted-foreground flex-wrap">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center sm:justify-start gap-2 sm:gap-x-5 pt-2 text-xs text-muted-foreground flex-wrap">
               {user.email && (
-                <div className="flex items-center gap-1.5 max-w-full">
+                <div className="inline-flex items-center gap-1.5 max-w-full">
                   <Mail className="w-3.5 h-3.5 text-primary/80 shrink-0" />
-                  <span className="truncate max-w-[200px] sm:max-w-xs">{user.email}</span>
+                  <span className="truncate max-w-[190px] sm:max-w-xs">{user.email}</span>
                   <CopyButton
                     value={user.email}
-                    label="Copy email"
+                    label="Copy"
                     copiedLabel="Copied"
                     className="h-6 px-1.5 text-[10px] rounded-md shrink-0"
                   />
                 </div>
               )}
-              <span className="flex items-center gap-1.5 shrink-0">
+              <span className="inline-flex items-center gap-1.5 shrink-0">
                 <Calendar className="w-3.5 h-3.5 text-primary/80 shrink-0" />
                 <span>Joined {joinedDate}</span>
               </span>
