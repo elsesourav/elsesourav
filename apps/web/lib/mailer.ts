@@ -1,3 +1,7 @@
+/* eslint-disable no-console */
+import dotenv from 'dotenv';
+import fs from 'node:fs';
+import path from 'node:path';
 import nodemailer from 'nodemailer';
 import { Resend } from 'resend';
 
@@ -14,7 +18,24 @@ export interface SendPasswordResetEmailOptions {
   displayName?: string;
 }
 
+function ensureEnvLoaded() {
+  if (!process.env.NODEMAILER_PASS || !process.env.RESEND_API_KEY) {
+    const candidatePaths = [
+      path.resolve(process.cwd(), '.env.local'),
+      path.resolve(process.cwd(), '.env'),
+      path.resolve(process.cwd(), '../../.env'),
+      path.resolve(process.cwd(), '../.env'),
+    ];
+    for (const p of candidatePaths) {
+      if (fs.existsSync(p)) {
+        dotenv.config({ path: p });
+      }
+    }
+  }
+}
+
 function getResendClient() {
+  ensureEnvLoaded();
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     return null;
@@ -23,10 +44,12 @@ function getResendClient() {
 }
 
 function getTransporter() {
+  ensureEnvLoaded();
   const smtpUser =
     process.env.NODEMAILER_USER || process.env.SMTP_USER || 'elsesourav.auth@gmail.com';
-  const smtpPass =
+  const rawPass =
     process.env.NODEMAILER_PASS || process.env.SMTP_PASS || process.env.GMAIL_APP_PASSWORD;
+  const smtpPass = rawPass ? rawPass.replace(/\s+/g, '') : '';
   const smtpHost = process.env.NODEMAILER_HOST || process.env.SMTP_HOST || 'smtp.gmail.com';
   const smtpPort = Number(process.env.NODEMAILER_PORT || process.env.SMTP_PORT || 465);
 
@@ -36,6 +59,7 @@ function getTransporter() {
 
   return {
     smtpUser,
+    smtpHost,
     transporter: nodemailer.createTransport({
       host: smtpHost,
       port: smtpPort,
@@ -121,8 +145,10 @@ export async function sendOtpEmail({
     const resend = getResendClient();
     if (resend) {
       try {
-        const from =
-          process.env.RESEND_FROM_EMAIL || 'ElseSourav Security <onboarding@resend.dev>';
+        const from = process.env.RESEND_FROM_EMAIL || 'ElseSourav Security <onboarding@resend.dev>';
+        console.log(
+          `[MAILER] Attempting dispatch via Resend REST API to: ${to} (from: ${from})...`
+        );
         const { error, data } = await resend.emails.send({
           from,
           to,
@@ -131,32 +157,48 @@ export async function sendOtpEmail({
         });
 
         if (!error && data?.id) {
+          console.log(`[MAILER] ✅ Email successfully dispatched via Resend API! (ID: ${data.id})`);
           return { success: true };
         }
 
-        console.warn('[MAILER] Resend dispatch note, falling back to SMTP:', error?.message);
+        console.warn(
+          `[MAILER] ⚠️ Resend dispatch returned notice: ${error?.message || 'Unknown Resend error'}. Falling back to Gmail SMTP...`
+        );
       } catch (resendErr) {
-        console.warn('[MAILER] Resend exception, falling back to SMTP:', resendErr);
+        console.warn('[MAILER] ⚠️ Resend exception, falling back to Gmail SMTP:', resendErr);
       }
     }
 
     const mailer = getTransporter();
     if (mailer) {
-      await mailer.transporter.sendMail({
+      console.log(
+        `[MAILER] Attempting dispatch via Gmail SMTP to: ${to} (user: ${mailer.smtpUser}, host: ${mailer.smtpHost})...`
+      );
+      const info = await mailer.transporter.sendMail({
         from: `"ElseSourav Security" <${mailer.smtpUser}>`,
         to,
         subject,
         html: htmlContent,
       });
-    } else {
-      // In development when neither Resend nor SMTP is configured, log clearly to console
-      console.info(
-        `\n[DEVELOPMENT EMAIL OTP]\nTo: ${to}\nPurpose: ${purpose}\n6-Digit OTP Code: >>> ${otp} <<<\n`
+      console.log(
+        `[MAILER] ✅ Email successfully sent via Gmail SMTP! MessageId: ${info.messageId}, Accepted:`,
+        info.accepted
       );
+      return { success: true };
     }
 
-    return { success: true };
+    // Neither Resend nor SMTP is configured
+    console.error(`[MAILER] ❌ Error: Neither Resend nor Gmail SMTP credentials are configured!`);
+    console.info(
+      `\n[DEVELOPMENT EMAIL OTP]\nTo: ${to}\nPurpose: ${purpose}\n6-Digit OTP Code: >>> ${otp} <<<\n`
+    );
+    return {
+      success: false,
+      error:
+        'Email service credentials not configured. Please ensure NODEMAILER_PASS or RESEND_API_KEY is set in .env.',
+    };
   } catch (error) {
+    console.error('[MAILER] ❌ Unexpected exception in sendOtpEmail:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to dispatch verification email',
@@ -207,44 +249,57 @@ export async function sendPasswordResetEmail({
       </html>
     `;
 
+    const subject = 'Reset your ElseSourav account password';
+
     const resend = getResendClient();
     if (resend) {
       try {
-        const from =
-          process.env.RESEND_FROM_EMAIL || 'ElseSourav Security <onboarding@resend.dev>';
+        const from = process.env.RESEND_FROM_EMAIL || 'ElseSourav Security <onboarding@resend.dev>';
+        console.log(
+          `[MAILER] Attempting password reset dispatch via Resend REST API to: ${to} (from: ${from})...`
+        );
         const { error, data } = await resend.emails.send({
           from,
           to,
-          subject: 'Reset your ElseSourav account password',
+          subject,
           html: htmlContent,
         });
 
         if (!error && data?.id) {
+          console.log(`[MAILER] ✅ Password reset email sent via Resend API! (ID: ${data.id})`);
           return { success: true };
         }
 
-        console.warn('[MAILER] Resend reset note, falling back to SMTP:', error?.message);
+        console.warn(
+          `[MAILER] ⚠️ Resend password reset note: ${error?.message || 'Unknown error'}. Falling back to Gmail SMTP...`
+        );
       } catch (resendErr) {
-        console.warn('[MAILER] Resend exception, falling back to SMTP:', resendErr);
+        console.warn('[MAILER] ⚠️ Resend exception, falling back to Gmail SMTP:', resendErr);
       }
     }
 
     const mailer = getTransporter();
     if (mailer) {
-      await mailer.transporter.sendMail({
+      console.log(`[MAILER] Attempting password reset dispatch via Gmail SMTP to: ${to}...`);
+      const info = await mailer.transporter.sendMail({
         from: `"ElseSourav Security" <${mailer.smtpUser}>`,
         to,
-        subject: 'Reset your ElseSourav account password',
+        subject,
         html: htmlContent,
       });
-    } else {
-      console.info(
-        `\n[DEVELOPMENT PASSWORD RESET]\nTo: ${to}\nReset URL: ${resetUrl}\n`
-      );
+      console.log(info);
+      return { success: true };
     }
 
-    return { success: true };
+    console.error(`[MAILER] ❌ Error: Neither Resend nor Gmail SMTP credentials are configured!`);
+    console.info(`\n[DEVELOPMENT PASSWORD RESET]\nTo: ${to}\nReset URL: ${resetUrl}\n`);
+    return {
+      success: false,
+      error:
+        'Email service credentials not configured. Please ensure NODEMAILER_PASS or RESEND_API_KEY is set in .env.',
+    };
   } catch (error) {
+    console.error('[MAILER] ❌ Unexpected exception in sendPasswordResetEmail:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to dispatch password reset email',

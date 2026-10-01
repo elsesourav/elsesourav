@@ -1,12 +1,13 @@
+/* eslint-disable no-console */
 'use server';
 
-import crypto from 'node:crypto';
-import { cookies } from 'next/headers';
-import { revalidatePath } from 'next/cache';
-import { UserRepository, UserService, OtpRepository } from '@elsesourav/database';
-import { getServerSession } from '@elsesourav/auth';
-import { UpdateProfileSchema, UpdatePreferencesSchema } from '@elsesourav/validation';
 import { sendOtpEmail } from '@/lib/mailer';
+import { getServerSession } from '@elsesourav/auth';
+import { OtpRepository, UserRepository, UserService } from '@elsesourav/database';
+import { UpdatePreferencesSchema, UpdateProfileSchema } from '@elsesourav/validation';
+import { revalidatePath } from 'next/cache';
+import { cookies } from 'next/headers';
+import crypto from 'node:crypto';
 
 const userRepo = new UserRepository();
 const userService = new UserService(userRepo);
@@ -101,24 +102,35 @@ export async function updatePreferencesAction(data: {
 
 /**
  * Send a genuine 6-digit numeric OTP to the currently authenticated user's email address.
- * Dispatches via Nodemailer with zero magic links or sign-in buttons.
+ * Dispatches via Resend API or Gmail SMTP with full terminal logging.
  */
 export async function sendEmailOtpAction(
   purpose: 'EMAIL_VERIFY' | 'PASSWORD_RESET' = 'EMAIL_VERIFY'
 ) {
+  console.log(`[OTP ACTION] 📧 sendEmailOtpAction requested for purpose: ${purpose}`);
   const user = await getSessionUser();
   if (!user?.email) {
+    console.warn(`[OTP ACTION] ❌ Unauthorized: No authenticated session found.`);
     return { success: false, error: 'Unauthorized' };
   }
+
+  console.log(`[OTP ACTION] Authenticated recipient: ${user.email} (userId: ${user.id})`);
 
   try {
     // Generate secure 6-digit numeric OTP
     const otp = crypto.randomInt(100000, 999999).toString();
+    console.log(
+      `[OTP ACTION] Generated 6-digit OTP code for ${user.email}: >>> ${otp} <<< (purpose: ${purpose})`
+    );
 
     // Store in database with 10-min expiration
     await otpRepo.createOtp(user.email, otp, purpose, 10);
+    console.log(
+      `[OTP ACTION] ✅ OTP record persisted in database for ${user.email} with 10-minute validity.`
+    );
 
-    // Send email with large 6-digit code box
+    // Dispatch email with 6-digit code box
+    console.log(`[OTP ACTION] Dispatching email via mailer...`);
     const sendResult = await sendOtpEmail({
       to: user.email,
       otp,
@@ -127,14 +139,18 @@ export async function sendEmailOtpAction(
     });
 
     if (!sendResult.success) {
+      console.error(`[OTP ACTION] ❌ Failed to dispatch email to ${user.email}:`, sendResult.error);
       return { success: false, error: sendResult.error || 'Failed to send verification email' };
     }
 
+    console.log(`[OTP ACTION] ✅ Successfully delivered OTP email to ${user.email}!`);
     return { success: true };
   } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Failed to send verification code';
+    console.error(`[OTP ACTION] ❌ Exception in sendEmailOtpAction for ${user.email}:`, error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to send verification code',
+      error: errorMsg,
     };
   }
 }
@@ -147,17 +163,23 @@ export async function verifyEmailOtpAction(
   otp: string,
   purpose: 'EMAIL_VERIFY' | 'PASSWORD_RESET' = 'EMAIL_VERIFY'
 ) {
+  console.log(
+    `[OTP ACTION] 🔍 verifyEmailOtpAction received code: "${otp}" for purpose: ${purpose}`
+  );
   const user = await getSessionUser();
   if (!user?.email || !user?.id) {
+    console.warn(`[OTP ACTION] ❌ Unauthorized verification attempt.`);
     return { success: false, error: 'Unauthorized' };
   }
 
   if (!otp || otp.length !== 6 || !/^\d{6}$/.test(otp)) {
+    console.warn(`[OTP ACTION] ⚠️ Invalid code format received: "${otp}"`);
     return { success: false, error: 'Please enter a valid 6-digit verification code' };
   }
 
   try {
     const result = await otpRepo.verifyOtp(user.email, otp, purpose);
+    console.log(`[OTP ACTION] OtpRepo verification result for ${user.email}:`, result);
     if (!result.valid) {
       return { success: false, error: result.error || 'Invalid or expired verification code' };
     }
@@ -165,11 +187,15 @@ export async function verifyEmailOtpAction(
     // If verifying email identity, update DB flag
     if (purpose === 'EMAIL_VERIFY') {
       await userService.markEmailVerified(user.id, user.id);
+      console.log(
+        `[OTP ACTION] ✅ User ${user.id} (${user.email}) email marked as verified in database!`
+      );
       revalidatePath('/settings');
     }
 
     return { success: true };
   } catch (error) {
+    console.error(`[OTP ACTION] ❌ Exception in verifyEmailOtpAction for ${user.email}:`, error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Verification failed',
