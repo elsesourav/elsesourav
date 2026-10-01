@@ -202,6 +202,7 @@ export type HoldToConfirmProps = {
   steps?: number;
   releaseRate?: number;
   disabled?: boolean;
+  variant?: "default" | "destructive";
   className?: string;
 };
 
@@ -215,6 +216,7 @@ export function HoldToConfirm({
   steps = 20,
   releaseRate = 2.5,
   disabled = false,
+  variant = "default",
   className = "",
 }: HoldToConfirmProps) {
   const { bind, phase, reset } = useHoldToConfirm({
@@ -272,6 +274,16 @@ export function HoldToConfirm({
     return () => controls.stop();
   }, [phase, duration, releaseRate, reduced, swept]);
 
+  const baseStyle =
+    variant === "destructive"
+      ? "border-rose-500/40 bg-rose-500/10 text-rose-500 focus-visible:ring-rose-500 dark:border-rose-500/40 dark:bg-rose-950/40 dark:text-rose-400"
+      : "border-[var(--interior-border)] bg-white text-[var(--interior-fg)] focus-visible:ring-[var(--interior-ring)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:text-[var(--interior-fg)] dark:focus-visible:ring-[var(--interior-ring)]";
+
+  const sweptStyle =
+    variant === "destructive"
+      ? "bg-rose-600 text-white dark:bg-rose-600 dark:text-white"
+      : "bg-[var(--interior-fg)] text-white dark:bg-[var(--interior-bg-subtle)] dark:text-[var(--interior-fg)]";
+
   return (
     <button
       data-interior="hold-to-confirm" type="button"
@@ -279,7 +291,7 @@ export function HoldToConfirm({
       aria-describedby={hintId}
       {...bind}
       style={{ touchAction: "manipulation", WebkitTouchCallout: "none" }}
-      className={`relative isolate inline-grid h-10 select-none place-items-center overflow-hidden rounded-[9px] border border-[var(--interior-border)] bg-white px-4 text-[13px] font-medium text-[var(--interior-fg)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--interior-ring)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:text-[var(--interior-fg)] dark:focus-visible:ring-[var(--interior-ring)] ${
+      className={`relative isolate inline-grid h-10 select-none place-items-center overflow-hidden rounded-[9px] border px-4 text-[13px] font-medium outline-none focus-visible:ring-2 ${baseStyle} ${
         disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"
       } ${className}`}
     >
@@ -290,7 +302,7 @@ export function HoldToConfirm({
       <motion.span
         aria-hidden
         style={{ clipPath }}
-        className="absolute inset-0 grid place-items-center bg-[var(--interior-fg)] px-4 text-white dark:bg-[var(--interior-bg-subtle)] dark:text-[var(--interior-fg)]"
+        className={`absolute inset-0 grid place-items-center px-4 ${sweptStyle}`}
       >
         <Faces committed={committed} confirmLabel={confirmLabel}>
           {children}

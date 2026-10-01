@@ -26,6 +26,7 @@ const ALLOW: Record<OtpMode, RegExp> = {
 };
 
 export type UseOtpInputOptions = {
+  value?: string;
   length?: number;
   mode?: OtpMode;
   defaultValue?: string;
@@ -63,6 +64,7 @@ export type UseOtpInputReturn = {
 };
 
 export function useOtpInput({
+  value: controlledValue,
   length = 6,
   mode = "numeric",
   defaultValue = "",
@@ -82,7 +84,7 @@ export function useOtpInput({
   );
 
   const [chars, setChars] = useState<string[]>(() => {
-    const seed = defaultValue
+    const seed = (controlledValue ?? defaultValue)
       .split("")
       .filter((c) => ALLOW[mode].test(c))
       .slice(0, length);
@@ -99,6 +101,14 @@ export function useOtpInput({
   changed.current = onChange;
   const completed = useRef(onComplete);
   completed.current = onComplete;
+
+  useEffect(() => {
+    if (controlledValue !== undefined) {
+      const formatted = Array.from({ length }, (_, i) => controlledValue[i] ?? "");
+      setChars(formatted);
+      charsRef.current = formatted;
+    }
+  }, [controlledValue, length]);
 
   useEffect(() => {
     setChars((prev) =>
@@ -281,6 +291,7 @@ export type OtpInputHandle = {
 };
 
 export type OtpInputProps = {
+  value?: string;
   length?: number;
   mode?: OtpMode;
   defaultValue?: string;
@@ -300,6 +311,7 @@ export type OtpInputProps = {
 };
 
 export function OtpInput({
+  value,
   length = 6,
   mode = "numeric",
   defaultValue = "",
@@ -321,6 +333,7 @@ export function OtpInput({
   const statusId = useId();
 
   const { chars, focusedIndex, getCellProps, focusAt, clear } = useOtpInput({
+    value,
     length,
     mode,
     defaultValue,

@@ -2,7 +2,9 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { motion, useReducedMotion } from 'motion/react';
 import { User as UserIcon, ShieldCheck, LifeBuoy, ArrowRight } from 'lucide-react';
+import { useRipple } from '@/components/interior/Ripple';
 
 const ACTIONS = [
   {
@@ -28,6 +30,66 @@ const ACTIONS = [
   },
 ] as const;
 
+function ActionCard({ action }: { action: (typeof ACTIONS)[number] }) {
+  const { bind, ripples, fadeDuration } = useRipple({ max: 3 });
+  const reduced = useReducedMotion();
+  const Icon = action.icon;
+
+  return (
+    <Link
+      href={action.href}
+      {...bind}
+      className="group relative flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-card text-card-foreground border border-border/80 shadow-sm hover:border-primary/40 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary overflow-hidden isolate"
+    >
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit]"
+      >
+        {ripples.map((r) => (
+          <motion.span
+            key={r.id}
+            className="absolute block rounded-full bg-primary/15"
+            style={{
+              left: r.x - 48,
+              top: r.y - 48,
+              width: 96,
+              height: 96,
+              willChange: 'transform, opacity',
+            }}
+            initial={{ scale: reduced ? r.scale : 0, opacity: 0 }}
+            animate={{ scale: r.scale, opacity: r.released ? 0 : 1 }}
+            transition={{
+              scale: reduced ? { duration: 0 } : { duration: 0.45, ease: [0.23, 1, 0.32, 1] },
+              opacity: {
+                duration: r.released ? fadeDuration : 0.07,
+                ease: r.released ? [0.23, 1, 0.32, 1] : 'linear',
+              },
+            }}
+          />
+        ))}
+      </span>
+
+      <div className="space-y-3 relative z-10">
+        <div className="flex items-center justify-between">
+          <div
+            className={`w-9 h-9 rounded-xl border flex items-center justify-center transition-transform duration-200 group-hover:scale-105 ${action.iconColor}`}
+          >
+            <Icon className="w-4 h-4" />
+          </div>
+          <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all duration-200" />
+        </div>
+
+        <div className="space-y-0.5">
+          <h3 className="font-semibold text-foreground text-sm group-hover:text-primary transition-colors">
+            {action.title}
+          </h3>
+          <p className="text-xs text-muted-foreground leading-relaxed">{action.subtitle}</p>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 export function ProfileQuickActions() {
   return (
     <div className="space-y-3">
@@ -38,34 +100,9 @@ export function ProfileQuickActions() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
-        {ACTIONS.map((action) => {
-          const Icon = action.icon;
-          return (
-            <Link
-              key={action.href}
-              href={action.href}
-              className="group relative flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-card text-card-foreground border border-border/80 shadow-sm hover:border-primary/40 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div
-                    className={`w-9 h-9 rounded-xl border flex items-center justify-center transition-transform duration-200 group-hover:scale-105 ${action.iconColor}`}
-                  >
-                    <Icon className="w-4 h-4" />
-                  </div>
-                  <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all duration-200" />
-                </div>
-
-                <div className="space-y-0.5">
-                  <h3 className="font-semibold text-foreground text-sm group-hover:text-primary transition-colors">
-                    {action.title}
-                  </h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">{action.subtitle}</p>
-                </div>
-              </div>
-            </Link>
-          );
-        })}
+        {ACTIONS.map((action) => (
+          <ActionCard key={action.href} action={action} />
+        ))}
       </div>
     </div>
   );

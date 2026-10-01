@@ -30,88 +30,18 @@ import {
   sendEmailOtpAction,
   verifyEmailOtpAction,
 } from '../actions/account-actions';
+import { OtpInput } from '@/components/interior/OtpInput';
+import { PasswordStrength } from '@/components/interior/PasswordStrength';
+import { HoldToConfirm } from '@/components/interior/HoldToConfirm';
+import { LoadingButton } from '@/components/interior/LoadingButton';
 
 interface AccountSectionProps {
   user: User & { provider?: 'email' | 'google' | 'github' };
 }
 
-// ─── 6-Box OTP Input Component ───────────────────────────────────────────────
-function OtpInput({
-  value,
-  onChange,
-  disabled,
-}: {
-  value: string;
-  onChange: (val: string) => void;
-  disabled?: boolean;
-}) {
-  const inputsRef = React.useRef<(HTMLInputElement | null)[]>([]);
-  const digits = value.padEnd(6, '').split('').slice(0, 6);
-
-  const handleKey = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Backspace') {
-      if (digits[index] === '' && index > 0) {
-        inputsRef.current[index - 1]?.focus();
-      } else {
-        const next = [...digits];
-        next[index] = '';
-        onChange(next.join('').trimEnd());
-      }
-    }
-  };
-
-  const handleChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
-    const char = e.target.value.replace(/\D/g, '').slice(-1);
-    const next = [...digits];
-    next[index] = char;
-    const joined = next.join('');
-    onChange(joined);
-    if (char && index < 5) {
-      inputsRef.current[index + 1]?.focus();
-    }
-  };
-
-  const handlePaste = (e: React.ClipboardEvent) => {
-    const text = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
-    if (text) {
-      onChange(text.padEnd(6, ''));
-      const focusIdx = Math.min(text.length, 5);
-      inputsRef.current[focusIdx]?.focus();
-    }
-    e.preventDefault();
-  };
-
-  return (
-    <div className="flex items-center gap-2 justify-center py-1">
-      {Array.from({ length: 6 }).map((_, i) => (
-        <input
-          key={i}
-          ref={(el) => {
-            inputsRef.current[i] = el;
-          }}
-          type="text"
-          inputMode="numeric"
-          maxLength={1}
-          value={digits[i] || ''}
-          disabled={disabled}
-          onChange={(e) => handleChange(i, e)}
-          onKeyDown={(e) => handleKey(i, e)}
-          onPaste={handlePaste}
-          className={`w-9 sm:w-10 h-11 sm:h-12 text-center text-base sm:text-lg font-bold rounded-xl border-2 bg-background text-foreground transition-all outline-none
-            ${digits[i] ? 'border-primary text-primary ring-1 ring-primary/20' : 'border-border'}
-            focus:border-primary focus:ring-2 focus:ring-primary/20
-            disabled:opacity-40 disabled:cursor-not-allowed`}
-        />
-      ))}
-    </div>
-  );
-}
-
-// ─── Main Account & Security Component ───────────────────────────────────────
 export function AccountSection({ user }: AccountSectionProps) {
   const isOAuth = user.provider === 'google' || user.provider === 'github';
 
-  // ── Email state ───────────────────────────────────────────────────────────
   const [isEditingEmail, setIsEditingEmail] = React.useState(false);
   const [emailStep, setEmailStep] = React.useState<
     'idle' | 'sending' | 'otp' | 'verifying' | 'done'
@@ -175,11 +105,10 @@ export function AccountSection({ user }: AccountSectionProps) {
     }
   };
 
-  // ── Email: Verify OTP ─────────────────────────────────────────────────────
   const handleVerifyEmailOtp = async () => {
     if (emailOtp.length !== 6) {
       setEmailError('Please enter the full 6-digit OTP code');
-      return;
+      throw new Error('Please enter the full 6-digit OTP code');
     }
     setEmailError(null);
     setEmailStep('verifying');
@@ -191,10 +120,10 @@ export function AccountSection({ user }: AccountSectionProps) {
     } else {
       setEmailError(res.error || 'Invalid or expired OTP code');
       setEmailStep('otp');
+      throw new Error(res.error || 'Invalid or expired OTP code');
     }
   };
 
-  // ── Password: Send OTP ────────────────────────────────────────────────────
   const handleSendPwOtp = async () => {
     setPwError(null);
     setPwStep('sending');
@@ -208,37 +137,36 @@ export function AccountSection({ user }: AccountSectionProps) {
     }
   };
 
-  // ── Password: Verify OTP ──────────────────────────────────────────────────
   const handleVerifyPwOtp = async () => {
     if (pwOtp.length !== 6) {
       setPwError('Please enter the full 6-digit OTP code');
-      return;
+      throw new Error('Please enter the full 6-digit OTP code');
     }
     setPwError(null);
     setPwStep('verifying');
     const res = await verifyEmailOtpAction(pwOtp, 'PASSWORD_RESET');
     if (res.success) {
-      setIsEmailVerified(true); // OTP verified → email is verified as well
+      setIsEmailVerified(true);
       setPwStep('form');
       setNewPassword('');
       setConfirmPassword('');
     } else {
       setPwError(res.error || 'Invalid or expired OTP code');
       setPwStep('otp');
+      throw new Error(res.error || 'Invalid or expired OTP code');
     }
   };
 
-  // ── Password: Set new password ────────────────────────────────────────────
-  const handleSetPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSetPassword = async (e?: React.FormEvent) => {
+    e?.preventDefault();
     setPwError(null);
     if (newPassword.length < 8) {
       setPwError('Password must be at least 8 characters long');
-      return;
+      throw new Error('Password must be at least 8 characters long');
     }
     if (newPassword !== confirmPassword) {
       setPwError('Passwords do not match');
-      return;
+      throw new Error('Passwords do not match');
     }
     setPwStep('saving');
     try {
@@ -247,21 +175,23 @@ export function AccountSection({ user }: AccountSectionProps) {
       if (error) {
         setPwError(error.message);
         setPwStep('form');
+        throw new Error(error.message);
       } else {
         setPwSuccess('Password updated successfully');
         setPwStep('done');
         setNewPassword('');
         setConfirmPassword('');
       }
-    } catch {
-      setPwError('An unexpected error occurred. Please try again.');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'An unexpected error occurred. Please try again.';
+      setPwError(msg);
       setPwStep('form');
+      throw err;
     }
   };
 
-  // ── Delete Account ────────────────────────────────────────────────────────
-  const handleScheduleDelete = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleScheduleDelete = async (e?: React.FormEvent) => {
+    e?.preventDefault();
     if (!isUsernameMatched) return;
     setIsDeletingAccount(true);
     setDeleteError(null);
@@ -271,6 +201,7 @@ export function AccountSection({ user }: AccountSectionProps) {
     } else {
       setDeleteError(res.error || 'Failed to schedule deletion');
       setIsDeletingAccount(false);
+      throw new Error(res.error || 'Failed to schedule deletion');
     }
   };
 
@@ -281,6 +212,7 @@ export function AccountSection({ user }: AccountSectionProps) {
       window.location.reload();
     } else {
       setIsDeletingAccount(false);
+      throw new Error(res.error || 'Failed to cancel deletion');
     }
   };
 
@@ -434,11 +366,14 @@ export function AccountSection({ user }: AccountSectionProps) {
                       Enter the 6-digit code sent to{' '}
                       <span className="font-semibold text-foreground font-mono">{user.email}</span>
                     </p>
-                    <OtpInput
-                      value={emailOtp}
-                      onChange={setEmailOtp}
-                      disabled={emailStep === 'verifying'}
-                    />
+                    <div className="flex justify-center py-1">
+                      <OtpInput
+                        value={emailOtp}
+                        onChange={setEmailOtp}
+                        disabled={emailStep === 'verifying'}
+                        status={emailError ? 'error' : 'idle'}
+                      />
+                    </div>
                     <div className="flex items-center justify-between pt-1">
                       <button
                         type="button"
@@ -447,17 +382,16 @@ export function AccountSection({ user }: AccountSectionProps) {
                       >
                         Resend Code
                       </button>
-                      <Button
-                        type="button"
-                        onClick={handleVerifyEmailOtp}
+                      <LoadingButton
+                        onAction={handleVerifyEmailOtp}
                         disabled={emailOtp.length !== 6 || emailStep === 'verifying'}
-                        isLoading={emailStep === 'verifying'}
-                        size="sm"
-                        className="text-xs font-semibold gap-1.5 h-8 px-3.5 rounded-lg cursor-pointer"
+                        pendingLabel="Verifying..."
+                        successLabel="Verified"
+                        errorLabel="Failed"
+                        className="text-xs font-semibold h-8 px-3.5 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
                       >
-                        <Check className="w-3.5 h-3.5" />
-                        <span>Verify Code</span>
-                      </Button>
+                        Verify Code
+                      </LoadingButton>
                     </div>
                   </div>
                 )}
@@ -582,11 +516,14 @@ export function AccountSection({ user }: AccountSectionProps) {
                           {user.email}
                         </span>
                       </p>
-                      <OtpInput
-                        value={pwOtp}
-                        onChange={setPwOtp}
-                        disabled={pwStep === 'verifying'}
-                      />
+                      <div className="flex justify-center py-1">
+                        <OtpInput
+                          value={pwOtp}
+                          onChange={setPwOtp}
+                          disabled={pwStep === 'verifying'}
+                          status={pwError ? 'error' : 'idle'}
+                        />
+                      </div>
                       <div className="flex items-center justify-between pt-1">
                         <button
                           type="button"
@@ -595,17 +532,16 @@ export function AccountSection({ user }: AccountSectionProps) {
                         >
                           Resend Code
                         </button>
-                        <Button
-                          type="button"
-                          onClick={handleVerifyPwOtp}
+                        <LoadingButton
+                          onAction={handleVerifyPwOtp}
                           disabled={pwOtp.length !== 6 || pwStep === 'verifying'}
-                          isLoading={pwStep === 'verifying'}
-                          size="sm"
-                          className="text-xs font-semibold gap-1.5 h-8 px-3.5 rounded-lg cursor-pointer"
+                          pendingLabel="Verifying..."
+                          successLabel="Verified"
+                          errorLabel="Failed"
+                          className="text-xs font-semibold h-8 px-3.5 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
                         >
-                          <span>Next</span>
-                          <ChevronRight className="w-3.5 h-3.5" />
-                        </Button>
+                          Next
+                        </LoadingButton>
                       </div>
                     </div>
                   )}
@@ -640,6 +576,16 @@ export function AccountSection({ user }: AccountSectionProps) {
                         </div>
                       </div>
 
+                      {newPassword && (
+                        <div className="pt-0.5">
+                          <PasswordStrength
+                            value={newPassword}
+                            showRules={false}
+                            className="text-xs"
+                          />
+                        </div>
+                      )}
+
                       <div className="flex items-center justify-between pt-1 border-t border-border/60">
                         <button
                           type="button"
@@ -653,16 +599,16 @@ export function AccountSection({ user }: AccountSectionProps) {
                           <span>Back</span>
                         </button>
 
-                        <Button
-                          type="submit"
+                        <LoadingButton
+                          onAction={handleSetPassword}
                           disabled={pwStep === 'saving' || !newPassword || !confirmPassword}
-                          isLoading={pwStep === 'saving'}
-                          size="sm"
-                          className="text-xs font-semibold gap-1.5 h-8 px-3.5 rounded-lg cursor-pointer"
+                          pendingLabel="Saving..."
+                          successLabel="Saved"
+                          errorLabel="Failed"
+                          className="text-xs font-semibold h-8 px-3.5 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
                         >
-                          <Lock className="w-3.5 h-3.5" />
-                          <span>Save Password</span>
-                        </Button>
+                          Save Password
+                        </LoadingButton>
                       </div>
                     </form>
                   )}
@@ -746,18 +692,16 @@ export function AccountSection({ user }: AccountSectionProps) {
                   </p>
                 </div>
               </div>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={handleCancelDelete}
+              <LoadingButton
+                onAction={handleCancelDelete}
                 disabled={isDeletingAccount}
-                isLoading={isDeletingAccount}
-                className="border-rose-500/40 hover:bg-rose-500/10 text-rose-400 text-xs gap-1.5 rounded-lg cursor-pointer h-7 px-3"
+                pendingLabel="Cancelling..."
+                successLabel="Cancelled"
+                errorLabel="Failed"
+                className="border border-rose-500/40 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs rounded-lg h-7 px-3"
               >
-                <X className="w-3 h-3" />
-                <span>Cancel Deletion</span>
-              </Button>
+                Cancel Deletion
+              </LoadingButton>
             </div>
           ) : (
             <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-rose-500/5 border border-rose-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -883,19 +827,17 @@ export function AccountSection({ user }: AccountSectionProps) {
                   Cancel
                 </Button>
 
-                <Button
-                  type="submit"
+                <HoldToConfirm
+                  onConfirm={() => {
+                    void handleScheduleDelete();
+                  }}
                   disabled={isDeletingAccount || !isUsernameMatched}
-                  isLoading={isDeletingAccount}
-                  className={`text-xs font-semibold px-3.5 h-8 rounded-lg gap-1.5 shadow-sm transition-all ${
-                    isUsernameMatched
-                      ? 'bg-rose-600 hover:bg-rose-500 text-white cursor-pointer'
-                      : 'bg-zinc-800 text-zinc-500 opacity-60 cursor-not-allowed border border-zinc-700'
-                  }`}
+                  confirmLabel="Scheduling..."
+                  variant="destructive"
+                  className="text-xs font-semibold h-8 rounded-lg shadow-sm"
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
-                  <span>{isDeletingAccount ? 'Scheduling…' : 'Schedule Deletion'}</span>
-                </Button>
+                  Hold to Schedule Deletion
+                </HoldToConfirm>
               </div>
             </form>
           </div>

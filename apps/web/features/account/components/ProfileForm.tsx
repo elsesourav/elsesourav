@@ -1,8 +1,11 @@
 'use client';
 
 import { ImageCropperModal } from '@/components/media/ImageCropperModal';
-import type { User, UserPreferences } from '@elsesourav/types';
+import type { User } from '@elsesourav/types';
 import { Card, CardDescription, CardHeader, CardTitle, Input, UserAvatar } from '@elsesourav/ui';
+import { LoadingButton } from '@/components/interior/LoadingButton';
+import { SnapCarousel } from '@/components/interior/SnapCarousel';
+import { BlurUpImage } from '@/components/interior/BlurUpImage';
 import {
   AlertCircle,
   Camera,
@@ -33,9 +36,6 @@ const PRESET_AVATARS = [
 ];
 
 export function ProfileForm({ user }: ProfileFormProps) {
-  const userPrefs = (user.preferences as UserPreferences) || {};
-
-  // Form Field States
   const [displayName, setDisplayName] = React.useState(user.displayName || '');
   const [username, setUsername] = React.useState(user.username || '');
   const [bio, setBio] = React.useState(user.bio || '');
@@ -155,23 +155,24 @@ export function ProfileForm({ user }: ProfileFormProps) {
         setIsEditingName(false);
       } else {
         setNameError(res.error || 'Failed to update name');
+        throw new Error(res.error || 'Failed to update name');
       }
-    } catch {
-      setNameError('An unexpected error occurred');
+    } catch (err) {
+      if (!nameError) setNameError(err instanceof Error ? err.message : 'An unexpected error occurred');
+      throw err;
     } finally {
       setIsSavingName(false);
     }
   };
 
-  // Handle Username Save
   const handleApplyUsername = async () => {
     const trimmed = editUsernameValue.trim().toLowerCase();
     if (!trimmed || trimmed.length < 4) {
       setUsernameError('Username must be at least 4 characters long');
-      return;
+      throw new Error('Username must be at least 4 characters long');
     }
     if (usernameStatus === 'taken' || usernameStatus === 'invalid') {
-      return;
+      throw new Error('Username is not available');
     }
 
     setIsSavingUsername(true);
@@ -184,20 +185,21 @@ export function ProfileForm({ user }: ProfileFormProps) {
         setIsEditingUsername(false);
       } else {
         setUsernameError(res.error || 'Failed to update username');
+        throw new Error(res.error || 'Failed to update username');
       }
-    } catch {
-      setUsernameError('An unexpected error occurred');
+    } catch (err) {
+      if (!usernameError) setUsernameError(err instanceof Error ? err.message : 'An unexpected error occurred');
+      throw err;
     } finally {
       setIsSavingUsername(false);
     }
   };
 
-  // Handle Bio Save
   const handleApplyBio = async () => {
     const trimmed = editBioValue.trim();
     if (trimmed.length > 250) {
       setBioError('Bio cannot exceed 250 characters');
-      return;
+      throw new Error('Bio cannot exceed 250 characters');
     }
 
     setIsSavingBio(true);
@@ -210,22 +212,22 @@ export function ProfileForm({ user }: ProfileFormProps) {
         setIsEditingBio(false);
       } else {
         setBioError(res.error || 'Failed to update bio');
+        throw new Error(res.error || 'Failed to update bio');
       }
-    } catch {
-      setBioError('An unexpected error occurred');
+    } catch (err) {
+      if (!bioError) setBioError(err instanceof Error ? err.message : 'An unexpected error occurred');
+      throw err;
     } finally {
       setIsSavingBio(false);
     }
   };
 
-  // Handle Preset or Upload Draft Selection (Does NOT auto-save)
   const handleSelectPresetOrDraft = (newUrl: string) => {
     setDraftPhotoUrl(newUrl);
     setPhotoSaveSuccess(false);
     setPhotoSaveError(null);
   };
 
-  // Explicit Save Profile Image Action
   const handleSavePhoto = async () => {
     setIsSavingPhoto(true);
     setPhotoSaveError(null);
@@ -239,9 +241,13 @@ export function ProfileForm({ user }: ProfileFormProps) {
         setTimeout(() => setPhotoSaveSuccess(false), 3000);
       } else {
         setPhotoSaveError(res.error || 'Failed to update profile image');
+        throw new Error(res.error || 'Failed to update profile image');
       }
-    } catch {
-      setPhotoSaveError('An unexpected error occurred while saving profile image');
+    } catch (err) {
+      if (!photoSaveError) {
+        setPhotoSaveError(err instanceof Error ? err.message : 'An unexpected error occurred while saving profile image');
+      }
+      throw err;
     } finally {
       setIsSavingPhoto(false);
     }
@@ -351,43 +357,32 @@ export function ProfileForm({ user }: ProfileFormProps) {
                   </button>
                 )}
 
-                <button
-                  type="button"
-                  onClick={handleSavePhoto}
+                <LoadingButton
+                  onAction={handleSavePhoto}
                   disabled={!hasPhotoChanged || isSavingPhoto}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold shadow-sm transition-all duration-200 ${
-                    hasPhotoChanged
-                      ? 'bg-primary text-primary-foreground hover:opacity-90 cursor-pointer shadow-primary/20 shadow-md ring-2 ring-primary/40'
-                      : 'bg-muted text-muted-foreground/60 border border-border/60 cursor-not-allowed opacity-60'
-                  }`}
+                  pendingLabel="Saving..."
+                  successLabel="Saved"
+                  errorLabel="Failed"
+                  className="h-8 px-3 text-xs font-semibold"
                 >
-                  {isSavingPhoto ? (
-                    <>
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      <span>Saving...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Check className="w-3.5 h-3.5" />
-                      <span>Save Image</span>
-                    </>
-                  )}
-                </button>
+                  Save Image
+                </LoadingButton>
               </div>
             </div>
 
-            {/* Seamless 2-Column Studio Layout */}
             <div className="flex flex-col sm:flex-row items-center sm:items-stretch gap-4 sm:gap-5">
-              {/* Left Hero: Large Profile Image Squircle with Hover Overlay */}
               <div
                 onClick={() => fileInputRef.current?.click()}
                 className="group relative w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-[25%] overflow-hidden border-2 border-primary/30 bg-muted/60 shadow-md shrink-0 cursor-pointer transition-all duration-200 hover:border-primary hover:shadow-lg flex items-center justify-center"
                 title="Click to upload new photo"
               >
                 {draftPhotoUrl ? (
-                  <img
+                  <BlurUpImage
                     src={draftPhotoUrl}
                     alt={displayName || 'Profile preview'}
+                    width={160}
+                    height={160}
+                    radius={36}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 ) : (
@@ -447,50 +442,50 @@ export function ProfileForm({ user }: ProfileFormProps) {
                     Or select a preset:
                   </div>
 
-                  <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-                    {/* Default Monogram */}
-                    <button
-                      type="button"
-                      onClick={() => handleSelectPresetOrDraft('')}
-                      title="Default Monogram"
-                      className={`relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden border transition-all duration-200 cursor-pointer flex items-center justify-center shrink-0 hover:scale-105 active:scale-95 ${
-                        !draftPhotoUrl
-                          ? 'border-primary ring-2 ring-primary/50 shadow-md scale-105 font-bold'
-                          : 'border-border hover:border-foreground/40 opacity-75 hover:opacity-100'
-                      }`}
-                    >
-                      <UserAvatar
-                        src={null}
-                        name={displayName}
-                        identifier={user.id || user.email}
-                        size="sm"
-                        className="w-full h-full rounded-none text-[10px]"
-                      />
-                    </button>
+                  <div className="w-full overflow-hidden">
+                    <SnapCarousel label="Preset avatars" gap={8} className="w-full">
+                      <button
+                        type="button"
+                        onClick={() => handleSelectPresetOrDraft('')}
+                        title="Default Monogram"
+                        className={`relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden border transition-all duration-200 cursor-pointer flex items-center justify-center shrink-0 hover:scale-105 active:scale-95 ${
+                          !draftPhotoUrl
+                            ? 'border-primary ring-2 ring-primary/50 shadow-md scale-105 font-bold'
+                            : 'border-border hover:border-foreground/40 opacity-75 hover:opacity-100'
+                        }`}
+                      >
+                        <UserAvatar
+                          src={null}
+                          name={displayName}
+                          identifier={user.id || user.email}
+                          size="sm"
+                          className="w-full h-full rounded-none text-[10px]"
+                        />
+                      </button>
 
-                    {/* Preset SVG Colors */}
-                    {PRESET_AVATARS.map((preset) => {
-                      const isSelected = draftPhotoUrl === preset.url;
-                      return (
-                        <button
-                          key={preset.id}
-                          type="button"
-                          onClick={() => handleSelectPresetOrDraft(preset.url)}
-                          title={preset.name}
-                          className={`relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden border transition-all duration-200 cursor-pointer shrink-0 hover:scale-105 active:scale-95 ${
-                            isSelected
-                              ? 'border-primary ring-2 ring-primary/50 shadow-md scale-105'
-                              : 'border-border hover:border-foreground/40 opacity-75 hover:opacity-100'
-                          }`}
-                        >
-                          <img
-                            src={preset.url}
-                            alt={preset.name}
-                            className="w-full h-full object-cover"
-                          />
-                        </button>
-                      );
-                    })}
+                      {PRESET_AVATARS.map((preset) => {
+                        const isSelected = draftPhotoUrl === preset.url;
+                        return (
+                          <button
+                            key={preset.id}
+                            type="button"
+                            onClick={() => handleSelectPresetOrDraft(preset.url)}
+                            title={preset.name}
+                            className={`relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden border transition-all duration-200 cursor-pointer shrink-0 hover:scale-105 active:scale-95 ${
+                              isSelected
+                                ? 'border-primary ring-2 ring-primary/50 shadow-md scale-105'
+                                : 'border-border hover:border-foreground/40 opacity-75 hover:opacity-100'
+                            }`}
+                          >
+                            <img
+                              src={preset.url}
+                              alt={preset.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </button>
+                        );
+                      })}
+                    </SnapCarousel>
                   </div>
                 </div>
               </div>
@@ -531,19 +526,16 @@ export function ProfileForm({ user }: ProfileFormProps) {
                     maxLength={60}
                     className="bg-background border-border text-xs rounded-lg text-foreground flex-1 h-8 sm:h-9"
                   />
-                  <button
-                    type="button"
-                    onClick={handleApplyName}
+                  <LoadingButton
+                    onAction={handleApplyName}
                     disabled={isSavingName}
-                    className="inline-flex items-center gap-1 px-3 h-8 sm:h-9 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer shrink-0 shadow-sm"
+                    pendingLabel="Applying..."
+                    successLabel="Applied"
+                    errorLabel="Failed"
+                    className="h-8 sm:h-9 px-3 text-xs font-semibold shrink-0"
                   >
-                    {isSavingName ? (
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                    ) : (
-                      <Check className="w-3 h-3" />
-                    )}
-                    <span>Apply</span>
-                  </button>
+                    Apply
+                  </LoadingButton>
                   <button
                     type="button"
                     onClick={() => {
@@ -621,24 +613,21 @@ export function ProfileForm({ user }: ProfileFormProps) {
                     />
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={handleApplyUsername}
+                  <LoadingButton
+                    onAction={handleApplyUsername}
                     disabled={
                       isSavingUsername ||
                       usernameStatus === 'invalid' ||
                       usernameStatus === 'taken' ||
                       usernameStatus === 'checking'
                     }
-                    className="inline-flex items-center gap-1 px-3 h-8 sm:h-9 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer shrink-0 shadow-sm"
+                    pendingLabel="Applying..."
+                    successLabel="Applied"
+                    errorLabel="Failed"
+                    className="h-8 sm:h-9 px-3 text-xs font-semibold shrink-0"
                   >
-                    {isSavingUsername ? (
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    ) : (
-                      <Check className="w-3.5 h-3.5" />
-                    )}
-                    <span>Apply</span>
-                  </button>
+                    Apply
+                  </LoadingButton>
 
                   <button
                     type="button"
@@ -710,19 +699,16 @@ export function ProfileForm({ user }: ProfileFormProps) {
                   </div>
 
                   <div className="flex items-center gap-1.5">
-                    <button
-                      type="button"
-                      onClick={handleApplyBio}
+                    <LoadingButton
+                      onAction={handleApplyBio}
                       disabled={isSavingBio}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer shadow-sm"
+                      pendingLabel="Applying..."
+                      successLabel="Applied"
+                      errorLabel="Failed"
+                      className="h-7 px-3 text-xs font-semibold shrink-0"
                     >
-                      {isSavingBio ? (
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      ) : (
-                        <Check className="w-3.5 h-3.5" />
-                      )}
-                      <span>Apply</span>
-                    </button>
+                      Apply
+                    </LoadingButton>
 
                     <button
                       type="button"

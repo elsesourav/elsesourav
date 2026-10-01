@@ -113,7 +113,7 @@ export type BlurUpImageProps = {
   placeholder?: string;
   color?: string;
   blur?: number;
-  radius?: 5 | 6 | 9 | 11 | 14;
+  radius?: number;
   srcSet?: string;
   sizes?: string;
   loading?: "lazy" | "eager";
