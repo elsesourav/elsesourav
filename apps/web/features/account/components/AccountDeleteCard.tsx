@@ -3,8 +3,7 @@
 import * as React from 'react';
 import { Button, Input } from '@elsesourav/ui';
 import { AlertTriangle, Trash2, Check } from 'lucide-react';
-import { HoldToConfirm } from '@/components/interior/HoldToConfirm';
-import { LoadingButton } from '@/components/interior/LoadingButton';
+import { HoldToConfirm, LoadingButton } from '@elsesourav/ui/interior';
 import {
   cancelAccountDeletionAction,
   scheduleAccountDeletionAction,
@@ -15,15 +14,27 @@ interface AccountDeleteCardProps {
   scheduledDeletionAt?: number | null;
 }
 
-export function AccountDeleteCard({
-  targetUsername,
-  scheduledDeletionAt,
-}: AccountDeleteCardProps) {
+export function AccountDeleteCard({ targetUsername, scheduledDeletionAt }: AccountDeleteCardProps) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
   const [deleteReason, setDeleteReason] = React.useState('');
   const [typedUsername, setTypedUsername] = React.useState('');
   const [isDeletingAccount, setIsDeletingAccount] = React.useState(false);
   const [deleteError, setDeleteError] = React.useState<string | null>(null);
+
+  // Close delete modal on Escape key press
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isDeleteModalOpen && !isDeletingAccount) {
+        setIsDeleteModalOpen(false);
+        setTypedUsername('');
+        setDeleteError(null);
+      }
+    };
+    if (isDeleteModalOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isDeleteModalOpen, isDeletingAccount]);
 
   const isUsernameMatched = typedUsername.trim().toLowerCase() === targetUsername.toLowerCase();
   const isPendingDeletion = !!scheduledDeletionAt;
@@ -68,13 +79,11 @@ export function AccountDeleteCard({
           <div className="flex items-start gap-2.5">
             <AlertTriangle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
             <div className="space-y-0.5 flex-1">
-              <h4 className="text-xs font-semibold text-rose-500">
-                Account Deletion Scheduled
-              </h4>
+              <h4 className="text-xs font-semibold text-rose-500">Account Deletion Scheduled</h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 Your account will be permanently deleted on{' '}
-                <span className="font-semibold text-rose-400">{deletionDate}</span>. You can
-                cancel at any time during this 30-day grace period.
+                <span className="font-semibold text-rose-400">{deletionDate}</span>. You can cancel
+                at any time during this 30-day grace period.
               </p>
             </div>
           </div>

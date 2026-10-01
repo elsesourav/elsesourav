@@ -2,7 +2,7 @@
 
 import type { AuthenticatedUser } from '@elsesourav/auth';
 import { UserAvatar } from '@elsesourav/ui';
-import { AtSign, LogOut, Shield, User } from 'lucide-react';
+import { AtSign, LogOut, Shield, ShieldCheck, User } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
 
@@ -130,7 +130,7 @@ export function UserAvatarMenu({ user, hasImportantAlert = false }: UserAvatarMe
             <p className="text-[11px] text-muted-foreground truncate mt-0.5">{user.email}</p>
           </div>
 
-          {/* Profile Option Only */}
+          {/* Profile & Settings Navigation */}
           <Link
             href="/profile"
             role="menuitem"
@@ -140,7 +140,20 @@ export function UserAvatarMenu({ user, hasImportantAlert = false }: UserAvatarMe
             <User className="w-3.5 h-3.5 text-primary" />
             <div className="flex flex-col">
               <span className="font-medium">Profile</span>
-              <span className="text-[10px] text-muted-foreground">View profile & overview</span>
+              <span className="text-[10px] text-muted-foreground">Overview & identity</span>
+            </div>
+          </Link>
+
+          <Link
+            href="/settings?tab=account"
+            role="menuitem"
+            onClick={() => requestClose()}
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-foreground hover:bg-accent transition-colors cursor-pointer"
+          >
+            <ShieldCheck className="w-3.5 h-3.5 text-primary" />
+            <div className="flex flex-col">
+              <span className="font-medium">Account &amp; Security</span>
+              <span className="text-[10px] text-muted-foreground">Credentials & preferences</span>
             </div>
           </Link>
 
@@ -149,14 +162,12 @@ export function UserAvatarMenu({ user, hasImportantAlert = false }: UserAvatarMe
               href="/admin"
               role="menuitem"
               onClick={() => requestClose()}
-              className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-amber-600 dark:text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 transition-colors cursor-pointer"
+              className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 transition-colors cursor-pointer"
             >
-              <Shield className="w-3.5 h-3.5 text-amber-500" />
+              <Shield className="w-3.5 h-3.5 text-amber-400" />
               <div className="flex flex-col">
                 <span className="font-medium">Admin Portal</span>
-                <span className="text-[10px] text-amber-600/70 dark:text-amber-400/70">
-                  System management
-                </span>
+                <span className="text-[10px] text-amber-400/80">System management</span>
               </div>
             </Link>
           )}
@@ -167,9 +178,9 @@ export function UserAvatarMenu({ user, hasImportantAlert = false }: UserAvatarMe
               <button
                 type="submit"
                 role="menuitem"
-                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer text-left font-medium"
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer text-left font-medium"
               >
-                <LogOut className="w-3.5 h-3.5 text-rose-500 dark:text-rose-400" />
+                <LogOut className="w-3.5 h-3.5 text-rose-400" />
                 <span>Sign Out</span>
               </button>
             </form>

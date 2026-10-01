@@ -103,7 +103,9 @@ export async function updatePreferencesAction(data: {
  * Send a genuine 6-digit numeric OTP to the currently authenticated user's email address.
  * Dispatches via Nodemailer with zero magic links or sign-in buttons.
  */
-export async function sendEmailOtpAction(purpose: 'EMAIL_VERIFY' | 'PASSWORD_RESET' = 'EMAIL_VERIFY') {
+export async function sendEmailOtpAction(
+  purpose: 'EMAIL_VERIFY' | 'PASSWORD_RESET' = 'EMAIL_VERIFY'
+) {
   const user = await getSessionUser();
   if (!user?.email) {
     return { success: false, error: 'Unauthorized' };

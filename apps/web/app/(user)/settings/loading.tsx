@@ -1,80 +1,61 @@
 import * as React from 'react';
-import { Card, CardContent, CardHeader, Skeleton, SkeletonBadge } from '@elsesourav/ui';
+import { Card, CardHeader, Skeleton } from '@elsesourav/ui';
 
 export default function SettingsLoading() {
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 animate-pulse">
-      {/* Header Skeleton */}
-      <div className="space-y-2">
-        <div className="flex items-center gap-3">
-          <Skeleton className="h-8 w-48 rounded-xl bg-zinc-900/60" />
-          <SkeletonBadge className="w-16 h-5" />
-        </div>
-        <Skeleton className="h-4 w-72 bg-zinc-900/60 rounded-md" />
-      </div>
-
+    <div className="w-full space-y-4 sm:space-y-5 animate-pulse">
       {/* Tabs Switcher Skeleton */}
-      <div className="flex items-center gap-2 bg-zinc-900/60 p-1.5 rounded-2xl border border-zinc-800/60">
-        <Skeleton className="h-9 w-24 rounded-xl bg-zinc-800/80" />
-        <Skeleton className="h-9 w-28 rounded-xl bg-zinc-900/40" />
-        <Skeleton className="h-9 w-24 rounded-xl bg-zinc-900/40" />
-        <Skeleton className="h-9 w-28 rounded-xl bg-zinc-900/40" />
+      <div className="flex justify-start">
+        <Skeleton className="h-9 w-full sm:w-64 rounded-xl bg-muted/40 border border-border" />
       </div>
 
       {/* Main Settings Card Skeleton */}
-      <Card className="rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl p-6 space-y-6">
-        <CardHeader className="p-0 pb-4 border-b border-zinc-800/60 space-y-2">
+      <Card className="bg-card text-card-foreground border-border shadow-sm rounded-2xl sm:rounded-3xl overflow-hidden">
+        <CardHeader className="pb-3 sm:pb-4 border-b border-border/60 space-y-2">
           <div className="flex items-center gap-2">
-            <Skeleton className="w-4 h-4 rounded-full bg-zinc-800" />
-            <Skeleton className="h-5 w-40 rounded-lg bg-zinc-800" />
+            <Skeleton className="w-4 h-4 rounded-full bg-muted/50" />
+            <Skeleton className="h-5 w-44 rounded-lg bg-muted/50" />
           </div>
-          <Skeleton className="h-3.5 w-80 bg-zinc-900/60 rounded" />
+          <Skeleton className="h-3.5 w-72 bg-muted/30 rounded" />
         </CardHeader>
 
-        <CardContent className="p-0 space-y-6 max-w-xl">
-          {/* Avatar Section Skeleton */}
-          <div className="p-4 rounded-2xl bg-zinc-950/40 border border-zinc-800/80 space-y-4">
+        <div className="p-4 sm:p-5 pt-3 space-y-3.5">
+          {/* Avatar Studio Skeleton */}
+          <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-muted/30 border border-border/80 space-y-3.5">
             <div className="flex items-center justify-between">
-              <Skeleton className="h-4 w-36 rounded bg-zinc-800" />
-              <Skeleton className="h-4 w-28 rounded bg-zinc-800" />
+              <Skeleton className="h-4 w-28 rounded bg-muted/50" />
+              <Skeleton className="h-7 w-20 rounded-lg bg-muted/40" />
             </div>
-            <div className="flex flex-col sm:flex-row items-center gap-4">
-              <Skeleton className="w-16 h-16 rounded-full shrink-0 bg-zinc-800" />
-              <div className="space-y-2 w-full">
-                <Skeleton className="h-3 w-44 rounded bg-zinc-900/80" />
-                <div className="grid grid-cols-6 gap-2">
-                  {Array.from({ length: 6 }).map((_, i) => (
-                    <Skeleton key={i} className="w-10 h-10 rounded-full bg-zinc-800" />
+            <div className="flex flex-col sm:flex-row items-center sm:items-stretch gap-4 sm:gap-5">
+              <Skeleton className="w-32 h-32 sm:w-36 sm:h-36 rounded-2xl bg-muted/40 shrink-0 border border-border" />
+              <div className="flex-1 w-full space-y-3">
+                <Skeleton className="h-16 w-full rounded-xl bg-muted/20 border border-dashed border-border" />
+                <div className="flex items-center gap-2 pt-1">
+                  {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <Skeleton
+                      key={i}
+                      className="w-10 h-10 rounded-xl bg-muted/30 border border-border shrink-0"
+                    />
                   ))}
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Display Name Input Skeleton */}
-          <div className="space-y-2">
-            <Skeleton className="h-3.5 w-28 rounded bg-zinc-800" />
-            <Skeleton className="h-10 w-full rounded-xl bg-zinc-950/60" />
-          </div>
-
-          {/* Username Input Skeleton */}
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <Skeleton className="h-3.5 w-20 rounded bg-zinc-800" />
-              <Skeleton className="h-3.5 w-16 rounded bg-zinc-900" />
+          {/* Form Field Wells */}
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-muted/20 border border-border/80 space-y-2.5"
+            >
+              <div className="flex items-center justify-between">
+                <Skeleton className="h-3.5 w-28 rounded bg-muted/50" />
+                <Skeleton className="h-5 w-12 rounded bg-muted/30" />
+              </div>
+              <Skeleton className="h-8 w-full rounded-xl bg-background/80 border border-border/70" />
             </div>
-            <Skeleton className="h-10 w-full rounded-xl bg-zinc-950/60" />
-          </div>
-
-          {/* Bio Textarea Skeleton */}
-          <div className="space-y-2">
-            <Skeleton className="h-3.5 w-16 rounded bg-zinc-800" />
-            <Skeleton className="h-24 w-full rounded-xl bg-zinc-950/60" />
-          </div>
-
-          {/* Save Button Skeleton */}
-          <Skeleton className="h-10 w-44 rounded-xl bg-indigo-950/40 border border-indigo-500/20" />
-        </CardContent>
+          ))}
+        </div>
       </Card>
     </div>
   );

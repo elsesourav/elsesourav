@@ -1,10 +1,19 @@
 'use client';
 
 import * as React from 'react';
-import { Mail, CheckCircle2, AlertCircle, Lock, ShieldCheck, Pencil, Sparkles, X, Loader2 } from 'lucide-react';
+import {
+  Mail,
+  CheckCircle2,
+  AlertCircle,
+  Lock,
+  ShieldCheck,
+  Pencil,
+  Sparkles,
+  X,
+  Loader2,
+} from 'lucide-react';
 import { Button } from '@elsesourav/ui';
-import { OtpInput } from '@/components/interior/OtpInput';
-import { LoadingButton } from '@/components/interior/LoadingButton';
+import { LoadingButton, OtpInput } from '@elsesourav/ui/interior';
 import { sendEmailOtpAction, verifyEmailOtpAction } from '../actions/account-actions';
 
 interface AccountEmailCardProps {

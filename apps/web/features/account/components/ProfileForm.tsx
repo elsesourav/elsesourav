@@ -3,7 +3,7 @@
 import * as React from 'react';
 import type { User } from '@elsesourav/types';
 import { Card, CardDescription, CardHeader, CardTitle, Input } from '@elsesourav/ui';
-import { LoadingButton } from '@/components/interior/LoadingButton';
+import { LoadingButton } from '@elsesourav/ui/interior';
 import {
   AlertCircle,
   Check,
@@ -125,7 +125,8 @@ export function ProfileForm({ user }: ProfileFormProps) {
         throw new Error(res.error || 'Failed to update name');
       }
     } catch (err) {
-      if (!nameError) setNameError(err instanceof Error ? err.message : 'An unexpected error occurred');
+      if (!nameError)
+        setNameError(err instanceof Error ? err.message : 'An unexpected error occurred');
       throw err;
     } finally {
       setIsSavingName(false);
@@ -156,7 +157,8 @@ export function ProfileForm({ user }: ProfileFormProps) {
         throw new Error(res.error || 'Failed to update username');
       }
     } catch (err) {
-      if (!usernameError) setUsernameError(err instanceof Error ? err.message : 'An unexpected error occurred');
+      if (!usernameError)
+        setUsernameError(err instanceof Error ? err.message : 'An unexpected error occurred');
       throw err;
     } finally {
       setIsSavingUsername(false);
@@ -183,7 +185,8 @@ export function ProfileForm({ user }: ProfileFormProps) {
         throw new Error(res.error || 'Failed to update bio');
       }
     } catch (err) {
-      if (!bioError) setBioError(err instanceof Error ? err.message : 'An unexpected error occurred');
+      if (!bioError)
+        setBioError(err instanceof Error ? err.message : 'An unexpected error occurred');
       throw err;
     } finally {
       setIsSavingBio(false);
@@ -264,7 +267,9 @@ export function ProfileForm({ user }: ProfileFormProps) {
                   />
                   <LoadingButton
                     onAction={handleApplyName}
-                    disabled={isSavingName || !editNameValue.trim() || editNameValue === displayName}
+                    disabled={
+                      isSavingName || !editNameValue.trim() || editNameValue === displayName
+                    }
                     pendingLabel="Applying..."
                     successLabel="Applied"
                     errorLabel="Failed"
@@ -412,17 +417,13 @@ export function ProfileForm({ user }: ProfileFormProps) {
 
             {!isEditingBio ? (
               <div className="p-2.5 rounded-xl bg-background/80 border border-border/70 text-xs text-foreground leading-relaxed">
-                {bio || (
-                  <span className="text-muted-foreground italic">No bio provided yet.</span>
-                )}
+                {bio || <span className="text-muted-foreground italic">No bio provided yet.</span>}
               </div>
             ) : (
               <div className="p-3 rounded-xl bg-background border border-primary/30 space-y-2.5 animate-in fade-in duration-150">
                 <div className="flex items-center justify-between text-xs text-muted-foreground">
                   <label className="font-medium text-foreground">Short Bio (max 250 chars)</label>
-                  <span className="text-[11px] font-mono">
-                    {editBioValue.length}/250
-                  </span>
+                  <span className="text-[11px] font-mono">{editBioValue.length}/250</span>
                 </div>
 
                 <textarea

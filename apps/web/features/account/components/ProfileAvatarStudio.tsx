@@ -4,17 +4,8 @@ import * as React from 'react';
 import type { User } from '@elsesourav/types';
 import { UserAvatar } from '@elsesourav/ui';
 import { ImageCropperModal } from '@/components/media/ImageCropperModal';
-import { LoadingButton } from '@/components/interior/LoadingButton';
-import { SnapCarousel } from '@/components/interior/SnapCarousel';
-import { BlurUpImage } from '@/components/interior/BlurUpImage';
-import {
-  AlertCircle,
-  Camera,
-  Check,
-  RotateCcw,
-  Sparkles,
-  UploadCloud,
-} from 'lucide-react';
+import { BlurUpImage, LoadingButton, SnapCarousel } from '@elsesourav/ui/interior';
+import { AlertCircle, Camera, Check, RotateCcw, Sparkles, UploadCloud } from 'lucide-react';
 import { updateProfileFormAction } from '../actions/account-actions';
 
 interface ProfileAvatarStudioProps {
@@ -79,7 +70,9 @@ export function ProfileAvatarStudio({
     } catch (err) {
       if (!photoSaveError) {
         setPhotoSaveError(
-          err instanceof Error ? err.message : 'An unexpected error occurred while saving profile image'
+          err instanceof Error
+            ? err.message
+            : 'An unexpected error occurred while saving profile image'
         );
       }
       throw err;
@@ -148,12 +141,12 @@ export function ProfileAvatarStudio({
 
         <div className="flex items-center gap-2">
           {photoSaveSuccess && (
-            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-medium animate-in fade-in">
+            <span className="text-[11px] text-emerald-400 flex items-center gap-1 font-medium animate-in fade-in">
               <Check className="w-3 h-3" /> Image saved
             </span>
           )}
           {photoSaveError && (
-            <span className="text-[11px] text-rose-600 dark:text-rose-400 flex items-center gap-1 font-medium animate-in fade-in">
+            <span className="text-[11px] text-rose-400 flex items-center gap-1 font-medium animate-in fade-in">
               <AlertCircle className="w-3 h-3" /> {photoSaveError}
             </span>
           )}

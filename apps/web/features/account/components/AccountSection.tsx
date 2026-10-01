@@ -87,7 +87,7 @@ export function AccountSection({ user }: AccountSectionProps) {
                 type="submit"
                 variant="outline"
                 size="sm"
-                className="text-xs border-border hover:border-rose-500/50 hover:bg-rose-500/10 text-rose-600 dark:text-rose-400 gap-1.5 rounded-lg cursor-pointer h-7 px-3"
+                className="text-xs border-border hover:border-rose-500/50 hover:bg-rose-500/10 text-rose-400 gap-1.5 rounded-lg cursor-pointer h-7 px-3"
               >
                 <LogOut className="w-3 h-3" />
                 <span>Sign Out</span>

@@ -3,15 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import {
-  LayoutDashboard,
-  User,
-  ShieldCheck,
-  LifeBuoy,
-  Menu,
-  ChevronDown,
-  X,
-} from 'lucide-react';
+import { LayoutDashboard, User, ShieldCheck, LifeBuoy, Menu, ChevronDown, X } from 'lucide-react';
 
 interface NavItem {
   label: string;
@@ -38,8 +30,7 @@ const NAV_ITEMS: NavItem[] = [
     href: '/settings?tab=account',
     icon: ShieldCheck,
     isActive: (pathname, tab) =>
-      pathname === '/settings' &&
-      (tab === 'account' || tab === 'security' || tab === 'danger'),
+      pathname === '/settings' && (tab === 'account' || tab === 'security' || tab === 'danger'),
   },
   {
     label: 'Help & Support',
@@ -81,6 +72,19 @@ export function UserSidebar() {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('touchstart', handleClickOutside);
     };
+  }, [mobileMenuOpen]);
+
+  // Close on Escape key press
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+    if (mobileMenuOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [mobileMenuOpen]);
 
   return (

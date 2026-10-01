@@ -1,5 +1,4 @@
 import { SearchButton } from '@/components/search/SearchButton';
-import { ThemePopup } from '@/components/theme/ThemePopup';
 import { UserAvatarMenu } from '@/features/user/components/UserAvatarMenu';
 import { UserSidebar } from '@/features/user/components/UserSidebar';
 import { getServerSession } from '@elsesourav/auth';
@@ -28,7 +27,7 @@ export default async function UserLayout({ children }: { children: React.ReactNo
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors overflow-x-hidden">
+    <div className="min-h-screen flex flex-col bg-background text-foreground dark transition-colors overflow-x-hidden">
       {/* Streamlined Authenticated Global Header */}
       <header className="border-b border-border/80 bg-background/85 backdrop-blur-2xl sticky top-0 z-50 transition-colors w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
@@ -52,14 +51,9 @@ export default async function UserLayout({ children }: { children: React.ReactNo
             </Link>
           </div>
 
-          {/* Action Cluster: Search, Theme Toggle & User Avatar Menu */}
-          <div className="flex items-center gap-2 shrink-0">
+          {/* Action Cluster: Search & User Avatar Menu (Strict Dark Mode) */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <SearchButton />
-
-            <ThemePopup />
-
-            <div className="w-px h-5 bg-border mx-0.5" />
-
             <UserAvatarMenu user={session.user} />
           </div>
         </div>

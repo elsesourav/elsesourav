@@ -14,9 +14,7 @@ import {
   Loader2,
   CheckCircle2,
 } from 'lucide-react';
-import { OtpInput } from '@/components/interior/OtpInput';
-import { PasswordStrength } from '@/components/interior/PasswordStrength';
-import { LoadingButton } from '@/components/interior/LoadingButton';
+import { LoadingButton, OtpInput, PasswordStrength } from '@elsesourav/ui/interior';
 import { sendEmailOtpAction, verifyEmailOtpAction } from '../actions/account-actions';
 
 interface AccountPasswordCardProps {
@@ -93,7 +91,8 @@ export function AccountPasswordCard({ email, onEmailVerified }: AccountPasswordC
         setConfirmPassword('');
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'An unexpected error occurred. Please try again.';
+      const msg =
+        err instanceof Error ? err.message : 'An unexpected error occurred. Please try again.';
       setPwError(msg);
       setPwStep('form');
       throw err;
@@ -149,9 +148,7 @@ export function AccountPasswordCard({ email, onEmailVerified }: AccountPasswordC
       {pwStep === 'idle' && (
         <div className="flex items-center justify-between text-xs text-muted-foreground p-2.5 rounded-xl bg-background/80 border border-border/70 font-mono">
           <span>••••••••••••••••</span>
-          <span className="text-[11px] text-muted-foreground font-sans">
-            Protected by OTP
-          </span>
+          <span className="text-[11px] text-muted-foreground font-sans">Protected by OTP</span>
         </div>
       )}
 
@@ -161,11 +158,7 @@ export function AccountPasswordCard({ email, onEmailVerified }: AccountPasswordC
             <div className="flex items-center justify-between text-[11px] text-muted-foreground pb-1 border-b border-border/60">
               {['Send OTP', 'Verify Code', 'New Password'].map((label, i) => {
                 const stepIdx =
-                  pwStep === 'sending' || pwStep === 'otp'
-                    ? 0
-                    : pwStep === 'verifying'
-                      ? 1
-                      : 2;
+                  pwStep === 'sending' || pwStep === 'otp' ? 0 : pwStep === 'verifying' ? 1 : 2;
                 const isDone = i < stepIdx;
                 const isActive = i === stepIdx;
                 return (
@@ -175,9 +168,7 @@ export function AccountPasswordCard({ email, onEmailVerified }: AccountPasswordC
                     >
                       {isDone ? '✓' : `${i + 1}.`} {label}
                     </span>
-                    {i < 2 && (
-                      <ChevronRight className="w-3 h-3 text-muted-foreground/30 ml-1" />
-                    )}
+                    {i < 2 && <ChevronRight className="w-3 h-3 text-muted-foreground/30 ml-1" />}
                   </div>
                 );
               })}
@@ -202,9 +193,7 @@ export function AccountPasswordCard({ email, onEmailVerified }: AccountPasswordC
             <div className="space-y-3">
               <p className="text-xs text-muted-foreground text-center">
                 Enter the 6-digit code sent to{' '}
-                <span className="font-semibold text-foreground font-mono">
-                  {email}
-                </span>
+                <span className="font-semibold text-foreground font-mono">{email}</span>
               </p>
               <div className="flex justify-center py-1">
                 <OtpInput
@@ -240,9 +229,7 @@ export function AccountPasswordCard({ email, onEmailVerified }: AccountPasswordC
             <form onSubmit={handleSetPassword} className="space-y-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 <div className="space-y-1">
-                  <label className="text-[11px] font-semibold text-foreground">
-                    New Password
-                  </label>
+                  <label className="text-[11px] font-semibold text-foreground">New Password</label>
                   <Input
                     type="password"
                     value={newPassword}
@@ -268,11 +255,7 @@ export function AccountPasswordCard({ email, onEmailVerified }: AccountPasswordC
 
               {newPassword && (
                 <div className="pt-0.5">
-                  <PasswordStrength
-                    value={newPassword}
-                    showRules={false}
-                    className="text-xs"
-                  />
+                  <PasswordStrength value={newPassword} showRules={false} className="text-xs" />
                 </div>
               )}
 

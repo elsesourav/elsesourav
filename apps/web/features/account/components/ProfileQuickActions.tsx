@@ -4,7 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { motion, useReducedMotion } from 'motion/react';
 import { User as UserIcon, ShieldCheck, LifeBuoy, ArrowRight } from 'lucide-react';
-import { useRipple } from '@/components/interior/Ripple';
+import { useRipple } from '@elsesourav/ui/interior';
 
 const ACTIONS = [
   {
@@ -19,14 +19,14 @@ const ACTIONS = [
     subtitle: 'Manage your email, password credentials, and account protection.',
     href: '/settings?tab=account',
     icon: ShieldCheck,
-    iconColor: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20',
+    iconColor: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
   },
   {
     title: 'Help & Support',
     subtitle: 'Get technical assistance, browse guides, or track support tickets.',
     href: '/support/tickets',
     icon: LifeBuoy,
-    iconColor: 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/20',
+    iconColor: 'bg-sky-500/10 text-sky-400 border-sky-500/20',
   },
 ] as const;
 
@@ -99,7 +99,7 @@ export function ProfileQuickActions() {
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
         {ACTIONS.map((action) => (
           <ActionCard key={action.href} action={action} />
         ))}

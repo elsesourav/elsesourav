@@ -3,7 +3,7 @@
 import * as React from 'react';
 import type { User } from '@elsesourav/types';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { SegmentedControl } from '@/components/interior/SegmentedControl';
+import { SegmentedControl } from '@elsesourav/ui/interior';
 import { AccountSection } from './AccountSection';
 import { ProfileForm } from './ProfileForm';
 
