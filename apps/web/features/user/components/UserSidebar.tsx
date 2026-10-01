@@ -187,7 +187,7 @@ export function UserSidebar() {
 
       {/* 2. Desktop Sticky Sidebar (visible on lg+ screens) */}
       <aside className="w-56 shrink-0 hidden lg:block sticky top-[5.5rem] self-start h-[calc(100dvh-7rem)]">
-        <nav className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card text-card-foreground p-2.5 shadow-sm flex flex-col justify-between h-full">
+        <nav className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card text-card-foreground p-2.5 shadow-sm flex flex-col justify-between h-full overflow-y-auto overscroll-contain">
           <div className="space-y-1">
             {NAV_ITEMS.map((item) => {
               const Icon = item.icon;

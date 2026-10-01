@@ -28,7 +28,7 @@ export default async function UserLayout({ children }: { children: React.ReactNo
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors overflow-x-hidden relative">
+    <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors overflow-x-clip relative">
       {/* Dynamic Ambient Background Elements */}
       <div
         className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
