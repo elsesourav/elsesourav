@@ -2,7 +2,19 @@
 
 import * as React from 'react';
 import type { User } from '@elsesourav/types';
-import { Card, CardDescription, CardHeader, CardTitle, Button } from '@elsesourav/ui';
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@elsesourav/ui';
 import { Shield, ShieldCheck, Calendar, LogOut, Lock } from 'lucide-react';
 import { AccountEmailCard } from './AccountEmailCard';
 import { AccountPasswordCard } from './AccountPasswordCard';
@@ -13,6 +25,7 @@ interface AccountSectionProps {
 }
 
 export function AccountSection({ user }: AccountSectionProps) {
+  const [showSignOutModal, setShowSignOutModal] = React.useState(false);
   const isOAuth = user.provider === 'google' || user.provider === 'github';
 
   const targetUsername = user.username || user.email.split('@')[0] || 'user';
@@ -39,7 +52,7 @@ export function AccountSection({ user }: AccountSectionProps) {
             </div>
             <div>
               <CardTitle className="text-sm sm:text-base font-bold text-foreground">
-                Account &amp; Security
+                Security
               </CardTitle>
               <CardDescription className="text-xs text-muted-foreground">
                 Manage your credentials, password reset flow, and session security.
@@ -82,17 +95,16 @@ export function AccountSection({ user }: AccountSectionProps) {
               </div>
             </div>
 
-            <form action="/api/auth/logout" method="POST" className="shrink-0">
-              <Button
-                type="submit"
-                variant="outline"
-                size="sm"
-                className="text-xs border-border hover:border-rose-500/50 hover:bg-rose-500/10 text-rose-400 gap-1.5 rounded-lg cursor-pointer h-7 px-3"
-              >
-                <LogOut className="w-3 h-3" />
-                <span>Sign Out</span>
-              </Button>
-            </form>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setShowSignOutModal(true)}
+              className="text-xs border-border hover:border-rose-500/50 hover:bg-rose-500/10 text-rose-400 gap-1.5 rounded-lg cursor-pointer h-7 px-3 shrink-0"
+            >
+              <LogOut className="w-3 h-3" />
+              <span>Sign Out</span>
+            </Button>
           </div>
 
           <AccountDeleteCard
@@ -101,6 +113,44 @@ export function AccountSection({ user }: AccountSectionProps) {
           />
         </div>
       </Card>
+
+      {/* Accessible Logout Confirmation Dialog */}
+      <Dialog open={showSignOutModal} onOpenChange={setShowSignOutModal}>
+        <DialogContent onClose={() => setShowSignOutModal(false)} className="sm:max-w-md">
+          <DialogHeader>
+            <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-500 mb-2">
+              <LogOut className="w-5 h-5" />
+            </div>
+            <DialogTitle>Sign out of ElseSourav?</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to end your active session? You will need to sign in again to
+              access your account and security settings.
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter className="gap-2 sm:gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setShowSignOutModal(false)}
+              className="w-full sm:w-auto rounded-xl text-xs font-semibold cursor-pointer"
+            >
+              Cancel
+            </Button>
+            <form action="/api/auth/logout" method="POST" className="w-full sm:w-auto">
+              <Button
+                type="submit"
+                variant="danger"
+                className="w-full sm:w-auto rounded-xl text-xs font-semibold gap-1.5 cursor-pointer shadow-sm"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>Confirm Sign Out</span>
+              </Button>
+            </form>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
+

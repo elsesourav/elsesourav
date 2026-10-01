@@ -8,15 +8,15 @@ import { useRipple } from '@/components/interior/Ripple';
 
 const ACTIONS = [
   {
-    title: 'Edit Profile',
-    subtitle: 'Update your image, display name, username, and developer bio.',
+    title: 'Account Settings',
+    subtitle: 'Update your avatar, display name, username, and public bio.',
     href: '/settings?tab=profile',
     icon: UserIcon,
     iconColor: 'bg-primary/10 text-primary border-primary/20',
   },
   {
-    title: 'Account & Security',
-    subtitle: 'Manage your email, password credentials, and account protection.',
+    title: 'Security',
+    subtitle: 'Manage your email, password credentials, and session safety.',
     href: '/settings?tab=account',
     icon: ShieldCheck,
     iconColor: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',

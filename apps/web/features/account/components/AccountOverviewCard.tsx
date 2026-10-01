@@ -1,10 +1,10 @@
 'use client';
 
-import * as React from 'react';
-import type { User } from '@elsesourav/types';
-import Link from 'next/link';
-import { ShieldCheck, ShieldAlert, KeyRound, Calendar, ArrowRight } from 'lucide-react';
 import StatusMark from '@/components/micro/StatusMark';
+import type { User } from '@elsesourav/types';
+import { ArrowRight, Calendar, KeyRound } from 'lucide-react';
+import Link from 'next/link';
+import * as React from 'react';
 
 interface AccountOverviewCardProps {
   user: User & { provider?: 'email' | 'google' | 'github' };
@@ -29,9 +29,7 @@ export function AccountOverviewCard({ user, joinedDate }: AccountOverviewCardPro
     <div className="w-full rounded-2xl sm:rounded-3xl border border-border/80 bg-card/90 backdrop-blur-xl text-card-foreground p-5 sm:p-6 shadow-sm space-y-4">
       <div className="flex items-center justify-between pb-3 border-b border-border/60">
         <div>
-          <h2 className="text-sm sm:text-base font-bold text-foreground">
-            Account & Security Overview
-          </h2>
+          <h2 className="text-sm sm:text-base font-bold text-foreground">Security Overview</h2>
           <p className="text-xs text-muted-foreground mt-0.5">
             Your identity, credentials, and authentication details.
           </p>

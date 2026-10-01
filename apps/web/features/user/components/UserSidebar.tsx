@@ -3,7 +3,25 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { LayoutDashboard, User, ShieldCheck, LifeBuoy, Menu, ChevronDown, X } from 'lucide-react';
+import {
+  User,
+  SlidersHorizontal,
+  ShieldCheck,
+  LifeBuoy,
+  Menu,
+  ChevronDown,
+  X,
+  LogOut,
+} from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  Button,
+} from '@elsesourav/ui';
 
 interface NavItem {
   label: string;
@@ -14,19 +32,19 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   {
-    label: 'Dashboard',
+    label: 'Profile',
     href: '/profile',
-    icon: LayoutDashboard,
+    icon: User,
     isActive: (pathname) => pathname === '/profile' || pathname === '/dashboard',
   },
   {
-    label: 'Profile',
+    label: 'Account',
     href: '/settings?tab=profile',
-    icon: User,
+    icon: SlidersHorizontal,
     isActive: (pathname, tab) => pathname === '/settings' && (!tab || tab === 'profile'),
   },
   {
-    label: 'Account & Security',
+    label: 'Security',
     href: '/settings?tab=account',
     icon: ShieldCheck,
     isActive: (pathname, tab) =>
@@ -45,6 +63,7 @@ export function UserSidebar() {
   const searchParams = useSearchParams();
   const currentTab = searchParams.get('tab');
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [showLogoutModal, setShowLogoutModal] = React.useState(false);
   const mobileMenuRef = React.useRef<HTMLDivElement>(null);
 
   // Determine current active item for mobile header label
@@ -98,7 +117,7 @@ export function UserSidebar() {
             </div>
             <div>
               <span className="text-xs font-bold text-foreground block">{activeItem.label}</span>
-              <span className="text-[10px] text-muted-foreground">Account Navigation</span>
+              <span className="text-[10px] text-muted-foreground">Navigation</span>
             </div>
           </div>
 
@@ -148,35 +167,99 @@ export function UserSidebar() {
                 </Link>
               );
             })}
+
+            <div className="pt-1.5 mt-1 border-t border-border/60">
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setShowLogoutModal(true);
+                }}
+                className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-rose-500 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent transition-all cursor-pointer text-left group"
+              >
+                <LogOut className="w-4 h-4 shrink-0 transition-transform group-hover:-translate-x-0.5" />
+                <span>Sign Out</span>
+              </button>
+            </div>
           </div>
         )}
       </div>
 
       {/* 2. Desktop Sticky Sidebar (visible on lg+ screens) */}
-      <aside className="w-56 shrink-0 hidden lg:block sticky top-20 self-start">
-        <nav className="rounded-2xl border border-border/80 bg-card text-card-foreground p-2 shadow-sm space-y-1">
-          {NAV_ITEMS.map((item) => {
-            const Icon = item.icon;
-            const active = item.isActive(pathname, currentTab);
-            return (
-              <Link
-                key={item.label}
-                href={item.href}
-                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all duration-200 ${
-                  active
-                    ? 'bg-primary/10 text-primary border border-primary/25 shadow-sm font-semibold'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-accent/60 border border-transparent'
-                }`}
-              >
-                <Icon
-                  className={`w-4 h-4 shrink-0 ${active ? 'text-primary' : 'text-muted-foreground'}`}
-                />
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
+      <aside className="w-56 shrink-0 hidden lg:block sticky top-[5.5rem] self-start h-[calc(100dvh-7rem)]">
+        <nav className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card text-card-foreground p-2.5 shadow-sm flex flex-col justify-between h-full">
+          <div className="space-y-1">
+            {NAV_ITEMS.map((item) => {
+              const Icon = item.icon;
+              const active = item.isActive(pathname, currentTab);
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all duration-200 ${
+                    active
+                      ? 'bg-primary/10 text-primary border border-primary/25 shadow-sm font-semibold'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-accent/60 border border-transparent'
+                  }`}
+                >
+                  <Icon
+                    className={`w-4 h-4 shrink-0 ${active ? 'text-primary' : 'text-muted-foreground'}`}
+                  />
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="pt-2 border-t border-border/60">
+            <button
+              type="button"
+              onClick={() => setShowLogoutModal(true)}
+              className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-rose-500 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent transition-all cursor-pointer group"
+            >
+              <LogOut className="w-4 h-4 shrink-0 transition-transform group-hover:-translate-x-0.5" />
+              <span>Sign Out</span>
+            </button>
+          </div>
         </nav>
       </aside>
+
+      {/* 3. Accessible Logout Confirmation Dialog */}
+      <Dialog open={showLogoutModal} onOpenChange={setShowLogoutModal}>
+        <DialogContent onClose={() => setShowLogoutModal(false)} className="sm:max-w-md">
+          <DialogHeader>
+            <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-500 mb-2">
+              <LogOut className="w-5 h-5" />
+            </div>
+            <DialogTitle>Sign out of ElseSourav?</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to end your active session? You will need to sign in again to
+              access your account and security settings.
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter className="gap-2 sm:gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setShowLogoutModal(false)}
+              className="w-full sm:w-auto rounded-xl text-xs font-semibold cursor-pointer"
+            >
+              Cancel
+            </Button>
+            <form action="/api/auth/logout" method="POST" className="w-full sm:w-auto">
+              <Button
+                type="submit"
+                variant="danger"
+                className="w-full sm:w-auto rounded-xl text-xs font-semibold gap-1.5 cursor-pointer shadow-sm"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>Confirm Sign Out</span>
+              </Button>
+            </form>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

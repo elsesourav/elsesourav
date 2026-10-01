@@ -145,6 +145,19 @@ export function UserAvatarMenu({ user, hasImportantAlert = false }: UserAvatarMe
           </Link>
 
           <Link
+            href="/settings?tab=profile"
+            role="menuitem"
+            onClick={() => requestClose()}
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-foreground hover:bg-accent transition-colors cursor-pointer"
+          >
+            <AtSign className="w-3.5 h-3.5 text-primary" />
+            <div className="flex flex-col">
+              <span className="font-medium">Account</span>
+              <span className="text-[10px] text-muted-foreground">Edit details & bio</span>
+            </div>
+          </Link>
+
+          <Link
             href="/settings?tab=account"
             role="menuitem"
             onClick={() => requestClose()}
@@ -152,8 +165,8 @@ export function UserAvatarMenu({ user, hasImportantAlert = false }: UserAvatarMe
           >
             <ShieldCheck className="w-3.5 h-3.5 text-primary" />
             <div className="flex flex-col">
-              <span className="font-medium">Account &amp; Security</span>
-              <span className="text-[10px] text-muted-foreground">Credentials & preferences</span>
+              <span className="font-medium">Security</span>
+              <span className="text-[10px] text-muted-foreground">Credentials & auth</span>
             </div>
           </Link>
 
