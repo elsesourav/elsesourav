@@ -185,44 +185,46 @@ export function UserSidebar() {
         )}
       </div>
 
-      {/* 2. Desktop Sticky Sidebar (visible on lg+ screens) */}
-      <aside className="w-56 shrink-0 hidden lg:block sticky top-[5.5rem] self-start h-[calc(100dvh-7rem)]">
-        <nav className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card text-card-foreground p-2.5 shadow-sm flex flex-col justify-between h-full overflow-y-auto overscroll-contain">
-          <div className="space-y-1">
-            {NAV_ITEMS.map((item) => {
-              const Icon = item.icon;
-              const active = item.isActive(pathname, currentTab);
-              return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all duration-200 ${
-                    active
-                      ? 'bg-primary/10 text-primary border border-primary/25 shadow-sm font-semibold'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-accent/60 border border-transparent'
-                  }`}
-                >
-                  <Icon
-                    className={`w-4 h-4 shrink-0 ${active ? 'text-primary' : 'text-muted-foreground'}`}
-                  />
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
-          </div>
+      {/* 2. Desktop Fixed Sidebar (visible on lg+ screens) */}
+      <div className="w-56 shrink-0 hidden lg:block">
+        <aside className="w-56 fixed top-[5.5rem] bottom-6 z-30">
+          <nav className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card text-card-foreground p-2.5 shadow-sm flex flex-col justify-between h-full overflow-y-auto overscroll-contain">
+            <div className="space-y-1">
+              {NAV_ITEMS.map((item) => {
+                const Icon = item.icon;
+                const active = item.isActive(pathname, currentTab);
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all duration-200 ${
+                      active
+                        ? 'bg-primary/10 text-primary border border-primary/25 shadow-sm font-semibold'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-accent/60 border border-transparent'
+                    }`}
+                  >
+                    <Icon
+                      className={`w-4 h-4 shrink-0 ${active ? 'text-primary' : 'text-muted-foreground'}`}
+                    />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
 
-          <div className="pt-2 border-t border-border/60">
-            <button
-              type="button"
-              onClick={() => setShowLogoutModal(true)}
-              className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-rose-500 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent transition-all cursor-pointer group"
-            >
-              <LogOut className="w-4 h-4 shrink-0 transition-transform group-hover:-translate-x-0.5" />
-              <span>Sign Out</span>
-            </button>
-          </div>
-        </nav>
-      </aside>
+            <div className="pt-2 border-t border-border/60">
+              <button
+                type="button"
+                onClick={() => setShowLogoutModal(true)}
+                className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-rose-500 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent transition-all cursor-pointer group"
+              >
+                <LogOut className="w-4 h-4 shrink-0 transition-transform group-hover:-translate-x-0.5" />
+                <span>Sign Out</span>
+              </button>
+            </div>
+          </nav>
+        </aside>
+      </div>
 
       {/* 3. Accessible Logout Confirmation Dialog */}
       <Dialog open={showLogoutModal} onOpenChange={setShowLogoutModal}>
