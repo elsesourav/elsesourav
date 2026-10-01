@@ -120,20 +120,24 @@ export async function sendOtpEmail({
 
     const resend = getResendClient();
     if (resend) {
-      const from =
-        process.env.RESEND_FROM_EMAIL || 'ElseSourav Security <onboarding@resend.dev>';
-      const { error } = await resend.emails.send({
-        from,
-        to,
-        subject,
-        html: htmlContent,
-      });
+      try {
+        const from =
+          process.env.RESEND_FROM_EMAIL || 'ElseSourav Security <onboarding@resend.dev>';
+        const { error, data } = await resend.emails.send({
+          from,
+          to,
+          subject,
+          html: htmlContent,
+        });
 
-      if (error) {
-        console.error('Resend dispatch error:', error);
-        return { success: false, error: error.message };
+        if (!error && data?.id) {
+          return { success: true };
+        }
+
+        console.warn('[MAILER] Resend dispatch note, falling back to SMTP:', error?.message);
+      } catch (resendErr) {
+        console.warn('[MAILER] Resend exception, falling back to SMTP:', resendErr);
       }
-      return { success: true };
     }
 
     const mailer = getTransporter();
@@ -205,20 +209,24 @@ export async function sendPasswordResetEmail({
 
     const resend = getResendClient();
     if (resend) {
-      const from =
-        process.env.RESEND_FROM_EMAIL || 'ElseSourav Security <onboarding@resend.dev>';
-      const { error } = await resend.emails.send({
-        from,
-        to,
-        subject: 'Reset your ElseSourav account password',
-        html: htmlContent,
-      });
+      try {
+        const from =
+          process.env.RESEND_FROM_EMAIL || 'ElseSourav Security <onboarding@resend.dev>';
+        const { error, data } = await resend.emails.send({
+          from,
+          to,
+          subject: 'Reset your ElseSourav account password',
+          html: htmlContent,
+        });
 
-      if (error) {
-        console.error('Resend dispatch error:', error);
-        return { success: false, error: error.message };
+        if (!error && data?.id) {
+          return { success: true };
+        }
+
+        console.warn('[MAILER] Resend reset note, falling back to SMTP:', error?.message);
+      } catch (resendErr) {
+        console.warn('[MAILER] Resend exception, falling back to SMTP:', resendErr);
       }
-      return { success: true };
     }
 
     const mailer = getTransporter();
