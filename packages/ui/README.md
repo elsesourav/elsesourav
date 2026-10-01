@@ -1050,6 +1050,7 @@ The `@elsesourav/ui/micro` collection contains **34 playful, high-tactility micr
 | **`CallChip`**      | Expandable status capsule with pulsing live waves         | Active call status, podcast player indicator  |
 | **`CodeSlots`**     | Mechanical slot-machine digit counter                     | Live user counts, star counters               |
 | **`CometDial`**     | Circular dial slider with glowing comet tail              | Volume controllers, circular timers           |
+| **`CopyIconButton`**| Ultra-sleek inline icon copy trigger with morph animation | Copying usernames, emails, tokens, and IDs    |
 | **`DodgeField`**    | Text input with playful dodging character eye             | Login passwords, whimsical form fields        |
 | **`FlipCard`**      | 3D perspective flip card with realistic shadow            | Developer business cards, portfolio showcases |
 | **`FolderFloat`**   | Origami floating folder opening with paper preview        | File attachments, folder organizers           |

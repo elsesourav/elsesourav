@@ -2,8 +2,7 @@ import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { getUserAccountData } from '@/features/account/queries/get-account';
 import { ProfileHeroSection } from '@/features/account/components/ProfileHeroSection';
-import { ProfileTelemetryCards } from '@/features/account/components/ProfileTelemetryCards';
-import { ProfileSecurityChecklist } from '@/features/account/components/ProfileSecurityChecklist';
+import { AccountOverviewCard } from '@/features/account/components/AccountOverviewCard';
 import { ProfileQuickActions } from '@/features/account/components/ProfileQuickActions';
 
 export const metadata: Metadata = {
@@ -29,18 +28,16 @@ export default async function ProfilePage() {
 
   return (
     <div className="w-full space-y-4 sm:space-y-5 lg:space-y-6">
-      {/* 1. Profile Identity Hero Card */}
+      {/* 1. Clean Profile Identity Hero Card */}
       <ProfileHeroSection user={user} joinedDate={joinedDate} />
 
-      {/* 2. Telemetry & Account Stats Grid */}
-      <ProfileTelemetryCards user={user} joinedDate={joinedDate} />
+      {/* 2. Consolidated Account & Security Overview Card */}
+      <AccountOverviewCard user={user} joinedDate={joinedDate} />
 
-      {/* 3. Account Readiness & Security Checklist */}
-      <ProfileSecurityChecklist user={user} />
-
-      {/* 4. Quick Account Actions */}
+      {/* 3. Account Navigation & Shortcuts */}
       <ProfileQuickActions />
     </div>
   );
 }
+
 

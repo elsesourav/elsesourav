@@ -68,3 +68,6 @@ export { default as WakeSlider } from './WakeSlider';
 export * from './WakeSlider';
 export { default as WarmTooltip } from './WarmTooltip';
 export * from './WarmTooltip';
+export { default as CopyIconButton } from './CopyIconButton';
+export * from './CopyIconButton';
+
