@@ -28,7 +28,7 @@ export default async function UserLayout({ children }: { children: React.ReactNo
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors overflow-x-clip relative">
+    <div className="min-h-screen lg:h-screen flex flex-col bg-background text-foreground transition-colors overflow-x-clip lg:overflow-hidden relative">
       {/* Dynamic Ambient Background Elements */}
       <div
         className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
@@ -38,7 +38,7 @@ export default async function UserLayout({ children }: { children: React.ReactNo
       </div>
 
       {/* Streamlined Authenticated Global Header */}
-      <header className="border-b border-border/80 bg-background/80 backdrop-blur-xl sticky top-0 z-50 transition-colors w-full">
+      <header className="border-b border-border/80 bg-background/80 backdrop-blur-xl sticky top-0 z-50 transition-colors w-full shrink-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
           {/* Brand Logo & Name */}
           <div className="flex items-center gap-4 sm:gap-6 shrink-0">
@@ -69,10 +69,10 @@ export default async function UserLayout({ children }: { children: React.ReactNo
         </div>
       </header>
 
-      {/* Main Authenticated Layout with Sticky Sidebar on Desktop & Menu on Mobile */}
-      <div className="flex-1 max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 flex flex-col lg:flex-row items-start gap-4 sm:gap-5 lg:gap-6">
+      {/* Main Authenticated Layout: Fixed Shell on Desktop with Independent Scroll View for Content */}
+      <div className="flex-1 max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 flex flex-col lg:flex-row items-start gap-4 sm:gap-5 lg:gap-6 lg:h-[calc(100dvh-4rem)] lg:overflow-hidden">
         <UserSidebar />
-        <main id="main-content" className="flex-1 min-w-0 w-full">
+        <main id="main-content" className="flex-1 min-w-0 w-full lg:h-full lg:overflow-y-auto lg:pr-1">
           {children}
         </main>
       </div>

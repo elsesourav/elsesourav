@@ -1,12 +1,12 @@
 'use client';
 
-import * as React from 'react';
-import type { User } from '@elsesourav/types';
-import { UserAvatar } from '@elsesourav/ui';
-import { ImageCropperModal } from '@/components/media/ImageCropperModal';
 import { BlurUpImage } from '@/components/interior/BlurUpImage';
 import { LoadingButton } from '@/components/interior/LoadingButton';
+import { ImageCropperModal } from '@/components/media/ImageCropperModal';
+import type { User } from '@elsesourav/types';
+import { UserAvatar } from '@elsesourav/ui';
 import { AlertCircle, Camera, Check, RotateCcw, Sparkles, UploadCloud } from 'lucide-react';
+import * as React from 'react';
 import { updateProfileFormAction } from '../actions/account-actions';
 
 interface ProfileAvatarStudioProps {
@@ -128,7 +128,7 @@ export function ProfileAvatarStudio({
   };
 
   return (
-    <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-muted/30 border border-border/80 space-y-3.5">
+    <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-muted/30 border border-border/80 space-y-3.5 overflow-hidden max-w-full">
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <div className="flex items-center gap-2">
           <Sparkles className="w-3.5 h-3.5 text-primary" />
@@ -178,7 +178,7 @@ export function ProfileAvatarStudio({
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row items-center sm:items-stretch gap-4 sm:gap-5">
+      <div className="flex flex-col sm:flex-row items-center sm:items-stretch gap-4 sm:gap-5 w-full min-w-0 max-w-full">
         <div
           onClick={() => fileInputRef.current?.click()}
           className="group relative w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-[25%] overflow-hidden border-2 border-primary/30 bg-muted/60 shadow-md shrink-0 cursor-pointer transition-all duration-200 hover:border-primary hover:shadow-lg flex items-center justify-center"
@@ -209,7 +209,7 @@ export function ProfileAvatarStudio({
           </div>
         </div>
 
-        <div className="flex-1 w-full flex flex-col justify-between gap-3 min-w-0">
+        <div className="flex-1 w-full flex flex-col justify-between gap-3 min-w-0 max-w-full overflow-hidden">
           <div
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -241,12 +241,12 @@ export function ProfileAvatarStudio({
             </div>
           </div>
 
-          <div className="space-y-1.5 pt-0.5">
+          <div className="space-y-1.5 pt-0.5 w-full min-w-0 max-w-full">
             <div className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
               Or select a preset:
             </div>
 
-            <div className="w-full overflow-x-auto py-1 scrollbar-none">
+            <div className="w-full max-w-full overflow-x-auto py-1 scrollbar-none pl-1">
               <div className="flex items-center gap-2 sm:gap-2.5 min-w-max">
                 <button
                   type="button"
