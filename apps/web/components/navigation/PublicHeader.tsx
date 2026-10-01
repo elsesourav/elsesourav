@@ -22,6 +22,7 @@ import {
 import { UserAvatarMenu } from '@/features/user/components/UserAvatarMenu';
 import { SearchButton } from '@/components/search/SearchButton';
 import { ThemePopup } from '@/components/theme/ThemePopup';
+import { useHeaderHeadroom } from '@/hooks/useHeaderHeadroom';
 import type { AuthenticatedUser } from '@elsesourav/auth';
 
 export interface PublicHeaderProps {
@@ -33,6 +34,12 @@ export function PublicHeader({ user }: PublicHeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const mobileMenuRef = React.useRef<HTMLDivElement>(null);
   const toggleButtonRef = React.useRef<HTMLButtonElement>(null);
+
+  const { isVisible, isScrolled, headerRef } = useHeaderHeadroom({
+    threshold: 10,
+    topOffset: 64,
+    isLocked: mobileMenuOpen,
+  });
 
   const [isMobileMenuClosing, setIsMobileMenuClosing] = React.useState(false);
 
@@ -140,8 +147,21 @@ export function PublicHeader({ user }: PublicHeaderProps) {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full">
-      <div className="border-b border-[hsl(var(--border))]/80 bg-[hsl(var(--background))]/80 backdrop-blur-md transition-colors">
+    <header
+      ref={headerRef}
+      className={`sticky top-0 z-50 w-full transition-transform duration-300 ease-smooth motion-reduce:transition-none ${
+        mobileMenuOpen
+          ? ''
+          : isVisible
+            ? 'translate-y-0 will-change-transform'
+            : '-translate-y-full will-change-transform'
+      }`}
+    >
+      <div
+        className={`border-b border-[hsl(var(--border))]/80 bg-[hsl(var(--background))]/80 backdrop-blur-md transition-[colors,box-shadow] duration-200 ${
+          isScrolled ? 'shadow-sm shadow-black/5 dark:shadow-black/20' : ''
+        }`}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
           {/* Brand Logo */}
           <Link

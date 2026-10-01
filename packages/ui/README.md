@@ -568,6 +568,18 @@ import { ... } from '@elsesourav/ui';
 
 ---
 
+### `Navigation Headroom & Auto-Hide`
+
+- **Purpose**: High-performance auto-hiding header navigation powered by `useHeaderHeadroom`. Smoothly hides on downward scroll and reveals on upward scroll, maximizing mobile and desktop reading canvas while maintaining instant access to navigation.
+- **Key Characteristics**:
+  - Hardware-accelerated CSS transforms (`translate-y-0` vs `-translate-y-full`) with `cubic-bezier(0.16, 1, 0.3, 1)`.
+  - Directional hysteresis threshold (10px) to prevent micro-jitter and trackpad bounce fluttering.
+  - Zero layout thrashing via `requestAnimationFrame` and passive scroll event listeners.
+  - Keyboard accessibility: automatically reveals if keyboard focus (`focusin`) moves inside the header.
+  - Pinned visible at page top (`scrollY <= topOffset`) and when mobile dialogs/menus are active (`isLocked`).
+
+---
+
 ## Category 8: Data Display, Markdown & Motion
 
 ### `Table` Suite
