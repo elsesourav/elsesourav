@@ -1,3 +1,5 @@
+"use client";
+
 export { default as BellToggle } from './BellToggle';
 export * from './BellToggle';
 export { default as BranchedMenu } from './BranchedMenu';

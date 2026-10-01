@@ -13,7 +13,9 @@ import {
   Loader2,
 } from 'lucide-react';
 import { Button } from '@elsesourav/ui';
-import { LoadingButton, OtpInput } from '@elsesourav/ui/interior';
+import { LoadingButton } from '@/components/interior/LoadingButton';
+import { OtpInput } from '@/components/interior/OtpInput';
+import StatusMark from '@/components/micro/StatusMark';
 import { sendEmailOtpAction, verifyEmailOtpAction } from '../actions/account-actions';
 
 interface AccountEmailCardProps {
@@ -79,17 +81,22 @@ export function AccountEmailCard({
 
         <div className="flex items-center gap-1.5">
           {isEmailVerified ? (
-            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-500 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
-              <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+              <StatusMark status="done" size={13} strokeWidth={2} doneColor="#34d399" />
               Verified
             </span>
           ) : !isOAuth ? (
-            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-amber-500 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20">
-              <AlertCircle className="w-3 h-3 text-amber-500" />
-              Unverified
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20">
+              <StatusMark
+                status={emailStep === 'sending' || emailStep === 'verifying' ? 'running' : 'pending'}
+                size={13}
+                strokeWidth={2}
+                color="#f59e0b"
+              />
+              {emailStep === 'sending' || emailStep === 'verifying' ? 'Verifying…' : 'Unverified'}
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1 text-[10px] font-mono uppercase text-primary bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase text-primary bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
               <Lock className="w-2.5 h-2.5" />
               {provider}
             </span>
@@ -98,11 +105,11 @@ export function AccountEmailCard({
       </div>
 
       {!isEditingEmail ? (
-        <div className="flex items-center justify-between gap-3 p-2.5 rounded-xl bg-background/80 border border-border/70">
-          <span className="text-xs font-mono text-foreground truncate select-all">{email}</span>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 p-2.5 rounded-xl bg-background/80 border border-border/70">
+          <span className="text-xs font-mono text-foreground truncate select-all min-w-0">{email}</span>
 
           {!isOAuth && (
-            <div>
+            <div className="shrink-0 flex items-center justify-end">
               {!isEmailVerified ? (
                 <Button
                   type="button"

@@ -4,7 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { motion, useReducedMotion } from 'motion/react';
 import { User as UserIcon, ShieldCheck, LifeBuoy, ArrowRight } from 'lucide-react';
-import { useRipple } from '@elsesourav/ui/interior';
+import { useRipple } from '@/components/interior/Ripple';
 
 const ACTIONS = [
   {

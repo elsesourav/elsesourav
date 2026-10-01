@@ -14,7 +14,9 @@ import {
   Loader2,
   CheckCircle2,
 } from 'lucide-react';
-import { LoadingButton, OtpInput, PasswordStrength } from '@elsesourav/ui/interior';
+import { LoadingButton } from '@/components/interior/LoadingButton';
+import { OtpInput } from '@/components/interior/OtpInput';
+import { PasswordStrength } from '@/components/interior/PasswordStrength';
 import { sendEmailOtpAction, verifyEmailOtpAction } from '../actions/account-actions';
 
 interface AccountPasswordCardProps {

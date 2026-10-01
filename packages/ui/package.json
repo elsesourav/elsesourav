@@ -21,6 +21,16 @@
       "import": "./src/components/interior/index.ts",
       "default": "./src/components/interior/index.ts"
     },
+    "./interior/*": {
+      "types": "./src/components/interior/*.tsx",
+      "import": "./src/components/interior/*.tsx",
+      "default": "./src/components/interior/*.tsx"
+    },
+    "./micro/*": {
+      "types": "./src/components/micro/*.tsx",
+      "import": "./src/components/micro/*.tsx",
+      "default": "./src/components/micro/*.tsx"
+    },
     "./styles.css": "./src/styles/globals.css",
     "./micro.css": "./src/styles/micro.css",
     "./interior.css": "./src/styles/interior.css"

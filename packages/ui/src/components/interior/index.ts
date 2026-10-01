@@ -1,3 +1,5 @@
+"use client";
+
 // Auto-generated interior.dev micro-interaction components
 // Complete collection of 54 physics-based animated UI components
 // Adapts cleanly to dark/light themes via CSS variables

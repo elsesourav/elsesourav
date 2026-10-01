@@ -5,7 +5,10 @@ import type { User } from '@elsesourav/types';
 import Link from 'next/link';
 import { Mail, Calendar, Pencil } from 'lucide-react';
 import { UserAvatar } from '@elsesourav/ui';
-import { BlurUpImage, CopyButton, PressDepth, ShowMore } from '@elsesourav/ui/interior';
+import { BlurUpImage } from '@/components/interior/BlurUpImage';
+import { CopyButton } from '@/components/interior/CopyButton';
+import { PressDepth } from '@/components/interior/PressDepth';
+import { ShowMore } from '@/components/interior/ShowMore';
 
 interface ProfileHeroSectionProps {
   user: User;

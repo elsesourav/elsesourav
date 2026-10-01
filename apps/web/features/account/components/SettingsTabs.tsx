@@ -3,7 +3,7 @@
 import * as React from 'react';
 import type { User } from '@elsesourav/types';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { SegmentedControl } from '@elsesourav/ui/interior';
+import { SegmentedControl } from '@/components/interior/SegmentedControl';
 import { AccountSection } from './AccountSection';
 import { ProfileForm } from './ProfileForm';
 
@@ -15,7 +15,7 @@ type TabType = 'profile' | 'account';
 
 const TAB_OPTIONS = [
   { value: 'profile', label: 'Profile' },
-  { value: 'account', label: 'Account & Security' },
+  { value: 'account', label: 'Account' },
 ];
 
 export function SettingsTabs({ user }: SettingsTabsProps) {
@@ -31,7 +31,7 @@ export function SettingsTabs({ user }: SettingsTabsProps) {
 
   return (
     <div className="w-full space-y-4 sm:space-y-5">
-      <div className="flex justify-start">
+      <div className="w-full sm:w-auto">
         <SegmentedControl
           label="Settings navigation"
           options={TAB_OPTIONS}

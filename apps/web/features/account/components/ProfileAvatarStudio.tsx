@@ -4,7 +4,8 @@ import * as React from 'react';
 import type { User } from '@elsesourav/types';
 import { UserAvatar } from '@elsesourav/ui';
 import { ImageCropperModal } from '@/components/media/ImageCropperModal';
-import { BlurUpImage, LoadingButton, SnapCarousel } from '@elsesourav/ui/interior';
+import { BlurUpImage } from '@/components/interior/BlurUpImage';
+import { LoadingButton } from '@/components/interior/LoadingButton';
 import { AlertCircle, Camera, Check, RotateCcw, Sparkles, UploadCloud } from 'lucide-react';
 import { updateProfileFormAction } from '../actions/account-actions';
 
@@ -245,15 +246,15 @@ export function ProfileAvatarStudio({
               Or select a preset:
             </div>
 
-            <div className="w-full overflow-hidden">
-              <SnapCarousel label="Preset avatars" gap={8} className="w-full">
+            <div className="w-full overflow-x-auto py-1 scrollbar-none">
+              <div className="flex items-center gap-2 sm:gap-2.5 min-w-max">
                 <button
                   type="button"
                   onClick={() => handleSelectPresetOrDraft('')}
                   title="Default Monogram"
                   className={`group relative w-10 h-10 sm:w-11 sm:h-11 rounded-xl border flex items-center justify-center transition-all duration-200 shrink-0 cursor-pointer overflow-hidden ${
                     !draftPhotoUrl
-                      ? 'border-primary ring-2 ring-primary/30 shadow-md scale-105'
+                      ? 'border-primary ring-2 ring-primary/40 shadow-md scale-105'
                       : 'border-border/70 hover:border-primary/40 bg-muted/40'
                   }`}
                 >
@@ -281,7 +282,7 @@ export function ProfileAvatarStudio({
                       title={preset.name}
                       className={`group relative w-10 h-10 sm:w-11 sm:h-11 rounded-xl border flex items-center justify-center transition-all duration-200 shrink-0 cursor-pointer overflow-hidden ${
                         isSelected
-                          ? 'border-primary ring-2 ring-primary/30 shadow-md scale-105'
+                          ? 'border-primary ring-2 ring-primary/40 shadow-md scale-105'
                           : 'border-border/70 hover:border-primary/40 bg-muted/40'
                       }`}
                     >
@@ -301,7 +302,7 @@ export function ProfileAvatarStudio({
                     </button>
                   );
                 })}
-              </SnapCarousel>
+              </div>
             </div>
           </div>
         </div>

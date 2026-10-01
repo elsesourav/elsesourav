@@ -3,7 +3,7 @@
 import * as React from 'react';
 import type { User } from '@elsesourav/types';
 import { Card, CardDescription, CardHeader, CardTitle, Input } from '@elsesourav/ui';
-import { LoadingButton } from '@elsesourav/ui/interior';
+import { LoadingButton } from '@/components/interior/LoadingButton';
 import {
   AlertCircle,
   Check,

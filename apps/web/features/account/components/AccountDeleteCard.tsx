@@ -3,7 +3,8 @@
 import * as React from 'react';
 import { Button, Input } from '@elsesourav/ui';
 import { AlertTriangle, Trash2, Check } from 'lucide-react';
-import { HoldToConfirm, LoadingButton } from '@elsesourav/ui/interior';
+import { HoldToConfirm } from '@/components/interior/HoldToConfirm';
+import { LoadingButton } from '@/components/interior/LoadingButton';
 import {
   cancelAccountDeletionAction,
   scheduleAccountDeletionAction,
