@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
 export interface SendOtpEmailOptions {
   to: string;
@@ -11,6 +12,14 @@ export interface SendPasswordResetEmailOptions {
   to: string;
   resetUrl: string;
   displayName?: string;
+}
+
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    return null;
+  }
+  return new Resend(apiKey);
 }
 
 function getTransporter() {
@@ -50,7 +59,6 @@ export async function sendOtpEmail({
   displayName,
 }: SendOtpEmailOptions): Promise<{ success: boolean; error?: string }> {
   try {
-    const mailer = getTransporter();
     const recipientName = displayName || to.split('@')[0] || 'Developer';
     const isVerify = purpose === 'EMAIL_VERIFY';
 
@@ -110,6 +118,25 @@ export async function sendOtpEmail({
       </html>
     `;
 
+    const resend = getResendClient();
+    if (resend) {
+      const from =
+        process.env.RESEND_FROM_EMAIL || 'ElseSourav Security <onboarding@resend.dev>';
+      const { error } = await resend.emails.send({
+        from,
+        to,
+        subject,
+        html: htmlContent,
+      });
+
+      if (error) {
+        console.error('Resend dispatch error:', error);
+        return { success: false, error: error.message };
+      }
+      return { success: true };
+    }
+
+    const mailer = getTransporter();
     if (mailer) {
       await mailer.transporter.sendMail({
         from: `"ElseSourav Security" <${mailer.smtpUser}>`,
@@ -118,7 +145,7 @@ export async function sendOtpEmail({
         html: htmlContent,
       });
     } else {
-      // In development when SMTP is not configured, log clearly to console
+      // In development when neither Resend nor SMTP is configured, log clearly to console
       console.info(
         `\n[DEVELOPMENT EMAIL OTP]\nTo: ${to}\nPurpose: ${purpose}\n6-Digit OTP Code: >>> ${otp} <<<\n`
       );
@@ -139,51 +166,73 @@ export async function sendPasswordResetEmail({
   displayName,
 }: SendPasswordResetEmailOptions): Promise<{ success: boolean; error?: string }> {
   try {
+    const recipientName = displayName || to.split('@')[0] || 'Developer';
+
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Reset your ElseSourav Password</title>
+      </head>
+      <body style="margin: 0; padding: 0; background-color: #09090b; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #f4f4f5;">
+        <div style="max-width: 560px; margin: 40px auto; background-color: #18181b; border: 1px solid #27272a; border-radius: 16px; padding: 36px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+          <div style="margin-bottom: 24px;">
+            <h1 style="color: #6366f1; font-size: 20px; margin: 0; font-weight: 700; letter-spacing: -0.5px;">ElseSourav</h1>
+            <p style="color: #a1a1aa; font-size: 13px; margin: 4px 0 0 0;">Personal Software Studio & Archive</p>
+          </div>
+          
+          <h2 style="color: #ffffff; font-size: 18px; margin-top: 0;">Password Reset Request</h2>
+          <p style="color: #d4d4d8; font-size: 14px; line-height: 1.6;">Hello ${recipientName},</p>
+          <p style="color: #d4d4d8; font-size: 14px; line-height: 1.6;">
+            We received a request to reset the password for your ElseSourav account associated with <strong>${to}</strong>.
+          </p>
+          
+          <div style="margin: 28px 0; text-align: center;">
+            <a href="${resetUrl}" style="display: inline-block; background-color: #4f46e5; color: #ffffff; text-decoration: none; padding: 12px 28px; border-radius: 10px; font-weight: 600; font-size: 14px; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);">
+              Reset Password
+            </a>
+          </div>
+          
+          <p style="color: #71717a; font-size: 12px; line-height: 1.5;">
+            If you didn't request this email, you can safely ignore it. Your password will remain unchanged.
+          </p>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const resend = getResendClient();
+    if (resend) {
+      const from =
+        process.env.RESEND_FROM_EMAIL || 'ElseSourav Security <onboarding@resend.dev>';
+      const { error } = await resend.emails.send({
+        from,
+        to,
+        subject: 'Reset your ElseSourav account password',
+        html: htmlContent,
+      });
+
+      if (error) {
+        console.error('Resend dispatch error:', error);
+        return { success: false, error: error.message };
+      }
+      return { success: true };
+    }
+
     const mailer = getTransporter();
     if (mailer) {
-      const recipientName = displayName || to.split('@')[0] || 'Developer';
-
-      const htmlContent = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Reset your ElseSourav Password</title>
-        </head>
-        <body style="margin: 0; padding: 0; background-color: #09090b; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #f4f4f5;">
-          <div style="max-width: 560px; margin: 40px auto; background-color: #18181b; border: 1px solid #27272a; border-radius: 16px; padding: 36px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-            <div style="margin-bottom: 24px;">
-              <h1 style="color: #6366f1; font-size: 20px; margin: 0; font-weight: 700; letter-spacing: -0.5px;">ElseSourav</h1>
-              <p style="color: #a1a1aa; font-size: 13px; margin: 4px 0 0 0;">Personal Software Studio & Archive</p>
-            </div>
-            
-            <h2 style="color: #ffffff; font-size: 18px; margin-top: 0;">Password Reset Request</h2>
-            <p style="color: #d4d4d8; font-size: 14px; line-height: 1.6;">Hello ${recipientName},</p>
-            <p style="color: #d4d4d8; font-size: 14px; line-height: 1.6;">
-              We received a request to reset the password for your ElseSourav account associated with <strong>${to}</strong>.
-            </p>
-            
-            <div style="margin: 28px 0; text-align: center;">
-              <a href="${resetUrl}" style="display: inline-block; background-color: #4f46e5; color: #ffffff; text-decoration: none; padding: 12px 28px; border-radius: 10px; font-weight: 600; font-size: 14px; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);">
-                Reset Password
-              </a>
-            </div>
-            
-            <p style="color: #71717a; font-size: 12px; line-height: 1.5;">
-              If you didn't request this email, you can safely ignore it. Your password will remain unchanged.
-            </p>
-          </div>
-        </body>
-        </html>
-      `;
-
       await mailer.transporter.sendMail({
         from: `"ElseSourav Security" <${mailer.smtpUser}>`,
         to,
         subject: 'Reset your ElseSourav account password',
         html: htmlContent,
       });
+    } else {
+      console.info(
+        `\n[DEVELOPMENT PASSWORD RESET]\nTo: ${to}\nReset URL: ${resetUrl}\n`
+      );
     }
 
     return { success: true };
