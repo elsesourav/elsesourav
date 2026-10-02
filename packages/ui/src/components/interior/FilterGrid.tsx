@@ -95,7 +95,7 @@ export type FilterGridProps<T> = {
   items: readonly T[];
   filters: readonly FilterDefinition<T>[];
   getKey: (item: T) => string;
-  renderItem: (item: T) => ReactNode;
+  renderItem: (item: T, index: number) => ReactNode;
   label: string;
   value?: string;
   defaultValue?: string;
@@ -106,6 +106,11 @@ export type FilterGridProps<T> = {
   gap?: number;
   emptyLabel?: string;
   className?: string;
+  fluid?: boolean;
+  gridClassName?: string;
+  unstyledItem?: boolean;
+  itemClassName?: string;
+  filterBarClassName?: string;
 };
 
 export function FilterGrid<T>({
@@ -123,6 +128,11 @@ export function FilterGrid<T>({
   gap = 8,
   emptyLabel = 'Nothing matches this filter',
   className = '',
+  fluid = false,
+  gridClassName = '',
+  unstyledItem = false,
+  itemClassName = '',
+  filterBarClassName = '',
 }: FilterGridProps<T>) {
   const uid = useId();
   const gridId = `${uid}-grid`;
@@ -200,11 +210,12 @@ export function FilterGrid<T>({
 
   return (
     <div data-interior="filter-grid" className={`w-full ${className}`}>
+      {/* Category Filter Pills with Spring Thumb */}
       <div
         role="radiogroup"
         aria-label={label}
         aria-controls={gridId}
-        className="flex flex-wrap items-center gap-1.5"
+        className={`flex flex-wrap items-center gap-1.5 ${filterBarClassName}`}
       >
         {filters.map((filter, i) => {
           const on = i === index;
@@ -220,7 +231,7 @@ export function FilterGrid<T>({
               tabIndex={on ? 0 : -1}
               onClick={() => choose(filter.id)}
               onKeyDown={(e) => onKeyDown(e, i)}
-              className="group relative inline-grid h-8 select-none place-items-center rounded-[6px] px-3 outline-none focus-visible:shadow-[0_1px_3px_rgba(28,25,23,0.18)] dark:focus-visible:shadow-[0_1px_3px_rgba(0,0,0,0.5)]"
+              className="group relative inline-grid h-8 select-none place-items-center rounded-full px-3.5 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-indigo-500"
               style={{ touchAction: 'manipulation' }}
             >
               {on ? (
@@ -228,14 +239,14 @@ export function FilterGrid<T>({
                   aria-hidden
                   layoutId={reduced ? undefined : `${uid}-thumb`}
                   transition={CELL}
-                  className="absolute inset-0 rounded-[6px] bg-[var(--interior-fg)] dark:bg-[var(--interior-bg-subtle)]"
+                  className="absolute inset-0 rounded-full bg-[hsl(var(--primary))] dark:bg-indigo-600 shadow-md shadow-indigo-600/25"
                 />
               ) : null}
 
               <span
                 aria-hidden
-                className={`pointer-events-none absolute inset-0 rounded-[6px] border group-focus-visible:border-[var(--interior-primary)] dark:group-focus-visible:border-[#93B0FF] ${
-                  on ? 'border-transparent' : 'border-[var(--interior-border)]'
+                className={`pointer-events-none absolute inset-0 rounded-full border transition-colors ${
+                  on ? 'border-transparent' : 'border-[hsl(var(--border))] bg-[hsl(var(--surface-subtle))] group-hover:bg-[hsl(var(--accent))]'
                 }`}
               />
               <span className="relative col-start-1 row-start-1 inline-grid">
@@ -244,10 +255,10 @@ export function FilterGrid<T>({
                   initial={false}
                   animate={{ opacity: on ? 0 : 1 }}
                   transition={swap}
-                  className="col-start-1 row-start-1 inline-flex items-center gap-1.5 whitespace-nowrap text-[12.5px] font-medium text-[var(--interior-fg)]"
+                  className="col-start-1 row-start-1 inline-flex items-center gap-1.5 whitespace-nowrap text-xs font-medium text-[hsl(var(--muted-foreground))] group-hover:text-[hsl(var(--foreground))]"
                 >
                   {filter.label}
-                  <span className="text-[10.5px] tabular-nums text-[var(--interior-fg-muted)]">
+                  <span className="text-[10px] tabular-nums font-mono px-1.5 py-0.2 rounded-full bg-[hsl(var(--surface-elevated))] text-[hsl(var(--muted-foreground))]">
                     {counts[filter.id]}
                   </span>
                 </motion.span>
@@ -256,10 +267,12 @@ export function FilterGrid<T>({
                   initial={false}
                   animate={{ opacity: on ? 1 : 0 }}
                   transition={swap}
-                  className="col-start-1 row-start-1 inline-flex items-center gap-1.5 whitespace-nowrap text-[12.5px] font-medium text-stone-50 dark:text-[var(--interior-fg)]"
+                  className="col-start-1 row-start-1 inline-flex items-center gap-1.5 whitespace-nowrap text-xs font-semibold text-white"
                 >
                   {filter.label}
-                  <span className="text-[10.5px] tabular-nums opacity-70">{counts[filter.id]}</span>
+                  <span className="text-[10px] tabular-nums font-mono px-1.5 py-0.2 rounded-full bg-black/30 text-white">
+                    {counts[filter.id]}
+                  </span>
                 </motion.span>
                 <span className="sr-only">
                   {filter.label}, {counts[filter.id]} of {total}
@@ -269,34 +282,49 @@ export function FilterGrid<T>({
           );
         })}
       </div>
-      <div className="relative mt-2.5">
+
+      {/* Grid Container */}
+      <div className="relative mt-4">
         <ul
           id={gridId}
           ref={gridRef}
           tabIndex={-1}
-          className={`relative overflow-y-auto overscroll-contain outline-none ${
-            capped ? '[scrollbar-gutter:stable]' : ''
-          }`}
-          style={{
-            display: 'grid',
-            gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
-            gridAutoRows: `${rowHeight}px`,
-            gap: `${gap}px`,
-            height: `${box}px`,
-          }}
+          className={
+            fluid
+              ? gridClassName ||
+                'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 list-none p-0 m-0 outline-none'
+              : `relative overflow-y-auto overscroll-contain outline-none ${
+                  capped ? '[scrollbar-gutter:stable]' : ''
+                }`
+          }
+          style={
+            fluid
+              ? undefined
+              : {
+                  display: 'grid',
+                  gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+                  gridAutoRows: `${rowHeight}px`,
+                  gap: `${gap}px`,
+                  height: `${box}px`,
+                }
+          }
         >
           <AnimatePresence initial={false} mode="popLayout" onExitComplete={settle}>
-            {visible.map((item) => (
+            {visible.map((item, idx) => (
               <motion.li
                 key={getKey(item)}
                 layout={reduced ? false : 'position'}
-                initial={{ opacity: 0, scale: 0.97 }}
+                initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.98, transition: leave }}
+                exit={{ opacity: 0, scale: 0.96, transition: leave }}
                 transition={step}
-                className="min-w-0 overflow-hidden rounded-[11px] border border-[var(--interior-border)] bg-white p-2.5 shadow-[0_1px_2px_rgba(28,25,23,0.06),0_4px_10px_-8px_rgba(28,25,23,0.45)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[0_1px_6px_rgba(0,0,0,0.45)]"
+                className={
+                  unstyledItem
+                    ? `min-w-0 list-none ${itemClassName || 'h-full flex flex-col'}`
+                    : 'min-w-0 overflow-hidden rounded-[11px] border border-[var(--interior-border)] bg-white p-2.5 shadow-[0_1px_2px_rgba(28,25,23,0.06),0_4px_10px_-8px_rgba(28,25,23,0.45)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[0_1px_6px_rgba(0,0,0,0.45)]'
+                }
               >
-                {renderItem(item)}
+                {renderItem(item, idx)}
               </motion.li>
             ))}
           </AnimatePresence>
@@ -309,9 +337,13 @@ export function FilterGrid<T>({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0, transition: leave }}
               transition={reduced ? INSTANT : { duration: 0.2, ease: EASE }}
-              className="pointer-events-none absolute inset-0 grid place-items-center"
+              className={
+                fluid
+                  ? 'py-16 text-center w-full flex flex-col items-center justify-center'
+                  : 'pointer-events-none absolute inset-0 grid place-items-center'
+              }
             >
-              <span className="text-[12.5px] text-[var(--interior-fg-muted)]">{emptyLabel}</span>
+              <span className="text-sm text-[hsl(var(--muted-foreground))]">{emptyLabel}</span>
             </motion.div>
           )}
         </AnimatePresence>

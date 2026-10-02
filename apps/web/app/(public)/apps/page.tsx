@@ -7,9 +7,10 @@ import {
 } from '@/features/apps/queries/get-apps';
 import { AppCard } from '@/features/apps/components/AppCard';
 import { AppDiscoveryBar } from '@/features/apps/components/AppDiscoveryBar';
+import { AppsFilterGrid } from '@/features/apps/components/AppsFilterGrid';
 import { AppPagination } from '@/features/apps/components/AppPagination';
 import { AppsEmptyState } from '@/features/apps/components/AppsEmptyState';
-import { PageShell, PageHeader, Badge, Reveal, RevealGroup } from '@elsesourav/ui';
+import { PageShell, PageHeader, Badge, Reveal } from '@elsesourav/ui';
 import { SITE_CONFIG } from '@elsesourav/config';
 import type { AppSortOption, AppPlatform } from '@elsesourav/types';
 import { Sparkles, ArrowRight, LayoutGrid, Archive, BookOpen } from 'lucide-react';
@@ -163,7 +164,7 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
 
         {/* Discovery, Search, Category & Platform Controls */}
         <Reveal direction="up" distance={10}>
-          <AppDiscoveryBar categories={categories} tags={tags} />
+          <AppDiscoveryBar categories={categories} tags={tags} showCategoryPills={false} />
         </Reveal>
 
         {/* Applications Catalog Grid or Empty State */}
@@ -193,7 +194,7 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
               </section>
             )}
 
-            {/* Catalog Grid */}
+            {/* Catalog Grid with FilterGrid spring physics */}
             <section aria-labelledby="catalog-apps-heading" className="space-y-4">
               <div className="flex items-center justify-between pb-2 border-b border-[hsl(var(--border-subtle))] text-xs font-mono text-[hsl(var(--muted-foreground))]">
                 <div className="flex items-center gap-2 uppercase tracking-wider font-semibold">
@@ -212,22 +213,15 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
                 </span>
               </div>
 
-              <RevealGroup
-                staggerDelay={0.04}
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-              >
-                {catalogItems.map((app, idx) => (
-                  <AppCard
-                    key={app.id}
-                    app={app}
-                    index={
-                      (searchResult.page - 1) * 12 +
-                      idx +
-                      (isDefaultView ? spotlightItems.length : 0)
-                    }
-                  />
-                ))}
-              </RevealGroup>
+              <AppsFilterGrid
+                apps={catalogItems}
+                categories={categories}
+                initialCategory={categorySlug}
+                startIndex={
+                  (searchResult.page - 1) * 12 +
+                  (isDefaultView ? spotlightItems.length : 0)
+                }
+              />
             </section>
 
             {/* Pagination Controls */}

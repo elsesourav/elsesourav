@@ -9,9 +9,14 @@ import { Search, X, SlidersHorizontal, Layers, Laptop } from 'lucide-react';
 interface AppDiscoveryBarProps {
   categories?: readonly CategorySummary[];
   tags?: readonly TagSummary[];
+  showCategoryPills?: boolean;
 }
 
-export function AppDiscoveryBar({ categories = [], tags = [] }: AppDiscoveryBarProps) {
+export function AppDiscoveryBar({
+  categories = [],
+  tags = [],
+  showCategoryPills = true,
+}: AppDiscoveryBarProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -126,49 +131,51 @@ export function AppDiscoveryBar({ categories = [], tags = [] }: AppDiscoveryBarP
         </div>
       </div>
 
-      {/* Category Filter Carousel */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
-        <button
-          type="button"
-          onClick={() => updateFilters({ category: null })}
-          className={`px-3.5 py-1.5 rounded-full font-medium transition-all shrink-0 border ${
-            !currentCategory
-              ? 'bg-[hsl(var(--primary))] border-transparent text-[hsl(var(--primary-foreground))] shadow-md shadow-indigo-600/20'
-              : 'bg-[hsl(var(--surface-subtle))] border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))]'
-          }`}
-        >
-          All Categories
-        </button>
+      {/* Category Filter Carousel (shown when not using integrated FilterGrid) */}
+      {showCategoryPills && (
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
+          <button
+            type="button"
+            onClick={() => updateFilters({ category: null })}
+            className={`px-3.5 py-1.5 rounded-full font-medium transition-all shrink-0 border ${
+              !currentCategory
+                ? 'bg-[hsl(var(--primary))] border-transparent text-[hsl(var(--primary-foreground))] shadow-md shadow-indigo-600/20'
+                : 'bg-[hsl(var(--surface-subtle))] border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))]'
+            }`}
+          >
+            All Categories
+          </button>
 
-        {categories.map((cat) => {
-          const isActive = currentCategory === cat.slug;
-          return (
-            <button
-              key={cat.id}
-              type="button"
-              onClick={() => updateFilters({ category: cat.slug })}
-              className={`px-3.5 py-1.5 rounded-full font-medium transition-all shrink-0 border flex items-center gap-1.5 ${
-                isActive
-                  ? 'bg-[hsl(var(--primary))] border-transparent text-[hsl(var(--primary-foreground))] shadow-md shadow-indigo-600/20'
-                  : 'bg-[hsl(var(--surface-subtle))] border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))]'
-              }`}
-            >
-              <span>{cat.name}</span>
-              {cat.appCount !== undefined && cat.appCount > 0 && (
-                <span
-                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-                    isActive
-                      ? 'bg-black/30 text-white'
-                      : 'bg-[hsl(var(--surface-elevated))] text-[hsl(var(--muted-foreground))]'
-                  }`}
-                >
-                  {cat.appCount}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
+          {categories.map((cat) => {
+            const isActive = currentCategory === cat.slug;
+            return (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => updateFilters({ category: cat.slug })}
+                className={`px-3.5 py-1.5 rounded-full font-medium transition-all shrink-0 border flex items-center gap-1.5 ${
+                  isActive
+                    ? 'bg-[hsl(var(--primary))] border-transparent text-[hsl(var(--primary-foreground))] shadow-md shadow-indigo-600/20'
+                    : 'bg-[hsl(var(--surface-subtle))] border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))]'
+                }`}
+              >
+                <span>{cat.name}</span>
+                {cat.appCount !== undefined && cat.appCount > 0 && (
+                  <span
+                    className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+                      isActive
+                        ? 'bg-black/30 text-white'
+                        : 'bg-[hsl(var(--surface-elevated))] text-[hsl(var(--muted-foreground))]'
+                    }`}
+                  >
+                    {cat.appCount}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {/* Popular Tags Strip */}
       {tags.length > 0 && (
