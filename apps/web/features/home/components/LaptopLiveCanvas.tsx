@@ -7,10 +7,32 @@ export interface LaptopLiveCanvasProps {
   isSceneActive?: boolean;
 }
 
+function generateShuffledDeck(count: number, avoidFirst?: number): number[] {
+  const deck = Array.from({ length: count }, (_, i) => i);
+  // Fisher-Yates shuffle
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = deck[i]!;
+    deck[i] = deck[j]!;
+    deck[j] = temp;
+  }
+  // Ensure the very first item does not repeat avoidFirst if there are multiple options
+  if (avoidFirst !== undefined && deck[0] === avoidFirst && count > 1) {
+    const swapTarget = Math.floor(Math.random() * (count - 1)) + 1;
+    const temp = deck[0]!;
+    deck[0] = deck[swapTarget]!;
+    deck[swapTarget] = temp;
+  }
+  return deck;
+}
+
 export function LaptopLiveCanvas({ isSceneActive = true }: LaptopLiveCanvasProps) {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const isSceneActiveRef = React.useRef(isSceneActive);
   isSceneActiveRef.current = isSceneActive;
+
+  // Deck of non-repeating randomized snippet indices
+  const deckRef = React.useRef<number[]>([]);
 
   // Preserve exact typing position, active demo, and interaction state across tab blur
   const stateRef = React.useRef({
@@ -24,6 +46,15 @@ export function LaptopLiveCanvas({ isSceneActive = true }: LaptopLiveCanvasProps
 
   const timerRef = React.useRef<NodeJS.Timeout | null>(null);
   const tickRef = React.useRef<() => void>(() => {});
+
+  // Function to pull the next random snippet without back-to-back repetitions
+  const getNextSnippet = React.useCallback((): number => {
+    const lastSnippet = stateRef.current.snippetIdx;
+    if (deckRef.current.length === 0) {
+      deckRef.current = generateShuffledDeck(SNIPPETS.length, lastSnippet);
+    }
+    return deckRef.current.shift() ?? 0;
+  }, []);
 
   React.useEffect(() => {
     isSceneActiveRef.current = isSceneActive;
@@ -73,55 +104,66 @@ export function LaptopLiveCanvas({ isSceneActive = true }: LaptopLiveCanvasProps
       const currentFullText = current.lines.join('\n');
 
       if (!s.isHolding && !s.isErasing) {
-        // Typing phase: add 1-2 chars per tick
-        s.charIdx += Math.floor(Math.random() * 2) + 1;
+        // Typing phase: natural randomized bursts (1-3 chars per tick)
+        const burst = Math.random() < 0.25 ? 3 : Math.floor(Math.random() * 2) + 1;
+        s.charIdx += burst;
         if (s.charIdx >= currentFullText.length) {
           s.charIdx = currentFullText.length;
           s.isHolding = true;
           paint();
 
-          // After 700ms, trigger the live micro-interaction (adds dynamic UI content!)
+          // After 550-800ms, trigger the live micro-interaction (dynamic game/app UI!)
+          const interactionDelay = 550 + Math.floor(Math.random() * 250);
           timerRef.current = setTimeout(() => {
             if (isDestroyed || !isSceneActiveRef.current) return;
             s.isInteracted = true;
             paint();
 
-            // Hold finished interactive demo for 2.8s with ZERO redraws
+            // Hold finished interactive demo for 2.6s - 3.4s
+            const holdDuration = 2600 + Math.floor(Math.random() * 800);
             timerRef.current = setTimeout(() => {
               s.isErasing = true;
               s.isHolding = false;
               s.isInteracted = false;
               tick();
-            }, 2800);
-          }, 700);
+            }, holdDuration);
+          }, interactionDelay);
           return;
         }
 
         paint();
-        timerRef.current = setTimeout(tick, 55);
+        // Variable typing speed rhythm (45-65ms per stroke)
+        const typeSpeed = 48 + Math.floor(Math.random() * 18);
+        timerRef.current = setTimeout(tick, typeSpeed);
       } else if (s.isErasing) {
-        // Transition to next demo
-        s.snippetIdx = (s.snippetIdx + 1) % SNIPPETS.length;
+        // Pick next random snippet from shuffled deck (guaranteed non-repeating back-to-back)
+        s.snippetIdx = getNextSnippet();
         s.charIdx = 0;
         s.isHolding = false;
         s.isErasing = false;
         s.isInteracted = false;
         paint();
-        timerRef.current = setTimeout(tick, 350);
+        // Short randomized pause before starting to type next code (200-340ms)
+        const nextDelay = 200 + Math.floor(Math.random() * 140);
+        timerRef.current = setTimeout(tick, nextDelay);
       }
     };
 
     tickRef.current = tick;
 
-    // Paint initial frame or resume cleanly
-    paint();
-
     const s = stateRef.current;
     if (!s.isInitialized) {
+      // Pick starting snippet fully randomly on first load
+      deckRef.current = generateShuffledDeck(SNIPPETS.length);
+      s.snippetIdx = deckRef.current.shift() ?? 0;
       s.isInitialized = true;
-      timerRef.current = setTimeout(tick, 400);
-    } else if (isSceneActiveRef.current && !timerRef.current) {
-      timerRef.current = setTimeout(tick, 100);
+      paint();
+      timerRef.current = setTimeout(tick, 350);
+    } else {
+      paint();
+      if (isSceneActiveRef.current && !timerRef.current) {
+        timerRef.current = setTimeout(tick, 100);
+      }
     }
 
     return () => {
@@ -131,7 +173,7 @@ export function LaptopLiveCanvas({ isSceneActive = true }: LaptopLiveCanvasProps
         timerRef.current = null;
       }
     };
-  }, []);
+  }, [getNextSnippet]);
 
   return (
     <canvas
