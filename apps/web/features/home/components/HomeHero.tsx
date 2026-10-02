@@ -3,6 +3,7 @@
 import { useTheme } from '@/components/theme/ThemeProvider';
 import { ROUTES } from '@elsesourav/config';
 import { Container, Reveal, Section } from '@elsesourav/ui';
+import { TextReveal } from '@elsesourav/ui/interior';
 import { ArrowRight, Code, Layers, Star, Users } from 'lucide-react';
 import Link from 'next/link';
 import { DaylightFogCanvas } from './DaylightFogCanvas';
@@ -25,38 +26,49 @@ function renderHighlightedHeadline(headline: string, isLight: boolean) {
   const words = headline.trim().split(/\s+/);
   if (words.length <= 4) {
     return (
-      <span
+      <TextReveal
+        text={headline}
+        by="word"
+        delay={0.08}
+        stagger={0.06}
         className={
           isLight
             ? 'text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-700 font-bold'
             : 'text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-indigo-200 to-purple-300 font-bold drop-shadow-[0_2px_14px_rgba(129,140,248,0.25)]'
         }
-      >
-        {headline}
-      </span>
+      />
     );
   }
 
   // Dynamically highlight the final ~45% of words (between 3 and 8 words)
   const highlightCount = Math.max(3, Math.min(8, Math.round(words.length * 0.45)));
   const splitIndex = words.length - highlightCount;
-  const leadPart = words.slice(0, splitIndex).join(' ');
-  const highlightPart = words.slice(splitIndex).join(' ');
+  const leadWords = words.slice(0, splitIndex);
+  const highlightWords = words.slice(splitIndex);
+  const leadPart = leadWords.join(' ');
+  const highlightPart = highlightWords.join(' ');
+  const leadDuration = leadWords.length * 0.05;
 
   return (
     <>
-      <span className={isLight ? 'text-slate-900 font-bold' : 'text-white font-bold'}>
-        {leadPart}
-      </span>{' '}
-      <span
+      <TextReveal
+        text={leadPart}
+        by="word"
+        delay={0.08}
+        stagger={0.05}
+        className={isLight ? 'text-slate-900 font-bold' : 'text-white font-bold'}
+      />{' '}
+      <TextReveal
+        text={highlightPart}
+        by="word"
+        delay={0.08 + leadDuration}
+        stagger={0.05}
         className={
           isLight
             ? 'text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-700 font-bold'
             : 'text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-indigo-200 to-purple-300 font-bold drop-shadow-[0_2px_14px_rgba(129,140,248,0.25)]'
         }
-      >
-        {highlightPart}
-      </span>
+      />
     </>
   );
 }
@@ -231,9 +243,17 @@ export function HomeHero({
                   }`}
                 />
                 <span>
-                  {heroBadge && heroBadge !== 'SOURAV / ELSESOURAV'
-                    ? heroBadge
-                    : 'Personal Software Studio'}
+                  <TextReveal
+                    text={
+                      heroBadge && heroBadge !== 'SOURAV / ELSESOURAV'
+                        ? heroBadge
+                        : 'Personal Software Studio'
+                    }
+                    by="word"
+                    delay={0.02}
+                    stagger={0.04}
+                    className={isLight ? 'text-indigo-700' : 'text-indigo-400'}
+                  />
                 </span>
               </div>
             </Reveal>
@@ -256,11 +276,19 @@ export function HomeHero({
                   isLight ? 'text-slate-700' : 'text-zinc-300/90'
                 }`}
               >
-                {heroSubtitle
-                  ? heroSubtitle.replace(/ElseSourav/gi, '').includes(creatorName || 'Sourav')
-                    ? heroSubtitle
-                    : `Crafted by ${creatorName || 'Sourav'}. ${heroSubtitle}`
-                  : `Crafted by ${creatorName || 'Sourav'}. ElseSourav is my personal space for the applications I build, the ideas I explore, and the things I learn along the way.`}
+                <TextReveal
+                  text={
+                    heroSubtitle
+                      ? heroSubtitle.replace(/ElseSourav/gi, '').includes(creatorName || 'Sourav')
+                        ? heroSubtitle
+                        : `Crafted by ${creatorName || 'Sourav'}. ${heroSubtitle}`
+                      : `Crafted by ${creatorName || 'Sourav'}. ElseSourav is my personal space for the applications I build, the ideas I explore, and the things I learn along the way.`
+                  }
+                  by="word"
+                  delay={0.35}
+                  stagger={0.025}
+                  className={isLight ? 'text-slate-700' : 'text-zinc-300/90'}
+                />
               </p>
             </Reveal>
 

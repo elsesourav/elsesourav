@@ -3,6 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Container, Reveal } from '@elsesourav/ui';
+import { TextReveal } from '@elsesourav/ui/interior';
 import { ROUTES } from '@elsesourav/config';
 import {
   ArrowRight,
@@ -144,16 +145,23 @@ export function PhilosophySection({ creator }: PhilosophySectionProps) {
 
               {/* Headline */}
               <h2 className="text-2xl sm:text-3xl lg:text-[2.25rem] font-extrabold tracking-tight text-[hsl(var(--foreground))] leading-snug">
-                I care about software that is{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
-                  useful, fast
-                </span>
-                , and considerate.
+                <TextReveal
+                  text="I care about software that is useful, fast, and considerate."
+                  by="word"
+                  stagger={0.06}
+                  className="font-extrabold"
+                />
               </h2>
 
               {/* Subtitle */}
               <p className="text-sm sm:text-base text-[hsl(var(--muted-foreground))] leading-relaxed max-w-lg">
-                Independent creator building practical software, developer tools, and thoughtful web experiences with strong engineering fundamentals.
+                <TextReveal
+                  text="Independent creator building practical software, developer tools, and thoughtful web experiences with strong engineering fundamentals."
+                  by="word"
+                  stagger={0.03}
+                  delay={0.2}
+                  className="text-[hsl(var(--muted-foreground))]"
+                />
               </p>
 
               {/* Creator Compact Badge */}

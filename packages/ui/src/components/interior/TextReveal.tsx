@@ -31,6 +31,7 @@ export type UseTextRevealOptions = {
   play?: boolean;
   once?: boolean;
   amount?: number;
+  delay?: number;
 };
 
 export function useTextReveal<T extends HTMLElement = HTMLSpanElement>({
@@ -104,6 +105,7 @@ export function TextReveal({
   play = true,
   once = true,
   amount = 0.35,
+  delay = 0,
   className = '',
 }: TextRevealProps) {
   const { ref, groups, step, started, reduced } = useTextReveal<HTMLSpanElement>({
@@ -115,25 +117,46 @@ export function TextReveal({
     play,
     once,
     amount,
+    delay,
   });
+
+  const hasExplicitColor = /text-|bg-clip-text/.test(className);
+  const isGradient = className.includes('bg-clip-text');
 
   return (
     <span
       data-interior="text-reveal"
       ref={ref}
-      className={`text-[var(--interior-fg)] ${className}`}
+      className={`${hasExplicitColor ? '' : 'text-[var(--interior-fg)]'} ${className}`}
     >
       <span className="sr-only">{text}</span>
 
-      <span aria-hidden="true">
+      <span
+        aria-hidden="true"
+        className={
+          isGradient
+            ? '[background:inherit] [background-clip:inherit] [-webkit-background-clip:inherit] text-inherit'
+            : undefined
+        }
+      >
         {groups.map((group, g) => (
           <Fragment key={group.key}>
             {g > 0 ? ' ' : null}
-            <span className="inline-block whitespace-nowrap align-baseline">
+            <span
+              className={`inline-block whitespace-nowrap align-baseline ${
+                isGradient
+                  ? '[background:inherit] [background-clip:inherit] [-webkit-background-clip:inherit] text-inherit'
+                  : ''
+              }`}
+            >
               {group.units.map((unit) => (
                 <motion.span
                   key={unit.key}
-                  className="inline-block align-baseline"
+                  className={`inline-block align-baseline ${
+                    isGradient
+                      ? '[background:inherit] [background-clip:inherit] [-webkit-background-clip:inherit] text-inherit'
+                      : ''
+                  }`}
                   initial={reduced ? false : HIDDEN}
                   animate={started ? SHOWN : HIDDEN}
                   transition={
@@ -142,7 +165,7 @@ export function TextReveal({
                       : {
                           duration: DURATION,
                           ease: EASE,
-                          delay: started ? unit.index * step : 0,
+                          delay: started ? (delay ?? 0) + unit.index * step : 0,
                         }
                   }
                 >

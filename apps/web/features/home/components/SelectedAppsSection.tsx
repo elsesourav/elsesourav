@@ -3,6 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Container, Reveal, RevealGroup } from '@elsesourav/ui';
+import { TextReveal } from '@elsesourav/ui/interior';
 import { ROUTES } from '@elsesourav/config';
 import type { AppListItem } from '@elsesourav/types';
 import { AppCard } from '@/features/apps/components/AppCard';
@@ -75,13 +76,26 @@ export function SelectedAppsSection({
 
               {/* Title */}
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
-                {title || 'Selected Apps'}
+                <TextReveal
+                  text={title || 'Selected Apps'}
+                  by="word"
+                  stagger={0.06}
+                  className="text-slate-900 dark:text-white font-bold"
+                />
               </h2>
 
               {/* Subtitle */}
               <p className="text-sm sm:text-base text-slate-600 dark:text-zinc-400 leading-relaxed max-w-xl">
-                {subtitle ||
-                  'A curated selection of software, developer tools, games, and systems.'}
+                <TextReveal
+                  text={
+                    subtitle ||
+                    'A curated selection of software, developer tools, games, and systems.'
+                  }
+                  by="word"
+                  stagger={0.03}
+                  delay={0.15}
+                  className="text-slate-600 dark:text-zinc-400"
+                />
               </p>
             </div>
 

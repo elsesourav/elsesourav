@@ -969,7 +969,7 @@ The `@elsesourav/ui/interior` collection contains **54 physics-based animated UI
 | **`Tabs`**              | `tabs, activeTab, onChange`       | Floating sliding underline indicator                 | Tabbed interfaces                           |
 | **`TagInput`**          | `tags, onAdd, onRemove`           | Pill tag insertion with spring entrance              | Blog tagging, tech stack selection          |
 | **`TaskSteps`**         | `steps, currentStep`              | Stepper bar with connected progress lines            | Multi-step setup wizards                    |
-| **`TextReveal`**        | `text, delay`                     | Word-by-word opacity mask rise                       | Hero titles, landing page headlines         |
+| **`TextReveal`**        | `text, by, stagger, delay, className` | Word-by-word or character-by-character de-blur spring rise | Hero titles, landing page headlines         |
 | **`TooltipGroup`**      | `tooltips, activeIndex`           | Shared tooltip bubble that glides between items      | App toolbars, icon ribbons                  |
 | **`TreeView`**          | `nodes, onSelect`                 | Nested folder disclosure with connecting lines       | File explorers, hierarchical category trees |
 | **`TypingIndicator`**   | `size, color`                     | Three oscillating dots in speech bubble              | Live chat waiting status                    |

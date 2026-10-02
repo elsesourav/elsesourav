@@ -52,10 +52,11 @@ export function Section({
   );
 }
 
-export interface SectionHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface SectionHeaderProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   caption?: string;
-  title: string;
-  description?: string;
+  title: React.ReactNode;
+  description?: React.ReactNode;
   actions?: React.ReactNode;
   align?: 'left' | 'center' | 'split';
 }

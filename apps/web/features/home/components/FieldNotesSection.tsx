@@ -3,6 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Section, SectionHeader, Container, Reveal } from '@elsesourav/ui';
+import { TextReveal } from '@elsesourav/ui/interior';
 import { ROUTES } from '@elsesourav/config';
 import type { BlogPostListItem } from '@elsesourav/types';
 import { ArrowRight, BookOpen, Clock } from 'lucide-react';
@@ -27,10 +28,23 @@ export function FieldNotesSection({ posts, totalCount, title, subtitle }: FieldN
           <SectionHeader
             align="split"
             caption="Updates"
-            title={title || 'Latest Updates'}
+            title={
+              <TextReveal
+                text={title || 'Latest Updates'}
+                by="word"
+                stagger={0.06}
+              />
+            }
             description={
-              subtitle ||
-              'Things I write about while building software, learning tools, and solving architectural problems.'
+              <TextReveal
+                text={
+                  subtitle ||
+                  'Things I write about while building software, learning tools, and solving architectural problems.'
+                }
+                by="word"
+                stagger={0.03}
+                delay={0.15}
+              />
             }
             actions={
               <Link

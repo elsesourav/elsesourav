@@ -3,6 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Section, Container, Reveal } from '@elsesourav/ui';
+import { TextReveal } from '@elsesourav/ui/interior';
 import { ROUTES } from '@elsesourav/config';
 import { Layers, BookOpen, User, ArrowRight, Sparkles, LifeBuoy } from 'lucide-react';
 
@@ -29,11 +30,24 @@ export function StudioDoorwaySection({ closingTitle, closingSubtitle }: StudioDo
                 <span>Studio Doorway</span>
               </div>
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[hsl(var(--foreground))] tracking-tight">
-                {closingTitle || 'Explore the ElseSourav Studio'}
+                <TextReveal
+                  text={closingTitle || 'Explore the ElseSourav Studio'}
+                  by="word"
+                  stagger={0.06}
+                  className="font-extrabold text-[hsl(var(--foreground))]"
+                />
               </h2>
               <p className="text-sm sm:text-base text-[hsl(var(--muted-foreground))] leading-relaxed">
-                {closingSubtitle ||
-                  'Every application, utility, and field note is built independently with a focus on craft, performance, and usability.'}
+                <TextReveal
+                  text={
+                    closingSubtitle ||
+                    'Every application, utility, and field note is built independently with a focus on craft, performance, and usability.'
+                  }
+                  by="word"
+                  stagger={0.03}
+                  delay={0.15}
+                  className="text-[hsl(var(--muted-foreground))]"
+                />
               </p>
             </div>
 
