@@ -7,6 +7,8 @@ const DEVELOP = { duration: 0.65, ease: [0.23, 1, 0.32, 1] } as const;
 
 const INSTANT = { duration: 0 } as const;
 
+const CACHE = new Set<string>();
+
 export type BlurUpStatus = 'loading' | 'ready' | 'error';
 
 export type UseBlurUpImageOptions = {
@@ -18,10 +20,14 @@ export type UseBlurUpImageOptions = {
 
 export function useBlurUpImage({ src, srcSet, onReady, onError }: UseBlurUpImageOptions) {
   const ref = useRef<HTMLImageElement>(null);
+  const isPreloaded = Boolean(src && CACHE.has(src));
   const [state, setState] = useState<{
     status: BlurUpStatus;
     instant: boolean;
-  }>({ status: 'loading', instant: false });
+  }>({
+    status: isPreloaded ? 'ready' : 'loading',
+    instant: isPreloaded,
+  });
 
   const ready = useRef(onReady);
   ready.current = onReady;
@@ -43,10 +49,11 @@ export function useBlurUpImage({ src, srcSet, onReady, onError }: UseBlurUpImage
 
     let alive = true;
 
-    const cached = img.complete && img.naturalWidth > 0;
+    const cached = (img.complete && img.naturalWidth > 0) || isPreloaded;
 
     const reveal = () => {
       if (!alive) return;
+      if (src) CACHE.add(src);
       set('ready', cached);
       ready.current?.();
     };
@@ -70,7 +77,15 @@ export function useBlurUpImage({ src, srcSet, onReady, onError }: UseBlurUpImage
     const onLoad = () => {
       if (!alive) return;
       if (typeof img.decode === 'function') {
-        img.decode().then(reveal, fail);
+        img.decode()
+          .then(reveal)
+          .catch(() => {
+            if (img.naturalWidth > 0) {
+              reveal();
+            } else {
+              fail();
+            }
+          });
         return;
       }
       reveal();
@@ -84,7 +99,7 @@ export function useBlurUpImage({ src, srcSet, onReady, onError }: UseBlurUpImage
       img.removeEventListener('load', onLoad);
       img.removeEventListener('error', fail);
     };
-  }, [src, srcSet]);
+  }, [src, srcSet, isPreloaded]);
 
   return {
     ref,
@@ -97,8 +112,9 @@ export function useBlurUpImage({ src, srcSet, onReady, onError }: UseBlurUpImage
 export type BlurUpImageProps = {
   src?: string;
   alt: string;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
+  fill?: boolean;
   placeholder?: string;
   color?: string;
   blur?: number;
@@ -110,6 +126,7 @@ export type BlurUpImageProps = {
   onReady?: () => void;
   onError?: () => void;
   className?: string;
+  imgClassName?: string;
 };
 
 export function BlurUpImage({
@@ -117,10 +134,11 @@ export function BlurUpImage({
   alt,
   width,
   height,
+  fill = false,
   placeholder,
   color,
   blur = 14,
-  radius = 11,
+  radius,
   srcSet,
   sizes,
   loading = 'lazy',
@@ -128,6 +146,7 @@ export function BlurUpImage({
   onReady,
   onError,
   className = '',
+  imgClassName = '',
 }: BlurUpImageProps) {
   const reduced = useReducedMotion();
   const { ref, status, instant } = useBlurUpImage({
@@ -140,17 +159,22 @@ export function BlurUpImage({
   const shown = status === 'ready';
   const still = reduced === true || instant;
   const transition = still ? INSTANT : DEVELOP;
+  const resolvedRadius = radius !== undefined ? radius : fill ? undefined : 11;
 
   return (
     <div
       data-interior="blur-up-image"
       aria-busy={status === 'loading'}
       style={{
-        aspectRatio: `${width} / ${height}`,
-        borderRadius: radius,
+        aspectRatio: fill ? undefined : width && height ? `${width} / ${height}` : undefined,
+        borderRadius: resolvedRadius,
         backgroundColor: color,
       }}
-      className={`relative w-full overflow-hidden bg-[var(--interior-bg-subtle)] dark:bg-white/15 ${className}`}
+      className={
+        fill
+          ? `absolute inset-0 h-full w-full overflow-hidden ${className}`
+          : `relative w-full overflow-hidden bg-[var(--interior-bg-subtle)] dark:bg-white/15 ${className}`
+      }
     >
       {placeholder ? (
         <img
@@ -158,7 +182,7 @@ export function BlurUpImage({
           alt=""
           aria-hidden
           draggable={false}
-          className="absolute inset-0 h-full w-full object-cover"
+          className={`absolute inset-0 h-full w-full object-cover ${imgClassName}`}
           style={{ filter: `blur(${blur}px)`, transform: 'scale(1.08)' }}
         />
       ) : null}
@@ -169,13 +193,13 @@ export function BlurUpImage({
         srcSet={srcSet}
         sizes={sizes}
         alt={alt}
-        width={width}
-        height={height}
+        width={fill ? undefined : width}
+        height={fill ? undefined : height}
         loading={loading}
         fetchPriority={fetchPriority}
         decoding="async"
         draggable={false}
-        className="absolute inset-0 h-full w-full object-cover"
+        className={`absolute inset-0 h-full w-full object-cover ${imgClassName}`}
         initial={false}
         animate={
           still

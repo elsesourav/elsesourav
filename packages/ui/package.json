@@ -46,9 +46,11 @@
     "@hugeicons/core-free-icons": "^4.3.5",
     "@hugeicons/react": "^1.1.10",
     "clsx": "^2.1.1",
+    "gsap": "^3.15.0",
     "lucide-react": "^1.16.0",
     "matter-js": "^0.20.0",
     "motion": "^13.4.6",
+    "ogl": "^1.0.11",
     "tailwind-merge": "^3.0.2",
     "three": "^0.186.1"
   },

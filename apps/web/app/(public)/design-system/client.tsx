@@ -44,6 +44,7 @@ import {
   TableCell,
   StatCard,
 } from '@elsesourav/ui';
+import { MorphSlider } from '@elsesourav/ui/interior';
 import { Sparkles, Terminal, Activity, Layers } from 'lucide-react';
 
 export function DesignSystemClient() {
@@ -317,6 +318,30 @@ export function DesignSystemClient() {
           <div className="pt-4 flex items-center gap-4">
             <Button onClick={() => setDialogOpen(true)}>Open Modal Dialog</Button>
             <Avatar alt="Sourav" fallback="ES" size="lg" />
+          </div>
+        </Card>
+      </section>
+
+      {/* GPU Displacement Morph Slider Showcase */}
+      <section className="space-y-4">
+        <div>
+          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+            <Layers className="w-5 h-5 text-indigo-400" /> WebGL Morph Slider
+          </h2>
+          <p className="text-sm text-zinc-400 mt-1">
+            GPU-driven procedural displacement slider with auto-scroll (5s interval), drag gesture pause/refresh, and melt/ripple/shear/swirl transitions.
+          </p>
+        </div>
+        <Card className="p-4 sm:p-6 border-zinc-800 bg-zinc-950/60">
+          <div className="relative h-[340px] sm:h-[440px] w-full rounded-2xl overflow-hidden shadow-2xl">
+            <MorphSlider
+              transition="melt"
+              intensity={0.55}
+              aberration={0.35}
+              drift={0.4}
+              autoplay
+              autoplayDelay={5}
+            />
           </div>
         </Card>
       </section>

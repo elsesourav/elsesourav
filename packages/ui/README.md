@@ -661,15 +661,21 @@ The `@elsesourav/ui/interior` collection contains **54 physics-based animated UI
 - **Props**:
   - `src?: string`
   - `alt: string`
-  - `width: number`, `height: number`
+  - `width?: number`, `height?: number` (optional when `fill: true`)
+  - `fill?: boolean` (absolute inset-0 full-bleed cover layout)
   - `placeholder?: string` (base64 or thumbnail)
   - `color?: string` (dominant color placeholder)
   - `blur?: number` (default: `14`)
-  - `radius?: number` (default: `11`)
+  - `radius?: number` (default: `11`, or `undefined` when `fill: true`)
+  - `imgClassName?: string` (class names for inner image, e.g. object position/fit)
+  - `className?: string` (container class names)
+  - `loading?: 'lazy' | 'eager'`
+  - `fetchPriority?: 'high' | 'low' | 'auto'`
 - **Usage Example**:
   ```tsx
   import { BlurUpImage } from '@elsesourav/ui/interior';
 
+  // Standard fixed aspect ratio:
   <BlurUpImage
     src="/portfolio/hero.jpg"
     alt="Project Preview"
@@ -679,8 +685,19 @@ The `@elsesourav/ui/interior` collection contains **54 physics-based animated UI
     blur={16}
     radius={12}
   />;
+
+  // Full-bleed responsive fill:
+  <BlurUpImage
+    src="/hero/sky-bg.webp"
+    placeholder="/hero/sky-bg-thumb.webp"
+    alt="Hero sky background"
+    fill
+    loading="eager"
+    fetchPriority="high"
+    imgClassName="object-[82%_center] md:object-center object-cover"
+  />;
   ```
-- **When to Use**: Hero project images, profile avatar previews, blog header banners, image galleries.
+- **When to Use**: Hero background scenes, profile avatar previews, blog header banners, image galleries.
 
 ---
 
@@ -917,12 +934,56 @@ The `@elsesourav/ui/interior` collection contains **54 physics-based animated UI
 
 ---
 
+### 11. `MorphSlider`
+
+- **Purpose**: WebGL GPU displacement slider morphing between slides with fluid shader transitions (melt, ripple, shear, swirl).
+- **Key Features**:
+  - Procedural noise displacement and chromatic aberration peak on transition.
+  - Infinite auto-scroll (default 5s interval) with drag pause and automatic timer refresh.
+  - Interactive touch/pointer drag with spring commit.
+  - Smooth animated captions with blur entry.
+  - Automatic `prefers-reduced-motion` override (fast-fade fallback).
+- **Props**:
+  - `items?: MorphItem[]` (`{ image: string; caption?: string }[]`)
+  - `startIndex?: number` (default: `0`)
+  - `transition?: 'melt' | 'ripple' | 'shear' | 'swirl'` (default: `'melt'`)
+  - `duration?: number` (default: `1.1`)
+  - `intensity?: number` (default: `0.55`)
+  - `scale?: number` (default: `2.4`)
+  - `aberration?: number` (default: `0.35`)
+  - `drift?: number` (default: `0.4`)
+  - `autoplay?: boolean` (default: `true`)
+  - `autoplayDelay?: number` (default: `5` seconds)
+  - `loop?: boolean` (default: `true`)
+  - `radius?: number` (default: `16`)
+  - `showCaptions?: boolean`, `showControls?: boolean`, `showIndicators?: boolean`
+- **Usage Example**:
+  ```tsx
+  import { MorphSlider } from '@elsesourav/ui/interior';
+
+  <div className="relative h-[500px] w-full">
+    <MorphSlider
+      items={[
+        { image: '/apps/showcase-1.webp', caption: 'Creative Canvas' },
+        { image: '/apps/showcase-2.webp', caption: 'Interactive Studio' },
+        { image: '/apps/showcase-3.webp', caption: 'Fluid Playground' },
+      ]}
+      transition="melt"
+      autoplay
+      autoplayDelay={5}
+    />
+  </div>;
+  ```
+- **When to Use**: Interactive hero banners, visual portfolio carousels, immersive project previews.
+
+---
+
 ## Complete Directory: All 54 Interior.dev Components
 
 | Component               | Primary Props / Types             | Physics & Animation Behavior                         | Ideal Use Case                              |
 | :---------------------- | :-------------------------------- | :--------------------------------------------------- | :------------------------------------------ |
 | **`Accordion`**         | `items: { id, title, content }[]` | Spring height disclosure with chevron rotation       | FAQ sections, collapsible settings          |
-| **`BlurUpImage`**       | `src, alt, width, height, blur`   | Smooth progressive reveal with instant cache bypass  | Hero images, avatar studios, media cards    |
+| **`BlurUpImage`**       | `src, alt, width, height, fill, blur, imgClassName` | Smooth progressive reveal with instant cache bypass | Hero backdrops, avatar studios, media cards |
 | **`CollapsibleBanner`** | `open, onDismiss, children`       | Elastic collapse with top-border bounce              | System announcements, discount alerts       |
 | **`CommandPalette`**    | `open, onOpenChange, items`       | Centered floating scale-in with instant fuzzy search | Quick action palette (`Cmd+K`)              |
 | **`ContextMenu`**       | `items, children`                 | Cursor-anchored spring reveal with bounds collision  | Table row right-click actions               |
@@ -944,6 +1005,7 @@ The `@elsesourav/ui/interior` collection contains **54 physics-based animated UI
 | **`LogoMarquee`**       | `logos, speed, pauseOnHover`      | Seamless infinite CSS ticker                         | Partner logos, client trust badges          |
 | **`LongPress`**         | `onLongPress, delay`              | Radial progress ring indicator                       | Mobile quick-actions, preview triggers      |
 | **`Modal`**             | `open, onClose, title`            | Backdrop blur scrim with centered pop                | Confirmation dialogs, modal forms           |
+| **`MorphSlider`**       | `items, transition, intensity, aberration, drift, autoplay, autoplayDelay` | WebGL GPU displacement morph with melt, ripple, shear, swirl shaders & auto-timer | Hero showcases, visual portfolios, interactive galleries |
 | **`NewItemsPill`**      | `count, onClick`                  | Floating pill drop-in at top of feed                 | "3 new posts" feed notification             |
 | **`OtpInput`**          | `length, onComplete, mode`        | Cell-by-cell focus glide and clipboard auto-fill     | 2FA verification, SMS login codes           |
 | **`Pagination`**        | `page, total, onChange`           | Floating sliding pill over active page number        | Multi-page data tables, search results      |

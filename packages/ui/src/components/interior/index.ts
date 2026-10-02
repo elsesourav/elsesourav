@@ -27,6 +27,7 @@ export * from './LoadingButton';
 export * from './LogoMarquee';
 export * from './LongPress';
 export * from './Modal';
+export * from './MorphSlider';
 export * from './NewItemsPill';
 export * from './OtpInput';
 export * from './Pagination';

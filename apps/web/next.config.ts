@@ -26,6 +26,8 @@ const nextConfig: NextConfig = {
     '@elsesourav/auth',
     '@elsesourav/media',
     '@elsesourav/database',
+    'ogl',
+    'gsap',
   ],
   images: {
     formats: ['image/avif', 'image/webp'],
