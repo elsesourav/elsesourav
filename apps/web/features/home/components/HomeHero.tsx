@@ -196,17 +196,17 @@ export function HomeHero({
         className="relative z-10 w-full max-w-[1536px] px-4 sm:px-6 lg:px-8 xl:px-12 my-auto"
       >
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-6 items-center relative">
-          {/* Mobile-Only Static Floating Island Image: Single lightweight static image without floating animation for 0% lag */}
+          {/* Mobile-Only Static Floating Island Image: Single lightweight static image with high blur for soft atmospheric depth & 0% lag */}
           <div
             aria-hidden="true"
-            className="md:hidden absolute -right-6 sm:-right-4 -top-2 sm:top-2 w-[270px] sm:w-[340px] pointer-events-none select-none z-0 overflow-visible opacity-90 dark:opacity-95"
+            className="md:hidden absolute -right-6 sm:-right-4 -top-2 sm:top-2 w-[280px] sm:w-[360px] pointer-events-none select-none z-0 overflow-visible opacity-85 dark:opacity-90"
           >
             <img
               src="/hero/floating-island-mobile.webp"
               alt=""
               width={560}
               height={485}
-              className="w-full h-auto object-contain drop-shadow-[0_14px_28px_rgba(0,0,0,0.55)] drop-shadow-[0_4px_14px_rgba(236,72,153,0.22)]"
+              className="w-full h-auto object-contain blur-[8px] sm:blur-[12px] scale-105 drop-shadow-[0_16px_32px_rgba(0,0,0,0.6)] drop-shadow-[0_4px_20px_rgba(236,72,153,0.3)] transition-all"
               loading="eager"
               draggable={false}
             />
