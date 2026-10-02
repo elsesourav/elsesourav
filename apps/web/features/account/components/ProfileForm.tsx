@@ -3,6 +3,7 @@
 import * as React from 'react';
 import type { User } from '@elsesourav/types';
 import { Card, CardDescription, CardHeader, CardTitle, Input } from '@elsesourav/ui';
+import { FloatingLabelInput } from '@elsesourav/ui/interior';
 import { LoadingButton } from '@/components/interior/LoadingButton';
 import {
   AlertCircle,
@@ -242,7 +243,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
             ) : (
               <div className="p-3 rounded-xl bg-background border border-primary/30 space-y-2.5 animate-in fade-in duration-150">
                 <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <label className="font-medium text-foreground">Enter Display Name</label>
+                  <span className="font-medium text-foreground">Edit Name</span>
                   <button
                     type="button"
                     onClick={() => {
@@ -255,15 +256,15 @@ export function ProfileForm({ user }: ProfileFormProps) {
                   </button>
                 </div>
 
-                <div className="flex gap-2">
-                  <Input
+                <div className="flex gap-2 items-center">
+                  <FloatingLabelInput
+                    label="Display Name"
                     type="text"
                     value={editNameValue}
-                    onChange={(e) => setEditNameValue(e.target.value)}
+                    onChange={(val) => setEditNameValue(val)}
                     placeholder="e.g. Sourav Ghosh"
                     maxLength={60}
-                    autoFocus
-                    className="bg-background border-border text-xs rounded-lg text-foreground h-8 sm:h-9"
+                    className="flex-1"
                   />
                   <LoadingButton
                     onAction={handleApplyName}
@@ -273,9 +274,9 @@ export function ProfileForm({ user }: ProfileFormProps) {
                     pendingLabel="Applying..."
                     successLabel="Applied"
                     errorLabel="Failed"
-                    className="h-8 sm:h-9 px-3.5 text-xs font-semibold shrink-0"
+                    className="text-xs font-semibold h-10 px-3.5 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 mt-5"
                   >
-                    Apply
+                    Save
                   </LoadingButton>
                 </div>
 

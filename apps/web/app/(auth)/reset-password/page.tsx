@@ -5,10 +5,9 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-  Input,
   Button,
-  Label,
 } from '@elsesourav/ui';
+import { FloatingLabelInput } from '@elsesourav/ui/interior';
 
 export const metadata: Metadata = {
   title: 'Set New Password | ElseSourav',
@@ -26,30 +25,20 @@ export default function ResetPasswordPage() {
       </CardHeader>
       <CardContent>
         <form className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="password" required>
-              New Password
-            </Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              required
-              className="bg-zinc-950/50 border-zinc-800 text-zinc-100"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="confirmPassword" required>
-              Confirm Password
-            </Label>
-            <Input
-              id="confirmPassword"
-              type="password"
-              placeholder="••••••••"
-              required
-              className="bg-zinc-950/50 border-zinc-800 text-zinc-100"
-            />
-          </div>
+          <FloatingLabelInput
+            id="password"
+            label="New Password"
+            type="password"
+            placeholder="••••••••"
+            required
+          />
+          <FloatingLabelInput
+            id="confirmPassword"
+            label="Confirm Password"
+            type="password"
+            placeholder="••••••••"
+            required
+          />
           <Button
             type="submit"
             className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium"

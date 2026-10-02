@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { Button, Input } from '@elsesourav/ui';
+import { FloatingLabelInput } from '@elsesourav/ui/interior';
 import { AlertTriangle, Trash2, Check } from 'lucide-react';
 import { HoldToConfirm } from '@/components/interior/HoldToConfirm';
 import { LoadingButton } from '@/components/interior/LoadingButton';
@@ -196,19 +197,13 @@ export function AccountDeleteCard({ targetUsername, scheduledDeletionAt }: Accou
                 </div>
               </div>
 
-              <div className="space-y-1">
-                <label className="block font-semibold text-foreground text-[11px]">
-                  Reason for closure{' '}
-                  <span className="text-muted-foreground font-normal">(optional)</span>
-                </label>
-                <Input
-                  type="text"
-                  value={deleteReason}
-                  onChange={(e) => setDeleteReason(e.target.value)}
-                  placeholder="Tell us why you are leaving..."
-                  className="bg-background border-border text-xs rounded-lg text-foreground h-8 sm:h-9"
-                />
-              </div>
+              <FloatingLabelInput
+                label="Reason for closure (optional)"
+                type="text"
+                value={deleteReason}
+                onChange={(val) => setDeleteReason(val)}
+                placeholder="Tell us why you are leaving..."
+              />
 
               <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-border">
                 <Button

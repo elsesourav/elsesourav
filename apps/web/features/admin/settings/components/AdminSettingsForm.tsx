@@ -17,7 +17,7 @@ import type {
   SiteLinkPlatform,
 } from '@elsesourav/types';
 import { Alert, Button, Card, FormField, Input, Textarea } from '@elsesourav/ui';
-import { Dropdown } from '@elsesourav/ui/interior';
+import { Dropdown, FloatingLabelInput } from '@elsesourav/ui/interior';
 import {
   parseContactMethods,
   parseFooterLinks,
@@ -479,21 +479,21 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
       {activeTab === 'identity' && (
         <Card className="p-5 sm:p-6 space-y-5 rounded-3xl border-zinc-800 bg-zinc-900/40">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField label="Site Name" required>
-              <Input
-                value={settings['site_name'] || ''}
-                onChange={(e) => handleChange('site_name', e.target.value)}
-                placeholder="ElseSourav"
-              />
-            </FormField>
+            <FloatingLabelInput
+              label="Site Name"
+              required
+              value={settings['site_name'] || ''}
+              onChange={(val) => handleChange('site_name', val)}
+              placeholder="ElseSourav"
+            />
 
-            <FormField label="Site Tagline" required>
-              <Input
-                value={settings['site_tagline'] || ''}
-                onChange={(e) => handleChange('site_tagline', e.target.value)}
-                placeholder="Software, Tools & Engineering Notes"
-              />
-            </FormField>
+            <FloatingLabelInput
+              label="Site Tagline"
+              required
+              value={settings['site_tagline'] || ''}
+              onChange={(val) => handleChange('site_tagline', val)}
+              placeholder="Software, Tools & Engineering Notes"
+            />
           </div>
 
           <FormField label="Meta Description">
@@ -528,21 +528,19 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-zinc-800">
-            <FormField label="SEO Keywords (Comma-Separated)">
-              <Input
-                value={settings['site_keywords'] || ''}
-                onChange={(e) => handleChange('site_keywords', e.target.value)}
-                placeholder="software, developer tools, typescript, web performance"
-              />
-            </FormField>
+            <FloatingLabelInput
+              label="SEO Keywords (Comma-Separated)"
+              value={settings['site_keywords'] || ''}
+              onChange={(val) => handleChange('site_keywords', val)}
+              placeholder="software, developer tools, typescript, web performance"
+            />
 
-            <FormField label="System Status Badge">
-              <Input
-                value={settings['site_status_badge'] || ''}
-                onChange={(e) => handleChange('site_status_badge', e.target.value)}
-                placeholder="● All Systems Operational"
-              />
-            </FormField>
+            <FloatingLabelInput
+              label="System Status Badge"
+              value={settings['site_status_badge'] || ''}
+              onChange={(val) => handleChange('site_status_badge', val)}
+              placeholder="● All Systems Operational"
+            />
           </div>
         </Card>
       )}
@@ -551,31 +549,28 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
       {activeTab === 'footer' && (
         <Card className="p-5 sm:p-6 space-y-5 rounded-3xl border-zinc-800 bg-zinc-900/40">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField label="Footer Copyright Notice">
-              <Input
-                value={settings['footer_copyright'] || ''}
-                onChange={(e) => handleChange('footer_copyright', e.target.value)}
-                placeholder="© 2026 ElseSourav. All rights reserved."
-              />
-            </FormField>
+            <FloatingLabelInput
+              label="Footer Copyright Notice"
+              value={settings['footer_copyright'] || ''}
+              onChange={(val) => handleChange('footer_copyright', val)}
+              placeholder="© 2026 ElseSourav. All rights reserved."
+            />
 
-            <FormField label="Footer Mission Note">
-              <Input
-                value={settings['footer_text'] || ''}
-                onChange={(e) => handleChange('footer_text', e.target.value)}
-                placeholder="Software, Tools & Ideas — Built with purpose."
-              />
-            </FormField>
+            <FloatingLabelInput
+              label="Footer Mission Note"
+              value={settings['footer_text'] || ''}
+              onChange={(val) => handleChange('footer_text', val)}
+              placeholder="Software, Tools & Ideas — Built with purpose."
+            />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-zinc-800">
-            <FormField label="Operational Status Text">
-              <Input
-                value={settings['footer_status_text'] || ''}
-                onChange={(e) => handleChange('footer_status_text', e.target.value)}
-                placeholder="● All Services Online"
-              />
-            </FormField>
+            <FloatingLabelInput
+              label="Operational Status Text"
+              value={settings['footer_status_text'] || ''}
+              onChange={(val) => handleChange('footer_status_text', val)}
+              placeholder="● All Services Online"
+            />
 
             <div>
               <label className="text-[11px] font-semibold text-zinc-300 block mb-1.5">
@@ -626,21 +621,22 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
 
             {isAddingFooterLink && (
               <div className="p-3.5 rounded-2xl border border-indigo-500/40 bg-indigo-950/20 space-y-2.5">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                  <Input
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  <FloatingLabelInput
+                    label="Link Label"
                     value={newFooterLink.label || ''}
-                    onChange={(e) =>
-                      setNewFooterLink((prev) => ({ ...prev, label: e.target.value }))
+                    onChange={(val) =>
+                      setNewFooterLink((prev) => ({ ...prev, label: val }))
                     }
-                    placeholder="Link Label (e.g. Changelog)"
-                    className="text-xs h-8"
+                    placeholder="e.g. Changelog"
                   />
-                  <Input
+                  <FloatingLabelInput
+                    label="Target URL"
                     value={newFooterLink.url || ''}
-                    onChange={(e) => setNewFooterLink((prev) => ({ ...prev, url: e.target.value }))}
+                    onChange={(val) => setNewFooterLink((prev) => ({ ...prev, url: val }))}
                     placeholder="/changelog or https://..."
-                    className="text-xs h-8"
                   />
+                </div>
                   <div className="flex items-center justify-end gap-2">
                     <Button
                       type="button"
@@ -661,7 +657,6 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
                       Save
                     </Button>
                   </div>
-                </div>
               </div>
             )}
 
@@ -712,57 +707,53 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField label="Display Name (Homepage)" required>
-              <Input
-                value={settings['creator_name'] || ''}
-                onChange={(e) => handleChange('creator_name', e.target.value)}
-                placeholder="Sourav"
-              />
-            </FormField>
+            <FloatingLabelInput
+              label="Display Name (Homepage)"
+              required
+              value={settings['creator_name'] || ''}
+              onChange={(val) => handleChange('creator_name', val)}
+              placeholder="Sourav"
+            />
 
-            <FormField label="Full Name (About & Footer)">
-              <Input
-                value={settings['creator_full_name'] || ''}
-                onChange={(e) => handleChange('creator_full_name', e.target.value)}
-                placeholder="Sourav Barui"
-              />
-            </FormField>
+            <FloatingLabelInput
+              label="Full Name (About & Footer)"
+              value={settings['creator_full_name'] || ''}
+              onChange={(val) => handleChange('creator_full_name', val)}
+              placeholder="Sourav Barui"
+            />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField label="Professional Title" required>
-              <Input
-                value={settings['creator_title'] || ''}
-                onChange={(e) => handleChange('creator_title', e.target.value)}
-                placeholder="Software Engineer & Creator"
-              />
-            </FormField>
+            <FloatingLabelInput
+              label="Professional Title"
+              required
+              value={settings['creator_title'] || ''}
+              onChange={(val) => handleChange('creator_title', val)}
+              placeholder="Software Engineer & Creator"
+            />
 
-            <FormField label="Role / Specialization">
-              <Input
-                value={settings['creator_role'] || ''}
-                onChange={(e) => handleChange('creator_role', e.target.value)}
-                placeholder="Independent Software Creator"
-              />
-            </FormField>
+            <FloatingLabelInput
+              label="Role / Specialization"
+              value={settings['creator_role'] || ''}
+              onChange={(val) => handleChange('creator_role', val)}
+              placeholder="Independent Software Creator"
+            />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField label="Location / Timezone">
-              <Input
-                value={settings['creator_location'] || ''}
-                onChange={(e) => handleChange('creator_location', e.target.value)}
-                placeholder="Remote / Worldwide"
-              />
-            </FormField>
+            <FloatingLabelInput
+              label="Location / Timezone"
+              value={settings['creator_location'] || ''}
+              onChange={(val) => handleChange('creator_location', val)}
+              placeholder="Remote / Worldwide"
+            />
 
-            <FormField label="Studio Positioning Statement">
-              <Input
-                value={settings['creator_positioning'] || ''}
-                onChange={(e) => handleChange('creator_positioning', e.target.value)}
-                placeholder="Exploring ideas across web architecture, AI, graphics, and systems..."
-              />
-            </FormField>
+            <FloatingLabelInput
+              label="Studio Positioning Statement"
+              value={settings['creator_positioning'] || ''}
+              onChange={(val) => handleChange('creator_positioning', val)}
+              placeholder="Exploring ideas across web architecture, AI, graphics, and systems..."
+            />
           </div>
 
           <FormField label="Compact Bio (Hero Cards & Footer)">
@@ -918,33 +909,30 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
       {activeTab === 'homepage' && (
         <Card className="p-5 sm:p-6 space-y-4 rounded-3xl border-zinc-800 bg-zinc-900/40">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField label="Hero Badge" description="Small pill badge above the hero headline">
-              <Input
-                value={settings['hero_badge'] || ''}
-                onChange={(e) => handleChange('hero_badge', e.target.value)}
-                placeholder="Software & Systems Studio"
-              />
-            </FormField>
+            <FloatingLabelInput
+              label="Hero Badge"
+              hint="Small pill badge above the hero headline"
+              value={settings['hero_badge'] || ''}
+              onChange={(val) => handleChange('hero_badge', val)}
+              placeholder="Software & Systems Studio"
+            />
 
-            <FormField label="Announcement Banner" description="Optional top-of-page alert banner">
-              <Input
-                value={settings['announcement_banner'] || ''}
-                onChange={(e) => handleChange('announcement_banner', e.target.value)}
-                placeholder="e.g. SpectraLens AI v2.4 released with on-device WASM"
-              />
-            </FormField>
+            <FloatingLabelInput
+              label="Announcement Banner"
+              hint="Optional top-of-page alert banner"
+              value={settings['announcement_banner'] || ''}
+              onChange={(val) => handleChange('announcement_banner', val)}
+              placeholder="e.g. SpectraLens AI v2.4 released with on-device WASM"
+            />
           </div>
 
-          <FormField
+          <FloatingLabelInput
             label="Hero Headline"
-            description="Main statement rendered below 'I am [Name].'"
-          >
-            <Input
-              value={settings['hero_headline'] || ''}
-              onChange={(e) => handleChange('hero_headline', e.target.value)}
-              placeholder="Building software, tools, games, and experiments that solve real problems and spark new ideas."
-            />
-          </FormField>
+            hint="Main statement rendered below 'I am [Name].'"
+            value={settings['hero_headline'] || ''}
+            onChange={(val) => handleChange('hero_headline', val)}
+            placeholder="Building software, tools, games, and experiments that solve real problems and spark new ideas."
+          />
 
           <FormField
             label="Hero Positioning Paragraph"
@@ -959,65 +947,60 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
           </FormField>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField label="Primary CTA Label" description="First button linking to /apps">
-              <Input
-                value={settings['primary_cta_label'] || ''}
-                onChange={(e) => handleChange('primary_cta_label', e.target.value)}
-                placeholder="Explore Apps"
-              />
-            </FormField>
-
-            <FormField label="Secondary CTA Label" description="Second button linking to /about">
-              <Input
-                value={settings['secondary_cta_label'] || ''}
-                onChange={(e) => handleChange('secondary_cta_label', e.target.value)}
-                placeholder="About Me"
-              />
-            </FormField>
-          </div>
-
-          <div className="pt-3 border-t border-zinc-800 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField label="Selected Apps Section Title">
-              <Input
-                value={settings['homepage_apps_title'] || ''}
-                onChange={(e) => handleChange('homepage_apps_title', e.target.value)}
-                placeholder="Selected Apps"
-              />
-            </FormField>
-
-            <FormField label="Field Notes Section Title">
-              <Input
-                value={settings['homepage_blog_title'] || ''}
-                onChange={(e) => handleChange('homepage_blog_title', e.target.value)}
-                placeholder="Field Notes & Reflections"
-              />
-            </FormField>
-          </div>
-
-          <FormField label="Creator Statement ('How I Build' Headline)">
-            <Input
-              value={settings['creator_statement'] || ''}
-              onChange={(e) => handleChange('creator_statement', e.target.value)}
-              placeholder="I care about software that is understandable, useful, fast, and considerate."
+            <FloatingLabelInput
+              label="Primary CTA Label"
+              hint="First button linking to /apps"
+              value={settings['primary_cta_label'] || ''}
+              onChange={(val) => handleChange('primary_cta_label', val)}
+              placeholder="Explore Apps"
             />
-          </FormField>
+
+            <FloatingLabelInput
+              label="Secondary CTA Label"
+              hint="Second button linking to /about"
+              value={settings['secondary_cta_label'] || ''}
+              onChange={(val) => handleChange('secondary_cta_label', val)}
+              placeholder="About Me"
+            />
+          </div>
 
           <div className="pt-3 border-t border-zinc-800 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField label="Closing Studio Doorway Title">
-              <Input
-                value={settings['closing_cta_title'] || ''}
-                onChange={(e) => handleChange('closing_cta_title', e.target.value)}
-                placeholder="Explore the ElseSourav Studio"
-              />
-            </FormField>
+            <FloatingLabelInput
+              label="Selected Apps Section Title"
+              value={settings['homepage_apps_title'] || ''}
+              onChange={(val) => handleChange('homepage_apps_title', val)}
+              placeholder="Selected Apps"
+            />
 
-            <FormField label="Closing Studio Doorway Subtitle">
-              <Input
-                value={settings['closing_cta_subtitle'] || ''}
-                onChange={(e) => handleChange('closing_cta_subtitle', e.target.value)}
-                placeholder="Every application, utility, and field note is built independently with a focus on craft, performance, and usability."
-              />
-            </FormField>
+            <FloatingLabelInput
+              label="Field Notes Section Title"
+              value={settings['homepage_blog_title'] || ''}
+              onChange={(val) => handleChange('homepage_blog_title', val)}
+              placeholder="Field Notes & Reflections"
+            />
+          </div>
+
+          <FloatingLabelInput
+            label="Creator Statement ('How I Build' Headline)"
+            value={settings['creator_statement'] || ''}
+            onChange={(val) => handleChange('creator_statement', val)}
+            placeholder="I care about software that is understandable, useful, fast, and considerate."
+          />
+
+          <div className="pt-3 border-t border-zinc-800 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FloatingLabelInput
+              label="Closing Studio Doorway Title"
+              value={settings['closing_cta_title'] || ''}
+              onChange={(val) => handleChange('closing_cta_title', val)}
+              placeholder="Explore the ElseSourav Studio"
+            />
+
+            <FloatingLabelInput
+              label="Closing Studio Doorway Subtitle"
+              value={settings['closing_cta_subtitle'] || ''}
+              onChange={(val) => handleChange('closing_cta_subtitle', val)}
+              placeholder="Every application, utility, and field note is built independently with a focus on craft, performance, and usability."
+            />
           </div>
         </Card>
       )}
@@ -1067,30 +1050,20 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
                   />
                 </div>
 
-                <div>
-                  <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
-                    Display Label
-                  </label>
-                  <Input
-                    value={newLink.label || ''}
-                    onChange={(e) => setNewLink((prev) => ({ ...prev, label: e.target.value }))}
-                    placeholder="e.g. GitHub"
-                    className="text-xs h-9"
-                  />
-                </div>
+                <FloatingLabelInput
+                  label="Display Label"
+                  value={newLink.label || ''}
+                  onChange={(val) => setNewLink((prev) => ({ ...prev, label: val }))}
+                  placeholder="e.g. GitHub"
+                />
 
-                <div>
-                  <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
-                    Target URL
-                  </label>
-                  <Input
-                    type="url"
-                    value={newLink.url || ''}
-                    onChange={(e) => setNewLink((prev) => ({ ...prev, url: e.target.value }))}
-                    placeholder="https://..."
-                    className="text-xs h-9"
-                  />
-                </div>
+                <FloatingLabelInput
+                  label="Target URL"
+                  type="url"
+                  value={newLink.url || ''}
+                  onChange={(val) => setNewLink((prev) => ({ ...prev, url: val }))}
+                  placeholder="https://..."
+                />
               </div>
 
               <div className="flex items-center justify-end gap-2 pt-1">
@@ -1274,23 +1247,21 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
 
           {/* Quick Fallback Fields */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-3 border-b border-zinc-800/80">
-            <FormField label="Primary Contact Email">
-              <Input
-                type="email"
-                value={settings['contact_email'] || ''}
-                onChange={(e) => handleChange('contact_email', e.target.value)}
-                placeholder="contact@elsesourav.com"
-              />
-            </FormField>
+            <FloatingLabelInput
+              label="Primary Contact Email"
+              type="email"
+              value={settings['contact_email'] || ''}
+              onChange={(val) => handleChange('contact_email', val)}
+              placeholder="contact@elsesourav.com"
+            />
 
-            <FormField label="Support Desk URL">
-              <Input
-                type="url"
-                value={settings['support_url'] || ''}
-                onChange={(e) => handleChange('support_url', e.target.value)}
-                placeholder="https://elsesourav.com/support"
-              />
-            </FormField>
+            <FloatingLabelInput
+              label="Support Desk URL"
+              type="url"
+              value={settings['support_url'] || ''}
+              onChange={(val) => handleChange('support_url', val)}
+              placeholder="https://elsesourav.com/support"
+            />
           </div>
 
           {/* Add Contact Form */}
@@ -1314,44 +1285,29 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
                   />
                 </div>
 
-                <div>
-                  <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
-                    Channel Label
-                  </label>
-                  <Input
-                    value={newContact.label || ''}
-                    onChange={(e) => setNewContact((prev) => ({ ...prev, label: e.target.value }))}
-                    placeholder="e.g. Technical Inquiries"
-                    className="text-xs h-9"
-                  />
-                </div>
+                <FloatingLabelInput
+                  label="Channel Label"
+                  value={newContact.label || ''}
+                  onChange={(val) => setNewContact((prev) => ({ ...prev, label: val }))}
+                  placeholder="e.g. Technical Inquiries"
+                />
 
-                <div>
-                  <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
-                    Contact Detail / URL
-                  </label>
-                  <Input
-                    value={newContact.value || ''}
-                    onChange={(e) => setNewContact((prev) => ({ ...prev, value: e.target.value }))}
-                    placeholder="email, phone, or link"
-                    className="text-xs h-9"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
-                  Note / Response Time
-                </label>
-                <Input
-                  value={newContact.description || ''}
-                  onChange={(e) =>
-                    setNewContact((prev) => ({ ...prev, description: e.target.value }))
-                  }
-                  placeholder="Usually replies within 24 hours"
-                  className="text-xs h-8"
+                <FloatingLabelInput
+                  label="Contact Detail / URL"
+                  value={newContact.value || ''}
+                  onChange={(val) => setNewContact((prev) => ({ ...prev, value: val }))}
+                  placeholder="email, phone, or link"
                 />
               </div>
+
+              <FloatingLabelInput
+                label="Note / Response Time"
+                value={newContact.description || ''}
+                onChange={(val) =>
+                  setNewContact((prev) => ({ ...prev, description: val }))
+                }
+                placeholder="Usually replies within 24 hours"
+              />
 
               <div className="flex items-center justify-end gap-2 pt-1">
                 <Button

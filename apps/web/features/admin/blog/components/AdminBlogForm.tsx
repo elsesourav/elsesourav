@@ -3,8 +3,8 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Card, Button, Input } from '@elsesourav/ui';
-import { Dropdown } from '@elsesourav/ui/interior';
+import { Card, Button } from '@elsesourav/ui';
+import { Dropdown, FloatingLabelInput } from '@elsesourav/ui/interior';
 import type { BlogPost, BlogCategory, BlogTag } from '@elsesourav/types';
 import {
   createBlogPostAction,
@@ -231,53 +231,38 @@ export function AdminBlogForm({ post, categories }: AdminBlogFormProps) {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Title */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-zinc-300">
-                Article Title <span className="text-rose-400">*</span>
-              </label>
-              <Input
-                type="text"
-                value={title}
-                onChange={(e) => handleTitleChange(e.target.value)}
-                placeholder="e.g. Building ElseSourav: Next.js 15 Migration"
-                required
-                maxLength={150}
-                className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100"
-              />
-            </div>
+            <FloatingLabelInput
+              label="Article Title"
+              type="text"
+              value={title}
+              onChange={(val) => handleTitleChange(val)}
+              placeholder="e.g. Building ElseSourav: Next.js 15 Migration"
+              required
+              maxLength={150}
+            />
 
             {/* Slug */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-zinc-300">
-                URL Slug <span className="text-rose-400">*</span>
-              </label>
-              <Input
-                type="text"
-                value={slug}
-                onChange={(e) => setSlug(e.target.value.toLowerCase())}
-                placeholder="building-elsesourav-nextjs-15-migration"
-                required
-                maxLength={100}
-                className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100 font-mono"
-              />
-            </div>
+            <FloatingLabelInput
+              label="URL Slug"
+              type="text"
+              value={slug}
+              onChange={(val) => setSlug(val.toLowerCase())}
+              placeholder="building-elsesourav-nextjs-15-migration"
+              required
+              maxLength={100}
+            />
           </div>
 
           {/* Excerpt */}
-          <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-zinc-300">
-              Summary Excerpt <span className="text-rose-400">*</span>
-            </label>
-            <Input
-              type="text"
-              value={excerpt}
-              onChange={(e) => setExcerpt(e.target.value)}
-              placeholder="1-2 sentences summarizing key takeaways for RSS, preview cards, and search..."
-              required
-              maxLength={300}
-              className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100"
-            />
-          </div>
+          <FloatingLabelInput
+            label="Summary Excerpt"
+            type="text"
+            value={excerpt}
+            onChange={(val) => setExcerpt(val)}
+            placeholder="1-2 sentences summarizing key takeaways for RSS, preview cards, and search..."
+            required
+            maxLength={300}
+          />
 
           {/* Markdown Content */}
           <AdminMarkdownEditor

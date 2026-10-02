@@ -3,8 +3,8 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Card, Button, Input } from '@elsesourav/ui';
-import { Dropdown } from '@elsesourav/ui/interior';
+import { Card, Button } from '@elsesourav/ui';
+import { Dropdown, FloatingLabelInput } from '@elsesourav/ui/interior';
 import type { HelpArticle, HelpCategoryWithArticles } from '@elsesourav/types';
 import {
   createHelpArticleAction,
@@ -230,36 +230,26 @@ export function AdminHelpForm({ article, categories }: AdminHelpFormProps) {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Title */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-zinc-300">
-                Article Title <span className="text-rose-400">*</span>
-              </label>
-              <Input
-                type="text"
-                value={title}
-                onChange={(e) => handleTitleChange(e.target.value)}
-                placeholder="e.g. How to install Chrome extensions"
-                required
-                maxLength={150}
-                className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100"
-              />
-            </div>
+            <FloatingLabelInput
+              label="Article Title"
+              type="text"
+              value={title}
+              onChange={(val) => handleTitleChange(val)}
+              placeholder="e.g. How to install Chrome extensions"
+              required
+              maxLength={150}
+            />
 
             {/* Slug */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-zinc-300">
-                URL Slug <span className="text-rose-400">*</span>
-              </label>
-              <Input
-                type="text"
-                value={slug}
-                onChange={(e) => setSlug(e.target.value.toLowerCase())}
-                placeholder="how-to-install-chrome-extensions"
-                required
-                maxLength={100}
-                className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100 font-mono"
-              />
-            </div>
+            <FloatingLabelInput
+              label="URL Slug"
+              type="text"
+              value={slug}
+              onChange={(val) => setSlug(val.toLowerCase())}
+              placeholder="how-to-install-chrome-extensions"
+              required
+              maxLength={100}
+            />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -277,32 +267,25 @@ export function AdminHelpForm({ article, categories }: AdminHelpFormProps) {
             </div>
 
             {/* Order Index */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-zinc-300">
-                Display Order Index
-              </label>
-              <Input
+            <div className="pt-[18px]">
+              <FloatingLabelInput
+                label="Display Order Index"
                 type="number"
-                value={orderIndex}
-                onChange={(e) => setOrderIndex(Number(e.target.value))}
-                min={0}
-                className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100 font-mono"
+                value={String(orderIndex)}
+                onChange={(val) => setOrderIndex(Number(val) || 0)}
               />
             </div>
           </div>
 
           {/* Excerpt */}
-          <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-zinc-300">Quick Excerpt</label>
-            <Input
-              type="text"
-              value={excerpt}
-              onChange={(e) => setExcerpt(e.target.value)}
-              placeholder="Brief summary sentence..."
-              maxLength={250}
-              className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100"
-            />
-          </div>
+          <FloatingLabelInput
+            label="Quick Excerpt"
+            type="text"
+            value={excerpt}
+            onChange={(val) => setExcerpt(val)}
+            placeholder="Brief summary sentence..."
+            maxLength={250}
+          />
 
           {/* Markdown Content */}
           <AdminMarkdownEditor

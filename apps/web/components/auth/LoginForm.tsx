@@ -3,7 +3,8 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { Input, Button, Label, Alert, AlertDescription, Separator } from '@elsesourav/ui';
+import { Button, Alert, AlertDescription, Separator } from '@elsesourav/ui';
+import { FloatingLabelInput } from '@elsesourav/ui/interior';
 import { createAuthBrowserClient, sanitizeRedirectUrl, AuthError } from '@elsesourav/auth';
 import { OAuthButtons } from './OAuthButtons';
 import { Eye, EyeOff, Lock, UserCheck } from 'lucide-react';
@@ -124,69 +125,51 @@ export function LoginForm() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-1.5">
-          <Label
-            htmlFor="login-identifier"
-            required
-            className="text-xs text-[hsl(var(--foreground))]"
-          >
-            Email Address or Username
-          </Label>
-          <div className="relative">
-            <UserCheck className="w-4 h-4 text-[hsl(var(--muted-foreground))] absolute left-3 top-1/2 -translate-y-1/2" />
-            <Input
-              id="login-identifier"
-              name="identifier"
-              type="text"
-              autoComplete="username"
-              placeholder="you@example.com or username"
-              value={identifier}
-              onChange={(e) => setIdentifier(e.target.value)}
-              required
-              disabled={loading}
-              className="pl-9 bg-[hsl(var(--surface-subtle))] border-[hsl(var(--input))] text-[hsl(var(--foreground))] text-sm focus:border-indigo-500 rounded-xl"
-            />
-          </div>
-        </div>
+        <FloatingLabelInput
+          id="login-identifier"
+          name="identifier"
+          label="Email Address or Username"
+          type="text"
+          autoComplete="username"
+          placeholder="you@example.com or username"
+          value={identifier}
+          onChange={(val) => setIdentifier(val)}
+          required
+          disabled={loading}
+          icon={<UserCheck className="w-4 h-4" />}
+        />
 
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between">
-            <Label
-              htmlFor="login-password"
-              required
-              className="text-xs text-[hsl(var(--foreground))]"
-            >
-              Password
-            </Label>
+        <div>
+          <FloatingLabelInput
+            id="login-password"
+            name="password"
+            label="Password"
+            type={showPassword ? 'text' : 'password'}
+            autoComplete="current-password"
+            placeholder="••••••••"
+            value={password}
+            onChange={(val) => setPassword(val)}
+            required
+            disabled={loading}
+            icon={<Lock className="w-4 h-4" />}
+            rightElement={
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] focus:outline-none"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            }
+          />
+          <div className="flex justify-end -mt-3 mb-2">
             <Link
               href="/forgot-password"
               className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 hover:underline transition-colors"
             >
               Forgot password?
             </Link>
-          </div>
-          <div className="relative">
-            <Lock className="w-4 h-4 text-[hsl(var(--muted-foreground))] absolute left-3 top-1/2 -translate-y-1/2" />
-            <Input
-              id="login-password"
-              name="password"
-              type={showPassword ? 'text' : 'password'}
-              autoComplete="current-password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              disabled={loading}
-              className="pl-9 pr-10 bg-[hsl(var(--surface-subtle))] border-[hsl(var(--input))] text-[hsl(var(--foreground))] text-sm focus:border-indigo-500 rounded-xl"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] focus:outline-none"
-              aria-label={showPassword ? 'Hide password' : 'Show password'}
-            >
-              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            </button>
           </div>
         </div>
 

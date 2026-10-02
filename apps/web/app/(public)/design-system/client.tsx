@@ -6,7 +6,6 @@ import {
   Badge,
   Avatar,
   Separator,
-  Input,
   Textarea,
   Checkbox,
   Switch,
@@ -43,7 +42,7 @@ import {
   TableCell,
   StatCard,
 } from '@elsesourav/ui';
-import { MorphSlider, Dropdown } from '@elsesourav/ui/interior';
+import { MorphSlider, Dropdown, FloatingLabelInput } from '@elsesourav/ui/interior';
 import { Sparkles, Terminal, Activity, Layers } from 'lucide-react';
 
 export function DesignSystemClient() {
@@ -173,9 +172,12 @@ export function DesignSystemClient() {
         <h2 className="text-xl font-bold text-white">4. Form Controls</h2>
         <Card className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FormField label="Full Name" required description="Your public developer identity">
-              <Input placeholder="Sourav" defaultValue="Sourav" />
-            </FormField>
+            <FloatingLabelInput
+              label="Full Name"
+              defaultValue="Sourav"
+              required
+              hint="Your public developer identity"
+            />
 
             <FormField label="Role / Category" required>
               <Dropdown

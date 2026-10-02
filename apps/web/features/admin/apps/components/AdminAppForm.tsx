@@ -3,8 +3,8 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Card, CardHeader, CardTitle, CardDescription, Button, Input, Badge } from '@elsesourav/ui';
-import { Dropdown } from '@elsesourav/ui/interior';
+import { Card, CardHeader, CardTitle, CardDescription, Button, Badge } from '@elsesourav/ui';
+import { Dropdown, FloatingLabelInput } from '@elsesourav/ui/interior';
 import type { App, CategorySummary, TagSummary } from '@elsesourav/types';
 import {
   createAppAction,
@@ -269,53 +269,38 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Name */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-zinc-300">
-                Application Name <span className="text-rose-400">*</span>
-              </label>
-              <Input
-                type="text"
-                value={name}
-                onChange={(e) => handleNameChange(e.target.value)}
-                placeholder="e.g. Developer Terminal Pro"
-                required
-                maxLength={100}
-                className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100"
-              />
-            </div>
+            <FloatingLabelInput
+              label="Application Name"
+              type="text"
+              value={name}
+              onChange={(val) => handleNameChange(val)}
+              placeholder="e.g. Developer Terminal Pro"
+              required
+              maxLength={100}
+            />
 
             {/* Slug */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-zinc-300">
-                URL Slug <span className="text-rose-400">*</span>
-              </label>
-              <Input
-                type="text"
-                value={slug}
-                onChange={(e) => setSlug(e.target.value.toLowerCase())}
-                placeholder="developer-terminal-pro"
-                required
-                maxLength={50}
-                className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100 font-mono"
-              />
-            </div>
+            <FloatingLabelInput
+              label="URL Slug"
+              type="text"
+              value={slug}
+              onChange={(val) => setSlug(val.toLowerCase())}
+              placeholder="developer-terminal-pro"
+              required
+              maxLength={50}
+            />
           </div>
 
           {/* Short Description */}
-          <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-zinc-300">
-              Short Description <span className="text-rose-400">*</span>
-            </label>
-            <Input
-              type="text"
-              value={shortDescription}
-              onChange={(e) => setShortDescription(e.target.value)}
-              placeholder="1-2 sentences summarizing features for cards and search results..."
-              required
-              maxLength={250}
-              className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100"
-            />
-          </div>
+          <FloatingLabelInput
+            label="Short Description"
+            type="text"
+            value={shortDescription}
+            onChange={(val) => setShortDescription(val)}
+            placeholder="1-2 sentences summarizing features for cards and search results..."
+            required
+            maxLength={250}
+          />
 
           {/* Marketing Overview Description */}
           <div className="space-y-1.5">
@@ -379,32 +364,22 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
             />
 
             {/* Demo URL */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-zinc-300">
-                Interactive Demo URL
-              </label>
-              <Input
-                type="url"
-                value={demoUrl}
-                onChange={(e) => setDemoUrl(e.target.value)}
-                placeholder="https://demo.elsesourav.com/..."
-                className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100"
-              />
-            </div>
+            <FloatingLabelInput
+              label="Interactive Demo URL"
+              type="url"
+              value={demoUrl}
+              onChange={(val) => setDemoUrl(val)}
+              placeholder="https://demo.elsesourav.com/..."
+            />
 
             {/* Video URL */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-zinc-300">
-                Showcase Video URL
-              </label>
-              <Input
-                type="url"
-                value={videoUrl}
-                onChange={(e) => setVideoUrl(e.target.value)}
-                placeholder="https://youtube.com/..."
-                className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100"
-              />
-            </div>
+            <FloatingLabelInput
+              label="Showcase Video URL"
+              type="url"
+              value={videoUrl}
+              onChange={(val) => setVideoUrl(val)}
+              placeholder="https://youtube.com/..."
+            />
           </div>
         </Card>
 
@@ -441,18 +416,12 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
             </div>
 
             {/* Sort Order */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-zinc-300">
-                Display Sort Order
-              </label>
-              <Input
-                type="number"
-                value={sortOrder}
-                onChange={(e) => setSortOrder(Number(e.target.value))}
-                min={0}
-                className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100 font-mono"
-              />
-            </div>
+            <FloatingLabelInput
+              label="Display Sort Order"
+              type="number"
+              value={String(sortOrder)}
+              onChange={(val) => setSortOrder(Number(val))}
+            />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-zinc-800/60">
@@ -553,19 +522,14 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
             </div>
 
             <form onSubmit={handlePublishRelease} className="space-y-4 text-xs">
-              <div className="space-y-1.5">
-                <label className="block font-semibold text-zinc-300">
-                  Release Version <span className="text-rose-400">*</span>
-                </label>
-                <Input
-                  type="text"
-                  value={releaseVersion}
-                  onChange={(e) => setReleaseVersion(e.target.value)}
-                  placeholder="e.g. 1.0.0"
-                  required
-                  className="bg-zinc-950 border-zinc-800 text-xs rounded-xl text-zinc-100 font-mono"
-                />
-              </div>
+              <FloatingLabelInput
+                label="Release Version"
+                type="text"
+                value={releaseVersion}
+                onChange={(val) => setReleaseVersion(val)}
+                placeholder="e.g. 1.0.0"
+                required
+              />
 
               <div className="space-y-1.5">
                 <label className="block font-semibold text-zinc-300">
@@ -581,18 +545,13 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
                 />
               </div>
 
-              <div className="space-y-1.5">
-                <label className="block font-semibold text-zinc-300">
-                  Download Asset URL (optional)
-                </label>
-                <Input
-                  type="url"
-                  value={releaseDownloadUrl}
-                  onChange={(e) => setReleaseDownloadUrl(e.target.value)}
-                  placeholder="https://github.com/.../release.zip"
-                  className="bg-zinc-950 border-zinc-800 text-xs rounded-xl text-zinc-100"
-                />
-              </div>
+              <FloatingLabelInput
+                label="Download Asset URL (optional)"
+                type="url"
+                value={releaseDownloadUrl}
+                onChange={(val) => setReleaseDownloadUrl(val)}
+                placeholder="https://github.com/.../release.zip"
+              />
 
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-zinc-800">
                 <Button

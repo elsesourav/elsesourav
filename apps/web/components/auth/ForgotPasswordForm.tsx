@@ -2,7 +2,8 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Input, Button, Label, Alert, AlertDescription } from '@elsesourav/ui';
+import { Button, Label, Alert, AlertDescription } from '@elsesourav/ui';
+import { FloatingLabelInput } from '@elsesourav/ui/interior';
 import {
   Mail,
   CheckCircle2,
@@ -334,33 +335,19 @@ export function ForgotPasswordForm() {
       {/* ── STEP 1: Email / Username Entry ──────────────────────────────────── */}
       {step === 1 && (
         <form onSubmit={handleSendOtp} className="space-y-4 animate-fade-in">
-          <div className="space-y-1.5">
-            <Label
-              htmlFor="forgot-email"
-              required
-              className="text-xs text-[hsl(var(--foreground))]"
-            >
-              Email Address or Username
-            </Label>
-            <div className="relative">
-              <Mail className="w-4 h-4 text-[hsl(var(--muted-foreground))] absolute left-3 top-1/2 -translate-y-1/2" />
-              <Input
-                id="forgot-email"
-                type="text"
-                autoComplete="username"
-                placeholder="developer@example.com or username"
-                value={identifier}
-                onChange={(e) => setIdentifier(e.target.value)}
-                required
-                disabled={loading}
-                autoFocus
-                className="pl-9 bg-[hsl(var(--surface-subtle))] border-[hsl(var(--input))] text-[hsl(var(--foreground))] text-sm focus:border-indigo-500 rounded-xl"
-              />
-            </div>
-            <p className="text-[11px] text-[hsl(var(--muted-foreground))]">
-              We will dispatch a 6-digit numeric verification code to your email.
-            </p>
-          </div>
+          <FloatingLabelInput
+            id="forgot-email"
+            label="Email Address or Username"
+            type="text"
+            icon={<Mail className="w-4 h-4" />}
+            autoComplete="username"
+            placeholder="developer@example.com or username"
+            value={identifier}
+            onChange={(val) => setIdentifier(val)}
+            required
+            disabled={loading}
+            hint="We will dispatch a 6-digit numeric verification code to your email."
+          />
 
           <Button
             type="submit"
@@ -447,18 +434,39 @@ export function ForgotPasswordForm() {
       {/* ── STEP 3: Create New Password ─────────────────────────────────────── */}
       {step === 3 && (
         <form onSubmit={handleUpdatePassword} className="space-y-3.5 animate-fade-in">
-          <div className="space-y-1">
-            <div className="flex items-center justify-between">
-              <Label
-                htmlFor="new-password"
-                required
-                className="text-xs text-[hsl(var(--foreground))]"
-              >
-                New Password
-              </Label>
-              {password.length > 0 && (
-                <span className="text-[10px] font-medium flex items-center gap-1">
-                  <ShieldCheck className="w-3 h-3 text-indigo-400" />
+          <div>
+            <FloatingLabelInput
+              id="new-password"
+              name="new-password"
+              label="New Password"
+              type={showPassword ? 'text' : 'password'}
+              autoComplete="new-password"
+              placeholder="At least 8 characters"
+              value={password}
+              onChange={(val) => setPassword(val)}
+              required
+              disabled={loading}
+              icon={<Lock className="w-4 h-4" />}
+              rightElement={
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] focus:outline-none"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              }
+            />
+
+            {/* Password strength bar */}
+            {password.length > 0 && (
+              <div className="space-y-1 -mt-2 mb-3">
+                <div className="flex items-center justify-between text-[10px]">
+                  <span className="flex items-center gap-1 text-[hsl(var(--muted-foreground))]">
+                    <ShieldCheck className="w-3 h-3 text-indigo-400" />
+                    Strength:
+                  </span>
                   <span
                     className={
                       passwordStrength.score >= 4
@@ -472,84 +480,42 @@ export function ForgotPasswordForm() {
                   >
                     {passwordStrength.label}
                   </span>
-                </span>
-              )}
-            </div>
-            <div className="relative">
-              <Lock className="w-4 h-4 text-[hsl(var(--muted-foreground))] absolute left-3 top-1/2 -translate-y-1/2" />
-              <Input
-                id="new-password"
-                name="new-password"
-                type={showPassword ? 'text' : 'password'}
-                autoComplete="new-password"
-                placeholder="At least 8 characters"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                disabled={loading}
-                autoFocus
-                className="pl-9 pr-10 bg-[hsl(var(--surface-subtle))] border-[hsl(var(--input))] text-[hsl(var(--foreground))] text-sm focus:border-indigo-500 rounded-xl"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] focus:outline-none"
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-              >
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
-            </div>
-
-            {/* Password strength bar */}
-            {password.length > 0 && (
-              <div className="grid grid-cols-4 gap-1 pt-0.5">
-                {[1, 2, 3, 4].map((seg) => (
-                  <div
-                    key={seg}
-                    className={`h-1 rounded-full transition-all duration-300 ${
-                      passwordStrength.score >= seg ? passwordStrength.color : 'bg-zinc-800'
-                    }`}
-                  />
-                ))}
+                </div>
+                <div className="grid grid-cols-4 gap-1">
+                  {[1, 2, 3, 4].map((seg) => (
+                    <div
+                      key={seg}
+                      className={`h-1 rounded-full transition-all duration-300 ${
+                        passwordStrength.score >= seg ? passwordStrength.color : 'bg-zinc-800'
+                      }`}
+                    />
+                  ))}
+                </div>
               </div>
             )}
           </div>
 
-          <div className="space-y-1">
-            <div className="flex items-center justify-between">
-              <Label
-                htmlFor="confirm-new-password"
-                required
-                className="text-xs text-[hsl(var(--foreground))]"
-              >
-                Confirm New Password
-              </Label>
-              {confirmPassword && (
-                <span
-                  className={`text-[11px] font-medium flex items-center gap-1 ${
-                    confirmPassword !== password ? 'text-rose-400' : 'text-emerald-400'
-                  }`}
-                >
-                  {confirmPassword !== password ? 'Passwords do not match' : 'Match ✓'}
-                </span>
-              )}
-            </div>
-            <div className="relative">
-              <Lock className="w-4 h-4 text-[hsl(var(--muted-foreground))] absolute left-3 top-1/2 -translate-y-1/2" />
-              <Input
-                id="confirm-new-password"
-                name="confirm-new-password"
-                type={showPassword ? 'text' : 'password'}
-                autoComplete="new-password"
-                placeholder="Re-enter new password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                disabled={loading}
-                className="pl-9 bg-[hsl(var(--surface-subtle))] border-[hsl(var(--input))] text-[hsl(var(--foreground))] text-sm focus:border-indigo-500 rounded-xl"
-              />
-            </div>
-          </div>
+          <FloatingLabelInput
+            id="confirm-new-password"
+            name="confirm-new-password"
+            label="Confirm New Password"
+            type={showPassword ? 'text' : 'password'}
+            autoComplete="new-password"
+            placeholder="Re-enter new password"
+            value={confirmPassword}
+            onChange={(val) => setConfirmPassword(val)}
+            required
+            disabled={loading}
+            icon={<Lock className="w-4 h-4" />}
+            hint={
+              confirmPassword
+                ? confirmPassword !== password
+                  ? 'Passwords do not match'
+                  : 'Passwords match ✓'
+                : undefined
+            }
+            invalid={Boolean(confirmPassword && confirmPassword !== password)}
+          />
 
           <Button
             type="submit"

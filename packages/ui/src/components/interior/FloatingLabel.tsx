@@ -109,10 +109,13 @@ export type FloatingLabelInputProps = {
   onBlur?: () => void;
   hint?: string;
   invalid?: boolean;
+  error?: string;
   id?: string;
   name?: string;
-  type?: 'text' | 'email' | 'password' | 'search' | 'tel' | 'url';
+  placeholder?: string;
+  type?: React.ComponentProps<'input'>['type'];
   autoComplete?: string;
+  autoFocus?: boolean;
   inputMode?: React.ComponentProps<'input'>['inputMode'];
   maxLength?: number;
   required?: boolean;
@@ -120,6 +123,9 @@ export type FloatingLabelInputProps = {
   readOnly?: boolean;
   inputRef?: React.Ref<HTMLInputElement>;
   className?: string;
+  inputClassName?: string;
+  icon?: React.ReactNode;
+  rightElement?: React.ReactNode;
 };
 
 export function FloatingLabelInput({
@@ -131,10 +137,13 @@ export function FloatingLabelInput({
   onBlur,
   hint,
   invalid = false,
+  error,
   id,
   name,
+  placeholder,
   type = 'text',
   autoComplete,
+  autoFocus,
   inputMode,
   maxLength,
   required = false,
@@ -142,6 +151,9 @@ export function FloatingLabelInput({
   readOnly = false,
   inputRef,
   className = '',
+  inputClassName = '',
+  icon,
+  rightElement,
 }: FloatingLabelInputProps) {
   const auto = useId();
   const fieldId = id ?? `${auto}-field`;
@@ -165,18 +177,26 @@ export function FloatingLabelInput({
     [ref, inputRef]
   );
 
+  const isInvalid = invalid || Boolean(error);
+  const displayHint = error || hint;
+
   return (
     <div data-interior="floating-label" className={`w-full ${className}`}>
       <div className="relative pt-[20px]">
         <div
           className={`relative h-10 rounded-[10px] border-2 transition-[background-color,border-color,box-shadow] duration-150 ${
-            invalid
+            isInvalid
               ? 'border-red-500 bg-white dark:border-red-400 dark:bg-[var(--interior-bg-elevated)]'
               : focused
                 ? 'border-[var(--interior-primary)] bg-white dark:border-[var(--interior-primary)] dark:bg-[var(--interior-bg-elevated)]'
                 : 'border-[var(--interior-border)] bg-stone-100/70 shadow-[inset_0_1px_2px_rgba(28,25,23,0.07)] dark:border-white/[0.08] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.45)]'
           } ${disabled ? 'opacity-55' : ''}`}
         >
+          {icon && (
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none flex items-center justify-center z-10">
+              {icon}
+            </div>
+          )}
           <input
             ref={attach}
             id={fieldId}
@@ -184,15 +204,17 @@ export function FloatingLabelInput({
             type={type}
             value={value}
             defaultValue={defaultValue}
+            placeholder={raised ? placeholder : undefined}
             autoComplete={autoComplete}
+            autoFocus={autoFocus}
             inputMode={inputMode}
             maxLength={maxLength}
             required={required}
             disabled={disabled}
             readOnly={readOnly}
             aria-required={required || undefined}
-            aria-invalid={invalid || undefined}
-            aria-describedby={hint ? hintId : undefined}
+            aria-invalid={isInvalid || undefined}
+            aria-describedby={displayHint ? hintId : undefined}
             onFocus={() => {
               fieldProps.onFocus();
               onFocus?.();
@@ -205,8 +227,15 @@ export function FloatingLabelInput({
               fieldProps.onChange(event);
               onChange?.(event.currentTarget.value, event);
             }}
-            className="absolute inset-0 h-full w-full rounded-[9px] bg-transparent px-3 py-0 text-[13px] leading-[20px] text-[var(--interior-fg)] outline-none focus-visible:outline-none disabled:cursor-not-allowed dark:text-[var(--interior-fg)]"
+            className={`absolute inset-0 h-full w-full rounded-[9px] bg-transparent py-0 text-[13px] leading-[20px] text-[var(--interior-fg)] outline-none focus-visible:outline-none disabled:cursor-not-allowed dark:text-[var(--interior-fg)] ${
+              icon ? 'pl-9' : 'px-3'
+            } ${rightElement ? 'pr-10' : icon ? 'pr-3' : ''} ${inputClassName}`}
           />
+          {rightElement && (
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center z-10">
+              {rightElement}
+            </div>
+          )}
         </div>
 
         <motion.label
@@ -214,13 +243,15 @@ export function FloatingLabelInput({
           initial={false}
           animate={{
             y: raised ? RAISE : 0,
-            x: raised ? SLIDE : 0,
+            x: raised ? (icon ? 0 : SLIDE) : 0,
             scale: raised ? SHRINK : 1,
           }}
           transition={move}
           style={{ originX: 0, originY: 0, willChange: 'transform' }}
-          className={`absolute left-3 top-[32px] block cursor-text select-none text-[13px] leading-[16px] ${
-            invalid
+          className={`absolute top-[32px] block cursor-text select-none text-[13px] leading-[16px] ${
+            icon && !raised ? 'left-9' : 'left-3'
+          } ${
+            isInvalid
               ? 'text-[var(--interior-destructive)]'
               : raised
                 ? 'text-stone-600 dark:text-stone-300'
@@ -240,10 +271,10 @@ export function FloatingLabelInput({
         <p
           aria-hidden
           className={`min-w-0 flex-1 truncate text-[11.5px] leading-[16px] ${
-            invalid ? 'text-[var(--interior-destructive)]' : 'text-[var(--interior-fg-muted)]'
+            isInvalid ? 'text-[var(--interior-destructive)]' : 'text-[var(--interior-fg-muted)]'
           }`}
         >
-          {hint}
+          {displayHint}
         </p>
 
         {maxLength !== undefined ? (
@@ -260,9 +291,9 @@ export function FloatingLabelInput({
           </span>
         ) : null}
 
-        {hint ? (
+        {displayHint ? (
           <span id={hintId} className="sr-only">
-            {hint}
+            {displayHint}
           </span>
         ) : null}
       </div>

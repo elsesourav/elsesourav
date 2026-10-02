@@ -2,8 +2,8 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Input } from '@elsesourav/ui';
-import { Dropdown } from '@elsesourav/ui/interior';
+import { Button } from '@elsesourav/ui';
+import { Dropdown, FloatingLabelInput } from '@elsesourav/ui/interior';
 import { createSupportTicketAction } from '../actions/support-actions';
 import { Send, AlertCircle, Loader2 } from 'lucide-react';
 
@@ -112,20 +112,14 @@ export function CreateTicketForm({ onSuccess, onCancel }: CreateTicketFormProps)
       </div>
 
       {/* Subject Input */}
-      <div className="space-y-1.5">
-        <label className="block text-xs font-semibold text-foreground">
-          Subject Summary <span className="text-rose-500">*</span>
-        </label>
-        <Input
-          type="text"
-          value={subject}
-          onChange={(e) => setSubject(e.target.value)}
-          placeholder="Brief summary of the issue..."
-          required
-          maxLength={120}
-          className="bg-background border-border text-xs rounded-xl text-foreground focus:border-primary"
-        />
-      </div>
+      <FloatingLabelInput
+        label="Subject Summary"
+        value={subject}
+        onChange={(val) => setSubject(val)}
+        placeholder="Brief summary of the issue..."
+        required
+        maxLength={120}
+      />
 
       {/* Description Textarea */}
       <div className="space-y-1.5">

@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Card, Button, Input, Badge } from '@elsesourav/ui';
-import { Dropdown } from '@elsesourav/ui/interior';
+import { Dropdown, FloatingLabelInput } from '@elsesourav/ui/interior';
 import type { SupportTicketDetail, SupportTicketStatus } from '@elsesourav/types';
 import {
   adminReplyTicketAction,
@@ -280,18 +280,13 @@ export function AdminTicketDetailView({ ticket: initialTicket }: AdminTicketDeta
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Optional Attachment URL */}
-                <div className="space-y-1">
-                  <label className="block text-[11px] font-semibold text-zinc-400">
-                    Attachment URL (optional)
-                  </label>
-                  <Input
-                    type="url"
-                    value={attachmentUrl}
-                    onChange={(e) => setAttachmentUrl(e.target.value)}
-                    placeholder="https://res.cloudinary.com/..."
-                    className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100"
-                  />
-                </div>
+                <FloatingLabelInput
+                  label="Attachment URL (optional)"
+                  type="url"
+                  value={attachmentUrl}
+                  onChange={(val) => setAttachmentUrl(val)}
+                  placeholder="https://res.cloudinary.com/..."
+                />
 
                 {/* Internal Note Toggle */}
                 <div className="flex items-center pt-5">

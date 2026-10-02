@@ -2,7 +2,8 @@
 
 import * as React from 'react';
 import { createAuthBrowserClient } from '@elsesourav/auth';
-import { Button, Input } from '@elsesourav/ui';
+import { Button } from '@elsesourav/ui';
+import { FloatingLabelInput } from '@elsesourav/ui/interior';
 import {
   Lock,
   Check,
@@ -230,29 +231,22 @@ export function AccountPasswordCard({ email, onEmailVerified }: AccountPasswordC
           {(pwStep === 'form' || pwStep === 'saving') && (
             <form onSubmit={handleSetPassword} className="space-y-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                <div className="space-y-1">
-                  <label className="text-[11px] font-semibold text-foreground">New Password</label>
-                  <Input
-                    type="password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Min 8 characters"
-                    autoFocus
-                    className="bg-background border-border text-xs rounded-lg text-foreground h-8 sm:h-9"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[11px] font-semibold text-foreground">
-                    Confirm Password
-                  </label>
-                  <Input
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Re-enter password"
-                    className="bg-background border-border text-xs rounded-lg text-foreground h-8 sm:h-9"
-                  />
-                </div>
+                <FloatingLabelInput
+                  label="New Password"
+                  type="password"
+                  value={newPassword}
+                  onChange={(val) => setNewPassword(val)}
+                  placeholder="Min 8 characters"
+                  required
+                />
+                <FloatingLabelInput
+                  label="Confirm Password"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(val) => setConfirmPassword(val)}
+                  placeholder="Re-enter password"
+                  required
+                />
               </div>
 
               {newPassword && (

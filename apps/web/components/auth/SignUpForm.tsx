@@ -2,7 +2,8 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { Input, Button, Label, Alert, AlertDescription, Separator } from '@elsesourav/ui';
+import { Button, Alert, AlertDescription, Separator } from '@elsesourav/ui';
+import { FloatingLabelInput } from '@elsesourav/ui/interior';
 import { createAuthBrowserClient, AuthError } from '@elsesourav/auth';
 import { SignUpSchema, NAME_REGEX, USERNAME_REGEX, EMAIL_REGEX } from '@elsesourav/validation';
 import { OAuthButtons } from './OAuthButtons';
@@ -516,115 +517,50 @@ export function SignUpForm() {
           </div>
 
           {/* 1. Name with Instant Client Validation */}
-          <div className="space-y-1">
-            <div className="flex items-center justify-between">
-              <Label
-                htmlFor="signup-name"
-                required
-                className="text-xs text-[hsl(var(--foreground))]"
-              >
-                Name
-              </Label>
-              {displayNameError && touched.displayName && (
-                <span className="text-[11px] font-medium text-rose-400 flex items-center gap-1">
-                  <AlertCircle className="w-3 h-3 text-rose-400 inline" />
-                  {displayNameError}
-                </span>
-              )}
-            </div>
-            <div className="relative">
-              <User className="w-4 h-4 text-[hsl(var(--muted-foreground))] absolute left-3 top-1/2 -translate-y-1/2" />
-              <Input
-                id="signup-name"
-                name="name"
-                type="text"
-                autoComplete="name"
-                placeholder="Sourav or Alex"
-                value={displayName}
-                onBlur={() => setTouched((prev) => ({ ...prev, displayName: true }))}
-                onChange={(e) => setDisplayName(e.target.value)}
-                required
-                disabled={loading}
-                className={`pl-9 bg-[hsl(var(--surface-subtle))] border-[hsl(var(--input))] text-[hsl(var(--foreground))] text-sm focus:border-indigo-500 rounded-xl transition-colors ${
-                  displayNameError && touched.displayName
-                    ? 'border-rose-500/60 bg-rose-950/10 focus:border-rose-500'
-                    : ''
-                }`}
-              />
-            </div>
-          </div>
+          <FloatingLabelInput
+            id="signup-name"
+            name="name"
+            label="Name"
+            type="text"
+            autoComplete="name"
+            placeholder="Sourav or Alex"
+            value={displayName}
+            onBlur={() => setTouched((prev) => ({ ...prev, displayName: true }))}
+            onChange={(val) => setDisplayName(val)}
+            required
+            disabled={loading}
+            icon={<User className="w-4 h-4" />}
+            error={touched.displayName && displayNameError ? displayNameError : undefined}
+          />
 
           {/* 2. Username with Instant Client-Format Check + Debounced Availability */}
           <div className="space-y-1">
-            <div className="flex items-center justify-between">
-              <Label
-                htmlFor="signup-username"
-                required
-                className="text-xs text-[hsl(var(--foreground))]"
-              >
-                Username
-              </Label>
-              {usernameStatus !== 'idle' && (
-                <span
-                  className={`text-[11px] font-medium flex items-center gap-1 ${
-                    usernameStatus === 'available'
-                      ? 'text-emerald-400 font-semibold'
-                      : usernameStatus === 'checking'
-                        ? 'text-indigo-400'
-                        : 'text-rose-400'
-                  }`}
-                >
-                  {usernameStatus === 'checking' && <Loader2 className="w-3 h-3 animate-spin" />}
-                  {usernameStatus === 'available' && (
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                  )}
-                  {usernameStatus === 'unavailable' && (
-                    <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
-                  )}
-                  {usernameStatus === 'invalid' && (
-                    <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
-                  )}
-                  {usernameMessage}
-                </span>
-              )}
-            </div>
-            <div className="relative">
-              <AtSign className="w-4 h-4 text-[hsl(var(--muted-foreground))] absolute left-3 top-1/2 -translate-y-1/2" />
-              <Input
-                id="signup-username"
-                name="username"
-                type="text"
-                autoComplete="username"
-                placeholder="alexsmith"
-                value={username}
-                onChange={(e) =>
-                  setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, ''))
-                }
-                required
-                disabled={loading}
-                autoCapitalize="none"
-                autoCorrect="off"
-                spellCheck={false}
-                className={`pl-9 pr-9 bg-[hsl(var(--surface-subtle))] border-[hsl(var(--input))] text-[hsl(var(--foreground))] text-sm rounded-xl focus:border-indigo-500 transition-all ${
-                  usernameStatus === 'available'
-                    ? 'border-emerald-500/60 bg-emerald-950/10 focus:border-emerald-500 ring-1 ring-emerald-500/20'
-                    : usernameStatus === 'unavailable' || usernameStatus === 'invalid'
-                      ? 'border-rose-500/60 bg-rose-950/10 focus:border-rose-500'
-                      : ''
-                }`}
-              />
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
-                {usernameStatus === 'checking' && (
+            <FloatingLabelInput
+              id="signup-username"
+              name="username"
+              label="Username"
+              type="text"
+              autoComplete="username"
+              placeholder="alexsmith"
+              value={username}
+              onChange={(val) =>
+                setUsername(val.toLowerCase().replace(/[^a-z0-9_-]/g, ''))
+              }
+              required
+              disabled={loading}
+              icon={<AtSign className="w-4 h-4" />}
+              rightElement={
+                usernameStatus === 'checking' ? (
                   <Loader2 className="w-4 h-4 animate-spin text-indigo-400" />
-                )}
-                {usernameStatus === 'available' && (
+                ) : usernameStatus === 'available' ? (
                   <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                )}
-                {(usernameStatus === 'unavailable' || usernameStatus === 'invalid') && (
+                ) : usernameStatus === 'unavailable' || usernameStatus === 'invalid' ? (
                   <AlertCircle className="w-4 h-4 text-rose-400" />
-                )}
-              </div>
-            </div>
+                ) : null
+              }
+              hint={usernameStatus !== 'idle' ? usernameMessage || undefined : undefined}
+              invalid={usernameStatus === 'unavailable' || usernameStatus === 'invalid'}
+            />
 
             {/* 2 Verified Available Suggestions */}
             {verifiedSuggestions.length > 0 && (
@@ -724,58 +660,59 @@ export function SignUpForm() {
             </div>
 
             {/* 3. Email Address with Instant Client Validation */}
-            <div className="space-y-1">
-              <div className="flex items-center justify-between">
-                <Label
-                  htmlFor="signup-email"
-                  required
-                  className="text-xs text-[hsl(var(--foreground))]"
-                >
-                  Email Address
-                </Label>
-                {emailError && touched.email && (
-                  <span className="text-[11px] font-medium text-rose-400 flex items-center gap-1">
-                    <AlertCircle className="w-3 h-3 text-rose-400 inline" />
-                    {emailError}
-                  </span>
-                )}
-              </div>
-              <div className="relative">
-                <Mail className="w-4 h-4 text-[hsl(var(--muted-foreground))] absolute left-3 top-1/2 -translate-y-1/2" />
-                <Input
-                  id="signup-email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onBlur={() => setTouched((prev) => ({ ...prev, email: true }))}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  disabled={loading}
-                  autoFocus
-                  className={`pl-9 bg-[hsl(var(--surface-subtle))] border-[hsl(var(--input))] text-[hsl(var(--foreground))] text-sm focus:border-indigo-500 rounded-xl transition-colors ${
-                    emailError && touched.email
-                      ? 'border-rose-500/60 bg-rose-950/10 focus:border-rose-500'
-                      : ''
-                  }`}
-                />
-              </div>
-            </div>
+            <FloatingLabelInput
+              id="signup-email"
+              name="email"
+              label="Email Address"
+              type="email"
+              autoComplete="email"
+              placeholder="you@example.com"
+              value={email}
+              onBlur={() => setTouched((prev) => ({ ...prev, email: true }))}
+              onChange={(val) => setEmail(val)}
+              required
+              disabled={loading}
+              autoFocus
+              icon={<Mail className="w-4 h-4" />}
+              error={touched.email && emailError ? emailError : undefined}
+            />
 
             {/* 4. Password with Friendly Non-Red Strength Progress Meter */}
-            <div className="space-y-1">
-              <div className="flex items-center justify-between">
-                <Label
-                  htmlFor="signup-password"
-                  required
-                  className="text-xs text-[hsl(var(--foreground))]"
-                >
-                  Password
-                </Label>
-                {password.length > 0 && (
-                  <span className="text-[10px] font-medium flex items-center gap-1">
-                    <ShieldCheck className="w-3 h-3 text-indigo-400" />
+            <div>
+              <FloatingLabelInput
+                id="signup-password"
+                name="new-password"
+                label="Password"
+                type={showPassword ? 'text' : 'password'}
+                autoComplete="new-password"
+                placeholder="At least 8 characters"
+                value={password}
+                onBlur={() => setTouched((prev) => ({ ...prev, password: true }))}
+                onChange={(val) => setPassword(val)}
+                required
+                disabled={loading}
+                icon={<Lock className="w-4 h-4" />}
+                rightElement={
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] focus:outline-none"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                }
+                error={touched.password && passwordError ? passwordError : undefined}
+              />
+
+              {/* Dynamic Non-Red Password Strength Progress Bars */}
+              {password.length > 0 && (
+                <div className="space-y-1 -mt-2 mb-2">
+                  <div className="flex items-center justify-between text-[10px]">
+                    <span className="flex items-center gap-1 text-[hsl(var(--muted-foreground))]">
+                      <ShieldCheck className="w-3 h-3 text-indigo-400" />
+                      Strength:
+                    </span>
                     <span
                       className={
                         passwordStrength.score >= 4
@@ -789,107 +726,46 @@ export function SignUpForm() {
                     >
                       {passwordStrength.label}
                     </span>
-                  </span>
-                )}
-              </div>
-              <div className="relative">
-                <Lock className="w-4 h-4 text-[hsl(var(--muted-foreground))] absolute left-3 top-1/2 -translate-y-1/2" />
-                <Input
-                  id="signup-password"
-                  name="new-password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="new-password"
-                  placeholder="At least 8 characters"
-                  value={password}
-                  onBlur={() => setTouched((prev) => ({ ...prev, password: true }))}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  disabled={loading}
-                  className={`pl-9 pr-10 bg-[hsl(var(--surface-subtle))] border-[hsl(var(--input))] text-[hsl(var(--foreground))] text-sm focus:border-indigo-500 rounded-xl transition-colors ${
-                    passwordError && touched.password
-                      ? 'border-rose-500/60 bg-rose-950/10 focus:border-rose-500'
-                      : ''
-                  }`}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] focus:outline-none"
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-
-              {/* Dynamic Non-Red Password Strength Progress Bars */}
-              {password.length > 0 && (
-                <div className="grid grid-cols-4 gap-1 pt-0.5">
-                  {[1, 2, 3, 4].map((seg) => (
-                    <div
-                      key={seg}
-                      className={`h-1 rounded-full transition-all duration-300 ${
-                        passwordStrength.score >= seg ? passwordStrength.color : 'bg-zinc-800'
-                      }`}
-                    />
-                  ))}
+                  </div>
+                  <div className="grid grid-cols-4 gap-1">
+                    {[1, 2, 3, 4].map((seg) => (
+                      <div
+                        key={seg}
+                        className={`h-1 rounded-full transition-all duration-300 ${
+                          passwordStrength.score >= seg ? passwordStrength.color : 'bg-zinc-800'
+                        }`}
+                      />
+                    ))}
+                  </div>
                 </div>
-              )}
-              {passwordError && touched.password && (
-                <p className="text-[11px] text-rose-400 pt-0.5">{passwordError}</p>
               )}
             </div>
 
             {/* 5. Confirm Password with Instant Match Check */}
-            <div className="space-y-1">
-              <div className="flex items-center justify-between">
-                <Label
-                  htmlFor="signup-confirm-password"
-                  required
-                  className="text-xs text-[hsl(var(--foreground))]"
-                >
-                  Confirm Password
-                </Label>
-                {confirmPassword && (
-                  <span
-                    className={`text-[11px] font-medium flex items-center gap-1 ${
-                      confirmPasswordError ? 'text-rose-400' : 'text-emerald-400'
-                    }`}
-                  >
-                    {confirmPasswordError ? (
-                      <>
-                        <AlertCircle className="w-3 h-3 text-rose-400" />
-                        {confirmPasswordError}
-                      </>
-                    ) : (
-                      <>
-                        <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                        Match
-                      </>
-                    )}
-                  </span>
-                )}
-              </div>
-              <div className="relative">
-                <Lock className="w-4 h-4 text-[hsl(var(--muted-foreground))] absolute left-3 top-1/2 -translate-y-1/2" />
-                <Input
-                  id="signup-confirm-password"
-                  name="confirm-password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="new-password"
-                  placeholder="Re-enter password"
-                  value={confirmPassword}
-                  onBlur={() => setTouched((prev) => ({ ...prev, confirmPassword: true }))}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  disabled={loading}
-                  className={`pl-9 bg-[hsl(var(--surface-subtle))] border-[hsl(var(--input))] text-[hsl(var(--foreground))] text-sm focus:border-indigo-500 rounded-xl transition-colors ${
-                    confirmPasswordError && touched.confirmPassword
-                      ? 'border-rose-500/60 bg-rose-950/10 focus:border-rose-500'
-                      : ''
-                  }`}
-                />
-              </div>
-            </div>
+            <FloatingLabelInput
+              id="signup-confirm-password"
+              name="confirm-password"
+              label="Confirm Password"
+              type={showPassword ? 'text' : 'password'}
+              autoComplete="new-password"
+              placeholder="Re-enter password"
+              value={confirmPassword}
+              onBlur={() => setTouched((prev) => ({ ...prev, confirmPassword: true }))}
+              onChange={(val) => setConfirmPassword(val)}
+              required
+              disabled={loading}
+              icon={<Lock className="w-4 h-4" />}
+              hint={
+                confirmPassword && !confirmPasswordError
+                  ? 'Passwords match ✓'
+                  : undefined
+              }
+              error={
+                touched.confirmPassword && confirmPasswordError
+                  ? confirmPasswordError
+                  : undefined
+              }
+            />
 
             {/* Action Buttons: Back & Final Submit (Single Clean Spinner) */}
             <div className="flex items-center gap-2.5 pt-1.5">
