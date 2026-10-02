@@ -19,23 +19,27 @@ import {
   InstagramIcon,
 } from '@/components/icons/SocialIcons';
 
-function getPlatformIcon(platform: SiteLinkPlatform) {
-  switch (platform) {
-    case 'github':
-      return <GithubIcon className="w-4 h-4 group-hover:text-black dark:group-hover:text-white transition-colors" />;
-    case 'twitter':
-      return <TwitterXIcon className="w-4 h-4 group-hover:text-black dark:group-hover:text-white transition-colors" />;
-    case 'linkedin':
-      return <LinkedinIcon className="w-4 h-4 text-[#0077b5] transition-colors" />;
-    case 'youtube':
-      return <YoutubeIcon className="w-4 h-4 text-[#ff0000] group-hover:scale-110 transition-transform" />;
-    case 'instagram':
-      return <InstagramIcon className="w-4 h-4 text-[#e4405f] group-hover:scale-110 transition-transform" />;
-    case 'email':
-      return <Mail className="w-4 h-4 text-emerald-500 transition-colors" />;
-    default:
-      return <Globe className="w-4 h-4" />;
+function getPlatformIcon(platform: SiteLinkPlatform | string, url?: string) {
+  const norm = (url || '').toLowerCase();
+  if (platform === 'youtube' || norm.includes('youtube.com') || norm.includes('youtu.be')) {
+    return <YoutubeIcon className="w-4 h-4 text-[#ff0000] group-hover:scale-110 transition-transform" />;
   }
+  if (platform === 'instagram' || norm.includes('instagram.com')) {
+    return <InstagramIcon className="w-4 h-4 text-[#e4405f] group-hover:scale-110 transition-transform" />;
+  }
+  if (platform === 'github' || norm.includes('github.com')) {
+    return <GithubIcon className="w-4 h-4 group-hover:text-black dark:group-hover:text-white transition-colors" />;
+  }
+  if (platform === 'twitter' || norm.includes('twitter.com') || norm.includes('x.com')) {
+    return <TwitterXIcon className="w-4 h-4 group-hover:text-black dark:group-hover:text-white transition-colors" />;
+  }
+  if (platform === 'linkedin' || norm.includes('linkedin.com')) {
+    return <LinkedinIcon className="w-4 h-4 text-[#0077b5] transition-colors" />;
+  }
+  if (platform === 'email' || norm.startsWith('mailto:')) {
+    return <Mail className="w-4 h-4 text-emerald-500 transition-colors" />;
+  }
+  return <Globe className="w-4 h-4" />;
 }
 
 export async function PublicFooter() {
@@ -101,7 +105,7 @@ export async function PublicFooter() {
                     className="group inline-flex items-center justify-center w-9 h-9 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--surface-subtle))] hover:bg-[hsl(var(--surface-elevated))] hover:border-indigo-500/40 text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:scale-105 active:scale-95 transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))]"
                     title={link.label}
                   >
-                    {getPlatformIcon(link.platform)}
+                    {getPlatformIcon(link.platform, link.url)}
                   </a>
                 ))}
               </div>

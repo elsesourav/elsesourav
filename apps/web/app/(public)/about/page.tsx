@@ -12,8 +12,6 @@ import {
   ExternalLink,
   Globe,
   Mail,
-  MessageSquare,
-  Send,
   Share2,
   Terminal,
   BookOpen,
@@ -39,7 +37,14 @@ export const metadata: Metadata = buildPageMetadata({
 
 export const dynamic = 'force-dynamic';
 
-function getPlatformIcon(platform: SiteLinkPlatform) {
+function getPlatformIcon(platform: SiteLinkPlatform | string, url?: string) {
+  const norm = (url || '').toLowerCase();
+  if (platform === 'youtube' || norm.includes('youtube.com') || norm.includes('youtu.be')) {
+    return <YoutubeIcon className="w-3.5 h-3.5 text-[#ff0000]" />;
+  }
+  if (platform === 'instagram' || norm.includes('instagram.com')) {
+    return <InstagramIcon className="w-3.5 h-3.5 text-[#e4405f]" />;
+  }
   switch (platform) {
     case 'github':
       return <Code2 className="w-3.5 h-3.5 text-indigo-400" />;
@@ -47,14 +52,6 @@ function getPlatformIcon(platform: SiteLinkPlatform) {
       return <Share2 className="w-3.5 h-3.5 text-cyan-400" />;
     case 'linkedin':
       return <Globe className="w-3.5 h-3.5 text-blue-400" />;
-    case 'youtube':
-      return <YoutubeIcon className="w-3.5 h-3.5 text-[#ff0000]" />;
-    case 'instagram':
-      return <InstagramIcon className="w-3.5 h-3.5 text-[#e4405f]" />;
-    case 'discord':
-      return <MessageSquare className="w-3.5 h-3.5 text-indigo-400" />;
-    case 'telegram':
-      return <Send className="w-3.5 h-3.5 text-sky-400" />;
     case 'email':
       return <Mail className="w-3.5 h-3.5 text-emerald-400" />;
     default:
@@ -588,7 +585,7 @@ export default async function AboutPage() {
                   rel={link.url.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
                   className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-subtle))] text-[hsl(var(--foreground))] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
                 >
-                  {getPlatformIcon(link.platform)}
+                  {getPlatformIcon(link.platform, link.url)}
                   <span>{link.label}</span>
                   {!link.url.startsWith('mailto:') && (
                     <ExternalLink className="w-3 h-3 text-[hsl(var(--muted-foreground))]" />
