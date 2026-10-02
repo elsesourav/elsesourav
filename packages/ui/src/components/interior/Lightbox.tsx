@@ -1,38 +1,25 @@
-"use client";
+'use client';
 
-import React, {
-  useCallback,
-  useEffect,
-  useId,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
-import { createPortal } from "react-dom";
-import {
-  AnimatePresence,
-  animate,
-  motion,
-  useMotionValue,
-  useReducedMotion,
-} from "motion/react";
+import React, { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion } from 'motion/react';
 
 const CELL = {
-  type: "spring",
+  type: 'spring',
   stiffness: 520,
   damping: 34,
   mass: 0.45,
 } as const;
 
 const HOME = {
-  type: "spring",
+  type: 'spring',
   stiffness: 150,
   damping: 27,
   mass: 1,
 } as const;
 
 const VEIL = {
-  type: "spring",
+  type: 'spring',
   stiffness: 260,
   damping: 34,
   mass: 0.8,
@@ -42,7 +29,7 @@ const EASE = [0.23, 1, 0.32, 1] as const;
 const EXIT = { duration: 0.2, ease: [0.4, 0, 1, 1] } as const;
 
 const GLYPH = {
-  type: "spring",
+  type: 'spring',
   stiffness: 700,
   damping: 46,
   mass: 0.5,
@@ -57,17 +44,16 @@ const NEAR_HOME = 1.02;
 const SNAP_HOME = 1.05;
 
 const CHROME_BUTTON =
-  "grid size-8 place-items-center rounded-[9px] border border-[var(--interior-border)] bg-white text-[var(--interior-fg-muted)] outline-none transition-[border-color,color,box-shadow] duration-150 hover:border-[var(--interior-border-strong)] hover:text-[var(--interior-fg)] focus-visible:border-[var(--interior-primary)] focus-visible:shadow-[0_1px_2px_rgba(28,25,23,0.08),0_10px_20px_-14px_rgba(69,104,255,0.6)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:text-[var(--interior-fg-muted)] dark:hover:border-white/20 dark:hover:text-stone-200 dark:focus-visible:border-[var(--interior-primary)] dark:focus-visible:shadow-[0_10px_20px_-14px_rgba(147,176,255,0.5)]";
+  'grid size-8 place-items-center rounded-[9px] border border-[var(--interior-border)] bg-white text-[var(--interior-fg-muted)] outline-none transition-[border-color,color,box-shadow] duration-150 hover:border-[var(--interior-border-strong)] hover:text-[var(--interior-fg)] focus-visible:border-[var(--interior-primary)] focus-visible:shadow-[0_1px_2px_rgba(28,25,23,0.08),0_10px_20px_-14px_rgba(69,104,255,0.6)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:text-[var(--interior-fg-muted)] dark:hover:border-white/20 dark:hover:text-stone-200 dark:focus-visible:border-[var(--interior-primary)] dark:focus-visible:shadow-[0_10px_20px_-14px_rgba(147,176,255,0.5)]';
 
 type Spring = {
-  type: "spring";
+  type: 'spring';
   stiffness: number;
   damping: number;
   mass: number;
 };
 
-const clamp = (v: number, lo: number, hi: number) =>
-  Math.min(hi, Math.max(lo, v));
+const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 
 type Drag = {
   id: number;
@@ -86,12 +72,7 @@ export type UseLightboxOptions = {
 export function useLightbox<
   Frame extends HTMLElement = HTMLDivElement,
   Content extends HTMLElement = HTMLImageElement,
->({
-  maxScale = 4,
-  steps = 8,
-  disabled = false,
-  onDismiss,
-}: UseLightboxOptions = {}) {
+>({ maxScale = 4, steps = 8, disabled = false, onDismiss }: UseLightboxOptions = {}) {
   const cells = Math.max(1, Math.round(steps));
   const top = Math.max(1.1, maxScale);
 
@@ -117,7 +98,7 @@ export function useLightbox<
 
   const toStep = useCallback(
     (s: number) => clamp(Math.round(((s - 1) / (top - 1)) * cells), 0, cells),
-    [cells, top],
+    [cells, top]
   );
 
   const mark = useCallback(
@@ -127,7 +108,7 @@ export function useLightbox<
       stepRef.current = next;
       setStep(next);
     },
-    [toStep],
+    [toStep]
   );
 
   const settle = useCallback(
@@ -141,7 +122,7 @@ export function useLightbox<
       settledRef.current = next;
       setSettled(next);
     },
-    [toStep],
+    [toStep]
   );
 
   const settleSoon = useCallback(
@@ -152,7 +133,7 @@ export function useLightbox<
         settle(s);
       }, 220);
     },
-    [settle],
+    [settle]
   );
 
   const limit = useCallback((s: number) => {
@@ -173,7 +154,7 @@ export function useLightbox<
       y.set(clamp(ny, -my, my));
       mark(s);
     },
-    [limit, mark, scale, x, y],
+    [limit, mark, scale, x, y]
   );
 
   const glide = useCallback(
@@ -193,7 +174,7 @@ export function useLightbox<
       mark(s);
       settle(s);
     },
-    [limit, mark, reduced, scale, settle, x, y],
+    [limit, mark, reduced, scale, settle, x, y]
   );
 
   const reset = useCallback(() => {
@@ -220,7 +201,7 @@ export function useLightbox<
       place(s, nx, ny);
       settleSoon(s);
     },
-    [glide, place, scale, settleSoon, top, x, y],
+    [glide, place, scale, settleSoon, top, x, y]
   );
 
   const finish = useCallback(() => {
@@ -256,33 +237,31 @@ export function useLightbox<
     const cy = r.top + r.height / 2;
     const s0 = scale.get();
 
-    if (e.key === "+" || e.key === "=") {
+    if (e.key === '+' || e.key === '=') {
       e.preventDefault();
       zoomAt(s0 * KEY_ZOOM, cx, cy, true);
       return;
     }
-    if (e.key === "-" || e.key === "_") {
+    if (e.key === '-' || e.key === '_') {
       e.preventDefault();
       zoomAt(s0 / KEY_ZOOM, cx, cy, true);
       return;
     }
-    if (e.key === "0") {
+    if (e.key === '0') {
       e.preventDefault();
       reset();
       return;
     }
-    if (e.key === "Escape" && s0 > NEAR_HOME) {
+    if (e.key === 'Escape' && s0 > NEAR_HOME) {
       e.preventDefault();
       e.stopPropagation();
       reset();
       return;
     }
-    if (s0 > NEAR_HOME && e.key.startsWith("Arrow")) {
+    if (s0 > NEAR_HOME && e.key.startsWith('Arrow')) {
       e.preventDefault();
-      const dx =
-        e.key === "ArrowLeft" ? KEY_PAN : e.key === "ArrowRight" ? -KEY_PAN : 0;
-      const dy =
-        e.key === "ArrowUp" ? KEY_PAN : e.key === "ArrowDown" ? -KEY_PAN : 0;
+      const dx = e.key === 'ArrowLeft' ? KEY_PAN : e.key === 'ArrowRight' ? -KEY_PAN : 0;
+      const dy = e.key === 'ArrowUp' ? KEY_PAN : e.key === 'ArrowDown' ? -KEY_PAN : 0;
       glide(s0, x.get() + dx, y.get() + dy);
     }
   };
@@ -290,7 +269,7 @@ export function useLightbox<
   const bind = {
     onPointerDown: (e: React.PointerEvent) => {
       if (disabled) return;
-      if (e.pointerType === "mouse" && e.button !== 0) return;
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
       const content = contentRef.current;
       onContent.current = content ? content.contains(e.target as Node) : false;
       e.currentTarget.setPointerCapture?.(e.pointerId);
@@ -305,23 +284,14 @@ export function useLightbox<
       const held = drag.current;
       if (!held || held.id !== e.pointerId) return;
       if (scale.get() <= 1) return;
-      place(
-        scale.get(),
-        held.x + (e.clientX - held.from.x),
-        held.y + (e.clientY - held.from.y),
-      );
+      place(scale.get(), held.x + (e.clientX - held.from.x), held.y + (e.clientY - held.from.y));
     },
     onPointerUp: release,
     onPointerCancel: cancel,
     onLostPointerCapture: cancel,
     onDoubleClick: (e: React.MouseEvent) => {
       if (disabled) return;
-      zoomAt(
-        scale.get() > SNAP_HOME ? 1 : Math.min(TOGGLE, top),
-        e.clientX,
-        e.clientY,
-        true,
-      );
+      zoomAt(scale.get() > SNAP_HOME ? 1 : Math.min(TOGGLE, top), e.clientX, e.clientY, true);
     },
     onKeyDown,
   };
@@ -332,24 +302,19 @@ export function useLightbox<
     const onWheel = (e: WheelEvent) => {
       if (disabled) return;
       e.preventDefault();
-      zoomAt(
-        scale.get() * Math.exp(-e.deltaY / WHEEL_RATE),
-        e.clientX,
-        e.clientY,
-        false,
-      );
+      zoomAt(scale.get() * Math.exp(-e.deltaY / WHEEL_RATE), e.clientX, e.clientY, false);
     };
-    frame.addEventListener("wheel", onWheel, { passive: false });
-    return () => frame.removeEventListener("wheel", onWheel);
+    frame.addEventListener('wheel', onWheel, { passive: false });
+    return () => frame.removeEventListener('wheel', onWheel);
   }, [disabled, scale, zoomAt]);
 
   useEffect(() => {
     const bail = () => {
       drag.current = null;
     };
-    window.addEventListener("blur", bail);
+    window.addEventListener('blur', bail);
     return () => {
-      window.removeEventListener("blur", bail);
+      window.removeEventListener('blur', bail);
       if (timer.current) clearTimeout(timer.current);
     };
   }, []);
@@ -395,7 +360,7 @@ function Stage({
   width,
   height,
   maxScale = 4,
-  className = "",
+  className = '',
 }: LightboxProps) {
   const reduced = useReducedMotion();
   const titleId = useId();
@@ -407,18 +372,8 @@ function Stage({
   const fo = useMotionValue(0);
   const fr = useMotionValue(14);
 
-  const {
-    frameRef,
-    contentRef,
-    bind,
-    scale,
-    x,
-    y,
-    zoomed,
-    settledZoom,
-    reset,
-    zoomAt,
-  } = useLightbox({ maxScale, onDismiss: onClose });
+  const { frameRef, contentRef, bind, scale, x, y, zoomed, settledZoom, reset, zoomAt } =
+    useLightbox({ maxScale, onDismiss: onClose });
 
   const shellRef = useRef<HTMLDivElement>(null);
 
@@ -434,7 +389,7 @@ function Stage({
       Math.min(TOGGLE, Math.max(1.1, maxScale)),
       r.left + r.width / 2,
       r.top + r.height / 2,
-      true,
+      true
     );
   }, [frameRef, maxScale, reset, zoomAt, zoomed]);
 
@@ -447,8 +402,7 @@ function Stage({
       const o = origin.getBoundingClientRect();
       if (o.width > 0) {
         const s = o.width / content.offsetWidth;
-        const rad =
-          Number.parseFloat(getComputedStyle(origin).borderTopLeftRadius) || 9;
+        const rad = Number.parseFloat(getComputedStyle(origin).borderTopLeftRadius) || 9;
         return {
           dx: o.left + o.width / 2 - (r.left + r.width / 2),
           dy: o.top + o.height / 2 - (r.top + r.height / 2),
@@ -496,7 +450,7 @@ function Stage({
       y: d.dy,
       scale: d.s,
       opacity: d.o,
-      filter: "blur(4px)",
+      filter: 'blur(4px)',
       transition: HOME,
     };
   }, [fr, landing, reduced]);
@@ -508,21 +462,18 @@ function Stage({
       scale: 1,
       transition: reduced ? { duration: 0 } : HOME,
     }),
-    [reduced],
+    [reduced]
   );
 
   useEffect(() => {
     const frame = frameRef.current;
-    const previous =
-      document.activeElement instanceof HTMLElement
-        ? document.activeElement
-        : null;
+    const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const body = document.body;
     const overflow = body.style.overflow;
     const padding = body.style.paddingRight;
     const gap = window.innerWidth - document.documentElement.clientWidth;
     const base = Number.parseFloat(getComputedStyle(body).paddingRight) || 0;
-    body.style.overflow = "hidden";
+    body.style.overflow = 'hidden';
     if (gap > 0) body.style.paddingRight = `${base + gap}px`;
     frame?.focus({ preventScroll: true });
     return () => {
@@ -537,22 +488,18 @@ function Stage({
     if (!shell) return;
 
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+      if (e.key === 'Escape') {
         if (zoomed) return;
         e.preventDefault();
         onClose();
         return;
       }
-      if (e.key !== "Tab") return;
-      const nodes = Array.from(
-        shell.querySelectorAll<HTMLElement>('[data-lightbox-focus="1"]'),
-      );
+      if (e.key !== 'Tab') return;
+      const nodes = Array.from(shell.querySelectorAll<HTMLElement>('[data-lightbox-focus="1"]'));
       if (nodes.length === 0) return;
       e.preventDefault();
       const here =
-        document.activeElement instanceof HTMLElement
-          ? nodes.indexOf(document.activeElement)
-          : -1;
+        document.activeElement instanceof HTMLElement ? nodes.indexOf(document.activeElement) : -1;
       const next = e.shiftKey
         ? here <= 0
           ? nodes.length - 1
@@ -563,13 +510,14 @@ function Stage({
       nodes[next]?.focus();
     };
 
-    shell.addEventListener("keydown", onKeyDown);
-    return () => shell.removeEventListener("keydown", onKeyDown);
+    shell.addEventListener('keydown', onKeyDown);
+    return () => shell.removeEventListener('keydown', onKeyDown);
   }, [onClose, zoomed]);
 
   return (
     <div
-      data-interior="lightbox" ref={shellRef}
+      data-interior="lightbox"
+      ref={shellRef}
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}
@@ -593,23 +541,19 @@ function Stage({
         role="group"
         aria-labelledby={titleId}
         aria-describedby={hintId}
-        style={{ touchAction: "none", WebkitTouchCallout: "none" }}
+        style={{ touchAction: 'none', WebkitTouchCallout: 'none' }}
         className={`absolute inset-0 overflow-hidden outline-none select-none focus-visible:shadow-[inset_0_0_0_1px_var(--interior-primary)] ${
-          zoomed ? "cursor-grab active:cursor-grabbing" : "cursor-zoom-in"
+          zoomed ? 'cursor-grab active:cursor-grabbing' : 'cursor-zoom-in'
         }`}
         {...bind}
       >
         <motion.div
           style={{ x: fx, y: fy, scale: fs, opacity: fo }}
-          initial={reduced ? false : { filter: "blur(6px)" }}
-          animate={{ filter: "blur(0px)" }}
+          initial={reduced ? false : { filter: 'blur(6px)' }}
+          animate={{ filter: 'blur(0px)' }}
           variants={{ away }}
           exit="away"
-          transition={
-            reduced
-              ? { duration: 0 }
-              : { filter: { duration: 0.35, ease: EASE } }
-          }
+          transition={reduced ? { duration: 0 } : { filter: { duration: 0.35, ease: EASE } }}
           className="absolute inset-0 flex items-center justify-center p-4 sm:p-14"
         >
           <motion.img
@@ -644,7 +588,7 @@ function Stage({
             data-lightbox-focus="1"
             type="button"
             onClick={toggleZoom}
-            aria-label={zoomed ? "Zoom out" : "Zoom in"}
+            aria-label={zoomed ? 'Zoom out' : 'Zoom in'}
             className={CHROME_BUTTON}
           >
             <svg
@@ -690,10 +634,9 @@ function Stage({
         </div>
       </motion.div>
       <p id={hintId} className="sr-only">
-        Scroll to zoom toward the pointer, or press plus and minus. Drag or use
-        the arrow keys to pan, and double-click to switch between fit and
-        close-up. Press zero to return to the starting frame; Escape returns
-        home first, then closes.
+        Scroll to zoom toward the pointer, or press plus and minus. Drag or use the arrow keys to
+        pan, and double-click to switch between fit and close-up. Press zero to return to the
+        starting frame; Escape returns home first, then closes.
       </p>
       <p role="status" className="sr-only">
         Zoom {settledZoom.toFixed(1)} times
@@ -712,10 +655,8 @@ export function Lightbox(props: LightboxProps) {
   if (!mounted) return null;
 
   return createPortal(
-    <AnimatePresence>
-      {props.open ? <Stage key="lightbox" {...props} /> : null}
-    </AnimatePresence>,
-    document.body,
+    <AnimatePresence>{props.open ? <Stage key="lightbox" {...props} /> : null}</AnimatePresence>,
+    document.body
   );
 }
 

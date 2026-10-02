@@ -1,15 +1,14 @@
-"use client";
+'use client';
 
-import React, { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
-import type { KeyboardEvent, ReactNode } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import React, { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import type { KeyboardEvent, ReactNode } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 
-const INDICATOR = { type: "spring", stiffness: 620, damping: 42, mass: 0.35 } as const;
+const INDICATOR = { type: 'spring', stiffness: 620, damping: 42, mass: 0.35 } as const;
 
-const useIsoLayoutEffect =
-  typeof window === "undefined" ? useEffect : useLayoutEffect;
+const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
-const PANEL = { type: "spring", stiffness: 460, damping: 38, mass: 0.8 } as const;
+const PANEL = { type: 'spring', stiffness: 460, damping: 38, mass: 0.8 } as const;
 
 export type TabItem = {
   value: string;
@@ -17,7 +16,7 @@ export type TabItem = {
   disabled?: boolean;
 };
 
-export type TabsActivation = "automatic" | "manual";
+export type TabsActivation = 'automatic' | 'manual';
 export type UseTabsOptions = {
   items: TabItem[];
   value?: string;
@@ -31,14 +30,14 @@ export function useTabs({
   value: controlled,
   defaultValue,
   onValueChange,
-  activation = "automatic",
+  activation = 'automatic',
 }: UseTabsOptions) {
   const base = useId();
   const nodes = useRef(new Map<string, HTMLButtonElement>());
   const direction = useRef(1);
 
   const [internal, setInternal] = useState(
-    () => defaultValue ?? items.find((i) => !i.disabled)?.value ?? items[0]?.value ?? "",
+    () => defaultValue ?? items.find((i) => !i.disabled)?.value ?? items[0]?.value ?? ''
   );
 
   const value = controlled ?? internal;
@@ -55,7 +54,7 @@ export function useTabs({
       if (controlled === undefined) setInternal(next);
       emit.current?.(next);
     },
-    [controlled, items, value],
+    [controlled, items, value]
   );
 
   const focusAt = useCallback(
@@ -64,7 +63,7 @@ export function useTabs({
       if (!item) return;
       nodes.current.get(item.value)?.focus();
     },
-    [items],
+    [items]
   );
 
   const nextEnabled = useCallback(
@@ -78,7 +77,7 @@ export function useTabs({
       }
       return from;
     },
-    [items],
+    [items]
   );
 
   const endStop = useCallback(
@@ -97,17 +96,17 @@ export function useTabs({
       }
       return 0;
     },
-    [items],
+    [items]
   );
 
   const getTabProps = useCallback(
     (item: TabItem, index: number) => ({
       id: `${base}-tab-${item.value}`,
-      role: "tab" as const,
-      type: "button" as const,
-      "aria-selected": item.value === value,
-      "aria-controls": `${base}-panel-${item.value}`,
-      "aria-disabled": item.disabled ? (true as const) : undefined,
+      role: 'tab' as const,
+      type: 'button' as const,
+      'aria-selected': item.value === value,
+      'aria-controls': `${base}-panel-${item.value}`,
+      'aria-disabled': item.disabled ? (true as const) : undefined,
       tabIndex: item.value === value ? 0 : -1,
       ref: (node: HTMLButtonElement | null) => {
         if (node) nodes.current.set(item.value, node);
@@ -117,44 +116,44 @@ export function useTabs({
         if (!item.disabled) select(item.value);
       },
       onKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => {
-        if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
           e.preventDefault();
-          const to = nextEnabled(index, e.key === "ArrowRight" ? 1 : -1);
+          const to = nextEnabled(index, e.key === 'ArrowRight' ? 1 : -1);
           focusAt(to);
           const targetItem = items[to];
-          if (activation === "automatic" && targetItem) select(targetItem.value);
+          if (activation === 'automatic' && targetItem) select(targetItem.value);
           return;
         }
-        if (e.key === "Home" || e.key === "End") {
+        if (e.key === 'Home' || e.key === 'End') {
           e.preventDefault();
-          const to = endStop(e.key === "Home" ? 1 : -1);
+          const to = endStop(e.key === 'Home' ? 1 : -1);
           focusAt(to);
           const targetItem = items[to];
-          if (activation === "automatic" && targetItem) select(targetItem.value);
+          if (activation === 'automatic' && targetItem) select(targetItem.value);
           return;
         }
-        if (e.key === "Enter" || e.key === " ") {
+        if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           if (!item.disabled) select(item.value);
         }
       },
     }),
-    [activation, base, endStop, focusAt, items, nextEnabled, select, value],
+    [activation, base, endStop, focusAt, items, nextEnabled, select, value]
   );
 
   const getPanelProps = useCallback(
     (panelValue: string) => ({
       id: `${base}-panel-${panelValue}`,
-      role: "tabpanel" as const,
-      "aria-labelledby": `${base}-tab-${panelValue}`,
+      role: 'tabpanel' as const,
+      'aria-labelledby': `${base}-tab-${panelValue}`,
       tabIndex: 0,
     }),
-    [base],
+    [base]
   );
 
   const tabListProps = {
-    role: "tablist" as const,
-    "aria-orientation": "horizontal" as const,
+    role: 'tablist' as const,
+    'aria-orientation': 'horizontal' as const,
   };
 
   return {
@@ -186,11 +185,11 @@ export function Tabs({
   value,
   defaultValue,
   onValueChange,
-  activation = "automatic",
+  activation = 'automatic',
   renderPanel,
-  label = "Tabs",
-  panelClassName = "",
-  className = "",
+  label = 'Tabs',
+  panelClassName = '',
+  className = '',
 }: TabsProps) {
   const tabs = useTabs({ items, value, defaultValue, onValueChange, activation });
   const reduced = useReducedMotion();
@@ -207,11 +206,9 @@ export function Tabs({
 
     const read = () => {
       setPlateau((prev) =>
-        prev.x === node.offsetLeft &&
-        prev.width === node.offsetWidth &&
-        prev.ready
+        prev.x === node.offsetLeft && prev.width === node.offsetWidth && prev.ready
           ? prev
-          : { x: node.offsetLeft, width: node.offsetWidth, ready: true },
+          : { x: node.offsetLeft, width: node.offsetWidth, ready: true }
       );
     };
 
@@ -225,7 +222,8 @@ export function Tabs({
 
   return (
     <div
-      data-interior="tabs" className={`w-full overflow-hidden rounded-[12px] border border-[var(--interior-border)] bg-white shadow-[0_1px_2px_rgba(28,25,23,0.06),0_4px_10px_-8px_rgba(28,25,23,0.45)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[0_1px_6px_rgba(0,0,0,0.45)] ${className}`}
+      data-interior="tabs"
+      className={`w-full overflow-hidden rounded-[12px] border border-[var(--interior-border)] bg-white shadow-[0_1px_2px_rgba(28,25,23,0.06),0_4px_10px_-8px_rgba(28,25,23,0.45)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[0_1px_6px_rgba(0,0,0,0.45)] ${className}`}
     >
       <div
         {...tabs.tabListProps}
@@ -268,19 +266,17 @@ export function Tabs({
               }}
               className={`relative flex h-8 shrink-0 items-center justify-center rounded-t-[8px] px-3.5 text-[12.5px] outline-none transition-colors duration-150 after:pointer-events-none after:absolute after:inset-0 after:rounded-t-[8px] after:content-[''] focus-visible:after:shadow-[inset_0_0_0_1px_var(--interior-primary)] dark:focus-visible:after:shadow-[inset_0_0_0_1px_var(--interior-primary)] ${
                 item.disabled
-                  ? "cursor-default text-[var(--interior-fg-subtle)]"
+                  ? 'cursor-default text-[var(--interior-fg-subtle)]'
                   : selected
-                    ? "text-[var(--interior-fg)]"
-                    : "text-[var(--interior-fg-muted)] hover:bg-stone-200/50 hover:text-[var(--interior-fg)] dark:text-[var(--interior-fg-muted)] dark:hover:bg-white/[0.05] dark:hover:text-stone-200"
+                    ? 'text-[var(--interior-fg)]'
+                    : 'text-[var(--interior-fg-muted)] hover:bg-stone-200/50 hover:text-[var(--interior-fg)] dark:text-[var(--interior-fg-muted)] dark:hover:bg-white/[0.05] dark:hover:text-stone-200'
               }`}
             >
               <span className="relative grid place-items-center leading-[1.4]">
                 <span aria-hidden className="invisible col-start-1 row-start-1 font-medium">
                   {item.label}
                 </span>
-                <span
-                  className={`col-start-1 row-start-1 ${selected ? "font-medium" : ""}`}
-                >
+                <span className={`col-start-1 row-start-1 ${selected ? 'font-medium' : ''}`}>
                   {item.label}
                 </span>
               </span>

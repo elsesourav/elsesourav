@@ -82,19 +82,19 @@ export function AmbientBackground({
       ref={containerRef}
       aria-hidden="true"
       className={cn(
-        'pointer-events-none fixed inset-0 -z-10 overflow-hidden select-none bg-[hsl(var(--background))] transition-colors duration-500',
+        'pointer-events-none fixed inset-0 z-0 overflow-hidden select-none bg-[hsl(var(--background))] transition-colors duration-500',
         className
       )}
       {...props}
     >
       {/* =========================================================================
-          1. Base Atmosphere Gradient Mesh (Full page canvas shading)
+          1. Base Atmosphere Gradient Mesh (Continuous full-page multi-radial shading)
           ========================================================================= */}
       <div
-        className="absolute inset-0 opacity-40 dark:opacity-30 pointer-events-none"
+        className="absolute inset-0 opacity-60 dark:opacity-50 pointer-events-none"
         style={{
           background:
-            'radial-gradient(130% 90% at 50% 0%, var(--ambient-glow-1) 0%, transparent 65%), radial-gradient(80% 60% at 100% 100%, var(--ambient-glow-2) 0%, transparent 70%)',
+            'radial-gradient(110% 70% at 50% 0%, var(--ambient-glow-1) 0%, transparent 60%), radial-gradient(60% 45% at 80% 20%, var(--ambient-glow-3) 0%, transparent 55%), radial-gradient(50% 35% at 15% 55%, var(--ambient-glow-2) 0%, transparent 50%)',
         }}
       />
 
@@ -105,36 +105,42 @@ export function AmbientBackground({
       {/* --- HOMEPAGE VARIANT --- */}
       {variant === 'home' && (
         <>
-          {/* Top-center hero atmospheric dome */}
+          {/* Upper-right soft cosmic aura directly behind the orb */}
           <div
             className={cn(
-              'absolute -top-28 sm:-top-44 left-1/2 -translate-x-1/2 w-[340px] sm:w-[850px] lg:w-[1250px] h-[260px] sm:h-[550px] lg:h-[700px] rounded-full blur-[60px] sm:blur-[120px] lg:blur-[150px] opacity-95 dark:opacity-90',
-              enableMotion && 'animate-ambient-drift-1'
-            )}
-            style={{
-              background:
-                'radial-gradient(ellipse at center, var(--ambient-glow-1) 0%, var(--ambient-glow-2) 48%, transparent 75%)',
-            }}
-          />
-
-          {/* Floating mid-right atmospheric accent */}
-          <div
-            className={cn(
-              'hidden md:block absolute top-[28%] -right-20 lg:-right-32 w-[420px] lg:w-[650px] h-[420px] lg:h-[650px] rounded-full blur-[100px] lg:blur-[140px] opacity-80 dark:opacity-75',
+              'absolute top-[6%] right-[6%] sm:right-[10%] w-[380px] sm:w-[580px] lg:w-[720px] h-[380px] sm:h-[580px] lg:h-[720px] rounded-full blur-[100px] sm:blur-[140px] opacity-75 dark:opacity-65',
               enableMotion && 'animate-ambient-drift-2'
             )}
             style={{
               background:
-                'radial-gradient(circle at center, var(--ambient-glow-3) 0%, var(--ambient-glow-1) 42%, transparent 70%)',
+                'radial-gradient(circle at center, var(--ambient-glow-1) 0%, var(--ambient-glow-3) 40%, transparent 70%)',
             }}
           />
 
-          {/* Lower-left grounding ambient field */}
+          {/* Gentle top-left headline ambient wash */}
           <div
-            className="hidden lg:block absolute bottom-12 -left-28 w-[520px] h-[450px] rounded-full blur-[130px] opacity-60 dark:opacity-50"
+            className="absolute -top-24 left-[10%] w-[320px] sm:w-[500px] h-[260px] sm:h-[400px] rounded-full blur-[90px] sm:blur-[130px] opacity-50 dark:opacity-40"
             style={{
               background:
-                'radial-gradient(circle at center, var(--ambient-glow-2) 0%, var(--ambient-glow-1) 35%, transparent 68%)',
+                'radial-gradient(ellipse at center, var(--ambient-glow-2) 0%, transparent 65%)',
+            }}
+          />
+
+          {/* Subtle mid-page left-side accent for featured apps */}
+          <div
+            className="absolute top-[48%] -left-20 w-[300px] sm:w-[480px] h-[300px] sm:h-[480px] rounded-full blur-[100px] sm:blur-[140px] opacity-40 dark:opacity-35"
+            style={{
+              background:
+                'radial-gradient(circle at center, var(--ambient-glow-2) 0%, transparent 65%)',
+            }}
+          />
+
+          {/* Subtle lower-page right-side accent for updates */}
+          <div
+            className="absolute top-[72%] -right-20 w-[320px] sm:w-[500px] h-[320px] sm:h-[500px] rounded-full blur-[110px] sm:blur-[150px] opacity-40 dark:opacity-35"
+            style={{
+              background:
+                'radial-gradient(circle at center, var(--ambient-glow-3) 0%, transparent 65%)',
             }}
           />
         </>

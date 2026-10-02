@@ -48,7 +48,10 @@ export const CREATOR_CONFIG = {
 
   links: {
     github: 'https://github.com/elsesourav',
-    twitter: 'https://twitter.com/elsesourav',
+    twitter: 'https://x.com/elsesourav',
+    linkedin: 'https://linkedin.com/in/elsesourav',
+    discord: 'https://discord.gg/elsesourav',
+    telegram: 'https://t.me/elsesourav',
   },
 
   contact: {

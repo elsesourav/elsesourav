@@ -24,8 +24,10 @@ export interface SwipeRowAction {
 const DEFAULT_ACTIONS: SwipeRowAction[] = [{ id: 'delete', label: 'Delete' }];
 
 const clamp = (v: number, lo: number, hi: number): number => Math.min(hi, Math.max(lo, v));
-const rubber = (o: number, dim: number, c: number): number => (o * dim * c) / (dim + c * Math.abs(o));
-const unrubber = (y: number, dim: number, c: number): number => (y * dim) / (c * Math.max(1, dim - Math.abs(y)));
+const rubber = (o: number, dim: number, c: number): number =>
+  (o * dim * c) / (dim + c * Math.abs(o));
+const unrubber = (y: number, dim: number, c: number): number =>
+  (y * dim) / (c * Math.max(1, dim - Math.abs(y)));
 const project = (v: number): number => ((v / 1000) * DECEL) / (1 - DECEL);
 const velocityOf = (hist: [number, number][]): number => {
   if (hist.length < 2) return 0;
@@ -37,13 +39,15 @@ const velocityOf = (hist: [number, number][]): number => {
 const onColor = (hex: string): string => {
   const m = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(hex.trim());
   if (!m) return '#ffffff';
-  const h = m[1]?.length === 3 ? [...m[1]].map(ch => ch + ch).join('') : (m[1] ?? 'ffffff');
+  const h = m[1]?.length === 3 ? [...m[1]].map((ch) => ch + ch).join('') : (m[1] ?? 'ffffff');
   const r = parseInt(h.slice(0, 2), 16);
   const g = parseInt(h.slice(2, 4), 16);
   const b = parseInt(h.slice(4, 6), 16);
   return (r * 299 + g * 587 + b * 114) / 1000 >= 150 ? '#111111' : '#ffffff';
 };
-const watchWindow = (live: React.MutableRefObject<{ move: (e: PointerEvent) => void; up: (e: PointerEvent) => void }>): (() => void) => {
+const watchWindow = (
+  live: React.MutableRefObject<{ move: (e: PointerEvent) => void; up: (e: PointerEvent) => void }>
+): (() => void) => {
   const onMove = (e: PointerEvent): void => {
     if (e.isTrusted) live.current.move(e);
   };
@@ -125,7 +129,7 @@ export default function SwipeRow({
   haptic = true,
   label = 'List item',
   className = '',
-  style
+  style,
 }: SwipeRowProps) {
   const uid = useId();
   const reduce = useReducedMotion();
@@ -145,7 +149,10 @@ export default function SwipeRow({
   const w = useRef(360);
   const grip = useRef<SwipeRowGrip | null>(null);
   const unwatch = useRef<(() => void) | null>(null);
-  const live = useRef<{ move: (e: PointerEvent) => void; up: (e: PointerEvent) => void }>({ move: () => {}, up: () => {} });
+  const live = useRef<{ move: (e: PointerEvent) => void; up: (e: PointerEvent) => void }>({
+    move: () => {},
+    up: () => {},
+  });
   const foldTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const heading = useRef<number | null>(null);
 
@@ -154,12 +161,18 @@ export default function SwipeRow({
   const landed = useMotionValue(0);
   const commitPoint = (): number => Math.max(commitAt * w.current, D + A / 2);
   const canCommit = (): boolean => fullSwipe && n > 0 && commitPoint() <= w.current;
-  const exposed = useTransform(x, v => s * v);
-  const surfaceXf = useTransform(x, v => `translateX(${v}px)`);
-  const railXf = useTransform(exposed, e => `translateX(${-s * Math.max(0, D - e)}px)`);
-  const shift = useTransform([exposed, spread], ([e, p]: number[]) => (p ?? 0) * Math.max(0, (e ?? 0) - A));
-  const blockXf = useTransform(shift, v => `translateX(${s * v}px)`);
-  const glyphXf = useTransform([shift, landed], ([v, l]: number[]) => `translateX(${-s * (l ?? 0) * ((v ?? 0) - (w.current - A) / 2)}px)`);
+  const exposed = useTransform(x, (v) => s * v);
+  const surfaceXf = useTransform(x, (v) => `translateX(${v}px)`);
+  const railXf = useTransform(exposed, (e) => `translateX(${-s * Math.max(0, D - e)}px)`);
+  const shift = useTransform(
+    [exposed, spread],
+    ([e, p]: number[]) => (p ?? 0) * Math.max(0, (e ?? 0) - A)
+  );
+  const blockXf = useTransform(shift, (v) => `translateX(${s * v}px)`);
+  const glyphXf = useTransform(
+    [shift, landed],
+    ([v, l]: number[]) => `translateX(${-s * (l ?? 0) * ((v ?? 0) - (w.current - A) / 2)}px)`
+  );
 
   const map = (raw: number): number => {
     const W = w.current;
@@ -184,7 +197,7 @@ export default function SwipeRow({
     const el = root.current;
     if (!el) return undefined;
     w.current = el.offsetWidth || w.current;
-    const observer = new ResizeObserver(entries => {
+    const observer = new ResizeObserver((entries) => {
       const width = entries[0]?.contentRect.width;
       if (width) w.current = width;
     });
@@ -276,7 +289,7 @@ export default function SwipeRow({
       grab: null,
       moved: false,
       hist: [],
-      touch: e.pointerType === 'touch'
+      touch: e.pointerType === 'touch',
     };
     try {
       surface.current?.setPointerCapture(e.pointerId);
@@ -406,7 +419,7 @@ export default function SwipeRow({
           '--sr-action': actionColor,
           '--sr-on-action': onColor(actionColor),
           '--sr-collapse': `${collapseMs}ms`,
-          ...style
+          ...style,
         } as React.CSSProperties
       }
     >
@@ -423,11 +436,19 @@ export default function SwipeRow({
               key={a.id}
               type="button"
               className="swipe-row__action"
-              onClick={e => act(a, e)}
+              onClick={(e) => act(a, e)}
               style={
                 s < 0
-                  ? { right: (i + 1) * A, background: a.color ?? drawerColor, color: onColor(a.color ?? drawerColor) }
-                  : { left: (i + 1) * A, background: a.color ?? drawerColor, color: onColor(a.color ?? drawerColor) }
+                  ? {
+                      right: (i + 1) * A,
+                      background: a.color ?? drawerColor,
+                      color: onColor(a.color ?? drawerColor),
+                    }
+                  : {
+                      left: (i + 1) * A,
+                      background: a.color ?? drawerColor,
+                      color: onColor(a.color ?? drawerColor),
+                    }
               }
             >
               <span className="swipe-row__glyph">
@@ -442,11 +463,13 @@ export default function SwipeRow({
                 type="button"
                 className="swipe-row__action swipe-row__action--commit"
                 style={{ transform: glyphXf }}
-                onClick={e => act(primary, e)}
+                onClick={(e) => act(primary, e)}
               >
                 <span className="swipe-row__glyph">
                   <span className="swipe-row__icon">
-                    {primary.icon ?? <HugeiconsIcon icon={Delete02Icon} size={20} strokeWidth={2} />}
+                    {primary.icon ?? (
+                      <HugeiconsIcon icon={Delete02Icon} size={20} strokeWidth={2} />
+                    )}
                   </span>
                   <span>{primary.label}</span>
                 </span>
@@ -454,7 +477,12 @@ export default function SwipeRow({
             </motion.div>
           ) : null}
         </motion.div>
-        <motion.div ref={surface} className="swipe-row__surface" style={{ transform: surfaceXf }} onPointerDown={down}>
+        <motion.div
+          ref={surface}
+          className="swipe-row__surface"
+          style={{ transform: surfaceXf }}
+          onPointerDown={down}
+        >
           {children}
           <button
             type="button"

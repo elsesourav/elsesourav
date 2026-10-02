@@ -178,10 +178,7 @@ export class UserService {
     return this.userRepo.scheduleAccountDeletion(targetUserId, reason);
   }
 
-  async cancelScheduledDeletion(
-    requestingUserId: string,
-    targetUserId: string
-  ): Promise<void> {
+  async cancelScheduledDeletion(requestingUserId: string, targetUserId: string): Promise<void> {
     if (requestingUserId !== targetUserId) {
       throw AppError.forbidden('You do not have permission to modify this account');
     }

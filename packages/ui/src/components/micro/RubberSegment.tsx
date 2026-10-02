@@ -17,7 +17,7 @@ const RUBBER = 0.55;
 const SIZES: Record<string, { height: number; font: number; pad: number; min: number }> = {
   sm: { height: 28, font: 12, pad: 10, min: 36 },
   md: { height: 36, font: 13, pad: 14, min: 44 },
-  lg: { height: 44, font: 14, pad: 18, min: 48 }
+  lg: { height: 44, font: 14, pad: 18, min: 48 },
 };
 
 export interface RubberSegmentItem {
@@ -43,8 +43,10 @@ export interface RubberSegmentDrag {
   hist: [number, number][];
 }
 
-const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
-const rubber = (over: number, dim: number): number => (over * dim * RUBBER) / (dim + RUBBER * Math.abs(over));
+const clamp = (value: number, min: number, max: number): number =>
+  Math.min(max, Math.max(min, value));
+const rubber = (over: number, dim: number): number =>
+  (over * dim * RUBBER) / (dim + RUBBER * Math.abs(over));
 const project = (v: number, glide: number): number => {
   const d = 1 - 0.1 * Math.pow(0.05, glide / 100);
   return ((v / 1000) * d) / (1 - d);
@@ -117,16 +119,16 @@ export default function RubberSegment({
   draggable = true,
   disabled = false,
   className = '',
-  'aria-label': ariaLabel = 'Segmented control'
+  'aria-label': ariaLabel = 'Segmented control',
 }: RubberSegmentProps) {
-  const list: RubberSegmentItem[] = items.map(item =>
+  const list: RubberSegmentItem[] = items.map((item) =>
     typeof item === 'string' ? { value: item, label: item } : item
   );
   const [inner, setInner] = useState<string>(defaultValue ?? list[0]?.value ?? '');
   const current = value !== undefined ? value : inner;
   const index = Math.max(
     0,
-    list.findIndex(item => item.value === current)
+    list.findIndex((item) => item.value === current)
   );
   const reduce = useReducedMotion();
 
@@ -144,7 +146,8 @@ export default function RubberSegment({
   const innerW = useMotionValue(0);
   const thumbRadius = Math.max(0, radius - inset);
   const clipPath = useTransform(
-    () => `inset(0 ${Math.max(0, innerW.get() - edgeR.get())}px 0 ${Math.max(0, edgeL.get())}px round ${thumbRadius}px)`
+    () =>
+      `inset(0 ${Math.max(0, innerW.get() - edgeR.get())}px 0 ${Math.max(0, edgeL.get())}px round ${thumbRadius}px)`
   );
 
   const t = (seconds: number) => seconds / speed;
@@ -173,7 +176,7 @@ export default function RubberSegment({
     jumpTo(committed.current);
   };
 
-  const listKey = list.map(item => item.value).join('|');
+  const listKey = list.map((item) => item.value).join('|');
   useLayoutEffect(() => {
     measure();
     const observer = new ResizeObserver(measure);
@@ -215,19 +218,25 @@ export default function RubberSegment({
     if (!b) return;
     const g = ++gen.current;
     const dir = Math.sign((b.l + b.r) / 2 - (edgeL.get() + edgeR.get()) / 2) || 1;
-    const [lead, leadTo, trail, trailTo] = dir > 0 ? [edgeR, b.r, edgeL, b.l] : [edgeL, b.l, edgeR, b.r];
-    const velocityFor = (mv: typeof edgeL) => clamp(v === null ? mv.getVelocity() : v, -MAX_VELOCITY, MAX_VELOCITY);
+    const [lead, leadTo, trail, trailTo] =
+      dir > 0 ? [edgeR, b.r, edgeL, b.l] : [edgeL, b.l, edgeR, b.r];
+    const velocityFor = (mv: typeof edgeL) =>
+      clamp(v === null ? mv.getVelocity() : v, -MAX_VELOCITY, MAX_VELOCITY);
     animate(lead, leadTo, {
       ...(flick ? SPRING_MOMENTUM : SPRING_UI),
       duration: t(flick ? 0.4 : 0.3),
-      velocity: velocityFor(lead)
+      velocity: velocityFor(lead),
     });
     const trailVelocity = velocityFor(trail);
     if (!withSquash || squash <= 0) {
       animate(trail, trailTo, { ...SPRING_UI, duration: t(0.3), velocity: trailVelocity });
       return;
     }
-    void animate(trail, trailTo + dir * squash, { ...SPRING_UI, duration: t(0.3), velocity: trailVelocity }).then(() => {
+    void animate(trail, trailTo + dir * squash, {
+      ...SPRING_UI,
+      duration: t(0.3),
+      velocity: trailVelocity,
+    }).then(() => {
       if (gen.current === g) animate(trail, trailTo, { ...SPRING_RELAX, duration: t(0.16) });
     });
   };
@@ -250,7 +259,8 @@ export default function RubberSegment({
     handoff.current = setTimeout(() => land(to, null, false, true), t(HANDOFF) * 1000);
   };
 
-  const localX = (e: React.PointerEvent) => e.clientX - (box.current ? box.current.left : 0) - inset;
+  const localX = (e: React.PointerEvent) =>
+    e.clientX - (box.current ? box.current.left : 0) - inset;
 
   const handlePointerDown = (e: React.PointerEvent<HTMLButtonElement>, i: number) => {
     if (disabled || drag.current || e.button !== 0 || !trackRef.current) return;
@@ -262,7 +272,16 @@ export default function RubberSegment({
     }
     const x = localX(e);
     const onThumb = draggable && x >= edgeL.get() && x <= edgeR.get();
-    drag.current = { id: e.pointerId, x0: x, slot: i, onThumb, live: false, offset: 0, w: 0, hist: [[e.timeStamp, x]] };
+    drag.current = {
+      id: e.pointerId,
+      x0: x,
+      slot: i,
+      onThumb,
+      live: false,
+      offset: 0,
+      w: 0,
+      hist: [[e.timeStamp, x]],
+    };
     if (onThumb) {
       clearTimeout(handoff.current);
       gen.current += 1;
@@ -386,7 +405,7 @@ export default function RubberSegment({
           '--rs-h': `${preset.height}px`,
           '--rs-font': `${preset.font}px`,
           '--rs-pad': `${preset.pad}px`,
-          '--rs-min': `${preset.min}px`
+          '--rs-min': `${preset.min}px`,
         } as React.CSSProperties
       }
       onPointerMove={handlePointerMove}
@@ -397,7 +416,7 @@ export default function RubberSegment({
       {list.map((item, i) => (
         <button
           key={item.value}
-          ref={el => {
+          ref={(el) => {
             itemRefs.current[i] = el;
           }}
           type="button"
@@ -406,7 +425,7 @@ export default function RubberSegment({
           tabIndex={i === index ? 0 : -1}
           disabled={disabled}
           className="rubber-segment__item"
-          onPointerDown={e => handlePointerDown(e, i)}
+          onPointerDown={(e) => handlePointerDown(e, i)}
           onKeyDown={handleKeyDown}
         >
           {item.icon}
@@ -414,7 +433,7 @@ export default function RubberSegment({
         </button>
       ))}
       <motion.div className="rubber-segment__thumb" aria-hidden="true" style={{ clipPath }}>
-        {list.map(item => (
+        {list.map((item) => (
           <span key={item.value} className="rubber-segment__item rubber-segment__copy">
             {item.icon}
             {item.label}

@@ -3,13 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import {
-  User,
-  SlidersHorizontal,
-  ShieldCheck,
-  LifeBuoy,
-  LogOut,
-} from 'lucide-react';
+import { User, SlidersHorizontal, ShieldCheck, LifeBuoy, LogOut } from 'lucide-react';
 import {
   Dialog,
   DialogContent,

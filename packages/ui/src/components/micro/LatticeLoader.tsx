@@ -16,22 +16,45 @@ const PATTERNS: Record<string, Partial<Record<3 | 4, PatternDefinition>>> = {
   spiral: { 3: { cells: [0, 1, 2, 7, 8, 3, 6, 5, 4], loop: 9, scale: 1.2, lit: 0.35 } },
   orbit: {
     3: { cells: [0, 1, 2, 7, null, 3, 6, 5, 4], loop: 8, scale: 1.2 },
-    4: { cells: [0, 1, 2, 3, 11, null, null, 4, 10, null, null, 5, 9, 8, 7, 6], loop: 6, scale: 1.2, lit: 0.45 }
+    4: {
+      cells: [0, 1, 2, 3, 11, null, null, 4, 10, null, null, 5, 9, 8, 7, 6],
+      loop: 6,
+      scale: 1.2,
+      lit: 0.45,
+    },
   },
   snake: {
     3: { cells: [0, 1, 2, 5, 4, 3, 6, 7, 8], loop: 9, scale: 1, lit: 0.35 },
-    4: { cells: [0, 1, 2, 3, 7, 6, 5, 4, 8, 9, 10, 11, 15, 14, 13, 12], loop: 16, scale: 1, lit: 0.25 }
+    4: {
+      cells: [0, 1, 2, 3, 7, 6, 5, 4, 8, 9, 10, 11, 15, 14, 13, 12],
+      loop: 16,
+      scale: 1,
+      lit: 0.25,
+    },
   },
-  sweep: { 4: { cells: [0, 1, 2, 3, 1, 2, 3, 4, 2, 3, 4, 5, 3, 4, 5, 6], loop: 5, scale: 1, lit: 0.45 } },
-  spin: { 4: { cells: [0, 0, 1, 1, 0, 0, 1, 1, 3, 3, 2, 2, 3, 3, 2, 2], loop: 4, scale: 1.6, lit: 0.35 } },
-  rain: { 4: { cells: [0, 2, 1, 3, 1, 3, 2, 4, 2, 4, 3, 5, 3, 5, 4, 6], loop: 4, scale: 1.2, lit: 0.35 } },
-  pulse: { 4: { cells: [2, 1, 1, 2, 1, 0, 0, 1, 1, 0, 0, 1, 2, 1, 1, 2], loop: 2.4, scale: 2.5, lit: 0.45 } }
+  sweep: {
+    4: { cells: [0, 1, 2, 3, 1, 2, 3, 4, 2, 3, 4, 5, 3, 4, 5, 6], loop: 5, scale: 1, lit: 0.45 },
+  },
+  spin: {
+    4: { cells: [0, 0, 1, 1, 0, 0, 1, 1, 3, 3, 2, 2, 3, 3, 2, 2], loop: 4, scale: 1.6, lit: 0.35 },
+  },
+  rain: {
+    4: { cells: [0, 2, 1, 3, 1, 3, 2, 4, 2, 4, 3, 5, 3, 5, 4, 6], loop: 4, scale: 1.2, lit: 0.35 },
+  },
+  pulse: {
+    4: {
+      cells: [2, 1, 1, 2, 1, 0, 0, 1, 1, 0, 0, 1, 2, 1, 1, 2],
+      loop: 2.4,
+      scale: 2.5,
+      lit: 0.45,
+    },
+  },
 };
 
 const DEFAULT_PATTERN: Record<3 | 4, string> = { 3: 'orbit', 4: 'sweep' };
 const MARKS: Record<3 | 4, { done: number[]; error: number[] }> = {
   3: { done: [2, 3, 5, 7], error: [0, 2, 4, 6, 8] },
-  4: { done: [7, 8, 10, 13], error: [0, 3, 5, 6, 9, 10, 12, 15] }
+  4: { done: [7, 8, 10, 13], error: [0, 3, 5, 6, 9, 10, 12, 15] },
 };
 
 export interface CustomPattern {
@@ -58,10 +81,18 @@ const resolvePattern = (pattern: string | CustomPattern, grid: 3 | 4): ResolvedP
   const cells = Array.from({ length: grid * grid }, (_, i) => pattern.cells[i] ?? null);
   const validCells = cells.filter((v): v is number => v != null);
   const max = validCells.length > 0 ? Math.max(0, ...validCells) : 0;
-  return { cells, loop: pattern.loop ?? max + 4.2, scale: pattern.scale ?? 1, lit: pattern.lit ?? 0.62 };
+  return {
+    cells,
+    loop: pattern.loop ?? max + 4.2,
+    scale: pattern.scale ?? 1,
+    lit: pattern.lit ?? 0.62,
+  };
 };
 
-const fmt = (ds: number): string => (ds < 600 ? `${(ds / 10).toFixed(1)}s` : `${Math.floor(ds / 600)}m ${((ds % 600) / 10).toFixed(1)}s`);
+const fmt = (ds: number): string =>
+  ds < 600
+    ? `${(ds / 10).toFixed(1)}s`
+    : `${Math.floor(ds / 600)}m ${((ds % 600) / 10).toFixed(1)}s`;
 const spoken = (ds: number): string =>
   ds < 600
     ? `${(ds / 10).toFixed(1)} seconds`
@@ -115,7 +146,7 @@ export default function LatticeLoader({
   showTimer = true,
   elapsed,
   className = '',
-  style
+  style,
 }: LatticeLoaderProps) {
   const n: 3 | 4 = grid === 4 ? 4 : 3;
   const pat = resolvePattern(pattern, n);
@@ -126,7 +157,8 @@ export default function LatticeLoader({
   const timerRef = useRef<HTMLSpanElement | null>(null);
   const dsRef = useRef(0);
   const markRef = useRef<'done' | 'error'>('done');
-  const mark: 'done' | 'error' = status === 'working' ? markRef.current : (status === 'error' ? 'error' : 'done');
+  const mark: 'done' | 'error' =
+    status === 'working' ? markRef.current : status === 'error' ? 'error' : 'done';
   markRef.current = mark;
   const [announce, setAnnounce] = useState(`${label}, in progress`);
 
@@ -149,7 +181,10 @@ export default function LatticeLoader({
 
   useEffect(() => {
     if (status === 'working') setAnnounce(`${label}, in progress`);
-    else setAnnounce(`${status === 'done' ? doneLabel : errorLabel}${showTimer ? ` ${spoken(dsRef.current)}` : ''}`);
+    else
+      setAnnounce(
+        `${status === 'done' ? doneLabel : errorLabel}${showTimer ? ` ${spoken(dsRef.current)}` : ''}`
+      );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
@@ -172,7 +207,7 @@ export default function LatticeLoader({
           '--ll-glow': glowColor || color,
           '--ll-mark-glow': glowColor || (status === 'error' ? errorColor : doneColor),
           '--ll-cycle': `${cycle}ms`,
-          ...style
+          ...style,
         } as React.CSSProperties
       }
     >
@@ -190,7 +225,11 @@ export default function LatticeLoader({
         </span>
         <span className="lattice-loader__layer lattice-loader__mark">
           {pat.cells.map((_, i) => (
-            <span key={i} className="lattice-loader__cell" data-on={marks[mark]?.includes(i) ? '' : undefined} />
+            <span
+              key={i}
+              className="lattice-loader__cell"
+              data-on={marks[mark]?.includes(i) ? '' : undefined}
+            />
           ))}
         </span>
       </span>

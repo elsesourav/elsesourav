@@ -55,7 +55,7 @@ export class SiteService {
     const appsSubtitle =
       dbSettings['homepage_apps_subtitle'] ||
       'A curated selection of software, developer tools, games, and systems.';
-    const blogTitle = dbSettings['homepage_blog_title'] || 'Field Notes & Reflections';
+    const blogTitle = dbSettings['homepage_blog_title'] || 'Latest Updates';
     const blogSubtitle =
       dbSettings['homepage_blog_subtitle'] ||
       'Things I write about while building software, learning tools, and solving architectural problems.';
@@ -63,7 +63,7 @@ export class SiteService {
     const closingCtaTitle = dbSettings['closing_cta_title'] || 'Explore the ElseSourav Studio';
     const closingCtaSubtitle =
       dbSettings['closing_cta_subtitle'] ||
-      'Every application, utility, and field note is built independently with a focus on craft, performance, and usability.';
+      'Every application, utility, and update is built independently with a focus on craft, performance, and usability.';
 
     const creatorName = dbSettings['creator_name'] || CREATOR_CONFIG.name;
     const creatorFullName = dbSettings['creator_full_name'] || CREATOR_CONFIG.fullName;

@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 
-const CELL = { type: "spring", stiffness: 520, damping: 34, mass: 0.45 } as const;
-const CROSSFADE = { type: "spring", stiffness: 260, damping: 34, mass: 0.8 } as const;
+const CELL = { type: 'spring', stiffness: 520, damping: 34, mass: 0.45 } as const;
+const CROSSFADE = { type: 'spring', stiffness: 260, damping: 34, mass: 0.8 } as const;
 const INSTANT = { duration: 0 } as const;
 
-export type AsyncActionStatus = "idle" | "pending" | "success" | "error";
+export type AsyncActionStatus = 'idle' | 'pending' | 'success' | 'error';
 
 export type UseAsyncActionOptions = {
   action: () => unknown;
@@ -15,14 +15,10 @@ export type UseAsyncActionOptions = {
   onError?: (error: unknown) => void;
 };
 
-export function useAsyncAction({
-  action,
-  resetAfter = 1400,
-  onError,
-}: UseAsyncActionOptions) {
-  const [status, setStatus] = useState<AsyncActionStatus>("idle");
+export function useAsyncAction({ action, resetAfter = 1400, onError }: UseAsyncActionOptions) {
+  const [status, setStatus] = useState<AsyncActionStatus>('idle');
 
-  const phase = useRef<AsyncActionStatus>("idle");
+  const phase = useRef<AsyncActionStatus>('idle');
   const runId = useRef(0);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const alive = useRef(true);
@@ -45,38 +41,38 @@ export function useAsyncAction({
   const reset = useCallback(() => {
     runId.current += 1;
     clear();
-    phase.current = "idle";
-    setStatus("idle");
+    phase.current = 'idle';
+    setStatus('idle');
   }, [clear]);
 
   const run = useCallback(() => {
-    if (phase.current === "pending") return;
+    if (phase.current === 'pending') return;
 
     clear();
     const id = ++runId.current;
-    phase.current = "pending";
-    setStatus("pending");
+    phase.current = 'pending';
+    setStatus('pending');
 
-    const settle = (next: "success" | "error") => {
+    const settle = (next: 'success' | 'error') => {
       if (!alive.current || id !== runId.current) return;
       clear();
       phase.current = next;
       setStatus(next);
       timer.current = setTimeout(() => {
         if (!alive.current || id !== runId.current) return;
-        phase.current = "idle";
-        setStatus("idle");
+        phase.current = 'idle';
+        setStatus('idle');
       }, resetAfter);
     };
 
     Promise.resolve()
       .then(() => act.current())
       .then(
-        () => settle("success"),
+        () => settle('success'),
         (error: unknown) => {
           fail.current?.(error);
-          settle("error");
-        },
+          settle('error');
+        }
       );
   }, [clear, resetAfter]);
 
@@ -92,32 +88,24 @@ export function useAsyncAction({
     status,
     run,
     reset,
-    pending: status === "pending",
+    pending: status === 'pending',
   };
 }
 
 function Spinner({ still }: { still: boolean }) {
   return (
     <motion.svg
-      data-interior="loading-button" width="12"
+      data-interior="loading-button"
+      width="12"
       height="12"
       viewBox="0 0 12 12"
       fill="none"
       aria-hidden="true"
       className="shrink-0"
       animate={still ? undefined : { rotate: 360 }}
-      transition={
-        still ? undefined : { duration: 0.85, repeat: Infinity, ease: "linear" }
-      }
+      transition={still ? undefined : { duration: 0.85, repeat: Infinity, ease: 'linear' }}
     >
-      <circle
-        cx="6"
-        cy="6"
-        r="4.5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeOpacity="0.22"
-      />
+      <circle cx="6" cy="6" r="4.5" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.22" />
       <path
         d="M10.5 6A4.5 4.5 0 0 0 6 1.5"
         stroke="currentColor"
@@ -181,12 +169,12 @@ export function LoadingButton({
   onAction,
   children,
   pendingLabel = children,
-  successLabel = "Done",
-  errorLabel = "Try again",
+  successLabel = 'Done',
+  errorLabel = 'Try again',
   resetAfter = 1400,
   disabled = false,
   onError,
-  className = "",
+  className = '',
 }: LoadingButtonProps) {
   const reduced = useReducedMotion();
 
@@ -198,39 +186,38 @@ export function LoadingButton({
 
   const fade = reduced ? INSTANT : CROSSFADE;
 
-
   const label =
-    status === "pending"
+    status === 'pending'
       ? pendingLabel
-      : status === "success"
+      : status === 'success'
         ? successLabel
-        : status === "error"
+        : status === 'error'
           ? errorLabel
           : children;
 
   const faces = [
     {
-      key: "idle",
+      key: 'idle',
       text: children,
-      tone: "text-[var(--interior-fg)]",
+      tone: 'text-[var(--interior-fg)]',
       icon: null,
     },
     {
-      key: "pending",
+      key: 'pending',
       text: pendingLabel,
-      tone: "text-[var(--interior-fg-muted)]",
-      icon: <Spinner still={reduced === true || status !== "pending"} />,
+      tone: 'text-[var(--interior-fg-muted)]',
+      icon: <Spinner still={reduced === true || status !== 'pending'} />,
     },
     {
-      key: "success",
+      key: 'success',
       text: successLabel,
-      tone: "text-[var(--interior-success)]",
+      tone: 'text-[var(--interior-success)]',
       icon: <CheckMark />,
     },
     {
-      key: "error",
+      key: 'error',
       text: errorLabel,
-      tone: "text-[var(--interior-destructive)]",
+      tone: 'text-[var(--interior-destructive)]',
       icon: <AlertMark />,
     },
   ];
@@ -253,7 +240,7 @@ export function LoadingButton({
           run();
         }}
         className={`relative inline-flex h-9 select-none items-center justify-center rounded-[9px] border border-[var(--interior-border)] bg-white px-3.5 text-[13px] font-medium text-[var(--interior-fg)] shadow-[inset_0_1.5px_0_rgba(255,255,255,0.95),inset_0_-1px_0_rgba(28,25,23,0.06),0_1px_2px_rgba(28,25,23,0.08)] outline-none transition-[border-color,box-shadow,background-color] duration-150 hover:bg-[var(--interior-bg-subtle)] focus-visible:border-[var(--interior-primary)] focus-visible:shadow-[0_1px_2px_rgba(28,25,23,0.08),0_10px_20px_-14px_rgba(69,104,255,0.6)] disabled:opacity-50 dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:text-[var(--interior-fg)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_1px_2px_rgba(0,0,0,0.4)] dark:hover:bg-[var(--interior-bg-hover)] dark:focus-visible:border-[var(--interior-primary)] dark:focus-visible:shadow-[0_10px_20px_-14px_rgba(147,176,255,0.5)] ${className}`}
-        style={{ borderRadius: 9, touchAction: "manipulation" }}
+        style={{ borderRadius: 9, touchAction: 'manipulation' }}
       >
         <span aria-hidden className="relative grid place-items-center">
           {faces.map((face) => (
@@ -262,8 +249,8 @@ export function LoadingButton({
               initial={false}
               animate={
                 face.key === status
-                  ? { opacity: 1, y: 0, filter: "blur(0px)" }
-                  : { opacity: 0, y: 3, filter: "blur(3px)" }
+                  ? { opacity: 1, y: 0, filter: 'blur(0px)' }
+                  : { opacity: 0, y: 3, filter: 'blur(3px)' }
               }
               transition={fade}
               className={`col-start-1 row-start-1 flex items-center justify-center gap-1.5 whitespace-nowrap ${face.tone}`}
@@ -276,7 +263,7 @@ export function LoadingButton({
       </motion.button>
 
       <span role="status" aria-live="polite" className="sr-only">
-        {status === "success" ? successLabel : status === "error" ? errorLabel : ""}
+        {status === 'success' ? successLabel : status === 'error' ? errorLabel : ''}
       </span>
     </>
   );

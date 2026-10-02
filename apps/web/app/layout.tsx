@@ -85,7 +85,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
         <ThemeScript />
       </head>
-      <body className="bg-[hsl(var(--background))] text-[hsl(var(--foreground))] min-h-screen antialiased selection:bg-indigo-600/30 selection:text-indigo-200 font-sans">
+      <body className="bg-[hsl(var(--background))] text-[hsl(var(--foreground))] min-h-screen antialiased selection:bg-indigo-600/30 selection:text-indigo-200 font-sans [font-feature-settings:'cv02','cv03','cv04','cv11']">
         <SkipLink targetId="main-content" />
         <ThemeProvider>
           <ToastProvider>{children}</ToastProvider>

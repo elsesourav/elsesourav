@@ -1,9 +1,18 @@
 'use client';
 
 import React, { useEffect, useId, useRef, useState } from 'react';
-import { animate, motion, useMotionValue, useReducedMotion, useSpring, useTransform, useVelocity } from 'motion/react';
+import {
+  animate,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+  useVelocity,
+} from 'motion/react';
 
-const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
+const clamp = (value: number, min: number, max: number): number =>
+  Math.min(max, Math.max(min, value));
 
 const FLOW_SPRING = { stiffness: 320, damping: 40, mass: 0.6 };
 const SWELL_SPRING = { stiffness: 520, damping: 34, mass: 0.6 };
@@ -63,7 +72,7 @@ export default function SquishSwitch({
   ariaLabel,
   className = '',
   id,
-  style
+  style,
 }: SquishSwitchProps) {
   const reduce = useReducedMotion();
   const inset = Math.max(3, Math.round(height * 0.11));
@@ -90,7 +99,8 @@ export default function SquishSwitch({
   const flow = useSpring(useVelocity(x), FLOW_SPRING);
   const swell = useSpring(1, SWELL_SPRING);
   const gain = reduce ? 0 : clamp(stretch, 0, 100) / 100;
-  const stretchOf = (v: number): number => 1 + Math.min(MAX_STRETCH, Math.abs(v) / STRETCH_SPEED) * gain;
+  const stretchOf = (v: number): number =>
+    1 + Math.min(MAX_STRETCH, Math.abs(v) / STRETCH_SPEED) * gain;
   const scaleX = useTransform([flow, swell], ([v, h]: number[]) => stretchOf(v ?? 0) * (h ?? 1));
   const scaleY = useTransform([flow, swell], ([v, h]: number[]) => (h ?? 1) / stretchOf(v ?? 0));
 
@@ -114,7 +124,7 @@ export default function SquishSwitch({
       damping: 21.5,
       mass: 0.9,
       restDelta: 0.001,
-      restSpeed: 0.01
+      restSpeed: 0.01,
     });
     return () => controls.stop();
   }, [on, dragging, min, max, speed, reduce, x]);
@@ -134,7 +144,7 @@ export default function SquishSwitch({
       moved: false,
       startX: e.clientX,
       onAtPress: onRef.current,
-      slop: e.pointerType === 'touch' ? TAP_SLOP.coarse : TAP_SLOP.fine
+      slop: e.pointerType === 'touch' ? TAP_SLOP.coarse : TAP_SLOP.fine,
     };
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
@@ -157,7 +167,10 @@ export default function SquishSwitch({
     x.set(nx);
     commit(nx > mid);
   };
-  const up = (e: { pointerId: number; currentTarget?: HTMLElement | null }, cancelled: boolean): void => {
+  const up = (
+    e: { pointerId: number; currentTarget?: HTMLElement | null },
+    cancelled: boolean
+  ): void => {
     const g = grip.current;
     if (!g || g.id !== e.pointerId) return;
     grip.current = null;
@@ -206,27 +219,34 @@ export default function SquishSwitch({
             '--ss-thumb-r': `${thumbRadius}px`,
             '--ss-track': trackColor,
             '--ss-track-on': trackOnColor,
-            '--ss-thumb-color': thumbColor || `color-mix(in srgb, ${trackOnColor} 19%, ${trackColor})`,
+            '--ss-thumb-color':
+              thumbColor || `color-mix(in srgb, ${trackOnColor} 19%, ${trackColor})`,
             '--ss-thumb-on': thumbOnColor || trackColor,
-            '--ss-fade': `${colorDuration}ms`
+            '--ss-fade': `${colorDuration}ms`,
           } as React.CSSProperties
         }
         onPointerDown={down}
         onPointerMove={move}
-        onPointerUp={e => up({ pointerId: e.pointerId, currentTarget: e.currentTarget }, false)}
-        onPointerCancel={e => up({ pointerId: e.pointerId, currentTarget: e.currentTarget }, true)}
-        onPointerEnter={e => {
+        onPointerUp={(e) => up({ pointerId: e.pointerId, currentTarget: e.currentTarget }, false)}
+        onPointerCancel={(e) =>
+          up({ pointerId: e.pointerId, currentTarget: e.currentTarget }, true)
+        }
+        onPointerEnter={(e) => {
           if (e.pointerType === 'mouse' && !disabled) swell.set(hoverScale);
         }}
         onPointerLeave={() => swell.set(1)}
-        onKeyDown={e => {
+        onKeyDown={(e) => {
           if (e.key === 'Escape' && grip.current)
             up({ pointerId: grip.current.id, currentTarget: e.currentTarget }, true);
         }}
         onClick={click}
       >
         <span ref={trackRef} className="squish-switch__track">
-          <motion.span className="squish-switch__thumb" aria-hidden="true" style={{ x, scaleX, scaleY }} />
+          <motion.span
+            className="squish-switch__thumb"
+            aria-hidden="true"
+            style={{ x, scaleX, scaleY }}
+          />
         </span>
       </button>
       {label ? (

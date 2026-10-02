@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React, { useCallback, useId, useRef, useState } from "react";
-import { Reorder, useReducedMotion } from "motion/react";
+import React, { useCallback, useId, useRef, useState } from 'react';
+import { Reorder, useReducedMotion } from 'motion/react';
 
-const CELL = { type: "spring", stiffness: 520, damping: 34, mass: 0.45 } as const;
+const CELL = { type: 'spring', stiffness: 520, damping: 34, mass: 0.45 } as const;
 const INSTANT = { duration: 0 } as const;
 
 const moveItem = <T,>(list: readonly T[], from: number, to: number): T[] => {
@@ -34,7 +34,7 @@ export function useReorderList<T>({
 }: UseReorderListOptions<T>) {
   const [grabbed, setGrabbed] = useState<string | null>(null);
   const [dragging, setDragging] = useState<string | null>(null);
-  const [spoken, setSpoken] = useState("");
+  const [spoken, setSpoken] = useState('');
 
   const emit = useRef(onReorder);
   emit.current = onReorder;
@@ -46,7 +46,7 @@ export function useReorderList<T>({
 
   const indexOf = useCallback(
     (id: string) => live.current.findIndex((item) => getId(item) === id),
-    [getId],
+    [getId]
   );
 
   const grab = useCallback(
@@ -56,12 +56,10 @@ export function useReorderList<T>({
       const at = indexOf(id);
       const item = live.current[at];
       if (item !== undefined) {
-        setSpoken(
-          `${getLabel(item)} grabbed, position ${at + 1} of ${live.current.length}.`,
-        );
+        setSpoken(`${getLabel(item)} grabbed, position ${at + 1} of ${live.current.length}.`);
       }
     },
-    [getLabel, indexOf],
+    [getLabel, indexOf]
   );
 
   const drop = useCallback(
@@ -75,14 +73,14 @@ export function useReorderList<T>({
       }
       settle.current?.([...live.current]);
     },
-    [getLabel, indexOf],
+    [getLabel, indexOf]
   );
 
   const cancel = useCallback(() => {
     if (snapshot.current) emit.current([...snapshot.current]);
     snapshot.current = null;
     setGrabbed(null);
-    setSpoken("Reorder cancelled, original order restored.");
+    setSpoken('Reorder cancelled, original order restored.');
   }, []);
 
   const step = useCallback(
@@ -94,45 +92,40 @@ export function useReorderList<T>({
       emit.current(next);
       const item = next[to];
       if (item !== undefined) {
-        setSpoken(
-          `${getLabel(item)}, position ${to + 1} of ${next.length}.`,
-        );
+        setSpoken(`${getLabel(item)}, position ${to + 1} of ${next.length}.`);
       }
       if (snapshot.current === null) settle.current?.(next);
     },
-    [getLabel, indexOf],
+    [getLabel, indexOf]
   );
 
   const rowKeyDown = useCallback(
     (id: string) => (event: React.KeyboardEvent<HTMLElement>) => {
       if (disabled || event.target !== event.currentTarget) return;
       const held = grabbed === id;
-      if (event.key === " " || event.key === "Enter") {
+      if (event.key === ' ' || event.key === 'Enter') {
         event.preventDefault();
         if (held) drop(id);
         else grab(id);
         return;
       }
-      if ((event.key === "ArrowUp" || event.key === "ArrowDown") && held) {
+      if ((event.key === 'ArrowUp' || event.key === 'ArrowDown') && held) {
         event.preventDefault();
-        step(id, event.key === "ArrowUp" ? -1 : 1);
+        step(id, event.key === 'ArrowUp' ? -1 : 1);
         return;
       }
-      if (event.key === "Escape" && held) {
+      if (event.key === 'Escape' && held) {
         event.preventDefault();
         cancel();
       }
     },
-    [disabled, grabbed, grab, drop, step, cancel],
+    [disabled, grabbed, grab, drop, step, cancel]
   );
 
-  const onDragStart = useCallback(
-    (id: string) => {
-      snapshot.current = live.current;
-      setDragging(id);
-    },
-    [],
-  );
+  const onDragStart = useCallback((id: string) => {
+    snapshot.current = live.current;
+    setDragging(id);
+  }, []);
 
   const onDragEnd = useCallback(
     (id: string) => {
@@ -145,7 +138,7 @@ export function useReorderList<T>({
       }
       settle.current?.([...live.current]);
     },
-    [getLabel, indexOf],
+    [getLabel, indexOf]
   );
 
   return {
@@ -182,7 +175,7 @@ const GRIP = (
 export function ReorderList<T>({
   children,
   label,
-  className = "",
+  className = '',
   ...options
 }: ReorderListProps<T>) {
   const { items, getId, getLabel, onReorder, disabled = false } = options;
@@ -207,7 +200,7 @@ export function ReorderList<T>({
             <Reorder.Item
               key={id}
               value={item}
-              drag={disabled ? false : "y"}
+              drag={disabled ? false : 'y'}
               dragListener={!disabled}
               tabIndex={disabled ? -1 : 0}
               aria-describedby={hintId}
@@ -219,23 +212,23 @@ export function ReorderList<T>({
               onBlur={() => held && list.cancel()}
               transition={reduced ? INSTANT : CELL}
               whileDrag={reduced ? undefined : { scale: 1.02 }}
-              style={{ touchAction: "pan-x" }}
+              style={{ touchAction: 'pan-x' }}
               className={`relative flex items-center gap-2.5 rounded-[9px] border bg-white px-3 py-2.5 outline-none transition-[border-color,box-shadow,background-color] duration-150 focus-visible:outline-none dark:bg-[var(--interior-bg-elevated)] ${
                 lifted
-                  ? "z-10 cursor-grabbing border-[var(--interior-border)] shadow-[0_1px_2px_rgba(28,25,23,0.08),0_14px_28px_-16px_rgba(28,25,23,0.5)] dark:border-[var(--interior-border)] dark:shadow-[0_2px_14px_rgba(0,0,0,0.55)]"
-                  : "cursor-grab border-[var(--interior-border)] shadow-[0_1px_2px_rgba(28,25,23,0.06)] dark:border-[var(--interior-border)] dark:shadow-[0_1px_6px_rgba(0,0,0,0.45)]"
+                  ? 'z-10 cursor-grabbing border-[var(--interior-border)] shadow-[0_1px_2px_rgba(28,25,23,0.08),0_14px_28px_-16px_rgba(28,25,23,0.5)] dark:border-[var(--interior-border)] dark:shadow-[0_2px_14px_rgba(0,0,0,0.55)]'
+                  : 'cursor-grab border-[var(--interior-border)] shadow-[0_1px_2px_rgba(28,25,23,0.06)] dark:border-[var(--interior-border)] dark:shadow-[0_1px_6px_rgba(0,0,0,0.45)]'
               } ${
                 held
-                  ? "border-[var(--interior-primary)] bg-[var(--interior-primary)]/[0.04] dark:border-[var(--interior-primary)] dark:bg-[var(--interior-primary)]/[0.08]"
-                  : "focus-visible:bg-[var(--interior-primary)]/[0.06] focus-visible:shadow-[inset_0_0_0_1px_var(--interior-primary)] dark:focus-visible:bg-[#93B0FF]/[0.1] dark:focus-visible:shadow-[inset_0_0_0_1px_var(--interior-primary)]"
+                  ? 'border-[var(--interior-primary)] bg-[var(--interior-primary)]/[0.04] dark:border-[var(--interior-primary)] dark:bg-[var(--interior-primary)]/[0.08]'
+                  : 'focus-visible:bg-[var(--interior-primary)]/[0.06] focus-visible:shadow-[inset_0_0_0_1px_var(--interior-primary)] dark:focus-visible:bg-[#93B0FF]/[0.1] dark:focus-visible:shadow-[inset_0_0_0_1px_var(--interior-primary)]'
               }`}
             >
               <span
                 aria-hidden
                 className={`shrink-0 transition-colors duration-150 ${
                   lifted
-                    ? "text-[var(--interior-fg-muted)] dark:text-stone-300"
-                    : "text-stone-300 dark:text-stone-600"
+                    ? 'text-[var(--interior-fg-muted)] dark:text-stone-300'
+                    : 'text-stone-300 dark:text-stone-600'
                 }`}
               >
                 {GRIP}
@@ -249,8 +242,8 @@ export function ReorderList<T>({
         })}
       </Reorder.Group>
       <span id={hintId} className="sr-only">
-        Drag to reorder. With the keyboard, Space grabs the row, the arrow keys
-        move it, Space drops it, and Escape puts everything back.
+        Drag to reorder. With the keyboard, Space grabs the row, the arrow keys move it, Space drops
+        it, and Escape puts everything back.
       </span>
       <span role="status" aria-live="polite" className="sr-only">
         {list.spoken}

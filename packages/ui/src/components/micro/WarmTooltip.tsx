@@ -11,7 +11,7 @@ import React, {
   useLayoutEffect,
   useMemo,
   useRef,
-  useState
+  useState,
 } from 'react';
 import { createPortal } from 'react-dom';
 import {
@@ -23,7 +23,7 @@ import {
   useSpring,
   useTransform,
   useVelocity,
-  type MotionStyle
+  type MotionStyle,
 } from 'motion/react';
 
 const EASE_OUT = [0.23, 1, 0.32, 1] as const;
@@ -34,12 +34,12 @@ const ORIGIN: Record<string, string> = {
   top: 'center bottom',
   bottom: 'center top',
   left: 'right center',
-  right: 'left center'
+  right: 'left center',
 };
 const SIZES: Record<string, { font: number; px: number; py: number }> = {
   sm: { font: 11.5, px: 8, py: 5 },
   md: { font: 12.5, px: 10, py: 6 },
-  lg: { font: 13.5, px: 12, py: 7 }
+  lg: { font: 13.5, px: 12, py: 7 },
 };
 const MARGIN = 8;
 const HOLD_SLOP = 10;
@@ -50,7 +50,8 @@ const GRACE = 80;
 
 type Side = 'top' | 'bottom' | 'left' | 'right';
 
-const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
+const clamp = (value: number, min: number, max: number): number =>
+  Math.min(max, Math.max(min, value));
 const now = (): number => (typeof performance !== 'undefined' ? performance.now() : Date.now());
 const horizontal = (side: Side): boolean => side === 'top' || side === 'bottom';
 
@@ -87,15 +88,15 @@ const LAYER = {
     opacity: dir === 0 ? 1 : 0,
     x: across ? 0 : SWAP_SHIFT * dir,
     y: across ? SWAP_SHIFT * dir : 0,
-    filter: dir === 0 ? 'blur(0px)' : 'blur(3px)'
+    filter: dir === 0 ? 'blur(0px)' : 'blur(3px)',
   }),
   show: { opacity: 1, x: 0, y: 0, filter: 'blur(0px)' },
   exit: ({ dir, across }: LayerCustom) => ({
     opacity: 0,
     x: across ? 0 : -SWAP_SHIFT * dir,
     y: across ? -SWAP_SHIFT * dir : 0,
-    filter: 'blur(3px)'
-  })
+    filter: 'blur(3px)',
+  }),
 };
 
 export interface WarmTooltipPayload {
@@ -174,7 +175,7 @@ export const WarmTooltipGroup = forwardRef<WarmTooltipGroupRef, WarmTooltipGroup
       swap: { dir: 0, across: false },
       closeTimer: undefined,
       leaveTimer: undefined,
-      warmTimer: undefined
+      warmTimer: undefined,
     });
     const textRef = useRef<HTMLSpanElement | null>(null);
     const api = useRef<{
@@ -198,16 +199,22 @@ export const WarmTooltipGroup = forwardRef<WarmTooltipGroupRef, WarmTooltipGroup
     );
     const leanDeg = reduce ? 0 : lean;
 
-    const place = useTransform([ax, ay, w, h], ([x = 0, y = 0, width = 0, height = 0]: number[]) => {
-      const s = st.current.current ? st.current.current.side : 'top';
-      const { X, Y } = layoutOf(x, y, width, height, s);
-      return `translate(${X}px, ${Y}px)`;
-    });
-    const arrowAt = useTransform([ax, ay, w, h], ([x = 0, y = 0, width = 0, height = 0]: number[]) => {
-      const s = st.current.current ? st.current.current.side : 'top';
-      const { X, Y } = layoutOf(x, y, width, height, s);
-      return horizontal(s) ? clamp(x - X, 10, width - 10) : clamp(y - Y, 10, height - 10);
-    });
+    const place = useTransform(
+      [ax, ay, w, h],
+      ([x = 0, y = 0, width = 0, height = 0]: number[]) => {
+        const s = st.current.current ? st.current.current.side : 'top';
+        const { X, Y } = layoutOf(x, y, width, height, s);
+        return `translate(${X}px, ${Y}px)`;
+      }
+    );
+    const arrowAt = useTransform(
+      [ax, ay, w, h],
+      ([x = 0, y = 0, width = 0, height = 0]: number[]) => {
+        const s = st.current.current ? st.current.current.side : 'top';
+        const { X, Y } = layoutOf(x, y, width, height, s);
+        return horizontal(s) ? clamp(x - X, 10, width - 10) : clamp(y - Y, 10, height - 10);
+      }
+    );
     const pop = useTransform([presence, leanUnit], ([p = 0, l = 0]: number[]) => {
       const c = st.current.current;
       const s = c ? c.side : 'top';
@@ -248,7 +255,11 @@ export const WarmTooltipGroup = forwardRef<WarmTooltipGroupRef, WarmTooltipGroup
       const fresh = st.current.state === 'closed';
       if (prev && prev.id !== payload.id && prev.trigger && payload.trigger) {
         const [px, py] = anchorOf(prev.trigger.getBoundingClientRect(), prev.side, prev.gap);
-        const [nx, ny] = anchorOf(payload.trigger.getBoundingClientRect(), payload.side, payload.gap);
+        const [nx, ny] = anchorOf(
+          payload.trigger.getBoundingClientRect(),
+          payload.side,
+          payload.gap
+        );
         const across = !horizontal(payload.side);
         st.current.swap = { dir: Math.sign(across ? ny - py : nx - px) || 1, across };
       } else {
@@ -306,7 +317,7 @@ export const WarmTooltipGroup = forwardRef<WarmTooltipGroupRef, WarmTooltipGroup
           st.current.warmUntil = -Infinity;
           clearTimeout(st.current.warmTimer);
           notify();
-        }
+        },
       }),
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [id, delay, warmWindow, current]
@@ -405,11 +416,14 @@ export const WarmTooltipGroup = forwardRef<WarmTooltipGroupRef, WarmTooltipGroup
                     '--wt-ink': current.inkColor,
                     '--wt-radius': `${current.radius}px`,
                     '--wt-font': `${current.font}px`,
-                    '--wt-origin': ORIGIN[s]
+                    '--wt-origin': ORIGIN[s],
                   } as MotionStyle & Record<string, unknown>
                 }
               >
-                <motion.span className="warm-tooltip__box" style={{ transform: pop, opacity: presence, filter: blur }}>
+                <motion.span
+                  className="warm-tooltip__box"
+                  style={{ transform: pop, opacity: presence, filter: blur }}
+                >
                   <AnimatePresence initial={false} custom={st.current.swap}>
                     <motion.span
                       key={current.id}
@@ -422,18 +436,25 @@ export const WarmTooltipGroup = forwardRef<WarmTooltipGroupRef, WarmTooltipGroup
                       transition={{ duration: reduce ? 0 : SWAP, ease: EASE_OUT }}
                     >
                       <span
-                        ref={el => {
+                        ref={(el) => {
                           if (el) textRef.current = el;
                         }}
                         className="warm-tooltip__text"
                       >
                         {current.content}
-                        {current.shortcut ? <kbd className="warm-tooltip__kbd">{current.shortcut}</kbd> : null}
+                        {current.shortcut ? (
+                          <kbd className="warm-tooltip__kbd">{current.shortcut}</kbd>
+                        ) : null}
                       </span>
                     </motion.span>
                   </AnimatePresence>
                   {current.arrow ? (
-                    <motion.span className="warm-tooltip__arrow" data-side={s} style={arrowStyle} aria-hidden="true" />
+                    <motion.span
+                      className="warm-tooltip__arrow"
+                      data-side={s}
+                      style={arrowStyle}
+                      aria-hidden="true"
+                    />
                   ) : null}
                 </motion.span>
               </motion.span>,
@@ -486,7 +507,7 @@ function Trigger({
   showFuse,
   longPress,
   disabled,
-  className = ''
+  className = '',
 }: TriggerProps) {
   const group = useContext(GroupContext);
   const id = useId();
@@ -520,7 +541,7 @@ function Trigger({
     popDuration,
     popScale,
     popBlur,
-    warmWindow: warmWindow ?? group?.warmWindow ?? 300
+    warmWindow: warmWindow ?? group?.warmWindow ?? 300,
   });
 
   const hide = (instantHide: boolean) => {
@@ -610,7 +631,11 @@ function Trigger({
         },
         onPointerMove: (e: React.PointerEvent) => {
           const p = t.current.press0;
-          if (p && p.id === e.pointerId && Math.hypot(e.clientX - p.x, e.clientY - p.y) > HOLD_SLOP) {
+          if (
+            p &&
+            p.id === e.pointerId &&
+            Math.hypot(e.clientX - p.x, e.clientY - p.y) > HOLD_SLOP
+          ) {
             cancelPress();
           }
         },
@@ -633,7 +658,7 @@ function Trigger({
         onBlur: () => hide(true),
         onKeyDown: (e: React.KeyboardEvent) => {
           if (e.key === 'Escape') hide(true);
-        }
+        },
       };
 
   const described = (children.props as { 'aria-describedby'?: string })['aria-describedby'];
@@ -646,13 +671,15 @@ function Trigger({
       style={
         {
           '--wt-surface': surfaceColor,
-          '--wt-fuse-ms': `${t.current.press0 ? longPress : coldDelay}ms`
+          '--wt-fuse-ms': `${t.current.press0 ? longPress : coldDelay}ms`,
         } as React.CSSProperties
       }
       {...handlers}
     >
       {cloneElement(children, { 'aria-describedby': active && group ? group.id : described })}
-      {showFuse ? <span className="warm-tooltip__fuse" data-side={side} data-fuse={fuse} aria-hidden="true" /> : null}
+      {showFuse ? (
+        <span className="warm-tooltip__fuse" data-side={side} data-fuse={fuse} aria-hidden="true" />
+      ) : null}
     </span>
   );
 }
@@ -699,7 +726,7 @@ export default function WarmTooltip({
   showFuse = false,
   longPress = 500,
   disabled = false,
-  className = ''
+  className = '',
 }: WarmTooltipProps) {
   const context = useContext(GroupContext);
   const props: TriggerProps = {
@@ -721,7 +748,7 @@ export default function WarmTooltip({
     showFuse,
     longPress,
     disabled,
-    className
+    className,
   };
   if (context) return <Trigger {...props} />;
   return (

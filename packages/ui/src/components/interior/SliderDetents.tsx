@@ -1,18 +1,13 @@
-"use client";
+'use client';
 
-import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
-import {
-  motion,
-  useMotionTemplate,
-  useReducedMotion,
-  useSpring,
-} from "motion/react";
+import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { motion, useMotionTemplate, useReducedMotion, useSpring } from 'motion/react';
 
 const CARRIAGE = { stiffness: 520, damping: 34, mass: 0.45 } as const;
 
-const GRAB = { type: "spring", stiffness: 700, damping: 46, mass: 0.5 } as const;
+const GRAB = { type: 'spring', stiffness: 700, damping: 46, mass: 0.5 } as const;
 const CROSSFADE = {
-  type: "spring",
+  type: 'spring',
   stiffness: 260,
   damping: 34,
   mass: 0.8,
@@ -65,8 +60,8 @@ export function useSliderDetents({
   const [dragging, setDragging] = useState(false);
 
   const list = useMemo<SliderDetent[]>(
-    () => detents.map((d) => (typeof d === "number" ? { value: d } : d)),
-    [detents],
+    () => detents.map((d) => (typeof d === 'number' ? { value: d } : d)),
+    [detents]
   );
 
   const range = max - min;
@@ -79,7 +74,7 @@ export function useSliderDetents({
 
   const activeDetent = useMemo(
     () => list.findIndex((d) => tidy(d.value) === tidy(value)),
-    [list, value],
+    [list, value]
   );
 
   const marked = useRef(activeDetent);
@@ -98,7 +93,7 @@ export function useSliderDetents({
         emit.current(settled);
       }
     },
-    [haptic, list, max, min],
+    [haptic, list, max, min]
   );
 
   const capture = useCallback(
@@ -127,7 +122,7 @@ export function useSliderDetents({
       if (index >= 0 && matched) return matched.value;
       return min + Math.round((raw - min) / step) * step;
     },
-    [grab, list, max, min, range, step, thumbSize],
+    [grab, list, max, min, range, step, thumbSize]
   );
 
   const release = useCallback(() => {
@@ -140,40 +135,41 @@ export function useSliderDetents({
     (direction: number) => {
       const sorted = list.map((d) => d.value).sort((a: number, b: number) => a - b);
       const forward = sorted.find((d: number) => d > value + 1e-6);
-      const backward = sorted.slice().reverse().find((d: number) => d < value - 1e-6);
+      const backward = sorted
+        .slice()
+        .reverse()
+        .find((d: number) => d < value - 1e-6);
       const target = direction > 0 ? forward : backward;
       commit(target ?? (direction > 0 ? max : min));
     },
-    [commit, list, max, min, value],
+    [commit, list, max, min, value]
   );
 
   useEffect(() => {
-    window.addEventListener("blur", release);
-    return () => window.removeEventListener("blur", release);
+    window.addEventListener('blur', release);
+    return () => window.removeEventListener('blur', release);
   }, [release]);
 
   const detentLabel = list[activeDetent]?.label;
-  const valueText = detentLabel
-    ? `${format(value)}, ${detentLabel}`
-    : format(value);
+  const valueText = detentLabel ? `${format(value)}, ${detentLabel}` : format(value);
 
   const percent = range > 0 ? Math.min(1, Math.max(0, (value - min) / range)) : 0;
 
   const trackProps = {
-    role: "slider" as const,
+    role: 'slider' as const,
     tabIndex: 0,
-    "aria-orientation": "horizontal" as const,
-    "aria-valuemin": min,
-    "aria-valuemax": max,
-    "aria-valuenow": value,
-    "aria-valuetext": valueText,
-    "aria-disabled": disabled || undefined,
-    "aria-label": labelledBy ? undefined : label,
-    "aria-labelledby": labelledBy,
-    style: { touchAction: "none" as const },
+    'aria-orientation': 'horizontal' as const,
+    'aria-valuemin': min,
+    'aria-valuemax': max,
+    'aria-valuenow': value,
+    'aria-valuetext': valueText,
+    'aria-disabled': disabled || undefined,
+    'aria-label': labelledBy ? undefined : label,
+    'aria-labelledby': labelledBy,
+    style: { touchAction: 'none' as const },
     onPointerDown: (e: React.PointerEvent<HTMLDivElement>) => {
       if (disabled) return;
-      if (e.pointerType === "mouse" && e.button !== 0) return;
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
       e.currentTarget.setPointerCapture?.(e.pointerId);
       e.currentTarget.focus({ preventScroll: true });
       held.current = true;
@@ -191,20 +187,20 @@ export function useSliderDetents({
     onLostPointerCapture: release,
     onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => {
       if (disabled) return;
-      const forward = e.key === "ArrowRight" || e.key === "ArrowUp";
-      const back = e.key === "ArrowLeft" || e.key === "ArrowDown";
+      const forward = e.key === 'ArrowRight' || e.key === 'ArrowUp';
+      const back = e.key === 'ArrowLeft' || e.key === 'ArrowDown';
 
       if (forward || back) {
         const direction = forward ? 1 : -1;
         if (e.shiftKey) toDetent(direction);
         else commit(value + direction * step);
-      } else if (e.key === "PageUp") {
+      } else if (e.key === 'PageUp') {
         toDetent(1);
-      } else if (e.key === "PageDown") {
+      } else if (e.key === 'PageDown') {
         toDetent(-1);
-      } else if (e.key === "Home") {
+      } else if (e.key === 'Home') {
         commit(min);
-      } else if (e.key === "End") {
+      } else if (e.key === 'End') {
         commit(max);
       } else {
         return;
@@ -247,11 +243,11 @@ export function SliderDetents({
   step = 1,
   detents = NONE,
   pull,
-  label = "Value",
+  label = 'Value',
   format = plain,
   disabled = false,
   haptic = true,
-  className = "",
+  className = '',
 }: SliderDetentsProps) {
   const labelId = useId();
   const reduced = useReducedMotion();
@@ -290,14 +286,12 @@ export function SliderDetents({
     const options = [
       format(min),
       format(max),
-      ...list.map((d) =>
-        d.label ? `${format(d.value)} · ${d.label}` : format(d.value),
-      ),
+      ...list.map((d) => (d.label ? `${format(d.value)} · ${d.label}` : format(d.value))),
     ];
-    return options.reduce((a, b) => (b.length > a.length ? b : a), "");
+    return options.reduce((a, b) => (b.length > a.length ? b : a), '');
   }, [format, list, max, min]);
 
-  const suffix = list[activeDetent]?.label ?? "";
+  const suffix = list[activeDetent]?.label ?? '';
 
   const lastLabel = useRef(suffix);
   if (suffix) lastLabel.current = suffix;
@@ -307,10 +301,7 @@ export function SliderDetents({
   return (
     <div data-interior="slider-detents" className={`w-full select-none ${className}`}>
       <div className="mb-2.5 flex items-baseline justify-between gap-3">
-        <span
-          id={labelId}
-          className="text-[12.5px] text-[var(--interior-fg-muted)]"
-        >
+        <span id={labelId} className="text-[12.5px] text-[var(--interior-fg-muted)]">
           {label}
         </span>
         <span className="grid justify-items-start">
@@ -331,7 +322,7 @@ export function SliderDetents({
               transition={reduced ? INSTANT : CROSSFADE}
               className="text-[var(--interior-fg-muted)]"
             >
-              {lastLabel.current ? ` · ${lastLabel.current}` : ""}
+              {lastLabel.current ? ` · ${lastLabel.current}` : ''}
             </motion.span>
           </span>
         </span>
@@ -340,22 +331,12 @@ export function SliderDetents({
         ref={trackRef}
         {...trackProps}
         className={`relative h-9 w-full rounded-[9px] outline-none focus-visible:bg-[var(--interior-primary)]/[0.06] focus-visible:shadow-[inset_0_0_0_1px_var(--interior-primary)] dark:focus-visible:bg-[#93B0FF]/[0.1] dark:focus-visible:shadow-[inset_0_0_0_1px_var(--interior-primary)] ${
-          disabled
-            ? "pointer-events-none opacity-50"
-            : dragging
-              ? "cursor-grabbing"
-              : "cursor-grab"
+          disabled ? 'pointer-events-none opacity-50' : dragging ? 'cursor-grabbing' : 'cursor-grab'
         }`}
       >
         <div className="pointer-events-none absolute inset-x-0 top-[9px] h-[10px] overflow-hidden rounded-[5px] bg-[var(--interior-bg-subtle)] dark:bg-white/15">
-          <div
-            className="absolute inset-y-0"
-            style={{ left: THUMB / 2, right: THUMB / 2 }}
-          >
-            <motion.div
-              className="absolute inset-y-0 left-0 right-0"
-              style={{ x: offset }}
-            >
+          <div className="absolute inset-y-0" style={{ left: THUMB / 2, right: THUMB / 2 }}>
+            <motion.div className="absolute inset-y-0 left-0 right-0" style={{ x: offset }}>
               <div className="absolute inset-y-0 right-full w-[2000px] bg-[var(--interior-fg)] dark:bg-[var(--interior-bg-subtle)]" />
             </motion.div>
           </div>
@@ -364,14 +345,13 @@ export function SliderDetents({
           className="pointer-events-none absolute inset-y-0"
           style={{ left: THUMB / 2, right: THUMB / 2 }}
         >
-
           {list.map((d) => (
             <span
               key={String(d.value)}
               aria-hidden
               className="absolute top-[26px] block h-[5px] w-[2px] -translate-x-1/2 bg-stone-800/35 dark:bg-stone-100/35"
               style={{
-                left: span > 0 ? `${((d.value - min) / span) * 100}%` : "0%",
+                left: span > 0 ? `${((d.value - min) / span) * 100}%` : '0%',
               }}
             />
           ))}
@@ -380,10 +360,7 @@ export function SliderDetents({
           className="pointer-events-none absolute inset-y-0"
           style={{ left: THUMB / 2, right: THUMB / 2 }}
         >
-          <motion.div
-            className="absolute inset-y-0 left-0 right-0"
-            style={{ x: offset }}
-          >
+          <motion.div className="absolute inset-y-0 left-0 right-0" style={{ x: offset }}>
             <motion.div
               className="absolute top-[4px] h-[20px] w-[18px] rounded-[6px] border-2 border-white bg-[var(--interior-fg)] dark:border-stone-900 dark:bg-[var(--interior-bg-subtle)]"
               style={{ marginLeft: -THUMB / 2 }}

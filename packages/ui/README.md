@@ -239,13 +239,13 @@ import { ... } from '@elsesourav/ui';
 
 ### `AmbientBackground`
 
-- **Purpose**: Non-intrusive GPU-accelerated gradient aura and micro-dot grid providing subtle depth to hero sections and settings headers.
+- **Purpose**: Non-intrusive GPU-accelerated gradient aura and micro-dot grid providing subtle depth to hero sections and settings headers. Calibrated with restrained ambient opacities to preserve deep obsidian space contrast (`#0a0b14`) without muddy purple over-glow.
 - **Key Features**: Automatically disables heavy filters when `prefers-reduced-motion` is active. Zero CPU drag.
 - **Usage Example**:
   ```tsx
   import { AmbientBackground } from '@elsesourav/ui';
 
-  <AmbientBackground variant="subtle" />;
+  <AmbientBackground variant="home" />;
   ```
 
 ---
@@ -608,9 +608,34 @@ import { ... } from '@elsesourav/ui';
 
 ---
 
-### `Reveal`, `StaggerContainer`, `StaggerItem`
+### `Reveal`, `RevealGroup`, `ScrollReveal`, `ScrollRevealGroup`
 
-- **Purpose**: CSS and GPU-accelerated entrance animations that reveal items as they enter the viewport.
+- **Purpose**: GPU-accelerated viewport entrance animations using native `IntersectionObserver`.
+- **Key Features**:
+  - Automatically respects `prefers-reduced-motion: reduce` by immediately revealing content statically.
+  - SSR and JS-fallback resilient (renders with `opacity: 1` before client hydration).
+  - Staggered card sequences (`staggerDelay: 0.06s`) without making the user wait.
+  - Fires once (`once: true` by default) to avoid annoying re-triggering during minor scrolling.
+- **Props**:
+  - `direction?: 'up' | 'down' | 'left' | 'right' | 'fade'` (default: `'up'`)
+  - `distance?: number` (default: `12`)
+  - `delay?: number` (seconds)
+  - `duration?: number` (default: `0.35s`)
+  - `threshold?: number` (default: `0.05`)
+- **Usage Example**:
+  ```tsx
+  import { ScrollReveal, ScrollRevealGroup } from '@elsesourav/ui';
+
+  <ScrollReveal direction="up" distance={16}>
+    <h2>Section Title</h2>
+  </ScrollReveal>
+
+  <ScrollRevealGroup staggerDelay={0.08} className="grid grid-cols-3 gap-6">
+    <Card>Item 1</Card>
+    <Card>Item 2</Card>
+    <Card>Item 3</Card>
+  </ScrollRevealGroup>
+  ```
 
 ---
 
@@ -1055,43 +1080,43 @@ The `@elsesourav/ui/micro` collection contains **34 playful, high-tactility micr
 
 ## Complete Directory: All 34 Micro Components
 
-| Component           | Description                                               | Best Used For                                 |
-| :------------------ | :-------------------------------------------------------- | :-------------------------------------------- |
-| **`BellToggle`**    | Harmonic ringing bell toggle with badge counter           | Notification preferences, alert subscriptions |
-| **`BranchedMenu`**  | Radial tree branching menu opening from central hub       | Quick radial toolbars, floating speed dials   |
-| **`CallChip`**      | Expandable status capsule with pulsing live waves         | Active call status, podcast player indicator  |
-| **`CodeSlots`**     | Mechanical slot-machine digit counter                     | Live user counts, star counters               |
-| **`CometDial`**     | Circular dial slider with glowing comet tail              | Volume controllers, circular timers           |
-| **`CopyIconButton`**| Ultra-sleek inline icon copy trigger with morph animation | Copying usernames, emails, tokens, and IDs    |
-| **`DodgeField`**    | Text input with playful dodging character eye             | Login passwords, whimsical form fields        |
-| **`FlipCard`**      | 3D perspective flip card with realistic shadow            | Developer business cards, portfolio showcases |
-| **`FolderFloat`**   | Origami floating folder opening with paper preview        | File attachments, folder organizers           |
-| **`FuseButton`**    | Action button with burning fuse trail before commit       | Final irreversible action trigger             |
-| **`GlideSelect`**   | Magnetic glide selector with smooth cursor suction        | Compact dropdown alternatives                 |
-| **`HoldButton`**    | Charge-up hold button with electric particle aura         | Game actions, authorization confirmations     |
-| **`JellyRadio`**    | Gelatinous radio button that jiggles upon selection       | Form surveys, rating choices                  |
-| **`LatticeLoader`** | Interlocking geometric matrix loading spinner             | Fullscreen page transition loaders            |
-| **`PaperCrumple`**  | Physical 2D matter.js paper crumple into ball             | Discarding drafts, throwing away notes        |
-| **`PeekRating`**    | Five-star rating where stars smile/frown based on score   | Customer feedback, project review ratings     |
-| **`PromptBar`**     | Sleek AI prompt bar with rainbow micro aura               | AI query inputs, command search bars          |
-| **`PulseHeart`**    | Anatomical pulsating heart button for favorites           | Favoriting articles, sponsoring projects      |
-| **`RefineFrame`**   | Crop and adjust bounding box with magnetic handles        | Avatar crop studio, image adjustments         |
-| **`RubberSegment`** | Elastic rubber band segment selector                      | Range switches, view filters                  |
-| **`ScrubField`**    | Number input draggable horizontally like After Effects    | Numeric adjustments, CSS dimensions           |
-| **`Shredder`**      | Matter.js physics shredder turning documents into ribbons | Permanent account wipes, security cleanups    |
-| **`SlideCommit`**   | Slide-to-unlock style commit bar                          | Slide to pay, slide to publish                |
-| **`SlingButton`**   | Slingshot pull-and-release button                         | Sending messages, launching actions           |
-| **`SloshGauge`**    | Liquid sloshing gauge with water physics                  | Storage usage, battery meter                  |
-| **`SpringCheck`**   | High-energy bouncing checkmark                            | To-do lists, task completion confirmation     |
-| **`SquishSwitch`**  | Elastic silicone switch with stretch and squish           | Setting toggles, mode switches                |
-| **`StatusMark`**    | Tactile status badge with pinging pulse ring              | Server status, online indicator               |
-| **`SwipeRow`**      | iOS-style swipe action row revealing actions              | Mobile list items, mail inbox items           |
-| **`SwipeToast`**    | Dismissible toast notification flickable off-screen       | High-priority mobile notifications            |
-| **`TearTicket`**    | Perforated discount ticket that tears in half             | Event tickets, voucher redemption             |
-| **`ThoughtLine`**   | Animated thinking line pulse for AI reasoning             | AI stream reasoning indicator                 |
-| **`VoicePill`**     | Audio wave pill reacting to voice microphone input        | Voice search, audio notes                     |
-| **`WakeSlider`**    | Sleeping slider that opens eyes when touched              | Brightness controls, sensory sliders          |
-| **`WarmTooltip`**   | Floating tooltip with organic jelly squash effect         | Rich interactive element explanations         |
+| Component            | Description                                               | Best Used For                                 |
+| :------------------- | :-------------------------------------------------------- | :-------------------------------------------- |
+| **`BellToggle`**     | Harmonic ringing bell toggle with badge counter           | Notification preferences, alert subscriptions |
+| **`BranchedMenu`**   | Radial tree branching menu opening from central hub       | Quick radial toolbars, floating speed dials   |
+| **`CallChip`**       | Expandable status capsule with pulsing live waves         | Active call status, podcast player indicator  |
+| **`CodeSlots`**      | Mechanical slot-machine digit counter                     | Live user counts, star counters               |
+| **`CometDial`**      | Circular dial slider with glowing comet tail              | Volume controllers, circular timers           |
+| **`CopyIconButton`** | Ultra-sleek inline icon copy trigger with morph animation | Copying usernames, emails, tokens, and IDs    |
+| **`DodgeField`**     | Text input with playful dodging character eye             | Login passwords, whimsical form fields        |
+| **`FlipCard`**       | 3D perspective flip card with realistic shadow            | Developer business cards, portfolio showcases |
+| **`FolderFloat`**    | Origami floating folder opening with paper preview        | File attachments, folder organizers           |
+| **`FuseButton`**     | Action button with burning fuse trail before commit       | Final irreversible action trigger             |
+| **`GlideSelect`**    | Magnetic glide selector with smooth cursor suction        | Compact dropdown alternatives                 |
+| **`HoldButton`**     | Charge-up hold button with electric particle aura         | Game actions, authorization confirmations     |
+| **`JellyRadio`**     | Gelatinous radio button that jiggles upon selection       | Form surveys, rating choices                  |
+| **`LatticeLoader`**  | Interlocking geometric matrix loading spinner             | Fullscreen page transition loaders            |
+| **`PaperCrumple`**   | Physical 2D matter.js paper crumple into ball             | Discarding drafts, throwing away notes        |
+| **`PeekRating`**     | Five-star rating where stars smile/frown based on score   | Customer feedback, project review ratings     |
+| **`PromptBar`**      | Sleek AI prompt bar with rainbow micro aura               | AI query inputs, command search bars          |
+| **`PulseHeart`**     | Anatomical pulsating heart button for favorites           | Favoriting articles, sponsoring projects      |
+| **`RefineFrame`**    | Crop and adjust bounding box with magnetic handles        | Avatar crop studio, image adjustments         |
+| **`RubberSegment`**  | Elastic rubber band segment selector                      | Range switches, view filters                  |
+| **`ScrubField`**     | Number input draggable horizontally like After Effects    | Numeric adjustments, CSS dimensions           |
+| **`Shredder`**       | Matter.js physics shredder turning documents into ribbons | Permanent account wipes, security cleanups    |
+| **`SlideCommit`**    | Slide-to-unlock style commit bar                          | Slide to pay, slide to publish                |
+| **`SlingButton`**    | Slingshot pull-and-release button                         | Sending messages, launching actions           |
+| **`SloshGauge`**     | Liquid sloshing gauge with water physics                  | Storage usage, battery meter                  |
+| **`SpringCheck`**    | High-energy bouncing checkmark                            | To-do lists, task completion confirmation     |
+| **`SquishSwitch`**   | Elastic silicone switch with stretch and squish           | Setting toggles, mode switches                |
+| **`StatusMark`**     | Tactile status badge with pinging pulse ring              | Server status, online indicator               |
+| **`SwipeRow`**       | iOS-style swipe action row revealing actions              | Mobile list items, mail inbox items           |
+| **`SwipeToast`**     | Dismissible toast notification flickable off-screen       | High-priority mobile notifications            |
+| **`TearTicket`**     | Perforated discount ticket that tears in half             | Event tickets, voucher redemption             |
+| **`ThoughtLine`**    | Animated thinking line pulse for AI reasoning             | AI stream reasoning indicator                 |
+| **`VoicePill`**      | Audio wave pill reacting to voice microphone input        | Voice search, audio notes                     |
+| **`WakeSlider`**     | Sleeping slider that opens eyes when touched              | Brightness controls, sensory sliders          |
+| **`WarmTooltip`**    | Floating tooltip with organic jelly squash effect         | Rich interactive element explanations         |
 
 ---
 

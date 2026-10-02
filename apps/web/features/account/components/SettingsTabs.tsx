@@ -13,8 +13,7 @@ interface SettingsTabsProps {
 export function SettingsTabs({ user }: SettingsTabsProps) {
   const searchParams = useSearchParams();
   const rawTab = searchParams.get('tab');
-  const isSecurity =
-    rawTab === 'account' || rawTab === 'security' || rawTab === 'danger';
+  const isSecurity = rawTab === 'account' || rawTab === 'security' || rawTab === 'danger';
 
   return (
     <div className="w-full">
@@ -22,4 +21,3 @@ export function SettingsTabs({ user }: SettingsTabsProps) {
     </div>
   );
 }
-

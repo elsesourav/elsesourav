@@ -7,11 +7,18 @@ import { Tick02Icon } from '@hugeicons/core-free-icons';
 const VISUAL_DURATION = 0.2;
 const RULE_END = 0.84;
 const SWELL = 0.35;
-const TICK_PATH: string = (Tick02Icon[0]?.[1] as { d?: string })?.d ?? 'M7.5 12.25 10.5 15.25 16.75 8.75';
-const ORIGIN = { left: 'left center', center: 'center', right: 'right center', none: 'left center' } as const;
+const TICK_PATH: string =
+  (Tick02Icon[0]?.[1] as { d?: string })?.d ?? 'M7.5 12.25 10.5 15.25 16.75 8.75';
+const ORIGIN = {
+  left: 'left center',
+  center: 'center',
+  right: 'right center',
+  none: 'left center',
+} as const;
 
 const clamp01 = (value: number): number => Math.min(1, Math.max(0, value));
-const zetaOf = (bounce: number): number => (bounce <= 0 ? 1 : -Math.log(bounce) / Math.sqrt(Math.PI ** 2 + Math.log(bounce) ** 2));
+const zetaOf = (bounce: number): number =>
+  bounce <= 0 ? 1 : -Math.log(bounce) / Math.sqrt(Math.PI ** 2 + Math.log(bounce) ** 2);
 
 export interface SpringCheckReadings {
   fill: string;
@@ -28,7 +35,7 @@ const readings = (t: number, doneOpacity: number, strikeLag: number): SpringChec
     box: `scale(${1 + SWELL * Math.max(0, t - 1)})`,
     tick: 1 - held,
     word: 1 - (1 - doneOpacity) * held,
-    rule: `scaleX(${clamp01((held - strikeLag) / (RULE_END - strikeLag))})`
+    rule: `scaleX(${clamp01((held - strikeLag) / (RULE_END - strikeLag))})`,
   };
 };
 
@@ -73,7 +80,7 @@ export default function SpringCheck({
   strike = 'left',
   ariaLabel,
   className = '',
-  style
+  style,
 }: SpringCheckProps) {
   const controlled = checked !== undefined;
   const [inner, setInner] = useState(defaultChecked);
@@ -116,7 +123,7 @@ export default function SpringCheck({
     const controls = animate(t, target, {
       type: 'spring',
       visualDuration: VISUAL_DURATION,
-      bounce: 1 - zetaOf(bounce)
+      bounce: 1 - zetaOf(bounce),
     });
     return () => controls.stop();
   }, [on, reduce, bounce, t]);
@@ -169,7 +176,7 @@ export default function SpringCheck({
           '--sc-row': `${Math.max(44, boxSize + 16)}px`,
           '--sc-rule': `${ruleHeight}px`,
           '--sc-origin': ORIGIN[strike] || ORIGIN.left,
-          ...style
+          ...style,
         } as React.CSSProperties
       }
       onPointerDown={handlePointerDown}
@@ -183,7 +190,13 @@ export default function SpringCheck({
           <span className="spring-check__ring" aria-hidden="true" />
           <span ref={fillRef} className="spring-check__fill" style={{ transform: r.fill }} />
           <svg className="spring-check__tick" viewBox="0 0 24 24" aria-hidden="true">
-            <path ref={tickRef} d={TICK_PATH} pathLength={1} strokeDasharray={1} style={{ strokeDashoffset: r.tick }} />
+            <path
+              ref={tickRef}
+              d={TICK_PATH}
+              pathLength={1}
+              strokeDasharray={1}
+              style={{ strokeDashoffset: r.tick }}
+            />
           </svg>
         </span>
       </span>
@@ -192,7 +205,12 @@ export default function SpringCheck({
           {label}
         </span>
         {strike !== 'none' ? (
-          <span ref={ruleRef} className="spring-check__rule" aria-hidden="true" style={{ transform: r.rule }} />
+          <span
+            ref={ruleRef}
+            className="spring-check__rule"
+            aria-hidden="true"
+            style={{ transform: r.rule }}
+          />
         ) : null}
       </span>
     </button>

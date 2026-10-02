@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import React, { useCallback, useEffect, useId, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
 const EASE = [0.23, 1, 0.32, 1] as const;
 
 const EXIT = [0.4, 0, 1, 1] as const;
-const CELL = { type: "spring", stiffness: 520, damping: 34, mass: 0.45 } as const;
+const CELL = { type: 'spring', stiffness: 520, damping: 34, mass: 0.45 } as const;
 
-const NUDGE = { type: "spring", stiffness: 700, damping: 46, mass: 0.5 } as const;
+const NUDGE = { type: 'spring', stiffness: 700, damping: 46, mass: 0.5 } as const;
 const NONE = { duration: 0 } as const;
 
-const SLIDE = { type: "spring", stiffness: 700, damping: 46, mass: 0.5 } as const;
+const SLIDE = { type: 'spring', stiffness: 700, damping: 46, mass: 0.5 } as const;
 
 const ROW_H = 32;
 
-const OPEN = { type: "spring", stiffness: 620, damping: 38, mass: 0.6 } as const;
+const OPEN = { type: 'spring', stiffness: 620, damping: 38, mass: 0.6 } as const;
 
 export type DropdownItem = {
   value: string;
@@ -45,9 +45,7 @@ export function useDropdown({
   const listId = `${uid}-list`;
   const itemId = useCallback((i: number) => `${uid}-opt-${i}`, [uid]);
 
-  const [uncontrolled, setUncontrolled] = useState<string | null>(
-    defaultValue ?? null,
-  );
+  const [uncontrolled, setUncontrolled] = useState<string | null>(defaultValue ?? null);
   const selectedValue = value !== undefined ? value : uncontrolled;
   const selectedIndex = items.findIndex((it) => it.value === selectedValue);
 
@@ -59,7 +57,7 @@ export function useDropdown({
   const listRef = useRef<HTMLUListElement>(null);
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
   const viaKey = useRef(false);
-  const buffer = useRef("");
+  const buffer = useRef('');
   const bufferTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const emit = useRef(onChange);
@@ -77,12 +75,12 @@ export function useDropdown({
       }
       return from;
     },
-    [items],
+    [items]
   );
 
   const edge = useCallback(
     (dir: 1 | -1) => step(dir === 1 ? -1 : items.length, dir),
-    [step, items.length],
+    [step, items.length]
   );
 
   const openMenu = useCallback(
@@ -94,11 +92,11 @@ export function useDropdown({
       setActiveIndex(index ?? (usable ? selectedIndex : edge(1)));
       setOpen(true);
     },
-    [disabled, items, selectedIndex, edge],
+    [disabled, items, selectedIndex, edge]
   );
 
   const close = useCallback((restoreFocus = true) => {
-    buffer.current = "";
+    buffer.current = '';
     setOpen(false);
     setActiveIndex(-1);
     if (restoreFocus) triggerRef.current?.focus();
@@ -112,7 +110,7 @@ export function useDropdown({
       emit.current?.(item.value);
       close();
     },
-    [items, value, close],
+    [items, value, close]
   );
 
   const typeahead = useCallback(
@@ -120,7 +118,7 @@ export function useDropdown({
       if (bufferTimer.current) clearTimeout(bufferTimer.current);
       buffer.current += char.toLowerCase();
       bufferTimer.current = setTimeout(() => {
-        buffer.current = "";
+        buffer.current = '';
       }, typeaheadDelay);
 
       const q = buffer.current;
@@ -137,7 +135,7 @@ export function useDropdown({
         }
       }
     },
-    [items, activeIndex, typeaheadDelay],
+    [items, activeIndex, typeaheadDelay]
   );
 
   useEffect(() => {
@@ -150,40 +148,40 @@ export function useDropdown({
       if (!rootRef.current?.contains(e.target as Node)) close(false);
     };
     const onWindowBlur = () => close(false);
-    document.addEventListener("pointerdown", onDown, true);
-    window.addEventListener("blur", onWindowBlur);
+    document.addEventListener('pointerdown', onDown, true);
+    window.addEventListener('blur', onWindowBlur);
     return () => {
-      document.removeEventListener("pointerdown", onDown, true);
-      window.removeEventListener("blur", onWindowBlur);
+      document.removeEventListener('pointerdown', onDown, true);
+      window.removeEventListener('blur', onWindowBlur);
     };
   }, [open, close]);
 
   useEffect(() => {
     if (!open || activeIndex < 0 || !viaKey.current) return;
     viaKey.current = false;
-    itemRefs.current[activeIndex]?.scrollIntoView({ block: "nearest" });
+    itemRefs.current[activeIndex]?.scrollIntoView({ block: 'nearest' });
   }, [open, activeIndex]);
 
   useEffect(
     () => () => {
       if (bufferTimer.current) clearTimeout(bufferTimer.current);
     },
-    [],
+    []
   );
 
   const triggerProps = {
     ref: triggerRef,
-    type: "button" as const,
+    type: 'button' as const,
     disabled,
-    "aria-haspopup": "listbox" as const,
-    "aria-expanded": open,
-    "aria-controls": open ? listId : undefined,
+    'aria-haspopup': 'listbox' as const,
+    'aria-expanded': open,
+    'aria-controls': open ? listId : undefined,
     onClick: () => (open ? close() : openMenu()),
     onKeyDown: (e: React.KeyboardEvent<HTMLButtonElement>) => {
-      if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
+      if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         openMenu();
-      } else if (e.key === "ArrowUp") {
+      } else if (e.key === 'ArrowUp') {
         e.preventDefault();
         openMenu(edge(-1));
       }
@@ -193,34 +191,29 @@ export function useDropdown({
   const listProps = {
     ref: listRef,
     id: listId,
-    role: "listbox" as const,
+    role: 'listbox' as const,
     tabIndex: -1,
-    "aria-activedescendant": activeIndex >= 0 ? itemId(activeIndex) : undefined,
+    'aria-activedescendant': activeIndex >= 0 ? itemId(activeIndex) : undefined,
     onKeyDown: (e: React.KeyboardEvent<HTMLUListElement>) => {
-      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
         e.preventDefault();
-        const dir = e.key === "ArrowDown" ? 1 : -1;
+        const dir = e.key === 'ArrowDown' ? 1 : -1;
         viaKey.current = true;
         setActiveIndex((i) => step(i, dir));
-      } else if (e.key === "Home" || e.key === "End") {
+      } else if (e.key === 'Home' || e.key === 'End') {
         e.preventDefault();
         viaKey.current = true;
-        setActiveIndex(edge(e.key === "Home" ? 1 : -1));
-      } else if (e.key === "Enter" || e.key === " ") {
+        setActiveIndex(edge(e.key === 'Home' ? 1 : -1));
+      } else if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         select(activeIndex);
-      } else if (e.key === "Escape") {
+      } else if (e.key === 'Escape') {
         e.preventDefault();
         close();
-      } else if (e.key === "Tab") {
+      } else if (e.key === 'Tab') {
         e.preventDefault();
         close();
-      } else if (
-        e.key.length === 1 &&
-        !e.metaKey &&
-        !e.ctrlKey &&
-        !e.altKey
-      ) {
+      } else if (e.key.length === 1 && !e.metaKey && !e.ctrlKey && !e.altKey) {
         e.preventDefault();
         typeahead(e.key);
       }
@@ -230,9 +223,9 @@ export function useDropdown({
   const getItemProps = useCallback(
     (index: number) => ({
       id: itemId(index),
-      role: "option" as const,
-      "aria-selected": index === selectedIndex,
-      "aria-disabled": items[index]?.disabled ? (true as const) : undefined,
+      role: 'option' as const,
+      'aria-selected': index === selectedIndex,
+      'aria-disabled': items[index]?.disabled ? (true as const) : undefined,
       ref: (el: HTMLLIElement | null) => {
         itemRefs.current[index] = el;
       },
@@ -243,7 +236,7 @@ export function useDropdown({
       },
       onClick: () => select(index),
     }),
-    [itemId, items, selectedIndex, select],
+    [itemId, items, selectedIndex, select]
   );
 
   return {
@@ -279,11 +272,11 @@ export function Dropdown({
   value,
   defaultValue,
   onChange,
-  label = "Options",
-  placeholder = "Select an option",
+  label = 'Options',
+  placeholder = 'Select an option',
   disabled = false,
-  emptyLabel = "Nothing to choose",
-  className = "",
+  emptyLabel = 'Nothing to choose',
+  className = '',
 }: DropdownProps) {
   const reduced = useReducedMotion();
   const {
@@ -300,13 +293,17 @@ export function Dropdown({
   const cell = reduced ? NONE : CELL;
 
   return (
-    <div data-interior="dropdown" ref={rootRef} className={`relative inline-block text-left ${className}`}>
+    <div
+      data-interior="dropdown"
+      ref={rootRef}
+      className={`relative inline-block text-left ${className}`}
+    >
       <button
         {...triggerProps}
         className={`flex h-9 select-none items-center gap-2 whitespace-nowrap rounded-[9px] border border-[var(--interior-border)] bg-white px-3 text-[13px] font-medium text-[var(--interior-fg)] outline-none transition-[box-shadow,border-color] duration-150 disabled:opacity-50 dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:text-[var(--interior-fg)] ${
           open
-            ? "shadow-[inset_0_1px_2px_rgba(28,25,23,0.09)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]"
-            : "shadow-[0_1px_2px_rgba(28,25,23,0.06),0_4px_10px_-8px_rgba(28,25,23,0.45)] hover:border-[var(--interior-border-strong)] hover:shadow-[0_1px_2px_rgba(28,25,23,0.06),0_8px_18px_-12px_rgba(28,25,23,0.5)] focus-visible:border-stone-400 focus-visible:shadow-[0_1px_2px_rgba(28,25,23,0.08),0_10px_22px_-12px_rgba(28,25,23,0.55)] dark:shadow-[0_1px_6px_rgba(0,0,0,0.45)] dark:hover:border-white/20 dark:hover:shadow-[0_2px_10px_rgba(0,0,0,0.55)] dark:focus-visible:border-white/30 dark:focus-visible:shadow-[0_2px_12px_rgba(0,0,0,0.6)]"
+            ? 'shadow-[inset_0_1px_2px_rgba(28,25,23,0.09)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]'
+            : 'shadow-[0_1px_2px_rgba(28,25,23,0.06),0_4px_10px_-8px_rgba(28,25,23,0.45)] hover:border-[var(--interior-border-strong)] hover:shadow-[0_1px_2px_rgba(28,25,23,0.06),0_8px_18px_-12px_rgba(28,25,23,0.5)] focus-visible:border-stone-400 focus-visible:shadow-[0_1px_2px_rgba(28,25,23,0.08),0_10px_22px_-12px_rgba(28,25,23,0.55)] dark:shadow-[0_1px_6px_rgba(0,0,0,0.45)] dark:hover:border-white/20 dark:hover:shadow-[0_2px_10px_rgba(0,0,0,0.55)] dark:focus-visible:border-white/30 dark:focus-visible:shadow-[0_2px_12px_rgba(0,0,0,0.6)]'
         }`}
       >
         <span className="sr-only">
@@ -342,12 +339,8 @@ export function Dropdown({
               y: -6,
               transition: reduced ? NONE : { duration: 0.12, ease: EXIT },
             }}
-            transition={
-              reduced
-                ? NONE
-                : { ...OPEN, opacity: { duration: 0.12, ease: EASE } }
-            }
-            style={{ transformOrigin: "top left" }}
+            transition={reduced ? NONE : { ...OPEN, opacity: { duration: 0.12, ease: EASE } }}
+            style={{ transformOrigin: 'top left' }}
             className="absolute left-0 top-[calc(100%+6px)] z-50 min-w-[224px] whitespace-nowrap rounded-[11px] border border-[var(--interior-border)] bg-white p-[5px] shadow-[0_1px_2px_rgba(28,25,23,0.06),0_16px_36px_-18px_rgba(28,25,23,0.5)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.6)]"
           >
             <ul
@@ -363,11 +356,7 @@ export function Dropdown({
                   y: activeIndex < 0 ? 0 : activeIndex * ROW_H,
                   opacity: activeIndex < 0 ? 0 : 1,
                 }}
-                transition={
-                  reduced
-                    ? NONE
-                    : { ...SLIDE, opacity: { duration: 0.1, ease: EASE } }
-                }
+                transition={reduced ? NONE : { ...SLIDE, opacity: { duration: 0.1, ease: EASE } }}
               />
               {items.map((item, i) => {
                 const active = i === activeIndex && !item.disabled;
@@ -378,10 +367,10 @@ export function Dropdown({
                     {...getItemProps(i)}
                     className={`relative flex h-8 cursor-default select-none items-center rounded-[7px] px-2.5 text-[13px] ${
                       item.disabled
-                        ? "text-stone-500/70 dark:text-stone-400/70"
+                        ? 'text-stone-500/70 dark:text-stone-400/70'
                         : active
-                          ? "text-[var(--interior-fg)] dark:text-[var(--interior-fg)]"
-                          : "text-[var(--interior-fg)]"
+                          ? 'text-[var(--interior-fg)] dark:text-[var(--interior-fg)]'
+                          : 'text-[var(--interior-fg)]'
                     }`}
                   >
                     <span className="relative flex min-w-0 flex-1 items-center gap-3">

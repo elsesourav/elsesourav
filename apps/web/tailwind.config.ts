@@ -139,6 +139,18 @@ const config: Config = {
               '0 0 0 3px rgba(99,102,241,0.95), 0 0 32px rgba(99,102,241,0.55), 0 0 0 8.5px rgba(139,92,246,0.35), 0 0 50px rgba(139,92,246,0.4)',
           },
         },
+        'float-slow': {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+        'float-delayed': {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-14px)' },
+        },
+        'float-reverse': {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(8px)' },
+        },
       },
       animation: {
         'fade-in': 'fade-in var(--duration-fast) var(--ease-smooth)',
@@ -146,6 +158,9 @@ const config: Config = {
         'slide-down': 'slide-down var(--duration-smooth) var(--ease-smooth)',
         'scale-in': 'scale-in var(--duration-fast) var(--ease-smooth)',
         'neon-pulse': 'neon-pulse 4s ease-in-out infinite',
+        'float-slow': 'float-slow 5s ease-in-out infinite',
+        'float-delayed': 'float-delayed 6s ease-in-out infinite 1.5s',
+        'float-reverse': 'float-reverse 5.5s ease-in-out infinite 0.75s',
       },
       boxShadow: {
         'neon-ring':

@@ -30,10 +30,7 @@ export default async function UserLayout({ children }: { children: React.ReactNo
   return (
     <div className="min-h-screen lg:h-screen flex flex-col bg-background text-foreground transition-colors overflow-x-clip lg:overflow-hidden relative">
       {/* Dynamic Ambient Background Elements */}
-      <div
-        className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
-        aria-hidden="true"
-      >
+      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] bg-gradient-to-b from-primary/10 via-primary/5 to-transparent blur-3xl opacity-70 dark:opacity-40" />
       </div>
 
@@ -72,7 +69,10 @@ export default async function UserLayout({ children }: { children: React.ReactNo
       {/* Main Authenticated Layout: Fixed Shell on Desktop with Independent Scroll View for Content */}
       <div className="flex-1 max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 flex flex-col lg:flex-row items-start gap-4 sm:gap-5 lg:gap-6 lg:h-[calc(100dvh-4rem)] lg:overflow-hidden">
         <UserSidebar />
-        <main id="main-content" className="flex-1 min-w-0 w-full lg:h-full lg:overflow-y-auto lg:pr-1">
+        <main
+          id="main-content"
+          className="flex-1 min-w-0 w-full lg:h-full lg:overflow-y-auto lg:pr-1"
+        >
           {children}
         </main>
       </div>

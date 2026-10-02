@@ -77,12 +77,12 @@ export function ThemePopup() {
   const CurrentIcon = resolvedTheme === 'dark' ? Moon : Sun;
 
   return (
-    <div className="relative" ref={menuRef}>
+    <div className="relative shrink-0" ref={menuRef}>
       <button
         ref={triggerRef}
         type="button"
         onClick={handleToggle}
-        className="flex items-center justify-center w-10 h-10 rounded-xl text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--surface-subtle))] active:scale-95 transition-all duration-150 ease-smooth focus:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))] min-h-[40px] min-w-[40px] cursor-pointer"
+        className="shrink-0 flex items-center justify-center w-10 h-10 rounded-xl text-[hsl(var(--foreground))]/75 hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--surface-subtle))]/60 active:scale-95 transition-all duration-150 ease-smooth focus:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))] min-h-[40px] min-w-[40px] cursor-pointer"
         aria-label="Change theme"
         aria-expanded={open}
         aria-haspopup="menu"

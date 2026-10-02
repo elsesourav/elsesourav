@@ -10,10 +10,12 @@ const back = (k: number, c: number): number => {
   const u = k - 1;
   return 1 + (c + 1) * u ** 3 + c * u ** 2;
 };
-const swellOf = (t: number, c: number): number => (t <= 0 ? 0 : t < OUT ? 1 - (1 - t / OUT) ** 3 : 1 - back((t - OUT) / (1 - OUT), c));
+const swellOf = (t: number, c: number): number =>
+  t <= 0 ? 0 : t < OUT ? 1 - (1 - t / OUT) ** 3 : 1 - back((t - OUT) / (1 - OUT), c);
 const format = (n: number): string => new Intl.NumberFormat().format(n);
 const reducedMotion = (): boolean =>
-  typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  typeof window !== 'undefined' &&
+  !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
 export type PulseHeartIcon = 'heart' | 'star' | 'thumb';
 
@@ -71,7 +73,7 @@ export default function PulseHeart({
   disabled = false,
   label = 'Like',
   className = '',
-  style
+  style,
 }: PulseHeartProps) {
   const controlled = likedProp !== undefined;
   const [inner, setInner] = useState(defaultLiked);
@@ -134,8 +136,14 @@ export default function PulseHeart({
     if (from === to) return;
     const a = format(from);
     const b = format(to);
-    const changed = a.length === b.length ? [...b].flatMap((ch, i) => (ch !== a[i] ? [i] : [])) : [];
-    setRoll({ a, b, at: changed.length === 1 && changed[0] !== undefined ? changed[0] : -1, up: to > from });
+    const changed =
+      a.length === b.length ? [...b].flatMap((ch, i) => (ch !== a[i] ? [i] : [])) : [];
+    setRoll({
+      a,
+      b,
+      at: changed.length === 1 && changed[0] !== undefined ? changed[0] : -1,
+      up: to > from,
+    });
     clearTimeout(rollTimer.current);
     rollTimer.current = setTimeout(() => setRoll(null), cfg.current.rollDuration);
   };
@@ -220,9 +228,11 @@ export default function PulseHeart({
     ? roll.at === -1
       ? [{ top: roll.up ? roll.a : roll.b, bottom: roll.up ? roll.b : roll.a }]
       : [...roll.b].map((ch, i) =>
-          i === roll.at ? { top: roll.up ? roll.a[i] : ch, bottom: roll.up ? ch : roll.a[i] } : { ch }
+          i === roll.at
+            ? { top: roll.up ? roll.a[i] : ch, bottom: roll.up ? ch : roll.a[i] }
+            : { ch }
         )
-    : [...text].map(ch => ({ ch }));
+    : [...text].map((ch) => ({ ch }));
 
   return (
     <button
@@ -244,7 +254,7 @@ export default function PulseHeart({
           '--ph-text': textColor,
           '--ph-roll': `${rollDuration}ms`,
           '--ph-stroke': `${(1.5 * size) / 24}px`,
-          ...style
+          ...style,
         } as React.CSSProperties
       }
       onPointerDown={handlePointerDown}
@@ -260,7 +270,11 @@ export default function PulseHeart({
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <g ref={glyphRef}>
                 {paths.map(([, attrs]) => (
-                  <path key={String((attrs as { key?: string }).key)} d={String((attrs as { d?: string }).d)} vectorEffect="non-scaling-stroke" />
+                  <path
+                    key={String((attrs as { key?: string }).key)}
+                    d={String((attrs as { d?: string }).d)}
+                    vectorEffect="non-scaling-stroke"
+                  />
                 ))}
               </g>
             </svg>

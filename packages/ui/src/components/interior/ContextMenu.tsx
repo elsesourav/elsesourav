@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, {
   useCallback,
@@ -12,9 +12,9 @@ import React, {
   type MouseEvent as ReactMouseEvent,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
-} from "react";
-import { createPortal } from "react-dom";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+} from 'react';
+import { createPortal } from 'react-dom';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
 const EASE = [0.23, 1, 0.32, 1] as const;
 
@@ -26,10 +26,10 @@ const PAD = 5;
 const BORDER = 1;
 
 export type ContextMenuItem =
-  | { id: string; type: "separator" }
+  | { id: string; type: 'separator' }
   | {
       id: string;
-      type?: "item";
+      type?: 'item';
       label: string;
       shortcut?: string;
       icon?: ReactNode;
@@ -61,7 +61,7 @@ function clamp(value: number, min: number, max: number) {
 
 function measure(items: ContextMenuItem[]) {
   let height = PAD * 2 + BORDER * 2;
-  for (const item of items) height += item.type === "separator" ? SEP_H : ITEM_H;
+  for (const item of items) height += item.type === 'separator' ? SEP_H : ITEM_H;
   return height;
 }
 
@@ -86,7 +86,7 @@ export function useContextMenu({
   const holdFrom = useRef<{ x: number; y: number } | null>(null);
   const swallowClick = useRef(false);
   const pressed = useRef(-1);
-  const query = useRef("");
+  const query = useRef('');
   const queryTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   activeRef.current = active;
@@ -101,10 +101,10 @@ export function useContextMenu({
   const steps = useMemo(
     () =>
       items.reduce<number[]>((acc, item, index) => {
-        if (item.type !== "separator" && !item.disabled) acc.push(index);
+        if (item.type !== 'separator' && !item.disabled) acc.push(index);
         return acc;
       }, []),
-    [items],
+    [items]
   );
   const stepsRef = useRef(steps);
   stepsRef.current = steps;
@@ -124,11 +124,11 @@ export function useContextMenu({
       setActive(-1);
       if (restoreFocus) triggerRef.current?.focus({ preventScroll: true });
     },
-    [clearHold],
+    [clearHold]
   );
 
   const openAt = useCallback(
-    (x: number, y: number, source: "pointer" | "keyboard" = "pointer") => {
+    (x: number, y: number, source: 'pointer' | 'keyboard' = 'pointer') => {
       if (disabled || list.current.length === 0) return;
 
       const vw = document.documentElement.clientWidth;
@@ -149,20 +149,20 @@ export function useContextMenu({
         maxHeight: cap,
         transformOrigin: `${clamp(x - left, 0, w)}px ${clamp(y - top, 0, h)}px`,
       });
-      setActive(source === "keyboard" ? (stepsRef.current[0] ?? -1) : -1);
+      setActive(source === 'keyboard' ? (stepsRef.current[0] ?? -1) : -1);
     },
-    [disabled, height, margin, width],
+    [disabled, height, margin, width]
   );
 
   const choose = useCallback(
     (index: number) => {
       const item = list.current[index];
-      if (!item || item.type === "separator" || item.disabled) return;
+      if (!item || item.type === 'separator' || item.disabled) return;
       close(true);
       item.onSelect?.(item.id);
       emit.current?.(item.id);
     },
-    [close],
+    [close]
   );
 
   const step = useCallback((dir: 1 | -1) => {
@@ -171,18 +171,20 @@ export function useContextMenu({
     const at = order.indexOf(activeRef.current);
     const targetIndex =
       at === -1
-        ? (dir === 1 ? order[0] : order[order.length - 1])
+        ? dir === 1
+          ? order[0]
+          : order[order.length - 1]
         : order[(at + dir + order.length) % order.length];
-    if (typeof targetIndex === "number") {
+    if (typeof targetIndex === 'number') {
       setActive(targetIndex);
     }
   }, []);
 
-  const edge = useCallback((which: "first" | "last") => {
+  const edge = useCallback((which: 'first' | 'last') => {
     const order = stepsRef.current;
     if (order.length === 0) return;
-    const targetIndex = which === "first" ? order[0] : order[order.length - 1];
-    if (typeof targetIndex === "number") {
+    const targetIndex = which === 'first' ? order[0] : order[order.length - 1];
+    if (typeof targetIndex === 'number') {
       setActive(targetIndex);
     }
   }, []);
@@ -191,16 +193,16 @@ export function useContextMenu({
     query.current += char.toLowerCase();
     if (queryTimer.current !== null) clearTimeout(queryTimer.current);
     queryTimer.current = setTimeout(() => {
-      query.current = "";
+      query.current = '';
     }, 600);
 
     const order = stepsRef.current;
     const from = order.indexOf(activeRef.current) + 1;
     for (let k = 0; k < order.length; k += 1) {
       const index = order[(from + k) % order.length];
-      if (typeof index !== "number") continue;
+      if (typeof index !== 'number') continue;
       const item = list.current[index];
-      if (item && item.type !== "separator" && item.label.toLowerCase().startsWith(query.current)) {
+      if (item && item.type !== 'separator' && item.label.toLowerCase().startsWith(query.current)) {
         setActive(index);
         return;
       }
@@ -213,7 +215,7 @@ export function useContextMenu({
     if (!isOpen) return;
     const node = activeRef.current >= 0 ? itemRefs.current[activeRef.current] : menuRef.current;
     node?.focus({ preventScroll: true });
-    if (activeRef.current >= 0) node?.scrollIntoView({ block: "nearest" });
+    if (activeRef.current >= 0) node?.scrollIntoView({ block: 'nearest' });
   }, [isOpen, active]);
 
   useEffect(() => {
@@ -232,25 +234,25 @@ export function useContextMenu({
       close(false);
     };
     const onKey = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
+      if (event.key !== 'Escape') return;
       event.preventDefault();
       event.stopPropagation();
       close(true);
     };
     const bail = () => close(false);
 
-    document.addEventListener("pointerdown", onDown, true);
-    document.addEventListener("scroll", onScroll, { capture: true, passive: true });
-    document.addEventListener("keydown", onKey, true);
-    window.addEventListener("resize", bail);
-    window.addEventListener("blur", bail);
+    document.addEventListener('pointerdown', onDown, true);
+    document.addEventListener('scroll', onScroll, { capture: true, passive: true });
+    document.addEventListener('keydown', onKey, true);
+    window.addEventListener('resize', bail);
+    window.addEventListener('blur', bail);
 
     return () => {
-      document.removeEventListener("pointerdown", onDown, true);
-      document.removeEventListener("scroll", onScroll, { capture: true });
-      document.removeEventListener("keydown", onKey, true);
-      window.removeEventListener("resize", bail);
-      window.removeEventListener("blur", bail);
+      document.removeEventListener('pointerdown', onDown, true);
+      document.removeEventListener('scroll', onScroll, { capture: true });
+      document.removeEventListener('keydown', onKey, true);
+      window.removeEventListener('resize', bail);
+      window.removeEventListener('blur', bail);
     };
   }, [isOpen, close]);
 
@@ -259,35 +261,35 @@ export function useContextMenu({
       if (hold.current !== null) clearTimeout(hold.current);
       if (queryTimer.current !== null) clearTimeout(queryTimer.current);
     },
-    [],
+    []
   );
 
   const triggerProps = {
     tabIndex: disabled ? -1 : 0,
-    "aria-haspopup": "menu" as const,
-    "aria-expanded": isOpen,
-    style: { touchAction: "manipulation", WebkitTouchCallout: "none" } as CSSProperties,
+    'aria-haspopup': 'menu' as const,
+    'aria-expanded': isOpen,
+    style: { touchAction: 'manipulation', WebkitTouchCallout: 'none' } as CSSProperties,
     onContextMenu: (event: ReactMouseEvent<HTMLElement>) => {
       if (disabled) return;
       event.preventDefault();
       event.stopPropagation();
       clearHold();
       triggerRef.current = event.currentTarget as HTMLDivElement;
-      openAt(event.clientX, event.clientY, "pointer");
+      openAt(event.clientX, event.clientY, 'pointer');
     },
     onKeyDown: (event: ReactKeyboardEvent<HTMLElement>) => {
       if (disabled || opened.current) return;
       const wants =
-        event.key === "ContextMenu" ||
-        (event.shiftKey && event.key === "F10") ||
-        (event.key === "Enter" && event.target === event.currentTarget);
+        event.key === 'ContextMenu' ||
+        (event.shiftKey && event.key === 'F10') ||
+        (event.key === 'Enter' && event.target === event.currentTarget);
       if (!wants) return;
       event.preventDefault();
       const rect = event.currentTarget.getBoundingClientRect();
-      openAt(Math.round(rect.left + 14), Math.round(rect.top + 14), "keyboard");
+      openAt(Math.round(rect.left + 14), Math.round(rect.top + 14), 'keyboard');
     },
     onPointerDown: (event: ReactPointerEvent<HTMLElement>) => {
-      if (disabled || event.pointerType === "mouse" || opened.current) return;
+      if (disabled || event.pointerType === 'mouse' || opened.current) return;
       const x = event.clientX;
       const y = event.clientY;
       triggerRef.current = event.currentTarget as HTMLDivElement;
@@ -296,7 +298,7 @@ export function useContextMenu({
         hold.current = null;
         swallowClick.current = true;
         navigator.vibrate?.(10);
-        openAt(x, y, "pointer");
+        openAt(x, y, 'pointer');
       }, holdDuration);
     },
     onPointerMove: (event: ReactPointerEvent<HTMLElement>) => {
@@ -316,29 +318,29 @@ export function useContextMenu({
   };
 
   const menuProps = {
-    role: "menu" as const,
+    role: 'menu' as const,
     tabIndex: -1,
-    "aria-orientation": "vertical" as const,
+    'aria-orientation': 'vertical' as const,
     onContextMenu: (event: ReactMouseEvent) => event.preventDefault(),
     onKeyDown: (event: ReactKeyboardEvent) => {
-      if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
         event.preventDefault();
-        step(event.key === "ArrowDown" ? 1 : -1);
+        step(event.key === 'ArrowDown' ? 1 : -1);
         return;
       }
-      if (event.key === "Home" || event.key === "End") {
+      if (event.key === 'Home' || event.key === 'End') {
         event.preventDefault();
-        edge(event.key === "Home" ? "first" : "last");
+        edge(event.key === 'Home' ? 'first' : 'last');
         return;
       }
-      if (event.key === "Tab") {
+      if (event.key === 'Tab') {
         event.preventDefault();
         close(true);
         return;
       }
       if (
         event.key.length === 1 &&
-        event.key !== " " &&
+        event.key !== ' ' &&
         !event.metaKey &&
         !event.ctrlKey &&
         !event.altKey
@@ -352,11 +354,12 @@ export function useContextMenu({
     ref: (node: HTMLButtonElement | null) => {
       itemRefs.current[index] = node;
     },
-    role: "menuitem" as const,
+    role: 'menuitem' as const,
     tabIndex: -1,
     onPointerMove: () => {
       const item = list.current[index];
-      if (!item || activeRef.current === index || item.type === "separator" || item.disabled) return;
+      if (!item || activeRef.current === index || item.type === 'separator' || item.disabled)
+        return;
       setActive(index);
     },
     onPointerDown: () => {
@@ -397,10 +400,10 @@ export function ContextMenu({
   items,
   children,
   onSelect,
-  label = "Context menu",
+  label = 'Context menu',
   width = 224,
   disabled = false,
-  className = "",
+  className = '',
 }: ContextMenuProps) {
   const uid = useId();
   const reduced = useReducedMotion();
@@ -408,18 +411,10 @@ export function ContextMenu({
   const [host, setHost] = useState<HTMLElement | null>(null);
   useEffect(() => setHost(document.body), []);
 
-  const {
-    isOpen,
-    active,
-    placement,
-    triggerRef,
-    triggerProps,
-    menuRef,
-    menuProps,
-    getItemProps,
-  } = useContextMenu({ items, onSelect, width, disabled });
+  const { isOpen, active, placement, triggerRef, triggerProps, menuRef, menuProps, getItemProps } =
+    useContextMenu({ items, onSelect, width, disabled });
 
-  const hasIcons = items.some((item) => item.type !== "separator" && item.icon);
+  const hasIcons = items.some((item) => item.type !== 'separator' && item.icon);
 
   const menuId = `${uid}-menu`;
 
@@ -438,86 +433,80 @@ export function ContextMenu({
         </span>
       </div>
       <Portal host={host}>
-      <AnimatePresence>
-        {placement ? (
-          <motion.div
-            key={menuId}
-            ref={menuRef}
-            id={menuId}
-            {...menuProps}
-            aria-label={label}
-            initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={
-              reduced
-                ? { opacity: 0, transition: { duration: 0 } }
-                : { opacity: 0, scale: 0.98, transition: { duration: 0.14, ease: EXIT } }
-            }
-            transition={reduced ? { duration: 0 } : { duration: 0.2, ease: EASE }}
-            style={{
-              position: "fixed",
-              left: placement.left,
-              top: placement.top,
-              width: placement.width,
-              maxHeight: placement.maxHeight,
-              transformOrigin: placement.transformOrigin,
-              zIndex: 60,
-            }}
-            className="overflow-y-auto overscroll-contain rounded-[14px] border border-[var(--interior-border)] bg-white p-[5px] shadow-[0_1px_2px_rgba(28,25,23,0.06),0_16px_36px_-18px_rgba(28,25,23,0.5)] outline-none dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.6)]"
-          >
-            {items.map((item, index) =>
-              item.type === "separator" ? (
-                <div key={item.id} className="px-1 py-1">
-                  <hr className="h-px border-0 bg-[var(--interior-bg-subtle)] dark:bg-white/10" />
-                </div>
-              ) : (
-                <button
-                  key={item.id}
-                  type="button"
-                  aria-disabled={item.disabled || undefined}
-                  {...getItemProps(index)}
-                  className={`flex h-[32px] w-full cursor-default select-none items-center gap-2 rounded-[7px] px-2.5 text-left text-[13px] outline-none ${
-                    item.disabled
-                      ? "text-[var(--interior-fg-subtle)]"
-                      : "text-[var(--interior-fg)]"
-                  } ${active === index ? "bg-[var(--interior-bg-subtle)] dark:bg-white/10" : ""}`}
-                >
-                  {hasIcons ? (
-                    <span
-                      aria-hidden
-                      className="grid size-4 shrink-0 place-items-center text-[var(--interior-fg-muted)]"
-                    >
-                      {item.icon}
-                    </span>
-                  ) : null}
+        <AnimatePresence>
+          {placement ? (
+            <motion.div
+              key={menuId}
+              ref={menuRef}
+              id={menuId}
+              {...menuProps}
+              aria-label={label}
+              initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={
+                reduced
+                  ? { opacity: 0, transition: { duration: 0 } }
+                  : { opacity: 0, scale: 0.98, transition: { duration: 0.14, ease: EXIT } }
+              }
+              transition={reduced ? { duration: 0 } : { duration: 0.2, ease: EASE }}
+              style={{
+                position: 'fixed',
+                left: placement.left,
+                top: placement.top,
+                width: placement.width,
+                maxHeight: placement.maxHeight,
+                transformOrigin: placement.transformOrigin,
+                zIndex: 60,
+              }}
+              className="overflow-y-auto overscroll-contain rounded-[14px] border border-[var(--interior-border)] bg-white p-[5px] shadow-[0_1px_2px_rgba(28,25,23,0.06),0_16px_36px_-18px_rgba(28,25,23,0.5)] outline-none dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.6)]"
+            >
+              {items.map((item, index) =>
+                item.type === 'separator' ? (
+                  <div key={item.id} className="px-1 py-1">
+                    <hr className="h-px border-0 bg-[var(--interior-bg-subtle)] dark:bg-white/10" />
+                  </div>
+                ) : (
+                  <button
+                    key={item.id}
+                    type="button"
+                    aria-disabled={item.disabled || undefined}
+                    {...getItemProps(index)}
+                    className={`flex h-[32px] w-full cursor-default select-none items-center gap-2 rounded-[7px] px-2.5 text-left text-[13px] outline-none ${
+                      item.disabled
+                        ? 'text-[var(--interior-fg-subtle)]'
+                        : 'text-[var(--interior-fg)]'
+                    } ${active === index ? 'bg-[var(--interior-bg-subtle)] dark:bg-white/10' : ''}`}
+                  >
+                    {hasIcons ? (
+                      <span
+                        aria-hidden
+                        className="grid size-4 shrink-0 place-items-center text-[var(--interior-fg-muted)]"
+                      >
+                        {item.icon}
+                      </span>
+                    ) : null}
 
-                  <span className="min-w-0 flex-1 truncate">{item.label}</span>
-                  {item.shortcut ? (
-                    <span
-                      aria-hidden
-                      className="shrink-0 font-[family-name:var(--interior-font-mono)] text-[10.5px] tabular-nums text-[var(--interior-fg-muted)]"
-                    >
-                      {item.shortcut}
-                    </span>
-                  ) : null}
-                </button>
-              ),
-            )}
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+                    <span className="min-w-0 flex-1 truncate">{item.label}</span>
+                    {item.shortcut ? (
+                      <span
+                        aria-hidden
+                        className="shrink-0 font-[family-name:var(--interior-font-mono)] text-[10.5px] tabular-nums text-[var(--interior-fg-muted)]"
+                      >
+                        {item.shortcut}
+                      </span>
+                    ) : null}
+                  </button>
+                )
+              )}
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </Portal>
     </>
   );
 }
 
-function Portal({
-  host,
-  children,
-}: {
-  host: HTMLElement | null;
-  children: ReactNode;
-}) {
+function Portal({ host, children }: { host: HTMLElement | null; children: ReactNode }) {
   if (!host) return null;
   return createPortal(children, host);
 }

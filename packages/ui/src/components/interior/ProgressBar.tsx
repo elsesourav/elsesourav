@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import type { AriaAttributes } from "react";
-import React, { useId } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import type { AriaAttributes } from 'react';
+import React, { useId } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 
-const FILL = { type: "spring", stiffness: 210, damping: 34, mass: 0.9 } as const;
-const CROSSFADE = { type: "spring", stiffness: 260, damping: 34, mass: 0.8 } as const;
+const FILL = { type: 'spring', stiffness: 210, damping: 34, mass: 0.9 } as const;
+const CROSSFADE = { type: 'spring', stiffness: 260, damping: 34, mass: 0.8 } as const;
 const INSTANT = { duration: 0 } as const;
 
 export type ProgressBarProps = {
@@ -20,34 +20,30 @@ export type ProgressBarProps = {
 export function ProgressBar({
   value,
   max = 100,
-  label = "Progress",
-  pendingLabel = "Working",
-  completeLabel = "Complete",
-  className = "",
+  label = 'Progress',
+  pendingLabel = 'Working',
+  completeLabel = 'Complete',
+  className = '',
 }: ProgressBarProps) {
   const reduced = useReducedMotion();
   const labelId = useId();
 
   const indeterminate = value === null;
-  const fraction =
-    value === null || max <= 0 ? 0 : Math.min(1, Math.max(0, value / max));
+  const fraction = value === null || max <= 0 ? 0 : Math.min(1, Math.max(0, value / max));
   const percent = Math.round(fraction * 100);
   const complete = !indeterminate && fraction >= 1;
 
   const measured: AriaAttributes = indeterminate
     ? {}
     : {
-        "aria-valuenow": Math.round(fraction * max * 100) / 100,
-        "aria-valuetext": `${percent}%`,
+        'aria-valuenow': Math.round(fraction * max * 100) / 100,
+        'aria-valuetext': `${percent}%`,
       };
 
   return (
     <div data-interior="progress-bar" className={`w-full ${className}`}>
       <div className="flex items-baseline justify-between gap-3">
-        <span
-          id={labelId}
-          className="truncate text-[13px] font-medium text-[var(--interior-fg)]"
-        >
+        <span id={labelId} className="truncate text-[13px] font-medium text-[var(--interior-fg)]">
           {label}
         </span>
 
@@ -96,11 +92,11 @@ export function ProgressBar({
             <motion.span
               aria-hidden
               className="absolute inset-y-0 left-0 block w-2/5 rounded-[2px] bg-[var(--interior-primary)] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),inset_0_-1px_0_rgba(28,25,23,0.2)] dark:bg-[var(--interior-primary)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(0,0,0,0.25)]"
-              initial={{ x: "-100%", opacity: 0 }}
-              animate={{ x: "250%", opacity: 1 }}
+              initial={{ x: '-100%', opacity: 0 }}
+              animate={{ x: '250%', opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{
-                x: { duration: 1.25, ease: "easeInOut", repeat: Infinity },
+                x: { duration: 1.25, ease: 'easeInOut', repeat: Infinity },
                 opacity: { duration: 0.18 },
               }}
             />
@@ -109,7 +105,7 @@ export function ProgressBar({
       </div>
 
       <span aria-live="polite" className="sr-only">
-        {complete ? completeLabel : indeterminate ? pendingLabel : ""}
+        {complete ? completeLabel : indeterminate ? pendingLabel : ''}
       </span>
     </div>
   );

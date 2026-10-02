@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState } from 'react';
 import {
   motion,
   useMotionValueEvent,
@@ -9,7 +9,7 @@ import {
   useSpring,
   useTransform,
   type MotionValue,
-} from "motion/react";
+} from 'motion/react';
 
 const SMOOTH = { stiffness: 240, damping: 44, mass: 0.6 } as const;
 
@@ -34,7 +34,7 @@ export function useCondense<T extends HTMLElement = HTMLDivElement>({
   });
 
   const [condensed, setCondensed] = useState(false);
-  useMotionValueEvent(progress, "change", (p) => {
+  useMotionValueEvent(progress, 'change', (p) => {
     const done = p >= 1;
     setCondensed((prev) => (prev === done ? prev : done));
   });
@@ -63,13 +63,17 @@ export function StickyHeader({
   expandedHeight = 68,
   compactHeight = 48,
   maxHeight = 320,
-  className = "",
+  className = '',
 }: StickyHeaderProps) {
   const tall = Math.max(expandedHeight, compactHeight);
   const short = Math.min(expandedHeight, compactHeight);
   const travel = Math.max(1, tall - short);
 
-  const { ref, progress: tracked, condensed } = useCondense<HTMLDivElement>({
+  const {
+    ref,
+    progress: tracked,
+    condensed,
+  } = useCondense<HTMLDivElement>({
     range: Math.max(64, travel * 3),
   });
   const reduced = useReducedMotion();
@@ -91,12 +95,13 @@ export function StickyHeader({
 
   return (
     <div
-      data-interior="sticky-header" className={`relative overflow-hidden rounded-[14px] border border-[var(--interior-border)] bg-white shadow-[0_1px_2px_rgba(28,25,23,0.06),0_4px_10px_-8px_rgba(28,25,23,0.45)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[0_1px_6px_rgba(0,0,0,0.45)] ${className}`}
+      data-interior="sticky-header"
+      className={`relative overflow-hidden rounded-[14px] border border-[var(--interior-border)] bg-white shadow-[0_1px_2px_rgba(28,25,23,0.06),0_4px_10px_-8px_rgba(28,25,23,0.45)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[0_1px_6px_rgba(0,0,0,0.45)] ${className}`}
     >
       <div
         ref={ref}
 
-                tabIndex={0}
+        tabIndex={0}
         role="region"
         aria-label={title}
         style={{ maxHeight, scrollPaddingTop: short + 10 }}
@@ -111,7 +116,7 @@ export function StickyHeader({
         />
       </div>
       <header
-        data-condensed={condensed ? "true" : "false"}
+        data-condensed={condensed ? 'true' : 'false'}
         style={{ height: tall }}
         className="pointer-events-none absolute inset-x-0 top-0"
       >
@@ -137,9 +142,7 @@ export function StickyHeader({
         />
         <div className="absolute inset-x-0 top-0 flex items-start gap-2.5 px-4 pt-3">
           {leading ? (
-            <div className="pointer-events-auto flex h-6 shrink-0 items-center">
-              {leading}
-            </div>
+            <div className="pointer-events-auto flex h-6 shrink-0 items-center">{leading}</div>
           ) : null}
 
           <div className="relative min-w-0 flex-1">
@@ -148,7 +151,7 @@ export function StickyHeader({
                 y: bigY,
                 opacity: bigOpacity,
                 scale: bigScale,
-                transformOrigin: "left top",
+                transformOrigin: 'left top',
               }}
             >
               <h2 className="truncate text-[20px] font-medium leading-[1.2] tracking-[-0.03em] text-[var(--interior-fg)]">

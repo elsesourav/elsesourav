@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { useCallback, useEffect, useId, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import {
   animate,
   motion,
@@ -9,10 +9,10 @@ import {
   useMotionValue,
   useReducedMotion,
   useTransform,
-} from "motion/react";
+} from 'motion/react';
 
 const DISCLOSE = {
-  type: "spring",
+  type: 'spring',
   stiffness: 150,
   damping: 27,
   mass: 1,
@@ -28,7 +28,7 @@ type DragInfo = {
   velocity: { x: number; y: number };
 };
 
-export type DrawerSide = "left" | "right";
+export type DrawerSide = 'left' | 'right';
 
 export type UseDrawerOptions = {
   open?: boolean;
@@ -44,7 +44,7 @@ export function useDrawer({
   open: controlled,
   defaultOpen = false,
   onOpenChange,
-  side = "right",
+  side = 'right',
   width = 320,
   dismissRatio = 0.38,
   modal = true,
@@ -53,7 +53,7 @@ export function useDrawer({
   const [dragging, setDragging] = useState(false);
 
   const open = controlled ?? uncontrolled;
-  const sign = side === "right" ? 1 : -1;
+  const sign = side === 'right' ? 1 : -1;
   const away = sign * (width + 24);
 
   const x = useMotionValue(open ? 0 : away);
@@ -77,7 +77,7 @@ export function useDrawer({
       if (controlled === undefined) setUncontrolled(next);
       changed.current?.(next);
     },
-    [controlled],
+    [controlled]
   );
 
   const close = useCallback(() => setOpen(false), [setOpen]);
@@ -87,7 +87,7 @@ export function useDrawer({
       anim.current?.stop();
       anim.current = animate(x, to, reduced ? { duration: 0 } : DISCLOSE);
     },
-    [x, reduced],
+    [x, reduced]
   );
 
   useEffect(() => {
@@ -126,7 +126,7 @@ export function useDrawer({
     const padding = root.style.paddingRight;
     const gutter = window.innerWidth - root.clientWidth;
 
-    root.style.overflow = "hidden";
+    root.style.overflow = 'hidden';
     if (gutter > 0) root.style.paddingRight = `${gutter}px`;
 
     return () => {
@@ -158,12 +158,12 @@ export function useDrawer({
       const panel = panelRef.current;
       if (!panel) return;
 
-      if (event.key === "Escape") {
+      if (event.key === 'Escape') {
         event.stopPropagation();
         close();
         return;
       }
-      if (event.key !== "Tab") return;
+      if (event.key !== 'Tab') return;
 
       const nodes = Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE));
       if (nodes.length === 0) {
@@ -186,7 +186,7 @@ export function useDrawer({
         }
       }
     },
-    [close],
+    [close]
   );
 
   const startDrag = useCallback(
@@ -194,7 +194,7 @@ export function useDrawer({
       if (!live.current) return;
       controls.start(event);
     },
-    [controls],
+    [controls]
   );
 
   const onDragStart = useCallback(() => setDragging(true), []);
@@ -210,21 +210,21 @@ export function useDrawer({
       }
       glide(0);
     },
-    [sign, width, dismissRatio, glide, close],
+    [sign, width, dismissRatio, glide, close]
   );
 
   const panelProps = {
     tabIndex: -1,
-    role: "dialog" as const,
-    "aria-modal": modal,
+    role: 'dialog' as const,
+    'aria-modal': modal,
     onKeyDown,
-    drag: "x" as const,
+    drag: 'x' as const,
     dragControls: controls,
     dragListener: false,
     dragMomentum: false,
     dragConstraints: { left: 0, right: 0 },
     dragElastic:
-      side === "right"
+      side === 'right'
         ? { top: 0, bottom: 0, left: 0, right: 1 }
         : { top: 0, bottom: 0, left: 1, right: 0 },
     onDragStart,
@@ -281,7 +281,7 @@ export type DrawerProps = {
   footer?: React.ReactNode;
   side?: DrawerSide;
   width?: number;
-  container?: "viewport" | "parent";
+  container?: 'viewport' | 'parent';
   closeLabel?: string;
   dismissOnScrimClick?: boolean;
   className?: string;
@@ -294,12 +294,12 @@ export function Drawer({
   children,
   description,
   footer,
-  side = "right",
+  side = 'right',
   width = 320,
-  container = "viewport",
-  closeLabel = "Close panel",
+  container = 'viewport',
+  closeLabel = 'Close panel',
   dismissOnScrimClick = true,
-  className = "",
+  className = '',
 }: DrawerProps) {
   const titleId = useId();
   const hintId = useId();
@@ -309,24 +309,22 @@ export function Drawer({
     onOpenChange,
     side,
     width,
-    modal: container === "viewport",
+    modal: container === 'viewport',
   });
 
   const edge =
-    side === "right"
-      ? "right-0 rounded-l-[14px] border-l"
-      : "left-0 rounded-r-[14px] border-r";
+    side === 'right' ? 'right-0 rounded-l-[14px] border-l' : 'left-0 rounded-r-[14px] border-r';
 
   const [host, setHost] = useState<HTMLElement | null>(null);
   useEffect(() => {
-    setHost(container === "viewport" ? document.body : null);
+    setHost(container === 'viewport' ? document.body : null);
   }, [container]);
 
   const tree = (
     <div
       ref={drawer.rootRef}
-      className={`${container === "viewport" ? "fixed" : "absolute"} inset-0 z-50 overflow-hidden ${
-        open ? "" : "pointer-events-none"
+      className={`${container === 'viewport' ? 'fixed' : 'absolute'} inset-0 z-50 overflow-hidden ${
+        open ? '' : 'pointer-events-none'
       }`}
     >
       <motion.div
@@ -339,23 +337,20 @@ export function Drawer({
         ref={drawer.panelRef}
         aria-labelledby={titleId}
         aria-describedby={hintId}
-        style={{ x: drawer.x, width, maxWidth: "calc(100% - 40px)", touchAction: "pan-y" }}
+        style={{ x: drawer.x, width, maxWidth: 'calc(100% - 40px)', touchAction: 'pan-y' }}
         className={`absolute inset-y-0 flex flex-col border-[var(--interior-border)] bg-white shadow-[0_28px_56px_-24px_rgba(24,22,20,0.45)] outline-none dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] ${edge} ${
-          drawer.dragging ? "select-none" : ""
+          drawer.dragging ? 'select-none' : ''
         } ${className}`}
         {...drawer.panelProps}
       >
         <header
           onPointerDown={drawer.gripProps.onPointerDown}
           className={`flex select-none items-start gap-3 border-b border-[var(--interior-border)] px-4 py-3 dark:border-[var(--interior-border)] ${
-            drawer.dragging ? "cursor-grabbing" : "cursor-grab"
+            drawer.dragging ? 'cursor-grabbing' : 'cursor-grab'
           }`}
         >
           <div className="min-w-0 flex-1">
-            <h2
-              id={titleId}
-              className="truncate text-[13px] font-medium text-[var(--interior-fg)]"
-            >
+            <h2 id={titleId} className="truncate text-[13px] font-medium text-[var(--interior-fg)]">
               {title}
             </h2>
             {description ? (
@@ -391,7 +386,7 @@ export function Drawer({
     </div>
   );
 
-  if (container !== "viewport") return tree;
+  if (container !== 'viewport') return tree;
   return host ? createPortal(tree, host) : null;
 }
 

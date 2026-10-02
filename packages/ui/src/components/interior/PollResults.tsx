@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   animate,
   AnimatePresence,
@@ -9,11 +9,11 @@ import {
   useMotionValueEvent,
   useReducedMotion,
   useTransform,
-} from "motion/react";
+} from 'motion/react';
 
-const FILL = { type: "spring", stiffness: 210, damping: 34, mass: 0.9 } as const;
+const FILL = { type: 'spring', stiffness: 210, damping: 34, mass: 0.9 } as const;
 
-const POP = { type: "spring", stiffness: 640, damping: 22, mass: 0.7 } as const;
+const POP = { type: 'spring', stiffness: 640, damping: 22, mass: 0.7 } as const;
 const EASE = [0.23, 1, 0.32, 1] as const;
 const ENTER = { duration: 0.2, ease: EASE } as const;
 const STILL = { duration: 0 } as const;
@@ -51,14 +51,11 @@ export function usePollResults({
       if (!controlled) setInternal(id);
       emit.current?.(id);
     },
-    [chosen, controlled],
+    [chosen, controlled]
   );
 
   const total = options.reduce((sum, o) => sum + Math.max(0, o.votes), 0);
-  const top = options.reduce(
-    (best, o) => (o.votes > best ? o.votes : best),
-    0,
-  );
+  const top = options.reduce((best, o) => (o.votes > best ? o.votes : best), 0);
 
   const rows = options.map((option) => ({
     ...option,
@@ -102,13 +99,13 @@ function Row({ label, share, winner, mine, revealed, reduced, onPick }: RowProps
   const progress = useRef(motionValue(0)).current;
   const clipPath = useTransform(
     progress,
-    (p) => `inset(0 ${((1 - p) * 100).toFixed(2)}% 0 0 round 5px)`,
+    (p) => `inset(0 ${((1 - p) * 100).toFixed(2)}% 0 0 round 5px)`
   );
 
   const [landed, setLanded] = useState(false);
   const readout = useRef<HTMLSpanElement | null>(null);
 
-  useMotionValueEvent(progress, "change", (p) => {
+  useMotionValueEvent(progress, 'change', (p) => {
     const node = readout.current;
     if (!node) return;
     const next = `${Math.round(p * 100)}%`;
@@ -128,15 +125,15 @@ function Row({ label, share, winner, mine, revealed, reduced, onPick }: RowProps
   }, [revealed, share, reduced, progress]);
 
   return (
-        <button
+    <button
       type="button"
       onClick={onPick}
       aria-disabled={revealed}
       aria-pressed={revealed ? mine : undefined}
       className={`group relative h-9 w-full overflow-hidden rounded-[8px] border text-left outline-none transition-[border-color,background-color,box-shadow,transform] duration-200 focus-visible:after:pointer-events-none focus-visible:after:absolute focus-visible:after:inset-0 focus-visible:after:rounded-[7px] focus-visible:after:bg-[var(--interior-primary)]/[0.06] focus-visible:after:shadow-[inset_0_0_0_1px_var(--interior-primary)] dark:focus-visible:after:bg-[#93B0FF]/[0.1] dark:focus-visible:after:shadow-[inset_0_0_0_1px_var(--interior-primary)] ${
         revealed
-          ? "cursor-default border-[var(--interior-border)] bg-stone-100/70 shadow-[inset_0_1px_2px_rgba(28,25,23,0.07)] dark:border-white/[0.08] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.45)]"
-          : "border-[var(--interior-border)] bg-white shadow-[inset_0_1.5px_0_rgba(255,255,255,0.95),inset_0_-1px_0_rgba(28,25,23,0.06),0_1px_2px_rgba(28,25,23,0.08)] hover:bg-[var(--interior-bg-subtle)] active:translate-y-px active:shadow-[inset_0_1px_2px_rgba(28,25,23,0.06)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_1px_2px_rgba(0,0,0,0.4)] dark:hover:bg-[var(--interior-bg-hover)]"
+          ? 'cursor-default border-[var(--interior-border)] bg-stone-100/70 shadow-[inset_0_1px_2px_rgba(28,25,23,0.07)] dark:border-white/[0.08] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.45)]'
+          : 'border-[var(--interior-border)] bg-white shadow-[inset_0_1.5px_0_rgba(255,255,255,0.95),inset_0_-1px_0_rgba(28,25,23,0.06),0_1px_2px_rgba(28,25,23,0.08)] hover:bg-[var(--interior-bg-subtle)] active:translate-y-px active:shadow-[inset_0_1px_2px_rgba(28,25,23,0.06)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_1px_2px_rgba(0,0,0,0.4)] dark:hover:bg-[var(--interior-bg-hover)]'
       }`}
     >
       <motion.span
@@ -144,16 +141,16 @@ function Row({ label, share, winner, mine, revealed, reduced, onPick }: RowProps
         style={{ clipPath }}
         className={`absolute inset-[3px] rounded-[5px] ${
           mine
-            ? "bg-[var(--interior-primary)]/[0.22] shadow-[inset_0_1px_0_rgba(255,255,255,0.55),inset_0_-1px_0_rgba(69,104,255,0.28)] dark:bg-[var(--interior-primary)]/[0.26] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.16),inset_0_-1px_0_rgba(0,0,0,0.3)]"
-            : "bg-stone-800/[0.10] shadow-[inset_0_1px_0_rgba(255,255,255,0.5),inset_0_-1px_0_rgba(28,25,23,0.1)] dark:bg-white/[0.12] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.12),inset_0_-1px_0_rgba(0,0,0,0.3)]"
+            ? 'bg-[var(--interior-primary)]/[0.22] shadow-[inset_0_1px_0_rgba(255,255,255,0.55),inset_0_-1px_0_rgba(69,104,255,0.28)] dark:bg-[var(--interior-primary)]/[0.26] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.16),inset_0_-1px_0_rgba(0,0,0,0.3)]'
+            : 'bg-stone-800/[0.10] shadow-[inset_0_1px_0_rgba(255,255,255,0.5),inset_0_-1px_0_rgba(28,25,23,0.1)] dark:bg-white/[0.12] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.12),inset_0_-1px_0_rgba(0,0,0,0.3)]'
         }`}
       />
       <span className="relative flex h-full items-center gap-2 px-3">
         <span
           className={`min-w-0 flex-1 truncate text-[13px] transition-[color,font-weight] duration-200 ${
             revealed && winner
-              ? "font-medium text-[var(--interior-fg)]"
-              : "text-stone-600 group-hover:text-[var(--interior-fg)] dark:text-stone-300 dark:group-hover:text-stone-100"
+              ? 'font-medium text-[var(--interior-fg)]'
+              : 'text-stone-600 group-hover:text-[var(--interior-fg)] dark:text-stone-300 dark:group-hover:text-stone-100'
           }`}
         >
           {label}
@@ -208,12 +205,12 @@ export function PollResults({
   defaultValue,
   onVote,
   label,
-  className = "",
+  className = '',
 }: PollResultsProps) {
   const poll = usePollResults({ options, value, defaultValue, onVote });
   const reduced = useReducedMotion() === true;
 
-  const [spoken, setSpoken] = useState("");
+  const [spoken, setSpoken] = useState('');
   useEffect(() => {
     if (!poll.revealed) return;
     const winner = poll.rows.find((r) => r.winner);
@@ -222,18 +219,21 @@ export function PollResults({
         setSpoken(
           winner
             ? `Results: ${winner.label} leads with ${Math.round(winner.share * 100)} percent of ${poll.total} votes`
-            : `Results shown, ${poll.total} votes`,
+            : `Results shown, ${poll.total} votes`
         ),
-      700,
+      700
     );
     return () => clearTimeout(t);
   }, [poll.revealed, poll.rows, poll.total]);
 
   return (
-    <div data-interior="poll-results" role="group" aria-label={label} className={`w-full ${className}`}>
-      <p className="mb-2.5 text-[13px] font-medium text-[var(--interior-fg)]">
-        {label}
-      </p>
+    <div
+      data-interior="poll-results"
+      role="group"
+      aria-label={label}
+      className={`w-full ${className}`}
+    >
+      <p className="mb-2.5 text-[13px] font-medium text-[var(--interior-fg)]">{label}</p>
       <div className="space-y-1.5">
         {poll.rows.map((row) => (
           <Row
@@ -255,7 +255,7 @@ export function PollResults({
           transition={reduced ? STILL : { ...ENTER, delay: 0.4 }}
           className="inline-block"
         >
-          {poll.total.toLocaleString("en-US")} votes
+          {poll.total.toLocaleString('en-US')} votes
         </motion.span>
       </p>
       <span role="status" className="sr-only">

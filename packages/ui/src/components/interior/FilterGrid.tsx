@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, {
   useCallback,
@@ -8,11 +8,11 @@ import React, {
   useState,
   type KeyboardEvent,
   type ReactNode,
-} from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+} from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
-const CELL = { type: "spring", stiffness: 520, damping: 34, mass: 0.45 } as const;
-const MOVE = { type: "spring", stiffness: 260, damping: 34, mass: 0.8 } as const;
+const CELL = { type: 'spring', stiffness: 520, damping: 34, mass: 0.45 } as const;
+const MOVE = { type: 'spring', stiffness: 260, damping: 34, mass: 0.8 } as const;
 const EASE = [0.23, 1, 0.32, 1] as const;
 const LEAVE = { duration: 0.14, ease: [0.4, 0, 1, 1] } as const;
 const INSTANT = { duration: 0 } as const;
@@ -47,7 +47,7 @@ export function useFilterGrid<T>({
   defaultValue,
   onValueChange,
 }: UseFilterGridOptions<T>): UseFilterGridResult<T> {
-  const fallback = filters[0]?.id ?? "";
+  const fallback = filters[0]?.id ?? '';
   const [internal, setInternal] = useState(() => defaultValue ?? fallback);
 
   const requested = value ?? internal;
@@ -78,12 +78,12 @@ export function useFilterGrid<T>({
       if (value === undefined) setInternal(id);
       if (id !== active) emit.current?.(id);
     },
-    [value, active],
+    [value, active]
   );
 
   return {
     active,
-    activeLabel: current?.label ?? "",
+    activeLabel: current?.label ?? '',
     select,
     visible,
     counts,
@@ -121,8 +121,8 @@ export function FilterGrid<T>({
   rowHeight = 72,
   maxRows = 4,
   gap = 8,
-  emptyLabel = "Nothing matches this filter",
-  className = "",
+  emptyLabel = 'Nothing matches this filter',
+  className = '',
 }: FilterGridProps<T>) {
   const uid = useId();
   const gridId = `${uid}-grid`;
@@ -146,7 +146,7 @@ export function FilterGrid<T>({
 
   const index = Math.max(
     0,
-    filters.findIndex((f) => f.id === active),
+    filters.findIndex((f) => f.id === active)
   );
 
   const choose = useCallback(
@@ -156,7 +156,7 @@ export function FilterGrid<T>({
         !!grid && grid.contains(document.activeElement) && grid !== document.activeElement;
       select(id);
     },
-    [select],
+    [select]
   );
 
   const settle = useCallback(() => {
@@ -173,20 +173,20 @@ export function FilterGrid<T>({
       chips.current[(i + filters.length) % filters.length]?.focus();
       choose(next.id);
     },
-    [filters, choose],
+    [filters, choose]
   );
 
   const onKeyDown = (e: KeyboardEvent<HTMLButtonElement>, i: number) => {
-    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
       e.preventDefault();
       go(i + 1);
-    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
       e.preventDefault();
       go(i - 1);
-    } else if (e.key === "Home") {
+    } else if (e.key === 'Home') {
       e.preventDefault();
       go(0);
-    } else if (e.key === "End") {
+    } else if (e.key === 'End') {
       e.preventDefault();
       go(filters.length - 1);
     }
@@ -221,7 +221,7 @@ export function FilterGrid<T>({
               onClick={() => choose(filter.id)}
               onKeyDown={(e) => onKeyDown(e, i)}
               className="group relative inline-grid h-8 select-none place-items-center rounded-[6px] px-3 outline-none focus-visible:shadow-[0_1px_3px_rgba(28,25,23,0.18)] dark:focus-visible:shadow-[0_1px_3px_rgba(0,0,0,0.5)]"
-              style={{ touchAction: "manipulation" }}
+              style={{ touchAction: 'manipulation' }}
             >
               {on ? (
                 <motion.span
@@ -235,7 +235,7 @@ export function FilterGrid<T>({
               <span
                 aria-hidden
                 className={`pointer-events-none absolute inset-0 rounded-[6px] border group-focus-visible:border-[var(--interior-primary)] dark:group-focus-visible:border-[#93B0FF] ${
-                  on ? "border-transparent" : "border-[var(--interior-border)]"
+                  on ? 'border-transparent' : 'border-[var(--interior-border)]'
                 }`}
               />
               <span className="relative col-start-1 row-start-1 inline-grid">
@@ -259,9 +259,7 @@ export function FilterGrid<T>({
                   className="col-start-1 row-start-1 inline-flex items-center gap-1.5 whitespace-nowrap text-[12.5px] font-medium text-stone-50 dark:text-[var(--interior-fg)]"
                 >
                   {filter.label}
-                  <span className="text-[10.5px] tabular-nums opacity-70">
-                    {counts[filter.id]}
-                  </span>
+                  <span className="text-[10.5px] tabular-nums opacity-70">{counts[filter.id]}</span>
                 </motion.span>
                 <span className="sr-only">
                   {filter.label}, {counts[filter.id]} of {total}
@@ -277,10 +275,10 @@ export function FilterGrid<T>({
           ref={gridRef}
           tabIndex={-1}
           className={`relative overflow-y-auto overscroll-contain outline-none ${
-            capped ? "[scrollbar-gutter:stable]" : ""
+            capped ? '[scrollbar-gutter:stable]' : ''
           }`}
           style={{
-            display: "grid",
+            display: 'grid',
             gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
             gridAutoRows: `${rowHeight}px`,
             gap: `${gap}px`,
@@ -291,7 +289,7 @@ export function FilterGrid<T>({
             {visible.map((item) => (
               <motion.li
                 key={getKey(item)}
-                layout={reduced ? false : "position"}
+                layout={reduced ? false : 'position'}
                 initial={{ opacity: 0, scale: 0.97 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.98, transition: leave }}
@@ -313,9 +311,7 @@ export function FilterGrid<T>({
               transition={reduced ? INSTANT : { duration: 0.2, ease: EASE }}
               className="pointer-events-none absolute inset-0 grid place-items-center"
             >
-              <span className="text-[12.5px] text-[var(--interior-fg-muted)]">
-                {emptyLabel}
-              </span>
+              <span className="text-[12.5px] text-[var(--interior-fg-muted)]">{emptyLabel}</span>
             </motion.div>
           )}
         </AnimatePresence>

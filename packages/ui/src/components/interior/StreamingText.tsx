@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 
 const CHARS_PER_TOKEN = 4;
 
 const CROSSFADE = {
-  type: "spring",
+  type: 'spring',
   stiffness: 260,
   damping: 34,
   mass: 0.8,
@@ -14,7 +14,7 @@ const CROSSFADE = {
 
 const MAX_FRAME_DELTA = 64;
 
-export type StreamingTextStatus = "idle" | "streaming" | "paused" | "done";
+export type StreamingTextStatus = 'idle' | 'streaming' | 'paused' | 'done';
 
 export type StreamingToken = { word: string; gap: string };
 
@@ -22,13 +22,13 @@ function tokenize(text: string): StreamingToken[] {
   const tokens: StreamingToken[] = [];
   for (const part of text.split(/(\s+)/)) {
     if (!part) continue;
-    if (part.trim() === "") {
+    if (part.trim() === '') {
       const last = tokens[tokens.length - 1];
       if (last) last.gap += part;
-      else tokens.push({ word: "", gap: part });
+      else tokens.push({ word: '', gap: part });
       continue;
     }
-    tokens.push({ word: part, gap: "" });
+    tokens.push({ word: part, gap: '' });
   }
   return tokens;
 }
@@ -51,9 +51,7 @@ export function useStreamingText({
   const total = text.length;
 
   const [index, setIndex] = useState(0);
-  const [status, setStatus] = useState<StreamingTextStatus>(
-    autoStart ? "streaming" : "idle",
-  );
+  const [status, setStatus] = useState<StreamingTextStatus>(autoStart ? 'streaming' : 'idle');
 
   const cursor = useRef(0);
   const finished = useRef(onDone);
@@ -63,37 +61,37 @@ export function useStreamingText({
   }, [onDone]);
 
   const start = useCallback(() => {
-    setStatus((s) => (s === "done" ? s : "streaming"));
+    setStatus((s) => (s === 'done' ? s : 'streaming'));
   }, []);
 
   const pause = useCallback(() => {
-    setStatus((s) => (s === "streaming" ? "paused" : s));
+    setStatus((s) => (s === 'streaming' ? 'paused' : s));
   }, []);
 
   const skip = useCallback(() => {
     cursor.current = total;
     setIndex(total);
-    setStatus("done");
+    setStatus('done');
   }, [total]);
 
   const reset = useCallback(() => {
     cursor.current = 0;
     setIndex(0);
-    setStatus(autoStart ? "streaming" : "idle");
+    setStatus(autoStart ? 'streaming' : 'idle');
   }, [autoStart]);
 
   useEffect(() => {
     cursor.current = 0;
     setIndex(0);
-    setStatus(autoStart ? "streaming" : "idle");
+    setStatus(autoStart ? 'streaming' : 'idle');
   }, [text, autoStart]);
 
   useEffect(() => {
-    if (status !== "streaming") return;
+    if (status !== 'streaming') return;
     if (reduced || cursor.current >= total) {
       cursor.current = total;
       setIndex(total);
-      setStatus("done");
+      setStatus('done');
       return;
     }
 
@@ -113,7 +111,7 @@ export function useStreamingText({
         cursor.current = next;
         setIndex(next);
         if (next >= total) {
-          setStatus("done");
+          setStatus('done');
           return;
         }
       }
@@ -126,14 +124,14 @@ export function useStreamingText({
   }, [status, total, tokensPerSecond, reduced]);
 
   useEffect(() => {
-    if (status === "done") finished.current?.();
+    if (status === 'done') finished.current?.();
   }, [status]);
 
   useEffect(() => {
     if (!reduced) return;
     cursor.current = total;
     setIndex(total);
-    setStatus("done");
+    setStatus('done');
   }, [reduced, total]);
 
   const visible = useMemo(() => text.slice(0, index), [text, index]);
@@ -166,9 +164,9 @@ export function StreamingText({
   tokensPerSecond = 18,
   autoStart = true,
   showSkip = true,
-  label = "Streamed response",
+  label = 'Streamed response',
   onDone,
-  className = "",
+  className = '',
 }: StreamingTextProps) {
   const { visible, status, skip, start, reset } = useStreamingText({
     text,
@@ -178,15 +176,11 @@ export function StreamingText({
   });
   const reduced = useReducedMotion();
 
-  const done = status === "done";
-  const blink = !reduced && (status === "idle" || status === "paused");
-
+  const done = status === 'done';
+  const blink = !reduced && (status === 'idle' || status === 'paused');
 
   const caret = (
-    <span
-      aria-hidden
-      className="relative inline-block h-[1.1em] w-0 align-[-0.22em]"
-    >
+    <span aria-hidden className="relative inline-block h-[1.1em] w-0 align-[-0.22em]">
       <motion.span
         className="absolute inset-y-0 left-px block w-[2px] bg-[var(--interior-fg)] dark:bg-[var(--interior-bg-subtle)]"
         initial={false}
@@ -197,7 +191,7 @@ export function StreamingText({
                 duration: 1.06,
                 times: [0, 0.45, 0.5, 0.95],
                 repeat: Infinity,
-                ease: "linear",
+                ease: 'linear',
               }
             : CROSSFADE
         }
@@ -207,9 +201,10 @@ export function StreamingText({
 
   return (
     <div
-      data-interior="streaming-text" role="group"
+      data-interior="streaming-text"
+      role="group"
       aria-label={label}
-      aria-busy={status === "streaming"}
+      aria-busy={status === 'streaming'}
       className={`text-[13.5px] leading-relaxed text-[var(--interior-fg)] ${className}`}
     >
       <p aria-hidden className="relative whitespace-pre-line">
@@ -222,7 +217,7 @@ export function StreamingText({
       </p>
 
       <span role="status" aria-live="polite" className="sr-only">
-        {done ? text : ""}
+        {done ? text : ''}
       </span>
 
       {showSkip ? (
@@ -237,11 +232,7 @@ export function StreamingText({
                   }
                 : skip
             }
-            aria-label={
-              done
-                ? `Replay ${label}`
-                : "Skip to the end"
-            }
+            aria-label={done ? `Replay ${label}` : 'Skip to the end'}
             className="inline-grid h-7 place-items-center rounded-[6px] border border-[var(--interior-border)] px-2.5 text-[11.5px] font-medium text-[var(--interior-fg-muted)] transition-colors duration-150 hover:text-[var(--interior-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--interior-ring)] dark:border-[var(--interior-border)] dark:text-[var(--interior-fg-muted)] dark:hover:text-stone-200 dark:focus-visible:ring-[var(--interior-ring)]"
           >
             <motion.span

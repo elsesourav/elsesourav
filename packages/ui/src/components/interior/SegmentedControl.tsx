@@ -1,18 +1,12 @@
-"use client";
+'use client';
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import {
-  animate,
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useTransform,
-} from "motion/react";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { animate, motion, useMotionValue, useReducedMotion, useTransform } from 'motion/react';
 
-const CELL = { type: "spring", stiffness: 520, damping: 34, mass: 0.45 } as const;
+const CELL = { type: 'spring', stiffness: 520, damping: 34, mass: 0.45 } as const;
 
 const SEG =
-  "px-2 sm:px-3.5 py-1.5 text-center text-xs sm:text-[13px] font-medium leading-[18px] tracking-tight truncate transition-colors";
+  'px-2 sm:px-3.5 py-1.5 text-center text-xs sm:text-[13px] font-medium leading-[18px] tracking-tight truncate transition-colors';
 
 export type SegmentedOption = {
   value: string;
@@ -35,14 +29,12 @@ export function SegmentedControl({
   value,
   defaultValue,
   onValueChange,
-  className = "",
+  className = '',
 }: SegmentedControlProps) {
   const count = Math.max(1, options.length);
   const template = `repeat(${count}, minmax(0, 1fr))`;
 
-  const [internal, setInternal] = useState(
-    () => defaultValue ?? options[0]?.value ?? "",
-  );
+  const [internal, setInternal] = useState(() => defaultValue ?? options[0]?.value ?? '');
   const [hovered, setHovered] = useState(-1);
 
   const controlled = value !== undefined;
@@ -73,7 +65,7 @@ export function SegmentedControl({
       if (!controlled) setInternal(next);
       if (next !== current) emit.current?.(next);
     },
-    [controlled, current],
+    [controlled, current]
   );
 
   const seek = useCallback(
@@ -85,7 +77,7 @@ export function SegmentedControl({
       }
       return from;
     },
-    [count, options],
+    [count, options]
   );
 
   const go = useCallback(
@@ -95,20 +87,20 @@ export function SegmentedControl({
       buttons.current[i]?.focus();
       select(option.value);
     },
-    [options, select],
+    [options, select]
   );
 
   const onKeyDown = (e: React.KeyboardEvent, i: number) => {
-    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
       e.preventDefault();
       go(seek(i, 1));
-    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
       e.preventDefault();
       go(seek(i, -1));
-    } else if (e.key === "Home") {
+    } else if (e.key === 'Home') {
       e.preventDefault();
       go(seek(count - 1, 1));
-    } else if (e.key === "End") {
+    } else if (e.key === 'End') {
       e.preventDefault();
       go(seek(0, -1));
     }
@@ -123,7 +115,7 @@ export function SegmentedControl({
     >
       <div
         className="relative grid w-full"
-        style={{ gridTemplateColumns: template, touchAction: "manipulation" }}
+        style={{ gridTemplateColumns: template, touchAction: 'manipulation' }}
       >
         {options.map((option, i) => (
           <span
@@ -131,10 +123,10 @@ export function SegmentedControl({
             aria-hidden
             className={`${SEG} pointer-events-none ${
               option.disabled
-                ? "text-muted-foreground/30"
+                ? 'text-muted-foreground/30'
                 : hovered === i && i !== index
-                  ? "text-foreground"
-                  : "text-muted-foreground"
+                  ? 'text-foreground'
+                  : 'text-muted-foreground'
             }`}
           >
             {option.label}
@@ -147,20 +139,13 @@ export function SegmentedControl({
           style={{ width: `${100 / count}%`, x: thumbX }}
           initial={false}
         >
-          <motion.div
-            className="absolute inset-0"
-            style={{ x: maskX }}
-            initial={false}
-          >
+          <motion.div className="absolute inset-0" style={{ x: maskX }} initial={false}>
             <div
               className="absolute inset-y-0 left-0 grid"
               style={{ width: `${count * 100}%`, gridTemplateColumns: template }}
             >
               {options.map((option) => (
-                <span
-                  key={option.value}
-                  className={`${SEG} text-foreground font-semibold`}
-                >
+                <span key={option.value} className={`${SEG} text-foreground font-semibold`}>
                   {option.label}
                 </span>
               ))}

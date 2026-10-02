@@ -111,9 +111,6 @@ importers:
       resend:
         specifier: ^6.31.0
         version: 6.31.0
-      three:
-        specifier: ^0.186.1
-        version: 0.186.1
     devDependencies:
       '@types/matter-js':
         specifier: ^0.20.2
@@ -130,9 +127,6 @@ importers:
       '@types/react-dom':
         specifier: ^19.0.4
         version: 19.2.5(@types/react@19.2.18)
-      '@types/three':
-        specifier: ^0.186.0
-        version: 0.186.0
       autoprefixer:
         specifier: ^10.4.20
         version: 10.5.4(postcss@8.5.26)

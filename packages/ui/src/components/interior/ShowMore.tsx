@@ -1,21 +1,17 @@
-"use client";
+'use client';
 
-import React, { useCallback, useId, useRef, useState } from "react";
-import {
-  motion,
-  useIsomorphicLayoutEffect,
-  useReducedMotion,
-} from "motion/react";
+import React, { useCallback, useId, useRef, useState } from 'react';
+import { motion, useIsomorphicLayoutEffect, useReducedMotion } from 'motion/react';
 
 const DISCLOSE = {
-  type: "spring",
+  type: 'spring',
   stiffness: 190,
   damping: 30,
   mass: 1,
 } as const;
 
 const SMALL = {
-  type: "spring",
+  type: 'spring',
   stiffness: 700,
   damping: 46,
   mass: 0.5,
@@ -68,13 +64,10 @@ export function useShowMore({
       if (expandedProp === undefined) setUncontrolled(next);
       notify.current?.(next);
     },
-    [expandedProp],
+    [expandedProp]
   );
 
-  const toggle = useCallback(
-    () => setExpanded(!expanded),
-    [setExpanded, expanded],
-  );
+  const toggle = useCallback(() => setExpanded(!expanded), [setExpanded, expanded]);
 
   useIsomorphicLayoutEffect(() => {
     const el = contentRef.current;
@@ -83,15 +76,11 @@ export function useShowMore({
     const read = () => {
       const styles = getComputedStyle(el);
       const parsed = Number.parseFloat(styles.lineHeight);
-      const line = Number.isFinite(parsed)
-        ? parsed
-        : Number.parseFloat(styles.fontSize) * 1.5;
+      const line = Number.isFinite(parsed) ? parsed : Number.parseFloat(styles.fontSize) * 1.5;
       const full = el.scrollHeight;
 
       setMetrics((prev) =>
-        prev && prev.line === line && prev.full === full
-          ? prev
-          : { line, full },
+        prev && prev.line === line && prev.full === full ? prev : { line, full }
       );
     };
 
@@ -134,28 +123,27 @@ export type ShowMoreProps = UseShowMoreOptions & {
 
 export function ShowMore({
   children,
-  moreLabel = "Show more",
-  lessLabel = "Show less",
-  label = "Details",
+  moreLabel = 'Show more',
+  lessLabel = 'Show less',
+  label = 'Details',
   lines = 3,
   maxHeight = 320,
   defaultExpanded,
   expanded,
   onExpandedChange,
-  className = "",
+  className = '',
 }: ShowMoreProps) {
   const reduced = useReducedMotion();
   const regionId = useId();
   const regionRef = useRef<HTMLDivElement>(null);
 
-  const { contentRef, open, toggle, height, expandable, capped, scrollable } =
-    useShowMore({
-      lines,
-      maxHeight,
-      defaultExpanded,
-      expanded,
-      onExpandedChange,
-    });
+  const { contentRef, open, toggle, height, expandable, capped, scrollable } = useShowMore({
+    lines,
+    maxHeight,
+    defaultExpanded,
+    expanded,
+    onExpandedChange,
+  });
 
   const press = () => {
     if (open) regionRef.current?.scrollTo({ top: 0 });
@@ -166,13 +154,14 @@ export function ShowMore({
 
   return (
     <div
-      data-interior="show-more" className={`text-[13.5px] leading-relaxed text-[var(--interior-fg)] ${className}`}
+      data-interior="show-more"
+      className={`text-[13.5px] leading-relaxed text-[var(--interior-fg)] ${className}`}
     >
       <div className="relative">
         <motion.div
           ref={regionRef}
           id={regionId}
-          role={scrollable ? "region" : undefined}
+          role={scrollable ? 'region' : undefined}
           aria-label={scrollable ? label : undefined}
           tabIndex={scrollable ? 0 : undefined}
           initial={false}
@@ -180,9 +169,9 @@ export function ShowMore({
           transition={reduced ? INSTANT : DISCLOSE}
           style={{
             maxHeight: height === null ? `${lines}lh` : undefined,
-            overflowY: scrollable ? "auto" : "hidden",
+            overflowY: scrollable ? 'auto' : 'hidden',
 
-            scrollbarGutter: capped ? "stable" : undefined,
+            scrollbarGutter: capped ? 'stable' : undefined,
           }}
           className="overflow-hidden overscroll-contain rounded-[6px] outline-none focus-visible:bg-[var(--interior-primary)]/[0.06] focus-visible:shadow-[inset_0_0_0_1px_var(--interior-primary)] dark:focus-visible:bg-[#93B0FF]/[0.10] dark:focus-visible:shadow-[inset_0_0_0_1px_var(--interior-primary)]"
         >
@@ -197,13 +186,13 @@ export function ShowMore({
         />
       </div>
       <div className="mt-2 flex h-8 items-center">
-                <button
+        <button
           type="button"
           onClick={press}
           aria-expanded={open}
           aria-controls={regionId}
           className={`inline-flex h-8 select-none items-center gap-2 rounded-[9px] border border-[var(--interior-border)] bg-white px-2.5 text-[12.5px] font-medium text-[var(--interior-fg)] outline-none transition-[border-color,box-shadow] duration-150 hover:border-[var(--interior-border-strong)] focus-visible:border-[var(--interior-primary)] focus-visible:shadow-[0_1px_2px_rgba(28,25,23,0.08),0_10px_20px_-14px_rgba(69,104,255,0.6)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:text-[var(--interior-fg)] dark:hover:border-white/20 dark:focus-visible:border-[var(--interior-primary)] dark:focus-visible:shadow-[0_10px_20px_-14px_rgba(147,176,255,0.5)] ${
-            expandable ? "" : "pointer-events-none invisible"
+            expandable ? '' : 'pointer-events-none invisible'
           }`}
         >
           <span className="grid text-left">

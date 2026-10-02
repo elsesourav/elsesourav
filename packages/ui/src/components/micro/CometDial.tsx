@@ -113,7 +113,7 @@ export default function CometDial({
   disabled = false,
   onChange,
   onChangeEnd,
-  className = ''
+  className = '',
 }: CometDialProps) {
   const reduce = useReducedMotion();
   const [dragging, setDragging] = useState(false);
@@ -136,7 +136,8 @@ export default function CometDial({
   const decimals = decimalsOf(step);
   const k = 200 + (clamp(speed, 0, 100) / 100) * 700;
   const crit = 2 * Math.sqrt(k);
-  const snap = (v: number): number => (step > 0 ? clamp(Math.round((v - min) / step) * step + min, min, max) : clamp(v, min, max));
+  const snap = (v: number): number =>
+    step > 0 ? clamp(Math.round((v - min) / step) * step + min, min, max) : clamp(v, min, max);
 
   const commit = (v: number, finished: boolean, detail?: CommitDetail): void => {
     const s = snap(v);
@@ -168,7 +169,7 @@ export default function CometDial({
       stiffness: k,
       damping: crit * (1 - clamp(bounce, 0, 0.9)),
       mass: 1,
-      velocity
+      velocity,
     });
     wake();
   };
@@ -248,7 +249,8 @@ export default function CometDial({
     const [x, y] = localPoint(cx, cy);
     let rel = ((Math.atan2(y, x) * 180) / Math.PI - start + 720) % 360;
     const g = grip.current;
-    if (rel > sweep) rel = g && g.side ? (g.side === 'hi' ? sweep : 0) : rel < sweep + gap / 2 ? sweep : 0;
+    if (rel > sweep)
+      rel = g && g.side ? (g.side === 'hi' ? sweep : 0) : rel < sweep + gap / 2 ? sweep : 0;
     else if (g) g.side = rel > sweep / 2 ? 'hi' : 'lo';
     return min + (rel / sweep) * range;
   };
@@ -286,7 +288,8 @@ export default function CometDial({
     const lastHist = g.hist[g.hist.length - 1];
     const stale = lastHist ? performance.now() - lastHist[0] > STALE_MS : true;
     const v = e.type === 'pointercancel' || stale ? 0 : velocityOf(g.hist);
-    const bounce = tapBounce + (flickBounce - tapBounce) * clamp(Math.abs(v) / range / V_FLICK, 0, 1);
+    const bounce =
+      tapBounce + (flickBounce - tapBounce) * clamp(Math.abs(v) / range / V_FLICK, 0, 1);
     const to = snap((g.at ?? target.current) + (v / 1000) * (DECEL / (1 - DECEL)) * momentum);
     commit(to, true, { velocity: v, bounce });
     launch(to, bounce, v);
@@ -305,7 +308,15 @@ export default function CometDial({
       // ignore
     }
     svg?.focus({ preventScroll: true });
-    grip.current = { id: e.pointerId, at: null, hist: [], side: null, moved: false, x0: e.clientX, y0: e.clientY };
+    grip.current = {
+      id: e.pointerId,
+      at: null,
+      hist: [],
+      side: null,
+      moved: false,
+      x0: e.clientX,
+      y0: e.clientY,
+    };
     const at = angleAt(e.clientX, e.clientY);
     grip.current.hist.push([performance.now(), at]);
     setDragging(true);
@@ -399,7 +410,7 @@ export default function CometDial({
           '--cd-accent': accent,
           '--cd-ink': ink,
           '--cd-size': `${size}px`,
-          '--cd-figure': `${Math.round(size * 0.16)}px`
+          '--cd-figure': `${Math.round(size * 0.16)}px`,
         } as React.CSSProperties
       }
     >
@@ -424,7 +435,7 @@ export default function CometDial({
           {Array.from({ length: K }, (_, j) => (
             <path
               key={j}
-              ref={el => {
+              ref={(el) => {
                 comet.current[j] = el;
               }}
               style={{ opacity: 0 }}

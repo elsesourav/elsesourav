@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 
-const FILL = { type: "spring", stiffness: 210, damping: 34, mass: 0.9 } as const;
-const CROSSFADE = { type: "spring", stiffness: 260, damping: 34, mass: 0.8 } as const;
+const FILL = { type: 'spring', stiffness: 210, damping: 34, mass: 0.9 } as const;
+const CROSSFADE = { type: 'spring', stiffness: 260, damping: 34, mass: 0.8 } as const;
 const EASE = [0.23, 1, 0.32, 1] as const;
 const DRAW = { duration: 0.3, ease: EASE, delay: 0.08 } as const;
 const INSTANT = { duration: 0 } as const;
@@ -80,11 +80,10 @@ export function useReadingProgress({
       frame.current = requestAnimationFrame(read);
     };
 
-    source.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule);
+    source.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
 
-    const observer =
-      typeof ResizeObserver === "undefined" ? null : new ResizeObserver(schedule);
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(schedule);
     if (observer) {
       if (targetEl) observer.observe(targetEl);
       if (scrollEl) observer.observe(scrollEl);
@@ -94,8 +93,8 @@ export function useReadingProgress({
     read();
 
     return () => {
-      source.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", schedule);
+      source.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
       observer?.disconnect();
       if (frame.current) cancelAnimationFrame(frame.current);
       frame.current = 0;
@@ -104,8 +103,7 @@ export function useReadingProgress({
 
   const progress = steps > 0 ? step / steps : 1;
   const totalMinutes = words > 0 ? Math.max(1, Math.ceil(words / wordsPerMinute)) : 0;
-  const minutesLeft =
-    words > 0 ? Math.ceil(((1 - progress) * words) / wordsPerMinute) : 0;
+  const minutesLeft = words > 0 ? Math.ceil(((1 - progress) * words) / wordsPerMinute) : 0;
 
   return {
     step,
@@ -130,12 +128,17 @@ export function ReadingProgress({
   steps = 24,
   words = 0,
   wordsPerMinute = 220,
-  label = "Reading progress",
-  doneLabel = "End",
-  className = "",
+  label = 'Reading progress',
+  doneLabel = 'End',
+  className = '',
 }: ReadingProgressProps) {
-  const { step, percent, minutesLeft, totalMinutes, complete } =
-    useReadingProgress({ target, scroller, steps, words, wordsPerMinute });
+  const { step, percent, minutesLeft, totalMinutes, complete } = useReadingProgress({
+    target,
+    scroller,
+    steps,
+    words,
+    wordsPerMinute,
+  });
 
   const reduced = useReducedMotion();
   const fillTransition = reduced ? INSTANT : FILL;
@@ -144,9 +147,7 @@ export function ReadingProgress({
   const estimate = words > 0;
   const readout = `${minutesLeft} min left`;
   const finish = `${doneLabel} · ${totalMinutes} min`;
-  const valueText = estimate
-    ? `${percent}% read, ${readout}`
-    : `${percent}% read`;
+  const valueText = estimate ? `${percent}% read, ${readout}` : `${percent}% read`;
 
   return (
     <div data-interior="reading-progress" className={`flex items-center gap-3 ${className}`}>
@@ -161,7 +162,7 @@ export function ReadingProgress({
       >
         <motion.div
           className="h-[3px] origin-left rounded-[2px] bg-[var(--interior-primary)] dark:bg-[var(--interior-primary)]"
-          style={{ width: "100%" }}
+          style={{ width: '100%' }}
           initial={false}
           animate={{ scaleX: step / Math.max(1, steps) }}
           transition={fillTransition}
@@ -193,13 +194,7 @@ export function ReadingProgress({
             animate={{ opacity: complete ? 1 : 0 }}
             transition={fadeTransition}
           >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 256 256"
-              fill="none"
-              aria-hidden="true"
-            >
+            <svg width="12" height="12" viewBox="0 0 256 256" fill="none" aria-hidden="true">
               <motion.polyline
                 points="216 72 104 184 48 128"
                 stroke="currentColor"

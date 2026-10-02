@@ -10,7 +10,7 @@ import {
   PaintBoardIcon,
   Rocket01Icon,
   Settings02Icon,
-  TextFontIcon
+  TextFontIcon,
 } from '@hugeicons/core-free-icons';
 
 import type { IconSvgElement } from '@hugeicons/react';
@@ -34,8 +34,8 @@ const DEFAULT_ITEMS: BranchedMenuItem[] = [
       { value: 'install', label: 'Installation', icon: Download04Icon },
       { value: 'quick', label: 'Quick start', icon: Rocket01Icon },
       { value: 'config', label: 'Configuration', icon: Settings02Icon },
-      { value: 'theming', label: 'Theming', icon: PaintBoardIcon }
-    ]
+      { value: 'theming', label: 'Theming', icon: PaintBoardIcon },
+    ],
   },
   {
     label: 'Components',
@@ -43,19 +43,25 @@ const DEFAULT_ITEMS: BranchedMenuItem[] = [
       { value: 'buttons', label: 'Buttons', icon: CursorPointer01Icon },
       { value: 'typography', label: 'Typography', icon: TextFontIcon },
       { value: 'overlays', label: 'Overlays', icon: Layers01Icon },
-      { value: 'toasts', label: 'Toasts', icon: Notification03Icon }
-    ]
-  }
+      { value: 'toasts', label: 'Toasts', icon: Notification03Icon },
+    ],
+  },
 ];
 
 const PAD = 6;
 const MARK = 16;
 
 const renderIcon = (icon: IconSvgElement | React.ReactNode): React.ReactNode =>
-  isValidElement(icon) ? icon : <HugeiconsIcon icon={icon as IconSvgElement} size={16} strokeWidth={1.8} />;
+  isValidElement(icon) ? (
+    icon
+  ) : (
+    <HugeiconsIcon icon={icon as IconSvgElement} size={16} strokeWidth={1.8} />
+  );
 
 const toSet = (open: number | number[] | Set<number>): Set<number> =>
-  open instanceof Set ? open : new Set(Array.isArray(open) ? open : typeof open === 'number' && open >= 0 ? [open] : []);
+  open instanceof Set
+    ? open
+    : new Set(Array.isArray(open) ? open : typeof open === 'number' && open >= 0 ? [open] : []);
 
 export interface BranchedMenuProps {
   items?: BranchedMenuItem[];
@@ -97,7 +103,7 @@ export default function BranchedMenu({
   fontSize = 14,
   drawDuration = 400,
   foldDuration = 300,
-  className = ''
+  className = '',
 }: BranchedMenuProps) {
   const [open, setOpen] = useState<Set<number>>(() => toSet(defaultOpen));
   const [active, setActive] = useState<string>(() => {
@@ -115,7 +121,7 @@ export default function BranchedMenu({
   }>({});
   latest.current = { onSelect, onToggle };
 
-  const activeSection = items.findIndex(it => it.children?.some(kid => kid.value === active));
+  const activeSection = items.findIndex((it) => it.children?.some((kid) => kid.value === active));
   const markerShown = activeSection >= 0 && open.has(activeSection);
 
   useLayoutEffect(() => {
@@ -151,7 +157,7 @@ export default function BranchedMenu({
   };
 
   const toggle = (i: number) => {
-    setOpen(prev => {
+    setOpen((prev) => {
       const next = new Set(prev);
       const isOpen = !next.has(i);
       if (isOpen) next.add(i);
@@ -164,26 +170,30 @@ export default function BranchedMenu({
   const r = Math.min(radius, rowHeight / 2 - 2);
   const endX = indent - 8;
   const rowY = (k: number) => PAD + k * rowHeight + rowHeight / 2;
-  const branch = (k: number) => `M ${trunk} ${rowY(k) - r} A ${r} ${r} 0 0 0 ${trunk + r} ${rowY(k)} H ${endX}`;
-  const reach = (k: number) => `M ${trunk} 0 V ${rowY(k) - r} A ${r} ${r} 0 0 0 ${trunk + r} ${rowY(k)} H ${endX}`;
+  const branch = (k: number) =>
+    `M ${trunk} ${rowY(k) - r} A ${r} ${r} 0 0 0 ${trunk + r} ${rowY(k)} H ${endX}`;
+  const reach = (k: number) =>
+    `M ${trunk} 0 V ${rowY(k) - r} A ${r} ${r} 0 0 0 ${trunk + r} ${rowY(k)} H ${endX}`;
   const length = (k: number) => rowY(k) - r + (Math.PI * r) / 2 + (endX - trunk - r);
 
   return (
     <nav
       ref={navRef}
       className={`branched-menu${className ? ` ${className}` : ''}`}
-      style={{
-        '--bm-w': `${width}px`,
-        '--bm-ink': color,
-        '--bm-accent': accentColor,
-        '--bm-line': lineColor,
-        '--bm-font': `${fontSize}px`,
-        '--bm-row': `${rowHeight}px`,
-        '--bm-indent': `${indent}px`,
-        '--bm-line-w': lineWidth,
-        '--bm-draw': `${drawDuration}ms`,
-        '--bm-fold': `${foldDuration}ms`
-      } as React.CSSProperties}
+      style={
+        {
+          '--bm-w': `${width}px`,
+          '--bm-ink': color,
+          '--bm-accent': accentColor,
+          '--bm-line': lineColor,
+          '--bm-font': `${fontSize}px`,
+          '--bm-row': `${rowHeight}px`,
+          '--bm-indent': `${indent}px`,
+          '--bm-line-w': lineWidth,
+          '--bm-draw': `${drawDuration}ms`,
+          '--bm-fold': `${foldDuration}ms`,
+        } as React.CSSProperties
+      }
     >
       <span ref={markerRef} className="branched-menu__marker" aria-hidden="true" />
       {items.map((item, i) => {
@@ -193,9 +203,13 @@ export default function BranchedMenu({
         const leafActive = !kids && leafValue === active;
         const bodyH = kids ? PAD * 2 + kids.length * rowHeight : 0;
         return (
-          <div key={item.value ?? item.label} className="branched-menu__section" data-open={isOpen ? '' : undefined}>
+          <div
+            key={item.value ?? item.label}
+            className="branched-menu__section"
+            data-open={isOpen ? '' : undefined}
+          >
             <button
-              ref={el => {
+              ref={(el) => {
                 heads.current[i] = el;
               }}
               type="button"
@@ -211,8 +225,16 @@ export default function BranchedMenu({
               <div className="branched-menu__body">
                 <div className="branched-menu__fold">
                   <div className="branched-menu__tree" style={{ height: bodyH }}>
-                    <svg className="branched-menu__lines" width={indent} height={bodyH} aria-hidden="true">
-                      <path className="branched-menu__base" d={`M ${trunk} 0 V ${rowY(kids.length - 1) - r}`} />
+                    <svg
+                      className="branched-menu__lines"
+                      width={indent}
+                      height={bodyH}
+                      aria-hidden="true"
+                    >
+                      <path
+                        className="branched-menu__base"
+                        d={`M ${trunk} 0 V ${rowY(kids.length - 1) - r}`}
+                      />
                       {kids.map((kid, k) => (
                         <path key={kid.value} className="branched-menu__base" d={branch(k)} />
                       ))}
@@ -223,12 +245,12 @@ export default function BranchedMenu({
                           d={reach(k)}
                           style={{
                             strokeDasharray: length(k),
-                            strokeDashoffset: kid.value === active ? 0 : length(k)
+                            strokeDashoffset: kid.value === active ? 0 : length(k),
                           }}
                         />
                       ))}
                     </svg>
-                    {kids.map(kid => (
+                    {kids.map((kid) => (
                       <button
                         key={kid.value}
                         type="button"

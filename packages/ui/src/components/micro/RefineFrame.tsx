@@ -18,7 +18,7 @@ const STAGES: Record<RefineStage, RefineStageConfig> = {
   generating: { blur: 1.5, sat: 0.8, scale: 1.02, opacity: 0.85 },
   refining: { blur: 0.5, sat: 0.95, scale: 1.005, opacity: 1 },
   complete: { blur: 0, sat: 1, scale: 1, opacity: 1 },
-  error: { blur: 2, sat: 0.5, scale: 1, opacity: 0.28 }
+  error: { blur: 2, sat: 0.5, scale: 1, opacity: 0.28 },
 };
 const TARGET: Record<string, number> = { queued: 0, generating: 0.5, refining: 0.875, complete: 1 };
 const LEVELS = [48, 32, 20, 12, 8, 5, 3, 2, 1];
@@ -29,7 +29,7 @@ const DEFAULT_LABELS: Record<RefineStage, string> = {
   generating: 'Generating',
   refining: 'Refining',
   complete: 'Ready',
-  error: 'Failed'
+  error: 'Failed',
 };
 const ACTIVE = new Set<RefineStage>(['queued', 'generating', 'refining']);
 
@@ -52,7 +52,12 @@ export interface RefineLiveState {
   reduce: boolean;
 }
 
-const build = (s: RefineSimState, canvas: HTMLCanvasElement, img: HTMLImageElement, dpr: number): void => {
+const build = (
+  s: RefineSimState,
+  canvas: HTMLCanvasElement,
+  img: HTMLImageElement,
+  dpr: number
+): void => {
   const rect = canvas.getBoundingClientRect();
   const W = Math.max(1, Math.round(rect.width * dpr));
   const H = Math.max(1, Math.round(rect.height * dpr));
@@ -80,14 +85,14 @@ const build = (s: RefineSimState, canvas: HTMLCanvasElement, img: HTMLImageEleme
       [0.68, 1],
       [0.8, 0.7],
       [0.92, 0.1],
-      [1, 0]
+      [1, 0],
     ];
     for (const [at, a] of stops) {
       glint.addColorStop(at, `rgba(255, 255, 255, ${a})`);
     }
   }
   s.glint = glint;
-  s.levels = LEVELS.map(block => {
+  s.levels = LEVELS.map((block) => {
     const b = block === 1 ? 1 : Math.max(2, Math.round(block * dpr));
     const full = document.createElement('canvas');
     full.width = W;
@@ -150,14 +155,24 @@ export default function RefineFrame({
   retryLabel = 'Retry',
   onRetry,
   className = '',
-  style
+  style,
 }: RefineFrameProps) {
   const stage = STAGES[status] ?? STAGES.generating;
   const active = ACTIVE.has(status);
   const text = { ...DEFAULT_LABELS, ...labels };
   const printRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const sim = useRef<RefineSimState>({ p: 0, raf: 0, last: 0, key: '', w: 0, h: 0, levels: [], glint: null, sent: false });
+  const sim = useRef<RefineSimState>({
+    p: 0,
+    raf: 0,
+    last: 0,
+    key: '',
+    w: 0,
+    h: 0,
+    levels: [],
+    glint: null,
+    sent: false,
+  });
   const live = useRef<RefineLiveState>({ status, stageDuration, sweep, reduce: false });
   live.current = { status, stageDuration, sweep, reduce: live.current.reduce };
   const [mosaic, setMosaic] = useState(false);
@@ -311,7 +326,7 @@ export default function RefineFrame({
           '--rf-sat': stage.sat,
           '--rf-scale': mosaic ? 1 : stage.scale,
           '--rf-opacity': stage.opacity,
-          ...style
+          ...style,
         } as React.CSSProperties
       }
     >

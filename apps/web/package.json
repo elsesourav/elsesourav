@@ -31,8 +31,7 @@
     "pg": "^8.23.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "resend": "^6.31.0",
-    "three": "^0.186.1"
+    "resend": "^6.31.0"
   },
   "devDependencies": {
     "@types/matter-js": "^0.20.2",
@@ -40,7 +39,6 @@
     "@types/nodemailer": "^8.0.1",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
-    "@types/three": "^0.186.0",
     "autoprefixer": "^10.4.20",
     "dotenv": "^17.4.2",
     "postcss": "^8.5.2",

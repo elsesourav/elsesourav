@@ -124,9 +124,9 @@ describe('User Identity & Profile Architecture', () => {
     const service = new UserService(mockRepo);
 
     // Cross-user deletion is forbidden
-    await expect(
-      service.requestAccountDeletion('attacker', 'victim', '')
-    ).rejects.toThrowError(AppError);
+    await expect(service.requestAccountDeletion('attacker', 'victim', '')).rejects.toThrowError(
+      AppError
+    );
 
     expect(mockRepo.scheduleAccountDeletion).not.toHaveBeenCalled();
 

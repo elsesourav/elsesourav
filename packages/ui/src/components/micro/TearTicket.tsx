@@ -68,7 +68,8 @@ const buildGeometry = (
   const span = cross - 2 * notch;
   const bridge = Math.max(2, (span - n * hole) / (n + 1));
   const random = noise(n * 7919 + Math.round(cross));
-  const at = (u: number, v: number): { x: number; y: number } => (vertical ? { x: v, y: u } : { x: u, y: v });
+  const at = (u: number, v: number): { x: number; y: number } =>
+    vertical ? { x: v, y: u } : { x: u, y: v };
   const pt = (u: number, v: number): string => (vertical ? `${f(v)},${f(u)}` : `${f(u)},${f(v)}`);
   const arc = (r: number, sweep: number, u: number, v: number): string =>
     `A${f(r)},${f(r)} 0 0 ${vertical ? 1 - sweep : sweep} ${pt(u, v)}`;
@@ -85,7 +86,7 @@ const buildGeometry = (
   }
   let body = `M${pt(R, 0)}L${pt(x - notch, 0)}${arc(notch, 0, x, notch)}`;
   bridges.forEach((b, i) => {
-    b.pts.forEach(p => {
+    b.pts.forEach((p) => {
       body += `L${pt(p[0], p[1])}`;
     });
     body += `L${pt(x, b.y1)}`;
@@ -107,7 +108,7 @@ const buildGeometry = (
   stub += `${arc(notch, 0, x + notch, 0)}Z`;
   const ends: [TearTicketEnd, TearTicketEnd] = [
     { ...at(x, notch), v: notch },
-    { ...at(x, cross - notch), v: cross - notch }
+    { ...at(x, cross - notch), v: cross - notch },
   ];
   const bodyOutline = `M${pt(x, cross - notch)}${arc(notch, 0, x - notch, cross)}L${pt(R, cross)}${arc(R, 1, 0, cross - R)}L${pt(0, R)}${arc(R, 1, R, 0)}L${pt(x - notch, 0)}${arc(notch, 0, x, notch)}`;
   const stubOutline = `M${pt(x, notch)}${arc(notch, 0, x + notch, 0)}L${pt(main - R, 0)}${arc(R, 1, main, R)}L${pt(main, cross - R)}${arc(R, 1, main - R, cross)}L${pt(x + notch, cross)}${arc(notch, 0, x, cross - notch)}`;
@@ -235,7 +236,7 @@ export default function TearTicket({
   recenter = true,
   disabled = false,
   ariaLabel = 'Tear off the stub',
-  className = ''
+  className = '',
 }: TearTicketProps) {
   const reduce = useReducedMotion();
   const controlled = torn !== undefined;
@@ -251,7 +252,8 @@ export default function TearTicket({
   const fibres = useRef<(SVGPathElement | null)[]>([]);
   const vertical = orientation === 'vertical';
   const geo = useMemo(
-    () => buildGeometry(width, height, stubSize, radius, holes, holeSize, notch, roughness, vertical),
+    () =>
+      buildGeometry(width, height, stubSize, radius, holes, holeSize, notch, roughness, vertical),
     [width, height, stubSize, radius, holes, holeSize, notch, roughness, vertical]
   );
   const cfg = useRef<TearTicketCfg>({
@@ -263,7 +265,7 @@ export default function TearTicket({
     notch,
     reduce,
     onTear,
-    controlled
+    controlled,
   });
   cfg.current = { geo, tearAngle, stretch, resistance, height, notch, reduce, onTear, controlled };
   const sim = useRef<TearTicketSim>({
@@ -294,7 +296,7 @@ export default function TearTicket({
     bv: 0,
     snapped: [],
     snapAt: [],
-    span: []
+    span: [],
   });
 
   const tiltX = useSpring(0, TILT_SPRING);
@@ -467,7 +469,11 @@ export default function TearTicket({
       s.theta += s.thetaV * dt;
       s.sx += (0 - s.sx) * (1 - Math.exp(-dt / 0.07));
       s.sy += (0 - s.sy) * (1 - Math.exp(-dt / 0.07));
-      if (Math.abs(s.theta) < 0.0008 && Math.abs(s.thetaV) < 0.01 && Math.hypot(s.sx, s.sy) < 0.05) {
+      if (
+        Math.abs(s.theta) < 0.0008 &&
+        Math.abs(s.thetaV) < 0.01 &&
+        Math.hypot(s.sx, s.sy) < 0.05
+      ) {
         s.theta = 0;
         s.thetaV = 0;
         s.sx = 0;
@@ -510,7 +516,7 @@ export default function TearTicket({
       fade: 1,
       age: 0,
       bx: 0,
-      bv: 0
+      bv: 0,
     });
     s.snapped = [];
     s.snapAt = [];
@@ -616,7 +622,8 @@ export default function TearTicket({
     if (s.id !== e.pointerId) return;
     s.id = null;
     try {
-      if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
+      if (e.currentTarget.hasPointerCapture(e.pointerId))
+        e.currentTarget.releasePointerCapture(e.pointerId);
     } catch {
       /* ignore */
     }
@@ -682,7 +689,7 @@ export default function TearTicket({
           '--tt-span': ART_SPAN,
           '--tt-art-radius': `${imageRadius}px`,
           '--tt-fit': fit,
-          height: `${height * fit}px`
+          height: `${height * fit}px`,
         } as React.CSSProperties
       }
     >
@@ -690,7 +697,11 @@ export default function TearTicket({
         <motion.div className="tear-ticket__plane" style={{ transform: plane }}>
           <div ref={bodyRef} className="tear-ticket__piece">
             {border ? (
-              <svg className="tear-ticket__edge" viewBox={`0 0 ${width} ${height}`} aria-hidden="true">
+              <svg
+                className="tear-ticket__edge"
+                viewBox={`0 0 ${width} ${height}`}
+                aria-hidden="true"
+              >
                 <path d={geo.bodyOutline} />
               </svg>
             ) : null}
@@ -707,7 +718,10 @@ export default function TearTicket({
                   {scrim ? <div className="tear-ticket__scrim" /> : null}
                 </div>
               ) : null}
-              <motion.div className="tear-ticket__content" style={reduce ? undefined : { transform: ink }}>
+              <motion.div
+                className="tear-ticket__content"
+                style={reduce ? undefined : { transform: ink }}
+              >
                 {children}
               </motion.div>
             </div>
@@ -716,12 +730,12 @@ export default function TearTicket({
             {geo.bridges.map((_, i) => (
               <g key={i}>
                 <path
-                  ref={el => {
+                  ref={(el) => {
                     fibres.current[i * 2] = el;
                   }}
                 />
                 <path
-                  ref={el => {
+                  ref={(el) => {
                     fibres.current[i * 2 + 1] = el;
                   }}
                 />
@@ -742,14 +756,21 @@ export default function TearTicket({
             onPointerCancel={onStubUp}
             onLostPointerCapture={onStubUp}
             onKeyDown={onStubKey}
-            onDragStart={e => e.preventDefault()}
+            onDragStart={(e) => e.preventDefault()}
           >
             {border ? (
-              <svg className="tear-ticket__edge" viewBox={`0 0 ${width} ${height}`} aria-hidden="true">
+              <svg
+                className="tear-ticket__edge"
+                viewBox={`0 0 ${width} ${height}`}
+                aria-hidden="true"
+              >
                 <path d={geo.stubOutline} />
               </svg>
             ) : null}
-            <div className="tear-ticket__paper tear-ticket__paper--stub" style={{ clipPath: `path('${geo.stub}')` }}>
+            <div
+              className="tear-ticket__paper tear-ticket__paper--stub"
+              style={{ clipPath: `path('${geo.stub}')` }}
+            >
               <div className="tear-ticket__stub">{stub}</div>
             </div>
           </div>

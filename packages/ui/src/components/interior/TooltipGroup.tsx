@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, {
   cloneElement,
@@ -8,18 +8,18 @@ import React, {
   useId,
   useRef,
   useSyncExternalStore,
-} from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+} from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
 const LEAVE = [0.4, 0, 1, 1] as const;
 
-const RISE = { type: "spring", stiffness: 560, damping: 34, mass: 0.6 } as const;
+const RISE = { type: 'spring', stiffness: 560, damping: 34, mass: 0.6 } as const;
 
-const WARM = { type: "spring", stiffness: 900, damping: 48, mass: 0.5 } as const;
+const WARM = { type: 'spring', stiffness: 900, damping: 48, mass: 0.5 } as const;
 
-const GLIDE = { type: "spring", stiffness: 520, damping: 40, mass: 0.75 } as const;
+const GLIDE = { type: 'spring', stiffness: 520, damping: 40, mass: 0.75 } as const;
 
-const SWAP = { type: "spring", stiffness: 700, damping: 44, mass: 0.5 } as const;
+const SWAP = { type: 'spring', stiffness: 700, damping: 44, mass: 0.5 } as const;
 
 let groups = 0;
 
@@ -203,11 +203,11 @@ function useDismissOnBlur(store: TooltipStore, enabled: boolean) {
     const onVisibility = () => {
       if (document.hidden) store.reset();
     };
-    window.addEventListener("blur", bail);
-    document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener('blur', bail);
+    document.addEventListener('visibilitychange', onVisibility);
     return () => {
-      window.removeEventListener("blur", bail);
-      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener('blur', bail);
+      document.removeEventListener('visibilitychange', onVisibility);
     };
   }, [store, enabled]);
 }
@@ -227,7 +227,7 @@ export function TooltipGroup({
   closeDelay = 120,
   skipDelay = 400,
   onWarmChange,
-  className = "",
+  className = '',
 }: TooltipGroupProps) {
   const timing = useRef<TooltipTiming>({ openDelay, closeDelay, skipDelay });
   timing.current = { openDelay, closeDelay, skipDelay };
@@ -238,11 +238,7 @@ export function TooltipGroup({
   }
   const store = held.current;
 
-  const warm = useSyncExternalStore(
-    store.subscribe,
-    store.getWarm,
-    () => false,
-  );
+  const warm = useSyncExternalStore(store.subscribe, store.getWarm, () => false);
 
   const report = useRef(onWarmChange);
   report.current = onWarmChange;
@@ -291,7 +287,7 @@ export type UseTooltipReturn = {
 
 function isKeyboardFocus(el: HTMLElement) {
   try {
-    return el.matches(":focus-visible");
+    return el.matches(':focus-visible');
   } catch {
     return true;
   }
@@ -327,23 +323,11 @@ export function useTooltip({
   const open = useSyncExternalStore(
     store.subscribe,
     () => store.getActive() === tooltipId,
-    () => false,
+    () => false
   );
-  const warm = useSyncExternalStore(
-    store.subscribe,
-    store.getWarm,
-    () => false,
-  );
-  const skipped = useSyncExternalStore(
-    store.subscribe,
-    store.getSkipped,
-    () => false,
-  );
-  const travel = useSyncExternalStore(
-    store.subscribe,
-    store.getTravel,
-    () => 0,
-  );
+  const warm = useSyncExternalStore(store.subscribe, store.getWarm, () => false);
+  const skipped = useSyncExternalStore(store.subscribe, store.getSkipped, () => false);
+  const travel = useSyncExternalStore(store.subscribe, store.getTravel, () => 0);
 
   useEffect(() => {
     if (!disabled) return;
@@ -373,7 +357,7 @@ export function useTooltip({
       store.close(tooltipId, true);
     },
     onKeyDown: (event) => {
-      if (event.key === "Escape") store.dismiss(tooltipId);
+      if (event.key === 'Escape') store.dismiss(tooltipId);
     },
   };
 
@@ -381,21 +365,18 @@ export function useTooltip({
 }
 
 type TriggerChild = React.ReactElement<
-  React.HTMLAttributes<HTMLElement> & { "aria-describedby"?: string }
+  React.HTMLAttributes<HTMLElement> & { 'aria-describedby'?: string }
 >;
 
 export type TooltipProps = UseTooltipOptions & {
   label: React.ReactNode;
   children: TriggerChild;
-  side?: "top" | "bottom";
+  side?: 'top' | 'bottom';
   className?: string;
   contentClassName?: string;
 };
 
-function chain<E>(
-  theirs: ((event: E) => void) | undefined,
-  ours: (event: E) => void,
-) {
+function chain<E>(theirs: ((event: E) => void) | undefined, ours: (event: E) => void) {
   return (event: E) => {
     theirs?.(event);
     ours(event);
@@ -405,13 +386,13 @@ function chain<E>(
 export function Tooltip({
   label,
   children,
-  side = "top",
+  side = 'top',
   disabled = false,
   openDelay,
   closeDelay,
   skipDelay,
-  className = "",
-  contentClassName = "",
+  className = '',
+  contentClassName = '',
 }: TooltipProps) {
   const { open, skipped, travel, tooltipId, seat, triggerProps } = useTooltip({
     disabled,
@@ -421,34 +402,22 @@ export function Tooltip({
   });
   const reduced = useReducedMotion();
 
-  const described = [children.props["aria-describedby"], open ? tooltipId : null]
+  const described = [children.props['aria-describedby'], open ? tooltipId : null]
     .filter(Boolean)
-    .join(" ");
+    .join(' ');
 
   const trigger = cloneElement(children, {
-    "aria-describedby": described.length > 0 ? described : undefined,
-    onPointerEnter: chain(
-      children.props.onPointerEnter,
-      triggerProps.onPointerEnter,
-    ),
-    onPointerLeave: chain(
-      children.props.onPointerLeave,
-      triggerProps.onPointerLeave,
-    ),
-    onPointerDown: chain(
-      children.props.onPointerDown,
-      triggerProps.onPointerDown,
-    ),
-    onPointerCancel: chain(
-      children.props.onPointerCancel,
-      triggerProps.onPointerCancel,
-    ),
+    'aria-describedby': described.length > 0 ? described : undefined,
+    onPointerEnter: chain(children.props.onPointerEnter, triggerProps.onPointerEnter),
+    onPointerLeave: chain(children.props.onPointerLeave, triggerProps.onPointerLeave),
+    onPointerDown: chain(children.props.onPointerDown, triggerProps.onPointerDown),
+    onPointerCancel: chain(children.props.onPointerCancel, triggerProps.onPointerCancel),
     onFocus: chain(children.props.onFocus, triggerProps.onFocus),
     onBlur: chain(children.props.onBlur, triggerProps.onBlur),
     onKeyDown: chain(children.props.onKeyDown, triggerProps.onKeyDown),
   });
 
-  const lift = side === "top" ? 7 : -7;
+  const lift = side === 'top' ? 7 : -7;
 
   return (
     <span className={`relative inline-flex ${className}`}>
@@ -457,11 +426,7 @@ export function Tooltip({
       <span
         aria-hidden={!open}
         className="pointer-events-none absolute left-1/2 z-50 flex w-0 justify-center"
-        style={
-          side === "top"
-            ? { bottom: "calc(100% + 7px)" }
-            : { top: "calc(100% + 7px)" }
-        }
+        style={side === 'top' ? { bottom: 'calc(100% + 7px)' } : { top: 'calc(100% + 7px)' }}
       >
         <AnimatePresence>
           {open && (
@@ -473,10 +438,10 @@ export function Tooltip({
                 reduced
                   ? false
                   : skipped
-                    ? { opacity: 0, scale: 1, y: 0, filter: "blur(0px)" }
-                    : { opacity: 0, scale: 0.9, y: lift, filter: "blur(4px)" }
+                    ? { opacity: 0, scale: 1, y: 0, filter: 'blur(0px)' }
+                    : { opacity: 0, scale: 0.9, y: lift, filter: 'blur(4px)' }
               }
-              animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
+              animate={{ opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
               exit={
                 reduced
                   ? { opacity: 0, transition: { duration: 0 } }
@@ -484,16 +449,12 @@ export function Tooltip({
                       opacity: 0,
                       scale: 0.96,
                       y: lift * 0.35,
-                      filter: "blur(2px)",
+                      filter: 'blur(2px)',
                       transition: { duration: 0.12, ease: LEAVE },
                     }
               }
-              transition={
-                reduced
-                  ? { duration: 0 }
-                  : { ...(skipped ? WARM : RISE), layout: GLIDE }
-              }
-              style={{ transformOrigin: side === "top" ? "50% 100%" : "50% 0%" }}
+              transition={reduced ? { duration: 0 } : { ...(skipped ? WARM : RISE), layout: GLIDE }}
+              style={{ transformOrigin: side === 'top' ? '50% 100%' : '50% 0%' }}
               className={`relative w-max max-w-[220px] shrink-0 overflow-hidden rounded-[8px] px-2 py-1 text-[11.5px] font-medium leading-snug text-[var(--interior-fg)] dark:text-[var(--interior-fg)] ${contentClassName}`}
             >
               <motion.span
@@ -503,7 +464,7 @@ export function Tooltip({
                 className="absolute inset-0 rounded-[8px] border border-[var(--interior-border)] bg-white shadow-[0_1px_2px_rgba(28,25,23,0.06),0_6px_16px_-12px_rgba(28,25,23,0.35)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.45)]"
               />
               <motion.span
-                layout={reduced ? false : "position"}
+                layout={reduced ? false : 'position'}
                 initial={
                   reduced
                     ? false

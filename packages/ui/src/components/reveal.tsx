@@ -10,6 +10,7 @@ export interface RevealProps extends React.HTMLAttributes<HTMLDivElement> {
   readonly delay?: number;
   readonly duration?: number;
   readonly threshold?: number;
+  readonly rootMargin?: string;
   readonly once?: boolean;
   readonly as?: React.ElementType;
   readonly className?: string;
@@ -22,7 +23,7 @@ export function useScrollReveal(
     rootMargin?: string;
   } = {}
 ) {
-  const { threshold = 0.05, once = true, rootMargin = '50px 0px 50px 0px' } = options;
+  const { threshold = 0.05, once = true, rootMargin = '150px 0px 150px 0px' } = options;
   const ref = useRef<HTMLDivElement | null>(null);
   const [isRevealed, setIsRevealed] = useState(false);
 
@@ -79,13 +80,14 @@ export function Reveal({
   delay = 0,
   duration = 0.35,
   threshold = 0.05,
+  rootMargin,
   once = true,
   as: Component = 'div',
   className,
   style,
   ...props
 }: RevealProps) {
-  const { ref, isRevealed } = useScrollReveal({ threshold, once });
+  const { ref, isRevealed } = useScrollReveal({ threshold, once, rootMargin });
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -139,6 +141,9 @@ export interface RevealGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   readonly direction?: 'up' | 'down' | 'left' | 'right' | 'fade';
   readonly distance?: number;
   readonly duration?: number;
+  readonly threshold?: number;
+  readonly rootMargin?: string;
+  readonly once?: boolean;
   readonly as?: React.ElementType;
   readonly className?: string;
 }
@@ -150,28 +155,73 @@ export function RevealGroup({
   direction = 'up',
   distance = 14,
   duration = 0.38,
+  threshold = 0.05,
+  rootMargin,
+  once = true,
   as: Component = 'div',
   className,
   ...props
 }: RevealGroupProps) {
+  const { ref, isRevealed } = useScrollReveal({ threshold, once, rootMargin });
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const getTransform = () => {
+    if (!isMounted || isRevealed) return 'none';
+    switch (direction) {
+      case 'up':
+        return `translateY(${distance}px)`;
+      case 'down':
+        return `translateY(-${distance}px)`;
+      case 'left':
+        return `translateX(${distance}px)`;
+      case 'right':
+        return `translateX(-${distance}px)`;
+      case 'fade':
+      default:
+        return 'none';
+    }
+  };
+
   const childrenArray = React.Children.toArray(children);
 
   return (
-    <Component className={className} {...props}>
+    <Component ref={ref} className={className} {...props}>
       {childrenArray.map((child, index) => {
-        const itemDelay = baseDelay + Math.min(index * staggerDelay, 0.3);
+        const itemDelay = baseDelay + Math.min(index * staggerDelay, 0.4);
         return (
-          <Reveal
+          <div
             key={index}
-            direction={direction}
-            distance={distance}
-            delay={itemDelay}
-            duration={duration}
+            className="reveal-item h-full flex flex-col"
+            style={{
+              opacity: !isMounted || isRevealed ? 1 : 0,
+              transform: getTransform(),
+              transitionProperty: 'opacity, transform',
+              transitionDuration: `${duration}s`,
+              transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+              transitionDelay: `${itemDelay}s`,
+              willChange: isMounted && !isRevealed ? 'opacity, transform' : 'auto',
+            }}
           >
             {child}
-          </Reveal>
+          </div>
         );
       })}
     </Component>
   );
 }
+
+/**
+ * Reusable ScrollReveal component mapping to the natural viewport reveal system.
+ */
+export const ScrollReveal = Reveal;
+export type ScrollRevealProps = RevealProps;
+
+/**
+ * Reusable ScrollRevealGroup component mapping to staggered viewport reveal group.
+ */
+export const ScrollRevealGroup = RevealGroup;
+export type ScrollRevealGroupProps = RevealGroupProps;

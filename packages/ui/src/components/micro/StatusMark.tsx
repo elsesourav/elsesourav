@@ -12,7 +12,7 @@ const TEXT = {
   running: 'In progress',
   done: 'Completed',
   failed: 'Failed',
-  cancelled: 'Cancelled'
+  cancelled: 'Cancelled',
 } as const;
 const IDLE_DASH = 0.3;
 
@@ -59,7 +59,7 @@ export default function StatusMark({
   strike = true,
   strikeDelay = 60,
   className = '',
-  style
+  style,
 }: StatusMarkProps) {
   const reduce = useReducedMotion();
   const r = 10 - strokeWidth / 2;
@@ -68,7 +68,11 @@ export default function StatusMark({
   const determinate = status === 'running' && progress !== undefined && Number.isFinite(progress);
   const indeterminate = status === 'running' && !determinate;
   const solid = status === 'running' || status === 'done' || status === 'failed';
-  const targetArc = indeterminate ? arcLength : determinate && progress !== undefined ? clamp01(progress) : 1;
+  const targetArc = indeterminate
+    ? arcLength
+    : determinate && progress !== undefined
+      ? clamp01(progress)
+      : 1;
 
   const mode = useMotionValue(solid ? 1 : 0);
   const arc = useMotionValue(targetArc);
@@ -95,10 +99,12 @@ export default function StatusMark({
     const offs = [
       mode.on('change', writeDash),
       arc.on('change', writeDash),
-      travel.on('change', (v: number) => ringRef.current?.setAttribute('stroke-dashoffset', String(v)))
+      travel.on('change', (v: number) =>
+        ringRef.current?.setAttribute('stroke-dashoffset', String(v))
+      ),
     ];
     return () => {
-      offs.forEach(off => off());
+      offs.forEach((off) => off());
       mode.stop();
       arc.stop();
       travel.stop();
@@ -119,7 +125,11 @@ export default function StatusMark({
     animate(arc, targetArc, UI);
     if (indeterminate) {
       const t0 = travel.get();
-      animate(travel, [t0, t0 - C], { duration: spinDuration / 1000, ease: 'linear', repeat: Infinity });
+      animate(travel, [t0, t0 - C], {
+        duration: spinDuration / 1000,
+        ease: 'linear',
+        repeat: Infinity,
+      });
       return;
     }
     const unit = determinate ? C : P;
@@ -130,7 +140,9 @@ export default function StatusMark({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, determinate, targetArc, reduce, C, P, spinDuration]);
 
-  const spoken = TEXT[status] + (determinate && progress !== undefined ? `, ${Math.round(clamp01(progress) * 100)}%` : '');
+  const spoken =
+    TEXT[status] +
+    (determinate && progress !== undefined ? `, ${Math.round(clamp01(progress) * 100)}%` : '');
   const hasLabel = label !== undefined && label !== null;
 
   return (
@@ -150,7 +162,7 @@ export default function StatusMark({
           '--sm-font': `${fontSize}px`,
           '--sm-draw': `${drawDuration}ms`,
           '--sm-strike-delay': `${120 + strikeDelay}ms`,
-          ...style
+          ...style,
         } as React.CSSProperties
       }
     >
@@ -163,8 +175,21 @@ export default function StatusMark({
         aria-label={hasLabel ? undefined : spoken}
         aria-hidden={hasLabel || undefined}
       >
-        <circle className="status-mark__track" cx="12" cy="12" r={r} transform="rotate(-90 12 12)" />
-        <circle ref={ringRef} className="status-mark__ring" cx="12" cy="12" r={r} transform="rotate(-90 12 12)" />
+        <circle
+          className="status-mark__track"
+          cx="12"
+          cy="12"
+          r={r}
+          transform="rotate(-90 12 12)"
+        />
+        <circle
+          ref={ringRef}
+          className="status-mark__ring"
+          cx="12"
+          cy="12"
+          r={r}
+          transform="rotate(-90 12 12)"
+        />
         <path className="status-mark__check" d={CHECK} pathLength="1" />
         <path className="status-mark__cross" d={CROSS} pathLength="1" />
       </svg>

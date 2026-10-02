@@ -1,28 +1,28 @@
-"use client";
+'use client';
 
-import React, { useEffect, useRef, useState, type ReactNode } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import React, { useEffect, useRef, useState, type ReactNode } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
-const CELL = { type: "spring", stiffness: 520, damping: 34, mass: 0.45 } as const;
+const CELL = { type: 'spring', stiffness: 520, damping: 34, mass: 0.45 } as const;
 
-const ROLL = { type: "spring", stiffness: 460, damping: 32, mass: 0.55 } as const;
+const ROLL = { type: 'spring', stiffness: 460, damping: 32, mass: 0.55 } as const;
 
-const POP = { type: "spring", stiffness: 640, damping: 22, mass: 0.7 } as const;
+const POP = { type: 'spring', stiffness: 640, damping: 22, mass: 0.7 } as const;
 
-const LIFT = { type: "spring", stiffness: 380, damping: 26, mass: 0.7 } as const;
+const LIFT = { type: 'spring', stiffness: 380, damping: 26, mass: 0.7 } as const;
 
-const SETTLE = { type: "spring", stiffness: 260, damping: 34, mass: 0.8 } as const;
+const SETTLE = { type: 'spring', stiffness: 260, damping: 34, mass: 0.8 } as const;
 
 const CLEAR = { duration: 0.16, ease: [0.4, 0, 1, 1] } as const;
 const DROP = { duration: 0.14, ease: [0.4, 0, 1, 1] } as const;
 const STILL = { duration: 0 } as const;
 
-const GLYPH: Record<"up" | "down", ReactNode> = {
+const GLYPH: Record<'up' | 'down', ReactNode> = {
   up: <path d="M128 68 L210 180 H46 Z" />,
   down: <path d="M128 188 L46 76 H210 Z" />,
 };
 
-export type FlashDirection = "up" | "down";
+export type FlashDirection = 'up' | 'down';
 
 export type UseValueFlashOptions<T> = {
   hold?: number;
@@ -38,7 +38,7 @@ export type ValueFlashState<T> = {
 
 export function useValueFlash<T>(
   value: T,
-  { hold = 900, compare }: UseValueFlashOptions<T> = {},
+  { hold = 900, compare }: UseValueFlashOptions<T> = {}
 ): ValueFlashState<T> {
   const [state, setState] = useState<ValueFlashState<T>>({
     direction: null,
@@ -63,14 +63,14 @@ export function useValueFlash<T>(
     const measure = rank.current;
     const delta = measure
       ? measure(value, prior)
-      : typeof value === "number" && typeof prior === "number"
+      : typeof value === 'number' && typeof prior === 'number'
         ? value - prior
         : 0;
 
     if (delta === 0) return;
 
     setState((prev) => ({
-      direction: delta > 0 ? "up" : "down",
+      direction: delta > 0 ? 'up' : 'down',
       from: prior,
       changeId: prev.changeId + 1,
       flashing: true,
@@ -87,7 +87,7 @@ export function useValueFlash<T>(
     () => () => {
       if (timer.current) clearTimeout(timer.current);
     },
-    [],
+    []
   );
 
   return state;
@@ -108,7 +108,7 @@ export function ValueFlash({
   label,
   hold = 900,
   announceAfter = 700,
-  className = "",
+  className = '',
 }: ValueFlashProps) {
   const { direction, flashing, changeId } = useValueFlash(value, { hold });
   const reduced = useReducedMotion();
@@ -122,19 +122,20 @@ export function ValueFlash({
   }, [text, announceAfter]);
 
   const tone = flashing
-    ? direction === "up"
-      ? "text-[var(--interior-success)]"
-      : "text-[var(--interior-destructive)]"
-    : "text-[var(--interior-fg)]";
+    ? direction === 'up'
+      ? 'text-[var(--interior-success)]'
+      : 'text-[var(--interior-destructive)]'
+    : 'text-[var(--interior-fg)]';
 
   const tint =
-    direction === "up"
-      ? "bg-emerald-500/[0.12] dark:bg-emerald-400/[0.14]"
-      : "bg-red-500/[0.12] dark:bg-red-400/[0.14]";
+    direction === 'up'
+      ? 'bg-emerald-500/[0.12] dark:bg-emerald-400/[0.14]'
+      : 'bg-red-500/[0.12] dark:bg-red-400/[0.14]';
 
   return (
     <motion.span
-      data-interior="value-flash" initial={false}
+      data-interior="value-flash"
+      initial={false}
       animate={{ scale: reduced ? 1 : flashing ? 1.05 : 1 }}
       transition={reduced ? STILL : flashing ? LIFT : SETTLE}
       className={`relative inline-grid grid-flow-col items-center gap-1.5 rounded-[6px] px-1.5 py-[3px] text-[13px] font-medium tabular-nums transition-colors duration-200 ${tone} ${className}`}
@@ -158,18 +159,18 @@ export function ValueFlash({
                 ? { opacity: 0 }
                 : {
                     opacity: 0,
-                    y: direction === "down" ? "-0.85em" : "0.85em",
-                    filter: "blur(5px)",
+                    y: direction === 'down' ? '-0.85em' : '0.85em',
+                    filter: 'blur(5px)',
                   }
             }
-            animate={{ opacity: 1, y: "0em", filter: "blur(0px)" }}
+            animate={{ opacity: 1, y: '0em', filter: 'blur(0px)' }}
             exit={
               reduced
                 ? { opacity: 0, transition: STILL }
                 : {
                     opacity: 0,
-                    y: direction === "down" ? "0.7em" : "-0.7em",
-                    filter: "blur(4px)",
+                    y: direction === 'down' ? '0.7em' : '-0.7em',
+                    filter: 'blur(4px)',
                     transition: DROP,
                   }
             }
@@ -193,10 +194,10 @@ export function ValueFlash({
                   : {
                       opacity: 0,
                       scale: 0.4,
-                      y: direction === "up" ? "0.3em" : "-0.3em",
+                      y: direction === 'up' ? '0.3em' : '-0.3em',
                     }
               }
-              animate={{ opacity: 1, scale: 1, y: "0em" }}
+              animate={{ opacity: 1, scale: 1, y: '0em' }}
               exit={
                 reduced
                   ? { opacity: 0, transition: STILL }

@@ -7,7 +7,7 @@ import { ArrowDown01Icon, Tick02Icon } from '@hugeicons/core-free-icons';
 const SIZES: Record<string, { chip: number; row: number; font: number }> = {
   sm: { chip: 28, row: 26, font: 12 },
   md: { chip: 32, row: 30, font: 13 },
-  lg: { chip: 44, row: 40, font: 14 }
+  lg: { chip: 44, row: 40, font: 14 },
 };
 const PAD = 4;
 const GAP = 1;
@@ -22,7 +22,8 @@ export interface GlideOption {
 
 export type GlideOptionItem = string | GlideOption;
 
-const norm = (o: GlideOptionItem): GlideOption => (typeof o === 'string' ? { value: o, label: o } : o);
+const norm = (o: GlideOptionItem): GlideOption =>
+  typeof o === 'string' ? { value: o, label: o } : o;
 const textOf = (it: GlideOption): string => (typeof it.label === 'string' ? it.label : it.value);
 const typeaheadIndex = (items: GlideOption[], from: number, ch: string): number => {
   const c = ch.toLowerCase();
@@ -82,12 +83,12 @@ export default function GlideSelect({
   disabled = false,
   ariaLabel = 'Select',
   className = '',
-  style
+  style,
 }: GlideSelectProps) {
   const items = options.map(norm);
   const [inner, setInner] = useState(defaultValue ?? '');
   const current = value ?? inner;
-  const selected = items.findIndex(it => it.value === current);
+  const selected = items.findIndex((it) => it.value === current);
   const [phase, setPhase] = useState<'closed' | 'open' | 'closing'>('closed');
   const [active, setActive] = useState<number | null>(null);
   const [side, setSide] = useState(placement);
@@ -197,7 +198,8 @@ export default function GlideSelect({
       instant.current = true;
       setActive(Math.min(n - 1, Math.max(0, i)));
     };
-    if (k === 'ArrowDown' || k === 'ArrowUp') go(active === null ? cur : cur + (k === 'ArrowDown' ? 1 : -1));
+    if (k === 'ArrowDown' || k === 'ArrowUp')
+      go(active === null ? cur : cur + (k === 'ArrowDown' ? 1 : -1));
     else if (k === 'Home' || k === 'End') go(k === 'Home' ? 0 : n - 1);
     else if (k === 'Enter' || k === ' ') {
       e.preventDefault();
@@ -205,7 +207,8 @@ export default function GlideSelect({
     } else if (k === 'Escape' || k === 'Tab') {
       if (k === 'Escape') e.preventDefault();
       close('instant');
-    } else if (k.length === 1 && !e.metaKey && !e.ctrlKey && !e.altKey) go(typeaheadIndex(items, cur, k));
+    } else if (k.length === 1 && !e.metaKey && !e.ctrlKey && !e.altKey)
+      go(typeaheadIndex(items, cur, k));
   };
 
   useEffect(() => {
@@ -284,10 +287,10 @@ export default function GlideSelect({
           '--gs-pop-out': `${popOut}ms`,
           '--gs-glide': `${glideDuration}ms`,
           '--gs-origin': origin,
-          ...style
+          ...style,
         } as React.CSSProperties
       }
-      onAnimationEnd={e => {
+      onAnimationEnd={(e) => {
         if (e.animationName === 'gs-swap' && rootRef.current) delete rootRef.current.dataset.swap;
       }}
     >
@@ -302,7 +305,7 @@ export default function GlideSelect({
         aria-label={ariaLabel}
         disabled={disabled}
         className="glide-select__trigger"
-        onPointerDown={e => {
+        onPointerDown={(e) => {
           if (e.button !== 0 || disabled) return;
           e.currentTarget.focus({ preventScroll: true });
           if (phase === 'open') close('pop');
@@ -310,7 +313,11 @@ export default function GlideSelect({
         }}
         onKeyDown={onTriggerKey}
       >
-        <span className="glide-select__label" key={current} data-empty={selected < 0 ? '' : undefined}>
+        <span
+          className="glide-select__label"
+          key={current}
+          data-empty={selected < 0 ? '' : undefined}
+        >
           {selectedItem ? selectedItem.label : placeholder}
         </span>
         <span className="glide-select__chevron" aria-hidden="true">
@@ -318,7 +325,13 @@ export default function GlideSelect({
         </span>
       </button>
       {phase !== 'closed' ? (
-        <div ref={menuRef} className="glide-select__menu" data-state="open" data-side={side} data-align={align}>
+        <div
+          ref={menuRef}
+          className="glide-select__menu"
+          data-state="open"
+          data-side={side}
+          data-align={align}
+        >
           <div
             id={`${id}-list`}
             role="listbox"
@@ -347,7 +360,11 @@ export default function GlideSelect({
               >
                 <span className="glide-select__name">{it.label}</span>
                 {showTags && it.tag ? <span className="glide-select__tag">{it.tag}</span> : null}
-                <span className="glide-select__check" data-on={i === selected ? '' : undefined} aria-hidden="true">
+                <span
+                  className="glide-select__check"
+                  data-on={i === selected ? '' : undefined}
+                  aria-hidden="true"
+                >
                   <HugeiconsIcon icon={Tick02Icon} size={13} strokeWidth={2.5} />
                 </span>
               </div>

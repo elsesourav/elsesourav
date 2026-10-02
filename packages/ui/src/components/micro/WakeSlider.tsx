@@ -1,7 +1,14 @@
 'use client';
 
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { frame, useMotionValue, useMotionValueEvent, useReducedMotion, useSpring, useVelocity } from 'motion/react';
+import {
+  frame,
+  useMotionValue,
+  useMotionValueEvent,
+  useReducedMotion,
+  useSpring,
+  useVelocity,
+} from 'motion/react';
 
 const SETTLE = 9.23;
 const FULL_SPEED = 320;
@@ -10,7 +17,8 @@ const FLAT = 0.002;
 
 const clamp = (v: number, lo: number, hi: number): number => Math.min(hi, Math.max(lo, v));
 const smoothstep = (s: number): number => s * s * (3 - 2 * s);
-const toPct = (v: number, min: number, max: number): number => (max > min ? ((v - min) / (max - min)) * 100 : 0);
+const toPct = (v: number, min: number, max: number): number =>
+  max > min ? ((v - min) / (max - min)) * 100 : 0;
 const snap = (v: number, min: number, max: number, step: number): number => {
   if (!(max > min)) return min;
   if (!(step > 0)) return clamp(v, min, max);
@@ -70,7 +78,7 @@ export default function WakeSlider({
   disabled = false,
   ariaLabel = 'Value',
   className = '',
-  style
+  style,
 }: WakeSliderProps) {
   const [inner, setInner] = useState(defaultValue);
   const value = clamp(valueProp ?? inner, min, max);
@@ -185,7 +193,7 @@ export default function WakeSlider({
       PageUp: value + step * 10,
       PageDown: value - step * 10,
       Home: min,
-      End: max
+      End: max,
     };
     const targetJump = jumps[e.key];
     if (targetJump === undefined) return;
@@ -205,14 +213,14 @@ export default function WakeSlider({
     return Array.from({ length: bars }, (_, i) => (
       <span
         key={i}
-        ref={el => {
+        ref={(el) => {
           barEls.current[i] = el;
         }}
         className="wake-slider__bar"
       >
         {crestColor ? (
           <span
-            ref={el => {
+            ref={(el) => {
               crestEls.current[i] = el;
             }}
             className="wake-slider__crest"
@@ -235,7 +243,7 @@ export default function WakeSlider({
           '--ws-height': `${height}px`,
           '--ws-gap': `${gap}px`,
           '--ws-rest': rest,
-          ...style
+          ...style,
         } as React.CSSProperties
       }
     >

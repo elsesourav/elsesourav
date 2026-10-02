@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, {
   useCallback,
@@ -8,21 +8,21 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from "react";
-import { motion, useReducedMotion } from "motion/react";
+} from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 
 const EASE = [0.23, 1, 0.32, 1] as const;
 const EXIT_EASE = [0.4, 0, 1, 1] as const;
 
 const DISCLOSE = {
-  type: "spring",
+  type: 'spring',
   stiffness: 480,
   damping: 40,
   mass: 0.6,
 } as const;
 
 const CHEVRON = {
-  type: "spring",
+  type: 'spring',
   stiffness: 700,
   damping: 46,
   mass: 0.5,
@@ -30,8 +30,7 @@ const CHEVRON = {
 
 const NONE: readonly string[] = [];
 
-const useIsomorphicLayoutEffect =
-  typeof window === "undefined" ? useEffect : useLayoutEffect;
+const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
 type Inertable = HTMLElement & { inert?: boolean };
 
@@ -74,23 +73,23 @@ export type AccordionEntry = {
 export type AccordionHeaderProps = {
   id: string;
   ref: (node: HTMLButtonElement | null) => void;
-  type: "button";
+  type: 'button';
   onClick: () => void;
   onKeyDown: (event: React.KeyboardEvent) => void;
-  "aria-expanded": boolean;
-  "aria-controls": string;
+  'aria-expanded': boolean;
+  'aria-controls': string;
 };
 
 export type AccordionPanelProps = {
   id: string;
-  role: "region";
-  "aria-labelledby": string;
-  "aria-hidden": true | undefined;
+  role: 'region';
+  'aria-labelledby': string;
+  'aria-hidden': true | undefined;
 };
 
 export type UseAccordionOptions = {
   items: readonly AccordionEntry[];
-  type?: "single" | "multiple";
+  type?: 'single' | 'multiple';
   defaultOpen?: readonly string[];
   open?: readonly string[];
   onOpenChange?: (open: string[]) => void;
@@ -107,7 +106,7 @@ export type UseAccordionResult = {
 
 export function useAccordion({
   items,
-  type = "single",
+  type = 'single',
   defaultOpen = NONE,
   open: controlled,
   onOpenChange,
@@ -116,18 +115,18 @@ export function useAccordion({
   const base = useId();
 
   const [uncontrolled, setUncontrolled] = useState<string[]>(() =>
-    type === "single" ? defaultOpen.slice(0, 1) : defaultOpen.slice(),
+    type === 'single' ? defaultOpen.slice(0, 1) : defaultOpen.slice()
   );
 
   const open = useMemo(
     () => (controlled ? controlled.slice() : uncontrolled),
-    [controlled, uncontrolled],
+    [controlled, uncontrolled]
   );
 
   const headers = useRef(new Map<string, HTMLButtonElement>());
-  const binders = useRef(new Map<string, AccordionHeaderProps["ref"]>());
+  const binders = useRef(new Map<string, AccordionHeaderProps['ref']>());
 
-  const headerRef = useCallback((id: string): AccordionHeaderProps["ref"] => {
+  const headerRef = useCallback((id: string): AccordionHeaderProps['ref'] => {
     const cached = binders.current.get(id);
     if (cached) return cached;
     const bind = (node: HTMLButtonElement | null) => {
@@ -151,27 +150,27 @@ export function useAccordion({
   const toggle = useCallback(
     (id: string) => {
       const active = open.includes(id);
-      if (active && !collapsible && type === "single") return;
-      if (type === "single") {
+      if (active && !collapsible && type === 'single') return;
+      if (type === 'single') {
         commit(active ? [] : [id]);
         return;
       }
       commit(active ? open.filter((x) => x !== id) : [...open, id]);
     },
-    [open, type, collapsible, commit],
+    [open, type, collapsible, commit]
   );
 
   const order = useMemo(() => items.map((item) => item.id), [items]);
 
   const move = useCallback(
-    (id: string, delta: number, edge: "first" | "last" | null) => {
+    (id: string, delta: number, edge: 'first' | 'last' | null) => {
       if (order.length === 0) return;
       const at = order.indexOf(id);
       if (at < 0) return;
       const next =
-        edge === "first"
+        edge === 'first'
           ? 0
-          : edge === "last"
+          : edge === 'last'
             ? order.length - 1
             : (at + delta + order.length) % order.length;
       const targetId = order[next];
@@ -179,44 +178,44 @@ export function useAccordion({
         headers.current.get(targetId)?.focus();
       }
     },
-    [order],
+    [order]
   );
 
   const headerProps = useCallback(
     (id: string): AccordionHeaderProps => ({
       id: `${base}-header-${id}`,
       ref: headerRef(id),
-      type: "button",
+      type: 'button',
       onClick: () => toggle(id),
       onKeyDown: (event: React.KeyboardEvent) => {
-        if (event.key === "ArrowDown") {
+        if (event.key === 'ArrowDown') {
           event.preventDefault();
           move(id, 1, null);
-        } else if (event.key === "ArrowUp") {
+        } else if (event.key === 'ArrowUp') {
           event.preventDefault();
           move(id, -1, null);
-        } else if (event.key === "Home") {
+        } else if (event.key === 'Home') {
           event.preventDefault();
-          move(id, 0, "first");
-        } else if (event.key === "End") {
+          move(id, 0, 'first');
+        } else if (event.key === 'End') {
           event.preventDefault();
-          move(id, 0, "last");
+          move(id, 0, 'last');
         }
       },
-      "aria-expanded": open.includes(id),
-      "aria-controls": `${base}-panel-${id}`,
+      'aria-expanded': open.includes(id),
+      'aria-controls': `${base}-panel-${id}`,
     }),
-    [base, open, toggle, move, headerRef],
+    [base, open, toggle, move, headerRef]
   );
 
   const panelProps = useCallback(
     (id: string): AccordionPanelProps => ({
       id: `${base}-panel-${id}`,
-      role: "region",
-      "aria-labelledby": `${base}-header-${id}`,
-      "aria-hidden": open.includes(id) ? undefined : true,
+      role: 'region',
+      'aria-labelledby': `${base}-header-${id}`,
+      'aria-hidden': open.includes(id) ? undefined : true,
     }),
-    [base, open],
+    [base, open]
   );
 
   return { open, isOpen, toggle, headerProps, panelProps };
@@ -231,7 +230,7 @@ export type AccordionItem = {
 
 export type AccordionProps = {
   items: readonly AccordionItem[];
-  type?: "single" | "multiple";
+  type?: 'single' | 'multiple';
   defaultOpen?: readonly string[];
   open?: readonly string[];
   onOpenChange?: (open: string[]) => void;
@@ -243,14 +242,14 @@ export type AccordionProps = {
 
 export function Accordion({
   items,
-  type = "single",
+  type = 'single',
   defaultOpen = NONE,
   open: controlled,
   onOpenChange,
   collapsible = true,
   maxPanelHeight = 220,
   headingLevel = 3,
-  className = "",
+  className = '',
 }: AccordionProps) {
   const reduced = useReducedMotion();
 
@@ -267,7 +266,8 @@ export function Accordion({
 
   return (
     <div
-      data-interior="accordion" className={`divide-y divide-stone-200 overflow-hidden rounded-[11px] border border-[var(--interior-border)] bg-white shadow-[0_1px_2px_rgba(28,25,23,0.06),0_4px_10px_-8px_rgba(28,25,23,0.45)] dark:divide-white/10 dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[0_1px_6px_rgba(0,0,0,0.45)] ${className}`}
+      data-interior="accordion"
+      className={`divide-y divide-stone-200 overflow-hidden rounded-[11px] border border-[var(--interior-border)] bg-white shadow-[0_1px_2px_rgba(28,25,23,0.06),0_4px_10px_-8px_rgba(28,25,23,0.45)] dark:divide-white/10 dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[0_1px_6px_rgba(0,0,0,0.45)] ${className}`}
     >
       {items.map((item) => (
         <AccordionRow
@@ -322,9 +322,7 @@ function AccordionRow({
         >
           <span
             className={`min-w-0 flex-1 truncate text-[13px] font-medium transition-colors duration-150 ${
-              open
-                ? "text-[var(--interior-fg)]"
-                : "text-[var(--interior-fg)]"
+              open ? 'text-[var(--interior-fg)]' : 'text-[var(--interior-fg)]'
             }`}
           >
             {item.title}
@@ -362,8 +360,8 @@ function AccordionRow({
         animate={ready ? { height: open ? height : 0 } : {}}
         transition={reduced ? { duration: 0 } : DISCLOSE}
         style={{
-          overflow: "hidden",
-          height: ready ? undefined : open ? "auto" : 0,
+          overflow: 'hidden',
+          height: ready ? undefined : open ? 'auto' : 0,
         }}
       >
         <div
@@ -372,10 +370,10 @@ function AccordionRow({
           className="border-t border-[var(--interior-border)] bg-[var(--interior-bg-subtle)] shadow-[inset_0_1px_2px_rgba(28,25,23,0.05)] dark:border-[var(--interior-border)] dark:bg-white/[0.05] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]"
           style={{
             maxHeight: maxPanelHeight,
-            overflowY: "auto",
-            overscrollBehavior: "contain",
+            overflowY: 'auto',
+            overscrollBehavior: 'contain',
 
-            scrollbarGutter: "stable",
+            scrollbarGutter: 'stable',
           }}
         >
           <motion.div

@@ -4,11 +4,16 @@ import * as React from 'react';
 
 export interface UseHeaderHeadroomOptions {
   /**
-   * Minimum scroll delta in pixels required to toggle visibility.
-   * Prevents micro-jitter and trackpad bounce flickering.
-   * @default 10
+   * Minimum scroll delta in pixels required to hide on downward scroll.
+   * @default 12
    */
   threshold?: number;
+  /**
+   * Minimum scroll delta in pixels required to reveal on upward scroll.
+   * Lower value makes the header open instantly on upward flick.
+   * @default 5
+   */
+  upThreshold?: number;
   /**
    * Distance from page top (in pixels) where the header is guaranteed visible.
    * @default 64
@@ -39,7 +44,8 @@ export interface UseHeaderHeadroomReturn {
  * - Direction hysteresis to eliminate micro-scroll jitter
  */
 export function useHeaderHeadroom({
-  threshold = 10,
+  threshold = 12,
+  upThreshold = 5,
   topOffset = 64,
   isLocked = false,
 }: UseHeaderHeadroomOptions = {}): UseHeaderHeadroomReturn {
@@ -102,10 +108,7 @@ export function useHeaderHeadroom({
         }
 
         // 2. Prevent bottom-bounce on macOS/iOS elastic scrolling
-        const maxScroll = Math.max(
-          0,
-          document.documentElement.scrollHeight - window.innerHeight
-        );
+        const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
         if (currentScrollY > maxScroll) {
           return;
         }
@@ -129,8 +132,8 @@ export function useHeaderHeadroom({
           if (currentScrollY > lastScrollY) {
             // Scrolling down further: reset anchor point to current higher position
             lastScrollYRef.current = currentScrollY;
-          } else if (lastScrollY - currentScrollY >= threshold) {
-            // Scrolled UP beyond threshold -> reveal header
+          } else if (lastScrollY - currentScrollY >= upThreshold) {
+            // Scrolled UP beyond upThreshold -> immediately reveal header
             isVisibleRef.current = true;
             setIsVisible(true);
             lastScrollYRef.current = currentScrollY;
@@ -162,7 +165,7 @@ export function useHeaderHeadroom({
         rafIdRef.current = null;
       }
     };
-  }, [threshold, topOffset, isLocked]);
+  }, [threshold, upThreshold, topOffset, isLocked]);
 
   return {
     isVisible,

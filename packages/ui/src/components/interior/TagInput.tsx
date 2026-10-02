@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
 const LEAVE = [0.4, 0, 1, 1] as const;
-const CROSSFADE = { type: "spring", stiffness: 260, damping: 34, mass: 0.8 } as const;
-const CHIP = { type: "spring", stiffness: 700, damping: 46, mass: 0.5 } as const;
+const CROSSFADE = { type: 'spring', stiffness: 260, damping: 34, mass: 0.8 } as const;
+const CHIP = { type: 'spring', stiffness: 700, damping: 46, mass: 0.5 } as const;
 const EXIT = { duration: 0.18, ease: LEAVE } as const;
 const INSTANT = { duration: 0 } as const;
 
-const clean = (raw: string) => raw.trim().replace(/\s+/g, " ");
+const clean = (raw: string) => raw.trim().replace(/\s+/g, ' ');
 
 const splitter = (separators: string[]) =>
-  new RegExp(`[${separators.map((s) => s.replace(/[\\\]^-]/g, "\\$&")).join("")}\\n\\r\\t]+`);
+  new RegExp(`[${separators.map((s) => s.replace(/[\\\]^-]/g, '\\$&')).join('')}\\n\\r\\t]+`);
 
-export type TagRejection = "duplicate" | "limit" | "invalid";
+export type TagRejection = 'duplicate' | 'limit' | 'invalid';
 
 export type UseTagInputOptions = {
   value?: string[];
@@ -33,16 +33,16 @@ export function useTagInput({
   defaultValue,
   onChange,
   max,
-  separators = [","],
+  separators = [','],
   allowDuplicates = false,
   validate,
 }: UseTagInputOptions = {}) {
   const [internal, setInternal] = useState<string[]>(() => defaultValue ?? []);
-  const [draft, setDraft] = useState("");
+  const [draft, setDraft] = useState('');
   const [armed, setArmed] = useState(-1);
   const [rejection, setRejection] = useState<Rejection | null>(null);
   const [flashed, setFlashed] = useState<string | null>(null);
-  const [announcement, setAnnouncement] = useState("");
+  const [announcement, setAnnouncement] = useState('');
 
   const controlled = value !== undefined;
   const tags = value ?? internal;
@@ -61,7 +61,7 @@ export function useTagInput({
       if (rejectTimer.current) clearTimeout(rejectTimer.current);
       if (flashTimer.current) clearTimeout(flashTimer.current);
     },
-    [],
+    []
   );
 
   const dismiss = useCallback(() => {
@@ -79,19 +79,19 @@ export function useTagInput({
       }, 2400);
 
       setAnnouncement(
-        reason === "duplicate"
+        reason === 'duplicate'
           ? `${tag} is already in the list.`
-          : reason === "limit"
+          : reason === 'limit'
             ? `That is the limit of ${max} tags.`
-            : `${tag} is not allowed here.`,
+            : `${tag} is not allowed here.`
       );
 
-      if (reason !== "duplicate") return;
+      if (reason !== 'duplicate') return;
       if (flashTimer.current) clearTimeout(flashTimer.current);
       setFlashed(tag);
       flashTimer.current = setTimeout(() => setFlashed(null), 460);
     },
-    [max],
+    [max]
   );
 
   const apply = useCallback(
@@ -99,7 +99,7 @@ export function useTagInput({
       if (!controlled) setInternal(next);
       emit.current?.(next);
     },
-    [controlled],
+    [controlled]
   );
 
   const add = useCallback(
@@ -113,20 +113,20 @@ export function useTagInput({
         if (!candidate) continue;
 
         if (max !== undefined && next.length >= max) {
-          failure = { reason: "limit", tag: candidate };
+          failure = { reason: 'limit', tag: candidate };
           break;
         }
 
         if (!allowDuplicates) {
           const twin = next.find((t) => t.toLowerCase() === candidate.toLowerCase());
           if (twin) {
-            failure = { reason: "duplicate", tag: twin };
+            failure = { reason: 'duplicate', tag: twin };
             continue;
           }
         }
 
         if (check.current && !check.current(candidate, next)) {
-          failure = { reason: "invalid", tag: candidate };
+          failure = { reason: 'invalid', tag: candidate };
           continue;
         }
 
@@ -136,18 +136,18 @@ export function useTagInput({
 
       if (added > 0) {
         apply(next);
-        setDraft("");
+        setDraft('');
         setArmed(-1);
         dismiss();
         setAnnouncement(
-          `${added === 1 ? next[next.length - 1] : `${added} tags`} added, ${next.length} total.`,
+          `${added === 1 ? next[next.length - 1] : `${added} tags`} added, ${next.length} total.`
         );
       }
 
       if (failure) refuse(failure.reason, failure.tag);
       return added > 0;
     },
-    [tags, max, allowDuplicates, apply, dismiss, refuse],
+    [tags, max, allowDuplicates, apply, dismiss, refuse]
   );
 
   const removeAt = useCallback(
@@ -160,7 +160,7 @@ export function useTagInput({
       dismiss();
       setAnnouncement(`${gone} removed, ${next.length} left.`);
     },
-    [tags, apply, dismiss],
+    [tags, apply, dismiss]
   );
 
   const arm = useCallback(
@@ -168,7 +168,7 @@ export function useTagInput({
       setArmed(index);
       setAnnouncement(`${tags[index]} selected, press Backspace again to remove it.`);
     },
-    [tags],
+    [tags]
   );
 
   const inputProps = {
@@ -181,13 +181,13 @@ export function useTagInput({
     onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.nativeEvent.isComposing) return;
 
-      if (e.key === "Enter" || separators.includes(e.key)) {
+      if (e.key === 'Enter' || separators.includes(e.key)) {
         e.preventDefault();
         add([draft]);
         return;
       }
 
-      if (e.key === "Backspace" && draft === "") {
+      if (e.key === 'Backspace' && draft === '') {
         e.preventDefault();
         if (e.repeat) return;
         if (armedIndex >= 0) removeAt(armedIndex);
@@ -195,14 +195,14 @@ export function useTagInput({
         return;
       }
 
-      if (e.key === "Delete" && armedIndex >= 0) {
+      if (e.key === 'Delete' && armedIndex >= 0) {
         e.preventDefault();
         if (e.repeat) return;
         removeAt(armedIndex);
         return;
       }
 
-      if (e.key === "ArrowLeft") {
+      if (e.key === 'ArrowLeft') {
         const start = e.currentTarget.selectionStart;
         const end = e.currentTarget.selectionEnd;
         if (start !== 0 || end !== 0 || tags.length === 0) return;
@@ -211,20 +211,20 @@ export function useTagInput({
         return;
       }
 
-      if (e.key === "ArrowRight" && armedIndex >= 0) {
+      if (e.key === 'ArrowRight' && armedIndex >= 0) {
         e.preventDefault();
         if (armedIndex >= tags.length - 1) setArmed(-1);
         else arm(armedIndex + 1);
         return;
       }
 
-      if (e.key === "Escape" && armedIndex >= 0) {
+      if (e.key === 'Escape' && armedIndex >= 0) {
         e.preventDefault();
         setArmed(-1);
       }
     },
     onPaste: (e: React.ClipboardEvent<HTMLInputElement>) => {
-      const text = e.clipboardData.getData("text");
+      const text = e.clipboardData.getData('text');
       const pattern = splitter(separators);
       if (!pattern.test(text)) return;
       e.preventDefault();
@@ -258,7 +258,8 @@ export type TagInputProps = UseTagInputOptions & {
 function CloseGlyph() {
   return (
     <svg
-      data-interior="tag-input" viewBox="0 0 10 10"
+      data-interior="tag-input"
+      viewBox="0 0 10 10"
       aria-hidden
       className="size-[9px]"
       fill="none"
@@ -273,9 +274,9 @@ function CloseGlyph() {
 
 export function TagInput({
   label,
-  placeholder = "Add a tag",
-  hint = "Enter adds · Backspace removes",
-  className = "",
+  placeholder = 'Add a tag',
+  hint = 'Enter adds · Backspace removes',
+  className = '',
   ...options
 }: TagInputProps) {
   const { tags, draft, armedIndex, flashed, rejection, announcement, inputProps, removeAt, max } =
@@ -297,10 +298,10 @@ export function TagInput({
   }, [tags]);
 
   const message = !rejection
-    ? ""
-    : rejection.reason === "duplicate"
+    ? ''
+    : rejection.reason === 'duplicate'
       ? `${rejection.tag} is already in the list`
-      : rejection.reason === "limit"
+      : rejection.reason === 'limit'
         ? `That is the limit of ${max} tags`
         : `${rejection.tag} is not allowed here`;
 
@@ -343,8 +344,8 @@ export function TagInput({
                 transition={reduced ? INSTANT : { default: CHIP, layout: CHIP }}
                 className={`flex h-6 max-w-full shrink-0 select-none items-center gap-1 rounded-[6px] border pl-2 pr-1.5 text-[12.5px] transition-[background-color,border-color,box-shadow,color] duration-150 ${
                   lit
-                    ? "border-stone-800 bg-[var(--interior-fg)] text-white shadow-[0_1px_2px_rgba(28,25,23,0.18)] dark:border-[var(--interior-border-subtle)] dark:bg-[var(--interior-bg-subtle)] dark:text-[var(--interior-fg)] dark:shadow-[0_1px_2px_rgba(0,0,0,0.4)]"
-                    : "border-[var(--interior-border)] bg-white text-[var(--interior-fg)] shadow-[inset_0_1.5px_0_rgba(255,255,255,0.95),inset_0_-1px_0_rgba(28,25,23,0.06),0_1px_2px_rgba(28,25,23,0.08)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-subtle)] dark:text-[var(--interior-fg)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_1px_2px_rgba(0,0,0,0.4)]"
+                    ? 'border-stone-800 bg-[var(--interior-fg)] text-white shadow-[0_1px_2px_rgba(28,25,23,0.18)] dark:border-[var(--interior-border-subtle)] dark:bg-[var(--interior-bg-subtle)] dark:text-[var(--interior-fg)] dark:shadow-[0_1px_2px_rgba(0,0,0,0.4)]'
+                    : 'border-[var(--interior-border)] bg-white text-[var(--interior-fg)] shadow-[inset_0_1.5px_0_rgba(255,255,255,0.95),inset_0_-1px_0_rgba(28,25,23,0.06),0_1px_2px_rgba(28,25,23,0.08)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-subtle)] dark:text-[var(--interior-fg)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_1px_2px_rgba(0,0,0,0.4)]'
                 }`}
               >
                 <span className="truncate">{tag}</span>
@@ -359,8 +360,8 @@ export function TagInput({
                   }}
                   className={`-mr-0.5 grid size-[14px] shrink-0 place-items-center rounded-[5px] transition-colors duration-150 ${
                     lit
-                      ? "text-white/70 hover:text-white dark:text-stone-900/60 dark:hover:text-[var(--interior-fg)]"
-                      : "text-[var(--interior-fg-muted)] hover:text-[var(--interior-fg)] dark:text-[var(--interior-fg-muted)] dark:hover:text-stone-100"
+                      ? 'text-white/70 hover:text-white dark:text-stone-900/60 dark:hover:text-[var(--interior-fg)]'
+                      : 'text-[var(--interior-fg-muted)] hover:text-[var(--interior-fg)] dark:text-[var(--interior-fg-muted)] dark:hover:text-stone-100'
                   }`}
                 >
                   <CloseGlyph />
@@ -371,7 +372,7 @@ export function TagInput({
         </AnimatePresence>
 
         <motion.li
-          layout={reduced ? false : "position"}
+          layout={reduced ? false : 'position'}
           transition={reduced ? INSTANT : CHIP}
           className="relative flex h-6 flex-1"
         >
@@ -387,7 +388,7 @@ export function TagInput({
             id={inputId}
             type="text"
             aria-describedby={hintId}
-            aria-label={label ? undefined : "Tags"}
+            aria-label={label ? undefined : 'Tags'}
             placeholder={placeholder}
             autoComplete="off"
             autoCapitalize="off"

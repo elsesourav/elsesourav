@@ -1,14 +1,9 @@
-"use client";
+'use client';
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import {
-  AnimatePresence,
-  motion,
-  useIsomorphicLayoutEffect,
-  useReducedMotion,
-} from "motion/react";
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { AnimatePresence, motion, useIsomorphicLayoutEffect, useReducedMotion } from 'motion/react';
 
-const SLOT = { type: "spring", stiffness: 520, damping: 34, mass: 0.45 } as const;
+const SLOT = { type: 'spring', stiffness: 520, damping: 34, mass: 0.45 } as const;
 const FADE = { duration: 0.24, ease: [0.23, 1, 0.32, 1] } as const;
 const INSTANT = { duration: 0 } as const;
 
@@ -37,19 +32,19 @@ export type UsePresenceResult = {
 function initials(name: string): string {
   const words = name.trim().split(/\s+/).filter(Boolean);
   const firstWord = words[0];
-  if (!firstWord) return "?";
-  const first = Array.from(firstWord)[0] ?? "";
+  if (!firstWord) return '?';
+  const first = Array.from(firstWord)[0] ?? '';
   const lastWord = words.length > 1 ? words[words.length - 1] : undefined;
-  const last = lastWord ? (Array.from(lastWord)[0] ?? "") : "";
+  const last = lastWord ? (Array.from(lastWord)[0] ?? '') : '';
   return (first + last).toUpperCase();
 }
 
 function describe(names: string[]): string {
-  if (names.length === 0) return "Nobody here";
+  if (names.length === 0) return 'Nobody here';
   if (names.length === 1) return `${names[0]} is here`;
   if (names.length === 2) return `${names[0]} and ${names[1]} are here`;
   const rest = names.length - 2;
-  return `${names[0]}, ${names[1]} and ${rest} ${rest === 1 ? "other" : "others"} are here`;
+  return `${names[0]}, ${names[1]} and ${rest} ${rest === 1 ? 'other' : 'others'} are here`;
 }
 
 export function usePresence({
@@ -68,9 +63,7 @@ export function usePresence({
         next.current += 1;
       }
     }
-    return people
-      .slice()
-      .sort((a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0));
+    return people.slice().sort((a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0));
   }, [people]);
 
   const slots = Math.max(1, max);
@@ -97,9 +90,9 @@ export function usePresence({
 }
 
 const TILE =
-  "absolute left-0 top-0 select-none rounded-[10px] bg-[var(--interior-bg-subtle)] p-[3px] dark:bg-stone-700";
+  'absolute left-0 top-0 select-none rounded-[10px] bg-[var(--interior-bg-subtle)] p-[3px] dark:bg-stone-700';
 const WELL =
-  "relative grid size-full place-items-center overflow-hidden rounded-[7px] bg-[var(--interior-bg-subtle)] font-medium leading-none text-[var(--interior-fg-muted)] dark:bg-white/10 dark:text-stone-300";
+  'relative grid size-full place-items-center overflow-hidden rounded-[7px] bg-[var(--interior-bg-subtle)] font-medium leading-none text-[var(--interior-fg-muted)] dark:bg-white/10 dark:text-stone-300';
 
 type TileProps = {
   person: PresencePerson;
@@ -110,12 +103,12 @@ type TileProps = {
   reduced: boolean;
 };
 
-type FaceStatus = "loading" | "ready" | "error";
+type FaceStatus = 'loading' | 'ready' | 'error';
 
 function useFace(src?: string) {
   const ref = useRef<HTMLImageElement>(null);
   const [state, setState] = useState<{ status: FaceStatus; instant: boolean }>({
-    status: "loading",
+    status: 'loading',
     instant: false,
   });
 
@@ -124,39 +117,37 @@ function useFace(src?: string) {
 
     const set = (status: FaceStatus, instant: boolean) =>
       setState((prev) =>
-        prev.status === status && prev.instant === instant
-          ? prev
-          : { status, instant },
+        prev.status === status && prev.instant === instant ? prev : { status, instant }
       );
 
     if (!img || !src) {
-      set("loading", false);
+      set('loading', false);
       return;
     }
 
     const cached = img.complete && img.naturalWidth > 0;
     if (img.complete) {
-      set(cached ? "ready" : "error", cached);
+      set(cached ? 'ready' : 'error', cached);
       return;
     }
 
-    set("loading", false);
+    set('loading', false);
 
     let alive = true;
     const onLoad = () => {
-      if (alive) set("ready", false);
+      if (alive) set('ready', false);
     };
     const onError = () => {
-      if (alive) set("error", false);
+      if (alive) set('error', false);
     };
 
-    img.addEventListener("load", onLoad);
-    img.addEventListener("error", onError);
+    img.addEventListener('load', onLoad);
+    img.addEventListener('error', onError);
 
     return () => {
       alive = false;
-      img.removeEventListener("load", onLoad);
-      img.removeEventListener("error", onError);
+      img.removeEventListener('load', onLoad);
+      img.removeEventListener('error', onError);
     };
   }, [src]);
 
@@ -168,7 +159,8 @@ function PresenceTile({ person, index, step, size, zIndex, reduced }: TileProps)
 
   return (
     <motion.span
-      data-interior="presence-avatars" aria-hidden
+      data-interior="presence-avatars"
+      aria-hidden
       initial={{ opacity: 0, scale: 0.86, x: index * step }}
       animate={{ opacity: 1, scale: 1, x: index * step }}
       exit={{ opacity: 0, scale: 0.86 }}
@@ -188,7 +180,7 @@ function PresenceTile({ person, index, step, size, zIndex, reduced }: TileProps)
             height={size}
             decoding="async"
             initial={false}
-            animate={{ opacity: status === "ready" ? 1 : 0 }}
+            animate={{ opacity: status === 'ready' ? 1 : 0 }}
             transition={reduced || instant ? INSTANT : FADE}
             className="absolute inset-0 size-full object-cover"
           />
@@ -214,10 +206,10 @@ export function PresenceAvatars({
   max = 5,
   size = 28,
   overlap = 9,
-  label = "People here",
+  label = 'People here',
   announceAfter,
   onOverflowSelect,
-  className = "",
+  className = '',
 }: PresenceAvatarsProps) {
   const reduced = useReducedMotion();
   const { ordered, visible, hidden, overflow, announcement } = usePresence({
@@ -245,7 +237,7 @@ export function PresenceAvatars({
     transition: reduced ? INSTANT : SLOT,
   };
   const chipClass =
-    "absolute left-0 top-0 grid place-items-center rounded-[9px] border border-[var(--interior-border)] bg-white font-[family-name:var(--interior-font-mono)] text-[10.5px] leading-none tabular-nums text-[var(--interior-fg-muted)] outline-none ring-2 ring-white dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:text-[var(--interior-fg-muted)] dark:ring-stone-900";
+    'absolute left-0 top-0 grid place-items-center rounded-[9px] border border-[var(--interior-border)] bg-white font-[family-name:var(--interior-font-mono)] text-[10.5px] leading-none tabular-nums text-[var(--interior-fg-muted)] outline-none ring-2 ring-white dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:text-[var(--interior-fg-muted)] dark:ring-stone-900';
 
   return (
     <div role="group" aria-label={label} className={`inline-flex items-center ${className}`}>

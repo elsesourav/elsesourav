@@ -10,7 +10,10 @@ const EASE_IN_OUT = [0.77, 0, 0.175, 1] as [number, number, number, number];
 const GLYPH_DONE = 0.55;
 const EMPTY_STEPS: string[] = [];
 
-const fmt = (ds: number): string => (ds < 600 ? `${(ds / 10).toFixed(1)}s` : `${Math.floor(ds / 600)}m ${((ds % 600) / 10).toFixed(1)}s`);
+const fmt = (ds: number): string =>
+  ds < 600
+    ? `${(ds / 10).toFixed(1)}s`
+    : `${Math.floor(ds / 600)}m ${((ds % 600) / 10).toFixed(1)}s`;
 const spoken = (ds: number): string =>
   ds < 600
     ? `${(ds / 10).toFixed(1)} seconds`
@@ -67,7 +70,7 @@ export default function ThoughtLine({
   showTimer = true,
   onSettle,
   className = '',
-  style
+  style,
 }: ThoughtLineProps) {
   const reduce = useReducedMotion();
   const [autoSettled, setAutoSettled] = useState(false);
@@ -106,12 +109,17 @@ export default function ThoughtLine({
     if (!breathEl) return undefined;
     const s = settleDuration / 1000;
     const loop = (el: HTMLElement, delay: number) =>
-      animate(el, { opacity: [trough, 1, trough] }, { duration: period, ease: EASE_IN_OUT, repeat: Infinity, delay });
+      animate(
+        el,
+        { opacity: [trough, 1, trough] },
+        { duration: period, ease: EASE_IN_OUT, repeat: Infinity, delay }
+      );
     let cancelled = false;
     const running: { stop: () => void }[] = [];
     if (isWorking) {
       if (depth > 0) {
-        if (sheen) running.push(animate(breathEl, { opacity: 1 }, { duration: 0.2, ease: EASE_OUT }));
+        if (sheen)
+          running.push(animate(breathEl, { opacity: 1 }, { duration: 0.2, ease: EASE_OUT }));
         if (glyphEl) {
           const lead = animate(glyphEl, { opacity: trough }, { duration: 0.2, ease: EASE_OUT });
           running.push(lead);
@@ -124,16 +132,18 @@ export default function ThoughtLine({
           running.push(loop(breathEl, 0.14));
         }
       } else {
-        if (glyphEl) running.push(animate(glyphEl, { opacity: 1 }, { duration: 0.2, ease: EASE_OUT }));
+        if (glyphEl)
+          running.push(animate(glyphEl, { opacity: 1 }, { duration: 0.2, ease: EASE_OUT }));
         running.push(animate(breathEl, { opacity: 1 }, { duration: 0.2, ease: EASE_OUT }));
       }
     } else {
-      if (glyphEl) running.push(animate(glyphEl, { opacity: GLYPH_DONE }, { duration: s, ease: EASE_OUT }));
+      if (glyphEl)
+        running.push(animate(glyphEl, { opacity: GLYPH_DONE }, { duration: s, ease: EASE_OUT }));
       running.push(animate(breathEl, { opacity: 1 }, { duration: s, ease: EASE_OUT }));
     }
     return () => {
       cancelled = true;
-      running.forEach(a => a.stop());
+      running.forEach((a) => a.stop());
     };
   }, [isWorking, period, depth, trough, settleDuration, glyph, sheen]);
 
@@ -206,7 +216,11 @@ export default function ThoughtLine({
       ) : null}
       <span ref={stackRef} className="thought-line__label" aria-hidden="true">
         <span ref={workRef} className="thought-line__text" data-active={isWorking ? '' : undefined}>
-          <span ref={breathRef} className="thought-line__breath" data-shimmer={sheen ? '' : undefined}>
+          <span
+            ref={breathRef}
+            className="thought-line__breath"
+            data-shimmer={sheen ? '' : undefined}
+          >
             {renderLabel ? renderLabel(label, true) : label}
           </span>
         </span>
@@ -219,12 +233,21 @@ export default function ThoughtLine({
         </span>
       </span>
       {showTimer ? (
-        <span ref={timerRef} className="thought-line__timer" data-done={isWorking ? undefined : ''} aria-hidden="true">
+        <span
+          ref={timerRef}
+          className="thought-line__timer"
+          data-done={isWorking ? undefined : ''}
+          aria-hidden="true"
+        >
           0.0s
         </span>
       ) : null}
       {collapsible ? (
-        <span className="thought-line__chevron" data-on={hasTrace ? '' : undefined} aria-hidden="true">
+        <span
+          className="thought-line__chevron"
+          data-on={hasTrace ? '' : undefined}
+          aria-hidden="true"
+        >
           <HugeiconsIcon icon={ArrowDown01Icon} size="1em" strokeWidth={2.2} />
         </span>
       ) : null}
@@ -247,7 +270,7 @@ export default function ThoughtLine({
           '--tl-settle': `${settleDuration}ms`,
           '--tl-blur': `${settleBlur}px`,
           '--tl-shimmer': `${shimmerDuration}s`,
-          ...style
+          ...style,
         } as React.CSSProperties
       }
     >
@@ -259,7 +282,7 @@ export default function ThoughtLine({
           aria-expanded={toggle ? open : undefined}
           tabIndex={toggle ? 0 : -1}
           onClick={() => {
-            if (toggle) setOpen(v => !v);
+            if (toggle) setOpen((v) => !v);
           }}
         >
           {head}
@@ -274,7 +297,11 @@ export default function ThoughtLine({
               {steps.map((stepText, i) => {
                 const done = !isWorking || i < steps.length - 1;
                 return (
-                  <div key={`${i}-${stepText}`} className="thought-line__step" data-done={done ? '' : undefined}>
+                  <div
+                    key={`${i}-${stepText}`}
+                    className="thought-line__step"
+                    data-done={done ? '' : undefined}
+                  >
                     <span className="thought-line__mark" aria-hidden="true">
                       {done ? (
                         <HugeiconsIcon icon={Tick02Icon} size="1em" strokeWidth={2.5} />

@@ -11,18 +11,28 @@ const WARP = 0.6;
 const SIZES: Record<string, [number, number, number, number, number]> = {
   sm: [36, 12.5, 14, 15, 8],
   md: [44, 13.5, 16, 19, 9],
-  lg: [52, 15, 18, 23, 10]
+  lg: [52, 15, 18, 23, 10],
 };
 const WOBBLE = { amplitude: 0.4, passes: 3, duration: 420 };
 const BELL_BODY = 'M6 16.5V10a6 6 0 0 1 12 0v6.5l1.6 2.3H4.4L6 16.5z';
 
-const passOffset = (k: number, passes: number): number => 1 - Math.pow(1 - (k + 2 / 3) / (passes + 1), WARP);
+const passOffset = (k: number, passes: number): number =>
+  1 - Math.pow(1 - (k + 2 / 3) / (passes + 1), WARP);
 
-const ringKeyframes = (from: number, amplitude: number, passes: number, decay: number): Keyframe[] => {
+const ringKeyframes = (
+  from: number,
+  amplitude: number,
+  passes: number,
+  decay: number
+): Keyframe[] => {
   const frames: Keyframe[] = [{ transform: `rotate(${from}deg)`, offset: 0, easing: SEG_EASE }];
   for (let k = 0; k < passes; k++) {
     const angle = amplitude * Math.pow(1 - k / passes, decay) * (k % 2 ? 1 : -1);
-    frames.push({ transform: `rotate(${angle.toFixed(2)}deg)`, offset: passOffset(k, passes), easing: SEG_EASE });
+    frames.push({
+      transform: `rotate(${angle.toFixed(2)}deg)`,
+      offset: passOffset(k, passes),
+      easing: SEG_EASE,
+    });
   }
   frames.push({ transform: 'rotate(0deg)', offset: 1 });
   return frames;
@@ -95,7 +105,7 @@ export default function BellToggle({
   defaultPressed = false,
   onChange,
   disabled = false,
-  className = ''
+  className = '',
 }: BellToggleProps) {
   const [inner, setInner] = useState(defaultPressed);
   const on = pressed ?? inner;
@@ -135,35 +145,41 @@ export default function BellToggle({
     return () => observer.disconnect();
   }, [offLabel, onLabel, size, wOff, wOn]);
 
-  const swing = React.useCallback((amplitude: number, passes: number, duration: number) => {
-    const el = glyphRef.current;
-    if (!el) return;
-    el.getAnimations().forEach((a: Animation) => a.cancel());
-    el.animate(ringKeyframes(liveAngle(el), amplitude, passes, ringDecay), { duration, easing: 'linear' });
-    const c = clapperRef.current;
-    if (c) {
-      c.getAnimations().forEach((a: Animation) => a.cancel());
-      c.animate(ringKeyframes(liveAngle(c), amplitude * 1.6, passes, ringDecay), {
+  const swing = React.useCallback(
+    (amplitude: number, passes: number, duration: number) => {
+      const el = glyphRef.current;
+      if (!el) return;
+      el.getAnimations().forEach((a: Animation) => a.cancel());
+      el.animate(ringKeyframes(liveAngle(el), amplitude, passes, ringDecay), {
         duration,
-        delay: 70,
-        easing: 'linear'
+        easing: 'linear',
       });
-    }
-    if (!waves) return;
-    for (let k = 0; k < passes; k++) {
-      const side = k % 2 ? waveRight.current : waveLeft.current;
-      if (!side) continue;
-      const strength = Math.pow(1 - k / passes, ringDecay);
-      side.animate(
-        [
-          { opacity: 0, transform: 'scale(0.55)' },
-          { opacity: 0.9 * strength, offset: 0.3 },
-          { opacity: 0, transform: 'scale(1.25)' }
-        ],
-        { duration: 380, delay: passOffset(k, passes) * duration, easing: 'ease-out' }
-      );
-    }
-  }, [ringDecay, waves]);
+      const c = clapperRef.current;
+      if (c) {
+        c.getAnimations().forEach((a: Animation) => a.cancel());
+        c.animate(ringKeyframes(liveAngle(c), amplitude * 1.6, passes, ringDecay), {
+          duration,
+          delay: 70,
+          easing: 'linear',
+        });
+      }
+      if (!waves) return;
+      for (let k = 0; k < passes; k++) {
+        const side = k % 2 ? waveRight.current : waveLeft.current;
+        if (!side) continue;
+        const strength = Math.pow(1 - k / passes, ringDecay);
+        side.animate(
+          [
+            { opacity: 0, transform: 'scale(0.55)' },
+            { opacity: 0.9 * strength, offset: 0.3 },
+            { opacity: 0, transform: 'scale(1.25)' },
+          ],
+          { duration: 380, delay: passOffset(k, passes) * duration, easing: 'ease-out' }
+        );
+      }
+    },
+    [ringDecay, waves]
+  );
 
   useLayoutEffect(() => {
     const pointer = pending.current === 'pointer' && !reduce;
@@ -182,7 +198,8 @@ export default function BellToggle({
   useEffect(() => {
     const was = prevCount.current;
     prevCount.current = count;
-    if (count > was && on && !reduce) swing(ringAmplitude * WOBBLE.amplitude, WOBBLE.passes, WOBBLE.duration);
+    if (count > was && on && !reduce)
+      swing(ringAmplitude * WOBBLE.amplitude, WOBBLE.passes, WOBBLE.duration);
   }, [count, on, reduce, ringAmplitude, swing]);
 
   const toggle = () => {
@@ -212,23 +229,25 @@ export default function BellToggle({
       className={`bell-toggle${className ? ` ${className}` : ''}`}
       data-on={on ? 'true' : 'false'}
       data-disabled={disabled ? '' : undefined}
-      style={{
-        '--bt-clip': clip,
-        '--bt-color': color,
-        '--bt-bg': background,
-        '--bt-on-color': onColor,
-        '--bt-on-bg': onBackground,
-        '--bt-badge': badgeColor,
-        '--bt-badge-ink': badgeTextColor,
-        '--bt-radius': `${radius}px`,
-        '--bt-fade': `${crossfadeMs}ms`,
-        '--bt-pivot': `${ringPivot}%`,
-        '--bt-h': `${h}px`,
-        '--bt-fs': `${fs}px`,
-        '--bt-icon': `${iconSize}px`,
-        '--bt-px': `${px}px`,
-        '--bt-gap': `${gap}px`
-      } as React.CSSProperties}
+      style={
+        {
+          '--bt-clip': clip,
+          '--bt-color': color,
+          '--bt-bg': background,
+          '--bt-on-color': onColor,
+          '--bt-on-bg': onBackground,
+          '--bt-badge': badgeColor,
+          '--bt-badge-ink': badgeTextColor,
+          '--bt-radius': `${radius}px`,
+          '--bt-fade': `${crossfadeMs}ms`,
+          '--bt-pivot': `${ringPivot}%`,
+          '--bt-h': `${h}px`,
+          '--bt-fs': `${fs}px`,
+          '--bt-icon': `${iconSize}px`,
+          '--bt-px': `${px}px`,
+          '--bt-gap': `${gap}px`,
+        } as React.CSSProperties
+      }
     >
       <button
         type="button"
@@ -270,11 +289,19 @@ export default function BellToggle({
           ) : null}
           {waves ? (
             <>
-              <svg ref={waveLeft} className="bell-toggle__wave bell-toggle__wave--left" viewBox="0 0 14 14">
+              <svg
+                ref={waveLeft}
+                className="bell-toggle__wave bell-toggle__wave--left"
+                viewBox="0 0 14 14"
+              >
                 <path d="M14 8a6 6 0 0 0-6 6" />
                 <path d="M14 4A10 10 0 0 0 4 14" />
               </svg>
-              <svg ref={waveRight} className="bell-toggle__wave bell-toggle__wave--right" viewBox="0 0 14 14">
+              <svg
+                ref={waveRight}
+                className="bell-toggle__wave bell-toggle__wave--right"
+                viewBox="0 0 14 14"
+              >
                 <path d="M0 8a6 6 0 0 1 6 6" />
                 <path d="M0 4a10 10 0 0 1 10 10" />
               </svg>

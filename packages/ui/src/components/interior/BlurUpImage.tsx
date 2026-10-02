@@ -1,17 +1,13 @@
-"use client";
+'use client';
 
-import React, { useRef, useState } from "react";
-import {
-  motion,
-  useIsomorphicLayoutEffect,
-  useReducedMotion,
-} from "motion/react";
+import React, { useRef, useState } from 'react';
+import { motion, useIsomorphicLayoutEffect, useReducedMotion } from 'motion/react';
 
 const DEVELOP = { duration: 0.65, ease: [0.23, 1, 0.32, 1] } as const;
 
 const INSTANT = { duration: 0 } as const;
 
-export type BlurUpStatus = "loading" | "ready" | "error";
+export type BlurUpStatus = 'loading' | 'ready' | 'error';
 
 export type UseBlurUpImageOptions = {
   src?: string;
@@ -20,17 +16,12 @@ export type UseBlurUpImageOptions = {
   onError?: () => void;
 };
 
-export function useBlurUpImage({
-  src,
-  srcSet,
-  onReady,
-  onError,
-}: UseBlurUpImageOptions) {
+export function useBlurUpImage({ src, srcSet, onReady, onError }: UseBlurUpImageOptions) {
   const ref = useRef<HTMLImageElement>(null);
   const [state, setState] = useState<{
     status: BlurUpStatus;
     instant: boolean;
-  }>({ status: "loading", instant: false });
+  }>({ status: 'loading', instant: false });
 
   const ready = useRef(onReady);
   ready.current = onReady;
@@ -42,13 +33,11 @@ export function useBlurUpImage({
 
     const set = (status: BlurUpStatus, instant: boolean) =>
       setState((prev) =>
-        prev.status === status && prev.instant === instant
-          ? prev
-          : { status, instant },
+        prev.status === status && prev.instant === instant ? prev : { status, instant }
       );
 
     if (!img || !src) {
-      set("loading", false);
+      set('loading', false);
       return;
     }
 
@@ -58,13 +47,13 @@ export function useBlurUpImage({
 
     const reveal = () => {
       if (!alive) return;
-      set("ready", cached);
+      set('ready', cached);
       ready.current?.();
     };
 
     const fail = () => {
       if (!alive) return;
-      set("error", cached);
+      set('error', cached);
       failed.current?.();
     };
 
@@ -76,24 +65,24 @@ export function useBlurUpImage({
       };
     }
 
-    set("loading", false);
+    set('loading', false);
 
     const onLoad = () => {
       if (!alive) return;
-      if (typeof img.decode === "function") {
+      if (typeof img.decode === 'function') {
         img.decode().then(reveal, fail);
         return;
       }
       reveal();
     };
 
-    img.addEventListener("load", onLoad);
-    img.addEventListener("error", fail);
+    img.addEventListener('load', onLoad);
+    img.addEventListener('error', fail);
 
     return () => {
       alive = false;
-      img.removeEventListener("load", onLoad);
-      img.removeEventListener("error", fail);
+      img.removeEventListener('load', onLoad);
+      img.removeEventListener('error', fail);
     };
   }, [src, srcSet]);
 
@@ -101,7 +90,7 @@ export function useBlurUpImage({
     ref,
     status: state.status,
     instant: state.instant,
-    loaded: state.status === "ready",
+    loaded: state.status === 'ready',
   };
 }
 
@@ -116,8 +105,8 @@ export type BlurUpImageProps = {
   radius?: number;
   srcSet?: string;
   sizes?: string;
-  loading?: "lazy" | "eager";
-  fetchPriority?: "high" | "low" | "auto";
+  loading?: 'lazy' | 'eager';
+  fetchPriority?: 'high' | 'low' | 'auto';
   onReady?: () => void;
   onError?: () => void;
   className?: string;
@@ -134,11 +123,11 @@ export function BlurUpImage({
   radius = 11,
   srcSet,
   sizes,
-  loading = "lazy",
+  loading = 'lazy',
   fetchPriority,
   onReady,
   onError,
-  className = "",
+  className = '',
 }: BlurUpImageProps) {
   const reduced = useReducedMotion();
   const { ref, status, instant } = useBlurUpImage({
@@ -148,13 +137,14 @@ export function BlurUpImage({
     onError,
   });
 
-  const shown = status === "ready";
+  const shown = status === 'ready';
   const still = reduced === true || instant;
   const transition = still ? INSTANT : DEVELOP;
 
   return (
     <div
-      data-interior="blur-up-image" aria-busy={status === "loading"}
+      data-interior="blur-up-image"
+      aria-busy={status === 'loading'}
       style={{
         aspectRatio: `${width} / ${height}`,
         borderRadius: radius,
@@ -163,13 +153,13 @@ export function BlurUpImage({
       className={`relative w-full overflow-hidden bg-[var(--interior-bg-subtle)] dark:bg-white/15 ${className}`}
     >
       {placeholder ? (
-                <img
+        <img
           src={placeholder}
           alt=""
           aria-hidden
           draggable={false}
           className="absolute inset-0 h-full w-full object-cover"
-          style={{ filter: `blur(${blur}px)`, transform: "scale(1.08)" }}
+          style={{ filter: `blur(${blur}px)`, transform: 'scale(1.08)' }}
         />
       ) : null}
 
@@ -193,19 +183,19 @@ export function BlurUpImage({
             : shown
               ? {
                   opacity: 1,
-                  filter: "blur(0px) saturate(1)",
+                  filter: 'blur(0px) saturate(1)',
                   scale: 1,
                 }
               : {
                   opacity: 0,
-                  filter: "blur(18px) saturate(0.6)",
+                  filter: 'blur(18px) saturate(0.6)',
                   scale: 1.06,
                 }
         }
         transition={transition}
       />
 
-      {status === "error" ? (
+      {status === 'error' ? (
         <motion.div
           aria-hidden
           initial={{ opacity: 0 }}

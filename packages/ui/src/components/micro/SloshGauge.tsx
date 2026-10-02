@@ -15,10 +15,12 @@ const BAND = 10;
 
 const onColor = (hex: string): string => {
   const raw = hex.replace('#', '');
-  const full = raw.length === 3 ? [...raw].map(c => c + c).join('') : raw;
+  const full = raw.length === 3 ? [...raw].map((c) => c + c).join('') : raw;
   const n = parseInt(full, 16);
   if (Number.isNaN(n)) return '#ffffff';
-  return (((n >> 16) & 255) * 299 + ((n >> 8) & 255) * 587 + (n & 255) * 114) / 1000 >= 150 ? '#111111' : '#ffffff';
+  return (((n >> 16) & 255) * 299 + ((n >> 8) & 255) * 587 + (n & 255) * 114) / 1000 >= 150
+    ? '#111111'
+    : '#ffffff';
 };
 
 export interface SloshGaugeProps {
@@ -83,7 +85,7 @@ export default function SloshGauge({
   unit = '%',
   ariaLabel = 'Level',
   className = '',
-  style
+  style,
 }: SloshGaugeProps) {
   const root = useRef<HTMLDivElement | null>(null);
   const liquid = useRef<HTMLDivElement | null>(null);
@@ -91,7 +93,13 @@ export default function SloshGauge({
   const textA = useRef<HTMLSpanElement | null>(null);
   const textB = useRef<HTMLSpanElement | null>(null);
   const start = clamp(value ?? defaultValue, 0, 100);
-  const sim = useRef<{ x: number; v: number; L: number; raf: number; last: number }>({ x: start, v: 0, L: start, raf: 0, last: 0 });
+  const sim = useRef<{ x: number; v: number; L: number; raf: number; last: number }>({
+    x: start,
+    v: 0,
+    L: start,
+    raf: 0,
+    last: 0,
+  });
   const grip = useRef<GripState | null>(null);
   const reduce = useRef(false);
   const [held, setHeld] = useState(false);
@@ -198,7 +206,11 @@ export default function SloshGauge({
   }, [width, height, tilt, showValue, interactive, disabled]);
 
   const levelAt = (clientY: number, g: GripState): number =>
-    clamp(((g.rect.bottom - clientY) / g.scale / (root.current?.offsetHeight || g.rect.height)) * 100, 0, 100);
+    clamp(
+      ((g.rect.bottom - clientY) / g.scale / (root.current?.offsetHeight || g.rect.height)) * 100,
+      0,
+      100
+    );
   const report = (): void => {
     const g = grip.current;
     const n = Math.round(sim.current.L);
@@ -222,7 +234,7 @@ export default function SloshGauge({
       band: Math.abs(e.clientY - markerY) <= BAND * scale,
       grab: null,
       at: sim.current.L,
-      sent: NaN
+      sent: NaN,
     };
     grip.current = g;
     try {
@@ -262,7 +274,10 @@ export default function SloshGauge({
     if (reason === 'escape') {
       setLevel(g.at);
       live.current.onChange?.(Math.round(g.at));
-    } else if (live.current.value !== undefined && Math.round(sim.current.L) !== live.current.value) {
+    } else if (
+      live.current.value !== undefined &&
+      Math.round(sim.current.L) !== live.current.value
+    ) {
       setLevel(live.current.value);
     }
     wake();
@@ -283,7 +298,7 @@ export default function SloshGauge({
       PageUp: L + BIG,
       PageDown: L - BIG,
       Home: 0,
-      End: 100
+      End: 100,
     }[e.key];
     if (next === undefined) return;
     e.preventDefault();
@@ -319,14 +334,14 @@ export default function SloshGauge({
           '--sg-on-liquid': onColor(liquidColor),
           '--sg-ticks': ticks,
           '--sg-font': `${clamp(Math.round(width * 0.16), 12, 20)}px`,
-          ...style
+          ...style,
         } as React.CSSProperties
       }
       onPointerDown={down}
       onPointerMove={move}
-      onPointerUp={e => up(e)}
-      onPointerCancel={e => up(e, 'cancel')}
-      onLostPointerCapture={e => up(e, 'cancel')}
+      onPointerUp={(e) => up(e)}
+      onPointerCancel={(e) => up(e, 'cancel')}
+      onLostPointerCapture={(e) => up(e, 'cancel')}
       onKeyDown={key}
     >
       {showValue ? (
@@ -342,7 +357,9 @@ export default function SloshGauge({
         ) : null}
       </div>
       {ticks > 0 ? <div className="slosh-gauge__ticks" aria-hidden="true" /> : null}
-      {interactive && !disabled ? <div ref={marker} className="slosh-gauge__marker" aria-hidden="true" /> : null}
+      {interactive && !disabled ? (
+        <div ref={marker} className="slosh-gauge__marker" aria-hidden="true" />
+      ) : null}
     </div>
   );
 }

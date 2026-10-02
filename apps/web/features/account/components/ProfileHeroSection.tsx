@@ -75,11 +75,7 @@ export function ProfileHeroSection({ user, joinedDate }: ProfileHeroSectionProps
                 <span className="text-xs sm:text-sm font-mono text-muted-foreground">
                   @{user.username}
                 </span>
-                <CopyIconButton
-                  value={`@${user.username}`}
-                  label="Copy username"
-                  size="xs"
-                />
+                <CopyIconButton value={`@${user.username}`} label="Copy username" size="xs" />
               </div>
             )}
 
@@ -101,11 +97,7 @@ export function ProfileHeroSection({ user, joinedDate }: ProfileHeroSectionProps
                 <div className="inline-flex items-center gap-1 max-w-full">
                   <Mail className="w-3.5 h-3.5 text-primary/80 shrink-0" />
                   <span className="truncate max-w-[200px] sm:max-w-xs">{user.email}</span>
-                  <CopyIconButton
-                    value={user.email}
-                    label="Copy email"
-                    size="xs"
-                  />
+                  <CopyIconButton value={user.email} label="Copy email" size="xs" />
                 </div>
               )}
               <span className="inline-flex items-center gap-1.5 shrink-0">
@@ -132,4 +124,3 @@ export function ProfileHeroSection({ user, joinedDate }: ProfileHeroSectionProps
     </div>
   );
 }
-

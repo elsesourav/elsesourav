@@ -14,7 +14,6 @@ import {
   Layers,
   FileText,
   Sparkles,
-  HelpCircle,
   LifeBuoy,
   User,
   Settings,
@@ -36,7 +35,8 @@ export function PublicHeader({ user }: PublicHeaderProps) {
   const toggleButtonRef = React.useRef<HTMLButtonElement>(null);
 
   const { isVisible, isScrolled, headerRef } = useHeaderHeadroom({
-    threshold: 10,
+    threshold: 12,
+    upThreshold: 5,
     topOffset: 64,
     isLocked: mobileMenuOpen,
   });
@@ -128,8 +128,8 @@ export function PublicHeader({ user }: PublicHeaderProps) {
     },
     {
       href: ROUTES.BLOG,
-      label: 'Notes',
-      description: 'Engineering notes, architecture & ideas',
+      label: 'Updates',
+      description: 'News, releases & thoughts from my journey',
       icon: FileText,
     },
     {
@@ -137,12 +137,6 @@ export function PublicHeader({ user }: PublicHeaderProps) {
       label: 'About',
       description: 'Background, stack & design principles',
       icon: Sparkles,
-    },
-    {
-      href: ROUTES.HELP,
-      label: 'Help & Docs',
-      description: 'Knowledge base, guides & troubleshooting',
-      icon: HelpCircle,
     },
   ];
 
@@ -158,17 +152,19 @@ export function PublicHeader({ user }: PublicHeaderProps) {
       }`}
     >
       <div
-        className={`border-b border-[hsl(var(--border))]/80 bg-[hsl(var(--background))]/80 backdrop-blur-md transition-[colors,box-shadow] duration-200 ${
-          isScrolled ? 'shadow-sm shadow-black/5 dark:shadow-black/20' : ''
+        className={`transition-[background-color,border-color,backdrop-filter,box-shadow] duration-300 ${
+          isScrolled
+            ? 'border-b border-[hsl(var(--border))]/80 bg-[hsl(var(--background))]/80 backdrop-blur-md shadow-sm shadow-black/5 dark:shadow-black/20'
+            : 'border-b border-black/5 dark:border-white/10 bg-transparent backdrop-blur-[4px]'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2 sm:gap-4">
           {/* Brand Logo */}
           <Link
             href={ROUTES.HOME}
-            className="flex items-center gap-2.5 font-bold text-base sm:text-lg text-[hsl(var(--foreground))] group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] rounded-lg p-1"
+            className="flex items-center gap-2 sm:gap-2.5 font-bold text-base sm:text-lg text-[hsl(var(--foreground))] group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] rounded-lg p-1 shrink-0"
           >
-            <div className="w-8 h-8 rounded-xl overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
+            <div className="w-8 h-8 rounded-xl overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform duration-200 shrink-0">
               <Image
                 src="/logo-sm.png"
                 alt={`${SITE_CONFIG.name} Logo`}
@@ -196,7 +192,7 @@ export function PublicHeader({ user }: PublicHeaderProps) {
                   className={`px-3.5 py-1.5 rounded-xl transition-all duration-150 ease-smooth font-medium text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] ${
                     isActive
                       ? 'bg-[hsl(var(--accent))] text-[hsl(var(--foreground))] font-semibold shadow-inner'
-                      : 'text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--surface-subtle))] active:scale-95'
+                      : 'text-[hsl(var(--foreground))]/75 hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--surface-subtle))]/60 active:scale-95'
                   }`}
                 >
                   {link.label}
@@ -206,7 +202,7 @@ export function PublicHeader({ user }: PublicHeaderProps) {
           </nav>
 
           {/* Header Utility & Actions Cluster */}
-          <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             <SearchButton />
             <ThemePopup />
 
@@ -231,32 +227,24 @@ export function PublicHeader({ user }: PublicHeaderProps) {
             ) : (
               <div className="hidden md:flex items-center gap-2 ml-1">
                 <div className="w-px h-5 bg-[hsl(var(--border))] mx-0.5" />
-                <Link href={ROUTES.LOGIN}>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] text-xs"
-                  >
-                    Sign In
-                  </Button>
-                </Link>
-                <Link href={ROUTES.SIGNUP}>
-                  <Button variant="primary" size="sm" className="text-xs">
-                    Get Started
-                  </Button>
+                <Link
+                  href={ROUTES.SIGNUP}
+                  className="px-4 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-500 shadow-md shadow-indigo-500/20 hover:shadow-indigo-500/35 transition-all duration-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                >
+                  Sign Up
                 </Link>
               </div>
             )}
 
             {/* Mobile User Avatar when logged in */}
             {user && (
-              <div className="md:hidden">
+              <div className="md:hidden shrink-0">
                 <UserAvatarMenu user={user} />
               </div>
             )}
 
             {/* Mobile Menu Toggle Button */}
-            <div className="md:hidden">
+            <div className="md:hidden shrink-0">
               <button
                 ref={toggleButtonRef}
                 type="button"
@@ -268,7 +256,7 @@ export function PublicHeader({ user }: PublicHeaderProps) {
                     setMobileMenuOpen(true);
                   }
                 }}
-                className="h-10 w-10 min-h-[40px] min-w-[40px] p-0 text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--surface-subtle))] focus:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] rounded-xl active:scale-95 transition-all duration-150 flex items-center justify-center cursor-pointer"
+                className="h-10 w-10 min-h-[40px] min-w-[40px] p-0 text-[hsl(var(--foreground))]/80 hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--surface-subtle))]/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] rounded-xl active:scale-95 transition-all duration-150 flex items-center justify-center cursor-pointer"
                 aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
                 aria-expanded={mobileMenuOpen}
               >
@@ -410,24 +398,20 @@ export function PublicHeader({ user }: PublicHeaderProps) {
                 >
                   <Button
                     size="lg"
-                    className="w-full justify-center bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/90 text-white font-semibold min-h-[48px] rounded-xl shadow-lg active:scale-[0.99] text-base cursor-pointer"
+                    className="w-full justify-center bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold min-h-[48px] rounded-xl shadow-lg shadow-indigo-500/25 active:scale-[0.99] text-base cursor-pointer"
                   >
-                    Get Started
+                    Sign Up
                   </Button>
                 </Link>
-                <Link
-                  href={ROUTES.LOGIN}
-                  onClick={() => requestCloseMobileMenu()}
-                  className="block"
-                >
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="w-full justify-center border-[hsl(var(--border))] text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] min-h-[48px] rounded-xl active:scale-[0.99] text-base font-medium cursor-pointer"
+                <div className="text-center pt-1">
+                  <Link
+                    href={ROUTES.LOGIN}
+                    onClick={() => requestCloseMobileMenu()}
+                    className="text-xs text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] underline underline-offset-4 transition-colors"
                   >
-                    Sign In
-                  </Button>
-                </Link>
+                    Already have an account? Sign In
+                  </Link>
+                </div>
               </div>
             ) : (
               <div className="flex items-center justify-between px-2 text-xs text-[hsl(var(--muted-foreground))]">

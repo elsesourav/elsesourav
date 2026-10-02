@@ -7,7 +7,7 @@ import {
   useMotionTemplate,
   useMotionValue,
   useMotionValueEvent,
-  useReducedMotion
+  useReducedMotion,
 } from 'motion/react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { ArrowUp02Icon } from '@hugeicons/core-free-icons';
@@ -22,7 +22,8 @@ const DOT_MS = 300;
 const EASE_OUT = 'cubic-bezier(0.23, 1, 0.32, 1)';
 
 const clamp = (v: number, lo: number, hi: number): number => Math.min(hi, Math.max(lo, v));
-const rubberband = (o: number, dim: number, c = 0.55): number => (o * dim * c) / (dim + c * Math.abs(o));
+const rubberband = (o: number, dim: number, c = 0.55): number =>
+  (o * dim * c) / (dim + c * Math.abs(o));
 
 export type SlingAxis = 'any' | 'horizontal' | 'vertical';
 
@@ -84,7 +85,7 @@ export default function SlingButton({
   disabled = false,
   ariaLabel = 'Send',
   className = '',
-  style
+  style,
 }: SlingButtonProps) {
   const reduce = useReducedMotion();
   const R = maxPull;
@@ -153,7 +154,9 @@ export default function SlingButton({
       dot.animate(
         [
           { transform: `translate(${cx * wellR}px, ${cy * wellR}px) scale(${scale})` },
-          { transform: `translate(${cx * to - cy * drift}px, ${cy * to + cx * drift}px) scale(${shrink})` }
+          {
+            transform: `translate(${cx * to - cy * drift}px, ${cy * to + cx * drift}px) scale(${shrink})`,
+          },
         ],
         { duration, delay, easing: EASE_OUT, fill: 'none' }
       );
@@ -161,7 +164,7 @@ export default function SlingButton({
         [
           { opacity: 1, offset: 0 },
           { opacity: 1, offset: 0.55 },
-          { opacity: 0, offset: 1 }
+          { opacity: 0, offset: 1 },
         ],
         { duration, delay, easing: 'linear', fill: 'none' }
       );
@@ -194,7 +197,7 @@ export default function SlingButton({
       const a = Math.atan2(y, x);
       const b = Math.acos(clamp((wellR - padR) / dist, -1, 1));
       d = [a + b, a - b]
-        .map(t => {
+        .map((t) => {
           const cx = Math.cos(t);
           const cy = Math.sin(t);
           return `M${(wellR * cx).toFixed(2)},${(wellR * cy).toFixed(2)}L${(x + padR * cx).toFixed(2)},${(y + padR * cy).toFixed(2)}`;
@@ -242,8 +245,18 @@ export default function SlingButton({
       }, 200);
       return;
     }
-    animX.current = animate(px, 0, { type: 'spring', duration: 0.4, bounce: recoil, velocity: v0.x });
-    animY.current = animate(py, 0, { type: 'spring', duration: 0.4, bounce: recoil, velocity: v0.y });
+    animX.current = animate(px, 0, {
+      type: 'spring',
+      duration: 0.4,
+      bounce: recoil,
+      velocity: v0.x,
+    });
+    animY.current = animate(py, 0, {
+      type: 'spring',
+      duration: 0.4,
+      bounce: recoil,
+      velocity: v0.y,
+    });
   };
 
   const onPointerDown = (e: React.PointerEvent<HTMLButtonElement>): void => {
@@ -267,7 +280,7 @@ export default function SlingButton({
       moved: false,
       hist: [],
       rawOrigin: dNow > 0.5 ? { x: (rawNow * x) / dNow, y: (rawNow * y) / dNow } : { x: 0, y: 0 },
-      slop: e.pointerType === 'touch' ? SLOP.coarse : SLOP.fine
+      slop: e.pointerType === 'touch' ? SLOP.coarse : SLOP.fine,
     };
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
@@ -340,7 +353,9 @@ export default function SlingButton({
       if (tapSends && !cancelled) onSend?.();
     } else {
       const fire = armedRef.current && !cancelled;
-      const launch = fire ? launchSpeed * Math.min(p, POWER_CAP) : CANCEL * launchSpeed * Math.min(p, 1);
+      const launch = fire
+        ? launchSpeed * Math.min(p, POWER_CAP)
+        : CANCEL * launchSpeed * Math.min(p, 1);
       let v0x = vx - ux * launch;
       let v0y = vy - uy * launch;
       const m = Math.hypot(v0x, v0y);
@@ -392,11 +407,15 @@ export default function SlingButton({
           '--sl-band': bandColor,
           '--sl-stroke': `${strokeWidth}px`,
           '--sl-dot': `${DOT}px`,
-          ...style
+          ...style,
         } as React.CSSProperties
       }
     >
-      <svg className="sling-button__fx" viewBox={`${-H} ${-H} ${2 * H} ${2 * H}`} aria-hidden="true">
+      <svg
+        className="sling-button__fx"
+        viewBox={`${-H} ${-H} ${2 * H} ${2 * H}`}
+        aria-hidden="true"
+      >
         <g ref={fxRef} className="sling-button__tension" style={{ opacity: 0 }}>
           <path ref={bandRef} className="sling-button__band" />
           <path ref={hotRef} className="sling-button__band sling-button__band--hot" />
@@ -414,7 +433,7 @@ export default function SlingButton({
       {Array.from({ length: count }, (_, i) => (
         <span
           key={i}
-          ref={el => {
+          ref={(el) => {
             dotRefs.current[i] = el;
           }}
           className="sling-button__dot"
@@ -433,10 +452,10 @@ export default function SlingButton({
           data-armed={armed ? '' : undefined}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
-          onPointerUp={e => release(e.pointerId, false)}
-          onPointerCancel={e => release(e.pointerId, true)}
-          onLostPointerCapture={e => release(e.pointerId, true)}
-          onKeyDown={e => {
+          onPointerUp={(e) => release(e.pointerId, false)}
+          onPointerCancel={(e) => release(e.pointerId, true)}
+          onLostPointerCapture={(e) => release(e.pointerId, true)}
+          onKeyDown={(e) => {
             if (e.key === 'Escape' && grip.current) release(grip.current.id, true);
           }}
           onClick={() => {
@@ -449,7 +468,13 @@ export default function SlingButton({
         >
           <span className="sling-button__face">
             <span ref={iconRef} className="sling-button__icon">
-              {children ?? <HugeiconsIcon icon={ArrowUp02Icon} size={Math.round(size * 0.4)} strokeWidth={2.2} />}
+              {children ?? (
+                <HugeiconsIcon
+                  icon={ArrowUp02Icon}
+                  size={Math.round(size * 0.4)}
+                  strokeWidth={2.2}
+                />
+              )}
             </span>
           </span>
         </button>

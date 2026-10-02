@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import React, { useCallback, useId, useRef, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import React, { useCallback, useId, useRef, useState } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 
 const EASE = [0.23, 1, 0.32, 1] as const;
-const DISCLOSE = { type: "spring", stiffness: 190, damping: 30, mass: 1 } as const;
-const NUDGE = { type: "spring", stiffness: 700, damping: 46, mass: 0.5 } as const;
+const DISCLOSE = { type: 'spring', stiffness: 190, damping: 30, mass: 1 } as const;
+const NUDGE = { type: 'spring', stiffness: 700, damping: 46, mass: 0.5 } as const;
 const INSTANT = { duration: 0 } as const;
 
-export type BannerState = "open" | "folded" | "dismissed";
+export type BannerState = 'open' | 'folded' | 'dismissed';
 
 export type UseCollapsibleBannerOptions = {
   state?: BannerState;
@@ -31,7 +31,7 @@ export type UseCollapsibleBannerResult = {
 
 export function useCollapsibleBanner({
   state: controlled,
-  defaultState = "open",
+  defaultState = 'open',
   onStateChange,
   onDismiss,
 }: UseCollapsibleBannerOptions = {}): UseCollapsibleBannerResult {
@@ -48,25 +48,22 @@ export function useCollapsibleBanner({
     changed.current?.(next);
   }, []);
 
-  const fold = useCallback(() => commit("folded"), [commit]);
-  const expand = useCallback(() => commit("open"), [commit]);
-  const restore = useCallback(() => commit("open"), [commit]);
+  const fold = useCallback(() => commit('folded'), [commit]);
+  const expand = useCallback(() => commit('open'), [commit]);
+  const restore = useCallback(() => commit('open'), [commit]);
 
-  const toggle = useCallback(
-    () => commit(state === "open" ? "folded" : "open"),
-    [commit, state],
-  );
+  const toggle = useCallback(() => commit(state === 'open' ? 'folded' : 'open'), [commit, state]);
 
   const dismiss = useCallback(() => {
-    commit("dismissed");
+    commit('dismissed');
     closed.current?.();
   }, [commit]);
 
   return {
     state,
-    open: state === "open",
-    folded: state === "folded",
-    dismissed: state === "dismissed",
+    open: state === 'open',
+    folded: state === 'folded',
+    dismissed: state === 'dismissed',
     fold,
     expand,
     toggle,
@@ -149,12 +146,12 @@ export function CollapsibleBanner({
   icon,
   dismissible = true,
   state: controlled,
-  defaultState = "open",
+  defaultState = 'open',
   onStateChange,
   onDismiss,
-  dismissLabel = "Dismiss notice",
-  dismissedMessage = "Notice dismissed.",
-  className = "",
+  dismissLabel = 'Dismiss notice',
+  dismissedMessage = 'Notice dismissed.',
+  className = '',
 }: CollapsibleBannerProps) {
   const reduced = useReducedMotion();
   const uid = useId();
@@ -182,13 +179,11 @@ export function CollapsibleBanner({
     <>
       <motion.div
         initial={false}
-        animate={{ height: dismissed ? 0 : "auto", opacity: dismissed ? 0 : 1 }}
+        animate={{ height: dismissed ? 0 : 'auto', opacity: dismissed ? 0 : 1 }}
         transition={
-          reduced
-            ? INSTANT
-            : { height: DISCLOSE, opacity: { duration: 0.14, ease: EASE } }
+          reduced ? INSTANT : { height: DISCLOSE, opacity: { duration: 0.14, ease: EASE } }
         }
-        style={{ overflow: "hidden" }}
+        style={{ overflow: 'hidden' }}
         className="rounded-[11px]"
       >
         <div
@@ -209,7 +204,7 @@ export function CollapsibleBanner({
                 type="button"
                 onClick={toggle}
                 onKeyDown={(e) => {
-                  if (e.key !== "Escape" || !open) return;
+                  if (e.key !== 'Escape' || !open) return;
                   e.stopPropagation();
                   fold();
                 }}
@@ -259,9 +254,9 @@ export function CollapsibleBanner({
               id={bodyId}
               inert={!open}
               initial={false}
-              animate={{ height: open ? "auto" : 0, opacity: open ? 1 : 0 }}
+              animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}
               transition={disclose}
-              style={{ overflow: "hidden" }}
+              style={{ overflow: 'hidden' }}
             >
               <motion.div
                 initial={false}
@@ -284,7 +279,7 @@ export function CollapsibleBanner({
         </div>
       </motion.div>
       <span role="status" aria-live="polite" className="sr-only">
-        {state === "dismissed" ? dismissedMessage : ""}
+        {state === 'dismissed' ? dismissedMessage : ''}
       </span>
     </>
   );

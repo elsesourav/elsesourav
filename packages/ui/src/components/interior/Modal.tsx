@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, {
   useCallback,
@@ -8,39 +8,38 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from "react";
-import { createPortal } from "react-dom";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+} from 'react';
+import { createPortal } from 'react-dom';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
 const EASE = [0.23, 1, 0.32, 1] as const;
 
 const LEAVE = [0.4, 0, 1, 1] as const;
 
-const SURFACE = { type: "spring", stiffness: 420, damping: 36, mass: 0.9 } as const;
+const SURFACE = { type: 'spring', stiffness: 420, damping: 36, mass: 0.9 } as const;
 
-const useIsomorphicLayoutEffect =
-  typeof window === "undefined" ? useEffect : useLayoutEffect;
+const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
 const FOCUSABLE = [
-  "a[href]",
-  "area[href]",
-  "button:not([disabled])",
+  'a[href]',
+  'area[href]',
+  'button:not([disabled])',
   "input:not([disabled]):not([type='hidden'])",
-  "select:not([disabled])",
-  "textarea:not([disabled])",
-  "iframe",
-  "summary",
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  'iframe',
+  'summary',
   "[contenteditable='true']",
   "[tabindex]:not([tabindex='-1'])",
-].join(",");
+].join(',');
 
 function focusableWithin(root: HTMLElement): HTMLElement[] {
   return Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
     (el) =>
       el.tabIndex !== -1 &&
-      !el.hasAttribute("inert") &&
-      el.getAttribute("aria-hidden") !== "true" &&
-      el.getClientRects().length > 0,
+      !el.hasAttribute('inert') &&
+      el.getAttribute('aria-hidden') !== 'true' &&
+      el.getClientRects().length > 0
   );
 }
 
@@ -57,7 +56,7 @@ function lockDocumentScroll() {
   const paddingRight = body.style.paddingRight;
   const base = Number.parseFloat(window.getComputedStyle(body).paddingRight);
 
-  body.style.overflow = "hidden";
+  body.style.overflow = 'hidden';
   if (gap > 0) {
     body.style.paddingRight = `${(Number.isFinite(base) ? base : 0) + gap}px`;
   }
@@ -95,9 +94,9 @@ export type ModalOverlayProps = {
 
 export type ModalPanelProps = {
   ref: React.RefObject<HTMLDivElement | null>;
-  role: "dialog";
-  "aria-modal": true;
-  "aria-labelledby": string;
+  role: 'dialog';
+  'aria-modal': true;
+  'aria-labelledby': string;
   tabIndex: -1;
   onKeyDown: (event: React.KeyboardEvent) => void;
 };
@@ -154,14 +153,14 @@ export function useModal({
     const changed: Array<[Element, string | null]> = [];
     for (const child of Array.from(parent.children)) {
       if (child === overlay) continue;
-      changed.push([child, child.getAttribute("inert")]);
-      child.setAttribute("inert", "");
+      changed.push([child, child.getAttribute('inert')]);
+      child.setAttribute('inert', '');
     }
 
     return () => {
       for (const [child, previous] of changed) {
-        if (previous === null) child.removeAttribute("inert");
-        else child.setAttribute("inert", previous);
+        if (previous === null) child.removeAttribute('inert');
+        else child.setAttribute('inert', previous);
       }
     };
   }, [open, target]);
@@ -172,7 +171,7 @@ export function useModal({
     stack.push(token);
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
+      if (event.key !== 'Escape') return;
       if (stack[stack.length - 1] !== token) return;
       if (!latest.current.closeOnEscape) return;
       event.preventDefault();
@@ -180,9 +179,9 @@ export function useModal({
       latest.current.onClose();
     };
 
-    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener('keydown', onKeyDown);
     return () => {
-      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener('keydown', onKeyDown);
       const index = stack.indexOf(token);
       if (index > -1) stack.splice(index, 1);
     };
@@ -196,8 +195,8 @@ export function useModal({
       if (!panel || !node || panel.contains(node)) return;
       panel.focus({ preventScroll: true });
     };
-    document.addEventListener("focusin", onFocusIn);
-    return () => document.removeEventListener("focusin", onFocusIn);
+    document.addEventListener('focusin', onFocusIn);
+    return () => document.removeEventListener('focusin', onFocusIn);
   }, [open, target]);
 
   useEffect(() => {
@@ -205,8 +204,7 @@ export function useModal({
     const panel = panelRef.current;
     if (!panel) return;
 
-    const previous =
-      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const preferred = latest.current.initialFocusRef?.current;
     (preferred ?? focusableWithin(panel)[0] ?? panel).focus({ preventScroll: true });
 
@@ -216,7 +214,7 @@ export function useModal({
   }, [open, target]);
 
   const onKeyDown = useCallback((event: React.KeyboardEvent) => {
-    if (event.key !== "Tab") return;
+    if (event.key !== 'Tab') return;
     const panel = panelRef.current;
     if (!panel) return;
 
@@ -265,9 +263,9 @@ export function useModal({
     overlayProps: { ref: overlayRef, onPointerDown, onClick },
     panelProps: {
       ref: panelRef,
-      role: "dialog",
-      "aria-modal": true,
-      "aria-labelledby": titleId,
+      role: 'dialog',
+      'aria-modal': true,
+      'aria-labelledby': titleId,
       tabIndex: -1,
       onKeyDown,
     },
@@ -324,7 +322,7 @@ export function Modal({
   description,
   children,
   footer,
-  closeLabel = "Close dialog",
+  closeLabel = 'Close dialog',
   showClose = true,
   closeOnEscape = true,
   closeOnBackdrop = true,
@@ -332,8 +330,8 @@ export function Modal({
   initialFocusRef,
   container,
   maxWidth = 440,
-  maxHeight = "min(78vh, 620px)",
-  className = "",
+  maxHeight = 'min(78vh, 620px)',
+  className = '',
 }: ModalProps) {
   const reduced = useReducedMotion();
 
@@ -404,7 +402,7 @@ export function Modal({
           <motion.div
             aria-hidden="true"
             variants={variants.backdrop}
-            style={{ touchAction: "none" }}
+            style={{ touchAction: 'none' }}
             className="absolute inset-0 bg-stone-900/40 dark:bg-black/65"
           />
           <motion.div
@@ -459,7 +457,7 @@ export function Modal({
         </motion.div>
       ) : null}
     </AnimatePresence>,
-    target,
+    target
   );
 }
 

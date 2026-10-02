@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React, { useEffect, useId, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
-const CELL = { type: "spring", stiffness: 520, damping: 34, mass: 0.45 } as const;
-const CROSSFADE = { type: "spring", stiffness: 260, damping: 34, mass: 0.8 } as const;
+const CELL = { type: 'spring', stiffness: 520, damping: 34, mass: 0.45 } as const;
+const CROSSFADE = { type: 'spring', stiffness: 260, damping: 34, mass: 0.8 } as const;
 const BOUNDARY = /[\s\-_/.:]/;
 const ROW = 36;
 const GAP = 2;
@@ -69,12 +69,8 @@ function rank(items: CommandItem[], query: string): CommandItem[] {
   return scored.map((s) => s.item);
 }
 
-export function useCommandPalette({
-  items,
-  onSelect,
-  onDismiss,
-}: UseCommandPaletteOptions) {
-  const [query, setQuery] = useState("");
+export function useCommandPalette({ items, onSelect, onDismiss }: UseCommandPaletteOptions) {
+  const [query, setQuery] = useState('');
   const [pinned, setPinned] = useState<string | null>(null);
 
   const listRef = useRef<HTMLUListElement>(null);
@@ -87,9 +83,7 @@ export function useCommandPalette({
 
   const results = useMemo(() => rank(items, query), [items, query]);
 
-  const activeId = results.some((r) => r.id === pinned)
-    ? pinned
-    : (results[0]?.id ?? null);
+  const activeId = results.some((r) => r.id === pinned) ? pinned : (results[0]?.id ?? null);
   const activeIndex = results.findIndex((r) => r.id === activeId);
 
   useEffect(() => {
@@ -136,22 +130,22 @@ export function useCommandPalette({
   };
 
   const onKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === "ArrowDown") {
+    if (event.key === 'ArrowDown') {
       event.preventDefault();
       move(1);
-    } else if (event.key === "ArrowUp") {
+    } else if (event.key === 'ArrowUp') {
       event.preventDefault();
       move(-1);
-    } else if (event.key === "Home") {
+    } else if (event.key === 'Home') {
       event.preventDefault();
       jump(0);
-    } else if (event.key === "End") {
+    } else if (event.key === 'End') {
       event.preventDefault();
       jump(results.length - 1);
-    } else if (event.key === "Enter") {
+    } else if (event.key === 'Enter') {
       event.preventDefault();
       run();
-    } else if (event.key === "Escape") {
+    } else if (event.key === 'Escape') {
       event.preventDefault();
       dismiss.current?.();
     }
@@ -191,12 +185,12 @@ export function CommandPalette({
   onSelect,
   onDismiss,
   open,
-  placeholder = "Search commands",
-  emptyLabel = "No command matches",
-  label = "Command palette",
+  placeholder = 'Search commands',
+  emptyLabel = 'No command matches',
+  label = 'Command palette',
   maxRows = 6,
   autoFocus = false,
-  className = "",
+  className = '',
 }: CommandPaletteProps) {
   const uid = useId();
   const reduced = useReducedMotion();
@@ -204,16 +198,8 @@ export function CommandPalette({
   const inputRef = useRef<HTMLInputElement>(null);
   const liveRef = useRef<HTMLSpanElement>(null);
 
-  const {
-    query,
-    setQuery,
-    results,
-    activeId,
-    listRef,
-    onKeyDown,
-    pointerActivate,
-    run,
-  } = useCommandPalette({ items, onSelect, onDismiss });
+  const { query, setQuery, results, activeId, listRef, onKeyDown, pointerActivate, run } =
+    useCommandPalette({ items, onSelect, onDismiss });
 
   const rows = Math.max(1, Math.min(maxRows, items.length));
   const height = PAD * 2 + rows * ROW + (rows - 1) * GAP;
@@ -224,16 +210,14 @@ export function CommandPalette({
   }, [autoFocus]);
 
   useEffect(() => {
-    if (open) setQuery("");
+    if (open) setQuery('');
   }, [open, setQuery]);
 
   useEffect(() => {
     const id = setTimeout(() => {
       if (!liveRef.current) return;
       liveRef.current.textContent =
-        count === 0
-          ? emptyLabel
-          : `${count} ${count === 1 ? "command" : "commands"} available`;
+        count === 0 ? emptyLabel : `${count} ${count === 1 ? 'command' : 'commands'} available`;
     }, 400);
     return () => clearTimeout(id);
   }, [count, emptyLabel]);
@@ -247,8 +231,8 @@ export function CommandPalette({
       ref={panelRef}
       className={`overflow-hidden rounded-[14px] border border-[var(--interior-border)] bg-white dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] ${
         overlaid
-          ? "w-full max-w-[520px] shadow-[0_1px_2px_rgba(28,25,23,0.07),0_28px_56px_-24px_rgba(24,22,20,0.5)] dark:shadow-[0_3px_16px_rgba(0,0,0,0.65)]"
-          : ""
+          ? 'w-full max-w-[520px] shadow-[0_1px_2px_rgba(28,25,23,0.07),0_28px_56px_-24px_rgba(24,22,20,0.5)] dark:shadow-[0_3px_16px_rgba(0,0,0,0.65)]'
+          : ''
       } ${className}`}
     >
       <div className="flex h-11 items-center gap-2.5 border-b border-[var(--interior-border)] px-3 dark:border-[var(--interior-border)]">
@@ -289,7 +273,7 @@ export function CommandPalette({
         <ul
           ref={listRef}
           id={`${uid}-list`}
-                    role="listbox"
+          role="listbox"
           aria-label={label}
           onMouseDown={(e) => e.preventDefault()}
           className="absolute inset-0 flex flex-col gap-[2px] overflow-y-auto overscroll-contain p-[5px] [scrollbar-gutter:stable]"
@@ -297,12 +281,12 @@ export function CommandPalette({
           {results.map((item) => {
             const active = item.id === activeId;
             return (
-                            <motion.li
+              <motion.li
                 key={item.id}
                 id={`${uid}-${item.id}`}
                 role="option"
                 aria-selected={active}
-                layout={reduced ? false : "position"}
+                layout={reduced ? false : 'position'}
                 transition={spring}
                 onPointerMove={(e) => pointerActivate(item.id, e)}
                 onClick={() => run(item)}
@@ -362,7 +346,8 @@ export function CommandPalette({
   if (!overlaid) return surface;
   return (
     <PaletteLayer
-      data-interior="command-palette" open={open}
+      data-interior="command-palette"
+      open={open}
       onDismiss={onDismiss}
       reduced={Boolean(reduced)}
       panelRef={panelRef}
@@ -374,7 +359,7 @@ export function CommandPalette({
 
 const LAYER_EASE = [0.23, 1, 0.32, 1] as const;
 const LAYER_OUT = [0.4, 0, 1, 1] as const;
-const PANEL = { type: "spring", stiffness: 420, damping: 36, mass: 0.9 } as const;
+const PANEL = { type: 'spring', stiffness: 420, damping: 36, mass: 0.9 } as const;
 
 function PaletteLayer({
   open,
@@ -399,13 +384,13 @@ function PaletteLayer({
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
+      if (event.key !== 'Escape') return;
       event.preventDefault();
       event.stopPropagation();
       leave.current?.();
     };
-    document.addEventListener("keydown", onKeyDown, true);
-    return () => document.removeEventListener("keydown", onKeyDown, true);
+    document.addEventListener('keydown', onKeyDown, true);
+    return () => document.removeEventListener('keydown', onKeyDown, true);
   }, [open]);
 
   useEffect(() => {
@@ -414,7 +399,7 @@ function PaletteLayer({
     const overflow = root.style.overflow;
     const padding = root.style.paddingRight;
     const gutter = window.innerWidth - root.clientWidth;
-    root.style.overflow = "hidden";
+    root.style.overflow = 'hidden';
     if (gutter > 0) root.style.paddingRight = `${gutter}px`;
     return () => {
       root.style.overflow = overflow;
@@ -453,15 +438,11 @@ function PaletteLayer({
               closed: { opacity: 0 },
               open: {
                 opacity: 1,
-                transition: reduced
-                  ? { duration: 0 }
-                  : { duration: 0.2, ease: LAYER_EASE },
+                transition: reduced ? { duration: 0 } : { duration: 0.2, ease: LAYER_EASE },
               },
               gone: {
                 opacity: 0,
-                transition: reduced
-                  ? { duration: 0 }
-                  : { duration: 0.15, ease: LAYER_OUT },
+                transition: reduced ? { duration: 0 } : { duration: 0.15, ease: LAYER_OUT },
               },
             }}
           />
@@ -492,7 +473,7 @@ function PaletteLayer({
         </motion.div>
       ) : null}
     </AnimatePresence>,
-    host,
+    host
   );
 }
 

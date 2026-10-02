@@ -10,7 +10,8 @@ export interface Spring {
 }
 
 const spring = (value = 0): Spring => ({ value, target: value, velocity: 0 });
-const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
+const clamp = (value: number, min: number, max: number): number =>
+  Math.min(max, Math.max(min, value));
 const finite = (value: number | undefined, fallback: number): number =>
   typeof value === 'number' && Number.isFinite(value) ? value : fallback;
 
@@ -69,7 +70,12 @@ function createPaperPath(
   const random = randomSource(seed);
   const guides = Array.from({ length: density }, () => {
     const angle = random() * Math.PI * 2;
-    return { x: Math.cos(angle), y: Math.sin(angle), phase: random() * Math.PI * 2, weight: random() * 0.6 + 0.4 };
+    return {
+      x: Math.cos(angle),
+      y: Math.sin(angle),
+      phase: random() * Math.PI * 2,
+      weight: random() * 0.6 + 0.4,
+    };
   });
   for (let t = 0; t < triangles.length; t += 3) {
     for (let k = 0; k < 3; k++) {
@@ -98,7 +104,9 @@ function createPaperPath(
         const my = (restC1 + restD1) * 0.5;
         let weakness = 0;
         for (const guide of guides) {
-          const distance = Math.abs(Math.sin(((mx * guide.x + my * guide.y) / shortSide) * 4 + guide.phase));
+          const distance = Math.abs(
+            Math.sin(((mx * guide.x + my * guide.y) / shortSide) * 4 + guide.phase)
+          );
           weakness = Math.max(weakness, Math.exp(-distance * distance * 80) * guide.weight);
         }
         hinges.push(c, d, length, 0.12 + (1 - weakness) * 0.75);
@@ -113,7 +121,10 @@ function createPaperPath(
   const totalSteps = frameCount * stepsPerFrame;
   let initialRadius = 0;
   for (let i = 0; i < rest.length; i += 3) {
-    initialRadius = Math.max(initialRadius, Math.hypot((rest[i] ?? 0) / 0.94, (rest[i + 1] ?? 0) / 1.02));
+    initialRadius = Math.max(
+      initialRadius,
+      Math.hypot((rest[i] ?? 0) / 0.94, (rest[i + 1] ?? 0) / 1.02)
+    );
   }
   initialRadius *= 1.02;
 
@@ -190,18 +201,12 @@ function createPaperPath(
         const pP0 = points[p] ?? 0;
         const pP1 = points[p + 1] ?? 0;
         const pP2 = points[p + 2] ?? 0;
-        if (
-          pP0 < minX ||
-          pP0 > maxX ||
-          pP1 < minY ||
-          pP1 > maxY ||
-          pP2 < minZ ||
-          pP2 > maxZ
-        ) {
+        if (pP0 < minX || pP0 > maxX || pP1 < minY || pP1 > maxY || pP2 < minZ || pP2 > maxZ) {
           continue;
         }
         const rx = (rest[p] ?? 0) - ((rest[a] ?? 0) + (rest[b] ?? 0) + (rest[c] ?? 0)) / 3;
-        const ry = (rest[p + 1] ?? 0) - ((rest[a + 1] ?? 0) + (rest[b + 1] ?? 0) + (rest[c + 1] ?? 0)) / 3;
+        const ry =
+          (rest[p + 1] ?? 0) - ((rest[a + 1] ?? 0) + (rest[b + 1] ?? 0) + (rest[c + 1] ?? 0)) / 3;
         if (rx * rx + ry * ry < spacing * spacing * 6) continue;
         const dx = pP0 - ax;
         const dy = pP1 - ay;
@@ -238,13 +243,15 @@ function createPaperPath(
   for (let step = 1; step <= totalSteps; step++) {
     const progress = step / totalSteps;
     const compression = progress * progress * (3 - 2 * progress);
-    const radius = initialRadius * (1 - compression) + shortSide * (0.19 - depth * 0.025) * compression;
+    const radius =
+      initialRadius * (1 - compression) + shortSide * (0.19 - depth * 0.025) * compression;
     before.set(points);
     for (let i = 0; i < points.length; i += 3) {
       const x = (rest[i] ?? 0) / shortSide;
       const y = (rest[i + 1] ?? 0) / shortSide;
       let buckle = 0;
-      for (const guide of guides) buckle += Math.sin((x * guide.x + y * guide.y) * 5 + guide.phase) * guide.weight;
+      for (const guide of guides)
+        buckle += Math.sin((x * guide.x + y * guide.y) * 5 + guide.phase) * guide.weight;
       for (let axis = 0; axis < 3; axis++) {
         const idx = i + axis;
         const pVal = points[idx] ?? 0;
@@ -253,7 +260,9 @@ function createPaperPath(
         previous[idx] = pVal;
         points[idx] = pVal + clamp(velocity, -spacing * 0.15, spacing * 0.15);
       }
-      points[i + 2] = (points[i + 2] ?? 0) + (buckle / density) * shortSide * 0.0007 * Math.sin(progress * Math.PI);
+      points[i + 2] =
+        (points[i + 2] ?? 0) +
+        (buckle / density) * shortSide * 0.0007 * Math.sin(progress * Math.PI);
     }
     for (let pass = 0; pass < 18; pass++) {
       constrain(hinges, 4, 0.45 * (1 - sharpness * 0.4), pass % 2 === 0);
@@ -380,7 +389,7 @@ export default function PaperCrumple({
   onStateChange,
   onError,
   className = '',
-  style
+  style,
 }: PaperCrumpleProps) {
   const pathCache = useRef<{ key: string; value: PaperPath } | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -401,7 +410,7 @@ export default function PaperCrumple({
     returnToOrigin,
     disabled,
     onStateChange,
-    onError
+    onError,
   });
   options.current = {
     releaseBehavior,
@@ -415,7 +424,7 @@ export default function PaperCrumple({
     returnToOrigin,
     disabled,
     onStateChange,
-    onError
+    onError,
   };
 
   useEffect(() => {
@@ -439,10 +448,17 @@ export default function PaperCrumple({
     root.style.setProperty('--pc-image-height', `${initialHeight * initialScale}px`);
     let renderer: THREE.WebGLRenderer;
     try {
-      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' });
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: true,
+        powerPreference: 'low-power',
+      });
     } catch (error) {
       setStatus('error');
-      options.current.onError?.(error instanceof Error ? error : new Error('WebGL is unavailable.'));
+      options.current.onError?.(
+        error instanceof Error ? error : new Error('WebGL is unavailable.')
+      );
       return;
     }
     const paperWidth = Math.max(1, finite(width, 320));
@@ -482,11 +498,27 @@ export default function PaperCrumple({
         }
       }
     }
-    const pathKey = JSON.stringify([paperWidth, paperHeight, resolution, foldTotal, sharpness, depth, seed]);
+    const pathKey = JSON.stringify([
+      paperWidth,
+      paperHeight,
+      resolution,
+      foldTotal,
+      sharpness,
+      depth,
+      seed,
+    ]);
     if (pathCache.current?.key !== pathKey) {
       pathCache.current = {
         key: pathKey,
-        value: createPaperPath(original, indices, shortSide, foldTotal, sharpness, depth, finite(seed, 7))
+        value: createPaperPath(
+          original,
+          indices,
+          shortSide,
+          foldTotal,
+          sharpness,
+          depth,
+          finite(seed, 7)
+        ),
       };
     }
     const paperPath = pathCache.current.value;
@@ -502,8 +534,14 @@ export default function PaperCrumple({
       incidentFaces[idx]?.push(Math.floor(i / 3) * 3);
     }
     const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute('position', new THREE.BufferAttribute(renderPositions, 3).setUsage(THREE.DynamicDrawUsage));
-    geometry.setAttribute('normal', new THREE.BufferAttribute(renderNormals, 3).setUsage(THREE.DynamicDrawUsage));
+    geometry.setAttribute(
+      'position',
+      new THREE.BufferAttribute(renderPositions, 3).setUsage(THREE.DynamicDrawUsage)
+    );
+    geometry.setAttribute(
+      'normal',
+      new THREE.BufferAttribute(renderNormals, 3).setUsage(THREE.DynamicDrawUsage)
+    );
     geometry.setAttribute('uv', new THREE.BufferAttribute(renderUvs, 2));
     const grainData = new Uint8Array(128 * 128 * 4);
     for (let i = 0; i < grainData.length; i += 4) {
@@ -524,17 +562,20 @@ export default function PaperCrumple({
       bumpScale: clamp(finite(paperTexture, 0.08), 0, 1) * 0.32,
       alphaTest: 0.04,
       alphaToCoverage: true,
-      flatShading: false
+      flatShading: false,
     };
-    const frontMaterial = new THREE.MeshStandardMaterial({ ...materialOptions, side: THREE.FrontSide });
+    const frontMaterial = new THREE.MeshStandardMaterial({
+      ...materialOptions,
+      side: THREE.FrontSide,
+    });
     const backMaterial = new THREE.MeshStandardMaterial({
       ...materialOptions,
       side: THREE.BackSide,
-      color: backSrc ? '#ffffff' : paperColor
+      color: backSrc ? '#ffffff' : paperColor,
     });
     const lighting = { value: 0 };
     for (const material of [frontMaterial, backMaterial]) {
-      material.onBeforeCompile = shader => {
+      material.onBeforeCompile = (shader) => {
         shader.uniforms['paperLighting'] = lighting;
         shader.fragmentShader = 'uniform float paperLighting;\n' + shader.fragmentShader;
         shader.fragmentShader = shader.fragmentShader.replace(
@@ -555,14 +596,15 @@ export default function PaperCrumple({
         `
         );
       };
-      material.customProgramCacheKey = () => `paper-${material === backMaterial && !backSrc ? 'stock' : 'print'}`;
+      material.customProgramCacheKey = () =>
+        `paper-${material === backMaterial && !backSrc ? 'stock' : 'print'}`;
     }
     const depthMaterial = new THREE.MeshDepthMaterial({
       depthPacking: THREE.RGBADepthPacking,
       alphaTest: 0.04,
-      side: THREE.DoubleSide
+      side: THREE.DoubleSide,
     });
-    depthMaterial.onBeforeCompile = shader => {
+    depthMaterial.onBeforeCompile = (shader) => {
       shader.fragmentShader = shader.fragmentShader.replace(
         '#include <map_fragment>',
         `
@@ -596,7 +638,7 @@ export default function PaperCrumple({
     const floorGeometry = new THREE.PlaneGeometry(1, 1);
     const floorMaterial = new THREE.ShadowMaterial({
       opacity: clamp(finite(shadowOpacity, 0.08), 0, 1),
-      depthWrite: false
+      depthWrite: false,
     });
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.receiveShadow = true;
@@ -674,7 +716,8 @@ export default function PaperCrumple({
         const toVal = to[i] ?? 0;
         const crVal = paperPath.creased[i] ?? 0;
         const origVal = original[i] ?? 0;
-        positions[i] = fromVal + (toVal - fromVal) * mix + (crVal - origVal) * memory.value * (1 - fold);
+        positions[i] =
+          fromVal + (toVal - fromVal) * mix + (crVal - origVal) * memory.value * (1 - fold);
       }
       for (let face = 0; face < indices.length; face += 3) {
         const aIdx = (indices[face] ?? 0) * 3;
@@ -769,9 +812,17 @@ export default function PaperCrumple({
       lastTime = time;
       const opts = options.current;
       let moving = false;
-      const duration = held ? finite(opts.crumpleDuration, 0.55) : finite(opts.releaseDuration, 0.4);
+      const duration = held
+        ? finite(opts.crumpleDuration, 0.55)
+        : finite(opts.releaseDuration, 0.4);
       for (const s of springs) {
-        moving = advance(s, dt, s === amount || s === memory ? duration : 0.42, reduceMotion || keyboard) || moving;
+        moving =
+          advance(
+            s,
+            dt,
+            s === amount || s === memory ? duration : 0.42,
+            reduceMotion || keyboard
+          ) || moving;
       }
       peak = Math.max(peak, amount.value);
       deform();
@@ -826,7 +877,11 @@ export default function PaperCrumple({
       viewportHeight = Math.max(1, rect.height);
       scale =
         paperWidth *
-        Math.min(1, Math.max(1, viewportWidth - 48) / paperWidth, Math.max(1, viewportHeight - 48) / paperHeight);
+        Math.min(
+          1,
+          Math.max(1, viewportWidth - 48) / paperWidth,
+          Math.max(1, viewportHeight - 48) / paperHeight
+        );
       sheet.scale.setScalar(scale);
       camera.aspect = viewportWidth / viewportHeight;
       camera.position.z = viewportHeight / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
@@ -880,11 +935,16 @@ export default function PaperCrumple({
       } else {
         const bounds = geometry.boundingBox;
         const spanX = opts.releaseBehavior === 'stay' && bounds ? bounds.max.x - bounds.min.x : 1;
-        const spanY = opts.releaseBehavior === 'stay' && bounds ? bounds.max.y - bounds.min.y : aspect;
+        const spanY =
+          opts.releaseBehavior === 'stay' && bounds ? bounds.max.y - bounds.min.y : aspect;
         const halfWidth =
-          ((Math.abs(Math.cos(baseRotation)) * spanX + Math.abs(Math.sin(baseRotation)) * spanY) * scale) / 2;
+          ((Math.abs(Math.cos(baseRotation)) * spanX + Math.abs(Math.sin(baseRotation)) * spanY) *
+            scale) /
+          2;
         const halfHeight =
-          ((Math.abs(Math.sin(baseRotation)) * spanX + Math.abs(Math.cos(baseRotation)) * spanY) * scale) / 2;
+          ((Math.abs(Math.sin(baseRotation)) * spanX + Math.abs(Math.cos(baseRotation)) * spanY) *
+            scale) /
+          2;
         const limitX = Math.min(
           Math.max(0, finite(opts.dragRadius, 180)),
           Math.max(0, viewportWidth / 2 - halfWidth - 16)
@@ -933,7 +993,16 @@ export default function PaperCrumple({
     }
 
     function pointerDown(event: PointerEvent) {
-      if (!ready || options.current.disabled || held || event.button !== 0 || !event.isPrimary || !root || !hit) return;
+      if (
+        !ready ||
+        options.current.disabled ||
+        held ||
+        event.button !== 0 ||
+        !event.isPrimary ||
+        !root ||
+        !hit
+      )
+        return;
       const rect = root.getBoundingClientRect();
       pointerX = lastX = event.clientX - rect.left;
       pointerY = lastY = event.clientY - rect.top;
@@ -1088,7 +1157,7 @@ export default function PaperCrumple({
     canvas.addEventListener('webglcontextrestored', restoreContext);
     const observer = new ResizeObserver(resize);
     observer.observe(root);
-    const intersectionObserver = new IntersectionObserver(entries => {
+    const intersectionObserver = new IntersectionObserver((entries) => {
       inView = entries[0]?.isIntersecting ?? false;
       lastTime = 0;
       if (!inView) cancel();
@@ -1104,7 +1173,7 @@ export default function PaperCrumple({
       return new Promise((resolve, reject) => {
         loader.load(
           url,
-          texture => {
+          (texture) => {
             if (disposed) {
               texture.dispose();
               resolve(texture);
@@ -1130,7 +1199,8 @@ export default function PaperCrumple({
             resolve(texture);
           },
           undefined,
-          () => reject(new Error(`Unable to load paper image: ${url}. Remote images must allow CORS.`))
+          () =>
+            reject(new Error(`Unable to load paper image: ${url}. Remote images must allow CORS.`))
         );
       });
     }
@@ -1165,7 +1235,8 @@ export default function PaperCrumple({
     return () => {
       disposed = true;
       cancelAnimationFrame(frame);
-      if (hit && pointerId !== null && hit.hasPointerCapture(pointerId)) hit.releasePointerCapture(pointerId);
+      if (hit && pointerId !== null && hit.hasPointerCapture(pointerId))
+        hit.releasePointerCapture(pointerId);
       resetRef.current = cancelRef.current = null;
       observer.disconnect();
       intersectionObserver.disconnect();
@@ -1189,7 +1260,7 @@ export default function PaperCrumple({
       depthMaterial.dispose();
       floorMaterial.dispose();
       grain.dispose();
-      textures.forEach(texture => texture.dispose());
+      textures.forEach((texture) => texture.dispose());
       light.shadow.dispose();
       renderer.dispose();
     };
@@ -1211,7 +1282,7 @@ export default function PaperCrumple({
     shadowOpacity,
     rotation,
     seed,
-    detail
+    detail,
   ]);
 
   useEffect(() => {
@@ -1248,7 +1319,7 @@ export default function PaperCrumple({
           style={{
             objectFit: imageFit,
             transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
-            filter: shadowFilter
+            filter: shadowFilter,
           }}
         />
       )}

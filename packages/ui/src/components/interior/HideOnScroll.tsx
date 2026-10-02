@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React, { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 
-const DISCLOSE = { type: "spring", stiffness: 150, damping: 27, mass: 1 } as const;
-const CROSSFADE = { type: "spring", stiffness: 260, damping: 34, mass: 0.8 } as const;
+const DISCLOSE = { type: 'spring', stiffness: 150, damping: 27, mass: 1 } as const;
+const CROSSFADE = { type: 'spring', stiffness: 260, damping: 34, mass: 0.8 } as const;
 
 export type UseHideOnScrollOptions = {
   hideAfter?: number;
@@ -107,18 +107,18 @@ export function useHideOnScroll<T extends HTMLElement = HTMLDivElement>({
     last.current = readY();
     evaluate();
 
-    target.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule);
+    target.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
 
     let observer: ResizeObserver | null = null;
-    if (el && typeof ResizeObserver !== "undefined") {
+    if (el && typeof ResizeObserver !== 'undefined') {
       observer = new ResizeObserver(schedule);
       observer.observe(el);
     }
 
     return () => {
-      target.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", schedule);
+      target.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
       observer?.disconnect();
       if (frame.current) cancelAnimationFrame(frame.current);
       frame.current = 0;
@@ -151,9 +151,9 @@ export function HideOnScroll({
   topGuard = 24,
   pinned = false,
   maxHeight = 320,
-  label = "Scrollable content",
+  label = 'Scrollable content',
   onHiddenChange,
-  className = "",
+  className = '',
 }: HideOnScrollProps) {
   const [focusWithin, setFocusWithin] = useState(false);
 
@@ -177,10 +177,11 @@ export function HideOnScroll({
 
   return (
     <div
-      data-interior="hide-on-scroll" className={`relative w-full min-w-0 overflow-hidden rounded-[14px] border border-[var(--interior-border)] bg-white shadow-[0_1px_2px_rgba(28,25,23,0.06),0_4px_10px_-8px_rgba(28,25,23,0.45)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[0_1px_6px_rgba(0,0,0,0.45)] ${className}`}
+      data-interior="hide-on-scroll"
+      className={`relative w-full min-w-0 overflow-hidden rounded-[14px] border border-[var(--interior-border)] bg-white shadow-[0_1px_2px_rgba(28,25,23,0.06),0_4px_10px_-8px_rgba(28,25,23,0.45)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[0_1px_6px_rgba(0,0,0,0.45)] ${className}`}
     >
       <motion.div
-        data-hidden={hidden ? "true" : "false"}
+        data-hidden={hidden ? 'true' : 'false'}
         onFocus={() => setFocusWithin(true)}
         onBlur={() => setFocusWithin(false)}
         style={{ height: barHeight }}
@@ -202,7 +203,7 @@ export function HideOnScroll({
       <div
         ref={ref}
 
-                tabIndex={0}
+        tabIndex={0}
         role="region"
         aria-label={label}
         style={{ maxHeight, scrollPaddingTop: barHeight + 8 }}

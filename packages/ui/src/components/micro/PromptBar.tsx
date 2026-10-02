@@ -1,6 +1,14 @@
 'use client';
 
-import React, { isValidElement, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  isValidElement,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { animate, useMotionValue, useMotionValueEvent, useReducedMotion } from 'motion/react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
@@ -16,7 +24,7 @@ import {
   Mic01Icon,
   PlusSignIcon,
   SparklesIcon,
-  Tick02Icon
+  Tick02Icon,
 } from '@hugeicons/core-free-icons';
 
 const ARROW_UP = [12, 4.5, 18.5, 11, 14.25, 11, 14.25, 19.5, 9.75, 19.5, 9.75, 11, 5.5, 11];
@@ -60,25 +68,30 @@ const DEFAULT_SOURCES: PromptSource[] = [
     name: 'Photos & files',
     description: 'Upload from this device',
     icon: Attachment01Icon,
-    attach: true
+    attach: true,
   },
   { key: 'web', name: 'Web search', description: 'Live results', icon: Globe02Icon },
   { key: 'sales', name: 'Sales data', description: 'Revenue and churn', icon: ChartLineData01Icon },
   { key: 'docs', name: 'Documents', description: 'Specs, notes, briefs', icon: File02Icon },
   { key: 'mail', name: 'Mail', description: 'Read and draft mail', icon: Mail01Icon },
-  { key: 'calendar', name: 'Calendar', description: 'Events and availability', icon: Calendar03Icon }
+  {
+    key: 'calendar',
+    name: 'Calendar',
+    description: 'Events and availability',
+    icon: Calendar03Icon,
+  },
 ];
 const DEFAULT_COMMANDS: PromptCommand[] = [
   { key: 'summarize', name: '/summarize', description: 'Digest the thread so far' },
   { key: 'compare', name: '/compare', description: 'Two options side by side' },
   { key: 'draft', name: '/draft', description: 'Write a first version' },
   { key: 'explain', name: '/explain', description: 'A plain-language walkthrough' },
-  { key: 'tasks', name: '/tasks', description: 'Turn this into a to-do list' }
+  { key: 'tasks', name: '/tasks', description: 'Turn this into a to-do list' },
 ];
 const DEFAULT_MODELS: PromptModel[] = [
   { key: 'nova-3', name: 'Nova 3', tag: 'Flagship' },
   { key: 'nova-mini', name: 'Nova Mini', tag: 'Fast' },
-  { key: 'nova-2', name: 'Nova 2', tag: 'Legacy' }
+  { key: 'nova-2', name: 'Nova 2', tag: 'Legacy' },
 ];
 const DEFAULT_EFFORTS = ['Low', 'Medium', 'High', 'Extra', 'Max'];
 
@@ -97,14 +110,28 @@ const pathAt = (a: number[], b: number[], t: number): string => {
   return `${d}Z`;
 };
 
-const parseToken = (draft: string): { kind: 'at' | 'slash'; query: string; start: number } | null => {
+const parseToken = (
+  draft: string
+): { kind: 'at' | 'slash'; query: string; start: number } | null => {
   const m = /(^|\s)([@/])([\w-]*)$/.exec(draft);
   if (!m || m.index === undefined || !m[1] || !m[2] || !m[3]) return null;
-  return { kind: m[2] === '@' ? 'at' : 'slash', query: m[3].toLowerCase(), start: m.index + m[1].length };
+  return {
+    kind: m[2] === '@' ? 'at' : 'slash',
+    query: m[3].toLowerCase(),
+    start: m.index + m[1].length,
+  };
 };
 
 const renderIcon = (icon: unknown, size: number): React.ReactNode =>
-  isValidElement(icon) ? icon : <HugeiconsIcon icon={icon as Parameters<typeof HugeiconsIcon>[0]['icon']} size={size} strokeWidth={1.8} />;
+  isValidElement(icon) ? (
+    icon
+  ) : (
+    <HugeiconsIcon
+      icon={icon as Parameters<typeof HugeiconsIcon>[0]['icon']}
+      size={size}
+      strokeWidth={1.8}
+    />
+  );
 
 interface SendGlyphProps {
   busy: boolean;
@@ -132,12 +159,14 @@ function SendGlyph({ busy, morphDuration, squash, tilt }: SendGlyphProps) {
     return () => controls.stop();
   }, [busy, morphDuration, reduce, t]);
 
-  useMotionValueEvent(t, 'change', v => {
+  useMotionValueEvent(t, 'change', (v) => {
     pathRef.current?.setAttribute('d', pathAt(ARROW_UP, SQUARE, v));
     const goo = reduce ? 0 : Math.sin(v * Math.PI);
     const sx = 1 - squash * goo;
     if (svgRef.current) {
-      svgRef.current.style.transform = goo ? `rotate(${dir.current * tilt * goo}deg) scale(${sx}, ${1 / sx})` : '';
+      svgRef.current.style.transform = goo
+        ? `rotate(${dir.current * tilt * goo}deg) scale(${sx}, ${1 / sx})`
+        : '';
     }
   });
 
@@ -175,7 +204,8 @@ export interface PromptBarProps {
   busy?: boolean;
   onSend?: (prompt: string, payload: PromptSendPayload) => void;
   onStop?: () => void;
-  onAttach?: () => string[] | string | Promise<string[] | string | null | undefined> | null | undefined;
+  onAttach?: () =>
+    string[] | string | Promise<string[] | string | null | undefined> | null | undefined;
   onDictate?: () => string | Promise<string | null | undefined> | null | undefined;
   background?: string;
   color?: string;
@@ -231,7 +261,7 @@ export default function PromptBar({
   tilt = 8,
   pressScale = 0.96,
   className = '',
-  style
+  style,
 }: PromptBarProps) {
   const reduce = useReducedMotion();
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -262,13 +292,16 @@ export default function PromptBar({
   const [listening, setListening] = useState(false);
   const [pressed, setPressed] = useState(false);
 
-  const model = models.find(m => m.key === modelKey) ?? models[0];
+  const model = models.find((m) => m.key === modelKey) ?? models[0];
   const token = dismissed ? null : parseToken(draft);
-  const open = plusOpen ? 'at' : (token?.kind ?? (modelOpen ? 'model' : effortOpen ? 'effort' : null));
+  const open = plusOpen
+    ? 'at'
+    : (token?.kind ?? (modelOpen ? 'model' : effortOpen ? 'effort' : null));
   const query = plusOpen ? '' : (token?.query ?? '');
   const list: PromptItemRow[] = useMemo(() => {
-    if (open === 'at') return sources.filter(s => s.name.toLowerCase().includes(query));
-    if (open === 'slash') return commands.filter(c => c.name.replace(/^\//, '').toLowerCase().startsWith(query));
+    if (open === 'at') return sources.filter((s) => s.name.toLowerCase().includes(query));
+    if (open === 'slash')
+      return commands.filter((c) => c.name.replace(/^\//, '').toLowerCase().startsWith(query));
     if (open === 'model') return models;
     return [];
   }, [open, query, sources, commands, models]);
@@ -365,7 +398,7 @@ export default function PromptBar({
         sway: (Math.random() - 0.5) * 10,
         phase: Math.random() * Math.PI * 2,
         life: burst ? Math.random() * 1.2 : 0,
-        span: 2.4 + Math.random() * 2.4
+        span: 2.4 + Math.random() * 2.4,
       });
     };
     const tick = (now: number): void => {
@@ -406,7 +439,8 @@ export default function PromptBar({
           p.x = Math.random() * w;
         }
         const edge = Math.min(1, Math.max(0, p.y / 14), Math.max(0, (h - p.y) / 14));
-        ctx.globalAlpha = Math.min(1, Math.sin(k * Math.PI) * (0.9 + energy * 0.25) * twinkle) * edge;
+        ctx.globalAlpha =
+          Math.min(1, Math.sin(k * Math.PI) * (0.9 + energy * 0.25) * twinkle) * edge;
         ctx.beginPath();
         ctx.arc(
           p.x + Math.sin((now / 900) * (1 + energy * 0.8) + p.phase) * p.sway,
@@ -445,7 +479,11 @@ export default function PromptBar({
   };
   const onEffortKey = (e: React.KeyboardEvent<HTMLDivElement>): void => {
     const step =
-      e.key === 'ArrowRight' || e.key === 'ArrowUp' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowDown' ? -1 : 0;
+      e.key === 'ArrowRight' || e.key === 'ArrowUp'
+        ? 1
+        : e.key === 'ArrowLeft' || e.key === 'ArrowDown'
+          ? -1
+          : 0;
     if (step) {
       e.preventDefault();
       setEffort(effortIndex + step);
@@ -460,8 +498,10 @@ export default function PromptBar({
       focusInput();
     }
   };
-  const stepAt = (i: number): string => `calc(${EDGE}px + (100% - ${EDGE * 2}px) * ${i / Math.max(1, efforts.length - 1)})`;
-  const fillAt = (i: number): string => (i === efforts.length - 1 ? '100%' : `calc(${stepAt(i)} + 7px)`);
+  const stepAt = (i: number): string =>
+    `calc(${EDGE}px + (100% - ${EDGE * 2}px) * ${i / Math.max(1, efforts.length - 1)})`;
+  const fillAt = (i: number): string =>
+    i === efforts.length - 1 ? '100%' : `calc(${stepAt(i)} + 7px)`;
 
   const pick = (row: PromptItemRow): void => {
     if (open === 'model') {
@@ -473,9 +513,9 @@ export default function PromptBar({
     const head = token ? draft.slice(0, token.start) : draft;
     if (row.attach) {
       setDraft(head);
-      Promise.resolve(latest.current.onAttach?.()).then(files => {
+      Promise.resolve(latest.current.onAttach?.()).then((files) => {
         if (!files) return;
-        setAttachments(a => [...a, ...(Array.isArray(files) ? files : [files])]);
+        setAttachments((a) => [...a, ...(Array.isArray(files) ? files : [files])]);
       });
     } else if (open === 'at') {
       setDraft(`${head}@${row.name} `);
@@ -506,10 +546,10 @@ export default function PromptBar({
     const seq = ++dictation.current;
     setListening(true);
     Promise.resolve(latest.current.onDictate?.()).then(
-      text => {
+      (text) => {
         if (seq !== dictation.current) return;
         setListening(false);
-        if (text) setDraft(d => (d.trim() ? `${d.trimEnd()} ${text}` : text));
+        if (text) setDraft((d) => (d.trim() ? `${d.trimEnd()} ${text}` : text));
         focusInput();
       },
       () => {
@@ -567,7 +607,7 @@ export default function PromptBar({
           '--pb-radius': `${radius}px`,
           '--pb-spark': sparkColor,
           '--pb-press': pressScale,
-          ...style
+          ...style,
         } as React.CSSProperties
       }
     >
@@ -576,7 +616,13 @@ export default function PromptBar({
           className="prompt-bar__menu"
           role={open === 'effort' ? 'dialog' : 'listbox'}
           aria-label={
-            open === 'at' ? 'Sources' : open === 'slash' ? 'Commands' : open === 'model' ? 'Models' : 'Effort'
+            open === 'at'
+              ? 'Sources'
+              : open === 'slash'
+                ? 'Commands'
+                : open === 'model'
+                  ? 'Models'
+                  : 'Effort'
           }
           data-kind={open}
         >
@@ -585,7 +631,10 @@ export default function PromptBar({
               <div className="prompt-bar__effort-head">
                 <span className="prompt-bar__effort-title">Effort</span>
                 <span className="prompt-bar__effort-level">{level}</span>
-                <span className="prompt-bar__effort-help" title="Higher effort thinks longer before answering">
+                <span
+                  className="prompt-bar__effort-help"
+                  title="Higher effort thinks longer before answering"
+                >
                   <HugeiconsIcon icon={HelpCircleIcon} size={14} strokeWidth={1.8} />
                 </span>
               </div>
@@ -605,10 +654,10 @@ export default function PromptBar({
                 style={
                   {
                     '--pb-effort-x': stepAt(effortIndex),
-                    '--pb-effort-fill': fillAt(effortIndex)
+                    '--pb-effort-fill': fillAt(effortIndex),
                   } as React.CSSProperties
                 }
-                onPointerDown={e => {
+                onPointerDown={(e) => {
                   if (e.button !== 0) return;
                   try {
                     e.currentTarget.setPointerCapture(e.pointerId);
@@ -618,14 +667,18 @@ export default function PromptBar({
                   e.currentTarget.focus({ preventScroll: true });
                   effortFromPointer(e);
                 }}
-                onPointerMove={e => {
+                onPointerMove={(e) => {
                   if (e.buttons & 1) effortFromPointer(e);
                 }}
                 onKeyDown={onEffortKey}
               >
                 <span className="prompt-bar__effort-fill" />
                 {efforts.map((effortLabel, i) => (
-                  <i key={effortLabel} className="prompt-bar__effort-dot" style={{ left: stepAt(i) }} />
+                  <i
+                    key={effortLabel}
+                    className="prompt-bar__effort-dot"
+                    style={{ left: stepAt(i) }}
+                  />
                 ))}
                 <span className="prompt-bar__effort-thumb" />
               </div>
@@ -636,31 +689,40 @@ export default function PromptBar({
               {list.map((row, i) => (
                 <button
                   key={row.key}
-                  ref={el => {
+                  ref={(el) => {
                     rowRefs.current[i] = el;
                   }}
                   type="button"
                   role="option"
                   aria-selected={i === cursor}
                   className="prompt-bar__row"
-                  onMouseDown={e => e.preventDefault()}
+                  onMouseDown={(e) => e.preventDefault()}
                   onPointerEnter={() => setActive(i)}
                   onClick={() => pick(row)}
                 >
-                  {open === 'at' ? <span className="prompt-bar__row-icon">{renderIcon(row.icon, 15)}</span> : null}
+                  {open === 'at' ? (
+                    <span className="prompt-bar__row-icon">{renderIcon(row.icon, 15)}</span>
+                  ) : null}
                   <span className="prompt-bar__row-name">{row.name}</span>
-                  {row.description ? <span className="prompt-bar__row-desc">{row.description}</span> : null}
+                  {row.description ? (
+                    <span className="prompt-bar__row-desc">{row.description}</span>
+                  ) : null}
                   {open === 'model' ? (
                     <>
                       <span className="prompt-bar__row-tag">{row.tag}</span>
-                      <span className="prompt-bar__row-check" data-on={row.key === model?.key ? '' : undefined}>
+                      <span
+                        className="prompt-bar__row-check"
+                        data-on={row.key === model?.key ? '' : undefined}
+                      >
                         <HugeiconsIcon icon={Tick02Icon} size={13} strokeWidth={2.5} />
                       </span>
                     </>
                   ) : null}
                 </button>
               ))}
-              {list.length === 0 ? <div className="prompt-bar__empty">No matches for “{query}”</div> : null}
+              {list.length === 0 ? (
+                <div className="prompt-bar__empty">No matches for “{query}”</div>
+              ) : null}
             </>
           )}
         </div>
@@ -670,7 +732,7 @@ export default function PromptBar({
         className="prompt-bar__field"
         role="presentation"
         data-max={maxed ? '' : undefined}
-        onPointerDown={e => {
+        onPointerDown={(e) => {
           if (e.target === e.currentTarget || e.target === inputRef.current) closeMenus();
         }}
         onClick={focusInput}
@@ -686,7 +748,7 @@ export default function PromptBar({
                   type="button"
                   className="prompt-bar__chip-x"
                   aria-label={`Remove ${file}`}
-                  onClick={() => setAttachments(a => a.filter((_, j) => j !== i))}
+                  onClick={() => setAttachments((a) => a.filter((_, j) => j !== i))}
                 >
                   <HugeiconsIcon icon={Cancel01Icon} size={10} strokeWidth={2.5} />
                 </button>
@@ -702,7 +764,7 @@ export default function PromptBar({
           value={draft}
           placeholder={listening ? 'Listening…' : placeholder}
           aria-label="Prompt"
-          onChange={e => {
+          onChange={(e) => {
             setDraft(e.target.value);
             typing.current.energy = Math.min(1.6, typing.current.energy + 0.22);
             typing.current.strokes = Math.min(4, typing.current.strokes + 1);
@@ -721,12 +783,12 @@ export default function PromptBar({
             aria-label="Add files and sources"
             aria-expanded={plusOpen}
             data-on={plusOpen ? '' : undefined}
-            onMouseDown={e => e.preventDefault()}
+            onMouseDown={(e) => e.preventDefault()}
             onClick={() => {
               setModelOpen(false);
               setEffortOpen(false);
               setActive(0);
-              setPlusOpen(v => !v);
+              setPlusOpen((v) => !v);
               focusInput();
             }}
           >
@@ -739,12 +801,12 @@ export default function PromptBar({
               aria-label="Choose model"
               aria-expanded={modelOpen}
               data-on={modelOpen ? '' : undefined}
-              onMouseDown={e => e.preventDefault()}
+              onMouseDown={(e) => e.preventDefault()}
               onClick={() => {
                 setPlusOpen(false);
                 setEffortOpen(false);
                 setActive(Math.max(0, models.indexOf(model)));
-                setModelOpen(v => !v);
+                setModelOpen((v) => !v);
                 focusInput();
               }}
             >
@@ -760,11 +822,11 @@ export default function PromptBar({
               aria-expanded={effortOpen}
               data-on={effortOpen ? '' : undefined}
               data-max={maxed ? '' : undefined}
-              onMouseDown={e => e.preventDefault()}
+              onMouseDown={(e) => e.preventDefault()}
               onClick={() => {
                 setPlusOpen(false);
                 setModelOpen(false);
-                setEffortOpen(v => !v);
+                setEffortOpen((v) => !v);
                 focusInput();
               }}
             >
@@ -780,7 +842,7 @@ export default function PromptBar({
               aria-label={listening ? 'Stop dictation' : 'Dictate'}
               aria-pressed={listening}
               data-on={listening ? '' : undefined}
-              onMouseDown={e => e.preventDefault()}
+              onMouseDown={(e) => e.preventDefault()}
               onClick={toggleListen}
             >
               {listening ? (
@@ -801,7 +863,7 @@ export default function PromptBar({
             aria-label={busy ? 'Stop' : 'Send'}
             data-armed={armed ? '' : undefined}
             data-pressed={pressed ? '' : undefined}
-            onMouseDown={e => e.preventDefault()}
+            onMouseDown={(e) => e.preventDefault()}
             onPointerDown={down}
             onPointerUp={up}
             onPointerCancel={up}

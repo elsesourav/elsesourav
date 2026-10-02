@@ -45,11 +45,11 @@ describe('Favicon & Site Brand Icon Audit', () => {
     });
   });
 
-  it('verifies App Router root metadata icons are present in app/', () => {
-    const appIcons = ['icon.png', 'apple-icon.png'];
-    appIcons.forEach((file) => {
+  it('verifies conflicting App Router root metadata icons are eliminated in favor of layout.tsx metadata', () => {
+    const conflictingAppIcons = ['icon.png', 'apple-icon.png'];
+    conflictingAppIcons.forEach((file) => {
       const filePath = path.join(appDir, file);
-      expect(fs.existsSync(filePath)).toBe(true);
+      expect(fs.existsSync(filePath)).toBe(false);
     });
   });
 

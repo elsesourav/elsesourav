@@ -4,7 +4,12 @@ import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from
 import Matter from 'matter-js';
 const { Bodies, Body, Composite, Engine } = Matter;
 
-const DEFAULT_ITEMS = ['Try a warmer palette', 'Tighten the spacing', 'Logo feels small', 'Love the new hero'];
+const DEFAULT_ITEMS = [
+  'Try a warmer palette',
+  'Tighten the spacing',
+  'Logo feels small',
+  'Love the new hero',
+];
 const PAD = 28;
 const CHAR = 6.8;
 const GAP = 12;
@@ -97,7 +102,11 @@ const layout = (
     const shift = (ri % 2 ? 1 : -1) * Math.min(16, spread * 0.1);
     r.items.forEach(({ i, pw }) => {
       const j = jitter(i);
-      pos[i] = { x: x + pw / 2 + shift + (j - 0.5) * 6, y: -lift - ri * ROW - j * 6, r: tilt * (j * 2 - 1) };
+      pos[i] = {
+        x: x + pw / 2 + shift + (j - 0.5) * 6,
+        y: -lift - ri * ROW - j * 6,
+        r: tilt * (j * 2 - 1),
+      };
       x += pw + GAP;
     });
   });
@@ -164,7 +173,7 @@ export default function FolderFloat({
   openDuration = 520,
   stagger = 45,
   bounce = 0.3,
-  className = ''
+  className = '',
 }: FolderFloatProps) {
   const [open, setOpen] = useState(defaultOpen);
   const [popped, setPopped] = useState(-1);
@@ -181,7 +190,7 @@ export default function FolderFloat({
     t0: 0,
     drag: null,
     zone: null,
-    live: false
+    live: false,
   });
   const latest = useRef<{
     onSelect?: (value: string, index: number) => void;
@@ -192,22 +201,22 @@ export default function FolderFloat({
   latest.current = { onSelect, onOpenChange, drift, reduce: false };
   const popTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const liveTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const list: FolderFloatItem[] = items.map(item =>
+  const list: FolderFloatItem[] = items.map((item) =>
     typeof item === 'string' ? { label: item, value: item } : item
   );
   const n = list.length;
   const sub = sublabel || `${n} ${n === 1 ? 'note' : 'notes'}`;
   const pos = layout(list, spread, lift, tilt, sizes);
 
-  const labelsKey = list.map(item => item.label).join('|');
+  const labelsKey = list.map((item) => item.label).join('|');
   useLayoutEffect(() => {
     const measure = () => {
       const next = pillRefs.current
         .slice(0, n)
-        .map(el => (el ? { w: el.offsetWidth, h: el.offsetHeight } : null));
-      if (next.some(s => !s)) return;
+        .map((el) => (el ? { w: el.offsetWidth, h: el.offsetHeight } : null));
+      if (next.some((s) => !s)) return;
       const validNext = next as FolderFloatSize[];
-      setSizes(prev =>
+      setSizes((prev) =>
         prev.length === validNext.length &&
         prev.every((s, i) => s.w === validNext[i]?.w && s.h === validNext[i]?.h)
           ? prev
@@ -247,18 +256,18 @@ export default function FolderFloat({
     const w = world.current;
     if (w.engine) return;
     const els = pillRefs.current.slice(0, n);
-    if (els.some(el => !el)) return;
+    if (els.some((el) => !el)) return;
     const validEls = els as HTMLButtonElement[];
     const engine = Engine.create({ gravity: { x: 0, y: 0 } });
     engine.enableSleeping = false;
     w.engine = engine;
-    w.sizes = validEls.map(el => ({ w: el.offsetWidth, h: el.offsetHeight }));
-    const ys = pos.map(p => p.y);
+    w.sizes = validEls.map((el) => ({ w: el.offsetWidth, h: el.offsetHeight }));
+    const ys = pos.map((p) => p.y);
     const zone = {
       left: -spread - ZONE_PAD,
       right: spread + ZONE_PAD,
       top: Math.min(...ys) - ZONE_PAD,
-      bottom: -lift + Math.max(...w.sizes.map(s => s.h))
+      bottom: -lift + Math.max(...w.sizes.map((s) => s.h)),
     };
     w.zone = zone;
     w.bodies = validEls.map((_, i) => {
@@ -270,25 +279,49 @@ export default function FolderFloat({
         restitution: 0.55,
         friction: 0,
         frictionAir: 0.08,
-        inertia: Infinity
+        inertia: Infinity,
       }) as PhysicsBody;
       b.plugin = { phase: jitter(i) * Math.PI * 2 };
       return b;
     });
     const T = 80;
     const walls = [
-      Bodies.rectangle((zone.left + zone.right) / 2, zone.top - T / 2, zone.right - zone.left + 2 * T, T, {
-        isStatic: true
-      }),
-      Bodies.rectangle((zone.left + zone.right) / 2, zone.bottom + T / 2, zone.right - zone.left + 2 * T, T, {
-        isStatic: true
-      }),
-      Bodies.rectangle(zone.left - T / 2, (zone.top + zone.bottom) / 2, T, zone.bottom - zone.top + 2 * T, {
-        isStatic: true
-      }),
-      Bodies.rectangle(zone.right + T / 2, (zone.top + zone.bottom) / 2, T, zone.bottom - zone.top + 2 * T, {
-        isStatic: true
-      })
+      Bodies.rectangle(
+        (zone.left + zone.right) / 2,
+        zone.top - T / 2,
+        zone.right - zone.left + 2 * T,
+        T,
+        {
+          isStatic: true,
+        }
+      ),
+      Bodies.rectangle(
+        (zone.left + zone.right) / 2,
+        zone.bottom + T / 2,
+        zone.right - zone.left + 2 * T,
+        T,
+        {
+          isStatic: true,
+        }
+      ),
+      Bodies.rectangle(
+        zone.left - T / 2,
+        (zone.top + zone.bottom) / 2,
+        T,
+        zone.bottom - zone.top + 2 * T,
+        {
+          isStatic: true,
+        }
+      ),
+      Bodies.rectangle(
+        zone.right + T / 2,
+        (zone.top + zone.bottom) / 2,
+        T,
+        zone.bottom - zone.top + 2 * T,
+        {
+          isStatic: true,
+        }
+      ),
     ];
     Composite.add(engine.world, [...w.bodies, ...walls]);
     w.live = true;
@@ -307,7 +340,7 @@ export default function FolderFloat({
         const ph = b.plugin.phase;
         Body.applyForce(b, b.position, {
           x: Math.sin(t * 0.9 + ph) * k * b.mass,
-          y: Math.cos(t * 1.3 + ph * 1.7) * k * b.mass
+          y: Math.cos(t * 1.3 + ph * 1.7) * k * b.mass,
         });
       });
       Engine.update(s.engine, dt);
@@ -326,7 +359,7 @@ export default function FolderFloat({
   const set = useCallback(
     (next: boolean) => {
       if (!next) stopPhysics();
-      setOpen(prev => {
+      setOpen((prev) => {
         if (prev === next) return prev;
         latest.current.onOpenChange?.(next);
         return next;
@@ -390,7 +423,7 @@ export default function FolderFloat({
       dy: b.position.y - p.y,
       sx: e.clientX,
       sy: e.clientY,
-      moved: false
+      moved: false,
     };
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
@@ -451,7 +484,7 @@ export default function FolderFloat({
             }
           : undefined
       }
-      onKeyDown={e => {
+      onKeyDown={(e) => {
         if (e.key === 'Escape' && open) {
           e.stopPropagation();
           set(false);
@@ -476,7 +509,7 @@ export default function FolderFloat({
           '--ff-close': `${Math.round(openDuration * 0.6)}ms`,
           '--ff-stagger': `${stagger}ms`,
           '--ff-n': n,
-          '--ff-spring': `cubic-bezier(0.34, ${(1 + bounce * 1.9).toFixed(2)}, 0.64, 1)`
+          '--ff-spring': `cubic-bezier(0.34, ${(1 + bounce * 1.9).toFixed(2)}, 0.64, 1)`,
         } as React.CSSProperties
       }
     >
@@ -486,7 +519,7 @@ export default function FolderFloat({
           return (
             <button
               key={`${item.value}-${i}`}
-              ref={el => {
+              ref={(el) => {
                 pillRefs.current[i] = el;
               }}
               type="button"
@@ -499,14 +532,14 @@ export default function FolderFloat({
                   '--i': i,
                   '--x': `${p.x.toFixed(1)}px`,
                   '--y': `${p.y.toFixed(1)}px`,
-                  '--r': `${p.r.toFixed(2)}deg`
+                  '--r': `${p.r.toFixed(2)}deg`,
                 } as React.CSSProperties
               }
-              onPointerDown={e => down(e, i)}
-              onPointerMove={e => move(e, i)}
-              onPointerUp={e => up(e, i, item)}
-              onPointerCancel={e => up(e, i, item)}
-              onClick={e => {
+              onPointerDown={(e) => down(e, i)}
+              onPointerMove={(e) => move(e, i)}
+              onPointerUp={(e) => up(e, i, item)}
+              onPointerCancel={(e) => up(e, i, item)}
+              onClick={(e) => {
                 if (!world.current.live || e.detail === 0) pick(item, i);
               }}
             >

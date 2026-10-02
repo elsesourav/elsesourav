@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React, { useCallback, useEffect, useId, useRef, useState } from "react";
+import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
 import {
   AnimatePresence,
   animate,
@@ -8,22 +8,22 @@ import {
   useMotionValue,
   useReducedMotion,
   useTransform,
-} from "motion/react";
+} from 'motion/react';
 
-const CELL = { type: "spring", stiffness: 520, damping: 34, mass: 0.45 } as const;
-const DISCLOSE = { type: "spring", stiffness: 150, damping: 27, mass: 1 } as const;
-const CROSSFADE = { type: "spring", stiffness: 260, damping: 34, mass: 0.8 } as const;
+const CELL = { type: 'spring', stiffness: 520, damping: 34, mass: 0.45 } as const;
+const DISCLOSE = { type: 'spring', stiffness: 150, damping: 27, mass: 1 } as const;
+const CROSSFADE = { type: 'spring', stiffness: 260, damping: 34, mass: 0.8 } as const;
 const LEAVE = [0.4, 0, 1, 1] as const;
 
-export type SwipeChoice = "left" | "right";
+export type SwipeChoice = 'left' | 'right';
 
 export type SwipeIntent = { dir: -1 | 0 | 1; step: number };
 
-export type SwipeDeckFlow = { dir: -1 | 1; kind: "decide" | "undo" };
+export type SwipeDeckFlow = { dir: -1 | 1; kind: 'decide' | 'undo' };
 
 const BLANK: SwipeIntent = { dir: 0, step: 0 };
 
-const spent = (out: boolean) => (out ? "opacity-0" : "");
+const spent = (out: boolean) => (out ? 'opacity-0' : '');
 
 export type UseSwipeDeckOptions = {
   count: number;
@@ -49,7 +49,7 @@ export function useSwipeDeck({
   const reach = Math.max(1, threshold);
 
   const [decisions, setDecisions] = useState<SwipeChoice[]>([]);
-  const [flow, setFlow] = useState<SwipeDeckFlow>({ dir: 1, kind: "decide" });
+  const [flow, setFlow] = useState<SwipeDeckFlow>({ dir: 1, kind: 'decide' });
   const [intent, setIntent] = useState<SwipeIntent>(BLANK);
 
   const index = Math.min(decisions.length, total);
@@ -77,11 +77,11 @@ export function useSwipeDeck({
       if (at >= size.current) return;
       len.current = at + 1;
       setDecisions((prev) => [...prev, choice]);
-      setFlow({ dir: choice === "right" ? 1 : -1, kind: "decide" });
+      setFlow({ dir: choice === 'right' ? 1 : -1, kind: 'decide' });
       setIntent(BLANK);
       decided.current?.(at, choice);
     },
-    [disabled],
+    [disabled]
   );
 
   const undo = useCallback(() => {
@@ -91,7 +91,7 @@ export function useSwipeDeck({
     const last = made.current[at - 1];
     len.current = at - 1;
     setDecisions((prev) => prev.slice(0, prev.length - 1));
-    setFlow({ dir: last === "right" ? 1 : -1, kind: "undo" });
+    setFlow({ dir: last === 'right' ? 1 : -1, kind: 'undo' });
     setIntent(BLANK);
     reverted.current?.(at - 1);
   }, [disabled]);
@@ -100,11 +100,9 @@ export function useSwipeDeck({
     (dx: number) => {
       const step = Math.min(grain, Math.round((Math.abs(dx) / reach) * grain));
       const dir: -1 | 0 | 1 = step === 0 ? 0 : dx > 0 ? 1 : -1;
-      setIntent((prev) =>
-        prev.dir === dir && prev.step === step ? prev : { dir, step },
-      );
+      setIntent((prev) => (prev.dir === dir && prev.step === step ? prev : { dir, step }));
     },
-    [grain, reach],
+    [grain, reach]
   );
 
   const release = useCallback(
@@ -115,38 +113,38 @@ export function useSwipeDeck({
         clear();
         return;
       }
-      decide((far ? dx : vx) > 0 ? "right" : "left");
+      decide((far ? dx : vx) > 0 ? 'right' : 'left');
     },
-    [reach, flick, clear, decide],
+    [reach, flick, clear, decide]
   );
 
   const onKeyDown = useCallback(
     (event: React.KeyboardEvent) => {
       if (event.target !== event.currentTarget) return;
-      if (event.key === "ArrowLeft") {
+      if (event.key === 'ArrowLeft') {
         event.preventDefault();
-        decide("left");
-      } else if (event.key === "ArrowRight") {
+        decide('left');
+      } else if (event.key === 'ArrowRight') {
         event.preventDefault();
-        decide("right");
-      } else if (event.key === "Backspace" || event.key === "Delete") {
+        decide('right');
+      } else if (event.key === 'Backspace' || event.key === 'Delete') {
         event.preventDefault();
         undo();
-      } else if (event.key === "Escape") {
+      } else if (event.key === 'Escape') {
         clear();
       }
     },
-    [decide, undo, clear],
+    [decide, undo, clear]
   );
 
   useEffect(() => {
     const bail = () => clear();
     const hidden = () => document.hidden && clear();
-    window.addEventListener("blur", bail);
-    document.addEventListener("visibilitychange", hidden);
+    window.addEventListener('blur', bail);
+    document.addEventListener('visibilitychange', hidden);
     return () => {
-      window.removeEventListener("blur", bail);
-      document.removeEventListener("visibilitychange", hidden);
+      window.removeEventListener('blur', bail);
+      document.removeEventListener('visibilitychange', hidden);
     };
   }, [clear]);
 
@@ -168,8 +166,8 @@ export function useSwipeDeck({
     report,
     release,
     deckProps: {
-      role: "group" as const,
-      "aria-roledescription": "card deck",
+      role: 'group' as const,
+      'aria-roledescription': 'card deck',
       tabIndex: 0,
       onKeyDown,
     },
@@ -284,7 +282,8 @@ function DeckCard({
     const on = intent.dir === side;
     return (
       <motion.span
-        data-interior="swipe-deck" aria-hidden
+        data-interior="swipe-deck"
+        aria-hidden
         initial={false}
         animate={{
           opacity: on ? intent.step / steps : 0,
@@ -293,8 +292,8 @@ function DeckCard({
         transition={reduced ? { duration: 0 } : CELL}
         className={`pointer-events-none absolute top-3 whitespace-nowrap rounded-[6px] border bg-white px-2 py-1 text-[10.5px] font-semibold uppercase tracking-[0.08em] transition-colors duration-150 dark:bg-[var(--interior-bg-elevated)] ${
           on && intent.step >= steps
-            ? "border-[var(--interior-primary)] text-[#4568FF] dark:border-[var(--interior-primary)] dark:text-[#93B0FF]"
-            : "border-[var(--interior-border-strong)] text-[var(--interior-fg)] dark:border-white/20 dark:text-[var(--interior-fg)]"
+            ? 'border-[var(--interior-primary)] text-[#4568FF] dark:border-[var(--interior-primary)] dark:text-[#93B0FF]'
+            : 'border-[var(--interior-border-strong)] text-[var(--interior-fg)] dark:border-white/20 dark:text-[var(--interior-fg)]'
         } ${place}`}
       >
         {text}
@@ -312,26 +311,20 @@ function DeckCard({
         exit: (dir: number) => ({
           x: dir * 560,
           zIndex: 12,
-          borderColor: "rgba(0,0,0,0)",
+          borderColor: 'rgba(0,0,0,0)',
           transition: reduced
             ? { duration: 0 }
             : {
                 x: { duration: 0.3, ease: LEAVE },
-                borderColor: { duration: 0.1, ease: "linear" },
+                borderColor: { duration: 0.1, ease: 'linear' },
               },
         }),
       }}
       initial={{ y, scale }}
       animate={{ y, scale }}
       exit="exit"
-      transition={
-        reduced
-          ? { duration: 0 }
-          : active
-            ? { ...CROSSFADE, delay: 0.1 }
-            : CROSSFADE
-      }
-      drag={active ? "x" : false}
+      transition={reduced ? { duration: 0 } : active ? { ...CROSSFADE, delay: 0.1 } : CROSSFADE}
+      drag={active ? 'x' : false}
       dragDirectionLock
       dragMomentum={false}
       dragElastic={1}
@@ -346,18 +339,18 @@ function DeckCard({
         opacity: fade,
         height,
         zIndex: 10 - depth,
-        transformOrigin: "50% 100%",
-        touchAction: "pan-y",
+        transformOrigin: '50% 100%',
+        touchAction: 'pan-y',
       }}
       className={`absolute inset-x-5 top-0 select-none overflow-hidden rounded-[14px] border border-[var(--interior-border)] bg-white dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] ${
         active
-          ? "cursor-grab shadow-[0_1px_2px_rgba(28,25,23,0.06),0_16px_32px_-18px_rgba(28,25,23,0.55)] active:cursor-grabbing dark:shadow-[0_2px_16px_rgba(0,0,0,0.6)]"
-          : "shadow-[0_1px_2px_rgba(28,25,23,0.05),0_6px_14px_-12px_rgba(28,25,23,0.4)] dark:shadow-[0_1px_6px_rgba(0,0,0,0.45)]"
+          ? 'cursor-grab shadow-[0_1px_2px_rgba(28,25,23,0.06),0_16px_32px_-18px_rgba(28,25,23,0.55)] active:cursor-grabbing dark:shadow-[0_2px_16px_rgba(0,0,0,0.6)]'
+          : 'shadow-[0_1px_2px_rgba(28,25,23,0.05),0_6px_14px_-12px_rgba(28,25,23,0.4)] dark:shadow-[0_1px_6px_rgba(0,0,0,0.45)]'
       }`}
     >
       {children}
-      {active ? badge(-1, leftLabel, "left-3") : null}
-      {active ? badge(1, rightLabel, "right-3") : null}
+      {active ? badge(-1, leftLabel, 'left-3') : null}
+      {active ? badge(1, rightLabel, 'right-3') : null}
     </motion.div>
   );
 }
@@ -388,16 +381,16 @@ export function SwipeDeck<T>({
   children,
   onDecide,
   onUndo,
-  label = "Card deck",
-  leftLabel = "Skip",
-  rightLabel = "Keep",
-  undoLabel = "Undo",
-  emptyLabel = "Deck cleared",
+  label = 'Card deck',
+  leftLabel = 'Skip',
+  rightLabel = 'Keep',
+  undoLabel = 'Undo',
+  emptyLabel = 'Deck cleared',
   height = 180,
   threshold = 92,
   steps = 6,
   peek = 3,
-  className = "",
+  className = '',
 }: SwipeDeckProps<T>) {
   const hintId = useId();
   const reduced = useReducedMotion() === true;
@@ -420,7 +413,7 @@ export function SwipeDeck<T>({
   const current = items[deck.index];
 
   const control =
-    "inline-flex h-8 items-center gap-1.5 rounded-[9px] border border-[var(--interior-border)] bg-white px-2.5 text-[12px] font-medium text-[var(--interior-fg)] outline-none transition-[background-color,border-color,opacity] duration-150 hover:bg-[var(--interior-bg-subtle)] focus-visible:border-[var(--interior-primary)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:text-[var(--interior-fg)] dark:hover:bg-white/10 dark:focus-visible:border-[var(--interior-primary)]";
+    'inline-flex h-8 items-center gap-1.5 rounded-[9px] border border-[var(--interior-border)] bg-white px-2.5 text-[12px] font-medium text-[var(--interior-fg)] outline-none transition-[background-color,border-color,opacity] duration-150 hover:bg-[var(--interior-bg-subtle)] focus-visible:border-[var(--interior-primary)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:text-[var(--interior-fg)] dark:hover:bg-white/10 dark:focus-visible:border-[var(--interior-primary)]';
 
   return (
     <div className={`w-full ${className}`}>
@@ -445,22 +438,20 @@ export function SwipeDeck<T>({
           <AnimatePresence initial={false} custom={deck.flow.dir}>
             {stack.map((item, depth) => (
               <DeckCard
-              key={itemKey(item)}
-              depth={depth}
-              height={height}
-              entryX={
-                depth === 0 && deck.flow.kind === "undo" ? deck.flow.dir * 560 : 0
-              }
-              active={depth === 0}
-              reduced={reduced}
-              label={itemLabel(item)}
-              leftLabel={leftLabel}
-              rightLabel={rightLabel}
-              intent={deck.intent}
-              steps={deck.steps}
-              onMove={deck.report}
-              onRelease={deck.release}
-            >
+                key={itemKey(item)}
+                depth={depth}
+                height={height}
+                entryX={depth === 0 && deck.flow.kind === 'undo' ? deck.flow.dir * 560 : 0}
+                active={depth === 0}
+                reduced={reduced}
+                label={itemLabel(item)}
+                leftLabel={leftLabel}
+                rightLabel={rightLabel}
+                intent={deck.intent}
+                steps={deck.steps}
+                onMove={deck.report}
+                onRelease={deck.release}
+              >
                 {children(item)}
               </DeckCard>
             ))}
@@ -470,7 +461,7 @@ export function SwipeDeck<T>({
       <div className="mt-3 grid h-8 grid-cols-[1fr_auto_1fr] items-center gap-3">
         <button
           type="button"
-          onClick={() => deck.decide("left")}
+          onClick={() => deck.decide('left')}
           inert={deck.done}
           className={`${control} justify-self-start ${spent(deck.done)}`}
         >
@@ -479,9 +470,7 @@ export function SwipeDeck<T>({
         </button>
         <span className="flex items-center gap-2 font-[family-name:var(--interior-font-mono)] text-[10.5px] tabular-nums text-[var(--interior-fg-muted)]">
           <span aria-hidden className="inline-grid justify-items-end">
-            <span className="invisible col-start-1 row-start-1">
-              {items.length}
-            </span>
+            <span className="invisible col-start-1 row-start-1">{items.length}</span>
             <span className="col-start-1 row-start-1">{deck.remaining}</span>
           </span>
           <span aria-hidden>left</span>
@@ -490,7 +479,7 @@ export function SwipeDeck<T>({
             onClick={deck.undo}
             inert={!deck.canUndo}
             className={`inline-flex items-center gap-1 rounded-[5px] px-1 py-0.5 text-[var(--interior-fg)] outline-none transition-[background-color,box-shadow,opacity] duration-150 hover:bg-[var(--interior-bg-subtle)] focus-visible:bg-[var(--interior-primary)]/[0.06] focus-visible:shadow-[inset_0_0_0_1px_var(--interior-primary)] dark:text-[var(--interior-fg)] dark:hover:bg-white/10 dark:focus-visible:bg-[#93B0FF]/[0.1] dark:focus-visible:shadow-[inset_0_0_0_1px_var(--interior-primary)] ${spent(
-              !deck.canUndo,
+              !deck.canUndo
             )}`}
           >
             {ICON_UNDO}
@@ -499,7 +488,7 @@ export function SwipeDeck<T>({
         </span>
         <button
           type="button"
-          onClick={() => deck.decide("right")}
+          onClick={() => deck.decide('right')}
           inert={deck.done}
           className={`${control} justify-self-end ${spent(deck.done)}`}
         >
@@ -513,8 +502,7 @@ export function SwipeDeck<T>({
           : `${itemLabel(current)}. Card ${deck.index + 1} of ${items.length}.`}
       </p>
       <span id={hintId} className="sr-only">
-        Left and right arrow keys decide the top card. Backspace brings the last
-        one back.
+        Left and right arrow keys decide the top card. Backspace brings the last one back.
       </span>
     </div>
   );

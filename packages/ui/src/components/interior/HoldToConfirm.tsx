@@ -1,18 +1,11 @@
-"use client";
+'use client';
 
-import React, { useCallback, useEffect, useId, useRef, useState } from "react";
-import {
-  animate,
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useTransform,
-} from "motion/react";
+import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { animate, motion, useMotionValue, useReducedMotion, useTransform } from 'motion/react';
 
-const FACE = { type: "spring", stiffness: 260, damping: 34, mass: 0.8 } as const;
+const FACE = { type: 'spring', stiffness: 260, damping: 34, mass: 0.8 } as const;
 
-
-export type HoldPhase = "idle" | "holding" | "releasing" | "committed";
+export type HoldPhase = 'idle' | 'holding' | 'releasing' | 'committed';
 
 export type UseHoldToConfirmOptions = {
   onConfirm: () => void;
@@ -36,9 +29,9 @@ export function useHoldToConfirm({
   disabled = false,
 }: UseHoldToConfirmOptions) {
   const [step, setStep] = useState(0);
-  const [phase, setPhase] = useState<HoldPhase>("idle");
+  const [phase, setPhase] = useState<HoldPhase>('idle');
 
-  const phaseRef = useRef<HoldPhase>("idle");
+  const phaseRef = useRef<HoldPhase>('idle');
   const down = useRef(false);
   const elapsed = useRef(0);
   const last = useRef(0);
@@ -62,19 +55,19 @@ export function useHoldToConfirm({
     elapsed.current = 0;
     origin.current = null;
     setStep(0);
-    move("idle");
+    move('idle');
   }, [move]);
 
   const begin = useCallback(
     (point?: { x: number; y: number }) => {
       if (disabled) return;
-      if (phaseRef.current === "committed" || phaseRef.current === "holding") {
+      if (phaseRef.current === 'committed' || phaseRef.current === 'holding') {
         return;
       }
 
       origin.current = point ?? null;
       down.current = true;
-      move("holding");
+      move('holding');
       if (raf.current) return;
 
       last.current = performance.now();
@@ -90,7 +83,7 @@ export function useHoldToConfirm({
           down.current = false;
           origin.current = null;
           setStep(steps);
-          move("committed");
+          move('committed');
           if (haptic) navigator.vibrate?.(14);
           confirm.current();
           return;
@@ -101,28 +94,25 @@ export function useHoldToConfirm({
           elapsed.current = 0;
           origin.current = null;
           setStep(0);
-          move("idle");
+          move('idle');
           return;
         }
 
-        const s = Math.min(
-          steps,
-          Math.floor((elapsed.current / duration) * steps),
-        );
+        const s = Math.min(steps, Math.floor((elapsed.current / duration) * steps));
         setStep((prev) => (prev === s ? prev : s));
         raf.current = requestAnimationFrame(loop);
       };
 
       raf.current = requestAnimationFrame(loop);
     },
-    [disabled, duration, steps, releaseRate, haptic, move],
+    [disabled, duration, steps, releaseRate, haptic, move]
   );
 
   const release = useCallback(() => {
-    if (phaseRef.current !== "holding") return;
+    if (phaseRef.current !== 'holding') return;
     down.current = false;
     origin.current = null;
-    move("releasing");
+    move('releasing');
     abort.current?.();
   }, [move]);
 
@@ -131,11 +121,11 @@ export function useHoldToConfirm({
     const onVisibility = () => {
       if (document.hidden) release();
     };
-    window.addEventListener("blur", bail);
-    document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener('blur', bail);
+    document.addEventListener('visibilitychange', onVisibility);
     return () => {
-      window.removeEventListener("blur", bail);
-      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener('blur', bail);
+      document.removeEventListener('visibilitychange', onVisibility);
       cancelAnimationFrame(raf.current);
       raf.current = 0;
     };
@@ -143,13 +133,13 @@ export function useHoldToConfirm({
 
   const bind = {
     onPointerDown: (e: React.PointerEvent) => {
-      if (e.pointerType === "mouse" && e.button !== 0) return;
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
       e.currentTarget.setPointerCapture?.(e.pointerId);
       begin({ x: e.clientX, y: e.clientY });
     },
     onPointerMove: (e: React.PointerEvent) => {
       const from = origin.current;
-      if (phaseRef.current !== "holding" || !from) return;
+      if (phaseRef.current !== 'holding' || !from) return;
       if (Math.hypot(e.clientX - from.x, e.clientY - from.y) > moveTolerance) {
         release();
       }
@@ -158,26 +148,26 @@ export function useHoldToConfirm({
     onPointerCancel: release,
     onPointerLeave: release,
     onKeyDown: (e: React.KeyboardEvent) => {
-      if (e.key === "Escape") {
-        if (phaseRef.current === "holding" || phaseRef.current === "releasing") {
+      if (e.key === 'Escape') {
+        if (phaseRef.current === 'holding' || phaseRef.current === 'releasing') {
           e.preventDefault();
           reset();
         }
         return;
       }
       if (e.repeat) return;
-      if (e.key === " " || e.key === "Enter") {
+      if (e.key === ' ' || e.key === 'Enter') {
         e.preventDefault();
         begin();
       }
     },
     onKeyUp: (e: React.KeyboardEvent) => {
-      if (e.key === " " || e.key === "Enter") release();
+      if (e.key === ' ' || e.key === 'Enter') release();
     },
     onBlur: release,
     onClick: (e: React.MouseEvent) => {
       e.preventDefault();
-      if (phaseRef.current === "committed") e.stopPropagation();
+      if (phaseRef.current === 'committed') e.stopPropagation();
     },
     onContextMenu: (e: React.MouseEvent) => e.preventDefault(),
   };
@@ -202,7 +192,7 @@ export type HoldToConfirmProps = {
   steps?: number;
   releaseRate?: number;
   disabled?: boolean;
-  variant?: "default" | "destructive";
+  variant?: 'default' | 'destructive';
   className?: string;
 };
 
@@ -210,14 +200,14 @@ export function HoldToConfirm({
   onConfirm,
   children,
   onAbort,
-  confirmLabel = "Confirmed",
+  confirmLabel = 'Confirmed',
   duration = 1800,
   resetAfter = 1600,
   steps = 20,
   releaseRate = 2.5,
   disabled = false,
-  variant = "default",
-  className = "",
+  variant = 'default',
+  className = '',
 }: HoldToConfirmProps) {
   const { bind, phase, reset } = useHoldToConfirm({
     onConfirm,
@@ -231,38 +221,35 @@ export function HoldToConfirm({
   const reduced = useReducedMotion();
   const hintId = useId();
 
-  const committed = phase === "committed";
+  const committed = phase === 'committed';
   const seconds = Math.round(duration / 100) / 10;
 
   const swept = useMotionValue(0);
-  const clipPath = useTransform(
-    swept,
-    (v) => `inset(0 ${(1 - v) * 100}% 0 0)`,
-  );
+  const clipPath = useTransform(swept, (v) => `inset(0 ${(1 - v) * 100}% 0 0)`);
 
   useEffect(() => {
-    if (phase !== "committed" || resetAfter <= 0) return;
+    if (phase !== 'committed' || resetAfter <= 0) return;
     const back = setTimeout(reset, resetAfter);
     return () => clearTimeout(back);
   }, [phase, resetAfter, reset]);
 
   useEffect(() => {
     if (reduced) {
-      swept.set(phase === "holding" || phase === "committed" ? 1 : 0);
+      swept.set(phase === 'holding' || phase === 'committed' ? 1 : 0);
       return;
     }
 
-    if (phase === "committed") {
-      const controls = animate(swept, 1, { duration: 0.12, ease: "linear" });
+    if (phase === 'committed') {
+      const controls = animate(swept, 1, { duration: 0.12, ease: 'linear' });
       return () => controls.stop();
     }
 
     const from = swept.get();
 
-    if (phase === "holding") {
+    if (phase === 'holding') {
       const controls = animate(swept, 1, {
         duration: (duration * (1 - from)) / 1000,
-        ease: "linear",
+        ease: 'linear',
       });
       return () => controls.stop();
     }
@@ -275,24 +262,25 @@ export function HoldToConfirm({
   }, [phase, duration, releaseRate, reduced, swept]);
 
   const baseStyle =
-    variant === "destructive"
-      ? "border-rose-500/40 bg-rose-500/10 text-rose-500 focus-visible:ring-rose-500 dark:border-rose-500/40 dark:bg-rose-950/40 dark:text-rose-400"
-      : "border-[var(--interior-border)] bg-white text-[var(--interior-fg)] focus-visible:ring-[var(--interior-ring)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:text-[var(--interior-fg)] dark:focus-visible:ring-[var(--interior-ring)]";
+    variant === 'destructive'
+      ? 'border-rose-500/40 bg-rose-500/10 text-rose-500 focus-visible:ring-rose-500 dark:border-rose-500/40 dark:bg-rose-950/40 dark:text-rose-400'
+      : 'border-[var(--interior-border)] bg-white text-[var(--interior-fg)] focus-visible:ring-[var(--interior-ring)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:text-[var(--interior-fg)] dark:focus-visible:ring-[var(--interior-ring)]';
 
   const sweptStyle =
-    variant === "destructive"
-      ? "bg-rose-600 text-white dark:bg-rose-600 dark:text-white"
-      : "bg-[var(--interior-fg)] text-white dark:bg-[var(--interior-bg-subtle)] dark:text-[var(--interior-fg)]";
+    variant === 'destructive'
+      ? 'bg-rose-600 text-white dark:bg-rose-600 dark:text-white'
+      : 'bg-[var(--interior-fg)] text-white dark:bg-[var(--interior-bg-subtle)] dark:text-[var(--interior-fg)]';
 
   return (
     <button
-      data-interior="hold-to-confirm" type="button"
+      data-interior="hold-to-confirm"
+      type="button"
       aria-disabled={disabled || committed}
       aria-describedby={hintId}
       {...bind}
-      style={{ touchAction: "manipulation", WebkitTouchCallout: "none" }}
+      style={{ touchAction: 'manipulation', WebkitTouchCallout: 'none' }}
       className={`relative isolate inline-grid h-10 select-none place-items-center overflow-hidden rounded-[9px] border px-4 text-[13px] font-medium outline-none focus-visible:ring-2 ${baseStyle} ${
-        disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+        disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
       } ${className}`}
     >
       <Faces committed={committed} confirmLabel={confirmLabel}>
@@ -310,12 +298,12 @@ export function HoldToConfirm({
       </motion.span>
 
       <span id={hintId} className="sr-only">
-        Press and hold for {seconds} seconds to confirm. Releasing early cancels
-        and nothing happens.
+        Press and hold for {seconds} seconds to confirm. Releasing early cancels and nothing
+        happens.
       </span>
 
       <span role="status" aria-live="polite" className="sr-only">
-        {committed ? confirmLabel : ""}
+        {committed ? confirmLabel : ''}
       </span>
     </button>
   );

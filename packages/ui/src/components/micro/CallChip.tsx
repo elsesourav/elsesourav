@@ -8,7 +8,7 @@ import {
   PencilEdit01Icon,
   RefreshIcon,
   Search01Icon,
-  Tick02Icon
+  Tick02Icon,
 } from '@hugeicons/core-free-icons';
 import type { IconSvgElement } from '@hugeicons/react';
 
@@ -18,13 +18,21 @@ const ICONS: Record<string, IconSvgElement> = {
   terminal: CommandLineIcon,
   file: File02Icon,
   search: Search01Icon,
-  edit: PencilEdit01Icon
+  edit: PencilEdit01Icon,
 };
-const WORDS: Record<string, string> = { running: 'running', done: 'done', error: 'failed', idle: 'queued' };
+const WORDS: Record<string, string> = {
+  running: 'running',
+  done: 'done',
+  error: 'failed',
+  idle: 'queued',
+};
 
-const fmt = (ms: number): string => (ms < 10000 ? `${Math.round(ms)} ms` : `${(ms / 1000).toFixed(1)} s`);
+const fmt = (ms: number): string =>
+  ms < 10000 ? `${Math.round(ms)} ms` : `${(ms / 1000).toFixed(1)} s`;
 const reduceMotion = (): boolean =>
-  typeof window !== 'undefined' ? (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false) : false;
+  typeof window !== 'undefined'
+    ? (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false)
+    : false;
 const glyphOf = (s: string): string => (s === 'done' ? 'check' : s === 'error' ? 'retry' : 'tool');
 
 export interface CallChipProps {
@@ -68,7 +76,7 @@ export default function CallChip({
   showTimer = true,
   onRetry,
   className = '',
-  style
+  style,
 }: CallChipProps) {
   const rootRef = useRef<HTMLSpanElement | null>(null);
   const fillRef = useRef<HTMLSpanElement | null>(null);
@@ -83,7 +91,8 @@ export default function CallChip({
   const [pressed, setPressed] = useState(false);
   const [announce, setAnnounce] = useState('');
   const roll = useRef<{ cur: string; prev: string | null }>({ cur: glyphOf(status), prev: null });
-  if (glyphOf(status) !== roll.current.cur) roll.current = { cur: glyphOf(status), prev: roll.current.cur };
+  if (glyphOf(status) !== roll.current.cur)
+    roll.current = { cur: glyphOf(status), prev: roll.current.cur };
 
   const setFraction = (f: number, instant: boolean) => {
     const fill = fillRef.current;
@@ -110,7 +119,10 @@ export default function CallChip({
       setFraction(Math.min(1, Math.max(0, live)), true);
       if (animate && shake > 0 && !reduceMotion() && rootRef.current) {
         shakeAnim.current = rootRef.current.animate(
-          SHAKE.map(k => ({ transform: `translateX(${k * shake}px)`, easing: 'cubic-bezier(0.77, 0, 0.175, 1)' })),
+          SHAKE.map((k) => ({
+            transform: `translateX(${k * shake}px)`,
+            easing: 'cubic-bezier(0.77, 0, 0.175, 1)',
+          })),
           { duration: 450, composite: 'add' }
         );
       }
@@ -141,7 +153,8 @@ export default function CallChip({
       if (timerRef.current) timerRef.current.textContent = fmt(ms);
     };
     if (status !== 'running') {
-      if ((status === 'idle' || !clock.current.ms) && timerRef.current) timerRef.current.textContent = '—';
+      if ((status === 'idle' || !clock.current.ms) && timerRef.current)
+        timerRef.current.textContent = '—';
       return undefined;
     }
     const startedAt = performance.now();
@@ -167,12 +180,14 @@ export default function CallChip({
 
   useEffect(() => {
     const ms = showTimer && clock.current.ms ? Math.round(clock.current.ms) : 0;
-    const when = status === 'done' && ms ? ` in ${ms} ms` : status === 'error' && ms ? ` after ${ms} ms` : '';
+    const when =
+      status === 'done' && ms ? ` in ${ms} ms` : status === 'error' && ms ? ` after ${ms} ms` : '';
     setAnnounce(`${name} ${argument}, ${WORDS[status] ?? status}${when}`);
   }, [argument, name, showTimer, status]);
 
   const font = Math.max(11, Math.round(size * 0.38));
-  const glyphState = (g: string) => (g === roll.current.cur ? 'in' : g === roll.current.prev ? 'out' : undefined);
+  const glyphState = (g: string) =>
+    g === roll.current.cur ? 'in' : g === roll.current.prev ? 'out' : undefined;
   const toolIcon = typeof icon === 'string' ? (ICONS[icon] ?? ICONS.terminal) : null;
   const iconSize = font + 2;
 
@@ -185,22 +200,24 @@ export default function CallChip({
       data-mounted={mounted ? '' : undefined}
       data-pressed={pressed ? '' : undefined}
       className={`call-chip${className ? ` ${className}` : ''}`}
-      style={{
-        '--cc-size': `${size}px`,
-        '--cc-font': `${font}px`,
-        '--cc-pad': `${Math.round(size * 0.35)}px`,
-        '--cc-gap': `${Math.round(font * 0.55)}px`,
-        '--cc-radius': `${radius}px`,
-        '--cc-color': color,
-        '--cc-surface': surfaceColor,
-        '--cc-progress': progressColor,
-        '--cc-progress-pct': `${progressOpacity * 100}%`,
-        '--cc-done': doneColor,
-        '--cc-error': errorColor,
-        '--cc-wash-pct': `${washOpacity * 100}%`,
-        '--cc-expected': `${expectedMs}ms`,
-        ...style
-      } as React.CSSProperties}
+      style={
+        {
+          '--cc-size': `${size}px`,
+          '--cc-font': `${font}px`,
+          '--cc-pad': `${Math.round(size * 0.35)}px`,
+          '--cc-gap': `${Math.round(font * 0.55)}px`,
+          '--cc-radius': `${radius}px`,
+          '--cc-color': color,
+          '--cc-surface': surfaceColor,
+          '--cc-progress': progressColor,
+          '--cc-progress-pct': `${progressOpacity * 100}%`,
+          '--cc-done': doneColor,
+          '--cc-error': errorColor,
+          '--cc-wash-pct': `${washOpacity * 100}%`,
+          '--cc-expected': `${expectedMs}ms`,
+          ...style,
+        } as React.CSSProperties
+      }
     >
       <span ref={fillRef} className="call-chip__fill" aria-hidden="true" />
       <span className="call-chip__slot" aria-hidden="true">

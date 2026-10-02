@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import React, { useCallback, useEffect, useId, useRef, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 
-const CROSSFADE = { type: "spring", stiffness: 260, damping: 34, mass: 0.8 } as const;
+const CROSSFADE = { type: 'spring', stiffness: 260, damping: 34, mass: 0.8 } as const;
 const INSTANT = { duration: 0 } as const;
 
 const LINE = 16;
 
-export type ValidationStatus = "idle" | "pending" | "valid" | "invalid";
+export type ValidationStatus = 'idle' | 'pending' | 'valid' | 'invalid';
 
 export type Validator = (value: string) => string | null;
 
@@ -27,7 +27,7 @@ export type UseInlineValidationReturn = {
   reset: () => void;
   fieldProps: {
     onBlur: () => void;
-    "aria-invalid": boolean;
+    'aria-invalid': boolean;
   };
 };
 
@@ -37,7 +37,7 @@ type Settled = {
   message: string;
 };
 
-const CLEAN: Settled = { status: "idle", error: null, message: "" };
+const CLEAN: Settled = { status: 'idle', error: null, message: '' };
 
 export function useInlineValidation({
   value,
@@ -59,26 +59,24 @@ export function useInlineValidation({
     if (!touched) return;
 
     const next = check.current(value);
-    const resolved: ValidationStatus = value.length > 0 ? "valid" : "idle";
+    const resolved: ValidationStatus = value.length > 0 ? 'valid' : 'idle';
 
     if (next === null) {
       setSettled((prev) =>
         prev.status === resolved && prev.error === null
           ? prev
-          : { status: resolved, error: null, message: prev.message },
+          : { status: resolved, error: null, message: prev.message }
       );
       return;
     }
 
     setSettled((prev) =>
-      prev.status === "invalid"
-        ? prev
-        : { status: "pending", error: null, message: prev.message },
+      prev.status === 'invalid' ? prev : { status: 'pending', error: null, message: prev.message }
     );
 
     const t = setTimeout(() => {
       setSettled((prev) =>
-        prev.error === next ? prev : { status: "invalid", error: next, message: next },
+        prev.error === next ? prev : { status: 'invalid', error: next, message: next }
       );
     }, debounce);
 
@@ -91,8 +89,8 @@ export function useInlineValidation({
     const next = check.current(v);
     setSettled((prev) =>
       next === null
-        ? { status: v.length > 0 ? "valid" : "idle", error: null, message: prev.message }
-        : { status: "invalid", error: next, message: next },
+        ? { status: v.length > 0 ? 'valid' : 'idle', error: null, message: prev.message }
+        : { status: 'invalid', error: next, message: next }
     );
   }, []);
 
@@ -108,7 +106,7 @@ export function useInlineValidation({
     touched,
     commit,
     reset,
-    fieldProps: { onBlur: commit, "aria-invalid": settled.status === "invalid" },
+    fieldProps: { onBlur: commit, 'aria-invalid': settled.status === 'invalid' },
   };
 }
 
@@ -120,10 +118,10 @@ export type InlineValidationProps = {
   hint?: string;
   id?: string;
   name?: string;
-  type?: "text" | "email" | "password" | "tel" | "url" | "search";
+  type?: 'text' | 'email' | 'password' | 'tel' | 'url' | 'search';
   placeholder?: string;
   autoComplete?: string;
-  inputMode?: React.ComponentProps<"input">["inputMode"];
+  inputMode?: React.ComponentProps<'input'>['inputMode'];
   debounce?: number;
   reserveLines?: number;
   disabled?: boolean;
@@ -139,7 +137,7 @@ export function InlineValidation({
   hint,
   id,
   name,
-  type = "text",
+  type = 'text',
   placeholder,
   autoComplete,
   inputMode,
@@ -147,7 +145,7 @@ export function InlineValidation({
   reserveLines = 1,
   disabled = false,
   required = false,
-  className = "",
+  className = '',
 }: InlineValidationProps) {
   const reduced = useReducedMotion();
   const fade = reduced ? INSTANT : CROSSFADE;
@@ -163,26 +161,21 @@ export function InlineValidation({
     debounce,
   });
 
-  const invalid = status === "invalid";
-  const valid = status === "valid";
+  const invalid = status === 'invalid';
+  const valid = status === 'valid';
 
-  const described = [hint ? hintId : null, invalid ? errorId : null]
-    .filter(Boolean)
-    .join(" ");
+  const described = [hint ? hintId : null, invalid ? errorId : null].filter(Boolean).join(' ');
 
   const clamp = {
-    display: "-webkit-box" as const,
-    WebkitBoxOrient: "vertical" as const,
+    display: '-webkit-box' as const,
+    WebkitBoxOrient: 'vertical' as const,
     WebkitLineClamp: reserveLines,
-    overflow: "hidden" as const,
+    overflow: 'hidden' as const,
   };
 
   return (
     <div data-interior="inline-validation" className={`w-full ${className}`}>
-      <label
-        htmlFor={fieldId}
-        className="block text-[13px] font-medium text-[var(--interior-fg)]"
-      >
+      <label htmlFor={fieldId} className="block text-[13px] font-medium text-[var(--interior-fg)]">
         {label}
       </label>
 
@@ -203,8 +196,8 @@ export function InlineValidation({
           {...fieldProps}
           className={`h-10 w-full rounded-[10px] border-2 pl-3 pr-9 text-[13px] text-[var(--interior-fg)] outline-none transition-[background-color,border-color,box-shadow] duration-150 placeholder:text-[var(--interior-fg-subtle)] focus-visible:outline-none disabled:opacity-50 dark:text-[var(--interior-fg)] dark:placeholder:text-[var(--interior-fg-muted)] ${
             invalid
-              ? "border-red-500 bg-white dark:border-red-400 dark:bg-[var(--interior-bg-elevated)]"
-              : "border-[var(--interior-border)] bg-stone-100/70 shadow-[inset_0_1px_2px_rgba(28,25,23,0.07)] focus:border-[var(--interior-primary)] focus:bg-white focus:shadow-none dark:border-white/[0.08] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.45)] dark:focus:border-[#93B0FF] dark:focus:bg-[#252522]"
+              ? 'border-red-500 bg-white dark:border-red-400 dark:bg-[var(--interior-bg-elevated)]'
+              : 'border-[var(--interior-border)] bg-stone-100/70 shadow-[inset_0_1px_2px_rgba(28,25,23,0.07)] focus:border-[var(--interior-primary)] focus:bg-white focus:shadow-none dark:border-white/[0.08] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.45)] dark:focus:border-[#93B0FF] dark:focus:bg-[#252522]'
           }`}
         />
 
@@ -277,14 +270,8 @@ export function InlineValidation({
           </span>
         ) : null}
 
-        <span
-          id={errorId}
-          role="status"
-          aria-live="polite"
-          aria-atomic="true"
-          className="sr-only"
-        >
-          {error ?? ""}
+        <span id={errorId} role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+          {error ?? ''}
         </span>
       </div>
     </div>

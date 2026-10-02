@@ -1,21 +1,14 @@
-"use client";
+'use client';
 
-import React, {
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import React, { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
 const EASE = [0.23, 1, 0.32, 1] as const;
-const CELL = { type: "spring", stiffness: 520, damping: 34, mass: 0.45 } as const;
-const CROSSFADE = { type: "spring", stiffness: 260, damping: 34, mass: 0.8 } as const;
+const CELL = { type: 'spring', stiffness: 520, damping: 34, mass: 0.45 } as const;
+const CROSSFADE = { type: 'spring', stiffness: 260, damping: 34, mass: 0.8 } as const;
 const INSTANT = { duration: 0 } as const;
 
-const HEART =
-  "M12 20.3 4.3 12.6a4.8 4.8 0 0 1 6.8-6.8l.9.9.9-.9a4.8 4.8 0 0 1 6.8 6.8Z";
+const HEART = 'M12 20.3 4.3 12.6a4.8 4.8 0 0 1 6.8-6.8l.9.9.9-.9a4.8 4.8 0 0 1 6.8 6.8Z';
 
 const SPARKS = Array.from({ length: 8 }, (_, i) => {
   const h = (((i + 1) * 2654435761) % 997) / 997;
@@ -29,13 +22,9 @@ const SPARKS = Array.from({ length: 8 }, (_, i) => {
   };
 });
 
-const DEFAULT_FORMAT = (value: number) =>
-  new Intl.NumberFormat("en-US").format(value);
+const DEFAULT_FORMAT = (value: number) => new Intl.NumberFormat('en-US').format(value);
 
-export type LikeCommit = (
-  liked: boolean,
-  signal: AbortSignal,
-) => Promise<unknown>;
+export type LikeCommit = (liked: boolean, signal: AbortSignal) => Promise<unknown>;
 
 export type LikeBurstHandle = {
   toggle: () => void;
@@ -135,7 +124,7 @@ export function useOptimisticLike({
         setCount(truth.current.count);
         setPending(false);
         failed.current?.(error);
-      },
+      }
     );
   }, []);
 
@@ -161,7 +150,7 @@ export function useOptimisticLike({
       inFlight.current?.abort();
       inFlight.current = null;
     },
-    [],
+    []
   );
 
   return {
@@ -196,16 +185,21 @@ export function LikeBurst({
   onError,
   onToggle,
   settle = 400,
-  label = "Like",
-  activeLabel = "Liked",
+  label = 'Like',
+  activeLabel = 'Liked',
   format = DEFAULT_FORMAT,
   disabled = false,
-  className = "",
+  className = '',
   ref,
 }: LikeBurstProps & { ref?: React.Ref<LikeBurstHandle> }) {
   const reduced = useReducedMotion();
-  const { liked, count, base, pending, burst, settled, toggle } =
-    useOptimisticLike({ initialLiked, initialCount, onCommit, onError, settle });
+  const { liked, count, base, pending, burst, settled, toggle } = useOptimisticLike({
+    initialLiked,
+    initialCount,
+    onCommit,
+    onError,
+    settle,
+  });
 
   useImperativeHandle(ref, () => ({ toggle }), [toggle]);
 
@@ -226,7 +220,7 @@ export function LikeBurst({
           toggle();
           onToggle?.(!liked);
         }}
-        style={{ touchAction: "manipulation" }}
+        style={{ touchAction: 'manipulation' }}
         className="inline-flex h-9 select-none items-center gap-2 rounded-[9px] border border-[var(--interior-border)] bg-white px-3 text-[13px] font-medium text-[var(--interior-fg)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--interior-ring)] disabled:opacity-50 dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:text-[var(--interior-fg)] dark:focus-visible:ring-[var(--interior-ring)]"
       >
         <span aria-hidden className="relative block size-[18px]">
@@ -316,11 +310,10 @@ export function LikeBurst({
             </motion.span>
           </AnimatePresence>
         </span>
-
       </button>
 
       <span role="status" aria-live="polite" className="sr-only">
-        {`${format(settled.count)} likes, ${settled.liked ? "liked" : "not liked"}`}
+        {`${format(settled.count)} likes, ${settled.liked ? 'liked' : 'not liked'}`}
       </span>
     </span>
   );

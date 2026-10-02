@@ -14,7 +14,8 @@ const EXIT = 0.7;
 const BURN = [{ transform: 'scaleX(1)' }, { transform: 'scaleX(0)' }];
 const HAS_STARTING_STYLE = typeof window !== 'undefined' && 'CSSStartingStyleRule' in window;
 
-const rubberband = (over: number, dim: number, c = 0.55): number => (over * dim * c) / (dim + c * Math.abs(over));
+const rubberband = (over: number, dim: number, c = 0.55): number =>
+  (over * dim * c) / (dim + c * Math.abs(over));
 const velocityOf = (hist: [number, number][]): number => {
   if (hist.length < 2) return 0;
   const first = hist[0];
@@ -26,7 +27,8 @@ const velocityOf = (hist: [number, number][]): number => {
 };
 
 export type SwipeToastPhase = 'open' | 'closing' | 'gone';
-export type SwipeToastCloseReason = 'timeout' | 'escape' | 'action' | 'close' | 'swipe' | 'programmatic' | string;
+export type SwipeToastCloseReason =
+  'timeout' | 'escape' | 'action' | 'close' | 'swipe' | 'programmatic' | string;
 export type SwipeToastFuse = 'bottom' | 'top' | 'none' | string;
 
 export interface SwipeToastProps {
@@ -86,7 +88,7 @@ export default function SwipeToast({
   inline = false,
   dismissible = true,
   className = '',
-  style
+  style,
 }: SwipeToastProps) {
   const reduce = useReducedMotion();
   const [phase, setPhase] = useState<SwipeToastPhase>('open');
@@ -121,7 +123,8 @@ export default function SwipeToast({
   const finish = (why: SwipeToastCloseReason): void => {
     setPhase('gone');
     leaving.current = false;
-    if (latest.current.inline) closeTimer.current = setTimeout(() => latest.current.onClose?.(why), COLLAPSE_MS);
+    if (latest.current.inline)
+      closeTimer.current = setTimeout(() => latest.current.onClose?.(why), COLLAPSE_MS);
     else latest.current.onClose?.(why);
   };
   const close = (why: SwipeToastCloseReason): void => {
@@ -132,11 +135,16 @@ export default function SwipeToast({
     }
     anim.current?.pause();
     reason.current = why;
-    const now = why === 'escape' || ((why === 'action' || why === 'close') && lastInput.current === 'keyboard');
+    const now =
+      why === 'escape' ||
+      ((why === 'action' || why === 'close') && lastInput.current === 'keyboard');
     setInstant(now);
     setPhase('closing');
     clearTimeout(closeTimer.current);
-    closeTimer.current = setTimeout(() => finish(why), now ? 0 : latest.current.slideMs * EXIT + 60);
+    closeTimer.current = setTimeout(
+      () => finish(why),
+      now ? 0 : latest.current.slideMs * EXIT + 60
+    );
   };
   const rescue = (): void => {
     clearTimeout(closeTimer.current);
@@ -191,13 +199,25 @@ export default function SwipeToast({
     leaving.current = true;
     pendingClose.current = null;
     if (!reduce && cardRef.current) {
-      animate(y, dy + cardRef.current.offsetHeight, { type: 'spring', duration: 0.3, bounce: 0, velocity: v * 1000 });
+      animate(y, dy + cardRef.current.offsetHeight, {
+        type: 'spring',
+        duration: 0.3,
+        bounce: 0,
+        velocity: v * 1000,
+      });
     }
     animate(fade, 0, { duration: 0.2, ease: EASE_OUT }).then(() => finish('swipe'));
   };
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>): void => {
     lastInput.current = 'pointer';
-    if (e.button !== 0 || !dismissible || drag.current || leaving.current || (e.target as HTMLElement).closest('button')) return;
+    if (
+      e.button !== 0 ||
+      !dismissible ||
+      drag.current ||
+      leaving.current ||
+      (e.target as HTMLElement).closest('button')
+    )
+      return;
     if (phaseRef.current === 'closing') rescue();
     try {
       cardRef.current?.setPointerCapture(e.pointerId);
@@ -210,7 +230,7 @@ export default function SwipeToast({
       startY: e.clientY,
       grab: null,
       moved: false,
-      hist: [[performance.now(), y.get()]]
+      hist: [[performance.now(), y.get()]],
     };
     flags.current.interacting = true;
     syncFuse();
@@ -280,7 +300,7 @@ export default function SwipeToast({
           '--st-radius': `${radius}px`,
           '--st-slide': `${slideMs}ms`,
           '--st-gap': '10px',
-          ...style
+          ...style,
         } as React.CSSProperties
       }
     >
@@ -298,13 +318,13 @@ export default function SwipeToast({
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}
             onPointerCancel={onPointerUp}
-            onPointerEnter={e => {
+            onPointerEnter={(e) => {
               if (pauseOnHover && e.pointerType === 'mouse') {
                 flags.current.hover = true;
                 syncFuse();
               }
             }}
-            onPointerLeave={e => {
+            onPointerLeave={(e) => {
               if (e.pointerType === 'mouse') {
                 flags.current.hover = false;
                 syncFuse();
@@ -314,13 +334,13 @@ export default function SwipeToast({
               flags.current.focus = true;
               syncFuse();
             }}
-            onBlur={e => {
+            onBlur={(e) => {
               if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
                 flags.current.focus = false;
                 syncFuse();
               }
             }}
-            onKeyDown={e => {
+            onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') lastInput.current = 'keyboard';
               if (e.key === 'Escape' && dismissible) {
                 e.stopPropagation();
@@ -350,7 +370,12 @@ export default function SwipeToast({
               </button>
             ) : null}
             {closeButton ? (
-              <button type="button" className="swipe-toast__close" aria-label="Close" onClick={() => close('close')}>
+              <button
+                type="button"
+                className="swipe-toast__close"
+                aria-label="Close"
+                onClick={() => close('close')}
+              >
                 <HugeiconsIcon icon={Cancel01Icon} size={12} strokeWidth={2.5} />
               </button>
             ) : null}

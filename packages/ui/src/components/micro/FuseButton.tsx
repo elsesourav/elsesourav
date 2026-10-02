@@ -9,7 +9,7 @@ const OUTLINE = [{ strokeDashoffset: 0 }, { strokeDashoffset: -1 }];
 const SIZES = {
   sm: { height: 36, font: 13, icon: 14, px: 16 },
   md: { height: 44, font: 14, icon: 15, px: 20 },
-  lg: { height: 52, font: 15, icon: 17, px: 24 }
+  lg: { height: 52, font: 15, icon: 17, px: 24 },
 } as const;
 
 export type FuseButtonSize = 'sm' | 'md' | 'lg';
@@ -69,7 +69,7 @@ export default function FuseButton({
   onPhaseChange,
   className = '',
   type = 'button',
-  style
+  style,
 }: FuseButtonProps) {
   const [phase, setPhase] = useState<FusePhase>('idle');
   const [instant, setInstant] = useState(false);
@@ -79,7 +79,11 @@ export default function FuseButton({
   const lineRef = useRef<HTMLElement | null>(null);
   const rimRef = useRef<SVGRectElement | null>(null);
   const anim = useRef<Animation | null>(null);
-  const pause = useRef<{ hover: boolean; hidden: boolean; canHoverPause: boolean }>({ hover: false, hidden: false, canHoverPause: false });
+  const pause = useRef<{ hover: boolean; hidden: boolean; canHoverPause: boolean }>({
+    hover: false,
+    hidden: false,
+    canHoverPause: false,
+  });
   const lastInput = useRef<'pointer' | 'keyboard'>('pointer');
   const windowRef = useRef(undoWindow);
   const latest = useRef({ commitOn, settle, onCommit, onUndo, onFuseEnd, onPhaseChange });
@@ -111,7 +115,7 @@ export default function FuseButton({
     const a = el.animate(fuse === 'outline' ? OUTLINE : LINE, {
       duration: windowRef.current,
       easing: 'linear',
-      fill: 'forwards'
+      fill: 'forwards',
     });
     if (from) a.currentTime = from;
     a.onfinish = (): void => {
@@ -149,7 +153,8 @@ export default function FuseButton({
   useEffect(() => {
     const inside = rootRef.current?.contains(document.activeElement);
     if (phase === 'armed') undoRef.current?.focus({ preventScroll: true });
-    else if (inside) (phase === 'idle' ? idleRef.current : rootRef.current)?.focus({ preventScroll: true });
+    else if (inside)
+      (phase === 'idle' ? idleRef.current : rootRef.current)?.focus({ preventScroll: true });
   }, [phase]);
 
   useEffect(() => {
@@ -207,7 +212,9 @@ export default function FuseButton({
     }
   };
 
-  const actionIcon = icon ?? <HugeiconsIcon icon={Archive02Icon} size={preset.icon} strokeWidth={1.8} />;
+  const actionIcon = icon ?? (
+    <HugeiconsIcon icon={Archive02Icon} size={preset.icon} strokeWidth={1.8} />
+  );
   const line = <i ref={lineRef} className="fuse-button__fuse" aria-hidden="true" />;
 
   return (
@@ -231,7 +238,7 @@ export default function FuseButton({
           '--fb-fs': `${preset.font}px`,
           '--fb-icon': `${preset.icon}px`,
           '--fb-px': `${preset.px}px`,
-          ...style
+          ...style,
         } as React.CSSProperties
       }
       onPointerDown={handlePointerDown}

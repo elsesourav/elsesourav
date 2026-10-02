@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import React, { useCallback, useId, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import React, { useCallback, useId, useRef, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
 const EASE = [0.23, 1, 0.32, 1] as const;
 
 const LEAVE = [0.4, 0, 1, 1] as const;
 
-const SMALL = { type: "spring", stiffness: 700, damping: 46, mass: 0.5 } as const;
+const SMALL = { type: 'spring', stiffness: 700, damping: 46, mass: 0.5 } as const;
 
 const OPEN_H = { duration: 0.28, ease: EASE } as const;
 const OPEN_O = { duration: 0.18, ease: EASE } as const;
@@ -38,7 +38,7 @@ function flatten(
   openSet: ReadonlySet<string>,
   level = 1,
   parentId: string | null = null,
-  out: TreeRow[] = [],
+  out: TreeRow[] = []
 ): TreeRow[] {
   nodes.forEach((node, i) => {
     const children = node.children ?? [];
@@ -97,9 +97,7 @@ export function useTreeView({
   const visible =
     focusId !== null && rows.some((r) => r.node.id === focusId)
       ? focusId
-      : (rows.find((r) => r.node.id === selectedId)?.node.id ??
-        rows[0]?.node.id ??
-        null);
+      : (rows.find((r) => r.node.id === selectedId)?.node.id ?? rows[0]?.node.id ?? null);
 
   const refs = useRef(new Map<string, HTMLElement>());
   const register = useCallback((id: string, el: HTMLElement | null) => {
@@ -117,7 +115,7 @@ export function useTreeView({
       if (!openControlled) setInternalOpen(next);
       emitOpen.current?.(next);
     },
-    [openControlled],
+    [openControlled]
   );
 
   const toggle = useCallback(
@@ -125,7 +123,7 @@ export function useTreeView({
       const has = openList.includes(id);
       setOpen(has ? openList.filter((v) => v !== id) : [...openList, id]);
     },
-    [openList, setOpen],
+    [openList, setOpen]
   );
 
   const select = useCallback(
@@ -133,7 +131,7 @@ export function useTreeView({
       if (!selControlled) setInternalSel(id);
       emitSel.current?.(id);
     },
-    [selControlled],
+    [selControlled]
   );
 
   const handleKey = useCallback(
@@ -145,34 +143,34 @@ export function useTreeView({
       };
 
       switch (event.key) {
-        case "ArrowDown":
+        case 'ArrowDown':
           event.preventDefault();
           go(at + 1);
           return;
-        case "ArrowUp":
+        case 'ArrowUp':
           event.preventDefault();
           go(at - 1);
           return;
-        case "ArrowRight":
+        case 'ArrowRight':
           event.preventDefault();
           if (row.branch && !row.open) toggle(row.node.id);
           else if (row.open) go(at + 1);
           return;
-        case "ArrowLeft":
+        case 'ArrowLeft':
           event.preventDefault();
           if (row.open) toggle(row.node.id);
           else if (row.parentId) focusRow(row.parentId);
           return;
-        case "Home":
+        case 'Home':
           event.preventDefault();
           go(0);
           return;
-        case "End":
+        case 'End':
           event.preventDefault();
           go(rows.length - 1);
           return;
-        case "Enter":
-        case " ":
+        case 'Enter':
+        case ' ':
           event.preventDefault();
           select(row.node.id);
           if (row.branch) toggle(row.node.id);
@@ -182,7 +180,7 @@ export function useTreeView({
 
       if (event.key.length === 1 && !event.metaKey && !event.ctrlKey) {
         const letter = event.key.toLowerCase();
-        if (letter === " ") return;
+        if (letter === ' ') return;
         for (let step = 1; step <= rows.length; step++) {
           const candidate = rows[(at + step) % rows.length];
           if (candidate && candidate.node.label.toLowerCase().startsWith(letter)) {
@@ -193,7 +191,7 @@ export function useTreeView({
         }
       }
     },
-    [rows, focusRow, toggle, select],
+    [rows, focusRow, toggle, select]
   );
 
   return {
@@ -215,7 +213,8 @@ function Caret({ open }: { open: boolean }) {
   const reduced = useReducedMotion();
   return (
     <motion.span
-      data-interior="tree-view" aria-hidden
+      data-interior="tree-view"
+      aria-hidden
       initial={false}
       animate={{ rotate: open ? 90 : 0 }}
       transition={reduced ? STILL : SMALL}
@@ -256,7 +255,7 @@ export function TreeView({
   selected,
   defaultSelected,
   onSelectedChange,
-  className = "",
+  className = '',
 }: TreeViewProps) {
   const tree = useTreeView({
     nodes,
@@ -299,17 +298,14 @@ export function TreeView({
             }}
             className={`flex h-7 cursor-default select-none items-center gap-1 rounded-[8px] px-1.5 outline-none transition-colors duration-150 focus-visible:bg-[var(--interior-primary)]/[0.06] focus-visible:shadow-[inset_0_0_0_1px_var(--interior-primary)] dark:focus-visible:bg-[#93B0FF]/[0.1] dark:focus-visible:shadow-[inset_0_0_0_1px_var(--interior-primary)] ${
               isSelected
-                ? "bg-stone-100/80 text-[var(--interior-fg)] dark:bg-white/[0.07] dark:text-[var(--interior-fg)]"
-                : "text-stone-600 hover:bg-stone-100/60 dark:text-stone-300 dark:hover:bg-white/[0.04]"
+                ? 'bg-stone-100/80 text-[var(--interior-fg)] dark:bg-white/[0.07] dark:text-[var(--interior-fg)]'
+                : 'text-stone-600 hover:bg-stone-100/60 dark:text-stone-300 dark:hover:bg-white/[0.04]'
             }`}
           >
-
             {row.branch ? <Caret open={row.open} /> : <span className="size-4 shrink-0" />}
 
             <span
-              className={`min-w-0 flex-1 truncate text-[12.5px] ${
-                isSelected ? "font-medium" : ""
-              }`}
+              className={`min-w-0 flex-1 truncate text-[12.5px] ${isSelected ? 'font-medium' : ''}`}
             >
               {node.label}
             </span>
@@ -328,7 +324,7 @@ export function TreeView({
                   key="group"
                   role="group"
                   initial={reduced ? { opacity: 0 } : { height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
+                  animate={{ height: 'auto', opacity: 1 }}
                   exit={
                     reduced
                       ? { opacity: 0, transition: STILL }
@@ -338,9 +334,7 @@ export function TreeView({
                           transition: { height: SHUT_H, opacity: SHUT_O },
                         }
                   }
-                  transition={
-                    reduced ? STILL : { height: OPEN_H, opacity: OPEN_O }
-                  }
+                  transition={reduced ? STILL : { height: OPEN_H, opacity: OPEN_O }}
                   className="overflow-hidden"
                 >
                   <div className="ml-[13px] border-l border-stone-200/80 pl-[7px] dark:border-[var(--interior-border)]">
@@ -362,9 +356,9 @@ export function TreeView({
         {renderNodes(nodes, 1)}
       </ul>
       <span id={hintId} className="sr-only">
-        Use the arrow keys to move. Right expands a folder, left collapses it
-        or climbs to its parent. Home and End jump to the ends, and typing a
-        letter jumps to the next name starting with it.
+        Use the arrow keys to move. Right expands a folder, left collapses it or climbs to its
+        parent. Home and End jump to the ends, and typing a letter jumps to the next name starting
+        with it.
       </span>
     </div>
   );

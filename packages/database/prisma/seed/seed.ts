@@ -1200,7 +1200,7 @@ ElseSourav is built with respect for user privacy:
       key: 'homepage_apps_subtitle',
       value: 'A curated selection of software, developer tools, games, and systems.',
     },
-    { key: 'homepage_blog_title', value: 'Field Notes & Reflections' },
+    { key: 'homepage_blog_title', value: 'Latest Updates' },
     {
       key: 'homepage_blog_subtitle',
       value:

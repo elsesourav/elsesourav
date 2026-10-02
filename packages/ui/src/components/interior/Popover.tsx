@@ -1,38 +1,31 @@
-"use client";
+'use client';
 
-import React, {
-  useCallback,
-  useEffect,
-  useId,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import React, { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
 const EASE = [0.23, 1, 0.32, 1] as const;
-const CROSSFADE = { type: "spring", stiffness: 260, damping: 34, mass: 0.8 } as const;
+const CROSSFADE = { type: 'spring', stiffness: 260, damping: 34, mass: 0.8 } as const;
 const RADIUS = 11;
 const MIN_W = 160;
 const MIN_H = 88;
 
-const useIsoLayoutEffect = typeof document === "undefined" ? useEffect : useLayoutEffect;
+const useIsoLayoutEffect = typeof document === 'undefined' ? useEffect : useLayoutEffect;
 
-export type PopoverSide = "top" | "right" | "bottom" | "left";
-export type PopoverAlign = "start" | "center" | "end";
+export type PopoverSide = 'top' | 'right' | 'bottom' | 'left';
+export type PopoverAlign = 'start' | 'center' | 'end';
 
 const FLIP: Record<PopoverSide, PopoverSide> = {
-  top: "bottom",
-  bottom: "top",
-  left: "right",
-  right: "left",
+  top: 'bottom',
+  bottom: 'top',
+  left: 'right',
+  right: 'left',
 };
 
 const ARROW_EDGE: Record<PopoverSide, string> = {
-  bottom: "border-t border-l",
-  top: "border-b border-r",
-  right: "border-b border-l",
-  left: "border-t border-r",
+  bottom: 'border-t border-l',
+  top: 'border-b border-r',
+  right: 'border-b border-l',
+  left: 'border-t border-r',
 };
 
 const FROM: Record<PopoverSide, { x?: number; y?: number }> = {
@@ -68,8 +61,8 @@ export type UsePopoverResult<A extends HTMLElement = HTMLElement> = {
 
 export function usePopover<A extends HTMLElement = HTMLElement>({
   open,
-  side = "bottom",
-  align = "center",
+  side = 'bottom',
+  align = 'center',
   offset = 10,
   padding = 8,
   arrowSize = 9,
@@ -90,8 +83,8 @@ export function usePopover<A extends HTMLElement = HTMLElement>({
     if (!anchor || !wrap || !panel) return;
 
     const content = contentRef.current;
-    panel.style.maxWidth = "";
-    if (content) content.style.maxHeight = "";
+    panel.style.maxWidth = '';
+    if (content) content.style.maxHeight = '';
 
     const a = anchor.getBoundingClientRect();
     const b = boundary?.current?.getBoundingClientRect() ?? null;
@@ -113,11 +106,10 @@ export function usePopover<A extends HTMLElement = HTMLElement>({
     };
 
     let next = side;
-    const wanted =
-      next === "top" || next === "bottom" ? panel.offsetHeight : panel.offsetWidth;
+    const wanted = next === 'top' || next === 'bottom' ? panel.offsetHeight : panel.offsetWidth;
     if (room[next] < wanted && room[FLIP[next]] > room[next]) next = FLIP[next];
 
-    const horizontal = next === "top" || next === "bottom";
+    const horizontal = next === 'top' || next === 'bottom';
     if (!horizontal) {
       panel.style.maxWidth = `${Math.max(MIN_W, Math.min(right - left, room[next]))}px`;
     }
@@ -133,21 +125,11 @@ export function usePopover<A extends HTMLElement = HTMLElement>({
     let x: number;
     let y: number;
     if (horizontal) {
-      y = next === "top" ? a.top - offset - h : a.bottom + offset;
-      x =
-        align === "start"
-          ? a.left
-          : align === "end"
-            ? a.right - w
-            : a.left + (a.width - w) / 2;
+      y = next === 'top' ? a.top - offset - h : a.bottom + offset;
+      x = align === 'start' ? a.left : align === 'end' ? a.right - w : a.left + (a.width - w) / 2;
     } else {
-      x = next === "left" ? a.left - offset - w : a.right + offset;
-      y =
-        align === "start"
-          ? a.top
-          : align === "end"
-            ? a.bottom - h
-            : a.top + (a.height - h) / 2;
+      x = next === 'left' ? a.left - offset - w : a.right + offset;
+      y = align === 'start' ? a.top : align === 'end' ? a.bottom - h : a.top + (a.height - h) / 2;
     }
     x = clamp(x, left, right - w);
     y = clamp(y, top, bottom - h);
@@ -164,17 +146,17 @@ export function usePopover<A extends HTMLElement = HTMLElement>({
       : clamp(a.top + a.height / 2 - y, RADIUS + half, h - RADIUS - half);
 
     panel.style.transformOrigin = horizontal
-      ? `${Math.round(point)}px ${next === "top" ? h : 0}px`
-      : `${next === "left" ? w : 0}px ${Math.round(point)}px`;
+      ? `${Math.round(point)}px ${next === 'top' ? h : 0}px`
+      : `${next === 'left' ? w : 0}px ${Math.round(point)}px`;
 
     const arrow = arrowRef.current;
     if (arrow) {
       if (horizontal) {
         arrow.style.left = `${Math.round(point - half)}px`;
-        arrow.style.top = `${Math.round(next === "top" ? h - half : -half)}px`;
+        arrow.style.top = `${Math.round(next === 'top' ? h - half : -half)}px`;
       } else {
         arrow.style.top = `${Math.round(point - half)}px`;
-        arrow.style.left = `${Math.round(next === "left" ? w - half : -half)}px`;
+        arrow.style.left = `${Math.round(next === 'left' ? w - half : -half)}px`;
       }
     }
 
@@ -201,14 +183,14 @@ export function usePopover<A extends HTMLElement = HTMLElement>({
     const observer = new ResizeObserver(schedule);
     if (anchorRef.current) observer.observe(anchorRef.current);
     if (contentRef.current) observer.observe(contentRef.current);
-    window.addEventListener("scroll", schedule, true);
-    window.addEventListener("resize", schedule);
+    window.addEventListener('scroll', schedule, true);
+    window.addEventListener('resize', schedule);
 
     return () => {
       cancelAnimationFrame(frame);
       observer.disconnect();
-      window.removeEventListener("scroll", schedule, true);
-      window.removeEventListener("resize", schedule);
+      window.removeEventListener('scroll', schedule, true);
+      window.removeEventListener('resize', schedule);
     };
   }, [open, update]);
 
@@ -239,14 +221,14 @@ export function Popover({
   open: controlled,
   defaultOpen = false,
   onOpenChange,
-  side = "bottom",
-  align = "center",
+  side = 'bottom',
+  align = 'center',
   offset = 10,
   padding = 8,
   arrowSize = 9,
   boundary,
-  triggerClassName = "",
-  className = "",
+  triggerClassName = '',
+  className = '',
 }: PopoverProps) {
   const [uncontrolled, setUncontrolled] = useState(defaultOpen);
   const open = controlled ?? uncontrolled;
@@ -257,23 +239,29 @@ export function Popover({
   const notify = useRef(onOpenChange);
   notify.current = onOpenChange;
 
-  const { anchorRef, floatingRef, panelRef, contentRef, arrowRef, side: at } =
-    usePopover<HTMLButtonElement>({
-      open,
-      side,
-      align,
-      offset,
-      padding,
-      arrowSize,
-      boundary,
-    });
+  const {
+    anchorRef,
+    floatingRef,
+    panelRef,
+    contentRef,
+    arrowRef,
+    side: at,
+  } = usePopover<HTMLButtonElement>({
+    open,
+    side,
+    align,
+    offset,
+    padding,
+    arrowSize,
+    boundary,
+  });
 
   const setOpen = useCallback(
     (next: boolean) => {
       if (controlled === undefined) setUncontrolled(next);
       notify.current?.(next);
     },
-    [controlled],
+    [controlled]
   );
 
   useEffect(() => {
@@ -292,17 +280,17 @@ export function Popover({
     };
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
+      if (event.key !== 'Escape') return;
       event.stopPropagation();
       anchorRef.current?.focus({ preventScroll: true });
       setOpen(false);
     };
 
-    document.addEventListener("pointerdown", onPointerDown, true);
-    document.addEventListener("keydown", onKeyDown, true);
+    document.addEventListener('pointerdown', onPointerDown, true);
+    document.addEventListener('keydown', onKeyDown, true);
     return () => {
-      document.removeEventListener("pointerdown", onPointerDown, true);
-      document.removeEventListener("keydown", onKeyDown, true);
+      document.removeEventListener('pointerdown', onPointerDown, true);
+      document.removeEventListener('keydown', onKeyDown, true);
     };
   }, [open, setOpen, anchorRef, panelRef]);
 
@@ -338,9 +326,7 @@ export function Popover({
               role="dialog"
               aria-label={label}
               tabIndex={-1}
-              initial={
-                reduced ? { opacity: 0 } : { opacity: 0, scale: 0.95, ...FROM[at] }
-              }
+              initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.95, ...FROM[at] }}
               animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
               exit={
                 reduced
@@ -361,7 +347,7 @@ export function Popover({
               <span
                 ref={arrowRef}
                 aria-hidden
-                style={{ width: arrowSize, height: arrowSize, transform: "rotate(45deg)" }}
+                style={{ width: arrowSize, height: arrowSize, transform: 'rotate(45deg)' }}
                 className={`absolute block bg-[var(--interior-bg)] border-[var(--interior-border)] ${ARROW_EDGE[at]}`}
               />
               <div ref={contentRef} className="relative overflow-y-auto overscroll-contain">

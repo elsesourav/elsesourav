@@ -20,7 +20,12 @@ const wallIt = (t: number, room: number, wall: DodgeWall): number => {
   }
   return Math.min(room, Math.max(-room, t));
 };
-const bearingOf = (dx: number, dy: number, d: number, axis: DodgeAxis): { x: number; y: number } => {
+const bearingOf = (
+  dx: number,
+  dy: number,
+  d: number,
+  axis: DodgeAxis
+): { x: number; y: number } => {
   if (axis === 'x') return { x: Math.sign(dx) || 1, y: 0 };
   if (axis === 'y') return { x: 0, y: Math.sign(dy) || 1 };
   return { x: dx / d, y: dy / d };
@@ -92,7 +97,7 @@ export default function DodgeField({
   onRelent,
   onCatch,
   className = '',
-  style
+  style,
 }: DodgeFieldProps) {
   const fieldRef = useRef<HTMLDivElement | null>(null);
   const moverRef = useRef<HTMLDivElement | null>(null);
@@ -124,7 +129,7 @@ export default function DodgeField({
     wall,
     still,
     inside,
-    reduce
+    reduce,
   });
   live.current = {
     reach,
@@ -137,7 +142,7 @@ export default function DodgeField({
     wall,
     still,
     inside,
-    reduce
+    reduce,
   };
 
   useEffect(() => {
@@ -147,7 +152,7 @@ export default function DodgeField({
     const measure = (): void => {
       room.current = {
         x: Math.max(0, (field.clientWidth - mover.offsetWidth) / 2 - INSET),
-        y: Math.max(0, (field.clientHeight - mover.offsetHeight) / 2 - INSET)
+        y: Math.max(0, (field.clientHeight - mover.offsetHeight) / 2 - INSET),
       };
     };
     measure();
@@ -174,7 +179,7 @@ export default function DodgeField({
       if (d < L.radius * COUNT_LINE) {
         if (armed.current) {
           armed.current = false;
-          setDodges(n => n + 1);
+          setDodges((n) => n + 1);
         }
       } else if (d > L.radius) {
         armed.current = true;
@@ -256,7 +261,8 @@ export default function DodgeField({
   };
 
   const state: DodgeState = { dodges, gave, caught, fleeing: inside && !still };
-  const index = gave || caught ? taunts.length - 1 : Math.min(dodges, Math.max(0, taunts.length - 2));
+  const index =
+    gave || caught ? taunts.length - 1 : Math.min(dodges, Math.max(0, taunts.length - 2));
   const content =
     typeof children === 'function'
       ? children(state)
@@ -288,7 +294,7 @@ export default function DodgeField({
           '--df-ink': inkColor,
           '--df-contrast': contrastColor,
           '--df-height': `${fieldHeight}px`,
-          ...style
+          ...style,
         } as React.CSSProperties
       }
     >

@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import React, { Fragment, useMemo, useRef } from "react";
-import { motion, useInView, useReducedMotion } from "motion/react";
+import React, { Fragment, useMemo, useRef } from 'react';
+import { motion, useInView, useReducedMotion } from 'motion/react';
 
 const EASE = [0.23, 1, 0.32, 1] as const;
 const DURATION = 0.6;
 
-const HIDDEN = { opacity: 0, y: 10, filter: "blur(8px)" } as const;
-const SHOWN = { opacity: 1, y: 0, filter: "blur(0px)" } as const;
+const HIDDEN = { opacity: 0, y: 10, filter: 'blur(8px)' } as const;
+const SHOWN = { opacity: 1, y: 0, filter: 'blur(0px)' } as const;
 
-export type TextRevealSplit = "word" | "character";
+export type TextRevealSplit = 'word' | 'character';
 
 export type TextRevealUnit = {
   key: string;
@@ -35,7 +35,7 @@ export type UseTextRevealOptions = {
 
 export function useTextReveal<T extends HTMLElement = HTMLSpanElement>({
   text,
-  by = "word",
+  by = 'word',
   stagger = 0.055,
   maxDuration = 1.6,
   startOnView = true,
@@ -52,7 +52,7 @@ export function useTextReveal<T extends HTMLElement = HTMLSpanElement>({
 
     let index = 0;
     const built: TextRevealGroup[] = words.map((word, w) => {
-      if (by === "character") {
+      if (by === 'character') {
         return {
           key: `w${w}`,
           units: Array.from(word).map((char, c) => ({
@@ -97,27 +97,38 @@ export type TextRevealProps = UseTextRevealOptions & {
 
 export function TextReveal({
   text,
-  by = "word",
+  by = 'word',
   stagger = 0.055,
   maxDuration = 1.6,
   startOnView = true,
   play = true,
   once = true,
   amount = 0.35,
-  className = "",
+  className = '',
 }: TextRevealProps) {
-  const { ref, groups, step, started, reduced } = useTextReveal<HTMLSpanElement>(
-    { text, by, stagger, maxDuration, startOnView, play, once, amount },
-  );
+  const { ref, groups, step, started, reduced } = useTextReveal<HTMLSpanElement>({
+    text,
+    by,
+    stagger,
+    maxDuration,
+    startOnView,
+    play,
+    once,
+    amount,
+  });
 
   return (
-    <span data-interior="text-reveal" ref={ref} className={`text-[var(--interior-fg)] ${className}`}>
+    <span
+      data-interior="text-reveal"
+      ref={ref}
+      className={`text-[var(--interior-fg)] ${className}`}
+    >
       <span className="sr-only">{text}</span>
 
       <span aria-hidden="true">
         {groups.map((group, g) => (
           <Fragment key={group.key}>
-            {g > 0 ? " " : null}
+            {g > 0 ? ' ' : null}
             <span className="inline-block whitespace-nowrap align-baseline">
               {group.units.map((unit) => (
                 <motion.span

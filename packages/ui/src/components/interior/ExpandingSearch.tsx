@@ -1,18 +1,11 @@
-"use client";
+'use client';
 
-import React, {
-  useCallback,
-  useEffect,
-  useId,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
-import { motion, useReducedMotion } from "motion/react";
+import React, { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 
-const DISCLOSE = { type: "spring", stiffness: 380, damping: 38, mass: 0.7 } as const;
-const CROSSFADE = { type: "spring", stiffness: 260, damping: 34, mass: 0.8 } as const;
-const CELL = { type: "spring", stiffness: 520, damping: 34, mass: 0.45 } as const;
+const DISCLOSE = { type: 'spring', stiffness: 380, damping: 38, mass: 0.7 } as const;
+const CROSSFADE = { type: 'spring', stiffness: 260, damping: 34, mass: 0.8 } as const;
+const CELL = { type: 'spring', stiffness: 520, damping: 34, mass: 0.45 } as const;
 const INSTANT = { duration: 0 } as const;
 
 const COLLAPSED = 40;
@@ -21,8 +14,7 @@ const CLEAR_SLOT = 35;
 const COUNT_SLOT = 38;
 const ANNOUNCE_DELAY = 500;
 
-const useIsomorphicLayoutEffect =
-  typeof window === "undefined" ? useEffect : useLayoutEffect;
+const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
 export type UseExpandingSearchOptions = {
   value?: string;
@@ -54,10 +46,10 @@ export type UseExpandingSearchReturn = {
   };
   triggerProps: {
     ref: React.RefObject<HTMLButtonElement | null>;
-    type: "button";
+    type: 'button';
     disabled: boolean;
     tabIndex: number;
-    "aria-expanded": boolean;
+    'aria-expanded': boolean;
     onClick: () => void;
   };
   inputProps: {
@@ -73,7 +65,7 @@ export type UseExpandingSearchReturn = {
 
 export function useExpandingSearch({
   value,
-  defaultValue = "",
+  defaultValue = '',
   onChange,
   onSearch,
   onSubmit,
@@ -107,7 +99,7 @@ export function useExpandingSearch({
     () => () => {
       if (timer.current) clearTimeout(timer.current);
     },
-    [],
+    []
   );
 
   const setOpen = useCallback((next: boolean) => {
@@ -127,7 +119,7 @@ export function useExpandingSearch({
         latest.current.onSearch?.(next);
       }, debounce);
     },
-    [debounce],
+    [debounce]
   );
 
   const flush = useCallback(() => {
@@ -148,7 +140,7 @@ export function useExpandingSearch({
       setOpen(false);
       if (returnFocus) triggerRef.current?.focus();
     },
-    [setOpen],
+    [setOpen]
   );
 
   const toggle = useCallback(() => {
@@ -157,7 +149,7 @@ export function useExpandingSearch({
   }, [collapse, expand]);
 
   const clear = useCallback(() => {
-    commit("");
+    commit('');
     inputRef.current?.focus();
   }, [commit]);
 
@@ -173,35 +165,35 @@ export function useExpandingSearch({
       if (latest.current.query.length > 0) return;
       setOpen(false);
     },
-    [collapseOnBlur, setOpen],
+    [collapseOnBlur, setOpen]
   );
 
   const onInputKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === "Escape") {
+      if (event.key === 'Escape') {
         event.preventDefault();
         event.stopPropagation();
         if (latest.current.query.length > 0) {
-          commit("");
+          commit('');
           return;
         }
         collapse(true);
         return;
       }
-      if (event.key === "Enter") {
+      if (event.key === 'Enter') {
         event.preventDefault();
         flush();
         latest.current.onSubmit?.(latest.current.query);
       }
     },
-    [collapse, commit, flush],
+    [collapse, commit, flush]
   );
 
   const onInputFocus = useCallback(() => setOpen(true), [setOpen]);
 
   const onInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => commit(event.currentTarget.value),
-    [commit],
+    [commit]
   );
 
   return {
@@ -217,10 +209,10 @@ export function useExpandingSearch({
     rootProps: { onFocus: onRootFocus, onBlur: onRootBlur },
     triggerProps: {
       ref: triggerRef,
-      type: "button",
+      type: 'button',
       disabled,
       tabIndex: isOpen ? -1 : 0,
-      "aria-expanded": isOpen,
+      'aria-expanded': isOpen,
       onClick: expand,
     },
     inputProps: {
@@ -239,32 +231,24 @@ export type ExpandingSearchProps = UseExpandingSearchOptions & {
   label?: string;
   placeholder?: string;
   resultCount?: number;
-  align?: "left" | "right";
+  align?: 'left' | 'right';
   className?: string;
 };
 
 export function ExpandingSearch({
-  label = "Search",
-  placeholder = "Search",
+  label = 'Search',
+  placeholder = 'Search',
   resultCount,
-  align = "right",
-  className = "",
+  align = 'right',
+  className = '',
   ...options
 }: ExpandingSearchProps) {
   const reduced = useReducedMotion();
   const auto = useId();
   const inputId = `${auto}-field`;
 
-  const {
-    open,
-    focused,
-    query,
-    clear,
-    inputRef,
-    rootProps,
-    triggerProps,
-    inputProps,
-  } = useExpandingSearch(options);
+  const { open, focused, query, clear, inputRef, rootProps, triggerProps, inputProps } =
+    useExpandingSearch(options);
 
   const trackRef = useRef<HTMLDivElement | null>(null);
   const [track, setTrack] = useState(0);
@@ -272,8 +256,7 @@ export function ExpandingSearch({
   useIsomorphicLayoutEffect(() => {
     const el = trackRef.current;
     if (!el) return;
-    const read = (w: number) =>
-      setTrack((prev) => (Math.abs(prev - w) < 0.5 ? prev : w));
+    const read = (w: number) => setTrack((prev) => (Math.abs(prev - w) < 0.5 ? prev : w));
     read(el.getBoundingClientRect().width);
     const observer = new ResizeObserver((entries) => {
       const box = entries[0];
@@ -283,16 +266,14 @@ export function ExpandingSearch({
     return () => observer.disconnect();
   }, []);
 
-  const [announced, setAnnounced] = useState("");
+  const [announced, setAnnounced] = useState('');
   useEffect(() => {
     const id = setTimeout(() => {
       if (!open || query.length === 0 || resultCount === undefined) {
-        setAnnounced("");
+        setAnnounced('');
         return;
       }
-      setAnnounced(
-        `${resultCount} ${resultCount === 1 ? "result" : "results"} for ${query}`,
-      );
+      setAnnounced(`${resultCount} ${resultCount === 1 ? 'result' : 'results'} for ${query}`);
     }, ANNOUNCE_DELAY);
     return () => clearTimeout(id);
   }, [open, query, resultCount]);
@@ -307,7 +288,8 @@ export function ExpandingSearch({
 
   return (
     <div
-      data-interior="expanding-search" ref={trackRef}
+      data-interior="expanding-search"
+      ref={trackRef}
       role="search"
       className={`relative h-10 w-full ${className}`}
       {...rootProps}
@@ -322,11 +304,11 @@ export function ExpandingSearch({
           if (open) inputRef.current?.focus();
         }}
         className={`absolute inset-y-0 ${
-          align === "right" ? "right-0" : "left-0"
+          align === 'right' ? 'right-0' : 'left-0'
         } overflow-hidden rounded-[10px] border-2 transition-[background-color,border-color,box-shadow] duration-150 ${
           focused
-            ? "border-[var(--interior-primary)] bg-white dark:border-[var(--interior-primary)] dark:bg-[var(--interior-bg-elevated)]"
-            : "border-[var(--interior-border)] bg-stone-100/70 shadow-[inset_0_1px_2px_rgba(28,25,23,0.07)] dark:border-white/[0.08] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.45)]"
+            ? 'border-[var(--interior-primary)] bg-white dark:border-[var(--interior-primary)] dark:bg-[var(--interior-bg-elevated)]'
+            : 'border-[var(--interior-border)] bg-stone-100/70 shadow-[inset_0_1px_2px_rgba(28,25,23,0.07)] dark:border-white/[0.08] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.45)]'
         }`}
       >
         <motion.input
@@ -342,9 +324,7 @@ export function ExpandingSearch({
           style={{ width: inner, left: TEXT_LEFT }}
           initial={false}
           animate={{ opacity: open ? 1 : 0 }}
-          transition={
-            reduced ? INSTANT : { ...CROSSFADE, delay: open ? 0.06 : 0 }
-          }
+          transition={reduced ? INSTANT : { ...CROSSFADE, delay: open ? 0.06 : 0 }}
           className="absolute inset-y-0 bg-transparent text-[13px] leading-9 text-[var(--interior-fg)] outline-none focus-visible:outline-none placeholder:text-[var(--interior-fg-subtle)] dark:text-[var(--interior-fg)] dark:placeholder:text-[var(--interior-fg-muted)] [&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-decoration]:appearance-none"
         />
 
@@ -359,7 +339,7 @@ export function ExpandingSearch({
               aria-hidden
               className="w-8 truncate text-right font-[family-name:var(--interior-font-mono)] text-[9.5px] tabular-nums text-[var(--interior-fg-muted)]"
             >
-              {filled ? resultCount : ""}
+              {filled ? resultCount : ''}
             </span>
           )}
 
@@ -373,7 +353,7 @@ export function ExpandingSearch({
             animate={{ opacity: filled ? 1 : 0, scale: filled ? 1 : 0.86 }}
             transition={cellMotion}
             className={`grid size-[22px] place-items-center rounded-[6px] text-[var(--interior-fg-muted)] outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[#4568FF] dark:text-[var(--interior-fg-muted)] dark:focus-visible:outline-[#93B0FF] ${
-              open && filled ? "pointer-events-auto" : ""
+              open && filled ? 'pointer-events-auto' : ''
             }`}
           >
             <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden>
@@ -386,7 +366,6 @@ export function ExpandingSearch({
             </svg>
           </motion.button>
         </motion.div>
-
       </motion.div>
 
       <motion.button
@@ -395,12 +374,12 @@ export function ExpandingSearch({
         aria-controls={inputId}
         initial={false}
         animate={{
-          x: align === "right" && open ? -(expanded - COLLAPSED) : 0,
+          x: align === 'right' && open ? -(expanded - COLLAPSED) : 0,
         }}
         transition={shellMotion}
         className={`absolute inset-y-0 z-10 grid w-10 place-items-center rounded-[8px] text-[var(--interior-fg-muted)] outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[#4568FF] disabled:opacity-50 dark:text-[var(--interior-fg-muted)] dark:focus-visible:outline-[#93B0FF] ${
-          align === "right" ? "right-0" : "left-0"
-        } ${open ? "pointer-events-none" : ""}`}
+          align === 'right' ? 'right-0' : 'left-0'
+        } ${open ? 'pointer-events-none' : ''}`}
       >
         <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden>
           <circle cx="6.4" cy="6.4" r="4.5" stroke="currentColor" strokeWidth="1.4" />

@@ -223,7 +223,10 @@ export class UserRepository {
     }
   }
 
-  async scheduleAccountDeletion(userId: string, reason = 'User requested account closure'): Promise<void> {
+  async scheduleAccountDeletion(
+    userId: string,
+    reason = 'User requested account closure'
+  ): Promise<void> {
     try {
       // 30-day grace period from now
       const scheduledDeletionAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);

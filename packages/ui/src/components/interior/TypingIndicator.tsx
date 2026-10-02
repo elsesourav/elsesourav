@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   AnimatePresence,
   animate,
@@ -9,12 +9,12 @@ import {
   useReducedMotion,
   useTransform,
   type MotionValue,
-} from "motion/react";
+} from 'motion/react';
 
 const WAVE_MS = 1.25;
 
-const SURFACE = { type: "spring", stiffness: 380, damping: 30, mass: 0.8 } as const;
-const CROSSFADE = { type: "spring", stiffness: 260, damping: 34, mass: 0.8 } as const;
+const SURFACE = { type: 'spring', stiffness: 380, damping: 30, mass: 0.8 } as const;
+const CROSSFADE = { type: 'spring', stiffness: 260, damping: 34, mass: 0.8 } as const;
 const EASE = [0.23, 1, 0.32, 1] as const;
 const LEAVE = [0.4, 0, 1, 1] as const;
 const INSTANT = { duration: 0 } as const;
@@ -96,7 +96,7 @@ export function useTypingPresence({
           ? null
           : setTimeout(() => settle.current(false), Math.max(24, next - now));
     },
-    [timeout, minVisible],
+    [timeout, minVisible]
   );
 
   settle.current = commit;
@@ -113,7 +113,7 @@ export function useTypingPresence({
       seen.current.set(name, Date.now());
       commit(true);
     },
-    [commit],
+    [commit]
   );
 
   const clear = useCallback(
@@ -121,7 +121,7 @@ export function useTypingPresence({
       if (!seen.current.delete(name)) return;
       commit(false);
     },
-    [commit],
+    [commit]
   );
 
   const send = useCallback((name: string) => {
@@ -176,28 +176,20 @@ export function useTypingPresence({
 }
 
 function describe(names: string[], max: number): string {
-  if (names.length === 0) return "";
+  if (names.length === 0) return '';
 
   const head = names.slice(0, Math.max(1, max));
   const rest = names.length - head.length;
 
   if (rest > 0) {
-    return `${head.join(", ")} and ${rest} ${rest === 1 ? "other" : "others"} are typing`;
+    return `${head.join(', ')} and ${rest} ${rest === 1 ? 'other' : 'others'} are typing`;
   }
   if (head.length === 1) return `${head[0]} is typing`;
 
-  return `${head.slice(0, -1).join(", ")} and ${head[head.length - 1]} are typing`;
+  return `${head.slice(0, -1).join(', ')} and ${head[head.length - 1]} are typing`;
 }
 
-function Dot({
-  index,
-  wave,
-  size,
-}: {
-  index: number;
-  wave: MotionValue<number>;
-  size: number;
-}) {
+function Dot({ index, wave, size }: { index: number; wave: MotionValue<number>; size: number }) {
   const lift = useTransform(wave, (w) => {
     let distance = (w - index) % 3;
     if (distance < 0) distance += 3;
@@ -210,7 +202,8 @@ function Dot({
 
   return (
     <motion.span
-      data-interior="typing-indicator" className="block rounded-full bg-stone-500 dark:bg-stone-300"
+      data-interior="typing-indicator"
+      className="block rounded-full bg-stone-500 dark:bg-stone-300"
       style={{ width: size, height: size, scale, opacity }}
     />
   );
@@ -234,7 +227,7 @@ export function TypingIndicator({
   size = 34,
   showLabel = true,
   announceAfter = 700,
-  className = "",
+  className = '',
 }: TypingIndicatorProps) {
   const reduced = useReducedMotion();
 
@@ -249,9 +242,9 @@ export function TypingIndicator({
     }
     const controls = animate(wave, 3, {
       duration: WAVE_MS,
-      ease: "linear",
+      ease: 'linear',
       repeat: Infinity,
-      repeatType: "loop",
+      repeatType: 'loop',
     });
     return () => controls.stop();
   }, [active, reduced, wave]);
@@ -268,10 +261,7 @@ export function TypingIndicator({
   const radius = Math.round(size * 0.47);
 
   return (
-    <div
-      className={`inline-flex max-w-full items-end gap-3 ${className}`}
-      style={{ height: size }}
-    >
+    <div className={`inline-flex max-w-full items-end gap-3 ${className}`} style={{ height: size }}>
       <div className="relative shrink-0" style={{ width, height: size }}>
         <AnimatePresence initial={false}>
           {active ? (
@@ -279,7 +269,7 @@ export function TypingIndicator({
               key="bubble"
               aria-hidden
               className="absolute inset-0 flex items-center justify-center bg-[var(--interior-bg-subtle)] dark:bg-white/[0.09]"
-              style={{ borderRadius: radius, transformOrigin: "0% 100%", gap }}
+              style={{ borderRadius: radius, transformOrigin: '0% 100%', gap }}
               initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.74 }}
               animate={
                 sending && !reduced
@@ -312,7 +302,7 @@ export function TypingIndicator({
                   />
                 ) : (
                   <Dot key={i} index={i} wave={wave} size={dot} />
-                ),
+                )
               )}
             </motion.div>
           ) : null}

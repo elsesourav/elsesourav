@@ -141,10 +141,7 @@ export async function POST(request: NextRequest) {
       const newPassword = typeof body.newPassword === 'string' ? body.newPassword : '';
 
       if (!email || !resetToken || !newPassword) {
-        return NextResponse.json(
-          { error: 'Missing required parameters' },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 });
       }
 
       if (newPassword.length < 8) {
@@ -165,10 +162,7 @@ export async function POST(request: NextRequest) {
       // Find user to get supabaseAuthId
       const user = await userRepo.findByEmail(email);
       if (!user) {
-        return NextResponse.json(
-          { error: 'User account not found' },
-          { status: 404 }
-        );
+        return NextResponse.json({ error: 'User account not found' }, { status: 404 });
       }
 
       const supabaseAdmin = createAuthAdminClient();

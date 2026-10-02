@@ -8,7 +8,7 @@ import {
   useMotionValue,
   useMotionValueEvent,
   useReducedMotion,
-  useTransform
+  useTransform,
 } from 'motion/react';
 
 const SPRING_UI = { type: 'spring' as const, duration: 0.3, bounce: 0 };
@@ -16,10 +16,11 @@ const LEAN = 4;
 const SIZES: Record<string, { height: number; font: number; radius: number; width: number }> = {
   sm: { height: 28, font: 12, radius: 6, width: 104 },
   md: { height: 34, font: 13, radius: 8, width: 128 },
-  lg: { height: 44, font: 16, radius: 10, width: 160 }
+  lg: { height: 44, font: 16, radius: 10, width: 160 },
 };
 
-const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
+const clamp = (value: number, min: number, max: number): number =>
+  Math.min(max, Math.max(min, value));
 const decimalsOf = (n: number): number => {
   const s = String(n);
   const i = s.indexOf('.');
@@ -27,7 +28,7 @@ const decimalsOf = (n: number): number => {
 };
 const onColor = (hex: string): string => {
   const raw = hex.replace('#', '');
-  const full = raw.length === 3 ? [...raw].map(ch => ch + ch).join('') : raw.slice(0, 6);
+  const full = raw.length === 3 ? [...raw].map((ch) => ch + ch).join('') : raw.slice(0, 6);
   const n = parseInt(full, 16);
   if (Number.isNaN(n)) return '#ffffff';
   const yiq = (((n >> 16) & 255) * 299 + ((n >> 8) & 255) * 587 + (n & 255) * 114) / 1000;
@@ -94,7 +95,7 @@ export default function ScrubField({
   onChange,
   onCommit,
   className = '',
-  style
+  style,
 }: ScrubFieldProps) {
   const id = useId();
   const reduce = useReducedMotion();
@@ -125,8 +126,10 @@ export default function ScrubField({
   const signed = (d: number): string => (d < 0 ? '−' : '+') + fmt(Math.abs(d));
 
   const reach = (rubberReach / 100) * Math.max(max - min, Number.EPSILON);
-  const bend = (raw: number): number => (reach ? Math.sign(raw) * reach * Math.log1p(Math.abs(raw) / reach) : 0);
-  const unbend = (over: number): number => (reach ? Math.sign(over) * reach * Math.expm1(Math.abs(over) / reach) : 0);
+  const bend = (raw: number): number =>
+    reach ? Math.sign(raw) * reach * Math.log1p(Math.abs(raw) / reach) : 0;
+  const unbend = (over: number): number =>
+    reach ? Math.sign(over) * reach * Math.expm1(Math.abs(over) / reach) : 0;
   const toShown = (raw: number): number => {
     const c = clamp(raw, min, max);
     return c + bend(raw - c);
@@ -135,8 +138,9 @@ export default function ScrubField({
     const c = clamp(shown, min, max);
     return c + unbend(shown - c);
   };
-  const multiplierOf = (e: React.PointerEvent<HTMLDivElement> | React.KeyboardEvent<HTMLInputElement>): number =>
-    e.shiftKey ? coarseMultiplier : e.altKey ? fineMultiplier : 1;
+  const multiplierOf = (
+    e: React.PointerEvent<HTMLDivElement> | React.KeyboardEvent<HTMLInputElement>
+  ): number => (e.shiftKey ? coarseMultiplier : e.altKey ? fineMultiplier : 1);
 
   const commit = (next: number): void => {
     const rounded = clamp(Number(next.toFixed(fineDecimals)), min, max);
@@ -146,15 +150,18 @@ export default function ScrubField({
     onChange?.(rounded);
   };
 
-  useMotionValueEvent(display, 'change', d => {
+  useMotionValueEvent(display, 'change', (d) => {
     if (!typingRef.current && inputRef.current) inputRef.current.value = fmt(d);
     if (chipRef.current) chipRef.current.dataset.over = d < min || d > max ? 'true' : 'false';
   });
-  const lean = useTransform(display, d =>
+  const lean = useTransform(display, (d) =>
     reduce || !reach ? 0 : clamp((d - clamp(d, min, max)) / reach, -1, 1) * LEAN
   );
   const chipTransform = useMotionTemplate`translateX(${lean}px)`;
-  const fill = useTransform(display, d => (clamp(d, min, max) - min) / Math.max(max - min, Number.EPSILON));
+  const fill = useTransform(
+    display,
+    (d) => (clamp(d, min, max) - min) / Math.max(max - min, Number.EPSILON)
+  );
   const fillTransform = useMotionTemplate`scaleX(${fill})`;
 
   const adopt = (next: number): void => {
@@ -196,7 +203,7 @@ export default function ScrubField({
       moved: false,
       before: valueRef.current,
       slack: e.pointerType === 'touch' ? 8 : 3,
-      left: chipRef.current ? chipRef.current.getBoundingClientRect().left : 0
+      left: chipRef.current ? chipRef.current.getBoundingClientRect().left : 0,
     };
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
@@ -277,7 +284,7 @@ export default function ScrubField({
       ArrowUp: step * multiplierOf(e),
       ArrowDown: -step * multiplierOf(e),
       PageUp: step * coarseMultiplier,
-      PageDown: -step * coarseMultiplier
+      PageDown: -step * coarseMultiplier,
     };
     const delta = deltas[e.key];
     if (delta !== undefined || e.key === 'Home' || e.key === 'End') {
@@ -347,7 +354,7 @@ export default function ScrubField({
           '--sf-r': `${preset.radius}px`,
           '--sf-w': `${preset.width}px`,
           transform: chipTransform,
-          ...style
+          ...style,
         } as React.CSSProperties
       }
     >
@@ -359,7 +366,7 @@ export default function ScrubField({
       <label
         htmlFor={id}
         className="scrub-field__handle"
-        onClick={e => {
+        onClick={(e) => {
           if (movedRef.current) e.preventDefault();
         }}
       >
@@ -379,7 +386,7 @@ export default function ScrubField({
         defaultValue={fmt(value)}
         disabled={disabled}
         onFocus={handleFocus}
-        onChange={e => setDraft(e.target.value)}
+        onChange={(e) => setDraft(e.target.value)}
         onKeyDown={handleKeyDown}
         onBlur={handleBlur}
       />

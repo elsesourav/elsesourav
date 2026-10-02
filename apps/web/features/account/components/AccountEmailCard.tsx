@@ -88,7 +88,9 @@ export function AccountEmailCard({
           ) : !isOAuth ? (
             <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20">
               <StatusMark
-                status={emailStep === 'sending' || emailStep === 'verifying' ? 'running' : 'pending'}
+                status={
+                  emailStep === 'sending' || emailStep === 'verifying' ? 'running' : 'pending'
+                }
                 size={13}
                 strokeWidth={2}
                 color="#f59e0b"
@@ -106,7 +108,9 @@ export function AccountEmailCard({
 
       {!isEditingEmail ? (
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 p-2.5 rounded-xl bg-background/80 border border-border/70">
-          <span className="text-xs font-mono text-foreground truncate select-all min-w-0">{email}</span>
+          <span className="text-xs font-mono text-foreground truncate select-all min-w-0">
+            {email}
+          </span>
 
           {!isOAuth && (
             <div className="shrink-0 flex items-center justify-end">

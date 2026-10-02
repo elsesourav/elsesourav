@@ -9,7 +9,7 @@ import {
   useReducedMotion,
   useSpring,
   useTransform,
-  type MotionStyle
+  type MotionStyle,
 } from 'motion/react';
 
 const SLOP = { fine: 4, coarse: 8 };
@@ -95,7 +95,7 @@ export default function FlipCard({
   disabled = false,
   ariaLabel = 'Flip card',
   className = '',
-  style
+  style,
 }: FlipCardProps) {
   const reduce = useReducedMotion();
   const controlled = flipped !== undefined;
@@ -121,9 +121,9 @@ export default function FlipCard({
   const sumY = useTransform([turn, tiltY], ([t, y]: number[]) => (t ?? 0) + (y ?? 0));
   const turnY = useMotionTemplate`perspective(${perspective}px) scale(${lift}) rotateX(${tiltX}deg) rotateY(${sumY}deg)`;
   const turnX = useMotionTemplate`perspective(${perspective}px) scale(${lift}) rotateY(${tiltY}deg) rotateX(${sumX}deg)`;
-  const facing = useTransform(turn, t => Math.abs(Math.cos((t * Math.PI) / 180)));
-  const spread = useTransform(facing, f => 0.08 + 0.92 * f);
-  const shade = useTransform(facing, f => 0.1 + 0.9 * f * f);
+  const facing = useTransform(turn, (t) => Math.abs(Math.cos((t * Math.PI) / 180)));
+  const spread = useTransform(facing, (f) => 0.08 + 0.92 * f);
+  const shade = useTransform(facing, (f) => 0.1 + 0.9 * f * f);
   const gxPct = useMotionTemplate`${gx}%`;
   const gyPct = useMotionTemplate`${gy}%`;
 
@@ -131,7 +131,14 @@ export default function FlipCard({
     spin.current?.stop();
     target.current = to;
     if (instant || reduce) turn.jump(to);
-    else spin.current = animate(turn, to, { type: 'spring', stiffness, damping, velocity, restDelta: 0.05 });
+    else
+      spin.current = animate(turn, to, {
+        type: 'spring',
+        stiffness,
+        damping,
+        velocity,
+        restDelta: 0.05,
+      });
     const next = isBack(to);
     if (next === shownRef.current) return;
     shownRef.current = next;
@@ -155,7 +162,13 @@ export default function FlipCard({
     spin.current?.stop();
     target.current = isBack(base) ? base - 180 : base + 180;
     if (reduce) turn.jump(target.current);
-    else spin.current = animate(turn, target.current, { type: 'spring', stiffness, damping, restDelta: 0.05 });
+    else
+      spin.current = animate(turn, target.current, {
+        type: 'spring',
+        stiffness,
+        damping,
+        restDelta: 0.05,
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flipped]);
   useEffect(() => () => spin.current?.stop(), []);
@@ -179,7 +192,7 @@ export default function FlipCard({
       base: turn.get(),
       moved: false,
       slop: e.pointerType === 'touch' ? SLOP.coarse : SLOP.fine,
-      hist: []
+      hist: [],
     };
     if (!reduce) lift.set(hoverScale);
   };
@@ -219,7 +232,8 @@ export default function FlipCard({
     if (!g || g.id !== e.pointerId) return;
     grip.current = null;
     try {
-      if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
+      if (e.currentTarget.hasPointerCapture(e.pointerId))
+        e.currentTarget.releasePointerCapture(e.pointerId);
     } catch {
       /* ignore */
     }
@@ -236,7 +250,9 @@ export default function FlipCard({
     const b = g.hist[g.hist.length - 1];
     if (!cancelled && a && b && b.t > a.t && performance.now() - b.t < 60)
       velocity = ((b.v - a.v) / (b.t - a.t)) * 1000;
-    const to = cancelled ? snap(g.base) : clamp(snap(here + velocity * FLING), snap(here) - 180, snap(here) + 180);
+    const to = cancelled
+      ? snap(g.base)
+      : clamp(snap(here + velocity * FLING), snap(here) - 180, snap(here) + 180);
     settle(to, velocity, false);
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>): void => {
@@ -252,7 +268,7 @@ export default function FlipCard({
     transform: axis === 'x' ? turnX : turnY,
     '--fc-gx': gxPct,
     '--fc-gy': gyPct,
-    '--fc-sheen': sheen
+    '--fc-sheen': sheen,
   };
 
   return (
@@ -271,10 +287,10 @@ export default function FlipCard({
       data-fade={reduce ? (shown ? 'back' : 'front') : undefined}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
-      onPointerUp={e => release(e, false)}
-      onPointerCancel={e => release(e, true)}
-      onLostPointerCapture={e => release(e, true)}
-      onPointerEnter={e => {
+      onPointerUp={(e) => release(e, false)}
+      onPointerCancel={(e) => release(e, true)}
+      onLostPointerCapture={(e) => release(e, true)}
+      onPointerEnter={(e) => {
         if (!reduce && !disabled && e.pointerType !== 'touch') lift.set(hoverScale);
       }}
       onPointerLeave={() => {
@@ -282,7 +298,7 @@ export default function FlipCard({
       }}
       onKeyDown={onKeyDown}
       onClick={onClick}
-      onDragStart={e => e.preventDefault()}
+      onDragStart={(e) => e.preventDefault()}
       style={
         {
           '--fc-w': `${width}px`,
@@ -293,7 +309,7 @@ export default function FlipCard({
           '--fc-shadow': shadowColor,
           '--fc-shadow-o': shadowOpacity,
           '--fc-glare': glareOpacity,
-          ...style
+          ...style,
         } as React.CSSProperties
       }
     >
@@ -301,7 +317,9 @@ export default function FlipCard({
         <motion.span
           className="flip-card__shadow"
           aria-hidden="true"
-          style={axis === 'x' ? { scaleY: spread, opacity: shade } : { scaleX: spread, opacity: shade }}
+          style={
+            axis === 'x' ? { scaleY: spread, opacity: shade } : { scaleX: spread, opacity: shade }
+          }
         />
       ) : null}
       <motion.div className="flip-card__rotor" style={reduce ? undefined : rotorStyle}>

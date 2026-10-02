@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 
-const PRESS = { type: "spring", stiffness: 520, damping: 34, mass: 0.45 } as const;
+const PRESS = { type: 'spring', stiffness: 520, damping: 34, mass: 0.45 } as const;
 
 export type UsePressDepthOptions = {
   disabled?: boolean;
@@ -25,9 +25,7 @@ export type UsePressDepthResult = {
   };
 };
 
-export function usePressDepth(
-  options: UsePressDepthOptions = {},
-): UsePressDepthResult {
+export function usePressDepth(options: UsePressDepthOptions = {}): UsePressDepthResult {
   const { disabled = false, onPressStart, onPressEnd } = options;
 
   const [pressed, setPressed] = useState(false);
@@ -86,18 +84,18 @@ export function usePressDepth(
       if (document.hidden) stop();
     };
 
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", lift);
-    window.addEventListener("pointercancel", lift);
-    window.addEventListener("blur", bail);
-    document.addEventListener("visibilitychange", hidden);
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', lift);
+    window.addEventListener('pointercancel', lift);
+    window.addEventListener('blur', bail);
+    document.addEventListener('visibilitychange', hidden);
 
     return () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", lift);
-      window.removeEventListener("pointercancel", lift);
-      window.removeEventListener("blur", bail);
-      document.removeEventListener("visibilitychange", hidden);
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', lift);
+      window.removeEventListener('pointercancel', lift);
+      window.removeEventListener('blur', bail);
+      document.removeEventListener('visibilitychange', hidden);
     };
   }, [tracking, setDown, stop]);
 
@@ -112,7 +110,7 @@ export function usePressDepth(
   const bind = {
     onPointerDown: (event: React.PointerEvent) => {
       if (disabled) return;
-      if (event.pointerType === "mouse" && event.button !== 0) return;
+      if (event.pointerType === 'mouse' && event.button !== 0) return;
       const r = event.currentTarget.getBoundingClientRect();
       setOrigin({
         x: Math.max(-1, Math.min(1, ((event.clientX - r.left) / r.width) * 2 - 1)),
@@ -124,10 +122,10 @@ export function usePressDepth(
     },
     onKeyDown: (event: React.KeyboardEvent) => {
       if (disabled || event.repeat) return;
-      if (event.key === " " || event.key === "Enter") setDown(true);
+      if (event.key === ' ' || event.key === 'Enter') setDown(true);
     },
     onKeyUp: (event: React.KeyboardEvent) => {
-      if (event.key === " " || event.key === "Enter" || event.key === "Escape") {
+      if (event.key === ' ' || event.key === 'Enter' || event.key === 'Escape') {
         setDown(false);
       }
     },
@@ -142,10 +140,10 @@ export type PressDepthProps = {
   depth?: number;
   tilt?: number;
   disabled?: boolean;
-  type?: "button" | "submit" | "reset";
+  type?: 'button' | 'submit' | 'reset';
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   className?: string;
-  "aria-label"?: string;
+  'aria-label'?: string;
 };
 
 export function PressDepth({
@@ -153,10 +151,10 @@ export function PressDepth({
   depth = 4,
   tilt = 7,
   disabled = false,
-  type = "button",
+  type = 'button',
   onClick,
-  className = "",
-  "aria-label": ariaLabel,
+  className = '',
+  'aria-label': ariaLabel,
 }: PressDepthProps) {
   const reduced = useReducedMotion();
   const { pressed, origin, ref, bind } = usePressDepth({ disabled });
@@ -165,16 +163,17 @@ export function PressDepth({
 
   return (
     <button
-      data-interior="press-depth" ref={ref}
+      data-interior="press-depth"
+      ref={ref}
       type={type}
       disabled={disabled}
       aria-label={ariaLabel}
-      data-pressed={pressed ? "" : undefined}
+      data-pressed={pressed ? '' : undefined}
       onClick={onClick}
       style={{
         paddingBottom: depth,
-        touchAction: "manipulation",
-        WebkitTapHighlightColor: "transparent",
+        touchAction: 'manipulation',
+        WebkitTapHighlightColor: 'transparent',
       }}
       className="group relative inline-flex select-none rounded-[9px] align-middle outline-none disabled:opacity-50"
       {...bind}

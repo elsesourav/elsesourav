@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React, { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import React, { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 
-const CELL = { type: "spring", stiffness: 520, damping: 34, mass: 0.45 } as const;
+const CELL = { type: 'spring', stiffness: 520, damping: 34, mass: 0.45 } as const;
 
-const SMALL = { type: "spring", stiffness: 700, damping: 46, mass: 0.5 } as const;
+const SMALL = { type: 'spring', stiffness: 700, damping: 46, mass: 0.5 } as const;
 
 const EASE = [0.23, 1, 0.32, 1] as const;
 const LEAVE = [0.4, 0, 1, 1] as const;
@@ -16,7 +16,7 @@ const STEP = 0.018;
 const STEP_CAP = 8;
 const SETTLE_MS = 380;
 
-export type SortDirection = "asc" | "desc";
+export type SortDirection = 'asc' | 'desc';
 
 export type SortState = { columnId: string; direction: SortDirection };
 
@@ -24,7 +24,7 @@ export type SortableColumn<T> = {
   id: string;
   header: string;
   width?: string;
-  align?: "start" | "end";
+  align?: 'start' | 'end';
   numeric?: boolean;
   sortable?: boolean;
   value?: (row: T) => string | number | null | undefined;
@@ -58,26 +58,26 @@ export function useSortableRows<T>({
   const current = controlled ? sort : internal;
 
   const collator = useMemo(
-    () => new Intl.Collator("en", { numeric: true, sensitivity: "base" }),
-    [],
+    () => new Intl.Collator('en', { numeric: true, sensitivity: 'base' }),
+    []
   );
 
   const ordered = useMemo<OrderedRow<T>[]>(() => {
     const base = rows.map((row, i) => ({ id: getRowId(row), row, i }));
 
     if (current) {
-      const dir = current.direction === "asc" ? 1 : -1;
+      const dir = current.direction === 'asc' ? 1 : -1;
       base.sort((x, y) => {
         const a = getValue(x.row, current.columnId);
         const b = getValue(y.row, current.columnId);
-        const emptyA = a === null || a === undefined || a === "";
-        const emptyB = b === null || b === undefined || b === "";
+        const emptyA = a === null || a === undefined || a === '';
+        const emptyB = b === null || b === undefined || b === '';
         if (emptyA || emptyB) {
           if (emptyA && emptyB) return x.i - y.i;
           return emptyA ? 1 : -1;
         }
         const d =
-          typeof a === "number" && typeof b === "number"
+          typeof a === 'number' && typeof b === 'number'
             ? a - b
             : collator.compare(String(a), String(b));
         return d === 0 ? x.i - y.i : d * dir;
@@ -91,27 +91,27 @@ export function useSortableRows<T>({
     (columnId: string) => {
       const next: SortState | null =
         !current || current.columnId !== columnId
-          ? { columnId, direction: "asc" }
-          : current.direction === "asc"
-            ? { columnId, direction: "desc" }
+          ? { columnId, direction: 'asc' }
+          : current.direction === 'asc'
+            ? { columnId, direction: 'desc' }
             : restoreOriginal
               ? null
-              : { columnId, direction: "asc" };
+              : { columnId, direction: 'asc' };
 
       if (!controlled) setInternal(next);
       onSortChange?.(next);
     },
-    [current, controlled, onSortChange, restoreOriginal],
+    [current, controlled, onSortChange, restoreOriginal]
   );
 
   const ariaSort = useCallback(
-    (columnId: string): "ascending" | "descending" | "none" =>
+    (columnId: string): 'ascending' | 'descending' | 'none' =>
       current?.columnId === columnId
-        ? current.direction === "asc"
-          ? "ascending"
-          : "descending"
-        : "none",
-    [current],
+        ? current.direction === 'asc'
+          ? 'ascending'
+          : 'descending'
+        : 'none',
+    [current]
   );
 
   return { sort: current, ordered, toggle, ariaSort };
@@ -146,7 +146,7 @@ export function SortableTable<T>({
   markable = false,
   onMarkChange,
   getRowLabel,
-  className = "",
+  className = '',
 }: SortableTableProps<T>) {
   const reduced = useReducedMotion();
   const [marked, setMarked] = useState<string | null>(null);
@@ -158,7 +158,7 @@ export function SortableTable<T>({
     () => () => {
       if (settleTimer.current) clearTimeout(settleTimer.current);
     },
-    [],
+    []
   );
 
   const getValue = useCallback(
@@ -166,10 +166,15 @@ export function SortableTable<T>({
       const column = columns.find((c) => c.id === columnId);
       return column?.value ? column.value(row) : null;
     },
-    [columns],
+    [columns]
   );
 
-  const { sort: current, ordered, toggle, ariaSort } = useSortableRows<T>({
+  const {
+    sort: current,
+    ordered,
+    toggle,
+    ariaSort,
+  } = useSortableRows<T>({
     rows,
     getRowId,
     getValue,
@@ -179,10 +184,8 @@ export function SortableTable<T>({
   });
 
   const template = useMemo(
-    () =>
-      (markable ? "28px " : "") +
-      columns.map((c) => c.width ?? "minmax(0, 1fr)").join(" "),
-    [columns, markable],
+    () => (markable ? '28px ' : '') + columns.map((c) => c.width ?? 'minmax(0, 1fr)').join(' '),
+    [columns, markable]
   );
 
   const onToggle = (columnId: string) => {
@@ -206,16 +209,17 @@ export function SortableTable<T>({
   const activeHeader = columns.find((c) => c.id === current?.columnId)?.header;
 
   const message = !touched
-    ? ""
+    ? ''
     : current && activeHeader
       ? `Sorted by ${activeHeader}, ${
-          current.direction === "asc" ? "ascending" : "descending"
+          current.direction === 'asc' ? 'ascending' : 'descending'
         }. ${rows.length} rows.`
       : `Original order restored. ${rows.length} rows.`;
 
   return (
     <div
-      data-interior="sortable-table" className={`overflow-hidden rounded-[14px] border border-[var(--interior-border)] bg-white shadow-[0_1px_2px_rgba(28,25,23,0.06),0_4px_10px_-8px_rgba(28,25,23,0.45)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[0_1px_6px_rgba(0,0,0,0.45)] ${className}`}
+      data-interior="sortable-table"
+      className={`overflow-hidden rounded-[14px] border border-[var(--interior-border)] bg-white shadow-[0_1px_2px_rgba(28,25,23,0.06),0_4px_10px_-8px_rgba(28,25,23,0.45)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[0_1px_6px_rgba(0,0,0,0.45)] ${className}`}
     >
       <div
         role="table"
@@ -238,8 +242,8 @@ export function SortableTable<T>({
 
             {columns.map((column) => {
               const state = ariaSort(column.id);
-              const active = state !== "none";
-              const end = column.align === "end";
+              const active = state !== 'none';
+              const end = column.align === 'end';
 
               return (
                 <div
@@ -251,7 +255,7 @@ export function SortableTable<T>({
                   {column.sortable === false ? (
                     <span
                       className={`block truncate px-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--interior-fg-muted)] ${
-                        end ? "text-right" : ""
+                        end ? 'text-right' : ''
                       }`}
                     >
                       {column.header}
@@ -261,14 +265,14 @@ export function SortableTable<T>({
                       type="button"
                       onClick={() => onToggle(column.id)}
                       className={`group flex h-7 w-full items-center gap-1.5 rounded-[6px] px-1.5 outline-none focus-visible:bg-[var(--interior-primary)]/[0.06] focus-visible:shadow-[inset_0_0_0_1px_var(--interior-primary)] dark:focus-visible:bg-[#93B0FF]/[0.06] dark:focus-visible:shadow-[inset_0_0_0_1px_var(--interior-primary)] ${
-                        end ? "flex-row-reverse" : ""
+                        end ? 'flex-row-reverse' : ''
                       }`}
                     >
                       <span
                         className={`truncate text-[11px] font-semibold uppercase tracking-[0.08em] ${
                           active
-                            ? "text-[var(--interior-fg)]"
-                            : "text-[var(--interior-fg-muted)] group-hover:text-[var(--interior-fg)] dark:text-[var(--interior-fg-muted)] dark:group-hover:text-stone-200"
+                            ? 'text-[var(--interior-fg)]'
+                            : 'text-[var(--interior-fg-muted)] group-hover:text-[var(--interior-fg)] dark:text-[var(--interior-fg-muted)] dark:group-hover:text-stone-200'
                         }`}
                       >
                         {column.header}
@@ -278,7 +282,7 @@ export function SortableTable<T>({
                         className="shrink-0 text-[var(--interior-fg)]"
                         initial={false}
                         animate={{
-                          rotate: state === "descending" ? 180 : 0,
+                          rotate: state === 'descending' ? 180 : 0,
                           opacity: active ? 1 : 0,
                           scale: active ? 1 : 0.72,
                         }}
@@ -304,7 +308,7 @@ export function SortableTable<T>({
         <div
           role="rowgroup"
           className={`relative overflow-y-auto overscroll-contain ${
-            maxHeight ? "[scrollbar-gutter:stable]" : ""
+            maxHeight ? '[scrollbar-gutter:stable]' : ''
           }`}
           style={{
             height: (rows.length || 1) * rowHeight,
@@ -317,10 +321,7 @@ export function SortableTable<T>({
               className="absolute inset-x-0 top-0 flex items-center px-3.5"
               style={{ height: rowHeight }}
             >
-              <span
-                role="cell"
-                className="text-[12.5px] text-[var(--interior-fg-muted)]"
-              >
+              <span role="cell" className="text-[12.5px] text-[var(--interior-fg-muted)]">
                 No rows
               </span>
             </div>
@@ -338,12 +339,10 @@ export function SortableTable<T>({
                 initial={false}
                 animate={{ y: index * rowHeight }}
                 transition={
-                  reduced
-                    ? { duration: 0 }
-                    : { ...CELL, delay: Math.min(index, STEP_CAP) * STEP }
+                  reduced ? { duration: 0 } : { ...CELL, delay: Math.min(index, STEP_CAP) * STEP }
                 }
                 className={`absolute inset-x-0 top-0 grid items-center gap-x-2 px-2 transition-colors duration-150 ${
-                  isMarked ? "bg-[var(--interior-bg-subtle)] dark:bg-white/[0.06]" : ""
+                  isMarked ? 'bg-[var(--interior-bg-subtle)] dark:bg-white/[0.06]' : ''
                 }`}
                 style={{ height: rowHeight, gridTemplateColumns: template }}
               >
@@ -355,8 +354,8 @@ export function SortableTable<T>({
                       onClick={() => onMark(id)}
                       className={`flex size-[18px] items-center justify-center rounded-[5px] border outline-none focus-visible:border-[var(--interior-primary)] focus-visible:shadow-[0_1px_3px_rgba(28,25,23,0.18)] dark:focus-visible:border-[var(--interior-primary)] dark:focus-visible:shadow-[0_1px_3px_rgba(0,0,0,0.5)] ${
                         marked === id
-                          ? "border-[var(--interior-primary)] bg-[var(--interior-primary)] text-white dark:border-[var(--interior-primary)] dark:bg-[var(--interior-primary)] dark:text-[var(--interior-fg)]"
-                          : "border-[var(--interior-border)] text-transparent dark:border-white/15"
+                          ? 'border-[var(--interior-primary)] bg-[var(--interior-primary)] text-white dark:border-[var(--interior-primary)] dark:bg-[var(--interior-primary)] dark:text-[var(--interior-fg)]'
+                          : 'border-[var(--interior-border)] text-transparent dark:border-white/15'
                       }`}
                     >
                       <span className="sr-only">Follow {nameOf(row)}</span>
@@ -386,8 +385,8 @@ export function SortableTable<T>({
                   const raw = column.value?.(row);
                   const content = column.cell
                     ? column.cell(row)
-                    : raw === null || raw === undefined || raw === ""
-                      ? "—"
+                    : raw === null || raw === undefined || raw === ''
+                      ? '—'
                       : String(raw);
 
                   return (
@@ -395,11 +394,11 @@ export function SortableTable<T>({
                       key={column.id}
                       role="cell"
                       className={`min-w-0 truncate px-1.5 text-[13px] ${
-                        column.align === "end" ? "text-right" : ""
-                      } ${column.numeric ? "tabular-nums" : ""} ${
+                        column.align === 'end' ? 'text-right' : ''
+                      } ${column.numeric ? 'tabular-nums' : ''} ${
                         c === 0
-                          ? "font-medium text-[var(--interior-fg)]"
-                          : "text-[var(--interior-fg-muted)]"
+                          ? 'font-medium text-[var(--interior-fg)]'
+                          : 'text-[var(--interior-fg-muted)]'
                       }`}
                     >
                       {content}

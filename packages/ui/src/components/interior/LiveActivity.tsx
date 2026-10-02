@@ -1,33 +1,26 @@
-"use client";
+'use client';
 
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
-const SURFACE = { type: "spring", stiffness: 420, damping: 36, mass: 0.9 } as const;
-const CROSSFADE = { type: "spring", stiffness: 260, damping: 34, mass: 0.8 } as const;
-const SMALL = { type: "spring", stiffness: 700, damping: 46, mass: 0.5 } as const;
-const FILL = { type: "spring", stiffness: 210, damping: 34, mass: 0.9 } as const;
+const SURFACE = { type: 'spring', stiffness: 420, damping: 36, mass: 0.9 } as const;
+const CROSSFADE = { type: 'spring', stiffness: 260, damping: 34, mass: 0.8 } as const;
+const SMALL = { type: 'spring', stiffness: 700, damping: 46, mass: 0.5 } as const;
+const FILL = { type: 'spring', stiffness: 210, damping: 34, mass: 0.9 } as const;
 const EASE = [0.23, 1, 0.32, 1] as const;
 const LEAVE = [0.4, 0, 1, 1] as const;
 const DRAW = { duration: 0.3, ease: EASE } as const;
 const INSTANT = { duration: 0 } as const;
-const SPIN = { duration: 0.85, ease: "linear", repeat: Infinity } as const;
+const SPIN = { duration: 0.85, ease: 'linear', repeat: Infinity } as const;
 
 const PEEK_FOR = 2600;
 const LEAVE_DELAY = 160;
 
-const face = (on: boolean) => (on ? "" : "pointer-events-none");
+const face = (on: boolean) => (on ? '' : 'pointer-events-none');
 
-const useIsoLayoutEffect =
-  typeof window === "undefined" ? useEffect : useLayoutEffect;
+const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
-export type ActivityPhase = "running" | "success" | "error";
+export type ActivityPhase = 'running' | 'success' | 'error';
 
 export type Activity = {
   id: string;
@@ -63,10 +56,10 @@ export function useLiveActivity({ linger = 2000 }: UseLiveActivityOptions = {}) 
       clear();
       seq.current += 1;
       const id = `activity-${seq.current}`;
-      setActivity({ progress: null, ...input, id, phase: "running" });
+      setActivity({ progress: null, ...input, id, phase: 'running' });
       return id;
     },
-    [clear],
+    [clear]
   );
 
   const update = useCallback((patch: Partial<ActivityInput>) => {
@@ -80,26 +73,22 @@ export function useLiveActivity({ linger = 2000 }: UseLiveActivityOptions = {}) 
 
   const succeed = useCallback(
     (patch?: Partial<ActivityInput>) => {
-      setActivity((prev) =>
-        prev ? { ...prev, ...patch, phase: "success", progress: 1 } : prev,
-      );
+      setActivity((prev) => (prev ? { ...prev, ...patch, phase: 'success', progress: 1 } : prev));
       clear();
       timer.current = setTimeout(() => {
         timer.current = null;
         setActivity(null);
       }, linger);
     },
-    [clear, linger],
+    [clear, linger]
   );
 
   const fail = useCallback(
-    (patch?: Partial<ActivityInput>, action?: Activity["action"]) => {
+    (patch?: Partial<ActivityInput>, action?: Activity['action']) => {
       clear();
-      setActivity((prev) =>
-        prev ? { ...prev, ...patch, phase: "error", action } : prev,
-      );
+      setActivity((prev) => (prev ? { ...prev, ...patch, phase: 'error', action } : prev));
     },
-    [clear],
+    [clear]
   );
 
   useEffect(() => clear, [clear]);
@@ -122,16 +111,16 @@ export function LiveActivity({
   activity,
   onDismiss,
   width = 300,
-  dismissLabel = "Dismiss activity",
-  label = "Activity",
-  className = "",
+  dismissLabel = 'Dismiss activity',
+  label = 'Activity',
+  className = '',
 }: LiveActivityProps) {
   const reduced = useReducedMotion() === true;
 
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const [peeking, setPeeking] = useState(false);
-  const [spoken, setSpoken] = useState("");
+  const [spoken, setSpoken] = useState('');
 
   const compactRef = useRef<HTMLDivElement>(null);
   const expandedRef = useRef<HTMLDivElement>(null);
@@ -142,19 +131,16 @@ export function LiveActivity({
   const peekTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const said = useRef<Set<string>>(new Set());
 
-  const phase = activity?.phase ?? "running";
-  const expanded =
-    activity !== null && (hovered || focused || peeking || phase === "error");
+  const phase = activity?.phase ?? 'running';
+  const expanded = activity !== null && (hovered || focused || peeking || phase === 'error');
 
   const apply = useCallback((open: boolean) => {
     const target = open ? sizes.current.e : sizes.current.c;
     if (target.w === 0 || target.h === 0) return;
     setDims((prev) =>
-      prev &&
-      Math.abs(prev.w - target.w) < 0.5 &&
-      Math.abs(prev.h - target.h) < 0.5
+      prev && Math.abs(prev.w - target.w) < 0.5 && Math.abs(prev.h - target.h) < 0.5
         ? prev
-        : { w: target.w, h: target.h },
+        : { w: target.w, h: target.h }
     );
   }, []);
 
@@ -168,7 +154,7 @@ export function LiveActivity({
       apply(expanded);
     };
     read();
-    if (typeof ResizeObserver === "undefined") return;
+    if (typeof ResizeObserver === 'undefined') return;
     const observer = new ResizeObserver(read);
     if (compactRef.current) observer.observe(compactRef.current);
     if (expandedRef.current) observer.observe(expandedRef.current);
@@ -196,7 +182,7 @@ export function LiveActivity({
       if (leaveTimer.current) clearTimeout(leaveTimer.current);
       if (peekTimer.current) clearTimeout(peekTimer.current);
     },
-    [],
+    []
   );
 
   useEffect(() => {
@@ -206,11 +192,11 @@ export function LiveActivity({
     if (said.current.size > 64) said.current.clear();
     said.current.add(key);
     setSpoken(
-      activity.phase === "running"
+      activity.phase === 'running'
         ? `${activity.title} started.`
-        : activity.phase === "success"
+        : activity.phase === 'success'
           ? `${activity.title} finished.`
-          : `${activity.title} failed.`,
+          : `${activity.title} failed.`
     );
   }, [activity]);
 
@@ -235,7 +221,8 @@ export function LiveActivity({
 
   return (
     <div
-      data-interior="live-activity" role="region"
+      data-interior="live-activity"
+      role="region"
       aria-label={label}
       className={`pointer-events-none flex justify-center ${className}`}
     >
@@ -244,15 +231,13 @@ export function LiveActivity({
           <motion.div
             key="pod"
             initial={
-              reduced
-                ? { opacity: 0 }
-                : { opacity: 0, y: -10, scale: 0.9, filter: "blur(6px)" }
+              reduced ? { opacity: 0 } : { opacity: 0, y: -10, scale: 0.9, filter: 'blur(6px)' }
             }
             animate={{
               opacity: 1,
               y: 0,
               scale: 1,
-              filter: "blur(0px)",
+              filter: 'blur(0px)',
               width: dims?.w,
               height: dims?.h,
             }}
@@ -263,7 +248,7 @@ export function LiveActivity({
                     opacity: 0,
                     y: -8,
                     scale: 0.97,
-                    filter: "blur(3px)",
+                    filter: 'blur(3px)',
                     transition: { duration: 0.16, ease: LEAVE },
                   }
             }
@@ -276,7 +261,7 @@ export function LiveActivity({
                     filter: { duration: 0.2, ease: EASE },
                   }
             }
-            style={{ transformOrigin: "50% 0%" }}
+            style={{ transformOrigin: '50% 0%' }}
             onPointerEnter={enter}
             onPointerLeave={leave}
             onFocusCapture={() => setFocused(true)}
@@ -286,9 +271,9 @@ export function LiveActivity({
               }
             }}
             onKeyDown={(e) => {
-              if (e.key !== "Escape") return;
+              if (e.key !== 'Escape') return;
               e.preventDefault();
-              if (phase === "running") setHovered(false);
+              if (phase === 'running') setHovered(false);
               else onDismiss?.();
             }}
             className="pointer-events-auto relative overflow-hidden rounded-[11px] border border-[var(--interior-border)] bg-white shadow-[inset_0_1.5px_0_rgba(255,255,255,0.95),0_1px_2px_rgba(28,25,23,0.07),0_16px_36px_-18px_rgba(28,25,23,0.5)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_2px_12px_rgba(0,0,0,0.55)]"
@@ -303,7 +288,7 @@ export function LiveActivity({
               className={`absolute left-0 top-0 flex h-8 w-max items-center gap-1.5 px-2.5 ${face(!expanded)}`}
             >
               <PhaseGlyph phase={phase} reduced={reduced} />
-              {percent !== null && phase === "running" ? (
+              {percent !== null && phase === 'running' ? (
                 <span className="font-[family-name:var(--interior-font-mono)] text-[10.5px] tabular-nums text-[var(--interior-fg-muted)]">
                   {percent}%
                 </span>
@@ -339,7 +324,7 @@ export function LiveActivity({
                     {activity.action.label}
                   </button>
                 ) : null}
-                {onDismiss && phase !== "running" ? (
+                {onDismiss && phase !== 'running' ? (
                   <button
                     type="button"
                     tabIndex={expanded ? 0 : -1}
@@ -365,7 +350,7 @@ export function LiveActivity({
                 </p>
               ) : null}
 
-              {percent !== null && phase !== "error" ? (
+              {percent !== null && phase !== 'error' ? (
                 <div className="mt-2.5 flex items-center gap-2 pl-[26px]">
                   <div className="min-w-0 flex-1 rounded-[4px] bg-stone-200/60 p-[2px] shadow-[inset_0_1px_2px_rgba(28,25,23,0.1)] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.45)]">
                     <div className="relative h-[4px] overflow-hidden rounded-[2px]">
@@ -383,7 +368,6 @@ export function LiveActivity({
                   </span>
                 </div>
               ) : null}
-
             </motion.div>
           </motion.div>
         ) : null}
@@ -402,14 +386,23 @@ function PhaseGlyph({ phase, reduced }: { phase: ActivityPhase; reduced: boolean
         className="col-start-1 row-start-1 flex"
         initial={false}
         animate={{
-          opacity: phase === "running" ? 1 : 0,
-          scale: reduced ? 1 : phase === "running" ? 1 : 0.7,
+          opacity: phase === 'running' ? 1 : 0,
+          scale: reduced ? 1 : phase === 'running' ? 1 : 0.7,
         }}
         transition={reduced ? INSTANT : SMALL}
       >
         {reduced ? (
           <svg width="13" height="13" viewBox="0 0 12 12" aria-hidden>
-            <circle cx="6" cy="6" r="4.4" stroke="currentColor" strokeWidth="1.6" fill="none" className="text-[var(--interior-fg-subtle)]" opacity="0.4" />
+            <circle
+              cx="6"
+              cy="6"
+              r="4.4"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              fill="none"
+              className="text-[var(--interior-fg-subtle)]"
+              opacity="0.4"
+            />
           </svg>
         ) : (
           <motion.svg
@@ -417,13 +410,27 @@ function PhaseGlyph({ phase, reduced }: { phase: ActivityPhase; reduced: boolean
             height="13"
             viewBox="0 0 12 12"
             aria-hidden
-            style={{ transformOrigin: "50% 50%" }}
+            style={{ transformOrigin: '50% 50%' }}
             animate={{ rotate: 360 }}
             transition={SPIN}
             className="text-[#4568FF] dark:text-[#93B0FF]"
           >
-            <circle cx="6" cy="6" r="4.4" stroke="currentColor" strokeWidth="1.6" fill="none" opacity="0.25" />
-            <path d="M6 1.6a4.4 4.4 0 0 1 4.4 4.4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" fill="none" />
+            <circle
+              cx="6"
+              cy="6"
+              r="4.4"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              fill="none"
+              opacity="0.25"
+            />
+            <path
+              d="M6 1.6a4.4 4.4 0 0 1 4.4 4.4"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              fill="none"
+            />
           </motion.svg>
         )}
       </motion.span>
@@ -431,8 +438,8 @@ function PhaseGlyph({ phase, reduced }: { phase: ActivityPhase; reduced: boolean
         className="col-start-1 row-start-1 flex text-[var(--interior-success)]"
         initial={false}
         animate={{
-          opacity: phase === "success" ? 1 : 0,
-          scale: reduced ? 1 : phase === "success" ? 1 : 0.7,
+          opacity: phase === 'success' ? 1 : 0,
+          scale: reduced ? 1 : phase === 'success' ? 1 : 0.7,
         }}
         transition={reduced ? INSTANT : SMALL}
       >
@@ -444,7 +451,7 @@ function PhaseGlyph({ phase, reduced }: { phase: ActivityPhase; reduced: boolean
             strokeLinecap="round"
             strokeLinejoin="round"
             initial={false}
-            animate={{ pathLength: phase === "success" ? 1 : 0 }}
+            animate={{ pathLength: phase === 'success' ? 1 : 0 }}
             transition={reduced ? INSTANT : DRAW}
           />
         </svg>
@@ -453,8 +460,8 @@ function PhaseGlyph({ phase, reduced }: { phase: ActivityPhase; reduced: boolean
         className="col-start-1 row-start-1 flex text-[var(--interior-destructive)]"
         initial={false}
         animate={{
-          opacity: phase === "error" ? 1 : 0,
-          scale: reduced ? 1 : phase === "error" ? 1 : 0.7,
+          opacity: phase === 'error' ? 1 : 0,
+          scale: reduced ? 1 : phase === 'error' ? 1 : 0.7,
         }}
         transition={reduced ? INSTANT : SMALL}
       >

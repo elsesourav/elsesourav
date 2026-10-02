@@ -7,9 +7,11 @@ import { FavouriteIcon, FlashIcon, StarIcon } from '@hugeicons/core-free-icons';
 const EASE_OUT = 'cubic-bezier(0.23, 1, 0.32, 1)';
 const SHAPES = { star: StarIcon, heart: FavouriteIcon, bolt: FlashIcon };
 
-const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
+const clamp = (value: number, min: number, max: number): number =>
+  Math.min(max, Math.max(min, value));
 const reducedMotion = (): boolean =>
-  typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  typeof window !== 'undefined' &&
+  !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
 export type PeekRatingShape = 'star' | 'heart' | 'bolt';
 
@@ -73,7 +75,7 @@ export default function PeekRating({
   disabled = false,
   ariaLabel = 'Rating',
   className = '',
-  style
+  style,
 }: PeekRatingProps) {
   const [inner, setInner] = useState(defaultValue);
   const value = clamp(valueProp ?? inner, 0, count);
@@ -85,7 +87,14 @@ export default function PeekRating({
   const starEls = useRef<(HTMLElement | null)[]>([]);
   const liftEls = useRef<(HTMLSpanElement | null)[]>([]);
   const glyphEls = useRef<(HTMLSpanElement | null)[]>([]);
-  const st = useRef<PeekState>({ hover: null, pressing: false, pointerId: null, settled: false, rect: null, rtl: false });
+  const st = useRef<PeekState>({
+    hover: null,
+    pressing: false,
+    pointerId: null,
+    settled: false,
+    rect: null,
+    rtl: false,
+  });
 
   const paint = (): void => {
     const { hover, settled, rtl } = st.current;
@@ -156,13 +165,20 @@ export default function PeekRating({
     st.current.settled = true;
     paint();
     const glyph = glyphEls.current[next - 1];
-    if (pop && next > 0 && popScale > 1 && glyph && typeof glyph.animate === 'function' && !reducedMotion()) {
-      glyph.getAnimations().forEach(animation => animation.cancel());
+    if (
+      pop &&
+      next > 0 &&
+      popScale > 1 &&
+      glyph &&
+      typeof glyph.animate === 'function' &&
+      !reducedMotion()
+    ) {
+      glyph.getAnimations().forEach((animation) => animation.cancel());
       glyph.animate(
         [
           { transform: 'scale(1)', easing: EASE_OUT },
           { transform: `scale(${popScale})`, offset: 0.35, easing: EASE_OUT },
-          { transform: 'scale(1)' }
+          { transform: 'scale(1)' },
         ],
         { duration: 300 }
       );
@@ -293,7 +309,7 @@ export default function PeekRating({
           '--pr-gap': `${Math.round(size * 0.22)}px`,
           '--pr-room': `${lift + tipRoom}px`,
           '--pr-rise': `${riseDuration}ms`,
-          ...style
+          ...style,
         } as React.CSSProperties
       }
       onKeyDown={readOnly ? undefined : handleKeyDown}
@@ -309,14 +325,16 @@ export default function PeekRating({
         onLostPointerCapture={endPress}
         onPointerLeave={handlePointerLeave}
       >
-        {interactive && showTip ? <span ref={tipEl} className="peek-rating__tip" aria-hidden="true" /> : null}
+        {interactive && showTip ? (
+          <span ref={tipEl} className="peek-rating__tip" aria-hidden="true" />
+        ) : null}
         {Array.from({ length: count }, (_, i) => {
           const checked = value === i + 1;
           const label = labels[i] ? `${i + 1} of ${count}, ${labels[i]}` : `${i + 1} of ${count}`;
           return (
             <Star
               key={i}
-              ref={el => {
+              ref={(el) => {
                 starEls.current[i] = el;
               }}
               type={readOnly ? undefined : 'button'}
@@ -328,18 +346,25 @@ export default function PeekRating({
               tabIndex={!interactive ? -1 : (value === 0 ? i === 0 : checked) ? 0 : -1}
             >
               <span
-                ref={el => {
+                ref={(el) => {
                   liftEls.current[i] = el;
                 }}
                 className="peek-rating__lift"
               >
                 <span
-                  ref={el => {
+                  ref={(el) => {
                     glyphEls.current[i] = el;
                   }}
                   className="peek-rating__glyph"
                 >
-                  {icon ?? <HugeiconsIcon icon={shapeIcon} size={size} fill="currentColor" strokeWidth={1.5} />}
+                  {icon ?? (
+                    <HugeiconsIcon
+                      icon={shapeIcon}
+                      size={size}
+                      fill="currentColor"
+                      strokeWidth={1.5}
+                    />
+                  )}
                 </span>
               </span>
             </Star>

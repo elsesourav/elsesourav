@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React, { useCallback, useEffect, useId, useRef, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 
-const CELL = { type: "spring", stiffness: 520, damping: 34, mass: 0.45 } as const;
-const POP = { type: "spring", stiffness: 640, damping: 22, mass: 0.7 } as const;
+const CELL = { type: 'spring', stiffness: 520, damping: 34, mass: 0.45 } as const;
+const POP = { type: 'spring', stiffness: 640, damping: 22, mass: 0.7 } as const;
 const INSTANT = { duration: 0 } as const;
 
 export type UseLongPressOptions = {
@@ -17,7 +17,7 @@ export type UseLongPressOptions = {
   onCancel?: () => void;
 };
 
-type Phase = "idle" | "holding" | "fired";
+type Phase = 'idle' | 'holding' | 'fired';
 
 export function useLongPress({
   onLongPress,
@@ -33,7 +33,7 @@ export function useLongPress({
   const [step, setStep] = useState(0);
   const [holding, setHolding] = useState(false);
 
-  const phase = useRef<Phase>("idle");
+  const phase = useRef<Phase>('idle');
   const raf = useRef(0);
   const startedAt = useRef(0);
   const origin = useRef<{ x: number; y: number } | null>(null);
@@ -52,22 +52,22 @@ export function useLongPress({
       settle.current = null;
     }
     origin.current = null;
-    phase.current = "idle";
+    phase.current = 'idle';
     setHolding(false);
     setStep(0);
   }, []);
 
   const end = useCallback(() => {
-    if (phase.current !== "holding") return;
+    if (phase.current !== 'holding') return;
     reset();
     cancelled.current?.();
   }, [reset]);
 
   const begin = useCallback(
     (point?: { x: number; y: number }) => {
-      if (disabled || phase.current !== "idle") return;
+      if (disabled || phase.current !== 'idle') return;
 
-      phase.current = "holding";
+      phase.current = 'holding';
       origin.current = point ?? null;
       startedAt.current = performance.now();
       setHolding(true);
@@ -85,29 +85,29 @@ export function useLongPress({
         }
 
         raf.current = 0;
-        phase.current = "fired";
+        phase.current = 'fired';
         setStep(cells);
         if (haptic) navigator.vibrate?.(12);
         fire.current();
 
         settle.current = setTimeout(() => {
-          if (phase.current === "fired") reset();
+          if (phase.current === 'fired') reset();
         }, 260);
       };
 
       raf.current = requestAnimationFrame(tick);
     },
-    [disabled, duration, cells, haptic, reset],
+    [disabled, duration, cells, haptic, reset]
   );
 
   useEffect(() => {
     const bail = () => end();
     const onVisibility = () => document.hidden && end();
-    window.addEventListener("blur", bail);
-    document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener('blur', bail);
+    document.addEventListener('visibilitychange', onVisibility);
     return () => {
-      window.removeEventListener("blur", bail);
-      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener('blur', bail);
+      document.removeEventListener('visibilitychange', onVisibility);
       cancelAnimationFrame(raf.current);
       if (settle.current) clearTimeout(settle.current);
     };
@@ -115,13 +115,13 @@ export function useLongPress({
 
   const bind = {
     onPointerDown: (e: React.PointerEvent) => {
-      if (e.button !== 0 && e.pointerType === "mouse") return;
+      if (e.button !== 0 && e.pointerType === 'mouse') return;
       e.currentTarget.setPointerCapture?.(e.pointerId);
       begin({ x: e.clientX, y: e.clientY });
     },
     onPointerMove: (e: React.PointerEvent) => {
       const from = origin.current;
-      if (phase.current !== "holding" || !from) return;
+      if (phase.current !== 'holding' || !from) return;
       if (Math.hypot(e.clientX - from.x, e.clientY - from.y) > moveTolerance) {
         end();
       }
@@ -131,18 +131,18 @@ export function useLongPress({
     onPointerLeave: end,
     onKeyDown: (e: React.KeyboardEvent) => {
       if (e.repeat) return;
-      if (e.key === " " || e.key === "Enter") {
+      if (e.key === ' ' || e.key === 'Enter') {
         e.preventDefault();
         begin();
       }
     },
     onKeyUp: (e: React.KeyboardEvent) => {
-      if (e.key === " " || e.key === "Enter") end();
-      if (e.key === "Escape") end();
+      if (e.key === ' ' || e.key === 'Enter') end();
+      if (e.key === 'Escape') end();
     },
     onBlur: end,
     onClick: (e: React.MouseEvent) => {
-      if (phase.current === "fired") {
+      if (phase.current === 'fired') {
         e.preventDefault();
         e.stopPropagation();
       }
@@ -175,11 +175,17 @@ export function LongPressButton({
   duration = 550,
   steps = 12,
   disabled = false,
-  className = "",
+  className = '',
 }: LongPressButtonProps) {
   const hintId = useId();
   const reduced = useReducedMotion() === true;
-  const { bind, step, steps: cells, holding, fired } = useLongPress({
+  const {
+    bind,
+    step,
+    steps: cells,
+    holding,
+    fired,
+  } = useLongPress({
     onLongPress,
     duration,
     steps,
@@ -190,7 +196,8 @@ export function LongPressButton({
 
   return (
     <motion.button
-      data-interior="long-press" type="button"
+      data-interior="long-press"
+      type="button"
       aria-disabled={disabled}
       aria-describedby={hintId}
       initial={false}
@@ -198,12 +205,12 @@ export function LongPressButton({
       transition={reduced ? INSTANT : POP}
       className={`group relative inline-flex h-9 select-none items-center rounded-[9px] border px-3.5 text-[13px] font-medium outline-none transition-[border-color,background-color,box-shadow,transform] duration-150 focus-visible:border-[var(--interior-primary)] focus-visible:shadow-[0_1px_2px_rgba(28,25,23,0.08),0_10px_20px_-14px_rgba(69,104,255,0.6)] dark:focus-visible:border-[var(--interior-primary)] dark:focus-visible:shadow-[0_10px_20px_-14px_rgba(147,176,255,0.5)] ${
         holding
-          ? "translate-y-px border-[var(--interior-border)] bg-stone-100/70 shadow-[inset_0_1px_2px_rgba(28,25,23,0.07)] dark:border-white/[0.08] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.45)]"
+          ? 'translate-y-px border-[var(--interior-border)] bg-stone-100/70 shadow-[inset_0_1px_2px_rgba(28,25,23,0.07)] dark:border-white/[0.08] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.45)]'
           : fired
-            ? "border-[var(--interior-primary)] bg-[var(--interior-primary)]/[0.07] dark:border-[var(--interior-primary)] dark:bg-[var(--interior-primary)]/[0.12]"
-            : "border-[var(--interior-border)] bg-white shadow-[inset_0_1.5px_0_rgba(255,255,255,0.95),inset_0_-1px_0_rgba(28,25,23,0.06),0_1px_2px_rgba(28,25,23,0.08)] hover:bg-[var(--interior-bg-subtle)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_1px_2px_rgba(0,0,0,0.4)] dark:hover:bg-[var(--interior-bg-hover)]"
-      } ${disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"} ${className}`}
-      style={{ touchAction: "manipulation", WebkitTouchCallout: "none" }}
+            ? 'border-[var(--interior-primary)] bg-[var(--interior-primary)]/[0.07] dark:border-[var(--interior-primary)] dark:bg-[var(--interior-primary)]/[0.12]'
+            : 'border-[var(--interior-border)] bg-white shadow-[inset_0_1.5px_0_rgba(255,255,255,0.95),inset_0_-1px_0_rgba(28,25,23,0.06),0_1px_2px_rgba(28,25,23,0.08)] hover:bg-[var(--interior-bg-subtle)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_1px_2px_rgba(0,0,0,0.4)] dark:hover:bg-[var(--interior-bg-hover)]'
+      } ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'} ${className}`}
+      style={{ touchAction: 'manipulation', WebkitTouchCallout: 'none' }}
       {...bind}
     >
       <span className="relative grid">

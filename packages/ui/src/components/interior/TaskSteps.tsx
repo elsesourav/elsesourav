@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import React, { useEffect, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
-const POP = { type: "spring", stiffness: 640, damping: 22, mass: 0.7 } as const;
-const CELL = { type: "spring", stiffness: 520, damping: 34, mass: 0.45 } as const;
+const POP = { type: 'spring', stiffness: 640, damping: 22, mass: 0.7 } as const;
+const CELL = { type: 'spring', stiffness: 520, damping: 34, mass: 0.45 } as const;
 const STILL = { duration: 0 } as const;
 
 export type TaskStep = {
@@ -14,7 +14,7 @@ export type TaskStep = {
   meta?: string;
 };
 
-export type TaskStepStatus = "pending" | "active" | "done" | "error";
+export type TaskStepStatus = 'pending' | 'active' | 'done' | 'error';
 
 export type UseTaskStepsOptions = {
   steps: TaskStep[];
@@ -30,22 +30,22 @@ export function useTaskSteps({ steps, current, failed = false }: UseTaskStepsOpt
   const rows = steps.map((step, i) => ({
     ...step,
     status: (i < current
-      ? "done"
+      ? 'done'
       : i === current && failed
-        ? "error"
+        ? 'error'
         : i === current && !complete
-          ? "active"
-          : "pending") as TaskStepStatus,
+          ? 'active'
+          : 'pending') as TaskStepStatus,
   }));
 
-  const active = rows.find((r) => r.status === "active");
+  const active = rows.find((r) => r.status === 'active');
   const sentence = failed
-    ? `Failed at ${steps[Math.min(current, steps.length - 1)]?.label ?? "step"}`
+    ? `Failed at ${steps[Math.min(current, steps.length - 1)]?.label ?? 'step'}`
     : complete
       ? `All ${steps.length} steps complete`
       : active
         ? `${active.label}, step ${current + 1} of ${steps.length}`
-        : "";
+        : '';
 
   return { rows, complete, failed, sentence };
 }
@@ -79,7 +79,7 @@ const Arc = ({ spin }: { spin: boolean }) => (
     className="size-3"
     aria-hidden
     animate={spin ? { rotate: 360 } : { rotate: 0 }}
-    transition={spin ? { duration: 0.8, ease: "linear", repeat: Infinity } : STILL}
+    transition={spin ? { duration: 0.8, ease: 'linear', repeat: Infinity } : STILL}
   >
     <circle
       cx="8"
@@ -109,13 +109,13 @@ export function TaskSteps({
   steps,
   current,
   failed = false,
-  label = "Task progress",
-  className = "",
+  label = 'Task progress',
+  className = '',
 }: TaskStepsProps) {
   const { rows, complete, sentence } = useTaskSteps({ steps, current, failed });
   const reduced = useReducedMotion() === true;
 
-  const [spoken, setSpoken] = useState("");
+  const [spoken, setSpoken] = useState('');
   useEffect(() => {
     if (!sentence) return;
     const t = setTimeout(() => setSpoken(sentence), 500);
@@ -127,23 +127,23 @@ export function TaskSteps({
       <ol aria-label={label} className="space-y-0.5">
         {rows.map((row) => {
           const tone =
-            row.status === "done"
-              ? "text-stone-600 dark:text-stone-300"
-              : row.status === "active"
-                ? "font-medium text-[var(--interior-fg)]"
-                : row.status === "error"
-                  ? "font-medium text-[var(--interior-destructive)]"
-                  : "text-[var(--interior-fg-subtle)]";
+            row.status === 'done'
+              ? 'text-stone-600 dark:text-stone-300'
+              : row.status === 'active'
+                ? 'font-medium text-[var(--interior-fg)]'
+                : row.status === 'error'
+                  ? 'font-medium text-[var(--interior-destructive)]'
+                  : 'text-[var(--interior-fg-subtle)]';
 
           return (
             <li
               key={row.id}
-              aria-current={row.status === "active" ? "step" : undefined}
+              aria-current={row.status === 'active' ? 'step' : undefined}
               className="flex h-7 items-center gap-2.5 px-1"
             >
               <span className="relative grid size-4 shrink-0 place-items-center">
                 <AnimatePresence initial={false}>
-                  {row.status === "done" ? (
+                  {row.status === 'done' ? (
                     <motion.span
                       key="done"
                       className="col-start-1 row-start-1 grid size-4 place-items-center rounded-[5px] bg-emerald-500/[0.14] text-emerald-600 dark:bg-emerald-400/[0.16] dark:text-[var(--interior-success)]"
@@ -154,7 +154,7 @@ export function TaskSteps({
                     >
                       {Tick}
                     </motion.span>
-                  ) : row.status === "error" ? (
+                  ) : row.status === 'error' ? (
                     <motion.span
                       key="error"
                       className="col-start-1 row-start-1 grid size-4 place-items-center rounded-[5px] bg-red-500/[0.12] text-red-600 dark:bg-red-400/[0.14] dark:text-[var(--interior-destructive)]"
@@ -165,7 +165,7 @@ export function TaskSteps({
                     >
                       {Cross}
                     </motion.span>
-                  ) : row.status === "active" ? (
+                  ) : row.status === 'active' ? (
                     <motion.span
                       key="active"
                       className="col-start-1 row-start-1 text-[var(--interior-fg-muted)]"
@@ -189,11 +189,11 @@ export function TaskSteps({
                 </AnimatePresence>
               </span>
 
-              {row.status === "active" && !reduced ? (
+              {row.status === 'active' && !reduced ? (
                 <motion.span
                   className="min-w-0 flex-1 truncate bg-[linear-gradient(90deg,#78716c_38%,#1c1917_50%,#78716c_62%)] bg-clip-text text-[12.5px] font-medium text-transparent [background-size:220%_100%] dark:bg-[linear-gradient(90deg,#a8a29e_38%,#fafaf9_50%,#a8a29e_62%)]"
-                  animate={{ backgroundPosition: ["120% 0", "-120% 0"] }}
-                  transition={{ duration: 1.6, ease: "linear", repeat: Infinity }}
+                  animate={{ backgroundPosition: ['120% 0', '-120% 0'] }}
+                  transition={{ duration: 1.6, ease: 'linear', repeat: Infinity }}
                 >
                   {row.label}
                 </motion.span>
@@ -208,11 +208,11 @@ export function TaskSteps({
               {row.meta ? (
                 <span
                   className={`shrink-0 font-[family-name:var(--interior-font-mono)] text-[10.5px] tabular-nums transition-opacity duration-200 ${
-                    row.status === "done"
-                      ? "text-[var(--interior-fg-subtle)] opacity-100 dark:text-[var(--interior-fg-muted)]"
-                      : "opacity-0"
+                    row.status === 'done'
+                      ? 'text-[var(--interior-fg-subtle)] opacity-100 dark:text-[var(--interior-fg-muted)]'
+                      : 'opacity-0'
                   }`}
-                  aria-hidden={row.status !== "done"}
+                  aria-hidden={row.status !== 'done'}
                 >
                   {row.meta}
                 </span>
@@ -224,8 +224,8 @@ export function TaskSteps({
       <span role="status" className="sr-only">
         {spoken}
       </span>
-      <span className="sr-only" aria-live={complete || failed ? "polite" : "off"}>
-        {complete ? "Run complete" : failed ? "Run failed" : ""}
+      <span className="sr-only" aria-live={complete || failed ? 'polite' : 'off'}>
+        {complete ? 'Run complete' : failed ? 'Run failed' : ''}
       </span>
     </div>
   );

@@ -10,20 +10,20 @@
   .dark,
   [data-theme='dark'] {
     /* Canvas & Core Backgrounds */
-    --background: 240 10% 3.9%;          /* #09090b */
+    --background: 240 18% 4.5%;          /* #0a0b14 deep midnight space */
     --foreground: 0 0% 98%;             /* #fafafa */
     
     /* Surfaces */
-    --surface: 240 10% 4.9%;            /* #0d0d10 */
-    --surface-subtle: 240 6% 8%;        /* #131317 */
-    --surface-elevated: 240 5% 11%;     /* #1b1b20 */
-    --surface-overlay: 240 10% 3.9%;    /* #09090b */
-    --surface-sunken: 240 10% 2.5%;     /* #050507 */
+    --surface: 240 16% 6%;              /* #0e0f1d */
+    --surface-subtle: 240 14% 8%;       /* #131424 */
+    --surface-elevated: 240 14% 11%;    /* #191b30 */
+    --surface-overlay: 240 18% 4.5%;
+    --surface-sunken: 240 20% 3%;       /* #06070e */
 
     /* Cards & Popovers */
-    --card: 240 10% 4.9%;
+    --card: 240 16% 6.5%;               /* #0e101f */
     --card-foreground: 0 0% 98%;
-    --popover: 240 5% 11%;
+    --popover: 240 14% 11%;
     --popover-foreground: 0 0% 98%;
 
     /* Brand & Accents */
@@ -52,10 +52,10 @@
     --info-foreground: 0 0% 98%;
 
     /* Borders & Inputs */
-    --border: 240 3.7% 15.9%;           /* #27272a */
-    --border-subtle: 240 4% 11%;        /* #18181b */
-    --border-strong: 240 5% 26%;        /* #3f3f46 */
-    --input: 240 3.7% 15.9%;
+    --border: 240 14% 14%;              /* #1c1d2e */
+    --border-subtle: 240 14% 10%;       /* #131422 */
+    --border-strong: 240 14% 22%;       /* #2d2e46 */
+    --input: 240 14% 14%;
     --ring: 238.7 83.5% 66.7%;
 
     /* Radii */
@@ -68,22 +68,22 @@
     --radius-full: 9999px;
 
     /* Glass Tokens (Glassmorphism 2.0) */
-    --glass-bg-subtle: rgba(9, 9, 11, 0.45);
-    --glass-bg: rgba(13, 13, 16, 0.72);
-    --glass-bg-elevated: rgba(27, 27, 32, 0.85);
+    --glass-bg-subtle: rgba(10, 11, 20, 0.45);
+    --glass-bg: rgba(14, 16, 29, 0.72);
+    --glass-bg-elevated: rgba(25, 27, 48, 0.85);
     --glass-border: rgba(255, 255, 255, 0.08);
     --glass-border-strong: rgba(255, 255, 255, 0.14);
     --glass-blur-sm: 8px;
     --glass-blur-md: 16px;
     --glass-blur-lg: 24px;
 
-    /* Ambient Lighting Tokens (Subtle Depth & Atmospheric Glow) */
-    --ambient-glow-1: rgba(99, 102, 241, 0.12);       /* Deep Indigo */
-    --ambient-glow-2: rgba(56, 189, 248, 0.065);      /* Cyan / Sky */
-    --ambient-glow-3: rgba(168, 85, 247, 0.07);       /* Violet */
-    --ambient-glow-4: rgba(244, 63, 94, 0.045);       /* Subtle Rose / Amber accent */
-    --ambient-pointer-glow: rgba(99, 102, 241, 0.045);/* Desktop pointer follow glow */
-    --ambient-noise-opacity: 0.022;
+    /* Ambient Lighting Tokens (Subtle, Focused Cosmic Atmosphere - NO OVERGLOW) */
+    --ambient-glow-1: rgba(99, 102, 241, 0.16);       /* Focused Indigo */
+    --ambient-glow-2: rgba(56, 189, 248, 0.12);       /* Soft Cyan */
+    --ambient-glow-3: rgba(168, 85, 247, 0.14);       /* Soft Violet */
+    --ambient-glow-4: rgba(244, 63, 94, 0.08);        /* Subtle Rose */
+    --ambient-pointer-glow: rgba(99, 102, 241, 0.08); /* Desktop pointer follow glow */
+    --ambient-noise-opacity: 0.02;
 
     /* Motion Tokens */
     --duration-fast: 150ms;

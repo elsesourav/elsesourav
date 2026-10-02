@@ -61,15 +61,22 @@ export default function HoldButton({
   onHold,
   onTap,
   className = '',
-  style
+  style,
 }: HoldButtonProps) {
   const [phase, setPhase] = useState<HoldPhase>('idle');
   const [input, setInput] = useState<HoldInput>(null);
   const phaseRef = useRef<HoldPhase>('idle');
   const inputRef = useRef<HoldInput>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const gesture = useRef<{ pointerId: number | null; start: number; rect: DOMRect | null }>({ pointerId: null, start: 0, rect: null });
-  const timers = useRef<{ complete: ReturnType<typeof setTimeout> | number; reset: ReturnType<typeof setTimeout> | number }>({ complete: 0, reset: 0 });
+  const gesture = useRef<{ pointerId: number | null; start: number; rect: DOMRect | null }>({
+    pointerId: null,
+    start: 0,
+    rect: null,
+  });
+  const timers = useRef<{
+    complete: ReturnType<typeof setTimeout> | number;
+    reset: ReturnType<typeof setTimeout> | number;
+  }>({ complete: 0, reset: 0 });
   const hintId = useId();
 
   const go = (next: HoldPhase, kind: HoldInput = null): void => {
@@ -84,7 +91,13 @@ export default function HoldButton({
     clearTimeout(timers.current.reset);
   };
 
-  const motion = useRef<{ raf: number; p: number; from: number; to: number; start: number }>({ raf: 0, p: 0, from: 0, to: 0, start: 0 });
+  const motion = useRef<{ raf: number; p: number; from: number; to: number; start: number }>({
+    raf: 0,
+    p: 0,
+    from: 0,
+    to: 0,
+    start: 0,
+  });
   const drive = (to: number, duration: number, ease: (t: number) => number): void => {
     const m = motion.current;
     cancelAnimationFrame(m.raf);
@@ -153,11 +166,15 @@ export default function HoldButton({
     }
   };
 
-  const endPointer = (e: React.PointerEvent<HTMLButtonElement>, options?: { drifted?: boolean }): void => {
+  const endPointer = (
+    e: React.PointerEvent<HTMLButtonElement>,
+    options?: { drifted?: boolean }
+  ): void => {
     if (e.pointerId !== gesture.current.pointerId) return;
     gesture.current.pointerId = null;
     try {
-      if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
+      if (e.currentTarget.hasPointerCapture(e.pointerId))
+        e.currentTarget.releasePointerCapture(e.pointerId);
     } catch {
       /* ignore */
     }
@@ -272,18 +289,18 @@ export default function HoldButton({
           '--hb-release': `${releaseTime}ms`,
           '--hb-press': pressScale,
           '--hb-wave': `${wave ? waveAmplitude : 0}px`,
-          ...style
+          ...style,
         } as React.CSSProperties
       }
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
-      onPointerUp={e => endPointer(e)}
-      onPointerCancel={e => endPointer(e, { drifted: true })}
-      onLostPointerCapture={e => endPointer(e, { drifted: true })}
+      onPointerUp={(e) => endPointer(e)}
+      onPointerCancel={(e) => endPointer(e, { drifted: true })}
+      onLostPointerCapture={(e) => endPointer(e, { drifted: true })}
       onPointerLeave={handlePointerLeave}
       onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}
-      onContextMenu={e => e.preventDefault()}
+      onContextMenu={(e) => e.preventDefault()}
     >
       <span className="hold-button__pulse" aria-hidden="true" />
       <span className="hold-button__label">{labels}</span>

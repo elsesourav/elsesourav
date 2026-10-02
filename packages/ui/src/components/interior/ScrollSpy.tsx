@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React, { useCallback, useEffect, useId, useRef, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 
-const CELL = { type: "spring", stiffness: 520, damping: 34, mass: 0.45 } as const;
+const CELL = { type: 'spring', stiffness: 520, damping: 34, mass: 0.45 } as const;
 const SETTLE = 420;
 const RELEASE = 900;
 
@@ -19,16 +19,11 @@ export type UseScrollSpyOptions = {
   onChange?: (id: string) => void;
 };
 
-export function useScrollSpy({
-  sections,
-  offset = 96,
-  root,
-  onChange,
-}: UseScrollSpyOptions) {
+export function useScrollSpy({ sections, offset = 96, root, onChange }: UseScrollSpyOptions) {
   const reduced = useReducedMotion();
 
-  const [activeId, setActiveId] = useState(() => sections[0]?.id ?? "");
-  const [announce, setAnnounce] = useState("");
+  const [activeId, setActiveId] = useState(() => sections[0]?.id ?? '');
+  const [announce, setAnnounce] = useState('');
 
   const list = useRef(sections);
   list.current = sections;
@@ -41,11 +36,11 @@ export function useScrollSpy({
   const settleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const started = useRef(false);
 
-  const key = sections.map((s) => s.id).join("|");
+  const key = sections.map((s) => s.id).join('|');
 
   const measure = useCallback(() => {
     const items = list.current;
-    if (items.length === 0) return "";
+    if (items.length === 0) return '';
 
     const container = root?.current ?? null;
 
@@ -61,8 +56,8 @@ export function useScrollSpy({
       offset +
       ratio * Math.max(0, viewport - offset - 1);
 
-    let current = "";
-    let last = "";
+    let current = '';
+    let last = '';
 
     for (const item of items) {
       const node = document.getElementById(item.id);
@@ -74,8 +69,7 @@ export function useScrollSpy({
 
     const atEnd = container
       ? container.scrollTop + container.clientHeight >= container.scrollHeight - 2
-      : window.scrollY + window.innerHeight >=
-        document.documentElement.scrollHeight - 2;
+      : window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
 
     return atEnd && last ? last : current;
   }, [offset, root]);
@@ -109,14 +103,14 @@ export function useScrollSpy({
       if (lock.current) release();
     };
 
-    scroller.addEventListener("scroll", sync, { passive: true });
-    window.addEventListener("resize", sync);
-    window.addEventListener("wheel", abandon, { passive: true });
-    window.addEventListener("touchstart", abandon, { passive: true });
+    scroller.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync);
+    window.addEventListener('wheel', abandon, { passive: true });
+    window.addEventListener('touchstart', abandon, { passive: true });
 
     const observer = new ResizeObserver(sync);
     observer.observe(container ?? document.documentElement);
-    for (const id of key ? key.split("|") : []) {
+    for (const id of key ? key.split('|') : []) {
       const node = document.getElementById(id);
       if (node) observer.observe(node);
     }
@@ -124,10 +118,10 @@ export function useScrollSpy({
     sync();
 
     return () => {
-      scroller.removeEventListener("scroll", sync);
-      window.removeEventListener("resize", sync);
-      window.removeEventListener("wheel", abandon);
-      window.removeEventListener("touchstart", abandon);
+      scroller.removeEventListener('scroll', sync);
+      window.removeEventListener('resize', sync);
+      window.removeEventListener('wheel', abandon);
+      window.removeEventListener('touchstart', abandon);
       observer.disconnect();
       cancelAnimationFrame(frame.current);
       frame.current = 0;
@@ -146,7 +140,7 @@ export function useScrollSpy({
 
     settleTimer.current = setTimeout(() => {
       const item = list.current.find((s) => s.id === activeId);
-      setAnnounce(item ? item.label : "");
+      setAnnounce(item ? item.label : '');
     }, SETTLE);
 
     return () => {
@@ -163,31 +157,23 @@ export function useScrollSpy({
       setActiveId(id);
 
       const container = root?.current ?? null;
-      const behavior: ScrollBehavior = reduced ? "auto" : "smooth";
+      const behavior: ScrollBehavior = reduced ? 'auto' : 'smooth';
       const rect = node.getBoundingClientRect();
 
       const viewport = container ? container.clientHeight : window.innerHeight;
       const max = container
         ? Math.max(0, container.scrollHeight - container.clientHeight)
-        : Math.max(
-            0,
-            document.documentElement.scrollHeight - window.innerHeight,
-          );
+        : Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
       const H = container
-        ? rect.top -
-          container.getBoundingClientRect().top +
-          container.scrollTop
+        ? rect.top - container.getBoundingClientRect().top + container.scrollTop
         : rect.top + window.scrollY;
       const usable = Math.max(0, viewport - offset - 1);
-      const top =
-        max > 0
-          ? Math.min(max, Math.max(0, (H - offset) / (1 + usable / max)))
-          : 0;
+      const top = max > 0 ? Math.min(max, Math.max(0, (H - offset) / (1 + usable / max))) : 0;
 
       if (container) container.scrollTo({ top, behavior });
       else window.scrollTo({ top, behavior });
 
-      if (!node.hasAttribute("tabindex")) node.setAttribute("tabindex", "-1");
+      if (!node.hasAttribute('tabindex')) node.setAttribute('tabindex', '-1');
       node.focus({ preventScroll: true });
 
       if (lockTimer.current) clearTimeout(lockTimer.current);
@@ -197,20 +183,20 @@ export function useScrollSpy({
         sync();
       }, RELEASE);
     },
-    [offset, reduced, root, sync],
+    [offset, reduced, root, sync]
   );
 
   const getLinkProps = useCallback(
     (id: string) => ({
       href: `#${id}`,
-      "aria-current": id === activeId ? ("location" as const) : undefined,
+      'aria-current': id === activeId ? ('location' as const) : undefined,
       onClick: (e: React.MouseEvent<HTMLAnchorElement>) => {
         if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
         e.preventDefault();
         scrollTo(id);
       },
     }),
-    [activeId, scrollTo],
+    [activeId, scrollTo]
   );
 
   const activeIndex = sections.findIndex((s) => s.id === activeId);
@@ -232,8 +218,8 @@ export function ScrollSpy({
   offset = 96,
   root,
   onChange,
-  label = "On this page",
-  className = "",
+  label = 'On this page',
+  className = '',
 }: ScrollSpyProps) {
   const { activeId, getLinkProps, announce } = useScrollSpy({
     sections,
@@ -247,9 +233,9 @@ export function ScrollSpy({
 
   useEffect(() => {
     chips.current.get(activeId)?.scrollIntoView({
-      behavior: reduced ? "auto" : "smooth",
-      block: "nearest",
-      inline: "nearest",
+      behavior: reduced ? 'auto' : 'smooth',
+      block: 'nearest',
+      inline: 'nearest',
     });
   }, [activeId, reduced]);
 
@@ -291,8 +277,8 @@ export function ScrollSpy({
                     <span
                       className={`col-start-1 row-start-1 whitespace-nowrap transition-colors duration-150 ${
                         active
-                          ? "font-medium text-white dark:text-[var(--interior-fg)]"
-                          : "text-[var(--interior-fg-muted)] group-hover:text-[var(--interior-fg)] dark:text-[var(--interior-fg-muted)] dark:group-hover:text-stone-200"
+                          ? 'font-medium text-white dark:text-[var(--interior-fg)]'
+                          : 'text-[var(--interior-fg-muted)] group-hover:text-[var(--interior-fg)] dark:text-[var(--interior-fg-muted)] dark:group-hover:text-stone-200'
                       }`}
                     >
                       {section.label}

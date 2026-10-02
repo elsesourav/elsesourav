@@ -1,27 +1,23 @@
-"use client";
+'use client';
 
-import React, { useCallback, useMemo, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import React, { useCallback, useMemo, useState } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 
-const CELL = { type: "spring", stiffness: 520, damping: 34, mass: 0.45 } as const;
-const CROSSFADE = { type: "spring", stiffness: 260, damping: 34, mass: 0.8 } as const;
+const CELL = { type: 'spring', stiffness: 520, damping: 34, mass: 0.45 } as const;
+const CROSSFADE = { type: 'spring', stiffness: 260, damping: 34, mass: 0.8 } as const;
 const INSTANT = { duration: 0 } as const;
 
 const NUMBER = /-?\d*\.?\d+/g;
-const CENTER = "12";
+const CENTER = '12';
 
 export type MorphShape = {
   d: readonly string[];
   rotate?: number;
 };
 
-export type IconMorphMode = "stroke" | "fill";
+export type IconMorphMode = 'stroke' | 'fill';
 
-export type IconMorphPreset =
-  | "menu-close"
-  | "play-pause"
-  | "plus-minus"
-  | "check-close";
+export type IconMorphPreset = 'menu-close' | 'play-pause' | 'plus-minus' | 'check-close';
 
 export type IconMorphSlot = {
   key: number;
@@ -29,58 +25,52 @@ export type IconMorphSlot = {
   visible: boolean;
 };
 
-export type IconMorphSemantics = "label" | "pressed" | "expanded";
+export type IconMorphSemantics = 'label' | 'pressed' | 'expanded';
 
 export const iconMorphPresets: Record<
   IconMorphPreset,
   { mode: IconMorphMode; labels: readonly string[]; shapes: readonly MorphShape[] }
 > = {
-  "menu-close": {
-    mode: "stroke",
-    labels: ["Menu", "Close"],
+  'menu-close': {
+    mode: 'stroke',
+    labels: ['Menu', 'Close'],
     shapes: [
       {
         rotate: 0,
-        d: ["M 4 7 L 20 7", "M 4 12 L 20 12", "M 4 17 L 20 17"],
+        d: ['M 4 7 L 20 7', 'M 4 12 L 20 12', 'M 4 17 L 20 17'],
       },
       {
         rotate: 90,
-        d: ["M 6.5 6.5 L 17.5 17.5", "M 12 12 L 12 12", "M 6.5 17.5 L 17.5 6.5"],
+        d: ['M 6.5 6.5 L 17.5 17.5', 'M 12 12 L 12 12', 'M 6.5 17.5 L 17.5 6.5'],
       },
     ],
   },
-  "play-pause": {
-    mode: "fill",
-    labels: ["Play", "Pause"],
+  'play-pause': {
+    mode: 'fill',
+    labels: ['Play', 'Pause'],
     shapes: [
       {
-        d: [
-          "M 8 5 L 14 8.5 L 14 15.5 L 8 19 Z",
-          "M 14 8.5 L 20 12 L 20 12 L 14 15.5 Z",
-        ],
+        d: ['M 8 5 L 14 8.5 L 14 15.5 L 8 19 Z', 'M 14 8.5 L 20 12 L 20 12 L 14 15.5 Z'],
       },
       {
-        d: [
-          "M 8 5 L 11.5 5 L 11.5 19 L 8 19 Z",
-          "M 15 5 L 18.5 5 L 18.5 19 L 15 19 Z",
-        ],
+        d: ['M 8 5 L 11.5 5 L 11.5 19 L 8 19 Z', 'M 15 5 L 18.5 5 L 18.5 19 L 15 19 Z'],
       },
     ],
   },
-  "plus-minus": {
-    mode: "stroke",
-    labels: ["Add", "Remove"],
+  'plus-minus': {
+    mode: 'stroke',
+    labels: ['Add', 'Remove'],
     shapes: [
-      { rotate: 0, d: ["M 5 12 L 19 12", "M 12 5 L 12 19"] },
-      { rotate: 180, d: ["M 5 12 L 19 12", "M 5 12 L 19 12"] },
+      { rotate: 0, d: ['M 5 12 L 19 12', 'M 12 5 L 12 19'] },
+      { rotate: 180, d: ['M 5 12 L 19 12', 'M 5 12 L 19 12'] },
     ],
   },
-  "check-close": {
-    mode: "stroke",
-    labels: ["Confirm", "Cancel"],
+  'check-close': {
+    mode: 'stroke',
+    labels: ['Confirm', 'Cancel'],
     shapes: [
-      { d: ["M 5 12.5 L 10 17.5 L 19.5 7", "M 12 12 L 12 12 L 12 12"] },
-      { d: ["M 6.5 6.5 L 12 12 L 17.5 17.5", "M 17.5 6.5 L 12 12 L 6.5 17.5"] },
+      { d: ['M 5 12.5 L 10 17.5 L 19.5 7', 'M 12 12 L 12 12 L 12 12'] },
+      { d: ['M 6.5 6.5 L 12 12 L 17.5 17.5', 'M 17.5 6.5 L 12 12 L 6.5 17.5'] },
     ],
   },
 };
@@ -97,15 +87,15 @@ function normalize(shapes: readonly MorphShape[]): IconMorphSlot[][] {
   return shapes.map((shape) =>
     Array.from({ length: slots }, (_, i) => {
       const own = shape.d[i];
-      const sibling = shapes.find((s) => s.d[i] !== undefined)?.d[i] ?? "";
+      const sibling = shapes.find((s) => s.d[i] !== undefined)?.d[i] ?? '';
       const d = own ?? sibling.replace(NUMBER, CENTER);
       return { key: i, d, visible: !isCollapsed(d) };
-    }),
+    })
   );
 }
 
 function toIndex(value: number | boolean): number {
-  return typeof value === "boolean" ? (value ? 1 : 0) : Math.trunc(value);
+  return typeof value === 'boolean' ? (value ? 1 : 0) : Math.trunc(value);
 }
 
 export type UseIconMorphOptions = {
@@ -119,7 +109,7 @@ export type UseIconMorphOptions = {
 };
 
 export function useIconMorph({
-  preset = "menu-close",
+  preset = 'menu-close',
   shapes,
   mode,
   labels,
@@ -147,7 +137,7 @@ export function useIconMorph({
       if (active === undefined) setInternal(wrapped);
       onActiveChange?.(wrapped);
     },
-    [active, count, onActiveChange],
+    [active, count, onActiveChange]
   );
 
   const toggle = useCallback(() => setIndex(index + 1), [setIndex, index]);
@@ -158,7 +148,7 @@ export function useIconMorph({
     slots: frames[index] ?? [],
     rotate: source[index]?.rotate ?? 0,
     mode: mode ?? base.mode,
-    label: names[index] ?? "",
+    label: names[index] ?? '',
     labels: names,
     transition: reduced ? INSTANT : CELL,
     labelTransition: reduced ? INSTANT : CROSSFADE,
@@ -180,39 +170,31 @@ export function IconMorph({
   size = 20,
   strokeWidth = 1.75,
   showLabel = false,
-  semantics = "label",
+  semantics = 'label',
   disabled = false,
-  className = "",
+  className = '',
   ...options
 }: IconMorphProps) {
-  const {
-    index,
-    slots,
-    rotate,
-    mode,
-    label,
-    labels,
-    transition,
-    labelTransition,
-    toggle,
-  } = useIconMorph(options);
+  const { index, slots, rotate, mode, label, labels, transition, labelTransition, toggle } =
+    useIconMorph(options);
 
-  const stroked = mode === "stroke";
+  const stroked = mode === 'stroke';
 
   return (
     <motion.button
-      data-interior="icon-morph" type="button"
+      data-interior="icon-morph"
+      type="button"
       disabled={disabled}
       onClick={toggle}
       aria-label={label}
-      aria-pressed={semantics === "pressed" ? index === 1 : undefined}
-      aria-expanded={semantics === "expanded" ? index === 1 : undefined}
+      aria-pressed={semantics === 'pressed' ? index === 1 : undefined}
+      aria-expanded={semantics === 'expanded' ? index === 1 : undefined}
       whileTap={disabled ? undefined : { y: 1 }}
       transition={transition}
       className={`inline-flex h-9 shrink-0 select-none items-center justify-center gap-2 rounded-[9px] border border-[var(--interior-border)] bg-white text-[13px] font-medium text-[var(--interior-fg)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--interior-ring)] disabled:opacity-50 dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:text-[var(--interior-fg)] dark:focus-visible:ring-white/30 ${
-        showLabel ? "px-3" : "w-9"
+        showLabel ? 'px-3' : 'w-9'
       } ${className}`}
-      style={{ touchAction: "manipulation" }}
+      style={{ touchAction: 'manipulation' }}
     >
       <motion.span
         aria-hidden="true"
@@ -227,12 +209,12 @@ export function IconMorph({
           width={size}
           height={size}
           focusable="false"
-          fill={stroked ? "none" : "currentColor"}
-          stroke={stroked ? "currentColor" : "none"}
+          fill={stroked ? 'none' : 'currentColor'}
+          stroke={stroked ? 'currentColor' : 'none'}
           strokeWidth={stroked ? strokeWidth : undefined}
           strokeLinecap="round"
           strokeLinejoin="round"
-          style={{ display: "block" }}
+          style={{ display: 'block' }}
         >
           {slots.map((slot) => (
             <motion.path

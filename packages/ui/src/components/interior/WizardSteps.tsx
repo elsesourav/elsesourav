@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { KeyboardEvent, ReactNode } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { KeyboardEvent, ReactNode } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
 const EASE = [0.23, 1, 0.32, 1] as const;
 const EXIT_EASE = [0.4, 0, 1, 1] as const;
 
-const RAIL = { type: "spring", stiffness: 520, damping: 40, mass: 0.5 } as const;
-const CROSSFADE = { type: "spring", stiffness: 260, damping: 34, mass: 0.8 } as const;
+const RAIL = { type: 'spring', stiffness: 520, damping: 40, mass: 0.5 } as const;
+const CROSSFADE = { type: 'spring', stiffness: 260, damping: 34, mass: 0.8 } as const;
 
 export type WizardDirection = 1 | -1;
 
@@ -73,7 +73,7 @@ export function useWizard({
       if (!controlled) setInternal(target);
       emit.current?.(target, direction);
     },
-    [controlled, current, total],
+    [controlled, current, total]
   );
 
   const next = useCallback(() => {
@@ -131,13 +131,13 @@ export function WizardSteps({
   onComplete,
   complete = false,
   height = 184,
-  backLabel = "Back",
-  nextLabel = "Next",
-  finishLabel = "Finish",
-  completeLabel = "All set",
-  completeHint = "Step back to change anything",
-  label = "Steps",
-  className = "",
+  backLabel = 'Back',
+  nextLabel = 'Next',
+  finishLabel = 'Finish',
+  completeLabel = 'All set',
+  completeHint = 'Step back to change anything',
+  label = 'Steps',
+  className = '',
 }: WizardStepsProps) {
   const wizard = useWizard({
     total: steps.length,
@@ -150,20 +150,18 @@ export function WizardSteps({
 
   const listRef = useRef<HTMLOListElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
-  const intent = useRef<"list" | "panel" | null>(null);
+  const intent = useRef<'list' | 'panel' | null>(null);
 
   const { index: at, direction, furthest, total, isFirst, isLast, next, back, goTo } = wizard;
 
   useEffect(() => {
     const move = intent.current;
     intent.current = null;
-    if (move === "list") {
-      listRef.current
-        ?.querySelector<HTMLButtonElement>('button[data-current="true"]')
-        ?.focus();
+    if (move === 'list') {
+      listRef.current?.querySelector<HTMLButtonElement>('button[data-current="true"]')?.focus();
       return;
     }
-    if (move === "panel") viewportRef.current?.focus({ preventScroll: true });
+    if (move === 'panel') viewportRef.current?.focus({ preventScroll: true });
   }, [at]);
 
   const variants = useMemo(
@@ -179,22 +177,22 @@ export function WizardSteps({
               transition: { duration: 0.14, ease: EXIT_EASE },
             },
     }),
-    [reduced],
+    [reduced]
   );
 
   const panelTransition = reduced ? { duration: 0 } : CROSSFADE;
 
   const onStepKeyDown = (e: KeyboardEvent<HTMLElement>) => {
     let target = at;
-    if (e.key === "ArrowRight" || e.key === "ArrowDown") target = at + 1;
-    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") target = at - 1;
-    else if (e.key === "Home") target = 0;
-    else if (e.key === "End") target = furthest;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') target = at + 1;
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') target = at - 1;
+    else if (e.key === 'Home') target = 0;
+    else if (e.key === 'End') target = furthest;
     else return;
     e.preventDefault();
     target = Math.min(clampIndex(target, total), furthest);
     if (target === at) return;
-    intent.current = "list";
+    intent.current = 'list';
     goTo(target);
   };
 
@@ -224,11 +222,7 @@ export function WizardSteps({
           </motion.span>
         ))}
       </span>
-      <ol
-        ref={listRef}
-        aria-label={label}
-        className="mb-4 flex list-none items-center gap-1 p-0"
-      >
+      <ol ref={listRef} aria-label={label} className="mb-4 flex list-none items-center gap-1 p-0">
         {steps.map((s, i) => {
           const done = complete || i < at;
           const here = !complete && i === at;
@@ -238,23 +232,17 @@ export function WizardSteps({
               aria-hidden
               className={`grid size-7 place-items-center rounded-[8px] border text-[11.5px] font-medium tabular-nums shadow-[0_1px_2px_rgba(28,25,23,0.06),0_4px_10px_-8px_rgba(28,25,23,0.45)] transition-colors duration-150 dark:shadow-[0_1px_6px_rgba(0,0,0,0.45)] ${
                 done
-                  ? "border-stone-800 bg-[var(--interior-fg)] text-white dark:border-[var(--interior-border-subtle)] dark:bg-[var(--interior-bg-subtle)] dark:text-[var(--interior-fg)]"
+                  ? 'border-stone-800 bg-[var(--interior-fg)] text-white dark:border-[var(--interior-border-subtle)] dark:bg-[var(--interior-bg-subtle)] dark:text-[var(--interior-fg)]'
                   : here
-                    ? "border-[var(--interior-border)] bg-white text-[var(--interior-fg)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:text-[var(--interior-fg)]"
-                    : "border-[var(--interior-border)] bg-white text-[var(--interior-fg-subtle)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:text-[var(--interior-fg-muted)]"
+                    ? 'border-[var(--interior-border)] bg-white text-[var(--interior-fg)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:text-[var(--interior-fg)]'
+                    : 'border-[var(--interior-border)] bg-white text-[var(--interior-fg-subtle)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:text-[var(--interior-fg-muted)]'
               }`}
               initial={false}
               animate={{ scale: here ? 1 : 0.92 }}
               transition={reduced ? { duration: 0 } : RAIL}
             >
               {done ? (
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 256 256"
-                  fill="none"
-                  aria-hidden="true"
-                >
+                <svg width="12" height="12" viewBox="0 0 256 256" fill="none" aria-hidden="true">
                   <polyline
                     points="216 72 104 184 48 128"
                     stroke="currentColor"
@@ -271,18 +259,17 @@ export function WizardSteps({
 
           return (
             <li key={s.id} className="flex flex-1 items-center gap-1 last:flex-none">
-
               {i <= furthest ? (
                 <button
                   type="button"
-                  data-current={here ? "true" : undefined}
+                  data-current={here ? 'true' : undefined}
                   tabIndex={here ? 0 : -1}
-                  aria-current={here ? "step" : undefined}
+                  aria-current={here ? 'step' : undefined}
                   aria-label={`Step ${i + 1} of ${total}: ${s.label}`}
                   onKeyDown={onStepKeyDown}
                   onClick={() => {
                     if (here) return;
-                    intent.current = "list";
+                    intent.current = 'list';
                     goTo(i);
                   }}
                   className="rounded-[8px] outline-none focus-visible:shadow-[0_0_0_1.5px_#4568FF] dark:focus-visible:shadow-[0_0_0_1.5px_#93B0FF]"
@@ -323,25 +310,22 @@ export function WizardSteps({
       >
         <AnimatePresence initial={false} custom={direction}>
           <motion.div
-            key={complete ? "__complete" : step.id}
+            key={complete ? '__complete' : step.id}
             custom={direction}
             variants={variants}
             initial="enter"
             animate="center"
             exit="exit"
             transition={panelTransition}
-            style={{ scrollbarGutter: "stable" }}
+            style={{ scrollbarGutter: 'stable' }}
             className="absolute inset-0 overflow-y-auto overscroll-contain p-4 text-[13.5px] leading-relaxed text-[var(--interior-fg)]"
           >
-
             {complete ? (
               <div className="flex h-full flex-col items-center justify-center gap-1.5">
                 <p className="text-[13px] font-medium text-[var(--interior-fg)] dark:text-[var(--interior-fg)]">
                   {completeLabel}
                 </p>
-                <p className="text-[12.5px] text-[var(--interior-fg-subtle)]">
-                  {completeHint}
-                </p>
+                <p className="text-[12.5px] text-[var(--interior-fg-subtle)]">{completeHint}</p>
               </div>
             ) : (
               step.content
@@ -363,7 +347,7 @@ export function WizardSteps({
               }}
               transition={reduced ? { duration: 0 } : { duration: 0.16, ease: EASE }}
               onClick={() => {
-                intent.current = "panel";
+                intent.current = 'panel';
                 back();
               }}
               className="h-9 rounded-[9px] border border-[var(--interior-border)] bg-white px-3 text-[13px] font-medium text-[var(--interior-fg)] outline-none transition-[border-color,box-shadow] duration-150 hover:border-[var(--interior-border-strong)] focus-visible:border-[var(--interior-primary)] focus-visible:shadow-[0_1px_2px_rgba(28,25,23,0.08),0_10px_20px_-14px_rgba(69,104,255,0.6)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:text-[var(--interior-fg)] dark:hover:border-white/20 dark:focus-visible:border-[var(--interior-primary)] dark:focus-visible:shadow-[0_10px_20px_-14px_rgba(147,176,255,0.5)]"
@@ -379,7 +363,7 @@ export function WizardSteps({
               type="button"
               aria-label={isLast ? finishLabel : nextLabel}
               onClick={() => {
-                if (!isLast) intent.current = "panel";
+                if (!isLast) intent.current = 'panel';
                 next();
               }}
               initial={{ opacity: 0, scale: 0.96 }}
@@ -387,9 +371,7 @@ export function WizardSteps({
               exit={{
                 opacity: 0,
                 scale: 0.96,
-                transition: reduced
-                  ? { duration: 0 }
-                  : { duration: 0.14, ease: EXIT_EASE },
+                transition: reduced ? { duration: 0 } : { duration: 0.14, ease: EXIT_EASE },
               }}
               transition={reduced ? { duration: 0 } : CROSSFADE}
               className="ml-auto grid h-9 place-items-center rounded-[9px] bg-[var(--interior-fg)] px-3.5 text-[13px] font-medium text-white outline-none focus-visible:shadow-[inset_0_0_0_1.5px_#93B0FF] dark:bg-[var(--interior-bg-subtle)] dark:text-[var(--interior-fg)] dark:focus-visible:shadow-[inset_0_0_0_1.5px_#4568FF]"

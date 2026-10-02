@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, {
   useCallback,
@@ -11,14 +11,13 @@ import React, {
   type ClipboardEvent,
   type FocusEvent,
   type KeyboardEvent,
-} from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+} from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
-const CROSSFADE = { type: "spring", stiffness: 260, damping: 34, mass: 0.8 } as const;
+const CROSSFADE = { type: 'spring', stiffness: 260, damping: 34, mass: 0.8 } as const;
 const EASE = [0.23, 1, 0.32, 1] as const;
 
-
-export type OtpMode = "numeric" | "alphanumeric";
+export type OtpMode = 'numeric' | 'alphanumeric';
 
 const ALLOW: Record<OtpMode, RegExp> = {
   numeric: /^[0-9]$/,
@@ -39,11 +38,11 @@ export type OtpCellProps = {
   ref: (el: HTMLInputElement | null) => void;
   value: string;
   disabled: boolean;
-  type: "text";
-  inputMode: "numeric" | "text";
+  type: 'text';
+  inputMode: 'numeric' | 'text';
   autoComplete: string;
-  autoCorrect: "off";
-  autoCapitalize: "off";
+  autoCorrect: 'off';
+  autoCapitalize: 'off';
   spellCheck: false;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
@@ -66,8 +65,8 @@ export type UseOtpInputReturn = {
 export function useOtpInput({
   value: controlledValue,
   length = 6,
-  mode = "numeric",
-  defaultValue = "",
+  mode = 'numeric',
+  defaultValue = '',
   disabled = false,
   onChange,
   onComplete,
@@ -77,18 +76,18 @@ export function useOtpInput({
   const keep = useCallback(
     (text: string) =>
       text
-        .split("")
+        .split('')
         .filter((c) => allow.test(c))
-        .join(""),
-    [allow],
+        .join(''),
+    [allow]
   );
 
   const [chars, setChars] = useState<string[]>(() => {
     const seed = (controlledValue ?? defaultValue)
-      .split("")
+      .split('')
       .filter((c) => ALLOW[mode].test(c))
       .slice(0, length);
-    return Array.from({ length }, (_, i) => seed[i] ?? "");
+    return Array.from({ length }, (_, i) => seed[i] ?? '');
   });
   const [focusedIndex, setFocusedIndex] = useState(-1);
 
@@ -104,7 +103,7 @@ export function useOtpInput({
 
   useEffect(() => {
     if (controlledValue !== undefined) {
-      const formatted = Array.from({ length }, (_, i) => controlledValue[i] ?? "");
+      const formatted = Array.from({ length }, (_, i) => controlledValue[i] ?? '');
       setChars(formatted);
       charsRef.current = formatted;
     }
@@ -112,9 +111,7 @@ export function useOtpInput({
 
   useEffect(() => {
     setChars((prev) =>
-      prev.length === length
-        ? prev
-        : Array.from({ length }, (_, i) => prev[i] ?? ""),
+      prev.length === length ? prev : Array.from({ length }, (_, i) => prev[i] ?? '')
     );
     refs.current.length = length;
   }, [length]);
@@ -122,9 +119,9 @@ export function useOtpInput({
   const commit = useCallback((next: string[]) => {
     charsRef.current = next;
     setChars(next);
-    const value = next.join("");
+    const value = next.join('');
     changed.current?.(value);
-    if (next.length > 0 && next.every((c) => c !== "")) completed.current?.(value);
+    if (next.length > 0 && next.every((c) => c !== '')) completed.current?.(value);
   }, []);
 
   const focusAt = useCallback(
@@ -134,7 +131,7 @@ export function useOtpInput({
       el.focus();
       el.select();
     },
-    [length],
+    [length]
   );
 
   const fillFrom = useCallback(
@@ -151,11 +148,11 @@ export function useOtpInput({
       commit(next);
       focusAt(cursor);
     },
-    [commit, focusAt, keep, length],
+    [commit, focusAt, keep, length]
   );
 
   const clear = useCallback(() => {
-    commit(Array.from({ length }, () => ""));
+    commit(Array.from({ length }, () => ''));
     focusAt(0);
   }, [commit, focusAt, length]);
 
@@ -164,30 +161,28 @@ export function useOtpInput({
       ref: (el) => {
         refs.current[index] = el;
       },
-      value: chars[index] ?? "",
+      value: chars[index] ?? '',
       disabled,
-      type: "text",
-      inputMode: mode === "numeric" ? "numeric" : "text",
-      autoComplete: index === 0 ? "one-time-code" : "off",
-      autoCorrect: "off",
-      autoCapitalize: "off",
+      type: 'text',
+      inputMode: mode === 'numeric' ? 'numeric' : 'text',
+      autoComplete: index === 0 ? 'one-time-code' : 'off',
+      autoCorrect: 'off',
+      autoCapitalize: 'off',
       spellCheck: false,
       onChange: (e) => {
-        const previous = charsRef.current[index] ?? "";
+        const previous = charsRef.current[index] ?? '';
         const raw = e.currentTarget.value;
         const trimmed =
-          raw.length > 1 && previous && raw.startsWith(previous)
-            ? raw.slice(previous.length)
-            : raw;
+          raw.length > 1 && previous && raw.startsWith(previous) ? raw.slice(previous.length) : raw;
         const incoming = keep(trimmed);
 
         if (incoming.length === 0) {
           if (raw.length === 0 && previous) {
             const next = [...charsRef.current];
-            next[index] = "";
+            next[index] = '';
             commit(next);
           }
-          e.currentTarget.value = charsRef.current[index] ?? "";
+          e.currentTarget.value = charsRef.current[index] ?? '';
           return;
         }
 
@@ -203,57 +198,57 @@ export function useOtpInput({
         fillFrom(index, incoming);
       },
       onKeyDown: (e) => {
-        if (e.key === "Backspace") {
+        if (e.key === 'Backspace') {
           e.preventDefault();
           const current = charsRef.current;
           const next = [...current];
           if (current[index]) {
-            next[index] = "";
+            next[index] = '';
             commit(next);
             return;
           }
           if (index > 0) {
-            next[index - 1] = "";
+            next[index - 1] = '';
             commit(next);
             focusAt(index - 1);
           }
           return;
         }
-        if (e.key === "Delete") {
+        if (e.key === 'Delete') {
           e.preventDefault();
           const next = [...charsRef.current];
-          next[index] = "";
+          next[index] = '';
           commit(next);
           return;
         }
-        if (e.key === "ArrowLeft") {
+        if (e.key === 'ArrowLeft') {
           e.preventDefault();
           focusAt(index - 1);
           return;
         }
-        if (e.key === "ArrowRight") {
+        if (e.key === 'ArrowRight') {
           e.preventDefault();
           focusAt(index + 1);
           return;
         }
-        if (e.key === "Home") {
+        if (e.key === 'Home') {
           e.preventDefault();
           focusAt(0);
           return;
         }
-        if (e.key === "End") {
+        if (e.key === 'End') {
           e.preventDefault();
           focusAt(length - 1);
         }
       },
       onPaste: (e) => {
         e.preventDefault();
-        const text = keep(e.clipboardData.getData("text"));
+        const text = keep(e.clipboardData.getData('text'));
         fillFrom(text.length >= length ? 0 : index, text);
       },
       onFocus: (e) => {
         e.currentTarget.select();
-        const firstEmpty = charsRef.current.findIndex((c) => c === "");
+        const firstEmpty = charsRef.current.findIndex((c) => c === '');
         if (firstEmpty !== -1 && firstEmpty < index) {
           focusAt(firstEmpty);
           return;
@@ -266,16 +261,16 @@ export function useOtpInput({
         setFocusedIndex(-1);
       },
     }),
-    [chars, commit, disabled, fillFrom, focusAt, keep, length, mode],
+    [chars, commit, disabled, fillFrom, focusAt, keep, length, mode]
   );
 
-  const value = chars.join("");
+  const value = chars.join('');
 
   return {
     chars,
     value,
     length,
-    complete: chars.length > 0 && chars.every((c) => c !== ""),
+    complete: chars.length > 0 && chars.every((c) => c !== ''),
     focusedIndex,
     getCellProps,
     focusAt,
@@ -283,7 +278,7 @@ export function useOtpInput({
   };
 }
 
-export type OtpStatus = "idle" | "error" | "success";
+export type OtpStatus = 'idle' | 'error' | 'success';
 
 export type OtpInputHandle = {
   clear: () => void;
@@ -313,20 +308,20 @@ export type OtpInputProps = {
 export function OtpInput({
   value,
   length = 6,
-  mode = "numeric",
-  defaultValue = "",
+  mode = 'numeric',
+  defaultValue = '',
   onChange,
   onComplete,
-  status = "idle",
-  errorMessage = "",
-  successMessage = "",
-  hint = "",
-  label = "Verification code",
+  status = 'idle',
+  errorMessage = '',
+  successMessage = '',
+  hint = '',
+  label = 'Verification code',
   groupEvery = 3,
   disabled = false,
   autoFocus = false,
   focusOnError = true,
-  className = "",
+  className = '',
   ref,
 }: OtpInputProps) {
   const reduced = useReducedMotion();
@@ -343,8 +338,8 @@ export function OtpInput({
   });
 
   const wasError = useRef(false);
-  const error = status === "error";
-  const success = status === "success";
+  const error = status === 'error';
+  const success = status === 'success';
 
   useImperativeHandle(
     ref,
@@ -355,7 +350,7 @@ export function OtpInput({
       },
       focus: () => focusAt(0),
     }),
-    [clear, focusAt],
+    [clear, focusAt]
   );
 
   useEffect(() => {
@@ -369,15 +364,14 @@ export function OtpInput({
 
   const enter = reduced ? { duration: 0 } : { duration: 0.22, ease: EASE };
   const swap = reduced ? { duration: 0 } : CROSSFADE;
-  const hasStatus =
-    hint.length > 0 || errorMessage.length > 0 || successMessage.length > 0;
+  const hasStatus = hint.length > 0 || errorMessage.length > 0 || successMessage.length > 0;
 
   const message = error ? errorMessage : success ? successMessage : hint;
   const messageTone = error
-    ? "text-[var(--interior-destructive)]"
+    ? 'text-[var(--interior-destructive)]'
     : success
-      ? "text-[var(--interior-success)]"
-      : "text-[var(--interior-fg-muted)]";
+      ? 'text-[var(--interior-success)]'
+      : 'text-[var(--interior-fg-muted)]';
 
   return (
     <div data-interior="otp-input" className={`inline-flex flex-col ${className}`}>
@@ -387,19 +381,16 @@ export function OtpInput({
         className="relative flex gap-2"
         initial={false}
         variants={{ idle: { x: 0 }, wrong: { x: [0, -5, 4, -3, 0] } }}
-        animate={error && !reduced ? "wrong" : "idle"}
+        animate={error && !reduced ? 'wrong' : 'idle'}
         transition={{ duration: 0.32, ease: EASE }}
       >
         {Array.from({ length }, (_, i) => {
-          const char = chars[i] ?? "";
+          const char = chars[i] ?? '';
           const active = focusedIndex === i;
           const gap = groupEvery > 0 && i > 0 && i % groupEvery === 0;
 
           return (
-            <div
-              key={i}
-              className={`relative h-12 w-10 ${gap ? "ml-3" : ""}`}
-            >
+            <div key={i} className={`relative h-12 w-10 ${gap ? 'ml-3' : ''}`}>
               <input
                 {...getCellProps(i)}
                 aria-label={`${label}, character ${i + 1} of ${length}`}
@@ -407,14 +398,14 @@ export function OtpInput({
                 aria-describedby={hasStatus ? statusId : undefined}
                 className={`h-12 w-10 rounded-[10px] border-2 text-center text-[15px] text-transparent caret-transparent outline-none transition-[background-color,border-color,box-shadow] duration-150 selection:bg-transparent focus-visible:outline-none disabled:opacity-50 ${
                   error
-                    ? "border-red-500 bg-white dark:border-red-400 dark:bg-[var(--interior-bg-elevated)]"
+                    ? 'border-red-500 bg-white dark:border-red-400 dark:bg-[var(--interior-bg-elevated)]'
                     : success
-                      ? "border-emerald-500 bg-white dark:border-emerald-400 dark:bg-[var(--interior-bg-elevated)]"
+                      ? 'border-emerald-500 bg-white dark:border-emerald-400 dark:bg-[var(--interior-bg-elevated)]'
                       : active
-                        ? "border-[var(--interior-primary)] bg-white dark:border-[var(--interior-primary)] dark:bg-[var(--interior-bg-elevated)]"
+                        ? 'border-[var(--interior-primary)] bg-white dark:border-[var(--interior-primary)] dark:bg-[var(--interior-bg-elevated)]'
                         : char
-                          ? "border-[var(--interior-border-strong)] bg-white dark:border-white/20 dark:bg-[var(--interior-bg-elevated)]"
-                          : "border-[var(--interior-border)] bg-stone-100/70 shadow-[inset_0_1px_2px_rgba(28,25,23,0.07)] dark:border-white/[0.08] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.45)]"
+                          ? 'border-[var(--interior-border-strong)] bg-white dark:border-white/20 dark:bg-[var(--interior-bg-elevated)]'
+                          : 'border-[var(--interior-border)] bg-stone-100/70 shadow-[inset_0_1px_2px_rgba(28,25,23,0.07)] dark:border-white/[0.08] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.45)]'
                 }`}
               />
 
@@ -427,15 +418,13 @@ export function OtpInput({
                     <motion.span
                       key={char}
                       initial={
-                        reduced
-                          ? false
-                          : { opacity: 0, scale: 0.97, y: 10, filter: "blur(6px)" }
+                        reduced ? false : { opacity: 0, scale: 0.97, y: 10, filter: 'blur(6px)' }
                       }
-                      animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
+                      animate={{ opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
                       exit={
                         reduced
                           ? { opacity: 0 }
-                          : { opacity: 0, scale: 0.98, y: -6, filter: "blur(3px)" }
+                          : { opacity: 0, scale: 0.98, y: -6, filter: 'blur(3px)' }
                       }
                       transition={enter}
                       className="col-start-1 row-start-1 font-[family-name:var(--interior-font-mono)] text-[15px] tabular-nums text-[var(--interior-fg)]"
@@ -457,7 +446,7 @@ export function OtpInput({
                             duration: 1.06,
                             times: [0, 0.5, 0.5, 1],
                             repeat: Infinity,
-                            ease: "linear",
+                            ease: 'linear',
                           }
                     }
                   />

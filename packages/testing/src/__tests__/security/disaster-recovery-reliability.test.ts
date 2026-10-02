@@ -60,9 +60,9 @@ describe('Disaster Recovery & Reliability Test Suite (Prompt 47)', () => {
       const userService = new UserService(mockRepo as UserRepository);
 
       // Cross-user deletion attempt fails safely
-      await expect(
-        userService.requestAccountDeletion('attacker', 'victim', '')
-      ).rejects.toThrow(/permission/i);
+      await expect(userService.requestAccountDeletion('attacker', 'victim', '')).rejects.toThrow(
+        /permission/i
+      );
 
       expect(mockRepo.scheduleAccountDeletion).not.toHaveBeenCalled();
 

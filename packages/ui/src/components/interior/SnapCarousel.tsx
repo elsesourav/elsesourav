@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, {
   Children,
@@ -8,31 +8,31 @@ import React, {
   useId,
   useRef,
   useState,
-} from "react";
+} from 'react';
 import {
   animate,
   motion,
   useIsomorphicLayoutEffect,
   useMotionValue,
   useReducedMotion,
-} from "motion/react";
+} from 'motion/react';
 
 const CELL = {
-  type: "spring",
+  type: 'spring',
   stiffness: 520,
   damping: 34,
   mass: 0.45,
 } as const;
 
 const CROSSFADE = {
-  type: "spring",
+  type: 'spring',
   stiffness: 260,
   damping: 34,
   mass: 0.8,
 } as const;
 
 const WALL = {
-  type: "spring",
+  type: 'spring',
   stiffness: 700,
   damping: 30,
   mass: 0.5,
@@ -40,8 +40,7 @@ const WALL = {
 
 const WALL_IMPULSE = 900;
 
-const clamp = (n: number, lo: number, hi: number) =>
-  Math.max(lo, Math.min(hi, n));
+const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n));
 
 type DragInfo = {
   offset: { x: number; y: number };
@@ -71,9 +70,7 @@ export function useSnapCarousel({
 }: UseSnapCarouselOptions) {
   const total = Math.max(1, Math.floor(count));
 
-  const [uncontrolled, setUncontrolled] = useState(() =>
-    clamp(defaultIndex, 0, total - 1),
-  );
+  const [uncontrolled, setUncontrolled] = useState(() => clamp(defaultIndex, 0, total - 1));
   const [slideWidth, setSlideWidth] = useState(0);
   const [dragging, setDragging] = useState(false);
 
@@ -100,13 +97,9 @@ export function useSnapCarousel({
     (to: number, velocity = 0) => {
       desired.current = to;
       anim.current?.stop();
-      anim.current = animate(
-        x,
-        to,
-        reduced ? { duration: 0 } : { ...CROSSFADE, velocity },
-      );
+      anim.current = animate(x, to, reduced ? { duration: 0 } : { ...CROSSFADE, velocity });
     },
-    [x, reduced],
+    [x, reduced]
   );
 
   const goTo = useCallback(
@@ -121,7 +114,7 @@ export function useSnapCarousel({
       }
       glide(-to * shelf.step, velocity);
     },
-    [glide],
+    [glide]
   );
 
   const bounce = useCallback(
@@ -133,10 +126,10 @@ export function useSnapCarousel({
       anim.current = animate(
         x,
         to,
-        reduced ? { duration: 0 } : { ...WALL, velocity: -dir * WALL_IMPULSE },
+        reduced ? { duration: 0 } : { ...WALL, velocity: -dir * WALL_IMPULSE }
       );
     },
-    [x, reduced],
+    [x, reduced]
   );
 
   const move = useCallback(
@@ -145,7 +138,7 @@ export function useSnapCarousel({
       if (to < 0 || to > metrics.current.total - 1) bounce(dir);
       else goTo(to);
     },
-    [bounce, goTo],
+    [bounce, goTo]
   );
 
   const next = useCallback(() => move(1), [move]);
@@ -159,16 +152,12 @@ export function useSnapCarousel({
       const anchor = clamp(Math.round(at), 0, shelf.total - 1);
       const projected = at - (velocity * shelf.momentum) / shelf.step;
       return clamp(
-        clamp(
-          Math.round(projected),
-          anchor - shelf.maxFlick,
-          anchor + shelf.maxFlick,
-        ),
+        clamp(Math.round(projected), anchor - shelf.maxFlick, anchor + shelf.maxFlick),
         0,
-        shelf.total - 1,
+        shelf.total - 1
       );
     },
-    [x],
+    [x]
   );
 
   useIsomorphicLayoutEffect(() => {
@@ -176,9 +165,7 @@ export function useSnapCarousel({
     if (!el) return;
     const observer = new ResizeObserver((entries) => {
       const width = entries[0]?.contentRect.width ?? 0;
-      setSlideWidth((current) =>
-        Math.abs(current - width) < 0.5 ? current : width,
-      );
+      setSlideWidth((current) => (Math.abs(current - width) < 0.5 ? current : width));
     });
     observer.observe(el);
     return () => observer.disconnect();
@@ -212,7 +199,7 @@ export function useSnapCarousel({
       const to = pick(info.velocity.x);
       setTarget((current) => (current === to ? current : to));
     },
-    [pick],
+    [pick]
   );
 
   const onDragEnd = useCallback(
@@ -220,26 +207,26 @@ export function useSnapCarousel({
       setDragging(false);
       goTo(pick(info.velocity.x), info.velocity.x);
     },
-    [goTo, pick],
+    [goTo, pick]
   );
 
   const onKeyDown = useCallback(
     (event: React.KeyboardEvent) => {
-      if (event.key === "ArrowRight") {
+      if (event.key === 'ArrowRight') {
         event.preventDefault();
         next();
-      } else if (event.key === "ArrowLeft") {
+      } else if (event.key === 'ArrowLeft') {
         event.preventDefault();
         prev();
-      } else if (event.key === "Home") {
+      } else if (event.key === 'Home') {
         event.preventDefault();
         goTo(0);
-      } else if (event.key === "End") {
+      } else if (event.key === 'End') {
         event.preventDefault();
         goTo(metrics.current.total - 1);
       }
     },
-    [goTo, next, prev],
+    [goTo, next, prev]
   );
 
   const onScroll = useCallback((event: React.UIEvent<HTMLElement>) => {
@@ -249,14 +236,14 @@ export function useSnapCarousel({
 
   const viewportProps = {
     tabIndex: 0,
-    role: "group" as const,
-    "aria-roledescription": "carousel",
+    role: 'group' as const,
+    'aria-roledescription': 'carousel',
     onKeyDown,
     onScroll,
   };
 
   const trackProps = {
-    drag: (disabled || total < 2 ? false : "x") as false | "x",
+    drag: (disabled || total < 2 ? false : 'x') as false | 'x',
     dragDirectionLock: true,
     dragMomentum: false,
     dragElastic: 0.14,
@@ -264,7 +251,7 @@ export function useSnapCarousel({
     onDragStart,
     onDrag,
     onDragEnd,
-    style: { x, gap: `${gap}px`, touchAction: "pan-y" as const },
+    style: { x, gap: `${gap}px`, touchAction: 'pan-y' as const },
   };
 
   return {
@@ -336,9 +323,9 @@ export function SnapCarousel({
   peek = 0,
   momentum = 0.14,
   maxFlick = 1,
-  prevLabel = "Previous slide",
-  nextLabel = "Next slide",
-  className = "",
+  prevLabel = 'Previous slide',
+  nextLabel = 'Next slide',
+  className = '',
 }: SnapCarouselProps) {
   const slides = Children.toArray(children);
   const hintId = useId();
@@ -355,7 +342,7 @@ export function SnapCarousel({
   });
 
   const button =
-    "grid size-7 place-items-center rounded-[6px] border border-[var(--interior-border)] bg-white text-[var(--interior-fg)] shadow-[inset_0_1.5px_0_rgba(255,255,255,0.95),inset_0_-1px_0_rgba(28,25,23,0.06),0_1px_2px_rgba(28,25,23,0.08)] outline-none transition-[background-color,border-color,box-shadow,transform] duration-150 hover:bg-[var(--interior-bg-subtle)] active:translate-y-px active:shadow-[inset_0_1px_2px_rgba(28,25,23,0.06)] focus-visible:border-[var(--interior-primary)] focus-visible:shadow-[0_1px_2px_rgba(28,25,23,0.08),0_10px_20px_-14px_rgba(69,104,255,0.6)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:text-[var(--interior-fg)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_1px_2px_rgba(0,0,0,0.4)] dark:hover:bg-[var(--interior-bg-hover)] dark:focus-visible:border-[var(--interior-primary)] dark:focus-visible:shadow-[0_10px_20px_-14px_rgba(147,176,255,0.5)]";
+    'grid size-7 place-items-center rounded-[6px] border border-[var(--interior-border)] bg-white text-[var(--interior-fg)] shadow-[inset_0_1.5px_0_rgba(255,255,255,0.95),inset_0_-1px_0_rgba(28,25,23,0.06),0_1px_2px_rgba(28,25,23,0.08)] outline-none transition-[background-color,border-color,box-shadow,transform] duration-150 hover:bg-[var(--interior-bg-subtle)] active:translate-y-px active:shadow-[inset_0_1px_2px_rgba(28,25,23,0.06)] focus-visible:border-[var(--interior-primary)] focus-visible:shadow-[0_1px_2px_rgba(28,25,23,0.08),0_10px_20px_-14px_rgba(69,104,255,0.6)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:text-[var(--interior-fg)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_1px_2px_rgba(0,0,0,0.4)] dark:hover:bg-[var(--interior-bg-hover)] dark:focus-visible:border-[var(--interior-primary)] dark:focus-visible:shadow-[0_10px_20px_-14px_rgba(147,176,255,0.5)]';
 
   return (
     <div data-interior="snap-carousel" className={`w-full ${className}`}>
@@ -378,9 +365,7 @@ export function SnapCarousel({
       >
         <motion.div
           {...car.trackProps}
-          className={`flex items-stretch ${
-            car.dragging ? "cursor-grabbing" : "cursor-grab"
-          }`}
+          className={`flex items-stretch ${car.dragging ? 'cursor-grabbing' : 'cursor-grab'}`}
         >
           {slides.map((slide, i) => (
             <motion.div
@@ -390,11 +375,7 @@ export function SnapCarousel({
               aria-label={`${i + 1} of ${slides.length}`}
               inert={i !== car.index}
               initial={false}
-              animate={
-                i === car.shown
-                  ? { scale: 1, opacity: 1 }
-                  : { scale: 0.96, opacity: 0.55 }
-              }
+              animate={i === car.shown ? { scale: 1, opacity: 1 } : { scale: 0.96, opacity: 0.55 }}
               transition={reduced ? { duration: 0 } : CROSSFADE}
               className="w-full shrink-0 select-none"
             >
@@ -411,15 +392,13 @@ export function SnapCarousel({
               type="button"
               onClick={() => car.goTo(i)}
               aria-label={`Go to slide ${i + 1}`}
-              aria-current={i === car.index ? "true" : undefined}
+              aria-current={i === car.index ? 'true' : undefined}
               className="grid h-[18px] w-[16px] place-items-center rounded-[5px] outline-none focus-visible:bg-[var(--interior-primary)]/[0.06] focus-visible:shadow-[inset_0_0_0_1px_var(--interior-primary)] dark:focus-visible:bg-[#93B0FF]/[0.1] dark:focus-visible:shadow-[inset_0_0_0_1px_var(--interior-primary)]"
             >
               <motion.span
                 initial={false}
                 animate={
-                  i === car.shown
-                    ? { scaleX: 1, opacity: 1 }
-                    : { scaleX: 0.36, opacity: 0.26 }
+                  i === car.shown ? { scaleX: 1, opacity: 1 } : { scaleX: 0.36, opacity: 0.26 }
                 }
                 transition={reduced ? { duration: 0 } : CELL}
                 className="block h-[5px] w-[14px] rounded-[1.5px] bg-[var(--interior-fg)] dark:bg-[var(--interior-bg-subtle)]"
