@@ -121,7 +121,7 @@ export async function PublicFooter() {
 
             <p className="text-xs text-[hsl(var(--muted-foreground))] leading-relaxed max-w-sm">
               {identity.footer.text ||
-                `${identity.site.name} is the personal software studio and archive of ${identity.creator.fullName}. Practical tools, simulations, and engineering notes.`}
+                `${identity.site.name} is the personal software studio and archive of ${identity.creator.fullName}. Practical tools, simulations, and engineering updates.`}
             </p>
 
             {/* Social / External Links with Proper Brand SVGs */}
@@ -171,7 +171,7 @@ export async function PublicFooter() {
                   href={ROUTES.NOTES}
                   className="hover:text-[hsl(var(--foreground))] transition-colors"
                 >
-                  Notes
+                  Updates
                 </Link>
               </li>
             </ul>

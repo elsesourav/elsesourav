@@ -107,8 +107,6 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
   const [contacts, setContacts] = React.useState<SiteContactItem[]>(() => {
     return parseContactMethods(initialSettings['contact_methods_json'], initialSettings);
   });
-  const [editingContactId, setEditingContactId] = React.useState<string | null>(null);
-  const [editContactForm, setEditContactForm] = React.useState<Partial<SiteContactItem>>({});
   const [isAddingContact, setIsAddingContact] = React.useState(false);
   const [newContact, setNewContact] = React.useState<Partial<SiteContactItem>>({
     type: 'email',
