@@ -1,45 +1,51 @@
 'use client';
 
-import * as React from 'react';
-import { Button, Card, Input, Textarea, FormField, Alert } from '@elsesourav/ui';
+import {
+  GithubIcon,
+  InstagramIcon,
+  LinkedinIcon,
+  TwitterXIcon,
+  YoutubeIcon,
+} from '@/components/icons/SocialIcons';
 import { AdminMarkdownEditor } from '@/features/admin/components/AdminMarkdownEditor';
 import { ImageInputWithLibrary } from '@/features/admin/media/components/ImageInputWithLibrary';
-import { updateSiteSettingsAction } from '../actions/admin-settings-actions';
-import {
-  parseSiteLinks,
-  parseContactMethods,
-  parseStringList,
-  parseFooterLinks,
-} from '@elsesourav/validation';
 import type {
-  SiteLinkItem,
-  SiteLinkPlatform,
   SiteContactItem,
   SiteContactMethodType,
   SiteFooterLink,
+  SiteLinkItem,
+  SiteLinkPlatform,
 } from '@elsesourav/types';
+import { Alert, Button, Card, FormField, Input, Textarea } from '@elsesourav/ui';
 import {
+  parseContactMethods,
+  parseFooterLinks,
+  parseSiteLinks,
+  parseStringList,
+} from '@elsesourav/validation';
+import {
+  BookOpen,
+  Calendar,
+  Edit2,
+  ExternalLink,
   Globe,
   Layout,
-  User,
-  BookOpen,
-  Share2,
-  Save,
-  Plus,
-  Trash2,
-  Edit2,
-  Mail,
-  Send,
-  RefreshCw,
-  Phone,
-  Calendar,
   LifeBuoy,
-  Code2,
+  Mail,
   PanelBottom,
-  ExternalLink,
-  Tag,
+  Phone,
+  Plus,
+  RefreshCw,
+  Save,
+  Send,
+  Share2,
   Sparkles,
+  Tag,
+  Trash2,
+  User,
 } from 'lucide-react';
+import * as React from 'react';
+import { updateSiteSettingsAction } from '../actions/admin-settings-actions';
 
 export interface AdminSettingsFormProps {
   initialSettings: Record<string, string>;
@@ -51,11 +57,11 @@ const PLATFORM_OPTIONS: Array<{
   icon: React.ComponentType<{ className?: string }>;
   defaultLabel: string;
 }> = [
-  { value: 'github', label: 'GitHub', icon: Code2, defaultLabel: 'GitHub' },
-  { value: 'twitter', label: 'Twitter / X', icon: Share2, defaultLabel: 'Twitter / X' },
-  { value: 'linkedin', label: 'LinkedIn', icon: Globe, defaultLabel: 'LinkedIn' },
-  { value: 'youtube', label: 'YouTube', icon: Share2, defaultLabel: 'YouTube' },
-  { value: 'instagram', label: 'Instagram', icon: Globe, defaultLabel: 'Instagram' },
+  { value: 'github', label: 'GitHub', icon: GithubIcon, defaultLabel: 'GitHub' },
+  { value: 'twitter', label: 'Twitter / X', icon: TwitterXIcon, defaultLabel: 'Twitter / X' },
+  { value: 'linkedin', label: 'LinkedIn', icon: LinkedinIcon, defaultLabel: 'LinkedIn' },
+  { value: 'youtube', label: 'YouTube', icon: YoutubeIcon, defaultLabel: 'YouTube' },
+  { value: 'instagram', label: 'Instagram', icon: InstagramIcon, defaultLabel: 'Instagram' },
   { value: 'discord', label: 'Discord', icon: Globe, defaultLabel: 'Discord Community' },
   { value: 'telegram', label: 'Telegram', icon: Send, defaultLabel: 'Telegram Channel' },
   { value: 'bluesky', label: 'Bluesky', icon: Globe, defaultLabel: 'Bluesky' },

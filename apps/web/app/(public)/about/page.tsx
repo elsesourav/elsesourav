@@ -27,6 +27,8 @@ import Link from 'next/link';
 
 import { buildPageMetadata } from '@/lib/seo-metadata';
 
+import { YoutubeIcon, InstagramIcon } from '@/components/icons/SocialIcons';
+
 export const metadata: Metadata = buildPageMetadata({
   title: 'About Sourav Barui — Independent Software Creator',
   description:
@@ -46,9 +48,9 @@ function getPlatformIcon(platform: SiteLinkPlatform) {
     case 'linkedin':
       return <Globe className="w-3.5 h-3.5 text-blue-400" />;
     case 'youtube':
-      return <Share2 className="w-3.5 h-3.5 text-rose-400" />;
+      return <YoutubeIcon className="w-3.5 h-3.5 text-[#ff0000]" />;
     case 'instagram':
-      return <Share2 className="w-3.5 h-3.5 text-pink-400" />;
+      return <InstagramIcon className="w-3.5 h-3.5 text-[#e4405f]" />;
     case 'discord':
       return <MessageSquare className="w-3.5 h-3.5 text-indigo-400" />;
     case 'telegram':
