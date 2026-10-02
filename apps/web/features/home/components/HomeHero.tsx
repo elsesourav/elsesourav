@@ -92,7 +92,7 @@ export function HomeHero({
       >
         {/* Dark Theme Background Layers (Cosmic Night Sky - High blur on mobile for soft atmospheric depth) */}
         <div
-          className={`absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out blur-[16px] sm:blur-[20px] md:blur-0 scale-110 md:scale-100 ${
+          className={`absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out blur-[4px] sm:blur-[5px] md:blur-0 scale-110 md:scale-100 ${
             isLight ? 'opacity-0' : 'opacity-100'
           }`}
         >
@@ -120,7 +120,7 @@ export function HomeHero({
 
         {/* Light Theme Background Layers (Daylight Cloudscape - High blur on mobile for soft atmospheric depth) */}
         <div
-          className={`absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out blur-[16px] sm:blur-[20px] md:blur-0 scale-110 md:scale-100 ${
+          className={`absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out blur-[4px] sm:blur-[5px] md:blur-0 scale-110 md:scale-100 ${
             isLight ? 'opacity-100' : 'opacity-0'
           }`}
         >
@@ -208,7 +208,7 @@ export function HomeHero({
               alt=""
               width={560}
               height={485}
-              className="w-full h-auto object-contain blur-[16px] sm:blur-[20px] scale-105 drop-shadow-[0_16px_32px_rgba(0,0,0,0.6)] transition-all"
+              className="w-full h-auto object-contain blur-[4px] sm:blur-[5px] scale-105 drop-shadow-[0_16px_32px_rgba(0,0,0,0.6)] transition-all"
               loading="eager"
               draggable={false}
             />
