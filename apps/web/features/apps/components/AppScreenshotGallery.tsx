@@ -4,7 +4,8 @@ import * as React from 'react';
 import Image from 'next/image';
 import { getAppScreenshotUrl } from '@elsesourav/media';
 import { Card } from '@elsesourav/ui';
-import { ChevronLeft, ChevronRight, ImageIcon, Maximize2, X } from 'lucide-react';
+import { Lightbox } from '@elsesourav/ui/interior';
+import { ChevronLeft, ChevronRight, ImageIcon, Maximize2 } from 'lucide-react';
 
 interface AppScreenshotGalleryProps {
   appName: string;
@@ -35,26 +36,13 @@ export function AppScreenshotGallery({
 
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = React.useState(false);
+  const mainImageRef = React.useRef<HTMLDivElement>(null);
 
-  // Keyboard navigation for carousel & modal
-  const [isLightboxClosing, setIsLightboxClosing] = React.useState(false);
-
-  const requestCloseLightbox = React.useCallback(() => {
-    if (isLightboxClosing) return;
-    setIsLightboxClosing(true);
-    setTimeout(() => {
-      setIsLightboxClosing(false);
-      setIsLightboxOpen(false);
-    }, 150);
-  }, [isLightboxClosing]);
-
-  // Keyboard navigation & escape key in lightbox
+  // Keyboard navigation for carousel when not in lightbox
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (isLightboxOpen && !isLightboxClosing) {
-        if (e.key === 'Escape') {
-          requestCloseLightbox();
-        } else if (e.key === 'ArrowLeft' && allMedia.length > 1) {
+      if (!isLightboxOpen) {
+        if (e.key === 'ArrowLeft' && allMedia.length > 1) {
           setSelectedIndex((prev) => (prev > 0 ? prev - 1 : allMedia.length - 1));
         } else if (e.key === 'ArrowRight' && allMedia.length > 1) {
           setSelectedIndex((prev) => (prev < allMedia.length - 1 ? prev + 1 : 0));
@@ -64,19 +52,7 @@ export function AppScreenshotGallery({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isLightboxOpen, isLightboxClosing, allMedia.length, requestCloseLightbox]);
-
-  // Lock body scroll when lightbox is open
-  React.useEffect(() => {
-    if (isLightboxOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isLightboxOpen]);
+  }, [isLightboxOpen, allMedia.length]);
 
   if (allMedia.length === 0) {
     return null;
@@ -105,24 +81,31 @@ export function AppScreenshotGallery({
       {/* Main Preview Container */}
       <Card className="relative overflow-hidden rounded-3xl border-[hsl(var(--border))] bg-[hsl(var(--card))] p-2.5 sm:p-4 aspect-[16/10] sm:aspect-video flex items-center justify-center shadow-xl backdrop-blur-xl group">
         {transformedUrl ? (
-          <div className="relative w-full h-full rounded-2xl overflow-hidden bg-[hsl(var(--surface-subtle))] flex items-center justify-center">
+          <div
+            ref={mainImageRef}
+            onClick={() => setIsLightboxOpen(true)}
+            className="relative w-full h-full rounded-2xl overflow-hidden bg-[hsl(var(--surface-subtle))] flex items-center justify-center cursor-zoom-in"
+          >
             <Image
               src={transformedUrl}
               alt={`${appName} interface preview ${selectedIndex + 1}`}
               fill
               sizes="(max-width: 768px) 100vw, 1200px"
-              className="w-full h-full object-contain rounded-2xl transition-transform duration-500"
+              className="w-full h-full object-contain rounded-2xl transition-transform duration-500 group-hover:scale-[1.01]"
             />
 
             {/* Expand Overlay Button */}
             <button
               type="button"
-              onClick={() => setIsLightboxOpen(true)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsLightboxOpen(true);
+              }}
               className="absolute top-3 right-3 p-2.5 rounded-xl bg-black/60 hover:bg-black/85 text-white backdrop-blur-md transition-all duration-150 active:scale-95 shadow-lg opacity-0 group-hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 flex items-center gap-1.5 text-xs font-mono cursor-pointer"
-              aria-label="Expand screenshot in full resolution"
+              aria-label="Expand screenshot in Lightbox"
             >
               <Maximize2 className="w-4 h-4" />
-              <span className="hidden sm:inline">Enlarge</span>
+              <span className="hidden sm:inline">Lightbox</span>
             </button>
           </div>
         ) : null}
@@ -165,7 +148,7 @@ export function AppScreenshotGallery({
                 key={src}
                 type="button"
                 onClick={() => setSelectedIndex(idx)}
-                className={`relative w-24 sm:w-28 aspect-video rounded-xl overflow-hidden border-2 transition-all shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 bg-[hsl(var(--surface-subtle))] ${
+                className={`relative w-24 sm:w-28 aspect-video rounded-xl overflow-hidden border-2 transition-all shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 bg-[hsl(var(--surface-subtle))] cursor-pointer ${
                   isSelected
                     ? 'border-indigo-500 ring-2 ring-indigo-500/30 opacity-100 scale-[1.02]'
                     : 'border-[hsl(var(--border))] opacity-60 hover:opacity-100'
@@ -185,96 +168,28 @@ export function AppScreenshotGallery({
         </div>
       )}
 
-      {/* Fullscreen Lightbox Modal */}
-      {isLightboxOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label={`${appName} screenshot viewer`}
-          className={`fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex flex-col items-center justify-between p-4 sm:p-8 ${
-            isLightboxClosing ? 'animate-overlay-out' : 'animate-overlay-in'
-          }`}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              requestCloseLightbox();
-            }
-          }}
-        >
-          {/* Top Bar */}
-          <div className="w-full max-w-7xl flex items-center justify-between text-white pb-4">
-            <div className="flex items-center gap-3">
-              <span className="font-bold text-sm sm:text-base">{appName}</span>
-              <span className="text-xs font-mono text-zinc-400">
-                {selectedIndex + 1} / {allMedia.length}
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={requestCloseLightbox}
-              className="p-2 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 text-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer"
-              aria-label="Close image viewer (Escape)"
-            >
-              <X className="w-6 h-6" />
-            </button>
-          </div>
-
-          {/* Center Image Container */}
-          <div
-            className={`relative flex-1 w-full max-w-7xl flex items-center justify-center min-h-0 py-2 ${
-              isLightboxClosing ? 'animate-dialog-out' : 'animate-dialog-in'
-            }`}
-          >
-            {transformedUrl && (
-              <div className="relative w-full h-full max-h-[82vh]">
-                <Image
-                  src={transformedUrl}
-                  alt={`${appName} expanded preview`}
-                  fill
-                  sizes="100vw"
-                  className="object-contain"
-                />
-              </div>
-            )}
-
-            {/* Lightbox Navigation Buttons */}
-            {allMedia.length > 1 && (
-              <>
-                <button
-                  type="button"
-                  onClick={() =>
-                    setSelectedIndex((prev) => (prev > 0 ? prev - 1 : allMedia.length - 1))
-                  }
-                  className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/60 hover:bg-black/90 active:scale-95 border border-white/20 text-white flex items-center justify-center transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer"
-                  aria-label="Previous screenshot (Left Arrow)"
-                >
-                  <ChevronLeft className="w-6 h-6" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() =>
-                    setSelectedIndex((prev) => (prev < allMedia.length - 1 ? prev + 1 : 0))
-                  }
-                  className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/60 hover:bg-black/90 active:scale-95 border border-white/20 text-white flex items-center justify-center transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer"
-                  aria-label="Next screenshot (Right Arrow)"
-                >
-                  <ChevronRight className="w-6 h-6" />
-                </button>
-              </>
-            )}
-          </div>
-
-          {/* Bottom Hint / Touch status */}
-          <div className="text-center text-xs font-mono text-zinc-400 pt-3">
-            <span className="sm:hidden">Swipe or tap arrows to navigate • Tap ✕ to close</span>
-            <span className="hidden sm:inline">
-              Press{' '}
-              <kbd className="px-1.5 py-0.5 rounded bg-zinc-800 border border-zinc-700 text-zinc-200">
-                Esc
-              </kbd>{' '}
-              to close, arrow keys to navigate
-            </span>
-          </div>
-        </div>
+      {/* Lightbox with Fluid Spring Physics & Gallery Navigation */}
+      {transformedUrl && (
+        <Lightbox
+          open={isLightboxOpen}
+          onClose={() => setIsLightboxOpen(false)}
+          src={transformedUrl}
+          alt={`${appName} interface preview ${selectedIndex + 1}`}
+          caption={`${appName} — Screenshot ${selectedIndex + 1} of ${allMedia.length}`}
+          originRef={mainImageRef}
+          index={selectedIndex}
+          total={allMedia.length}
+          onPrev={
+            allMedia.length > 1
+              ? () => setSelectedIndex((prev) => (prev > 0 ? prev - 1 : allMedia.length - 1))
+              : undefined
+          }
+          onNext={
+            allMedia.length > 1
+              ? () => setSelectedIndex((prev) => (prev < allMedia.length - 1 ? prev + 1 : 0))
+              : undefined
+          }
+        />
       )}
     </section>
   );

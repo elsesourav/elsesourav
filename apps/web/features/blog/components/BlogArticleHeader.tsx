@@ -1,11 +1,14 @@
+'use client';
+
 import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Badge, UserAvatar } from '@elsesourav/ui';
+import { Lightbox } from '@elsesourav/ui/interior';
 import { getBlogCoverUrl } from '@elsesourav/media';
 import type { PublicBlogPost } from '@elsesourav/types';
 import { BlogShareButtons } from './BlogShareButtons';
-import { ArrowLeft, Calendar, Clock, Eye, Sparkles } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Eye, Sparkles, Maximize2 } from 'lucide-react';
 
 interface BlogArticleHeaderProps {
   post: PublicBlogPost;
@@ -13,6 +16,8 @@ interface BlogArticleHeaderProps {
 }
 
 export function BlogArticleHeader({ post, postUrl }: BlogArticleHeaderProps) {
+  const [isLightboxOpen, setIsLightboxOpen] = React.useState(false);
+  const coverRef = React.useRef<HTMLDivElement>(null);
   const coverUrl = post.coverImageUrl ? getBlogCoverUrl(post.coverImageUrl, 1200, 630) : null;
   const publishedDate = post.publishedAt
     ? new Date(post.publishedAt).toLocaleDateString('en-US', {
@@ -102,16 +107,44 @@ export function BlogArticleHeader({ post, postUrl }: BlogArticleHeaderProps) {
 
       {/* Cover Image */}
       {coverUrl && (
-        <div className="relative aspect-[16/9] w-full rounded-3xl overflow-hidden border border-[hsl(var(--border))] bg-[hsl(var(--surface-subtle))] shadow-2xl">
+        <div
+          ref={coverRef}
+          onClick={() => setIsLightboxOpen(true)}
+          className="relative aspect-[16/9] w-full rounded-3xl overflow-hidden border border-[hsl(var(--border))] bg-[hsl(var(--surface-subtle))] shadow-2xl group cursor-zoom-in"
+          title="Click to view cover in Lightbox"
+        >
           <Image
             src={coverUrl}
             alt={post.title}
             fill
             priority
             sizes="(max-width: 1024px) 100vw, 1024px"
-            className="object-cover"
+            className="object-cover group-hover:scale-[1.01] transition-transform duration-300"
           />
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsLightboxOpen(true);
+            }}
+            aria-label="View cover image in Lightbox"
+            className="absolute top-4 right-4 p-2.5 rounded-xl bg-black/60 hover:bg-black/85 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 focus:opacity-100 hover:scale-105 active:scale-95 shadow-lg flex items-center gap-1.5 text-xs font-mono transition-all cursor-pointer"
+          >
+            <Maximize2 className="w-4 h-4" />
+            <span className="hidden sm:inline">Lightbox</span>
+          </button>
         </div>
+      )}
+
+      {coverUrl && (
+        <Lightbox
+          open={isLightboxOpen}
+          onClose={() => setIsLightboxOpen(false)}
+          src={coverUrl}
+          alt={post.title}
+          caption={post.title}
+          originRef={coverRef}
+        />
       )}
     </header>
   );

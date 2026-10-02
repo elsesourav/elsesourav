@@ -1,7 +1,10 @@
+'use client';
+
 import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Badge, Button } from '@elsesourav/ui';
+import { Lightbox } from '@elsesourav/ui/interior';
 import { getAppIconUrl } from '@elsesourav/media';
 import type { PublicApp, AppLink } from '@elsesourav/types';
 import {
@@ -16,6 +19,7 @@ import {
   Bookmark,
   CheckCircle2,
   Archive,
+  Maximize2,
 } from 'lucide-react';
 import { SaveAppButton } from './SaveAppButton';
 import { ShareButton } from '@/components/share/ShareButton';
@@ -25,6 +29,9 @@ interface AppDetailHeroProps {
 }
 
 export function AppDetailHero({ app }: AppDetailHeroProps) {
+  const [isIconLightboxOpen, setIsIconLightboxOpen] = React.useState(false);
+  const iconRef = React.useRef<HTMLDivElement>(null);
+
   const iconUrl = app.iconUrl ? getAppIconUrl(app.iconUrl, 160) : null;
 
   // Find GitHub repository link
@@ -72,16 +79,28 @@ export function AppDetailHero({ app }: AppDetailHeroProps) {
       <div className="p-6 sm:p-9 rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] backdrop-blur-xl space-y-6 shadow-2xl">
         <div className="flex flex-col md:flex-row items-start gap-6">
           {/* App Icon / Visual Mark */}
-          <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] shadow-xl shrink-0 flex items-center justify-center">
+          <div
+            ref={iconRef}
+            onClick={() => iconUrl && setIsIconLightboxOpen(true)}
+            className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] shadow-xl shrink-0 flex items-center justify-center ${
+              iconUrl ? 'cursor-zoom-in group/icon' : ''
+            }`}
+            title={iconUrl ? 'Click to inspect icon in Lightbox' : undefined}
+          >
             {iconUrl ? (
-              <Image
-                src={iconUrl}
-                alt={`${app.name} icon`}
-                width={96}
-                height={96}
-                priority
-                className="w-full h-full object-cover"
-              />
+              <>
+                <Image
+                  src={iconUrl}
+                  alt={`${app.name} icon`}
+                  width={96}
+                  height={96}
+                  priority
+                  className="w-full h-full object-cover group-hover/icon:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/icon:opacity-100 transition-opacity flex items-center justify-center text-white">
+                  <Maximize2 className="w-5 h-5 drop-shadow" />
+                </div>
+              </>
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-500/20 to-[hsl(var(--surface))] text-indigo-600 dark:text-indigo-400 font-bold text-2xl font-mono">
                 {app.name.charAt(0)}
@@ -219,6 +238,16 @@ export function AppDetailHero({ app }: AppDetailHeroProps) {
           </div>
         </div>
       </div>
+      {iconUrl && (
+        <Lightbox
+          open={isIconLightboxOpen}
+          onClose={() => setIsIconLightboxOpen(false)}
+          src={iconUrl}
+          alt={`${app.name} icon`}
+          caption={`${app.name} — Visual Mark & Icon`}
+          originRef={iconRef}
+        />
+      )}
     </header>
   );
 }

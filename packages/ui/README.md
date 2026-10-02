@@ -936,7 +936,7 @@ The `@elsesourav/ui/interior` collection contains **54 physics-based animated UI
 | **`HoldToConfirm`**     | `onConfirm, duration, variant`    | Progressive stroke fill with release decay           | Irreversible deletions, critical actions    |
 | **`IconMorph`**         | `iconA, iconB, active`            | Smooth SVG path crossfade                            | Play/Pause, Hamburger/Close buttons         |
 | **`InlineValidation`**  | `status, message`                 | Slide-down error pill with red accent pulse          | Real-time email and username checkers       |
-| **`Lightbox`**          | `src, alt, open, onClose`         | Fullscreen zoom from clicked element thumbnail       | Image gallery previews, proof viewing       |
+| **`Lightbox`**          | `src, alt, open, onClose, onPrev, onNext, index, total` | Fullscreen zoom from clicked element thumbnail with spring physics & gallery navigation | Image gallery previews, proof viewing, apps showcase |
 | **`LikeBurst`**         | `liked, onLike, count`            | Particle burst explosion with heart scale punch      | Social likes, upvoting blog posts           |
 | **`LiveActivity`**      | `title, status, time`             | Dynamic island capsule expansion                     | Audio player status, background job tracker |
 | **`LoadMore`**          | `onLoad, hasMore, loading`        | Spinner crossfade with content injection             | Paginated blog posts, endless lists         |

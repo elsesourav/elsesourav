@@ -2,6 +2,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Card } from '@elsesourav/ui';
+import { Lightbox } from '@elsesourav/ui/interior';
 import { getAppIconUrl } from '@elsesourav/media';
 import type { AppListItem, AppPlatform } from '@elsesourav/types';
 import {
@@ -17,6 +18,7 @@ import {
   Palette,
   Layers,
   Wrench,
+  Maximize2,
 } from 'lucide-react';
 
 export interface AppCardProps {
@@ -71,6 +73,9 @@ function PlatformIcon({ platform }: { platform: AppPlatform }) {
 }
 
 export function AppCard({ app, index, featured = false }: AppCardProps) {
+  const [isLightboxOpen, setIsLightboxOpen] = React.useState(false);
+  const imageRef = React.useRef<HTMLDivElement>(null);
+
   const iconUrl = app.iconUrl ? getAppIconUrl(app.iconUrl, 96) : null;
   const bannerUrl = app.featuredImageUrl || iconUrl || app.iconUrl;
   const isFallbackBanner = !app.featuredImageUrl && !!(iconUrl || app.iconUrl);
@@ -87,7 +92,10 @@ export function AppCard({ app, index, featured = false }: AppCardProps) {
             {/* Visual Cover / Interface Showcase (Left/Top) */}
             <div className="md:col-span-6 relative">
               {bannerUrl ? (
-                <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border-subtle))] shadow-md flex items-center justify-center">
+                <div
+                  ref={imageRef}
+                  className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border-subtle))] shadow-md flex items-center justify-center group/thumb"
+                >
                   {isFallbackBanner ? (
                     <div className="relative w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-950/40 via-zinc-900/60 to-zinc-950/80 p-8">
                       <div className="w-20 h-20 rounded-3xl overflow-hidden shadow-2xl border border-indigo-500/30 group-hover:scale-105 transition-transform duration-300">
@@ -110,6 +118,22 @@ export function AppCard({ app, index, featured = false }: AppCardProps) {
                     />
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+
+                  {/* Quick-view Lightbox Button */}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setIsLightboxOpen(true);
+                    }}
+                    title="View preview in Lightbox"
+                    aria-label={`View full preview of ${app.name} in Lightbox`}
+                    className="absolute top-3 right-3 z-10 p-2 rounded-xl bg-black/60 hover:bg-black/90 text-white backdrop-blur-md opacity-0 group-hover/thumb:opacity-100 focus:opacity-100 hover:scale-105 active:scale-95 shadow-lg flex items-center gap-1.5 text-xs font-mono transition-all cursor-pointer"
+                  >
+                    <Maximize2 className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Preview</span>
+                  </button>
                 </div>
               ) : (
                 <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-gradient-to-br from-[hsl(var(--surface-subtle))] to-[hsl(var(--card))] border border-[hsl(var(--border))] flex flex-col items-center justify-center p-6 text-center space-y-2">
@@ -197,6 +221,16 @@ export function AppCard({ app, index, featured = false }: AppCardProps) {
             </div>
           </div>
         </Card>
+        {bannerUrl && (
+          <Lightbox
+            open={isLightboxOpen}
+            onClose={() => setIsLightboxOpen(false)}
+            src={bannerUrl}
+            alt={`${app.name} project cover`}
+            caption={`${app.name} — ${app.primaryCategory}`}
+            originRef={imageRef}
+          />
+        )}
       </Link>
     );
   }
@@ -210,7 +244,10 @@ export function AppCard({ app, index, featured = false }: AppCardProps) {
         <div className="space-y-3">
           {/* Visual Banner Thumbnail (with Icon Fallback) */}
           {bannerUrl && (
-            <div className="relative aspect-[16/9] w-full rounded-xl overflow-hidden bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border-subtle))] shadow-inner flex items-center justify-center">
+            <div
+              ref={imageRef}
+              className="relative aspect-[16/9] w-full rounded-xl overflow-hidden bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border-subtle))] shadow-inner flex items-center justify-center group/thumb"
+            >
               {isFallbackBanner ? (
                 <div className="relative w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-950/30 via-zinc-900/50 to-zinc-950/70 p-4">
                   <div className="w-12 h-12 rounded-2xl overflow-hidden shadow-lg border border-indigo-500/20 group-hover:scale-105 transition-transform duration-300">
@@ -232,6 +269,21 @@ export function AppCard({ app, index, featured = false }: AppCardProps) {
                   className="object-cover object-top group-hover:scale-[1.02] transition-transform duration-300 ease-out"
                 />
               )}
+
+              {/* Quick-view Lightbox Button */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setIsLightboxOpen(true);
+                }}
+                title="View preview in Lightbox"
+                aria-label={`View full preview of ${app.name} in Lightbox`}
+                className="absolute top-2.5 right-2.5 z-10 p-1.5 rounded-lg bg-black/60 hover:bg-black/90 text-white backdrop-blur-md opacity-0 group-hover/thumb:opacity-100 focus:opacity-100 hover:scale-105 active:scale-95 shadow-md flex items-center justify-center transition-all cursor-pointer"
+              >
+                <Maximize2 className="w-3.5 h-3.5" />
+              </button>
             </div>
           )}
 
@@ -303,6 +355,16 @@ export function AppCard({ app, index, featured = false }: AppCardProps) {
           </span>
         </div>
       </Card>
+      {bannerUrl && (
+        <Lightbox
+          open={isLightboxOpen}
+          onClose={() => setIsLightboxOpen(false)}
+          src={bannerUrl}
+          alt={`${app.name} preview`}
+          caption={`${app.name} — ${app.primaryCategory}`}
+          originRef={imageRef}
+        />
+      )}
     </Link>
   );
 }
