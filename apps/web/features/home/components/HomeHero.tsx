@@ -1,10 +1,10 @@
 'use client';
 
+import { useTheme } from '@/components/theme/ThemeProvider';
 import { ROUTES } from '@elsesourav/config';
 import { Container, Reveal, Section } from '@elsesourav/ui';
 import { ArrowRight, Code, Layers, Star, Users } from 'lucide-react';
 import Link from 'next/link';
-import { useTheme } from '@/components/theme/ThemeProvider';
 import { DaylightFogCanvas } from './DaylightFogCanvas';
 import { EarthScene } from './EarthScene';
 import { StarsCanvas } from './StarsCanvas';
@@ -45,7 +45,9 @@ function renderHighlightedHeadline(headline: string, isLight: boolean) {
 
   return (
     <>
-      <span className={isLight ? 'text-slate-900 font-bold' : 'text-white font-bold'}>{leadPart}</span>{' '}
+      <span className={isLight ? 'text-slate-900 font-bold' : 'text-white font-bold'}>
+        {leadPart}
+      </span>{' '}
       <span
         className={
           isLight
@@ -88,9 +90,9 @@ export function HomeHero({
         aria-hidden="true"
         className="absolute inset-0 z-0 w-full h-full pointer-events-none select-none overflow-hidden"
       >
-        {/* Dark Theme Background Layers (Cosmic Night Sky) */}
+        {/* Dark Theme Background Layers (Cosmic Night Sky - High blur on mobile for soft atmospheric depth) */}
         <div
-          className={`absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out ${
+          className={`absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out blur-[16px] sm:blur-[20px] md:blur-0 scale-110 md:scale-100 ${
             isLight ? 'opacity-0' : 'opacity-100'
           }`}
         >
@@ -99,7 +101,7 @@ export function HomeHero({
             src="/hero/sky-bg-thumb.webp"
             alt=""
             className={`w-full h-full object-cover object-[82%_center] md:object-center scale-[1.03] transition-all duration-700 ease-out ${
-              isDarkBgLoaded ? 'opacity-0 blur-0' : 'opacity-100 blur-[8px]'
+              isDarkBgLoaded ? 'opacity-0' : 'opacity-100'
             }`}
             draggable={false}
           />
@@ -116,9 +118,9 @@ export function HomeHero({
           />
         </div>
 
-        {/* Light Theme Background Layers (Daylight Cloudscape & Horizon Sun) */}
+        {/* Light Theme Background Layers (Daylight Cloudscape - High blur on mobile for soft atmospheric depth) */}
         <div
-          className={`absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out ${
+          className={`absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out blur-[16px] sm:blur-[20px] md:blur-0 scale-110 md:scale-100 ${
             isLight ? 'opacity-100' : 'opacity-0'
           }`}
         >
@@ -127,7 +129,7 @@ export function HomeHero({
             src="/hero/sky-light-bg-thumb.webp"
             alt=""
             className={`w-full h-full object-cover object-[82%_center] md:object-center scale-[1.03] transition-all duration-700 ease-out ${
-              isLightBgLoaded ? 'opacity-0 blur-0' : 'opacity-100 blur-[8px]'
+              isLightBgLoaded ? 'opacity-0' : 'opacity-100'
             }`}
             draggable={false}
           />
@@ -206,14 +208,14 @@ export function HomeHero({
               alt=""
               width={560}
               height={485}
-              className="w-full h-auto object-contain blur-[8px] sm:blur-[12px] scale-105 drop-shadow-[0_16px_32px_rgba(0,0,0,0.6)] drop-shadow-[0_4px_20px_rgba(236,72,153,0.3)] transition-all"
+              className="w-full h-auto object-contain blur-[16px] sm:blur-[20px] scale-105 drop-shadow-[0_16px_32px_rgba(0,0,0,0.6)] transition-all"
               loading="eager"
               draggable={false}
             />
           </div>
 
-          {/* Left Column: Hero Narrative, CTAs & Metrics (Frosted glass backdrop-blur on mobile for legibility) */}
-          <div className="relative z-10 md:col-span-7 xl:col-span-7 space-y-6 text-left max-w-2xl lg:max-w-[44rem] xl:max-w-[48rem] p-5 sm:p-7 md:p-0 rounded-3xl backdrop-blur-xl md:backdrop-blur-none bg-white/45 dark:bg-black/40 md:bg-transparent border border-black/5 dark:border-white/10 md:border-none shadow-2xl md:shadow-none">
+          {/* Left Column: Hero Narrative, CTAs & Metrics (7 columns on iPad & desktop for wider text lines & larger headline) */}
+          <div className="relative z-10 md:col-span-7 xl:col-span-7 space-y-6 text-left max-w-2xl lg:max-w-[44rem] xl:max-w-[48rem]">
             <Reveal direction="down" distance={12}>
               {/* Studio Pill Badge */}
               <div
@@ -255,9 +257,9 @@ export function HomeHero({
                 }`}
               >
                 {heroSubtitle
-                  ? (heroSubtitle.replace(/ElseSourav/gi, '').includes(creatorName || 'Sourav')
-                      ? heroSubtitle
-                      : `Crafted by ${creatorName || 'Sourav'}. ${heroSubtitle}`)
+                  ? heroSubtitle.replace(/ElseSourav/gi, '').includes(creatorName || 'Sourav')
+                    ? heroSubtitle
+                    : `Crafted by ${creatorName || 'Sourav'}. ${heroSubtitle}`
                   : `Crafted by ${creatorName || 'Sourav'}. ElseSourav is my personal space for the applications I build, the ideas I explore, and the things I learn along the way.`}
               </p>
             </Reveal>
@@ -295,7 +297,7 @@ export function HomeHero({
                 }`}
               >
                 {/* Metric 1: Projects */}
-                <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0 p-1.5 sm:p-2 rounded-xl backdrop-blur-md bg-white/40 dark:bg-white/[0.04] border border-black/5 dark:border-white/5 md:bg-transparent md:border-none md:p-0 md:backdrop-blur-none">
+                <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
                   <div
                     className={`w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shrink-0 border ${
                       isLight
@@ -324,7 +326,7 @@ export function HomeHero({
                 </div>
 
                 {/* Metric 2: Passion */}
-                <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0 p-1.5 sm:p-2 rounded-xl backdrop-blur-md bg-white/40 dark:bg-white/[0.04] border border-black/5 dark:border-white/5 md:bg-transparent md:border-none md:p-0 md:backdrop-blur-none">
+                <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
                   <div
                     className={`w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shrink-0 border ${
                       isLight
@@ -353,7 +355,7 @@ export function HomeHero({
                 </div>
 
                 {/* Metric 3: Opportunities */}
-                <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0 p-1.5 sm:p-2 rounded-xl backdrop-blur-md bg-white/40 dark:bg-white/[0.04] border border-black/5 dark:border-white/5 md:bg-transparent md:border-none md:p-0 md:backdrop-blur-none">
+                <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
                   <div
                     className={`w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shrink-0 border ${
                       isLight
