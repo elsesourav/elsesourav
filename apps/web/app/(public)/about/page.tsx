@@ -47,6 +47,8 @@ function getPlatformIcon(platform: SiteLinkPlatform) {
       return <Globe className="w-3.5 h-3.5 text-blue-400" />;
     case 'youtube':
       return <Share2 className="w-3.5 h-3.5 text-rose-400" />;
+    case 'instagram':
+      return <Share2 className="w-3.5 h-3.5 text-pink-400" />;
     case 'discord':
       return <MessageSquare className="w-3.5 h-3.5 text-indigo-400" />;
     case 'telegram':

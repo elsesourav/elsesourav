@@ -55,6 +55,7 @@ const PLATFORM_OPTIONS: Array<{
   { value: 'twitter', label: 'Twitter / X', icon: Share2, defaultLabel: 'Twitter / X' },
   { value: 'linkedin', label: 'LinkedIn', icon: Globe, defaultLabel: 'LinkedIn' },
   { value: 'youtube', label: 'YouTube', icon: Share2, defaultLabel: 'YouTube' },
+  { value: 'instagram', label: 'Instagram', icon: Globe, defaultLabel: 'Instagram' },
   { value: 'discord', label: 'Discord', icon: Globe, defaultLabel: 'Discord Community' },
   { value: 'telegram', label: 'Telegram', icon: Send, defaultLabel: 'Telegram Channel' },
   { value: 'bluesky', label: 'Bluesky', icon: Globe, defaultLabel: 'Bluesky' },

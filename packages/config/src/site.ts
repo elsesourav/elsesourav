@@ -50,8 +50,8 @@ export const CREATOR_CONFIG = {
     github: 'https://github.com/elsesourav',
     twitter: 'https://x.com/elsesourav',
     linkedin: 'https://linkedin.com/in/elsesourav',
-    discord: 'https://discord.gg/elsesourav',
-    telegram: 'https://t.me/elsesourav',
+    youtube: 'https://www.youtube.com/@elsesourav',
+    instagram: 'https://instagram.com/elsesourav',
   },
 
   contact: {

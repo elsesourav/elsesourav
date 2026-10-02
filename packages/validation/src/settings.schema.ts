@@ -6,6 +6,7 @@ export const SiteLinkPlatformSchema = z.enum([
   'twitter',
   'linkedin',
   'youtube',
+  'instagram',
   'discord',
   'telegram',
   'bluesky',

@@ -46,6 +46,7 @@ export type SiteLinkPlatform =
   | 'twitter'
   | 'linkedin'
   | 'youtube'
+  | 'instagram'
   | 'discord'
   | 'telegram'
   | 'bluesky'
