@@ -196,16 +196,24 @@ export function HomeHero({
         className="relative z-10 w-full max-w-[1536px] px-4 sm:px-6 lg:px-8 xl:px-12 my-auto"
       >
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-6 items-center relative">
-          {/* Mobile-Only Atmospheric Backdrop: Floating Island softly blurred behind hero text on phones (< md) */}
+          {/* Mobile-Only Static Floating Island Image: Single lightweight static image without floating animation for 0% lag */}
           <div
             aria-hidden="true"
-            className="md:hidden absolute -right-8 sm:-right-4 top-12 sm:top-8 w-[320px] sm:w-[400px] pointer-events-none select-none z-0 opacity-75 dark:opacity-80 overflow-visible transition-opacity duration-700"
+            className="md:hidden absolute -right-6 sm:-right-4 -top-2 sm:top-2 w-[270px] sm:w-[340px] pointer-events-none select-none z-0 overflow-visible opacity-90 dark:opacity-95"
           >
-            <EarthScene isSceneActive={isSceneActive} isMobileBackdrop />
+            <img
+              src="/hero/floating-island-mobile.webp"
+              alt=""
+              width={560}
+              height={485}
+              className="w-full h-auto object-contain drop-shadow-[0_14px_28px_rgba(0,0,0,0.55)] drop-shadow-[0_4px_14px_rgba(236,72,153,0.22)]"
+              loading="eager"
+              draggable={false}
+            />
           </div>
 
-          {/* Left Column: Hero Narrative, CTAs & Metrics (7 columns on iPad & desktop for wider text lines & larger headline) */}
-          <div className="relative z-10 md:col-span-7 xl:col-span-7 space-y-6 text-left max-w-2xl lg:max-w-[44rem] xl:max-w-[48rem]">
+          {/* Left Column: Hero Narrative, CTAs & Metrics (Frosted glass backdrop-blur on mobile for legibility) */}
+          <div className="relative z-10 md:col-span-7 xl:col-span-7 space-y-6 text-left max-w-2xl lg:max-w-[44rem] xl:max-w-[48rem] p-5 sm:p-7 md:p-0 rounded-3xl backdrop-blur-xl md:backdrop-blur-none bg-white/45 dark:bg-black/40 md:bg-transparent border border-black/5 dark:border-white/10 md:border-none shadow-2xl md:shadow-none">
             <Reveal direction="down" distance={12}>
               {/* Studio Pill Badge */}
               <div
@@ -287,7 +295,7 @@ export function HomeHero({
                 }`}
               >
                 {/* Metric 1: Projects */}
-                <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
+                <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0 p-1.5 sm:p-2 rounded-xl backdrop-blur-md bg-white/40 dark:bg-white/[0.04] border border-black/5 dark:border-white/5 md:bg-transparent md:border-none md:p-0 md:backdrop-blur-none">
                   <div
                     className={`w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shrink-0 border ${
                       isLight
@@ -316,7 +324,7 @@ export function HomeHero({
                 </div>
 
                 {/* Metric 2: Passion */}
-                <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
+                <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0 p-1.5 sm:p-2 rounded-xl backdrop-blur-md bg-white/40 dark:bg-white/[0.04] border border-black/5 dark:border-white/5 md:bg-transparent md:border-none md:p-0 md:backdrop-blur-none">
                   <div
                     className={`w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shrink-0 border ${
                       isLight
@@ -345,7 +353,7 @@ export function HomeHero({
                 </div>
 
                 {/* Metric 3: Opportunities */}
-                <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
+                <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0 p-1.5 sm:p-2 rounded-xl backdrop-blur-md bg-white/40 dark:bg-white/[0.04] border border-black/5 dark:border-white/5 md:bg-transparent md:border-none md:p-0 md:backdrop-blur-none">
                   <div
                     className={`w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shrink-0 border ${
                       isLight

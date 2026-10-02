@@ -99,9 +99,7 @@ export function EarthScene({ isSceneActive = true, isMobileBackdrop = false }: E
             left: '13.48%',
             top: '1.91%',
             width: '82.62%',
-            filter: isMobileBackdrop
-              ? 'blur(2.5px) drop-shadow(0 15px 25px rgba(0, 0, 0, 0.45)) drop-shadow(0 6px 15px rgba(244, 114, 182, 0.18))'
-              : 'drop-shadow(0 20px 35px rgba(0, 0, 0, 0.45)) drop-shadow(0 8px 20px rgba(244, 114, 182, 0.15))',
+            filter: 'drop-shadow(0 20px 35px rgba(0, 0, 0, 0.45)) drop-shadow(0 8px 20px rgba(244, 114, 182, 0.15))',
           }}
         >
           {/* Low-Quality Lightweight Placeholder (3.6 KB) - On mobile, this is the only image used with blur */}
@@ -168,9 +166,7 @@ export function EarthScene({ isSceneActive = true, isMobileBackdrop = false }: E
                 animationDelay: `${rock.delay}s`,
                 '--rock-dist': `${rock.dist}px`,
                 '--rock-rot': `${rock.rot}deg`,
-                filter: isMobileBackdrop
-                  ? 'blur(2px) drop-shadow(0 6px 10px rgba(0, 0, 0, 0.4))'
-                  : 'drop-shadow(0 8px 14px rgba(0, 0, 0, 0.4))',
+                filter: 'drop-shadow(0 8px 14px rgba(0, 0, 0, 0.4))',
               } as React.CSSProperties
             }
           >
