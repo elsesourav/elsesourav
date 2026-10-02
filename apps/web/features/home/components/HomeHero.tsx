@@ -3,12 +3,13 @@
 import { useTheme } from '@/components/theme/ThemeProvider';
 import { ROUTES } from '@elsesourav/config';
 import { Container, Reveal, Section } from '@elsesourav/ui';
-import { BlurUpImage, TextReveal } from '@elsesourav/ui/interior';
+import { TextReveal } from '@elsesourav/ui/interior';
 import { ArrowRight, Code, Layers, Star, Users } from 'lucide-react';
 import Link from 'next/link';
 import { DaylightFogCanvas } from './DaylightFogCanvas';
 import { EarthScene } from './EarthScene';
 import { StarsCanvas } from './StarsCanvas';
+import { useProgressiveImage } from './useProgressiveImage';
 import { useScenePerformance } from './useScenePerformance';
 
 interface HomeHeroProps {
@@ -85,6 +86,8 @@ export function HomeHero({
   const isLight = resolvedTheme === 'light';
 
   const displayCount = totalAppsCount > 0 ? `${totalAppsCount}+` : '10+';
+  const [isDarkBgLoaded, markDarkBgLoaded] = useProgressiveImage('/hero/sky-bg.webp');
+  const [isLightBgLoaded, markLightBgLoaded] = useProgressiveImage('/hero/sky-light-bg.webp');
 
   const { isSceneActive } = useScenePerformance({ elementId: 'hero' });
 
@@ -105,14 +108,25 @@ export function HomeHero({
             isLight ? 'opacity-0 pointer-events-none' : 'opacity-100'
           }`}
         >
-          <BlurUpImage
+          {/* Low-Quality Placeholder with blur effect (726 bytes) */}
+          <img
+            src="/hero/sky-bg-thumb.webp"
+            alt=""
+            className={`w-full h-full object-cover object-[82%_center] md:object-center scale-[1.03] transition-all duration-700 ease-out ${
+              isDarkBgLoaded ? 'opacity-0' : 'opacity-100'
+            }`}
+            draggable={false}
+          />
+          {/* High-Quality Progressive WebP Background (72 KB) */}
+          <img
             src="/hero/sky-bg.webp"
-            placeholder="/hero/sky-bg-thumb.webp"
-            alt="Cosmic night sky backdrop"
-            fill
+            alt=""
+            className={`absolute inset-0 w-full h-full object-cover object-[82%_center] md:object-center scale-[1.02] transition-opacity duration-700 ease-out ${
+              isDarkBgLoaded ? 'opacity-100' : 'opacity-0'
+            }`}
             loading="eager"
-            fetchPriority="high"
-            imgClassName="object-[82%_center] md:object-center object-cover"
+            onLoad={markDarkBgLoaded}
+            draggable={false}
           />
         </div>
 
@@ -122,14 +136,25 @@ export function HomeHero({
             isLight ? 'opacity-100' : 'opacity-0 pointer-events-none'
           }`}
         >
-          <BlurUpImage
+          {/* Low-Quality Placeholder with blur effect (282 bytes) */}
+          <img
+            src="/hero/sky-light-bg-thumb.webp"
+            alt=""
+            className={`w-full h-full object-cover object-[82%_center] md:object-center scale-[1.03] transition-all duration-700 ease-out ${
+              isLightBgLoaded ? 'opacity-0' : 'opacity-100'
+            }`}
+            draggable={false}
+          />
+          {/* High-Quality Progressive WebP Daylight Clouds (64 KB) */}
+          <img
             src="/hero/sky-light-bg.webp"
-            placeholder="/hero/sky-light-bg-thumb.webp"
-            alt="Daylight cloudscape backdrop"
-            fill
+            alt=""
+            className={`absolute inset-0 w-full h-full object-cover object-[82%_center] md:object-center scale-[1.02] transition-opacity duration-700 ease-out ${
+              isLightBgLoaded ? 'opacity-100' : 'opacity-0'
+            }`}
             loading="eager"
-            fetchPriority="high"
-            imgClassName="object-[82%_center] md:object-center object-cover"
+            onLoad={markLightBgLoaded}
+            draggable={false}
           />
         </div>
 
