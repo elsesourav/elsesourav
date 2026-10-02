@@ -30,20 +30,20 @@ export async function generateMetadata({ searchParams }: BlogPageProps): Promise
   const hasFilterOrQuery = Boolean(query || category || tag || params.page);
 
   const title = query
-    ? `Search: "${query}" in Field Notes`
+    ? `Search: "${query}" in Updates`
     : category
-      ? `${category.charAt(0).toUpperCase() + category.slice(1)} — Field Notes`
+      ? `${category.charAt(0).toUpperCase() + category.slice(1)} — Updates`
       : tag
-        ? `#${tag} — Field Notes`
-        : 'Field Notes & Technical Writing';
+        ? `#${tag} — Updates`
+        : 'Updates & Engineering Devlogs';
 
   const description =
-    'Technical articles, architectural deep dives, software benchmarks, and release devlogs by Sourav Barui.';
+    'Technical articles, architectural deep dives, software benchmarks, and release updates by Sourav Barui.';
 
   return buildPageMetadata({
     title,
     description,
-    path: '/notes',
+    path: '/updates',
     noIndex: hasFilterOrQuery,
   });
 }
@@ -75,15 +75,15 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Blog',
-    name: 'ElseSourav Notes & Writing',
+    name: 'ElseSourav Updates & Devlogs',
     description:
-      'Technical observations, architecture notes, and lessons learned while building software.',
-    url: 'https://elsesourav.com/notes',
+      'Technical observations, architecture updates, and lessons learned while building software.',
+    url: 'https://elsesourav.com/updates',
     blogPost: posts.map((post) => ({
       '@type': 'BlogPosting',
       headline: post.title,
       description: post.excerpt,
-      url: `https://elsesourav.com/notes/${post.slug}`,
+      url: `https://elsesourav.com/updates/${post.slug}`,
       datePublished: post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined,
       author: {
         '@type': 'Person',
@@ -106,11 +106,11 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           eyebrow="Writing & Observations"
           badge={
             <Badge variant="primary" className="text-xs px-2.5 py-0.5 font-medium">
-              {listingResult.totalCount} {listingResult.totalCount === 1 ? 'Note' : 'Notes'}
+              {listingResult.totalCount} {listingResult.totalCount === 1 ? 'Update' : 'Updates'}
             </Badge>
           }
-          title="Notes"
-          description="Thoughts, technical observations, architecture notes, and things learned while building software."
+          title="Updates"
+          description="Thoughts, technical observations, architecture deep-dives, and updates learned while building software."
         />
 
         {/* Discovery & Search Bar */}

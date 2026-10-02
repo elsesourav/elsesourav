@@ -22,7 +22,7 @@ export function BlogPagination({ currentPage, totalPages, totalMatches }: BlogPa
   const createPageUrl = (pageNumber: number) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set('page', pageNumber.toString());
-    return `/notes?${params.toString()}`;
+    return `/updates?${params.toString()}`;
   };
 
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -35,7 +35,7 @@ export function BlogPagination({ currentPage, totalPages, totalMatches }: BlogPa
       <div className="text-xs text-[hsl(var(--muted-foreground))]">
         Page <span className="font-semibold text-[hsl(var(--foreground))]">{currentPage}</span> of{' '}
         <span className="font-semibold text-[hsl(var(--foreground))]">{totalPages}</span> (
-        {totalMatches} total notes)
+        {totalMatches} total updates)
       </div>
 
       <div className="flex items-center gap-1.5">

@@ -116,7 +116,7 @@ export default async function Image() {
           }}
         >
           A curated personal portfolio of high-performance web applications, developer utilities,
-          interactive systems, and architectural field notes.
+          interactive systems, and engineering updates.
         </div>
       </div>
 
@@ -160,7 +160,7 @@ export default async function Image() {
               color: '#e2e8f0',
             }}
           >
-            Field Notes
+            Updates
           </span>
           <span
             style={{

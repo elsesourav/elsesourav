@@ -119,26 +119,48 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [
+      {
+        source: '/updates',
+        destination: '/notes',
+      },
+      {
+        source: '/updates/:slug*',
+        destination: '/notes/:slug*',
+      },
+    ];
+  },
   async redirects() {
     return [
       {
+        source: '/notes',
+        destination: '/updates',
+        permanent: true,
+      },
+      {
+        source: '/notes/:slug*',
+        destination: '/updates/:slug*',
+        permanent: true,
+      },
+      {
         source: '/blog',
-        destination: '/notes',
+        destination: '/updates',
         permanent: true,
       },
       {
         source: '/blog/:slug*',
-        destination: '/notes/:slug*',
+        destination: '/updates/:slug*',
         permanent: true,
       },
       {
         source: '/posts',
-        destination: '/notes',
+        destination: '/updates',
         permanent: true,
       },
       {
         source: '/posts/:slug*',
-        destination: '/notes/:slug*',
+        destination: '/updates/:slug*',
         permanent: true,
       },
       {

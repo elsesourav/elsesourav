@@ -172,7 +172,7 @@ export class SearchService {
         type: 'note' as const,
         title: record.title,
         description: record.excerpt || '',
-        url: `/notes/${record.slug}`,
+        url: `/updates/${record.slug}`,
         category: record.category?.name,
         metadata: {
           ...(record.readingTime ? { readingTime: `${record.readingTime} min read` } : {}),

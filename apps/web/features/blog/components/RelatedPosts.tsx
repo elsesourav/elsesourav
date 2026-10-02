@@ -22,10 +22,10 @@ export function RelatedPosts({ posts }: RelatedPostsProps) {
           id="related-articles-heading"
           className="text-xs font-mono text-[hsl(var(--muted-foreground))] uppercase tracking-wider font-semibold"
         >
-          Further Reading & Related Notes
+          Further Reading & Related Updates
         </h2>
         <span className="text-xs font-mono text-[hsl(var(--subtle-foreground))]">
-          {posts.length} {posts.length === 1 ? 'Note' : 'Notes'}
+          {posts.length} {posts.length === 1 ? 'Update' : 'Updates'}
         </span>
       </div>
 

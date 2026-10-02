@@ -176,7 +176,7 @@ import { ... } from '@elsesourav/ui';
 - **Purpose**: Standard horizontal constraint container that centers content and enforces responsive side gutters.
 - **Key Features**: Consistent max-width breakpoints (`max-w-7xl`, `max-w-5xl`, etc.), responsive padding (`px-4 sm:px-6 lg:px-8`).
 - **Props**:
-  - `size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'`
+  - `size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'prose' | 'full'`
   - `className?: string`
 - **Usage Example**:
   ```tsx

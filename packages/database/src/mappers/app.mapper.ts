@@ -103,6 +103,8 @@ export function mapPrismaAppToListItem(prismaApp: PrismaAppWithRelations): AppLi
     currentVersion: prismaApp.currentVersion ?? undefined,
     sortOrder: prismaApp.sortOrder,
     publishedAt: prismaApp.publishedAt ? prismaApp.publishedAt.getTime() : undefined,
+    ratingAverage: prismaApp.stats?.ratingAverage ?? undefined,
+    ratingCount: prismaApp.stats?.ratingCount ?? undefined,
   };
 }
 

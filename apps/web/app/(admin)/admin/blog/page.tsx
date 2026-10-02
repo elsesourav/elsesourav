@@ -29,7 +29,7 @@ export default async function AdminBlogPage() {
             </Badge>
           }
           title="Devlog Articles & Updates"
-          description="Create, edit, and publish engineering devlogs and product release notes."
+          description="Create, edit, and publish engineering devlogs and product release updates."
         />
 
         <Link href="/admin/blog/new" className="shrink-0 self-start sm:self-auto sm:pt-4">

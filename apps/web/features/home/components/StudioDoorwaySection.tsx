@@ -41,7 +41,7 @@ export function StudioDoorwaySection({ closingTitle, closingSubtitle }: StudioDo
                 <TextReveal
                   text={
                     closingSubtitle ||
-                    'Every application, utility, and field note is built independently with a focus on craft, performance, and usability.'
+                    'Every application, utility, and update is built independently with a focus on craft, performance, and usability.'
                   }
                   by="word"
                   stagger={0.03}

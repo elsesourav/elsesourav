@@ -40,7 +40,7 @@ export function BlogDiscoveryBar({ categories = [], tags = [] }: BlogDiscoveryBa
     params.delete('page');
 
     const qs = params.toString();
-    router.push(qs ? `/notes?${qs}` : '/notes');
+    router.push(qs ? `/updates?${qs}` : '/updates');
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -200,7 +200,7 @@ export function BlogDiscoveryBar({ categories = [], tags = [] }: BlogDiscoveryBa
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => router.push('/notes')}
+            onClick={() => router.push('/updates')}
             className="text-xs text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] px-2 py-0.5 h-auto"
           >
             Clear All

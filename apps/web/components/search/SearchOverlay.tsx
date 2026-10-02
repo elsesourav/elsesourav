@@ -19,7 +19,7 @@ const TYPE_CONFIG: Record<
   { label: string; icon: typeof Search; color: string }
 > = {
   project: { label: 'Apps', icon: Layout, color: 'text-indigo-400' },
-  note: { label: 'Notes', icon: FileText, color: 'text-cyan-400' },
+  note: { label: 'Updates', icon: FileText, color: 'text-cyan-400' },
   page: { label: 'Pages', icon: Globe, color: 'text-zinc-400' },
 };
 
@@ -279,7 +279,7 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search projects, notes, and experiments..."
+            placeholder="Search projects, updates, and experiments..."
             className="h-full flex-1 bg-transparent text-base sm:text-sm text-[hsl(var(--foreground))] placeholder:text-[hsl(var(--muted-foreground))] outline-none min-w-0 font-normal"
             aria-label="Search query"
             autoComplete="off"
@@ -333,10 +333,10 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
           {state === 'empty' && (
             <div className="px-5 py-6 text-center">
               <p className="text-sm text-[hsl(var(--muted-foreground))]">
-                Search projects, notes, and experiments...
+                Search projects, updates, and experiments...
               </p>
               <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-[11px]">
-                {['Apps', 'Notes', 'About', 'Archive'].map((hint) => (
+                {['Apps', 'Updates', 'About', 'Archive'].map((hint) => (
                   <button
                     key={hint}
                     type="button"

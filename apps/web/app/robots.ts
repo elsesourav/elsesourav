@@ -10,6 +10,8 @@ export default function robots(): MetadataRoute.Robots {
           '/',
           '/apps',
           '/apps/',
+          '/updates',
+          '/updates/',
           '/notes',
           '/notes/',
           '/help',

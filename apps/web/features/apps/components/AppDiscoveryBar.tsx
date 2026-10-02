@@ -82,18 +82,94 @@ export function AppDiscoveryBar({
     (currentSort && currentSort !== 'sortOrder')
   );
 
+  const categoryItems = React.useMemo(() => {
+    return [
+      { value: '', label: 'All Categories' },
+      ...categories.map((cat) => ({
+        value: cat.slug,
+        label:
+          cat.appCount !== undefined && cat.appCount > 0
+            ? `${cat.name} (${cat.appCount})`
+            : cat.name,
+      })),
+    ];
+  }, [categories]);
+
+  // Curated domain topic ordering (Games, AI, Automation, Simulations, Tools, Web Apps, Open Source, etc.)
+  const displayedTopics = React.useMemo(() => {
+    const PRIORITY_SLUGS = [
+      'games',
+      'ai',
+      'automation',
+      'simulations',
+      'tools',
+      'web-apps',
+      'open-source',
+      'iot',
+    ];
+    const HIDDEN_TECH_SLUGS = new Set([
+      'algorithms',
+      'cpp',
+      'canvas',
+      'chrome-extension',
+      'embedded',
+      'expo',
+      'firebase',
+      'react',
+      'typescript',
+      'tailwindcss',
+      'webassembly',
+      'supabase',
+      'react-native',
+    ]);
+
+    const tagBySlug = new Map(tags.map((t) => [t.slug, t]));
+    const result: TagSummary[] = [];
+    const seen = new Set<string>();
+
+    // 1. Add prioritized domain topics if present
+    for (const slug of PRIORITY_SLUGS) {
+      const found = tagBySlug.get(slug);
+      if (found) {
+        result.push(found);
+        seen.add(slug);
+      }
+    }
+
+    // 2. If an active tag is not in priority list, ensure it appears so user can toggle it off
+    if (currentTag && !seen.has(currentTag)) {
+      const activeTag = tagBySlug.get(currentTag) || {
+        id: currentTag,
+        name: currentTag.charAt(0).toUpperCase() + currentTag.slice(1).replace(/-/g, ' '),
+        slug: currentTag,
+      };
+      result.push(activeTag);
+      seen.add(currentTag);
+    }
+
+    // 3. Fill remaining slots with other domain topics (excluding tech stack tags)
+    for (const t of tags) {
+      if (!seen.has(t.slug) && !HIDDEN_TECH_SLUGS.has(t.slug)) {
+        result.push(t);
+        seen.add(t.slug);
+      }
+    }
+
+    return result.slice(0, 8);
+  }, [tags, currentTag]);
+
   return (
     <div className="space-y-4 w-full" aria-label="Search and Discovery Controls">
       {/* Search Input, Platform, and Sort Select Bar */}
-      <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
-        <form onSubmit={handleSearchSubmit} className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-[hsl(var(--muted-foreground))] absolute left-3.5 top-1/2 -translate-y-1/2" />
+      <div className="space-y-2.5">
+        <form onSubmit={handleSearchSubmit} className="relative w-full">
+          <Search className="w-4 h-4 text-[hsl(var(--muted-foreground))] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <Input
             type="text"
             placeholder="Search applications, tags, keywords..."
             value={searchVal}
             onChange={(e) => setSearchVal(e.target.value)}
-            className="pl-9 pr-8 bg-[hsl(var(--surface-subtle))] border-[hsl(var(--input))] text-sm focus:border-indigo-500 text-[hsl(var(--foreground))] rounded-xl min-h-[42px]"
+            className="pl-9 pr-8 bg-[hsl(var(--surface-subtle))] border-[hsl(var(--input))] text-sm focus:border-indigo-500 text-[hsl(var(--foreground))] rounded-xl min-h-[40px] w-full"
             aria-label="Search applications"
           />
           {searchVal && (
@@ -111,117 +187,86 @@ export function AppDiscoveryBar({
           )}
         </form>
 
-        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
+        {/* Category Dropdown Filter */}
+        {categories.length > 0 && (
+          <div className="w-full">
+            <Dropdown
+              items={categoryItems}
+              value={currentCategory}
+              onChange={(val) => updateFilters({ category: val || null })}
+              icon={<Layers className="w-3.5 h-3.5 text-[hsl(var(--muted-foreground))]" />}
+              className="w-full"
+            />
+          </div>
+        )}
+
+        <div className="grid grid-cols-2 gap-2 w-full">
           {/* Platform Filter Dropdown */}
-          <div className="flex items-center gap-1.5 flex-1 min-w-[140px] sm:flex-initial">
+          <div className="min-w-0">
             <Dropdown
               items={PLATFORM_ITEMS}
               value={currentPlatform}
               onChange={(val) => updateFilters({ platform: val || null })}
-              icon={<Laptop className="w-3.5 h-3.5 text-[hsl(var(--muted-foreground))] hidden md:block" />}
-              className="w-full sm:w-auto"
+              icon={<Laptop className="w-3.5 h-3.5 text-[hsl(var(--muted-foreground))]" />}
+              className="w-full"
             />
           </div>
 
           {/* Sort Dropdown */}
-          <div className="flex items-center gap-1.5 flex-1 min-w-[150px] sm:flex-initial">
+          <div className="min-w-0">
             <Dropdown
               items={SORT_ITEMS}
               value={currentSort}
               onChange={(val) => updateFilters({ sort: val })}
-              icon={<SlidersHorizontal className="w-3.5 h-3.5 text-[hsl(var(--muted-foreground))] hidden md:block" />}
-              className="w-full sm:w-auto"
+              icon={<SlidersHorizontal className="w-3.5 h-3.5 text-[hsl(var(--muted-foreground))]" />}
+              className="w-full"
             />
           </div>
         </div>
       </div>
 
-      {/* Category Filter Carousel (shown when not using integrated FilterGrid) */}
-      {showCategoryPills && (
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
-          <button
-            type="button"
-            onClick={() => updateFilters({ category: null })}
-            className={`px-3.5 py-1.5 rounded-full font-medium transition-all shrink-0 border ${
-              !currentCategory
-                ? 'bg-[hsl(var(--primary))] border-transparent text-[hsl(var(--primary-foreground))] shadow-md shadow-indigo-600/20'
-                : 'bg-[hsl(var(--surface-subtle))] border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))]'
-            }`}
-          >
-            All Categories
-          </button>
-
-          {categories.map((cat) => {
-            const isActive = currentCategory === cat.slug;
-            return (
-              <button
-                key={cat.id}
-                type="button"
-                onClick={() => updateFilters({ category: cat.slug })}
-                className={`px-3.5 py-1.5 rounded-full font-medium transition-all shrink-0 border flex items-center gap-1.5 ${
-                  isActive
-                    ? 'bg-[hsl(var(--primary))] border-transparent text-[hsl(var(--primary-foreground))] shadow-md shadow-indigo-600/20'
-                    : 'bg-[hsl(var(--surface-subtle))] border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))]'
-                }`}
-              >
-                <span>{cat.name}</span>
-                {cat.appCount !== undefined && cat.appCount > 0 && (
-                  <span
-                    className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-                      isActive
-                        ? 'bg-black/30 text-white'
-                        : 'bg-[hsl(var(--surface-elevated))] text-[hsl(var(--muted-foreground))]'
-                    }`}
-                  >
-                    {cat.appCount}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Popular Tags Strip */}
-      {tags.length > 0 && (
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-[11px]">
-          <span className="text-[hsl(var(--subtle-foreground))] shrink-0 font-medium mr-1 font-mono text-[10px] uppercase tracking-wider">
-            Topics:
-          </span>
-          {tags.slice(0, 8).map((t) => {
-            const isSelected = currentTag === t.slug;
-            return (
-              <button
-                key={t.id}
-                type="button"
-                onClick={() => updateFilters({ tag: isSelected ? null : t.slug })}
-                className={`px-2.5 py-0.5 rounded-full font-medium transition-all shrink-0 border text-[11px] ${
-                  isSelected
-                    ? 'bg-indigo-500/15 text-indigo-600 dark:text-indigo-300 border-indigo-500/40 shadow-sm'
-                    : 'bg-[hsl(var(--surface-subtle))] border-[hsl(var(--border-subtle))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))]'
-                }`}
-              >
-                {t.name}
-              </button>
-            );
-          })}
+      {/* Curated Popular Topics Strip */}
+      {displayedTopics.length > 0 && (
+        <div className="space-y-1.5 pt-1">
+          <div className="text-[11px] font-mono text-[hsl(var(--muted-foreground))] uppercase tracking-wider font-semibold">
+            Topics
+          </div>
+          <div className="flex flex-wrap items-center gap-1 text-[11px]">
+            {displayedTopics.map((t) => {
+              const isSelected = currentTag === t.slug;
+              return (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => updateFilters({ tag: isSelected ? null : t.slug })}
+                  className={`px-2.5 py-0.5 rounded-full font-medium transition-all shrink-0 border text-[11px] ${
+                    isSelected
+                      ? 'bg-indigo-500/15 text-indigo-600 dark:text-indigo-300 border-indigo-500/40 shadow-sm'
+                      : 'bg-[hsl(var(--surface-subtle))] border-[hsl(var(--border-subtle))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))]'
+                  }`}
+                >
+                  {t.name}
+                </button>
+              );
+            })}
+          </div>
         </div>
       )}
 
       {/* Active Filter Badges Strip */}
       {hasActiveFilters && (
-        <div className="flex flex-wrap items-center gap-2 pt-1 text-xs" aria-label="Active filters">
-          <span className="text-[hsl(var(--muted-foreground))] text-[11px] font-mono uppercase tracking-wider">
+        <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-[hsl(var(--border-subtle))] text-xs" aria-label="Active filters">
+          <span className="text-[hsl(var(--muted-foreground))] text-[10px] font-mono uppercase tracking-wider">
             Active:
           </span>
 
           {currentSearch && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[hsl(var(--surface-subtle))] text-[hsl(var(--foreground))] border border-[hsl(var(--border))]">
-              <span>Search: "{currentSearch}"</span>
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[hsl(var(--surface-subtle))] text-[hsl(var(--foreground))] border border-[hsl(var(--border))] text-xs">
+              <span className="truncate max-w-[120px]">"{currentSearch}"</span>
               <button
                 type="button"
                 onClick={() => updateFilters({ q: null })}
-                className="hover:text-indigo-600 dark:hover:text-white ml-0.5"
+                className="hover:text-indigo-600 dark:hover:text-white"
                 aria-label="Remove search filter"
               >
                 <X className="w-3 h-3" />
@@ -230,12 +275,12 @@ export function AppDiscoveryBar({
           )}
 
           {currentCategory && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[hsl(var(--surface-subtle))] text-[hsl(var(--foreground))] border border-[hsl(var(--border))]">
-              <span>Category: {currentCategory}</span>
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[hsl(var(--surface-subtle))] text-[hsl(var(--foreground))] border border-[hsl(var(--border))] text-xs">
+              <span className="truncate max-w-[120px]">{currentCategory}</span>
               <button
                 type="button"
                 onClick={() => updateFilters({ category: null })}
-                className="hover:text-indigo-600 dark:hover:text-white ml-0.5"
+                className="hover:text-indigo-600 dark:hover:text-white"
                 aria-label="Remove category filter"
               >
                 <X className="w-3 h-3" />
@@ -244,12 +289,12 @@ export function AppDiscoveryBar({
           )}
 
           {currentPlatform && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[hsl(var(--surface-subtle))] text-[hsl(var(--foreground))] border border-[hsl(var(--border))]">
-              <span>Platform: {currentPlatform}</span>
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[hsl(var(--surface-subtle))] text-[hsl(var(--foreground))] border border-[hsl(var(--border))] text-xs">
+              <span>{currentPlatform}</span>
               <button
                 type="button"
                 onClick={() => updateFilters({ platform: null })}
-                className="hover:text-indigo-600 dark:hover:text-white ml-0.5"
+                className="hover:text-indigo-600 dark:hover:text-white"
                 aria-label="Remove platform filter"
               >
                 <X className="w-3 h-3" />
@@ -258,12 +303,12 @@ export function AppDiscoveryBar({
           )}
 
           {currentTag && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[hsl(var(--surface-subtle))] text-[hsl(var(--foreground))] border border-[hsl(var(--border))]">
-              <span>Tag: #{currentTag}</span>
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[hsl(var(--surface-subtle))] text-[hsl(var(--foreground))] border border-[hsl(var(--border))] text-xs">
+              <span>#{currentTag}</span>
               <button
                 type="button"
                 onClick={() => updateFilters({ tag: null })}
-                className="hover:text-indigo-600 dark:hover:text-white ml-0.5"
+                className="hover:text-indigo-600 dark:hover:text-white"
                 aria-label="Remove tag filter"
               >
                 <X className="w-3 h-3" />
@@ -275,7 +320,7 @@ export function AppDiscoveryBar({
             variant="ghost"
             size="sm"
             onClick={() => router.push('/apps')}
-            className="text-xs text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] px-2 py-0.5 h-auto"
+            className="text-xs text-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 px-2 py-0.5 h-auto ml-auto"
           >
             Clear All
           </Button>

@@ -394,7 +394,7 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
               </span>
             </Link>
 
-            {/* Notes Callout */}
+            {/* Updates Callout */}
             <Link
               href={ROUTES.BLOG}
               className="group p-6 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 hover:bg-zinc-900/60 hover:border-cyan-500/40 transition-all flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
@@ -404,7 +404,7 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
                   <BookOpen className="w-5 h-5" />
                 </div>
                 <h3 className="text-base font-bold text-zinc-100 group-hover:text-cyan-300 transition-colors">
-                  Engineering Field Notes
+                  Engineering Updates
                 </h3>
                 <p className="text-xs text-zinc-400 leading-relaxed">
                   Technical write-ups, architecture decisions, and observations recorded while
@@ -412,7 +412,7 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
                 </p>
               </div>
               <span className="text-xs font-mono text-cyan-400 flex items-center gap-1 pt-4 group-hover:translate-x-1 transition-transform">
-                <span>Read field notes</span>
+                <span>Read engineering updates</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </span>
             </Link>

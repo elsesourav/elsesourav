@@ -11,6 +11,7 @@ export interface AppsFilterGridProps {
   categories: readonly CategorySummary[];
   initialCategory?: string;
   startIndex?: number;
+  showCategoryFilter?: boolean;
 }
 
 export function AppsFilterGrid({
@@ -18,6 +19,7 @@ export function AppsFilterGrid({
   categories = [],
   initialCategory,
   startIndex = 0,
+  showCategoryFilter = true,
 }: AppsFilterGridProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -69,7 +71,9 @@ export function AppsFilterGrid({
       fluid={true}
       unstyledItem={true}
       gridClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 list-none p-0 m-0 outline-none"
-      filterBarClassName="mb-6 overflow-x-auto pb-1 no-scrollbar"
+      filterBarClassName={
+        showCategoryFilter ? 'mb-6 overflow-x-auto pb-1 no-scrollbar' : 'hidden'
+      }
       emptyLabel="No software projects found in this category."
       renderItem={(app, idx) => (
         <AppCard

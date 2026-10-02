@@ -31,17 +31,17 @@ export function BlogArticleHeader({ post, postUrl }: BlogArticleHeaderProps) {
     <header className="space-y-6 max-w-4xl mx-auto">
       {/* Back Button */}
       <Link
-        href="/notes"
+        href="/updates"
         className="inline-flex items-center gap-1.5 text-xs text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] transition-colors group font-medium"
       >
         <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
-        <span>Back to Notes</span>
+        <span>Back to Updates</span>
       </Link>
 
       {/* Category Pill */}
       {post.category && (
         <div>
-          <Link href={`/notes?category=${post.category.slug}`}>
+          <Link href={`/updates?category=${post.category.slug}`}>
             <Badge
               variant="info"
               className="text-xs px-2.5 py-0.5 hover:opacity-80 transition-colors"

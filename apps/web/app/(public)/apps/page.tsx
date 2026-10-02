@@ -1,20 +1,20 @@
-import { Metadata } from 'next';
-import Link from 'next/link';
+import { AppDiscoveryBar } from '@/features/apps/components/AppDiscoveryBar';
+import { AppPagination } from '@/features/apps/components/AppPagination';
+import { AppsEmptyState } from '@/features/apps/components/AppsEmptyState';
+import { AppsFilterGrid } from '@/features/apps/components/AppsFilterGrid';
+import { AppsMorphHeroLoader } from '@/features/apps/components/AppsMorphHeroLoader';
 import {
   discoverPublishedApps,
   getActiveCategories,
   getActiveTags,
 } from '@/features/apps/queries/get-apps';
-import { AppCard } from '@/features/apps/components/AppCard';
-import { AppDiscoveryBar } from '@/features/apps/components/AppDiscoveryBar';
-import { AppsFilterGrid } from '@/features/apps/components/AppsFilterGrid';
-import { AppPagination } from '@/features/apps/components/AppPagination';
-import { AppsEmptyState } from '@/features/apps/components/AppsEmptyState';
-import { PageShell, PageHeader, Badge, Reveal } from '@elsesourav/ui';
-import { SITE_CONFIG } from '@elsesourav/config';
-import type { AppSortOption, AppPlatform } from '@elsesourav/types';
-import { Sparkles, ArrowRight, LayoutGrid, Archive, BookOpen } from 'lucide-react';
 import { buildPageMetadata } from '@/lib/seo-metadata';
+import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
+import type { AppPlatform, AppSortOption } from '@elsesourav/types';
+import { PageShell, Reveal } from '@elsesourav/ui';
+import { Archive, ArrowRight, BookOpen, LayoutGrid } from 'lucide-react';
+import { Metadata } from 'next';
+import Link from 'next/link';
 
 interface AppsPageProps {
   searchParams: Promise<{
@@ -86,12 +86,12 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
 
   const isDefaultView = !hasFilters && page === 1;
 
-  // Curated spotlight split for default view
-  const spotlightItems = isDefaultView
-    ? searchResult.items.filter((item) => item.isFeatured).slice(0, 2)
+  // Curated hero slider items for default view (featured + pinned, up to 5)
+  const heroSliderItems = isDefaultView
+    ? searchResult.items.filter((item) => item.isFeatured || item.isPinned).slice(0, 5)
     : [];
   const catalogItems = isDefaultView
-    ? searchResult.items.filter((item) => !spotlightItems.some((s) => s.id === item.id))
+    ? searchResult.items.filter((item) => !heroSliderItems.some((s) => s.id === item.id))
     : searchResult.items;
 
   const jsonLd = {
@@ -147,54 +147,64 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="space-y-12">
-        {/* Page Header */}
-        <Reveal direction="down" distance={12}>
-          <PageHeader
-            eyebrow="Software & Applications"
-            badge={
-              <Badge variant="primary" className="text-xs px-2.5 py-0.5 font-medium font-mono">
-                {searchResult.totalCount} {searchResult.totalCount === 1 ? 'Project' : 'Projects'}
-              </Badge>
-            }
-            title="Apps"
-            description="Software, tools, games, and practical systems I've built and shipped."
-          />
+      <div className="space-y-10 sm:space-y-12">
+        {/* 1. Very Top: Apps Title & Subtitle (No project number) */}
+        <Reveal direction="down" distance={10}>
+          <div className="space-y-2">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-[hsl(var(--foreground))]">
+              {hasFilters ? 'Filtered Projects' : 'Apps'}
+            </h1>
+            <p className="text-sm sm:text-base text-[hsl(var(--muted-foreground))] max-w-2xl leading-relaxed">
+              {hasFilters
+                ? 'Showing software matching selected filter criteria.'
+                : "Software, tools, games, and practical systems I've built and shipped."}
+            </p>
+          </div>
         </Reveal>
 
-        {/* Discovery, Search, Category & Platform Controls */}
-        <Reveal direction="up" distance={10}>
-          <AppDiscoveryBar categories={categories} tags={tags} showCategoryPills={false} />
-        </Reveal>
+        {/* 2. Top Hero Section: Desktop 2-column split (40% Left: Filters, 60% Right: Slider) / Mobile & Tablet Compact */}
+        {isDefaultView && heroSliderItems.length > 0 ? (
+          <div className="grid grid-cols-1 lg:grid-cols-10 gap-6 lg:gap-8 items-start">
+            {/* Desktop Left (40%) / Mobile & Tablet Bottom: Search & Filters Panel */}
+            <div className="order-2 lg:order-1 lg:col-span-4">
+              <Reveal direction="up" distance={10}>
+                <div className="rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4 sm:p-5 lg:p-6 shadow-sm backdrop-blur-md">
+                  <AppDiscoveryBar
+                    categories={categories}
+                    tags={tags}
+                  />
+                </div>
+              </Reveal>
+            </div>
 
-        {/* Applications Catalog Grid or Empty State */}
+            {/* Desktop Right (60%) / Mobile & Tablet Top: Featured MorphSlider */}
+            <div className="order-1 lg:order-2 lg:col-span-6">
+              <Reveal direction="up" distance={12}>
+                <AppsMorphHeroLoader apps={heroSliderItems} />
+              </Reveal>
+            </div>
+          </div>
+        ) : (
+          /* When filters are active, show the discovery bar in a streamlined card */
+          <Reveal direction="up" distance={8}>
+            <div className="rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4 sm:p-5 lg:p-6 shadow-sm backdrop-blur-md">
+              <AppDiscoveryBar
+                categories={categories}
+                tags={tags}
+                showCategoryPills={true}
+              />
+            </div>
+          </Reveal>
+        )}
+
+        {/* 3. Applications Catalog Grid or Empty State */}
         {searchResult.items.length === 0 ? (
           <Reveal direction="up" distance={12}>
             <AppsEmptyState hasFilters={hasFilters} />
           </Reveal>
         ) : (
-          <div className="space-y-12">
-            {/* Spotlight Section on Clean Default View */}
-            {isDefaultView && spotlightItems.length > 0 && (
-              <section aria-labelledby="spotlight-apps-heading" className="space-y-4">
-                <div className="flex items-center gap-2 text-xs font-mono text-[hsl(var(--muted-foreground))] uppercase tracking-wider font-semibold pb-2 border-b border-[hsl(var(--border-subtle))]">
-                  <Sparkles className="w-4 h-4 text-indigo-500" />
-                  <h2
-                    id="spotlight-apps-heading"
-                    className="text-xs font-mono text-[hsl(var(--muted-foreground))] uppercase tracking-wider font-semibold"
-                  >
-                    Featured Spotlight
-                  </h2>
-                </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {spotlightItems.map((app, idx) => (
-                    <AppCard key={app.id} app={app} index={idx} featured />
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* Catalog Grid with FilterGrid spring physics */}
+          <div className="space-y-8">
+            {/* Catalog Grid Header */}
             <section aria-labelledby="catalog-apps-heading" className="space-y-4">
               <div className="flex items-center justify-between pb-2 border-b border-[hsl(var(--border-subtle))] text-xs font-mono text-[hsl(var(--muted-foreground))]">
                 <div className="flex items-center gap-2 uppercase tracking-wider font-semibold">
@@ -204,8 +214,8 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
                     className="text-xs font-mono text-[hsl(var(--muted-foreground))] uppercase tracking-wider font-semibold"
                   >
                     {hasFilters
-                      ? `Filtered Projects (${searchResult.totalCount})`
-                      : 'All Software & Projects'}
+                      ? `Filtered Catalog (${searchResult.totalCount})`
+                      : 'All Software Catalog'}
                   </h2>
                 </div>
                 <span className="text-[hsl(var(--subtle-foreground))]">
@@ -217,9 +227,9 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
                 apps={catalogItems}
                 categories={categories}
                 initialCategory={categorySlug}
+                showCategoryFilter={false}
                 startIndex={
-                  (searchResult.page - 1) * 12 +
-                  (isDefaultView ? spotlightItems.length : 0)
+                  (searchResult.page - 1) * 12 + (isDefaultView ? heroSliderItems.length : 0)
                 }
               />
             </section>
@@ -263,9 +273,9 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
               </span>
             </Link>
 
-            {/* Notes / Architecture Callout */}
+            {/* Updates / Devlogs Callout */}
             <Link
-              href="/blog"
+              href={ROUTES.BLOG}
               className="group p-6 rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] hover:border-cyan-500/40 transition-all flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
             >
               <div className="space-y-2">
@@ -273,15 +283,15 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
                   <BookOpen className="w-5 h-5" />
                 </div>
                 <h3 className="text-base font-bold text-[hsl(var(--foreground))] group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
-                  Engineering Field Notes
+                  Engineering Updates
                 </h3>
                 <p className="text-xs text-[hsl(var(--muted-foreground))] leading-relaxed">
-                  Technical write-ups, architecture decisions, postmortems, and lessons learned
+                  Technical write-ups, architecture decisions, release logs, and lessons learned
                   while building.
                 </p>
               </div>
               <span className="text-xs font-mono text-cyan-600 dark:text-cyan-400 flex items-center gap-1 pt-4 group-hover:translate-x-1 transition-transform">
-                <span>Read engineering notes</span>
+                <span>Read engineering updates</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </span>
             </Link>

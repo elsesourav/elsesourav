@@ -16,7 +16,7 @@ export function PageAtmosphere({ forcedVariant }: PageAtmosphereProps) {
     if (!pathname || pathname === '/') return 'home';
     if (pathname.startsWith('/apps/')) return 'project';
     if (pathname.startsWith('/apps')) return 'apps';
-    if (pathname.startsWith('/notes')) return 'notes';
+    if (pathname.startsWith('/updates') || pathname.startsWith('/notes')) return 'notes';
     if (pathname.startsWith('/about')) return 'about';
     if (pathname.startsWith('/help')) return 'help';
     if (

@@ -28,10 +28,10 @@ export default async function AdminSettingsPage() {
       dbSettings['hero_headline'] || 'Thoughtful software, practical tools, & engineering ideas.',
     hero_subtitle: dbSettings['hero_subtitle'] || CREATOR_CONFIG.positioning,
     primary_cta_label: dbSettings['primary_cta_label'] || 'Explore Applications',
-    secondary_cta_label: dbSettings['secondary_cta_label'] || 'Read Engineering Notes',
+    secondary_cta_label: dbSettings['secondary_cta_label'] || 'Read Updates',
     announcement_banner: dbSettings['announcement_banner'] || '',
     homepage_apps_title: dbSettings['homepage_apps_title'] || 'Software Crafted with Purpose',
-    homepage_blog_title: dbSettings['homepage_blog_title'] || 'Engineering Notes & Reflections',
+    homepage_blog_title: dbSettings['homepage_blog_title'] || 'Engineering Updates & Devlogs',
     creator_statement:
       dbSettings['creator_statement'] ||
       'I care about software that is understandable, useful, fast, and considerate.',

@@ -168,7 +168,7 @@ export default async function AboutPage() {
               <Link href={ROUTES.BLOG}>
                 <Button variant="secondary" size="sm" className="gap-2 text-xs">
                   <BookOpen className="w-3.5 h-3.5" />
-                  <span>Read Notes</span>
+                  <span>Read Updates</span>
                 </Button>
               </Link>
             </div>

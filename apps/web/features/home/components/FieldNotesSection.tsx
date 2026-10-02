@@ -65,7 +65,7 @@ export function FieldNotesSection({ posts, totalCount, title, subtitle }: FieldN
               {leadPost && (
                 <Reveal direction="up" distance={16} delay={0.06} className="lg:col-span-7">
                   <Link
-                    href={`/notes/${leadPost.slug}`}
+                    href={`/updates/${leadPost.slug}`}
                     className="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-3xl"
                   >
                     <article className="h-full border border-[hsl(var(--border))] bg-gradient-to-br from-[hsl(var(--card))] to-[hsl(var(--surface-subtle))] hover:border-cyan-500/50 p-6 sm:p-8 md:p-9 rounded-3xl transition-all duration-300 flex flex-col justify-between backdrop-blur-md group-hover:shadow-2xl group-hover:shadow-cyan-500/10 group-hover:-translate-y-1 active:scale-[0.99] active:translate-y-0">
@@ -130,7 +130,7 @@ export function FieldNotesSection({ posts, totalCount, title, subtitle }: FieldN
                     return (
                       <Link
                         key={post.id}
-                        href={`/notes/${post.slug}`}
+                        href={`/updates/${post.slug}`}
                         className="group block py-5 first:pt-0 last:pb-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-xl"
                       >
                         <article className="space-y-2">
@@ -183,7 +183,7 @@ export function FieldNotesSection({ posts, totalCount, title, subtitle }: FieldN
             leadPost && (
               <Reveal direction="up" distance={16} className="max-w-3xl mx-auto">
                 <Link
-                  href={`/notes/${leadPost.slug}`}
+                  href={`/updates/${leadPost.slug}`}
                   className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-3xl"
                 >
                   <article className="border border-[hsl(var(--border))] bg-gradient-to-br from-[hsl(var(--card))] to-[hsl(var(--surface-subtle))] hover:border-cyan-500/50 p-6 sm:p-8 rounded-3xl transition-all duration-300 flex flex-col justify-between backdrop-blur-md group-hover:shadow-2xl group-hover:shadow-cyan-500/10">

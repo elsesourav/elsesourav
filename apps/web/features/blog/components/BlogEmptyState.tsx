@@ -16,18 +16,18 @@ export function BlogEmptyState({ hasFilters = false }: BlogEmptyStateProps) {
 
       <div className="space-y-1.5">
         <h3 className="text-lg font-bold text-[hsl(var(--foreground))]">
-          {hasFilters ? 'No notes match your filters' : 'No notes published yet'}
+          {hasFilters ? 'No updates match your filters' : 'No updates published yet'}
         </h3>
         <p className="text-xs text-[hsl(var(--muted-foreground))] max-w-xs mx-auto leading-relaxed">
           {hasFilters
             ? 'Try adjusting your search query, selecting another category, or removing active tags.'
-            : 'Check back soon for software architecture notes, release observations, and engineering insights.'}
+            : 'Check back soon for software architecture updates, release observations, and engineering insights.'}
         </p>
       </div>
 
       {hasFilters && (
         <div className="pt-2">
-          <Link href="/notes">
+          <Link href="/updates">
             <Button
               variant="outline"
               size="sm"

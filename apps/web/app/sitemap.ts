@@ -31,7 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/notes`,
+      url: `${baseUrl}/updates`,
       lastModified: now,
       changeFrequency: 'daily',
       priority: 0.8,
@@ -99,11 +99,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }
     }
 
-    // Add published notes / blog posts
+    // Add published updates
     if (blogRes.status === 'fulfilled') {
       for (const post of blogRes.value.items) {
         dynamicEntries.push({
-          url: `${baseUrl}/notes/${post.slug}`,
+          url: `${baseUrl}/updates/${post.slug}`,
           lastModified: new Date(post.createdAt),
           changeFrequency: 'monthly',
           priority: 0.7,

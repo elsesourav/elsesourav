@@ -201,7 +201,11 @@ async function main() {
     { name: 'PDF Tools', slug: 'pdf-tools' },
     { name: 'Tailwind CSS', slug: 'tailwindcss' },
     { name: 'Open Source', slug: 'open-source' },
-    { name: 'Game Dev', slug: 'game-dev' },
+    { name: 'Games', slug: 'games' },
+    { name: 'Automation', slug: 'automation' },
+    { name: 'Simulations', slug: 'simulations' },
+    { name: 'Tools', slug: 'tools' },
+    { name: 'Web Apps', slug: 'web-apps' },
   ];
 
   const tagMap: Record<string, string> = {};
@@ -356,7 +360,7 @@ An academic and research portfolio website engineered for **Dr. Debayan Ganguly*
       isFeatured: false,
       currentVersion: '1.0.0',
       publishedAt: new Date('2024-07-13T14:00:00Z'),
-      tags: ['cpp', 'webassembly', 'game-dev', 'canvas', 'firebase', 'open-source'],
+      tags: ['cpp', 'webassembly', 'games', 'canvas', 'firebase', 'open-source'],
     },
     {
       name: 'Meal Tracker Mobile',
@@ -732,7 +736,7 @@ A browser typing speed test measuring WPM and keystroke accuracy in real time.
       isFeatured: false,
       currentVersion: '1.0.0',
       publishedAt: new Date('2024-03-20T10:00:00Z'),
-      tags: ['game-dev', 'canvas', 'open-source'],
+      tags: ['games', 'canvas', 'open-source'],
     },
     {
       name: 'Travel Plans Planner',

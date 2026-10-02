@@ -40,8 +40,8 @@ export function SkeletonShowcaseClient() {
             <TabsTrigger value="home">Homepage</TabsTrigger>
             <TabsTrigger value="apps">Apps</TabsTrigger>
             <TabsTrigger value="app-detail">App Detail</TabsTrigger>
-            <TabsTrigger value="notes">Notes</TabsTrigger>
-            <TabsTrigger value="note-detail">Note Detail</TabsTrigger>
+            <TabsTrigger value="notes">Updates</TabsTrigger>
+            <TabsTrigger value="note-detail">Update Detail</TabsTrigger>
             <TabsTrigger value="about">About</TabsTrigger>
             <TabsTrigger value="help">Help</TabsTrigger>
             <TabsTrigger value="user">User Dashboard</TabsTrigger>

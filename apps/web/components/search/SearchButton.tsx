@@ -43,12 +43,12 @@ export function SearchButton() {
         type="button"
         onClick={() => setOpen(true)}
         className="shrink-0 flex items-center justify-center md:justify-between gap-2.5 h-9 w-9 md:w-auto md:h-9 md:px-3 md:py-1.5 rounded-xl md:rounded-full border border-black/10 dark:border-white/10 bg-white/10 dark:bg-white/5 backdrop-blur-[6px] hover:bg-white/20 dark:hover:bg-white/10 hover:border-black/20 dark:hover:border-white/20 text-[hsl(var(--foreground))]/80 hover:text-[hsl(var(--foreground))] active:scale-95 transition-all duration-150 ease-smooth focus:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] cursor-pointer group whitespace-nowrap shadow-2xs"
-        aria-label="Search apps, updates, notes"
+        aria-label="Search apps and updates"
       >
         <div className="flex items-center gap-2 min-w-0">
           <Search className="w-3.5 h-3.5 shrink-0 text-[hsl(var(--foreground))]/75 group-hover:text-[hsl(var(--foreground))] transition-colors" />
           <span className="hidden lg:inline text-xs font-normal text-[hsl(var(--foreground))]/75 group-hover:text-[hsl(var(--foreground))] transition-colors truncate">
-            Search apps, updates, notes...
+            Search apps and updates...
           </span>
           <span className="hidden md:inline lg:hidden text-xs font-normal text-[hsl(var(--foreground))]/75 group-hover:text-[hsl(var(--foreground))] transition-colors truncate">
             Search...

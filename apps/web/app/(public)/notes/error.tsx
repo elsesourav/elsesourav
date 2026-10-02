@@ -23,9 +23,9 @@ export default function BlogError({
         </div>
 
         <div className="space-y-2">
-          <h2 className="text-xl font-bold text-[hsl(var(--foreground))]">Unable to load notes</h2>
+          <h2 className="text-xl font-bold text-[hsl(var(--foreground))]">Unable to load updates</h2>
           <p className="text-xs text-[hsl(var(--muted-foreground))] leading-relaxed">
-            We encountered a problem while retrieving published engineering notes. Please try
+            We encountered a problem while retrieving published engineering updates. Please try
             refreshing.
           </p>
         </div>

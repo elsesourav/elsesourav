@@ -85,6 +85,7 @@ export class AppRepository {
         include: {
           category: true,
           links: true,
+          stats: true,
         },
       });
 
@@ -150,6 +151,7 @@ export class AppRepository {
         include: {
           category: true,
           links: true,
+          stats: true,
         },
       });
 
@@ -238,6 +240,7 @@ export class AppRepository {
         include: {
           category: true,
           links: true,
+          stats: true,
         },
       });
 
@@ -299,8 +302,7 @@ export class AppRepository {
             },
           },
         },
-        orderBy: { name: 'asc' },
-        take: 30,
+        take: 50,
         include: {
           _count: {
             select: {
@@ -317,12 +319,37 @@ export class AppRepository {
         },
       });
 
-      return tags.map((t) => ({
+      const PRIORITY_TOPICS = [
+        'games',
+        'ai',
+        'automation',
+        'simulations',
+        'tools',
+        'web-apps',
+        'open-source',
+        'iot',
+      ];
+      const getPriority = (slug: string) => {
+        const idx = PRIORITY_TOPICS.indexOf(slug);
+        return idx !== -1 ? idx : 999;
+      };
+
+      const mapped = tags.map((t) => ({
         id: t.id,
         name: t.name,
         slug: t.slug,
         appCount: t._count.apps,
       }));
+
+      mapped.sort((a, b) => {
+        const pA = getPriority(a.slug);
+        const pB = getPriority(b.slug);
+        if (pA !== pB) return pA - pB;
+        if (b.appCount !== a.appCount) return b.appCount - a.appCount;
+        return a.name.localeCompare(b.name);
+      });
+
+      return mapped;
     } catch (error) {
       throw AppError.database('Failed to query public tags', error);
     }

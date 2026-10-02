@@ -28,8 +28,8 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
   if (!post) {
     return {
-      title: `Note Not Found — ${SITE_CONFIG.name}`,
-      description: 'The requested engineering note or writing could not be found.',
+      title: `Update Not Found — ${SITE_CONFIG.name}`,
+      description: 'The requested engineering update or writing could not be found.',
       robots: {
         index: false,
         follow: false,
@@ -49,7 +49,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   const relatedPosts = await getRelatedBlogPosts(post.id, post.category?.id, 3);
-  const postUrl = `${SITE_CONFIG.url}/notes/${post.slug}`;
+  const postUrl = `${SITE_CONFIG.url}/updates/${post.slug}`;
 
   // JSON-LD structured data for article & breadcrumbs
   const jsonLd = {
@@ -57,7 +57,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     '@graph': [
       {
         '@type': 'BlogPosting',
-        '@id': `${postUrl}/#note`,
+        '@id': `${postUrl}/#update`,
         headline: post.title,
         description: post.excerpt,
         image: post.coverImageUrl ? [getBlogCoverUrl(post.coverImageUrl, 1200, 630)] : undefined,
@@ -91,8 +91,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {
             '@type': 'ListItem',
             position: 2,
-            name: 'Notes',
-            item: `${SITE_CONFIG.url}/notes`,
+            name: 'Updates',
+            item: `${SITE_CONFIG.url}/updates`,
           },
           {
             '@type': 'ListItem',
@@ -132,7 +132,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   <Tag className="w-3.5 h-3.5" /> Tags:
                 </span>
                 {post.tags.map((tag) => (
-                  <Link key={tag.id} href={`/notes?tag=${tag.slug}`}>
+                  <Link key={tag.id} href={`/updates?tag=${tag.slug}`}>
                     <span className="px-2.5 py-1 rounded-lg text-xs font-medium bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border-subtle))] text-[hsl(var(--foreground))] hover:bg-[hsl(var(--surface-elevated))] transition-colors">
                       #{tag.name}
                     </span>

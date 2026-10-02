@@ -25,10 +25,10 @@ export default async function Image({ params }: BlogPostOgProps) {
     post = null;
   }
 
-  const title = post?.title || 'Field Note';
+  const title = post?.title || 'Engineering Update';
   const excerpt =
     post?.excerpt ||
-    'Architectural deep-dive, engineering reflections, and technical notes from ElseSourav.';
+    'Architectural deep-dive, engineering reflections, and technical updates from ElseSourav.';
   const authorName = post?.author?.displayName || 'Sourav Barui';
   const readingTime = post?.readingTime ? `${post.readingTime} min read` : '5 min read';
   const tags: string[] = post?.tags?.map((t: { name: string }) => t.name).slice(0, 3) || [];
@@ -81,7 +81,7 @@ export default async function Image({ params }: BlogPostOgProps) {
             <span style={{ fontSize: '20px', fontWeight: 'bold', letterSpacing: '-0.02em' }}>
               {SITE_CONFIG.name}
             </span>
-            <span style={{ fontSize: '13px', color: '#94a3b8' }}>Field Notes & Journal</span>
+            <span style={{ fontSize: '13px', color: '#94a3b8' }}>Updates & Devlogs</span>
           </div>
         </div>
 

@@ -105,6 +105,8 @@ export interface AppListItem {
   readonly currentVersion?: string;
   readonly sortOrder: number;
   readonly publishedAt?: Timestamp;
+  readonly ratingAverage?: number;
+  readonly ratingCount?: number;
 }
 
 /**

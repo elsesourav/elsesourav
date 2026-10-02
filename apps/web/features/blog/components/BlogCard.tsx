@@ -30,7 +30,7 @@ export function BlogCard({ post, isFeatured = false }: BlogCardProps) {
       {/* Cover Image Container (Only if real cover image exists) */}
       {coverUrl && (
         <Link
-          href={`/notes/${post.slug}`}
+          href={`/updates/${post.slug}`}
           className={`relative block overflow-hidden bg-[hsl(var(--surface-subtle))] shrink-0 ${
             isFeatured ? 'lg:w-1/2 aspect-[16/9] lg:aspect-auto' : 'aspect-[16/9] w-full'
           }`}
@@ -88,7 +88,7 @@ export function BlogCard({ post, isFeatured = false }: BlogCardProps) {
 
           {/* Title */}
           <Link
-            href={`/notes/${post.slug}`}
+            href={`/updates/${post.slug}`}
             className="block group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors"
           >
             <h3
@@ -122,10 +122,10 @@ export function BlogCard({ post, isFeatured = false }: BlogCardProps) {
           </div>
 
           <Link
-            href={`/notes/${post.slug}`}
+            href={`/updates/${post.slug}`}
             className="flex items-center gap-1 text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium shrink-0 group-hover:translate-x-0.5 transition-transform"
           >
-            <span>Read Note</span>
+            <span>Read Update</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </Link>
         </div>

@@ -492,7 +492,7 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
               required
               value={settings['site_tagline'] || ''}
               onChange={(val) => handleChange('site_tagline', val)}
-              placeholder="Software, Tools & Engineering Notes"
+              placeholder="Software, Tools & Engineering Updates"
             />
           </div>
 
@@ -973,10 +973,10 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
             />
 
             <FloatingLabelInput
-              label="Field Notes Section Title"
+              label="Updates Section Title"
               value={settings['homepage_blog_title'] || ''}
               onChange={(val) => handleChange('homepage_blog_title', val)}
-              placeholder="Field Notes & Reflections"
+              placeholder="Engineering Updates & Devlogs"
             />
           </div>
 
