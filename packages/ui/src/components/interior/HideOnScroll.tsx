@@ -7,17 +7,26 @@ const DISCLOSE = { type: 'spring', stiffness: 150, damping: 27, mass: 1 } as con
 const CROSSFADE = { type: 'spring', stiffness: 260, damping: 34, mass: 0.8 } as const;
 
 export type UseHideOnScrollOptions = {
+  /** Scroll delta in pixels downwards before hiding header @default 14 */
   hideAfter?: number;
+  /** Scroll delta in pixels upwards before revealing header @default 10 */
   revealAfter?: number;
+  /** Distance from page top (in pixels) where the header is guaranteed visible @default 24 */
   topGuard?: number;
+  /** When true, header is pinned and won't hide (e.g. mobile menu or modal open) @default false */
   pinned?: boolean;
+  /** When true, disables the scroll hide behavior @default false */
   disabled?: boolean;
+  /** When true, tracks window scroll instead of element scroll @default false */
+  useWindow?: boolean;
 };
 
 export type UseHideOnScrollResult<T extends HTMLElement> = {
   ref: React.RefObject<T | null>;
   hidden: boolean;
   atTop: boolean;
+  isVisible: boolean;
+  isScrolled: boolean;
 };
 
 export function useHideOnScroll<T extends HTMLElement = HTMLDivElement>({
@@ -26,6 +35,7 @@ export function useHideOnScroll<T extends HTMLElement = HTMLDivElement>({
   topGuard = 24,
   pinned = false,
   disabled = false,
+  useWindow = false,
 }: UseHideOnScrollOptions = {}): UseHideOnScrollResult<T> {
   const ref = useRef<T | null>(null);
   const frame = useRef(0);
@@ -50,13 +60,14 @@ export function useHideOnScroll<T extends HTMLElement = HTMLDivElement>({
 
   useEffect(() => {
     const el = ref.current;
-    const target: EventTarget = el ?? window;
+    const isWindowScroll = useWindow || !el || el.scrollHeight <= el.clientHeight;
+    const target: EventTarget = isWindowScroll ? window : el;
 
-    const readY = () => (el ? el.scrollTop : window.scrollY);
+    const readY = () => (isWindowScroll ? Math.max(0, window.scrollY) : (el ? el.scrollTop : 0));
     const readMax = () =>
-      el
-        ? el.scrollHeight - el.clientHeight
-        : document.documentElement.scrollHeight - window.innerHeight;
+      isWindowScroll
+        ? Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
+        : (el ? el.scrollHeight - el.clientHeight : 0);
 
     const evaluate = () => {
       frame.current = 0;
@@ -104,14 +115,26 @@ export function useHideOnScroll<T extends HTMLElement = HTMLDivElement>({
       frame.current = requestAnimationFrame(evaluate);
     };
 
+    // If keyboard focus enters the container or header, automatically reveal it
+    const handleFocusIn = (e: FocusEvent) => {
+      const targetEl = e.target as Node | null;
+      if (targetEl && el && el.contains(targetEl)) {
+        accum.current = 0;
+        setHidden(false);
+      }
+    };
+
     last.current = readY();
     evaluate();
 
     target.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', schedule);
+    if (el) {
+      el.addEventListener('focusin', handleFocusIn);
+    }
 
     let observer: ResizeObserver | null = null;
-    if (el && typeof ResizeObserver !== 'undefined') {
+    if (el && !isWindowScroll && typeof ResizeObserver !== 'undefined') {
       observer = new ResizeObserver(schedule);
       observer.observe(el);
     }
@@ -119,17 +142,82 @@ export function useHideOnScroll<T extends HTMLElement = HTMLDivElement>({
     return () => {
       target.removeEventListener('scroll', schedule);
       window.removeEventListener('resize', schedule);
+      if (el) {
+        el.removeEventListener('focusin', handleFocusIn);
+      }
       observer?.disconnect();
       if (frame.current) cancelAnimationFrame(frame.current);
       frame.current = 0;
     };
-  }, [down, up, guard]);
+  }, [down, up, guard, useWindow]);
 
-  return { ref, hidden, atTop };
+  return {
+    ref,
+    hidden,
+    atTop,
+    isVisible: !hidden,
+    isScrolled: !atTop,
+  };
+}
+
+export type HideOnScrollHeaderProps = {
+  children: React.ReactNode | ((props: { isVisible: boolean; isScrolled: boolean; hidden: boolean; atTop: boolean }) => React.ReactNode);
+  className?: string;
+  hideAfter?: number;
+  revealAfter?: number;
+  topGuard?: number;
+  pinned?: boolean;
+  onHiddenChange?: (hidden: boolean) => void;
+};
+
+export function HideOnScrollHeader({
+  children,
+  className = '',
+  hideAfter = 14,
+  revealAfter = 10,
+  topGuard = 64,
+  pinned = false,
+  onHiddenChange,
+}: HideOnScrollHeaderProps) {
+  const [focusWithin, setFocusWithin] = useState(false);
+  const { ref, hidden, atTop, isVisible, isScrolled } = useHideOnScroll<HTMLElement>({
+    hideAfter,
+    revealAfter,
+    topGuard,
+    pinned: pinned || focusWithin,
+    useWindow: true,
+  });
+
+  const reduced = useReducedMotion();
+  const slide = reduced ? { duration: 0 } : DISCLOSE;
+
+  const seen = useRef(hidden);
+  useEffect(() => {
+    if (seen.current === hidden) return;
+    seen.current = hidden;
+    onHiddenChange?.(hidden);
+  }, [hidden, onHiddenChange]);
+
+  return (
+    <motion.header
+      ref={ref}
+      data-interior="hide-on-scroll-header"
+      data-scrolled={isScrolled ? 'true' : 'false'}
+      data-hidden={hidden ? 'true' : 'false'}
+      onFocus={() => setFocusWithin(true)}
+      onBlur={() => setFocusWithin(false)}
+      initial={false}
+      animate={{ y: hidden ? '-100%' : '0%' }}
+      transition={slide}
+      className={`sticky top-0 z-50 w-full ${className}`}
+    >
+      {typeof children === 'function' ? children({ isVisible, isScrolled, hidden, atTop }) : children}
+    </motion.header>
+  );
 }
 
 export type HideOnScrollProps = {
-  bar: React.ReactNode;
+  bar?: React.ReactNode;
   children: React.ReactNode;
   barHeight?: number;
   hideAfter?: number;
@@ -202,7 +290,6 @@ export function HideOnScroll({
       </motion.div>
       <div
         ref={ref}
-
         tabIndex={0}
         role="region"
         aria-label={label}
@@ -223,5 +310,7 @@ export function HideOnScroll({
     </div>
   );
 }
+
+HideOnScroll.Header = HideOnScrollHeader;
 
 export default HideOnScroll;

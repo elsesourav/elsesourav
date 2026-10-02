@@ -932,7 +932,7 @@ The `@elsesourav/ui/interior` collection contains **54 physics-based animated UI
 | **`ExpandingSearch`**   | `placeholder, onSearch`           | Smooth horizontal width expansion on click           | Minimalist navigation headers               |
 | **`FilterGrid`**        | `items, activeCategory`           | Layout reflow with FLIP animation                    | Portfolio filters, project showcases        |
 | **`FloatingLabel`**     | `label, value, error`             | Floating micro-label transition upon input focus     | Material/modern login and signup forms      |
-| **`HideOnScroll`**      | `children, threshold`             | Smooth vertical transform header hide/reveal         | Sticky navigation bars, mobile toolbars     |
+| **`HideOnScroll`**      | `children, bar, useWindow`        | Smooth vertical transform header hide/reveal (with `useHideOnScroll` hook) | Sticky navigation bars, mobile toolbars     |
 | **`HoldToConfirm`**     | `onConfirm, duration, variant`    | Progressive stroke fill with release decay           | Irreversible deletions, critical actions    |
 | **`IconMorph`**         | `iconA, iconB, active`            | Smooth SVG path crossfade                            | Play/Pause, Hamburger/Close buttons         |
 | **`InlineValidation`**  | `status, message`                 | Slide-down error pill with red accent pulse          | Real-time email and username checkers       |

@@ -21,7 +21,7 @@ import {
 import { UserAvatarMenu } from '@/features/user/components/UserAvatarMenu';
 import { SearchButton } from '@/components/search/SearchButton';
 import { ThemePopup } from '@/components/theme/ThemePopup';
-import { useHeaderHeadroom } from '@/hooks/useHeaderHeadroom';
+import { useHideOnScroll } from '@elsesourav/ui/interior';
 import type { AuthenticatedUser } from '@elsesourav/auth';
 
 export interface PublicHeaderProps {
@@ -34,11 +34,12 @@ export function PublicHeader({ user }: PublicHeaderProps) {
   const mobileMenuRef = React.useRef<HTMLDivElement>(null);
   const toggleButtonRef = React.useRef<HTMLButtonElement>(null);
 
-  const { isVisible, isScrolled, headerRef } = useHeaderHeadroom({
-    threshold: 12,
-    upThreshold: 5,
-    topOffset: 64,
-    isLocked: mobileMenuOpen,
+  const { isVisible, isScrolled, ref: headerRef } = useHideOnScroll<HTMLElement>({
+    hideAfter: 14,
+    revealAfter: 6,
+    topGuard: 64,
+    pinned: mobileMenuOpen,
+    useWindow: true,
   });
 
   const [isMobileMenuClosing, setIsMobileMenuClosing] = React.useState(false);
