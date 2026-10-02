@@ -3,7 +3,14 @@
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Input, Button } from '@elsesourav/ui';
+import { Dropdown } from '@elsesourav/ui/interior';
 import { Search, X, SlidersHorizontal } from 'lucide-react';
+
+const SORT_ITEMS = [
+  { value: 'sortOrder', label: 'Featured & Ranked' },
+  { value: 'newest', label: 'Newest Releases' },
+  { value: 'name', label: 'Name (A-Z)' },
+];
 
 const CATEGORIES = [
   { slug: '', label: 'All Applications' },
@@ -84,17 +91,13 @@ export function AppFilters() {
         </form>
 
         <div className="flex items-center gap-2">
-          <SlidersHorizontal className="w-3.5 h-3.5 text-zinc-500 hidden sm:block" />
-          <select
+          <Dropdown
+            items={SORT_ITEMS}
             value={currentSort}
-            onChange={(e) => updateFilters({ sort: e.target.value })}
-            className="bg-zinc-900/80 border border-zinc-800 text-zinc-300 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-indigo-500"
-            aria-label="Sort applications"
-          >
-            <option value="sortOrder">Featured & Ranked</option>
-            <option value="newest">Newest Releases</option>
-            <option value="name">Name (A-Z)</option>
-          </select>
+            onChange={(val) => updateFilters({ sort: val })}
+            icon={<SlidersHorizontal className="w-3.5 h-3.5 text-zinc-500 hidden sm:block" />}
+            className="w-full sm:w-auto"
+          />
         </div>
       </div>
 

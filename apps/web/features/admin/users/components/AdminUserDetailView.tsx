@@ -1,27 +1,31 @@
 'use client';
 
-import * as React from 'react';
+import type { AdminUserDetail, UserRole } from '@elsesourav/types';
+import { Badge, Button, Card, UserAvatar } from '@elsesourav/ui';
+import { Dropdown } from '@elsesourav/ui/interior';
+import {
+  AlertCircle,
+  AlertTriangle,
+  ArrowLeft,
+  BookMarked,
+  CheckCircle2,
+  ExternalLink,
+  LifeBuoy,
+  Loader2,
+  Shield,
+  Trash2,
+  UserCheck,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Card, Badge, Button, UserAvatar } from '@elsesourav/ui';
-import type { AdminUserDetail, UserRole } from '@elsesourav/types';
-import { adminUpdateUserRoleAction, adminDeleteUserAction } from '../actions/admin-users-actions';
-import {
-  Users,
-  ArrowLeft,
-  Shield,
-  LifeBuoy,
-  BookMarked,
-  Calendar,
-  Mail,
-  UserCheck,
-  AlertTriangle,
-  Trash2,
-  CheckCircle2,
-  AlertCircle,
-  Loader2,
-  ExternalLink,
-} from 'lucide-react';
+import * as React from 'react';
+import { adminDeleteUserAction, adminUpdateUserRoleAction } from '../actions/admin-users-actions';
+
+const ROLE_OPTIONS = [
+  { value: 'USER', label: 'USER (Standard Access)' },
+  { value: 'STAFF', label: 'STAFF (Support & Moderation)' },
+  { value: 'ADMIN', label: 'ADMIN (Full Super Admin)' },
+];
 
 interface AdminUserDetailViewProps {
   user: AdminUserDetail;
@@ -239,15 +243,12 @@ export function AdminUserDetailView({ user: initialUser }: AdminUserDetailViewPr
             </p>
 
             <form onSubmit={handleRoleChange} className="flex items-center gap-3">
-              <select
+              <Dropdown
+                items={ROLE_OPTIONS}
                 value={selectedRole}
-                onChange={(e) => setSelectedRole(e.target.value as UserRole)}
-                className="bg-zinc-950 border border-zinc-800 text-xs rounded-xl px-3.5 py-2 text-zinc-200 focus:border-indigo-500 focus:outline-none uppercase font-mono"
-              >
-                <option value="USER">USER (Standard Access)</option>
-                <option value="STAFF">STAFF (Support & Moderation)</option>
-                <option value="ADMIN">ADMIN (Full Super Admin)</option>
-              </select>
+                onChange={(val) => setSelectedRole(val as UserRole)}
+                className="w-full sm:w-64"
+              />
 
               <Button
                 type="submit"

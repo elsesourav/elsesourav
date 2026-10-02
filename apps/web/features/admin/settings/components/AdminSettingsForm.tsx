@@ -17,6 +17,7 @@ import type {
   SiteLinkPlatform,
 } from '@elsesourav/types';
 import { Alert, Button, Card, FormField, Input, Textarea } from '@elsesourav/ui';
+import { Dropdown } from '@elsesourav/ui/interior';
 import {
   parseContactMethods,
   parseFooterLinks,
@@ -82,6 +83,21 @@ const CONTACT_TYPE_OPTIONS: Array<{
   { value: 'phone', label: 'Phone / WhatsApp', icon: Phone },
   { value: 'other', label: 'Other Contact', icon: ExternalLink },
 ];
+
+const BOOLEAN_ENABLED_OPTIONS = [
+  { value: 'true', label: 'Enabled (Visible)' },
+  { value: 'false', label: 'Disabled (Hidden)' },
+];
+
+const PLATFORM_DROPDOWN_ITEMS = PLATFORM_OPTIONS.map((o) => ({
+  value: o.value,
+  label: o.label,
+}));
+
+const CONTACT_TYPE_DROPDOWN_ITEMS = CONTACT_TYPE_OPTIONS.map((o) => ({
+  value: o.value,
+  label: o.label,
+}));
 
 type SettingsTab =
   'identity' | 'footer' | 'homepage' | 'profile' | 'creator_narrative' | 'links' | 'contact';
@@ -565,28 +581,24 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
               <label className="text-[11px] font-semibold text-zinc-300 block mb-1.5">
                 Show Socials in Footer
               </label>
-              <select
+              <Dropdown
+                items={BOOLEAN_ENABLED_OPTIONS}
                 value={settings['footer_show_socials'] !== 'false' ? 'true' : 'false'}
-                onChange={(e) => handleChange('footer_show_socials', e.target.value)}
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200"
-              >
-                <option value="true">Enabled (Visible)</option>
-                <option value="false">Disabled (Hidden)</option>
-              </select>
+                onChange={(val) => handleChange('footer_show_socials', val)}
+                className="w-full"
+              />
             </div>
 
             <div>
               <label className="text-[11px] font-semibold text-zinc-300 block mb-1.5">
                 Back to Top Button
               </label>
-              <select
+              <Dropdown
+                items={BOOLEAN_ENABLED_OPTIONS}
                 value={settings['footer_show_back_to_top'] !== 'false' ? 'true' : 'false'}
-                onChange={(e) => handleChange('footer_show_back_to_top', e.target.value)}
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200"
-              >
-                <option value="true">Enabled (Visible)</option>
-                <option value="false">Disabled (Hidden)</option>
-              </select>
+                onChange={(val) => handleChange('footer_show_back_to_top', val)}
+                className="w-full"
+              />
             </div>
           </div>
 
@@ -1039,10 +1051,11 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
                   <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
                     Platform
                   </label>
-                  <select
+                  <Dropdown
+                    items={PLATFORM_DROPDOWN_ITEMS}
                     value={newLink.platform || 'github'}
-                    onChange={(e) => {
-                      const plat = e.target.value as SiteLinkPlatform;
+                    onChange={(val) => {
+                      const plat = val as SiteLinkPlatform;
                       const opt = PLATFORM_OPTIONS.find((o) => o.value === plat);
                       setNewLink((prev) => ({
                         ...prev,
@@ -1050,14 +1063,8 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
                         label: prev.label || opt?.defaultLabel || '',
                       }));
                     }}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200"
-                  >
-                    {PLATFORM_OPTIONS.map((o) => (
-                      <option key={o.value} value={o.value}>
-                        {o.label}
-                      </option>
-                    ))}
-                  </select>
+                    className="w-full"
+                  />
                 </div>
 
                 <div>
@@ -1294,22 +1301,17 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
                   <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
                     Contact Type
                   </label>
-                  <select
+                  <Dropdown
+                    items={CONTACT_TYPE_DROPDOWN_ITEMS}
                     value={newContact.type || 'email'}
-                    onChange={(e) =>
+                    onChange={(val) =>
                       setNewContact((prev) => ({
                         ...prev,
-                        type: e.target.value as SiteContactMethodType,
+                        type: val as SiteContactMethodType,
                       }))
                     }
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200"
-                  >
-                    {CONTACT_TYPE_OPTIONS.map((o) => (
-                      <option key={o.value} value={o.value}>
-                        {o.label}
-                      </option>
-                    ))}
-                  </select>
+                    className="w-full"
+                  />
                 </div>
 
                 <div>

@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription, Button, Input, Badge } from '@elsesourav/ui';
+import { Dropdown } from '@elsesourav/ui/interior';
 import type { App, CategorySummary, TagSummary } from '@elsesourav/types';
 import {
   createAppAction,
@@ -54,6 +55,20 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
   const [categoryId, setCategoryId] = React.useState(app?.categoryId || categories[0]?.id || '');
   const [status, setStatus] = React.useState<'draft' | 'published' | 'archived'>(
     (app?.status as 'draft' | 'published' | 'archived') || 'draft'
+  );
+
+  const categoryItems = React.useMemo(
+    () => categories.map((c) => ({ value: c.id, label: c.name })),
+    [categories]
+  );
+
+  const statusItems = React.useMemo(
+    () => [
+      { value: 'draft', label: 'DRAFT' },
+      { value: 'published', label: 'PUBLISHED' },
+      { value: 'archived', label: 'ARCHIVED' },
+    ],
+    []
   );
   const [isFeatured, setIsFeatured] = React.useState(app?.isFeatured ?? false);
   const [isPinned, setIsPinned] = React.useState(app?.isPinned ?? false);
@@ -406,32 +421,23 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
               <label className="block text-xs font-semibold text-zinc-300">
                 Primary Category <span className="text-rose-400">*</span>
               </label>
-              <select
+              <Dropdown
+                items={categoryItems}
                 value={categoryId}
-                onChange={(e) => setCategoryId(e.target.value)}
-                required
-                className="w-full bg-zinc-950/60 border border-zinc-800 text-xs rounded-xl px-3 py-2.5 text-zinc-100 focus:border-indigo-500 focus:outline-none"
-              >
-                {categories.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
+                onChange={(val) => setCategoryId(val)}
+                className="w-full"
+              />
             </div>
 
             {/* Status */}
             <div className="space-y-1.5">
               <label className="block text-xs font-semibold text-zinc-300">Publish Status</label>
-              <select
+              <Dropdown
+                items={statusItems}
                 value={status}
-                onChange={(e) => setStatus(e.target.value as 'draft' | 'published' | 'archived')}
-                className="w-full bg-zinc-950/60 border border-zinc-800 text-xs rounded-xl px-3 py-2.5 text-zinc-100 focus:border-indigo-500 focus:outline-none uppercase font-mono"
-              >
-                <option value="draft">DRAFT</option>
-                <option value="published">PUBLISHED</option>
-                <option value="archived">ARCHIVED</option>
-              </select>
+                onChange={(val) => setStatus(val as 'draft' | 'published' | 'archived')}
+                className="w-full"
+              />
             </div>
 
             {/* Sort Order */}

@@ -8,7 +8,6 @@ import {
   Separator,
   Input,
   Textarea,
-  Select,
   Checkbox,
   Switch,
   FormField,
@@ -44,7 +43,7 @@ import {
   TableCell,
   StatCard,
 } from '@elsesourav/ui';
-import { MorphSlider } from '@elsesourav/ui/interior';
+import { MorphSlider, Dropdown } from '@elsesourav/ui/interior';
 import { Sparkles, Terminal, Activity, Layers } from 'lucide-react';
 
 export function DesignSystemClient() {
@@ -179,12 +178,14 @@ export function DesignSystemClient() {
             </FormField>
 
             <FormField label="Role / Category" required>
-              <Select
-                options={[
+              <Dropdown
+                items={[
                   { value: 'engineer', label: 'Systems Engineer' },
                   { value: 'designer', label: 'UI/UX Designer' },
                   { value: 'student', label: 'Student' },
                 ]}
+                defaultValue="engineer"
+                className="w-full"
               />
             </FormField>
 

@@ -3,6 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Card, Badge, Input } from '@elsesourav/ui';
+import { Dropdown } from '@elsesourav/ui/interior';
 import type { SupportTicketListItem, SupportTicketStatus } from '@elsesourav/types';
 import {
   LifeBuoy,
@@ -23,6 +24,23 @@ export function AdminSupportTable({ initialTickets }: AdminSupportTableProps) {
   const [search, setSearch] = React.useState('');
   const [selectedStatus, setSelectedStatus] = React.useState<string>('all');
   const [selectedPriority, setSelectedPriority] = React.useState<string>('all');
+
+  const statusItems = React.useMemo(() => [
+    { value: 'all', label: 'All Statuses' },
+    { value: 'open', label: 'Open' },
+    { value: 'in_progress', label: 'In Progress' },
+    { value: 'waiting_for_user', label: 'Waiting for User' },
+    { value: 'resolved', label: 'Resolved' },
+    { value: 'closed', label: 'Closed' },
+  ], []);
+
+  const priorityItems = React.useMemo(() => [
+    { value: 'all', label: 'All Priorities' },
+    { value: 'urgent', label: 'Urgent' },
+    { value: 'high', label: 'High' },
+    { value: 'medium', label: 'Medium' },
+    { value: 'low', label: 'Low' },
+  ], []);
 
   const filteredTickets = React.useMemo(() => {
     return tickets.filter((ticket) => {
@@ -71,31 +89,20 @@ export function AdminSupportTable({ initialTickets }: AdminSupportTableProps) {
           </div>
 
           {/* Status Dropdown */}
-          <select
+          <Dropdown
+            items={statusItems}
             value={selectedStatus}
-            onChange={(e) => setSelectedStatus(e.target.value)}
-            className="bg-zinc-900/60 border border-zinc-800 text-xs rounded-xl px-3 py-2 text-zinc-300 focus:outline-none focus:border-indigo-500"
-          >
-            <option value="all">All Statuses</option>
-            <option value="open">Open</option>
-            <option value="in_progress">In Progress</option>
-            <option value="waiting_for_user">Waiting for User</option>
-            <option value="resolved">Resolved</option>
-            <option value="closed">Closed</option>
-          </select>
+            onChange={(val) => setSelectedStatus(val)}
+            className="w-full sm:w-40"
+          />
 
           {/* Priority Dropdown */}
-          <select
+          <Dropdown
+            items={priorityItems}
             value={selectedPriority}
-            onChange={(e) => setSelectedPriority(e.target.value)}
-            className="bg-zinc-900/60 border border-zinc-800 text-xs rounded-xl px-3 py-2 text-zinc-300 focus:outline-none focus:border-indigo-500"
-          >
-            <option value="all">All Priorities</option>
-            <option value="urgent">Urgent</option>
-            <option value="high">High</option>
-            <option value="medium">Medium</option>
-            <option value="low">Low</option>
-          </select>
+            onChange={(val) => setSelectedPriority(val)}
+            className="w-full sm:w-40"
+          />
         </div>
       </div>
 

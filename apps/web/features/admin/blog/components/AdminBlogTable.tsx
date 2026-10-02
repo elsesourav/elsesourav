@@ -3,6 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Card, Badge, Button, Input } from '@elsesourav/ui';
+import { Dropdown } from '@elsesourav/ui/interior';
 import type { BlogPost, BlogCategory } from '@elsesourav/types';
 import { archiveBlogPostAction, deleteBlogPostAction } from '../actions/admin-blog-actions';
 import {
@@ -29,6 +30,18 @@ export function AdminBlogTable({ initialPosts, categories }: AdminBlogTableProps
   const [selectedCategory, setSelectedCategory] = React.useState<string>('all');
   const [selectedStatus, setSelectedStatus] = React.useState<string>('all');
   const [isDeletingId, setIsDeletingId] = React.useState<string | null>(null);
+
+  const categoryItems = React.useMemo(() => [
+    { value: 'all', label: 'All Categories' },
+    ...categories.map((c) => ({ value: c.slug, label: c.name })),
+  ], [categories]);
+
+  const statusItems = React.useMemo(() => [
+    { value: 'all', label: 'All Statuses' },
+    { value: 'published', label: 'Published' },
+    { value: 'draft', label: 'Draft' },
+    { value: 'archived', label: 'Archived' },
+  ], []);
 
   const filteredPosts = React.useMemo(() => {
     return posts.filter((post) => {
@@ -99,30 +112,20 @@ export function AdminBlogTable({ initialPosts, categories }: AdminBlogTableProps
           </div>
 
           {/* Category Dropdown */}
-          <select
+          <Dropdown
+            items={categoryItems}
             value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="bg-zinc-900/60 border border-zinc-800 text-xs rounded-xl px-3 py-2 text-zinc-300 focus:outline-none focus:border-indigo-500"
-          >
-            <option value="all">All Categories</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.slug}>
-                {c.name}
-              </option>
-            ))}
-          </select>
+            onChange={(val) => setSelectedCategory(val)}
+            className="w-full sm:w-44"
+          />
 
           {/* Status Dropdown */}
-          <select
+          <Dropdown
+            items={statusItems}
             value={selectedStatus}
-            onChange={(e) => setSelectedStatus(e.target.value)}
-            className="bg-zinc-900/60 border border-zinc-800 text-xs rounded-xl px-3 py-2 text-zinc-300 focus:outline-none focus:border-indigo-500"
-          >
-            <option value="all">All Statuses</option>
-            <option value="published">Published</option>
-            <option value="draft">Draft</option>
-            <option value="archived">Archived</option>
-          </select>
+            onChange={(val) => setSelectedStatus(val)}
+            className="w-full sm:w-36"
+          />
         </div>
 
         {/* Create Blog Action */}

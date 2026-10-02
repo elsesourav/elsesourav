@@ -3,6 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Card, Badge, Input, Button, UserAvatar } from '@elsesourav/ui';
+import { Dropdown } from '@elsesourav/ui/interior';
 import type { AdminUserListItem, UserRole } from '@elsesourav/types';
 import {
   Users,
@@ -26,6 +27,19 @@ export function AdminUsersTable({ initialUsers, total, totalPages }: AdminUsersT
   const [search, setSearch] = React.useState('');
   const [selectedRole, setSelectedRole] = React.useState<string>('all');
   const [selectedStatus, setSelectedStatus] = React.useState<string>('all');
+
+  const roleItems = React.useMemo(() => [
+    { value: 'all', label: 'All Roles' },
+    { value: 'USER', label: 'User' },
+    { value: 'STAFF', label: 'Staff' },
+    { value: 'ADMIN', label: 'Admin' },
+  ], []);
+
+  const statusItems = React.useMemo(() => [
+    { value: 'all', label: 'All Statuses' },
+    { value: 'active', label: 'Active' },
+    { value: 'deleted', label: 'Deleted' },
+  ], []);
 
   const filteredUsers = React.useMemo(() => {
     return users.filter((user) => {
@@ -102,27 +116,20 @@ export function AdminUsersTable({ initialUsers, total, totalPages }: AdminUsersT
           </div>
 
           {/* Role Dropdown */}
-          <select
+          <Dropdown
+            items={roleItems}
             value={selectedRole}
-            onChange={(e) => setSelectedRole(e.target.value)}
-            className="bg-zinc-900/60 border border-zinc-800 text-xs rounded-xl px-3 py-2 text-zinc-300 focus:outline-none focus:border-indigo-500"
-          >
-            <option value="all">All Roles</option>
-            <option value="USER">User</option>
-            <option value="STAFF">Staff</option>
-            <option value="ADMIN">Admin</option>
-          </select>
+            onChange={(val) => setSelectedRole(val)}
+            className="w-full sm:w-36"
+          />
 
           {/* Status Dropdown */}
-          <select
+          <Dropdown
+            items={statusItems}
             value={selectedStatus}
-            onChange={(e) => setSelectedStatus(e.target.value)}
-            className="bg-zinc-900/60 border border-zinc-800 text-xs rounded-xl px-3 py-2 text-zinc-300 focus:outline-none focus:border-indigo-500"
-          >
-            <option value="all">All Statuses</option>
-            <option value="active">Active</option>
-            <option value="deleted">Deleted</option>
-          </select>
+            onChange={(val) => setSelectedStatus(val)}
+            className="w-full sm:w-36"
+          />
         </div>
 
         {/* Total Users Count */}

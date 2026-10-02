@@ -3,6 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Card, Badge, Button, Input } from '@elsesourav/ui';
+import { Dropdown } from '@elsesourav/ui/interior';
 import type { HelpArticle, HelpCategoryWithArticles } from '@elsesourav/types';
 import { archiveHelpArticleAction, deleteHelpArticleAction } from '../actions/admin-help-actions';
 import {
@@ -27,6 +28,11 @@ export function AdminHelpTable({ initialArticles, categories }: AdminHelpTablePr
   const [search, setSearch] = React.useState('');
   const [selectedCategory, setSelectedCategory] = React.useState<string>('all');
   const [isDeletingId, setIsDeletingId] = React.useState<string | null>(null);
+
+  const categoryItems = React.useMemo(() => [
+    { value: 'all', label: 'All Categories' },
+    ...categories.map((c) => ({ value: c.id, label: c.name })),
+  ], [categories]);
 
   const filteredArticles = React.useMemo(() => {
     return articles.filter((article) => {
@@ -92,18 +98,12 @@ export function AdminHelpTable({ initialArticles, categories }: AdminHelpTablePr
           </div>
 
           {/* Category Dropdown */}
-          <select
+          <Dropdown
+            items={categoryItems}
             value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="bg-zinc-900/60 border border-zinc-800 text-xs rounded-xl px-3 py-2 text-zinc-300 focus:outline-none focus:border-indigo-500"
-          >
-            <option value="all">All Categories</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
+            onChange={(val) => setSelectedCategory(val)}
+            className="w-full sm:w-44"
+          />
         </div>
 
         {/* Create Action */}

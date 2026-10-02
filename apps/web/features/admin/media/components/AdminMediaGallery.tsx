@@ -8,6 +8,7 @@ import type {
   MediaType,
 } from '@elsesourav/types';
 import { Badge, Button, Card, Input } from '@elsesourav/ui';
+import { Dropdown } from '@elsesourav/ui/interior';
 import {
   AlertCircle,
   AlertTriangle,
@@ -30,6 +31,39 @@ import {
 } from 'lucide-react';
 import * as React from 'react';
 import { adminDeleteMediaAction, adminUploadImageFileAction } from '../actions/admin-media-actions';
+
+const DOMAIN_ITEMS = [
+  { value: 'all', label: 'All Domains' },
+  { value: 'apps', label: 'Apps' },
+  { value: 'blog', label: 'Blog' },
+  { value: 'help', label: 'Help' },
+  { value: 'users', label: 'Users' },
+  { value: 'support', label: 'Support' },
+  { value: 'general', label: 'General' },
+];
+
+const STATUS_ITEMS = [
+  { value: 'all', label: 'All Statuses' },
+  { value: 'referenced', label: 'Referenced Only' },
+  { value: 'orphan', label: 'Unreferenced (Orphans)' },
+];
+
+const FOLDER_ITEMS = [
+  { value: 'general', label: 'general (General application media)' },
+  { value: 'apps', label: 'apps (App icons & banners)' },
+  { value: 'blog', label: 'blog (Devlog post covers)' },
+  { value: 'help', label: 'help (Knowledge base tutorial diagrams)' },
+  { value: 'users', label: 'users (User profile avatars)' },
+];
+
+const PURPOSE_ITEMS = [
+  { value: 'generic', label: 'Generic Asset' },
+  { value: 'app_icon', label: 'App Icon' },
+  { value: 'app_screenshot', label: 'App Screenshot / Banner' },
+  { value: 'blog_cover', label: 'Blog Cover' },
+  { value: 'help_image', label: 'Help Guide Illustration' },
+  { value: 'avatar', label: 'User Avatar' },
+];
 
 interface AdminMediaGalleryProps {
   initialData: AdminMediaListResult;
@@ -254,30 +288,20 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
           </div>
 
           {/* Domain Dropdown */}
-          <select
+          <Dropdown
+            items={DOMAIN_ITEMS}
             value={selectedDomain}
-            onChange={(e) => setSelectedDomain(e.target.value)}
-            className="bg-zinc-900/60 border border-zinc-800 text-xs rounded-xl px-3 py-2 text-zinc-300 focus:outline-none focus:border-indigo-500"
-          >
-            <option value="all">All Domains</option>
-            <option value="apps">Apps</option>
-            <option value="blog">Blog</option>
-            <option value="help">Help</option>
-            <option value="users">Users</option>
-            <option value="support">Support</option>
-            <option value="general">General</option>
-          </select>
+            onChange={(val) => setSelectedDomain(val)}
+            className="w-full sm:w-40"
+          />
 
           {/* Status Dropdown */}
-          <select
+          <Dropdown
+            items={STATUS_ITEMS}
             value={selectedStatus}
-            onChange={(e) => setSelectedStatus(e.target.value)}
-            className="bg-zinc-900/60 border border-zinc-800 text-xs rounded-xl px-3 py-2 text-zinc-300 focus:outline-none focus:border-indigo-500"
-          >
-            <option value="all">All Statuses</option>
-            <option value="referenced">Referenced Only</option>
-            <option value="orphan">Unreferenced (Orphans)</option>
-          </select>
+            onChange={(val) => setSelectedStatus(val)}
+            className="w-full sm:w-44"
+          />
         </div>
 
         {/* Upload Button */}
@@ -554,33 +578,22 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
             <div className="space-y-4 text-xs">
               <div className="space-y-1">
                 <label className="text-zinc-400 block font-medium">Target Storage Folder</label>
-                <select
+                <Dropdown
+                  items={FOLDER_ITEMS}
                   value={uploadFolder}
-                  onChange={(e) => setUploadFolder(e.target.value as MediaFolder)}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-zinc-200 focus:outline-none focus:border-indigo-500"
-                >
-                  <option value="general">general (General application media)</option>
-                  <option value="apps">apps (App icons & banners)</option>
-                  <option value="blog">blog (Devlog post covers)</option>
-                  <option value="help">help (Knowledge base tutorial diagrams)</option>
-                  <option value="users">users (User profile avatars)</option>
-                </select>
+                  onChange={(val) => setUploadFolder(val as MediaFolder)}
+                  className="w-full"
+                />
               </div>
 
               <div className="space-y-1">
                 <label className="text-zinc-400 block font-medium">Media Purpose</label>
-                <select
+                <Dropdown
+                  items={PURPOSE_ITEMS}
                   value={uploadType}
-                  onChange={(e) => setUploadType(e.target.value as MediaType)}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-zinc-200 focus:outline-none focus:border-indigo-500"
-                >
-                  <option value="generic">Generic Asset</option>
-                  <option value="app_icon">App Icon</option>
-                  <option value="app_screenshot">App Screenshot / Banner</option>
-                  <option value="blog_cover">Blog Cover</option>
-                  <option value="help_image">Help Guide Illustration</option>
-                  <option value="avatar">User Avatar</option>
-                </select>
+                  onChange={(val) => setUploadType(val as MediaType)}
+                  className="w-full"
+                />
               </div>
 
               <div className="space-y-2 pt-2">

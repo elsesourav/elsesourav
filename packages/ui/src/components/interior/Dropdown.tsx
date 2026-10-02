@@ -265,6 +265,10 @@ export type DropdownProps = {
   disabled?: boolean;
   emptyLabel?: string;
   className?: string;
+  triggerClassName?: string;
+  id?: string;
+  error?: string;
+  icon?: React.ReactNode;
 };
 
 export function Dropdown({
@@ -272,11 +276,15 @@ export function Dropdown({
   value,
   defaultValue,
   onChange,
-  label = 'Options',
+  label,
   placeholder = 'Select an option',
   disabled = false,
   emptyLabel = 'Nothing to choose',
   className = '',
+  triggerClassName = '',
+  id,
+  error,
+  icon,
 }: DropdownProps) {
   const reduced = useReducedMotion();
   const {
@@ -291,29 +299,36 @@ export function Dropdown({
   } = useDropdown({ items, value, defaultValue, onChange, disabled });
 
   const cell = reduced ? NONE : CELL;
+  const isFullWidth = className.includes('w-full');
+  const displayLabel = selectedItem ? selectedItem.label : placeholder || label || 'Select an option';
 
   return (
     <div
       data-interior="dropdown"
       ref={rootRef}
-      className={`relative inline-block text-left ${className}`}
+      id={id}
+      className={`relative inline-block text-left ${isFullWidth ? 'w-full' : ''} ${className}`}
     >
       <button
         {...triggerProps}
-        className={`flex h-9 select-none items-center gap-2 whitespace-nowrap rounded-[9px] border border-[var(--interior-border)] bg-white px-3 text-[13px] font-medium text-[var(--interior-fg)] outline-none transition-[box-shadow,border-color] duration-150 disabled:opacity-50 dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:text-[var(--interior-fg)] ${
+        className={`flex h-10 min-h-[40px] select-none items-center justify-between gap-2 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--surface-subtle))] px-3.5 text-xs sm:text-sm font-medium text-[hsl(var(--foreground))] outline-none transition-all duration-150 disabled:cursor-not-allowed disabled:opacity-50 ${
+          isFullWidth ? 'w-full' : ''
+        } ${
+          error ? 'border-rose-500 focus-visible:ring-rose-500' : ''
+        } ${
           open
-            ? 'shadow-[inset_0_1px_2px_rgba(28,25,23,0.09)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]'
-            : 'shadow-[0_1px_2px_rgba(28,25,23,0.06),0_4px_10px_-8px_rgba(28,25,23,0.45)] hover:border-[var(--interior-border-strong)] hover:shadow-[0_1px_2px_rgba(28,25,23,0.06),0_8px_18px_-12px_rgba(28,25,23,0.5)] focus-visible:border-stone-400 focus-visible:shadow-[0_1px_2px_rgba(28,25,23,0.08),0_10px_22px_-12px_rgba(28,25,23,0.55)] dark:shadow-[0_1px_6px_rgba(0,0,0,0.45)] dark:hover:border-white/20 dark:hover:shadow-[0_2px_10px_rgba(0,0,0,0.55)] dark:focus-visible:border-white/30 dark:focus-visible:shadow-[0_2px_12px_rgba(0,0,0,0.6)]'
-        }`}
+            ? 'border-indigo-500/80 shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)] ring-2 ring-indigo-500/20'
+            : 'hover:border-[hsl(var(--border-hover,var(--border)))] hover:bg-[hsl(var(--surface-elevated))]'
+        } ${triggerClassName}`}
       >
-        <span className="sr-only">
-          {label}: {selectedItem ? selectedItem.label : placeholder}
+        <span className="flex items-center gap-2 truncate">
+          {icon}
+          <span className="truncate">{displayLabel}</span>
         </span>
-        <span aria-hidden>{label}</span>
         <motion.svg
           aria-hidden
           viewBox="0 0 12 12"
-          className="size-3 shrink-0 text-[var(--interior-fg-muted)]"
+          className="size-3 shrink-0 text-[hsl(var(--muted-foreground))]"
           initial={false}
           animate={{ rotate: open ? 180 : 0 }}
           transition={reduced ? NONE : NUDGE}
@@ -328,29 +343,36 @@ export function Dropdown({
           />
         </motion.svg>
       </button>
+      {error && (
+        <p role="alert" className="mt-1.5 text-xs text-rose-400 font-medium">
+          {error}
+        </p>
+      )}
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.94, y: -8 }}
+            initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: -6 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{
               opacity: 0,
               scale: 0.97,
-              y: -6,
+              y: -4,
               transition: reduced ? NONE : { duration: 0.12, ease: EXIT },
             }}
             transition={reduced ? NONE : { ...OPEN, opacity: { duration: 0.12, ease: EASE } }}
             style={{ transformOrigin: 'top left' }}
-            className="absolute left-0 top-[calc(100%+6px)] z-50 min-w-[224px] whitespace-nowrap rounded-[11px] border border-[var(--interior-border)] bg-white p-[5px] shadow-[0_1px_2px_rgba(28,25,23,0.06),0_16px_36px_-18px_rgba(28,25,23,0.5)] dark:border-[var(--interior-border)] dark:bg-[var(--interior-bg-elevated)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.6)]"
+            className={`absolute left-0 top-[calc(100%+6px)] z-50 min-w-[200px] ${
+              isFullWidth ? 'w-full' : ''
+            } rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--surface-elevated))] p-1.5 shadow-xl backdrop-blur-xl`}
           >
             <ul
               {...listProps}
-              aria-label={label}
-              className="relative max-h-[216px] overflow-y-auto outline-none [scrollbar-gutter:stable]"
+              aria-label={label || placeholder}
+              className="relative max-h-[220px] overflow-y-auto outline-none [scrollbar-gutter:stable]"
             >
               <motion.span
                 aria-hidden
-                className="pointer-events-none absolute inset-x-0 top-0 h-8 rounded-[7px] bg-[var(--interior-bg-subtle)] dark:bg-white/10"
+                className="pointer-events-none absolute inset-x-0 top-0 h-8 rounded-[7px] bg-[hsl(var(--surface-hover,var(--accent)))] dark:bg-white/10"
                 initial={false}
                 animate={{
                   y: activeIndex < 0 ? 0 : activeIndex * ROW_H,

@@ -3,8 +3,25 @@
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Input, Button } from '@elsesourav/ui';
+import { Dropdown } from '@elsesourav/ui/interior';
 import type { CategorySummary, TagSummary, AppPlatform } from '@elsesourav/types';
 import { Search, X, SlidersHorizontal, Layers, Laptop } from 'lucide-react';
+
+const PLATFORM_ITEMS = [
+  { value: '', label: 'All Platforms' },
+  { value: 'web', label: 'Web Browser' },
+  { value: 'macos', label: 'macOS' },
+  { value: 'linux', label: 'Linux' },
+  { value: 'windows', label: 'Windows' },
+  { value: 'chrome', label: 'Chrome Extension' },
+];
+
+const SORT_ITEMS = [
+  { value: 'sortOrder', label: 'Featured & Ranked' },
+  { value: 'newest', label: 'Newest Releases' },
+  { value: 'name', label: 'Alphabetical (A-Z)' },
+  { value: 'popularity', label: 'Most Popular' },
+];
 
 interface AppDiscoveryBarProps {
   categories?: readonly CategorySummary[];
@@ -95,38 +112,26 @@ export function AppDiscoveryBar({
         </form>
 
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
-          {/* Platform Filter Select */}
-          <div className="flex items-center gap-1.5 flex-1 min-w-[130px] sm:flex-initial">
-            <Laptop className="w-3.5 h-3.5 text-[hsl(var(--muted-foreground))] hidden md:block" />
-            <select
+          {/* Platform Filter Dropdown */}
+          <div className="flex items-center gap-1.5 flex-1 min-w-[140px] sm:flex-initial">
+            <Dropdown
+              items={PLATFORM_ITEMS}
               value={currentPlatform}
-              onChange={(e) => updateFilters({ platform: e.target.value || null })}
-              className="w-full sm:w-auto bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] text-[hsl(var(--foreground))] text-xs rounded-xl px-2.5 sm:px-3 py-2 min-h-[42px] focus:outline-none focus:border-indigo-500"
-              aria-label="Filter by platform"
-            >
-              <option value="">All Platforms</option>
-              <option value="web">Web Browser</option>
-              <option value="macos">macOS</option>
-              <option value="linux">Linux</option>
-              <option value="windows">Windows</option>
-              <option value="chrome">Chrome Extension</option>
-            </select>
+              onChange={(val) => updateFilters({ platform: val || null })}
+              icon={<Laptop className="w-3.5 h-3.5 text-[hsl(var(--muted-foreground))] hidden md:block" />}
+              className="w-full sm:w-auto"
+            />
           </div>
 
-          {/* Sort Select */}
-          <div className="flex items-center gap-1.5 flex-1 min-w-[130px] sm:flex-initial">
-            <SlidersHorizontal className="w-3.5 h-3.5 text-[hsl(var(--muted-foreground))] hidden md:block" />
-            <select
+          {/* Sort Dropdown */}
+          <div className="flex items-center gap-1.5 flex-1 min-w-[150px] sm:flex-initial">
+            <Dropdown
+              items={SORT_ITEMS}
               value={currentSort}
-              onChange={(e) => updateFilters({ sort: e.target.value })}
-              className="w-full sm:w-auto bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] text-[hsl(var(--foreground))] text-xs rounded-xl px-2.5 sm:px-3 py-2 min-h-[42px] focus:outline-none focus:border-indigo-500"
-              aria-label="Sort applications"
-            >
-              <option value="sortOrder">Featured & Ranked</option>
-              <option value="newest">Newest Releases</option>
-              <option value="name">Alphabetical (A-Z)</option>
-              <option value="popularity">Most Popular</option>
-            </select>
+              onChange={(val) => updateFilters({ sort: val })}
+              icon={<SlidersHorizontal className="w-3.5 h-3.5 text-[hsl(var(--muted-foreground))] hidden md:block" />}
+              className="w-full sm:w-auto"
+            />
           </div>
         </div>
       </div>

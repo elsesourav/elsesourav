@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { Card, Badge, Input } from '@elsesourav/ui';
+import { Dropdown } from '@elsesourav/ui/interior';
 import type { AuditLog, AuditListResult, AuditSummaryMetrics } from '@elsesourav/types';
 import {
   ShieldAlert,
@@ -27,6 +28,32 @@ export function AdminAuditTable({ initialLogs, summary }: AdminAuditTableProps) 
   const [search, setSearch] = React.useState('');
   const [selectedAction, setSelectedAction] = React.useState<string>('all');
   const [selectedResource, setSelectedResource] = React.useState<string>('all');
+
+  const actionItems = React.useMemo(() => [
+    { value: 'all', label: 'All Actions' },
+    { value: 'USER_ROLE_CHANGED', label: 'USER_ROLE_CHANGED' },
+    { value: 'USER_DELETED', label: 'USER_DELETED' },
+    { value: 'APP_PUBLISHED', label: 'APP_PUBLISHED' },
+    { value: 'APP_ARCHIVED', label: 'APP_ARCHIVED' },
+    { value: 'APP_DELETED', label: 'APP_DELETED' },
+    { value: 'BLOG_PUBLISHED', label: 'BLOG_PUBLISHED' },
+    { value: 'HELP_PUBLISHED', label: 'HELP_PUBLISHED' },
+    { value: 'SUPPORT_STATUS_CHANGED', label: 'SUPPORT_STATUS_CHANGED' },
+    { value: 'MEDIA_DELETED', label: 'MEDIA_DELETED' },
+    { value: 'SECURITY_UNAUTHORIZED_ACCESS_ATTEMPT', label: 'SECURITY_UNAUTHORIZED_ACCESS_ATTEMPT' },
+  ], []);
+
+  const resourceItems = React.useMemo(() => [
+    { value: 'all', label: 'All Resource Types' },
+    { value: 'USER', label: 'USER' },
+    { value: 'APP', label: 'APP' },
+    { value: 'BLOG_POST', label: 'BLOG_POST' },
+    { value: 'HELP_ARTICLE', label: 'HELP_ARTICLE' },
+    { value: 'SUPPORT_TICKET', label: 'SUPPORT_TICKET' },
+    { value: 'MEDIA', label: 'MEDIA' },
+    { value: 'SECURITY', label: 'SECURITY' },
+    { value: 'SYSTEM', label: 'SYSTEM' },
+  ], []);
 
   // Metadata inspector modal
   const [inspectingLog, setInspectingLog] = React.useState<AuditLog | null>(null);
@@ -167,42 +194,20 @@ export function AdminAuditTable({ initialLogs, summary }: AdminAuditTableProps) 
           </div>
 
           {/* Action Filter */}
-          <select
+          <Dropdown
+            items={actionItems}
             value={selectedAction}
-            onChange={(e) => setSelectedAction(e.target.value)}
-            className="bg-zinc-900/60 border border-zinc-800 text-xs rounded-xl px-3 py-2 text-zinc-300 focus:outline-none focus:border-indigo-500"
-          >
-            <option value="all">All Actions</option>
-            <option value="USER_ROLE_CHANGED">USER_ROLE_CHANGED</option>
-            <option value="USER_DELETED">USER_DELETED</option>
-            <option value="APP_PUBLISHED">APP_PUBLISHED</option>
-            <option value="APP_ARCHIVED">APP_ARCHIVED</option>
-            <option value="APP_DELETED">APP_DELETED</option>
-            <option value="BLOG_PUBLISHED">BLOG_PUBLISHED</option>
-            <option value="HELP_PUBLISHED">HELP_PUBLISHED</option>
-            <option value="SUPPORT_STATUS_CHANGED">SUPPORT_STATUS_CHANGED</option>
-            <option value="MEDIA_DELETED">MEDIA_DELETED</option>
-            <option value="SECURITY_UNAUTHORIZED_ACCESS_ATTEMPT">
-              SECURITY_UNAUTHORIZED_ACCESS_ATTEMPT
-            </option>
-          </select>
+            onChange={(val) => setSelectedAction(val)}
+            className="w-full sm:w-48"
+          />
 
           {/* Resource Filter */}
-          <select
+          <Dropdown
+            items={resourceItems}
             value={selectedResource}
-            onChange={(e) => setSelectedResource(e.target.value)}
-            className="bg-zinc-900/60 border border-zinc-800 text-xs rounded-xl px-3 py-2 text-zinc-300 focus:outline-none focus:border-indigo-500"
-          >
-            <option value="all">All Resource Types</option>
-            <option value="USER">USER</option>
-            <option value="APP">APP</option>
-            <option value="BLOG_POST">BLOG_POST</option>
-            <option value="HELP_ARTICLE">HELP_ARTICLE</option>
-            <option value="SUPPORT_TICKET">SUPPORT_TICKET</option>
-            <option value="MEDIA">MEDIA</option>
-            <option value="SECURITY">SECURITY</option>
-            <option value="SYSTEM">SYSTEM</option>
-          </select>
+            onChange={(val) => setSelectedResource(val)}
+            className="w-full sm:w-44"
+          />
         </div>
       </div>
 

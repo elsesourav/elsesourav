@@ -3,6 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Card, Button, Input, Badge } from '@elsesourav/ui';
+import { Dropdown } from '@elsesourav/ui/interior';
 import type { SupportTicketDetail, SupportTicketStatus } from '@elsesourav/types';
 import {
   adminReplyTicketAction,
@@ -22,6 +23,14 @@ import {
   User,
   Shield,
 } from 'lucide-react';
+
+const STATUS_OPTIONS = [
+  { value: 'open', label: 'OPEN' },
+  { value: 'in_progress', label: 'IN PROGRESS' },
+  { value: 'waiting_for_user', label: 'WAITING FOR USER' },
+  { value: 'resolved', label: 'RESOLVED' },
+  { value: 'closed', label: 'CLOSED' },
+];
 
 interface AdminTicketDetailViewProps {
   ticket: SupportTicketDetail;
@@ -128,18 +137,13 @@ export function AdminTicketDetailView({ ticket: initialTicket }: AdminTicketDeta
         {/* Status Selector */}
         <div className="flex items-center gap-2">
           <label className="text-xs font-semibold text-zinc-400">Status:</label>
-          <select
+          <Dropdown
+            items={STATUS_OPTIONS}
             value={status}
             disabled={isUpdatingStatus}
-            onChange={(e) => handleStatusChange(e.target.value as SupportTicketStatus)}
-            className="bg-zinc-900 border border-zinc-700 text-xs rounded-xl px-3 py-2 text-zinc-100 font-mono focus:border-indigo-500 focus:outline-none uppercase"
-          >
-            <option value="open">OPEN</option>
-            <option value="in_progress">IN PROGRESS</option>
-            <option value="waiting_for_user">WAITING FOR USER</option>
-            <option value="resolved">RESOLVED</option>
-            <option value="closed">CLOSED</option>
-          </select>
+            onChange={(val) => handleStatusChange(val as SupportTicketStatus)}
+            className="w-48"
+          />
         </div>
       </div>
 

@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Card, Button, Input } from '@elsesourav/ui';
+import { Dropdown } from '@elsesourav/ui/interior';
 import type { BlogPost, BlogCategory, BlogTag } from '@elsesourav/types';
 import {
   createBlogPostAction,
@@ -46,6 +47,11 @@ export function AdminBlogForm({ post, categories }: AdminBlogFormProps) {
   const [categoryId, setCategoryId] = React.useState(post?.categoryId || categories[0]?.id || '');
   const [status, setStatus] = React.useState<'draft' | 'published' | 'archived'>(
     (post?.status as 'draft' | 'published' | 'archived') || 'draft'
+  );
+
+  const categoryItems = React.useMemo(
+    () => categories.map((c) => ({ value: c.id, label: c.name })),
+    [categories]
   );
   const [seoTitle, setSeoTitle] = React.useState(post?.seoTitle || '');
   const [seoDescription, setSeoDescription] = React.useState(post?.seoDescription || '');
@@ -309,18 +315,12 @@ export function AdminBlogForm({ post, categories }: AdminBlogFormProps) {
               <label className="block text-xs font-semibold text-zinc-300">
                 Primary Category <span className="text-rose-400">*</span>
               </label>
-              <select
+              <Dropdown
+                items={categoryItems}
                 value={categoryId}
-                onChange={(e) => setCategoryId(e.target.value)}
-                required
-                className="w-full bg-zinc-950/60 border border-zinc-800 text-xs rounded-xl px-3 py-2.5 text-zinc-100 focus:border-indigo-500 focus:outline-none"
-              >
-                {categories.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
+                onChange={(val) => setCategoryId(val)}
+                className="w-full"
+              />
             </div>
           </div>
         </Card>

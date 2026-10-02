@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Input } from '@elsesourav/ui';
+import { Dropdown } from '@elsesourav/ui/interior';
 import { createSupportTicketAction } from '../actions/support-actions';
 import { Send, AlertCircle, Loader2 } from 'lucide-react';
 
@@ -91,33 +92,23 @@ export function CreateTicketForm({ onSuccess, onCancel }: CreateTicketFormProps)
         <label className="block text-xs font-semibold text-foreground">
           Issue Category <span className="text-rose-500">*</span>
         </label>
-        <select
+        <Dropdown
+          items={CATEGORIES}
           value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="w-full bg-background border border-border rounded-xl px-3.5 py-2.5 text-xs text-foreground focus:border-primary focus:outline-none"
-        >
-          {CATEGORIES.map((cat) => (
-            <option key={cat.value} value={cat.value}>
-              {cat.label}
-            </option>
-          ))}
-        </select>
+          onChange={(val) => setCategory(val)}
+          className="w-full"
+        />
       </div>
 
       {/* Priority Selection */}
       <div className="space-y-1.5">
         <label className="block text-xs font-semibold text-foreground">Priority Level</label>
-        <select
+        <Dropdown
+          items={PRIORITIES}
           value={priority}
-          onChange={(e) => setPriority(e.target.value)}
-          className="w-full bg-background border border-border rounded-xl px-3.5 py-2.5 text-xs text-foreground focus:border-primary focus:outline-none"
-        >
-          {PRIORITIES.map((pri) => (
-            <option key={pri.value} value={pri.value}>
-              {pri.label}
-            </option>
-          ))}
-        </select>
+          onChange={(val) => setPriority(val)}
+          className="w-full"
+        />
       </div>
 
       {/* Subject Input */}

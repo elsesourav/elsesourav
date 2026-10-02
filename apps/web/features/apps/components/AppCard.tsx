@@ -1,25 +1,27 @@
-import * as React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Card } from '@elsesourav/ui';
-import { Lightbox } from '@elsesourav/ui/interior';
+'use client';
+
 import { getAppIconUrl } from '@elsesourav/media';
 import type { AppListItem, AppPlatform } from '@elsesourav/types';
+import { Card } from '@elsesourav/ui';
+import { Lightbox } from '@elsesourav/ui/interior';
 import {
-  Globe,
-  Compass,
-  Smartphone,
   Apple,
-  Terminal,
   ArrowRight,
-  Sparkles,
+  Compass,
   Cpu,
-  Radio,
-  Palette,
+  Globe,
   Layers,
-  Wrench,
   Maximize2,
+  Palette,
+  Radio,
+  Smartphone,
+  Sparkles,
+  Terminal,
+  Wrench,
 } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRef, useState } from 'react';
 
 export interface AppCardProps {
   app: AppListItem;
@@ -73,8 +75,8 @@ function PlatformIcon({ platform }: { platform: AppPlatform }) {
 }
 
 export function AppCard({ app, index, featured = false }: AppCardProps) {
-  const [isLightboxOpen, setIsLightboxOpen] = React.useState(false);
-  const imageRef = React.useRef<HTMLDivElement>(null);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const imageRef = useRef<HTMLDivElement>(null);
 
   const iconUrl = app.iconUrl ? getAppIconUrl(app.iconUrl, 96) : null;
   const bannerUrl = app.featuredImageUrl || iconUrl || app.iconUrl;

@@ -989,7 +989,7 @@ The `@elsesourav/ui/interior` collection contains **54 physics-based animated UI
 | **`ContextMenu`**       | `items, children`                 | Cursor-anchored spring reveal with bounds collision  | Table row right-click actions               |
 | **`CopyButton`**        | `value, timeout, label`           | Tactile icon morph from Copy to Checkmark            | Code blocks, shareable links, API tokens    |
 | **`Drawer`**            | `open, onOpenChange, side`        | Side slide-in with elastic overshoot                 | Mobile menus, side inspectors, filter decks |
-| **`Dropdown`**          | `options, value, onChange`        | Scaled fade with active item highlight               | Form selection, filter criteria             |
+| **`Dropdown`**          | `items, value, defaultValue, onChange, placeholder, label, error, icon, triggerClassName` | Scaled fade with active item highlight & dynamic selected label | Form selection, filter criteria, responsive dropdowns |
 | **`ExpandingSearch`**   | `placeholder, onSearch`           | Smooth horizontal width expansion on click           | Minimalist navigation headers               |
 | **`FilterGrid`**        | `items, filters, getKey, renderItem, fluid` | Layout reflow with FLIP spring animation & counts | Portfolio filters, project showcases        |
 | **`FloatingLabel`**     | `label, value, error`             | Floating micro-label transition upon input focus     | Material/modern login and signup forms      |
