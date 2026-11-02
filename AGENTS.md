@@ -7,6 +7,7 @@ Every AI coding agent (Gemini Code, Antigravity, Claude, etc.) operating in this
 1. **Mandatory First Step**: Before making ANY UI changes or creating new components, you MUST read the UI development documentation first:
    - Primary Guide: [`packages/ui/README.md`](file:///Users/sourav/Developer/WEB/elsesourav/packages/ui/README.md)
    - UI Skill: [`.agents/skills/ui-development/SKILL.md`](file:///Users/sourav/Developer/WEB/elsesourav/.agents/skills/ui-development/SKILL.md)
+   - Workflow & Guidelines: [`docs/UI_DEVELOPMENT_WORKFLOW.md`](file:///Users/sourav/Developer/WEB/elsesourav/docs/UI_DEVELOPMENT_WORKFLOW.md)
    - Design Constitution: [`docs/design/DESIGN_CONSTITUTION.md`](file:///Users/sourav/Developer/WEB/elsesourav/docs/design/DESIGN_CONSTITUTION.md)
    - Theme Tokens: [`docs/design/THEME_TOKEN_ARCHITECTURE.md`](file:///Users/sourav/Developer/WEB/elsesourav/docs/design/THEME_TOKEN_ARCHITECTURE.md)
 2. **Quality & Maintainability Standards**:
