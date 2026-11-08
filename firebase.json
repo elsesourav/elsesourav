@@ -6,8 +6,8 @@
     "redirects": [
       {
         "source": "/**",
-        "destination": "http://20.244.48.139",
-        "type": 302
+        "destination": "https://elsesourav.com",
+        "type": 301
       }
     ]
   }
