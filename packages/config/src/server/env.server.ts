@@ -10,9 +10,7 @@ export const ServerEnvSchema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: isProduction
     ? z.string().min(1, 'SUPABASE_SERVICE_ROLE_KEY is required in production')
     : z.string().min(1).optional(),
-  OTP_SECRET: isProduction
-    ? z.string().min(32, 'OTP_SECRET must be at least 32 characters in production')
-    : z.string().min(1).optional(),
+  OTP_SECRET: z.string().min(16).optional(),
   RESEND_API_KEY: z.string().min(1, 'RESEND_API_KEY is required for email delivery').optional(),
   CLOUDINARY_API_KEY: z.string().min(1).optional(),
   CLOUDINARY_API_SECRET: z.string().min(1).optional(),

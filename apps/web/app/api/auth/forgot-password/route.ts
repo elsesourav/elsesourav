@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { UserRepository, OtpRepository } from '@elsesourav/database';
+import { UserRepository, OtpRepository, getOtpSecret } from '@elsesourav/database';
 import { createAuthAdminClient } from '@elsesourav/auth';
 import { checkRateLimit, extractClientIp } from '@elsesourav/utils';
 import { sendOtpEmail } from '@/lib/mailer';
@@ -9,12 +9,7 @@ const userRepo = new UserRepository();
 const otpRepo = new OtpRepository();
 
 function generateResetToken(email: string): string {
-  const secret = process.env.OTP_SECRET;
-  if (!secret) {
-    throw new Error(
-      '[ElseSourav Security] OTP_SECRET environment variable is not configured. Generate a 64-character random string and set it in your production environment.'
-    );
-  }
+  const secret = getOtpSecret();
   const expiresAt = Date.now() + 15 * 60 * 1000; // 15 minutes
   const payload = `${email.toLowerCase()}:${expiresAt}`;
   const signature = crypto.createHmac('sha256', secret).update(payload).digest('hex');
@@ -23,8 +18,7 @@ function generateResetToken(email: string): string {
 
 function verifyResetToken(token: string, email: string): boolean {
   try {
-    const secret = process.env.OTP_SECRET;
-    if (!secret) return false;
+    const secret = getOtpSecret();
     const decoded = Buffer.from(token, 'base64url').toString('utf-8');
     const [tokenEmail, expiresStr, signature] = decoded.split(':');
     if (!tokenEmail || !expiresStr || !signature) return false;

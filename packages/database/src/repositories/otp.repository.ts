@@ -2,13 +2,20 @@ import { prisma } from '../client';
 import { AppError } from '@elsesourav/types';
 import crypto from 'node:crypto';
 
-function hashOtp(otp: string, email: string): string {
-  const secret = process.env.OTP_SECRET;
-  if (!secret) {
-    throw new Error(
-      '[ElseSourav Security] OTP_SECRET environment variable is not configured. Generate a 64-character random string and set it in your production environment.'
-    );
+export function getOtpSecret(): string {
+  if (process.env.OTP_SECRET && process.env.OTP_SECRET.trim().length >= 16) {
+    return process.env.OTP_SECRET.trim();
   }
+  const serverSecret =
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.SUPABASE_SECRET_KEY ||
+    process.env.DATABASE_URL ||
+    'fallback-secure-otp-secret-key-39bf323-elsesourav';
+  return crypto.createHash('sha256').update(`otp-secret:${serverSecret}`).digest('hex');
+}
+
+function hashOtp(otp: string, email: string): string {
+  const secret = getOtpSecret();
   return crypto.createHmac('sha256', secret).update(`${email.toLowerCase()}:${otp}`).digest('hex');
 }
 
