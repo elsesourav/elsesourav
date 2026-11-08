@@ -166,8 +166,11 @@ inline void PixelEngine::generatePixels() {
             uint8_t pa = inputImage[idx + 3];
 
             if (pa > 16) {
+                float relX = (float)x / (float)w;
+                float relY = (float)y / (float)h;
                 Pixel& p = particles[particleCount++];
                 p.init((float)x, (float)y, pr, pg, pb, pa, basePixelSize, FLAG_IMAGE_PIXEL);
+                p.applyBaseTopHairGlow(isDark, relX, relY, lightIntensity);
             }
         }
     }
@@ -217,7 +220,9 @@ inline void PixelEngine::generatePixels() {
     // LAYER 3: TOP PARTICLES (Light up pixels traveling along silhouette edges)
     // =========================================================================
     if (contourCount > 10) {
-        int edgeParticleCount = (int)((float)w * 4.30f * densityMultiplier);
+        int edgeParticleCount = (int)((float)w * 0.72f * densityMultiplier);
+        if (edgeParticleCount < 24) edgeParticleCount = 24;
+        if (edgeParticleCount > 120) edgeParticleCount = 120;
         for (int k = 0; k < edgeParticleCount; k++) {
             if (particleCount >= MAX_PARTICLES - 8) break;
 

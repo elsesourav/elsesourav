@@ -32,7 +32,7 @@ inline void applyProximityLighting(
     memset(lightMapG, 0, totalCells * sizeof(float));
     memset(lightMapB, 0, totalCells * sizeof(float));
 
-    float lightRadius = 14.0f * glowMultiplier;
+    float lightRadius = 5.5f * glowMultiplier;
     int iRad = (int)ceilf(lightRadius);
     float rSq = lightRadius * lightRadius;
 
@@ -105,9 +105,9 @@ inline void applyProximityLighting(
 
                 if (isDark) {
                     // Dark mode: Luminous screen glow lighting
-                    float addR = avgR * intensity * 1.25f;
-                    float addG = avgG * intensity * 1.25f;
-                    float addB = avgB * intensity * 1.25f;
+                    float addR = avgR * intensity * 0.95f;
+                    float addG = avgG * intensity * 0.95f;
+                    float addB = avgB * intensity * 0.95f;
 
                     float litR = (float)p.baseR + addR;
                     float litG = (float)p.baseG + addG;
@@ -118,13 +118,13 @@ inline void applyProximityLighting(
                     p.b = (uint8_t)(litB > 255.0f ? 255.0f : litB);
                 } else {
                     // Light mode: Vibrant atmospheric tint lighting
-                    float tintR = avgR * intensity * 0.75f;
-                    float tintG = avgG * intensity * 0.75f;
-                    float tintB = avgB * intensity * 0.75f;
+                    float tintR = avgR * intensity * 0.70f;
+                    float tintG = avgG * intensity * 0.70f;
+                    float tintB = avgB * intensity * 0.70f;
 
-                    float litR = (float)p.baseR * (1.0f - intensity * 0.30f) + tintR;
-                    float litG = (float)p.baseG * (1.0f - intensity * 0.30f) + tintG;
-                    float litB = (float)p.baseB * (1.0f - intensity * 0.30f) + tintB;
+                    float litR = (float)p.baseR * (1.0f - intensity * 0.25f) + tintR;
+                    float litG = (float)p.baseG * (1.0f - intensity * 0.25f) + tintG;
+                    float litB = (float)p.baseB * (1.0f - intensity * 0.25f) + tintB;
 
                     p.r = (uint8_t)(litR > 255.0f ? 255.0f : litR);
                     p.g = (uint8_t)(litG > 255.0f ? 255.0f : litG);

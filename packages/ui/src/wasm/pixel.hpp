@@ -142,10 +142,60 @@ public:
         y += vy;
     }
 
-    void applyBaseTopColor(int isDark, float relX, float relY, float lightIntensity = 0.38f) {
-        // Static color overrides removed — all edge/side image pixel illumination is now
-        // computed dynamically in real-time based on the distance, density, and color of
-        // the nearest moving glowing particles!
+    void applyBaseTopHairGlow(int isDark, float relX, float relY, float lightIntensity = 0.38f) {
+        if (!active || baseA == 0 || lightIntensity <= 0.02f) return;
+
+        // Top of Head & Hair Crown: ALWAYS GLOW!
+        if (relY <= 0.36f) {
+            float topDistX = fabsf(relX - 0.50f);
+            if (topDistX > 0.06f) {
+                float crownWeight = ((topDistX - 0.06f) / 0.44f) * lightIntensity * 2.2f;
+                if (crownWeight > 1.0f) crownWeight = 1.0f;
+
+                uint8_t gr, gg, gb;
+                if (isDark) {
+                    if (relX < 0.48f) {
+                        gr = 0; gg = 220; gb = 255;
+                    } else if (relX > 0.52f) {
+                        gr = 185; gg = 90; gb = 250;
+                    } else {
+                        float b = (relX - 0.48f) / 0.04f;
+                        gr = (uint8_t)(b * 185.0f);
+                        gg = (uint8_t)((1.0f - b) * 220.0f + b * 90.0f);
+                        gb = 255;
+                    }
+                    float addR = (float)gr * crownWeight * 0.90f;
+                    float addG = (float)gg * crownWeight * 0.90f;
+                    float addB = (float)gb * crownWeight * 0.90f;
+                    float nr = (float)baseR + addR;
+                    float ng = (float)baseG + addG;
+                    float nb = (float)baseB + addB;
+                    r = baseR = (uint8_t)(nr > 255.0f ? 255.0f : nr);
+                    g = baseG = (uint8_t)(ng > 255.0f ? 255.0f : ng);
+                    b = baseB = (uint8_t)(nb > 255.0f ? 255.0f : nb);
+                } else {
+                    if (relX < 0.48f) {
+                        gr = 0; gg = 175; gb = 240;
+                    } else if (relX > 0.52f) {
+                        gr = 150; gg = 60; gb = 240;
+                    } else {
+                        float b = (relX - 0.48f) / 0.04f;
+                        gr = (uint8_t)(b * 150.0f);
+                        gg = (uint8_t)((1.0f - b) * 175.0f + b * 60.0f);
+                        gb = 240;
+                    }
+                    float tintR = (float)gr * crownWeight * 0.70f;
+                    float tintG = (float)gg * crownWeight * 0.70f;
+                    float tintB = (float)gb * crownWeight * 0.70f;
+                    float nr = (float)baseR * (1.0f - crownWeight * 0.25f) + tintR;
+                    float ng = (float)baseG * (1.0f - crownWeight * 0.25f) + tintG;
+                    float nb = (float)baseB * (1.0f - crownWeight * 0.25f) + tintB;
+                    r = baseR = (uint8_t)(nr > 255.0f ? 255.0f : nr);
+                    g = baseG = (uint8_t)(ng > 255.0f ? 255.0f : ng);
+                    b = baseB = (uint8_t)(nb > 255.0f ? 255.0f : nb);
+                }
+            }
+        }
     }
 };
 

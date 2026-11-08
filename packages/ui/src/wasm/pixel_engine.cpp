@@ -50,7 +50,10 @@ void PixelEngine::setTheme(int dark) {
 }
 
 void PixelEngine::setLightIntensity(float intensity) {
-    lightIntensity = intensity;
+    if (fabsf(lightIntensity - intensity) > 0.01f) {
+        lightIntensity = intensity;
+        generatePixels();
+    }
 }
 
 void PixelEngine::setParticleSize(float mult) {

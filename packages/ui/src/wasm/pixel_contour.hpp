@@ -38,10 +38,11 @@ inline void extractSilhouetteContour(
     memset(hasRow, 0, h * sizeof(uint8_t));
 
     int topY = -1;
+    int maxBottomY = (int)((float)h * 0.86f);
     int bottomY = -1;
 
     // Scan each horizontal row for positive alpha (where subject begins from left & right)
-    for (int y = 0; y < h; y++) {
+    for (int y = 0; y <= maxBottomY; y++) {
         int firstX = -1;
         int lastX = -1;
         int rowOffset = y * w * 4;

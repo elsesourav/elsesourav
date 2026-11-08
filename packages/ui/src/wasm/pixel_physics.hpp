@@ -210,9 +210,11 @@ inline void PixelEngine::update(float dt, float mouseX, float mouseY, int isMous
                 p.origX = cx + nx * totalOffset;
                 p.origY = cy + ny * totalOffset;
 
-                // Hidden at the very bottom line of shirt, fully shown and glowing everywhere else
-                if (cy >= (float)height - 2.5f || p.origY >= (float)height - 2.0f) {
-                    p.a = 0;
+                // Fade out smoothly at the lower shoulders so particles never touch bottom of shirt
+                if (cy >= (float)height * 0.82f) {
+                    float f = 1.0f - (cy - (float)height * 0.82f) / ((float)height * 0.04f);
+                    if (f < 0.0f) f = 0.0f;
+                    p.a = (uint8_t)(245.0f * f);
                 } else {
                     p.a = 245;
                 }
