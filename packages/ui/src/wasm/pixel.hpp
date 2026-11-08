@@ -148,11 +148,16 @@ public:
         float leftWeight = 0.0f;
         float rightWeight = 0.0f;
 
-        // 1. Top of Head & Hair Crown: ALWAYS GLOW!
+        // 1. Top of Head & Hair Crown: subtle edge rim only on outermost silhouette
         if (relY <= 0.38f) {
+            // In light mode, preserve 100% natural authentic photographic dark hair
+            // The top glow is provided by the floating glowing particles & halo!
+            if (!isDark) {
+                return;
+            }
             float topDistX = fabsf(relX - 0.50f);
-            if (topDistX > 0.08f) {
-                float crownWeight = ((topDistX - 0.08f) / 0.42f) * lightIntensity * 2.6f;
+            if (topDistX > 0.16f) {
+                float crownWeight = ((topDistX - 0.16f) / 0.34f) * lightIntensity * 1.8f;
                 if (relX < 0.50f) {
                     leftWeight = crownWeight;
                 } else {
@@ -193,15 +198,15 @@ public:
                 cb = cb * (1.0f - rightWeight * 0.25f) + 255.0f * rightWeight;
             }
         } else {
-            // Light Mode: refined electric emerald/cyan & violet/indigo
+            // Light Mode: Clean luminous cyber cyan & cyber violet rim tint on hoodie edges
             if (leftWeight > 0.01f) {
-                cr = cr * (1.0f - leftWeight) + 14.0f * leftWeight;
-                cg = cg * (1.0f - leftWeight) + 165.0f * leftWeight;
-                cb = cb * (1.0f - leftWeight) + 233.0f * leftWeight;
+                cr = cr * (1.0f - leftWeight * 0.25f) + 0.0f * (leftWeight * 0.25f);
+                cg = cg * (1.0f - leftWeight * 0.25f) + 200.0f * (leftWeight * 0.25f);
+                cb = cb * (1.0f - leftWeight * 0.25f) + 245.0f * (leftWeight * 0.25f);
             } else if (rightWeight > 0.01f) {
-                cr = cr * (1.0f - rightWeight) + 99.0f * rightWeight;
-                cg = cg * (1.0f - rightWeight) + 102.0f * rightWeight;
-                cb = cb * (1.0f - rightWeight) + 241.0f * rightWeight;
+                cr = cr * (1.0f - rightWeight * 0.25f) + 160.0f * (rightWeight * 0.25f);
+                cg = cg * (1.0f - rightWeight * 0.25f) + 70.0f * (rightWeight * 0.25f);
+                cb = cb * (1.0f - rightWeight * 0.25f) + 245.0f * (rightWeight * 0.25f);
             }
         }
 

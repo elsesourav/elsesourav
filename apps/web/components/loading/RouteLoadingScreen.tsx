@@ -53,7 +53,7 @@ export function RouteLoadingScreen({
 
       <CanvasLogoLoader
         size={size}
-        durationMs={1600}
+        durationMs={550}
         fullScreen={fullScreen}
         pixelData={pixelData}
         logoUrl={logoUrl}

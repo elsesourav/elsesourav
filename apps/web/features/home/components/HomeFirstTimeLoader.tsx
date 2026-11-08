@@ -48,7 +48,7 @@ export function HomeFirstTimeLoader({
     setIsFadingOut(true);
     const timer = setTimeout(() => {
       setShouldRender(false);
-    }, 550); // Matches transition duration
+    }, 220); // Matches transition duration
 
     return () => clearTimeout(timer);
   }, []);
@@ -76,7 +76,7 @@ export function HomeFirstTimeLoader({
       role="status"
       aria-live="polite"
       aria-label="Loading ElseSourav digital experience"
-      className={`fixed inset-0 top-0 left-0 w-screen h-screen z-[99999] flex flex-col items-center justify-center bg-[hsl(var(--background))] transition-opacity duration-500 ease-out select-none overflow-hidden ${
+      className={`fixed inset-0 top-0 left-0 w-screen h-screen z-[99999] flex flex-col items-center justify-center bg-[hsl(var(--background))] transition-opacity duration-200 ease-out select-none overflow-hidden ${
         isFadingOut ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
     >
@@ -91,7 +91,7 @@ export function HomeFirstTimeLoader({
 
       <CanvasLogoLoader
         fullScreen
-        durationMs={1800}
+        durationMs={600}
         logoUrl={logoUrl}
         pixelData={pixelData}
         onComplete={handleComplete}

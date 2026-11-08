@@ -107,7 +107,7 @@ export function ThemePopup() {
         ref={triggerRef}
         type="button"
         onClick={handleToggle}
-        className="shrink-0 flex items-center justify-center w-9 h-9 min-h-[36px] min-w-[36px] rounded-xl border border-black/10 dark:border-white/10 bg-black/[0.04] dark:bg-white/[0.06] backdrop-blur-[6px] hover:bg-black/[0.07] dark:hover:bg-white/[0.1] hover:border-black/20 dark:hover:border-white/20 text-[hsl(var(--foreground))]/80 hover:text-[hsl(var(--foreground))] active:scale-95 transition-all duration-150 ease-smooth focus:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))] cursor-pointer shadow-2xs"
+        className="shrink-0 flex items-center justify-center w-9 h-9 min-h-[36px] min-w-[36px] rounded-xl border border-slate-900/[0.08] dark:border-white/10 bg-white/80 dark:bg-white/[0.06] backdrop-blur-md hover:bg-white dark:hover:bg-white/[0.1] hover:border-slate-900/15 dark:hover:border-white/20 text-slate-700 dark:text-zinc-200 hover:text-slate-950 dark:hover:text-white active:scale-95 transition-all duration-150 ease-smooth focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))] cursor-pointer shadow-[0_1px_2px_rgba(0,0,0,0.03)] dark:shadow-none"
         aria-label="Change theme"
         aria-expanded={open}
         aria-haspopup="menu"
@@ -119,11 +119,11 @@ export function ThemePopup() {
         <div
           role="menu"
           aria-label="Appearance"
-          className={`absolute right-0 mt-2 w-52 rounded-2xl bg-[hsl(var(--surface-elevated))] border border-[hsl(var(--border))] shadow-2xl p-1.5 z-50 text-xs backdrop-blur-xl ${
+          className={`absolute right-0 mt-2 w-52 rounded-2xl bg-white/95 dark:bg-[hsl(var(--surface-elevated))] border border-slate-200/90 dark:border-[hsl(var(--border))] shadow-2xl p-1.5 z-50 text-xs backdrop-blur-xl ${
             isClosing ? 'animate-popup-out' : 'animate-popup-in'
           }`}
         >
-          <div className="px-3 py-1.5 text-[11px] font-semibold text-[hsl(var(--muted-foreground))] uppercase tracking-wider">
+          <div className="px-3 py-1.5 text-[11px] font-semibold text-slate-400 dark:text-[hsl(var(--muted-foreground))] uppercase tracking-wider">
             Theme
           </div>
 
@@ -137,10 +137,10 @@ export function ThemePopup() {
                 role="menuitem"
                 type="button"
                 onClick={(e) => handleSelectTheme(option.value, e)}
-                className={`w-full flex items-center justify-between gap-2 px-3 py-2 rounded-xl transition-colors text-left font-medium select-none focus:outline-none focus-visible:bg-[hsl(var(--accent))] ${
+                className={`w-full flex items-center justify-between gap-2 px-3 py-2 rounded-xl transition-colors text-left font-medium select-none focus:outline-none focus-visible:bg-slate-100 dark:focus-visible:bg-[hsl(var(--accent))] ${
                   isSelected
-                    ? 'text-[hsl(var(--primary))] bg-[hsl(var(--accent))]'
-                    : 'text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))]'
+                    ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-[hsl(var(--accent))]'
+                    : 'text-slate-700 dark:text-[hsl(var(--foreground))] hover:bg-slate-100 dark:hover:bg-[hsl(var(--accent))]'
                 }`}
               >
                 <span className="flex items-center gap-2">

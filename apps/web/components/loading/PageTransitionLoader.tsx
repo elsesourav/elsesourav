@@ -69,14 +69,14 @@ function PageTransitionLoaderInner({
       isInitialMountRef.current = false;
       navStartTimeRef.current = performance.now();
 
-      // Allow initial particle convergence (~1250ms) to complete smoothly on reload
-      const minInitialDisplayMs = 1250;
+      // Snappy initial particle convergence (~520ms) for fast initial load & reload
+      const minInitialDisplayMs = 520;
       const timer = setTimeout(() => {
         setIsFadingOut(true);
         const finishTimer = setTimeout(() => {
           setIsNavigating(false);
           setIsFadingOut(false);
-        }, 320);
+        }, 180);
         return () => clearTimeout(finishTimer);
       }, minInitialDisplayMs);
 
@@ -89,9 +89,9 @@ function PageTransitionLoaderInner({
     if (currentPathRef.current !== pathname) {
       currentPathRef.current = pathname;
       if (isNavigating) {
-        // Enforce smooth minimum display time so fast pages don't abruptly flash or jerk
+        // Enforce fast, lightweight minimum display time so transitions remain silky smooth
         const elapsed = performance.now() - navStartTimeRef.current;
-        const minVisibleMs = 450;
+        const minVisibleMs = 260;
         const delay = Math.max(0, minVisibleMs - elapsed);
 
         const timer = setTimeout(() => {
@@ -99,7 +99,7 @@ function PageTransitionLoaderInner({
           const finishTimer = setTimeout(() => {
             setIsNavigating(false);
             setIsFadingOut(false);
-          }, 320);
+          }, 180);
           return () => clearTimeout(finishTimer);
         }, delay);
 
@@ -218,8 +218,8 @@ function PageTransitionLoaderInner({
       setTimeout(() => {
         setIsNavigating(false);
         setIsFadingOut(false);
-      }, 320);
-    }, 6000);
+      }, 180);
+    }, 4000);
 
     return () => clearTimeout(safetyTimer);
   }, [isNavigating]);
@@ -249,7 +249,7 @@ function PageTransitionLoaderInner({
       role="status"
       aria-live="polite"
       aria-label="Loading requested page"
-      className={`fixed inset-0 top-0 left-0 w-screen h-screen z-[99999] flex flex-col items-center justify-center bg-[hsl(var(--background))]/85 backdrop-blur-md transition-opacity duration-300 ease-out select-none overflow-hidden ${
+      className={`fixed inset-0 top-0 left-0 w-screen h-screen z-[99999] flex flex-col items-center justify-center bg-[hsl(var(--background))]/85 backdrop-blur-md transition-opacity duration-200 ease-out select-none overflow-hidden ${
         isFadingOut ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
     >
@@ -264,7 +264,7 @@ function PageTransitionLoaderInner({
 
       <CanvasLogoLoader
         fullScreen
-        durationMs={1400}
+        durationMs={550}
         logoUrl={logoUrl}
         pixelData={parsedPixelData}
       />

@@ -74,7 +74,7 @@ export function encodePixelsToBase64(pixels: readonly LogoPixelTuple[]): string 
 let cachedDefaultPixels: LogoPixelTuple[] | null = null;
 
 /**
- * Returns the default 4x high-density (64x64 grid, 2,433 particles) brand monogram pixel matrix.
+ * Returns the default lightweight (146 particles) brand monogram pixel matrix.
  */
 export function getHighDensityLogoPixels(): LogoPixelTuple[] {
   if (!cachedDefaultPixels) {
@@ -84,7 +84,33 @@ export function getHighDensityLogoPixels(): LogoPixelTuple[] {
 }
 
 /**
+ * Normalizes any array of pixel tuples to a lightweight matrix (~120-180 particles)
+ * guaranteeing uniform rendering and zero lag across all devices.
+ */
+export function toLightweightPixels(pixels: readonly LogoPixelTuple[]): LogoPixelTuple[] {
+  if (!pixels || pixels.length === 0) return getHighDensityLogoPixels();
+  if (pixels.length <= 180) return [...pixels];
+
+  // Try 4-pixel spatial interval sampling first
+  const spatialSampled = pixels.filter(
+    (p) => Math.round(p[0]) % 4 === 0 && Math.round(p[1]) % 4 === 0
+  );
+  if (spatialSampled.length >= 80 && spatialSampled.length <= 220) {
+    return spatialSampled;
+  }
+
+  // Uniform stride to target ~140-160 particles
+  const stride = Math.max(1, Math.round(pixels.length / 146));
+  const result: LogoPixelTuple[] = [];
+  for (let i = 0; i < pixels.length; i += stride) {
+    result.push(pixels[i]!);
+  }
+  return result;
+}
+
+/**
  * Authoritative fallback parser: supports base64 string, JSON array, or fallback default.
+ * Always normalizes output to the lightweight particle matrix so all devices render identical pixel counts.
  */
 export function parseLogoPixels(raw?: string | null): LogoPixelTuple[] {
   if (!raw || typeof raw !== 'string' || raw.trim().length === 0) {
@@ -96,17 +122,18 @@ export function parseLogoPixels(raw?: string | null): LogoPixelTuple[] {
   // 1. Try base64 packed format
   if (!trimmed.startsWith('[')) {
     const decoded = decodeBase64Pixels(trimmed);
-    if (decoded.length > 50) return decoded;
+    if (decoded.length > 20) return toLightweightPixels(decoded);
   }
 
   // 2. Try JSON array format
   try {
     const parsed = JSON.parse(trimmed);
     if (Array.isArray(parsed) && parsed.length > 0) {
-      return parsed.filter(
+      const valid = parsed.filter(
         (p): p is LogoPixelTuple =>
           Array.isArray(p) && p.length >= 6 && typeof p[0] === 'number'
       );
+      if (valid.length > 0) return toLightweightPixels(valid);
     }
   } catch {
     // Fall back to default
@@ -115,5 +142,5 @@ export function parseLogoPixels(raw?: string | null): LogoPixelTuple[] {
   return getHighDensityLogoPixels();
 }
 
-/** Default 4x high-density pixel matrix exported for standard components */
+/** Default ultra-lightweight pixel matrix exported for standard components (146 particles) */
 export const LOGO_PIXEL_DATA: readonly LogoPixelTuple[] = getHighDensityLogoPixels();

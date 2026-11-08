@@ -152,7 +152,7 @@ export function AdminBrandLogoSection({
             <div className="py-4 flex flex-col items-center">
               <CanvasLogoLoader
                 size={180}
-                durationMs={1800}
+                durationMs={600}
                 pixelData={activePreviewPixels || undefined}
                 logoUrl={!activePreviewPixels ? currentLogoUrl || undefined : undefined}
               />

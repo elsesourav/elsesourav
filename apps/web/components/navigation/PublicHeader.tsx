@@ -72,15 +72,15 @@ export function PublicHeader({
       <div
         className={`transition-[background-color,border-color,backdrop-filter,box-shadow] duration-300 ${
           isScrolled
-            ? 'border-b border-[hsl(var(--border))]/80 bg-[hsl(var(--background))]/80 backdrop-blur-md shadow-sm shadow-black/5 dark:shadow-black/20'
-            : 'border-b border-black/5 dark:border-white/10 bg-transparent backdrop-blur-[4px]'
+            ? 'border-b border-black/[0.08] dark:border-white/[0.12] bg-white/92 dark:bg-[#07090e]/88 backdrop-blur-2xl shadow-sm shadow-black/[0.04] dark:shadow-black/30'
+            : 'border-b border-black/[0.06] dark:border-white/[0.08] bg-white/75 dark:bg-[#07090e]/65 backdrop-blur-xl shadow-xs shadow-black/[0.02] dark:shadow-none'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 h-16 flex items-center justify-between gap-1.5 sm:gap-2.5 lg:gap-4">
+        <div className="max-w-7xl mx-auto px-2.5 sm:px-4 lg:px-8 h-15 sm:h-16 flex items-center justify-between gap-1.5 sm:gap-2.5 lg:gap-4">
           {/* Brand Logo: compact and proportional on mobile, standard on desktop */}
           <Link
             href={ROUTES.HOME}
-            className="flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] rounded-lg p-0.5 sm:p-1 shrink-0"
+            className="flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg p-0.5 sm:p-1 shrink-0"
             aria-label={`${siteName || SITE_CONFIG.name} Home`}
           >
             <BrandLogo
@@ -116,20 +116,20 @@ export function PublicHeader({
                   aria-current={isActive ? 'page' : undefined}
                   className={`inline-flex items-center gap-1.5 px-3 lg:px-3.5 py-1.5 rounded-xl transition-all duration-200 font-medium text-xs lg:text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                     isActive
-                      ? 'bg-indigo-500/12 dark:bg-indigo-500/22 text-indigo-700 dark:text-indigo-300 border border-indigo-500/30 dark:border-indigo-400/35 font-semibold shadow-[0_1px_8px_rgba(99,102,241,0.12)]'
-                      : 'text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--surface-subtle))] border border-transparent active:scale-95'
+                      ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-300 border border-indigo-200/90 dark:border-indigo-400/35 font-semibold shadow-[0_1px_6px_rgba(99,102,241,0.12)]'
+                      : 'text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] border border-transparent active:scale-95'
                   }`}
                 >
                   <Icon
                     className={`w-3.5 h-3.5 transition-colors ${
                       isActive
                         ? 'text-indigo-600 dark:text-indigo-400'
-                        : 'text-[hsl(var(--muted-foreground))] opacity-75'
+                        : 'text-slate-500 dark:text-zinc-400 group-hover:text-slate-800 dark:group-hover:text-zinc-200'
                     }`}
                   />
                   <span>{link.label}</span>
                   {isActive && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 dark:bg-indigo-400 shadow-[0_0_6px_rgba(99,102,241,0.6)] ml-0.5" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-600 dark:bg-indigo-400 shadow-[0_0_6px_rgba(99,102,241,0.6)] ml-0.5" />
                   )}
                 </Link>
               );
@@ -149,13 +149,13 @@ export function PublicHeader({
             {/* Desktop-Only Auth / Profile Controls: completely hidden on mobile */}
             {user ? (
               <div className="hidden md:flex items-center gap-2.5 ml-1">
-                <div className="w-px h-5 bg-[hsl(var(--border))] mx-0.5" />
+                <div className="w-px h-5 bg-slate-200 dark:bg-zinc-800 mx-0.5" />
                 {user.role === 'ADMIN' && (
                   <Link href={ROUTES.ADMIN.ROOT}>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="gap-1.5 text-xs text-amber-400 hover:text-amber-300 hover:bg-amber-950/30"
+                      className="gap-1.5 text-xs text-amber-700 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/25"
                     >
                       <Shield className="w-3.5 h-3.5" />
                       <span>Admin</span>
@@ -166,16 +166,16 @@ export function PublicHeader({
               </div>
             ) : (
               <div className="hidden md:flex items-center gap-2 ml-1">
-                <div className="w-px h-5 bg-[hsl(var(--border))] mx-0.5" />
+                <div className="w-px h-5 bg-slate-200 dark:bg-zinc-800 mx-0.5" />
                 <Link
                   href={ROUTES.LOGIN}
-                  className="px-3 py-1.5 rounded-xl text-xs font-medium text-[hsl(var(--foreground))]/80 hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--surface-subtle))]/60 transition-colors"
+                  className="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors"
                 >
                   Sign In
                 </Link>
                 <Link
                   href={ROUTES.SIGNUP}
-                  className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-500 shadow-md shadow-indigo-500/20 hover:shadow-indigo-500/35 transition-all duration-200 active:scale-95"
+                  className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-indigo-600 via-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 shadow-xs hover:shadow-md hover:shadow-indigo-500/25 transition-all duration-200 active:scale-95"
                 >
                   Sign Up
                 </Link>

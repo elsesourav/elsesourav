@@ -420,7 +420,7 @@ export function WasmPortraitCanvas({
         className={`absolute inset-16 rounded-full blur-3xl pointer-events-none z-0 transition-opacity duration-700 ${
           isDark
             ? 'bg-gradient-to-tr from-cyan-500/25 via-indigo-600/20 to-purple-500/30 opacity-70'
-            : 'bg-gradient-to-tr from-sky-400/20 via-blue-500/15 to-indigo-500/20 opacity-60'
+            : 'bg-gradient-to-tr from-cyan-400/30 via-indigo-500/20 to-purple-500/30 opacity-70'
         }`}
         aria-hidden="true"
       />

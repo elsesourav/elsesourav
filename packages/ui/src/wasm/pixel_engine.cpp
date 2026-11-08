@@ -314,9 +314,9 @@ void PixelEngine::generatePixels() {
         float sy = STAR_SEEDS[s][1] * (float)h;
         bool isLeft = (STAR_SEEDS[s][0] < 0.5f);
 
-        uint8_t sr = isLeft ? 140 : 215;
-        uint8_t sg = isLeft ? 245 : 175;
-        uint8_t sb = isLeft ? 255 : 255;
+        uint8_t sr = isDark ? (isLeft ? 140 : 215) : (isLeft ? 0 : 160);
+        uint8_t sg = isDark ? (isLeft ? 245 : 175) : (isLeft ? 180 : 70);
+        uint8_t sb = isDark ? (isLeft ? 255 : 255) : (isLeft ? 240 : 245);
 
         // Center star pixel (delicate diamond point)
         Pixel& sp = particles[particleCount++];
@@ -455,14 +455,14 @@ void PixelEngine::generatePixels() {
                 }
             } else {
                 if (relX < 0.46f) {
-                    gr = 14; gg = 165; gb = 233;
+                    gr = 0; gg = 190; gb = 245;
                 } else if (relX > 0.54f) {
-                    gr = 135; gg = 65; gb = 240;
+                    gr = 160; gg = 65; gb = 245;
                 } else {
                     float b = (relX - 0.46f) / 0.08f;
-                    gr = (uint8_t)((1.0f - b) * 14.0f + b * 135.0f);
-                    gg = (uint8_t)((1.0f - b) * 165.0f + b * 65.0f);
-                    gb = (uint8_t)((1.0f - b) * 233.0f + b * 240.0f);
+                    gr = (uint8_t)(b * 160.0f);
+                    gg = (uint8_t)((1.0f - b) * 190.0f + b * 65.0f);
+                    gb = 245;
                 }
             }
 
@@ -710,6 +710,17 @@ void PixelEngine::update(float dt, float mouseX, float mouseY, int isMouseDown) 
                         p.baseG = (uint8_t)((1.0f - b) * 238.0f + b * 92.0f);
                         p.baseB = 255;
                     }
+                } else {
+                    if (relX < 0.46f) {
+                        p.baseR = 0; p.baseG = 190; p.baseB = 245;
+                    } else if (relX > 0.54f) {
+                        p.baseR = 160; p.baseG = 65; p.baseB = 245;
+                    } else {
+                        float b = (relX - 0.46f) / 0.08f;
+                        p.baseR = (uint8_t)(b * 160.0f);
+                        p.baseG = (uint8_t)((1.0f - b) * 190.0f + b * 65.0f);
+                        p.baseB = 245;
+                    }
                 }
                 p.r = p.baseR;
                 p.g = p.baseG;
@@ -811,6 +822,14 @@ void PixelEngine::update(float dt, float mouseX, float mouseY, int isMouseDown) 
                 continue;
             }
 
+            // In light mode, also protect hair from proximity emitter discoloration
+            if (!isDark && relY <= 0.38f && faceDistX < 0.36f) {
+                p.r = p.baseR;
+                p.g = p.baseG;
+                p.b = p.baseB;
+                continue;
+            }
+
             if (effLight <= 0.02f) {
                 p.r = p.baseR;
                 p.g = p.baseG;
@@ -834,9 +853,16 @@ void PixelEngine::update(float dt, float mouseX, float mouseY, int isMouseDown) 
                     // Controlled soft falloff scaled by dashboard lightIntensity
                     float intensity = norm * norm * 0.38f * effLight;
 
-                    litR = litR * (1.0f - intensity * 0.50f) + em.r * (intensity * 0.60f);
-                    litG = litG * (1.0f - intensity * 0.50f) + em.g * (intensity * 0.60f);
-                    litB = litB * (1.0f - intensity * 0.50f) + em.b * (intensity * 0.60f);
+                    if (isDark) {
+                        litR = litR * (1.0f - intensity * 0.50f) + em.r * (intensity * 0.60f);
+                        litG = litG * (1.0f - intensity * 0.50f) + em.g * (intensity * 0.60f);
+                        litB = litB * (1.0f - intensity * 0.50f) + em.b * (intensity * 0.60f);
+                    } else {
+                        // Light Mode: clean gentle illumination on hoodie edges without muddying
+                        litR = litR * (1.0f - intensity * 0.22f) + em.r * (intensity * 0.28f);
+                        litG = litG * (1.0f - intensity * 0.22f) + em.g * (intensity * 0.28f);
+                        litB = litB * (1.0f - intensity * 0.22f) + em.b * (intensity * 0.28f);
+                    }
                 }
             }
 
@@ -880,6 +906,9 @@ void PixelEngine::updateBuffers() {
             }
             // Always glow continuously along top (never fading down or going dark)
             ca = ((float)p.a / 255.0f) * glowMultiplier;
+            if (!isDark) {
+                ca = fminf(ca * 1.15f, 1.0f);
+            }
             if (ca > 1.0f) ca = 1.0f;
         } else if (p.flags & (FLAG_STAR_PIXEL | FLAG_RING_PIXEL)) {
             ca *= glowMultiplier;

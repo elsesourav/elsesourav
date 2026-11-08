@@ -40,7 +40,7 @@ export function AboutPortraitCard({
         className={`absolute -inset-3 sm:-inset-6 rounded-3xl blur-2xl sm:blur-3xl opacity-40 sm:opacity-60 group-hover:opacity-80 transition-opacity duration-700 pointer-events-none ${
           isDark
             ? 'bg-gradient-to-tr from-cyan-500/25 via-indigo-600/20 to-purple-500/30'
-            : 'bg-gradient-to-tr from-cyan-500/15 via-emerald-500/10 to-indigo-500/15'
+            : 'bg-gradient-to-tr from-cyan-400/25 via-indigo-500/20 to-purple-500/25'
         }`}
         aria-hidden="true"
       />
