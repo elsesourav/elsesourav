@@ -102,7 +102,7 @@ void PixelEngine::setShowPathGuide(int show) {
 void PixelEngine::processImage(int w, int h) {
     init(w, h, isDark);
     generatePixels();
-    triggerEntrance(1.6f);
+    updateBuffers();
 }
 
 void PixelEngine::updateBuffers() {

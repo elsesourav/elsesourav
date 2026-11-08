@@ -59,6 +59,19 @@ inline void PixelEngine::triggerEntrance(float duration) {
             p.size = p.targetSize;
             p.a = p.baseA;
         }
+        applyProximityLighting(
+            particles,
+            particleCount,
+            width,
+            height,
+            lightIntensity,
+            glowMultiplier,
+            isDark,
+            lightMapR,
+            lightMapG,
+            lightMapB,
+            lightMapW
+        );
         updateBuffers();
         return;
     }
@@ -334,7 +347,6 @@ inline void PixelEngine::update(float dt, float mouseX, float mouseY, int isMous
         lightIntensity,
         glowMultiplier,
         isDark,
-        isEntrancing,
         lightMapR,
         lightMapG,
         lightMapB,

@@ -65,16 +65,16 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-zinc-950 text-zinc-100">
-      {/* Mobile Top Navigation */}
+    <div className="min-h-screen flex flex-col lg:flex-row bg-zinc-950 text-zinc-100 w-full max-w-full overflow-x-hidden selection:bg-indigo-600/30 selection:text-indigo-200">
+      {/* Mobile & Tablet Navigation Header with Drawer (< 1024px) */}
       <AdminMobileNav context={adminContext} />
 
-      {/* Desktop Sidebar Navigation */}
+      {/* Desktop Persistent Sidebar Navigation (>= 1024px) */}
       <AdminSidebar context={adminContext} />
 
-      {/* Main Admin Area */}
-      <div className="flex-1 flex flex-col min-w-0">
-        <main id="main-content" className="flex-1 p-4 sm:p-6 lg:p-8">
+      {/* Main Admin Scrollable Area */}
+      <div className="flex-1 flex flex-col min-w-0 max-w-full overflow-x-hidden">
+        <main id="main-content" className="flex-1 p-3.5 sm:p-5 lg:p-8 min-w-0 max-w-full">
           {children}
         </main>
       </div>

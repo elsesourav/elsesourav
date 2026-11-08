@@ -7,9 +7,7 @@
 #include <math.h>
 
 // Dynamic Proximity Lighting on nearby actual image pixels:
-// "when move the pixels, light of pixel based on the pixel color, like top pixel color,
-//  glow pixel color, calculate the my actual image pixel color light up. So based on the
-//  current color and the number of nearest pixel that based on that glow up the color."
+// Lights up immediately as soon as the image and particles are placed.
 inline void applyProximityLighting(
     Pixel* particles,
     int particleCount,
@@ -18,7 +16,6 @@ inline void applyProximityLighting(
     float lightIntensity,
     float glowMultiplier,
     int isDark,
-    int isEntrancing,
     float* lightMapR,
     float* lightMapG,
     float* lightMapB,
@@ -36,8 +33,8 @@ inline void applyProximityLighting(
     int iRad = (int)ceilf(lightRadius);
     float rSq = lightRadius * lightRadius;
 
-    // 1. Accumulate light from active moving glow particles along the contour
-    if (!isEntrancing && effLight > 0.01f) {
+    // 1. Accumulate light immediately from active moving glow particles along the contour
+    if (effLight > 0.01f) {
         for (int i = 0; i < particleCount; i++) {
             const Pixel& mp = particles[i];
             if (!mp.active || !(mp.flags & FLAG_EDGE_FLOW) || mp.a == 0) continue;
@@ -86,7 +83,7 @@ inline void applyProximityLighting(
             int cellIdx = iy * w + ix;
             float totalW = lightMapW[cellIdx];
 
-            if (totalW <= 0.001f || effLight <= 0.01f || isEntrancing) {
+            if (totalW <= 0.001f || effLight <= 0.01f) {
                 // Not near moving glow pixels -> keep 100% natural base photograph color
                 p.r = p.baseR;
                 p.g = p.baseG;

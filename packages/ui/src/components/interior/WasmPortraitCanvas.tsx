@@ -103,6 +103,7 @@ export function WasmPortraitCanvas({
 
     bridge.setFullscreenMode(false);
     bridge.resize(currentSize, currentSize);
+    bridge.triggerEntrance(0.01);
   }, []);
 
   const switchToFullscreen = useCallback(() => {

@@ -197,6 +197,21 @@ inline void PixelEngine::generatePixels() {
             }
         }
     }
+
+    // Immediately calculate initial proximity rim glow so the image glows right away on Frame 0
+    applyProximityLighting(
+        particles,
+        particleCount,
+        w,
+        h,
+        lightIntensity,
+        glowMultiplier,
+        isDark,
+        lightMapR,
+        lightMapG,
+        lightMapB,
+        lightMapW
+    );
 }
 
 #endif // PIXEL_GENERATOR_HPP
