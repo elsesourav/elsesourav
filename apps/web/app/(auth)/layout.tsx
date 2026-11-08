@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
+import { SITE_CONFIG } from '@elsesourav/config';
 import { BrandLogo } from '@/components/brand/BrandLogo';
 import { ThemePopup } from '@/components/theme/ThemePopup';
 import { AmbientBackground } from '@elsesourav/ui';
