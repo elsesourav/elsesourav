@@ -18,25 +18,25 @@ export const metadata: Metadata = {
 
 export default function AuthErrorPage() {
   return (
-    <Card className="border-red-900/40 bg-zinc-900/60 backdrop-blur-md shadow-2xl text-center">
+    <Card className="w-full max-w-md border-rose-500/30 bg-[hsl(var(--card))] backdrop-blur-md shadow-2xl rounded-3xl text-center">
       <CardHeader className="flex flex-col items-center">
-        <div className="w-14 h-14 rounded-full bg-red-950/60 border border-red-500/30 flex items-center justify-center text-red-400 mb-2">
+        <div className="w-14 h-14 rounded-full bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-600 dark:text-rose-400 mb-2">
           <AlertTriangle className="w-7 h-7" />
         </div>
-        <CardTitle className="text-2xl font-bold text-zinc-100">Authentication Failed</CardTitle>
-        <CardDescription className="text-zinc-400 max-w-sm">
+        <CardTitle className="text-2xl font-bold text-[hsl(var(--foreground))]">Authentication Failed</CardTitle>
+        <CardDescription className="text-[hsl(var(--muted-foreground))] max-w-sm">
           We encountered an issue while verifying your identity with the authentication provider.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-xs text-zinc-500">
+        <p className="text-xs text-[hsl(var(--muted-foreground))]">
           This could happen if the session expired, the authorization code was already consumed, or
           permissions were cancelled.
         </p>
       </CardContent>
-      <CardFooter className="flex justify-center gap-3 border-t border-zinc-800/50 pt-4">
+      <CardFooter className="flex justify-center gap-3 border-t border-[hsl(var(--border-subtle))] pt-4">
         <Link href="/login">
-          <Button variant="outline" className="border-zinc-700 text-zinc-300">
+          <Button variant="outline" className="border-[hsl(var(--border))] text-[hsl(var(--foreground))]">
             Return to Sign In
           </Button>
         </Link>

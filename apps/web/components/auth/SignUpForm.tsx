@@ -389,7 +389,7 @@ export function SignUpForm() {
   return (
     <div className="space-y-4 w-full">
       {errorMessage && (
-        <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 text-rose-700 dark:text-rose-300 text-xs flex items-start gap-2 shadow-sm animate-fade-in">
+        <div className="p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800/80 text-rose-950 dark:text-rose-100 text-xs flex items-start gap-2.5 font-medium leading-relaxed shadow-xs animate-fade-in">
           <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 dark:text-rose-400 mt-0.5" />
           <span>{errorMessage}</span>
         </div>

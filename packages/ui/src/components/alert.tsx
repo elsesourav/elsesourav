@@ -8,10 +8,17 @@ export interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function Alert({ className, variant = 'info', children, ...props }: AlertProps) {
   const variants = {
-    info: 'bg-sky-500/10 border-sky-500/30 text-sky-800 dark:text-sky-200',
-    success: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-800 dark:text-emerald-200',
-    warning: 'bg-amber-500/10 border-amber-500/30 text-amber-800 dark:text-amber-200',
-    error: 'bg-rose-500/10 border-rose-500/30 text-rose-800 dark:text-rose-200',
+    info: 'bg-sky-50 dark:bg-sky-950/50 border-sky-200 dark:border-sky-800/70 text-sky-950 dark:text-sky-100',
+    success: 'bg-emerald-50 dark:bg-emerald-950/50 border-emerald-200 dark:border-emerald-800/70 text-emerald-950 dark:text-emerald-100',
+    warning: 'bg-amber-50 dark:bg-amber-950/50 border-amber-200 dark:border-amber-800/70 text-amber-950 dark:text-amber-100',
+    error: 'bg-rose-50 dark:bg-rose-950/60 border-rose-200 dark:border-rose-800/80 text-rose-950 dark:text-rose-100',
+  };
+
+  const iconVariants = {
+    info: 'text-sky-600 dark:text-sky-400',
+    success: 'text-emerald-600 dark:text-emerald-400',
+    warning: 'text-amber-600 dark:text-amber-400',
+    error: 'text-rose-600 dark:text-rose-400',
   };
 
   const icons = {
@@ -27,21 +34,21 @@ export function Alert({ className, variant = 'info', children, ...props }: Alert
     <div
       role="alert"
       className={cn(
-        'relative w-full rounded-2xl border p-4 flex gap-3 text-sm items-start shadow-sm',
+        'relative w-full rounded-2xl border p-3.5 sm:p-4 flex gap-3 text-sm items-start shadow-xs',
         variants[variant],
         className
       )}
       {...props}
     >
-      <IconComponent className="h-5 w-5 shrink-0 mt-0.5" />
-      <div className="flex-1 leading-relaxed">{children}</div>
+      <IconComponent className={cn('h-5 w-5 shrink-0 mt-0.5', iconVariants[variant])} />
+      <div className="flex-1 leading-relaxed font-medium">{children}</div>
     </div>
   );
 }
 
 export function AlertTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
-    <h5 className={cn('font-semibold leading-none tracking-tight mb-1', className)} {...props} />
+    <h5 className={cn('font-semibold leading-none tracking-tight mb-1 text-inherit', className)} {...props} />
   );
 }
 
@@ -49,5 +56,5 @@ export function AlertDescription({
   className,
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn('text-xs opacity-90', className)} {...props} />;
+  return <div className={cn('text-xs font-medium leading-relaxed text-inherit', className)} {...props} />;
 }

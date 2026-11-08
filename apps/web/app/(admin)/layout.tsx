@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Link from 'next/link';
-import { cookies, headers } from 'next/headers';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { getServerSession } from '@elsesourav/auth';
 import { ROUTES } from '@elsesourav/config';
@@ -19,15 +19,6 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const headersList = await headers();
-  const host = headersList.get('x-forwarded-host') || headersList.get('host') || '';
-  const hostname = (host.split(':')[0] || '').toLowerCase();
-
-  // If accessed from main public domain, redirect to the dedicated admin subdomain
-  if (hostname === 'elsesourav.com' || hostname === 'www.elsesourav.com') {
-    redirect('https://admin.elsesourav.com/admin');
-  }
-
   const cookieStore = await cookies();
   const session = await getServerSession({
     getAll: () => cookieStore.getAll(),

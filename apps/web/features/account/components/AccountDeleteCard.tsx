@@ -177,9 +177,9 @@ export function AccountDeleteCard({ targetUsername, scheduledDeletionAt }: Accou
               className="space-y-3.5 text-xs"
             >
               <div className="space-y-1.5 p-3 rounded-xl bg-rose-500/10 border border-rose-500/25">
-                <label className="block text-[11px] font-semibold text-rose-300">
+                <label className="block text-[11px] font-semibold text-rose-700 dark:text-rose-300">
                   Type your username{' '}
-                  <span className="font-mono text-white bg-rose-950/80 px-1.5 py-0.5 rounded border border-rose-500/40">
+                  <span className="font-mono text-rose-950 dark:text-white bg-rose-100 dark:bg-rose-950/80 px-1.5 py-0.5 rounded border border-rose-300 dark:border-rose-500/40">
                     {targetUsername}
                   </span>{' '}
                   to confirm:

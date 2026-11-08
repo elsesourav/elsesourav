@@ -22,8 +22,8 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
     <div className="min-h-screen flex flex-col justify-between bg-[hsl(var(--background))] text-[hsl(var(--foreground))] relative overflow-x-hidden selection:bg-indigo-500/30">
       <AmbientBackground variant="minimal" />
 
-      {/* Top Header with Brand Name Logo & Utility Controls */}
-      <header className="px-3.5 xs:px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between relative z-10">
+      {/* Top Header with Brand Name Logo & Utility Controls (Higher stacking context than main card) */}
+      <header className="px-3.5 xs:px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between relative z-50">
         <a
           href="https://elsesourav.com"
           className="flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg p-0.5 sm:p-1"

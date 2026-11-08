@@ -119,7 +119,7 @@ export function ThemePopup() {
         <div
           role="menu"
           aria-label="Appearance"
-          className={`absolute right-0 mt-2 w-52 rounded-2xl bg-white/95 dark:bg-[hsl(var(--surface-elevated))] border border-slate-200/90 dark:border-[hsl(var(--border))] shadow-2xl p-1.5 z-50 text-xs backdrop-blur-xl ${
+          className={`absolute right-0 mt-2 w-52 rounded-2xl bg-white/95 dark:bg-[hsl(var(--surface-elevated))] border border-slate-200/90 dark:border-[hsl(var(--border))] shadow-2xl p-1.5 z-[100] text-xs backdrop-blur-xl ${
             isClosing ? 'animate-popup-out' : 'animate-popup-in'
           }`}
         >

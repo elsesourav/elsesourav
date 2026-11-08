@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Metadata } from 'next';
-import { headers } from 'next/headers';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { getServerSession } from '@elsesourav/auth';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@elsesourav/ui';
 import { LoginForm } from '@/components/auth/LoginForm';
 import { ShieldCheck } from 'lucide-react';
@@ -14,13 +15,13 @@ export const metadata: Metadata = {
 };
 
 export default async function LoginPage() {
-  const headersList = await headers();
-  const host = headersList.get('x-forwarded-host') || headersList.get('host') || '';
-  const hostname = (host.split(':')[0] || '').toLowerCase();
+  const cookieStore = await cookies();
+  const session = await getServerSession({
+    getAll: () => cookieStore.getAll(),
+  });
 
-  // If accessed on the main public site, redirect to admin subdomain login
-  if (hostname === 'elsesourav.com' || hostname === 'www.elsesourav.com') {
-    redirect('https://admin.elsesourav.com/login');
+  if (session?.user && (session.user.role === 'ADMIN' || session.user.role === 'STAFF')) {
+    redirect('/admin');
   }
 
   return (
@@ -48,7 +49,7 @@ export default async function LoginPage() {
           Authorized administrative access only.
         </p>
         <a
-          href="https://elsesourav.com"
+          href="/"
           className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium hover:underline transition-colors"
         >
           Return to public website

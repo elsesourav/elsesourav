@@ -197,7 +197,7 @@ export function ForgotPasswordForm() {
   return (
     <div className="space-y-4 w-full">
       {errorMessage && (
-        <Alert variant="error" className="bg-red-950/40 border-red-800/60 text-red-300 text-xs">
+        <Alert variant="error" className="text-xs">
           <AlertDescription>{errorMessage}</AlertDescription>
         </Alert>
       )}
@@ -207,13 +207,12 @@ export function ForgotPasswordForm() {
         <div className="flex items-center justify-between pt-1 px-0.5 pb-2 border-b border-[hsl(var(--border-subtle))]">
           <div className="flex items-center gap-1.5">
             <span
-              className={`w-1.5 h-1.5 rounded-full ${
-                step === 1
+              className={`w-1.5 h-1.5 rounded-full ${step === 1
                   ? 'bg-indigo-400 animate-pulse'
                   : step === 2
                     ? 'bg-amber-400 animate-pulse'
                     : 'bg-emerald-400'
-              }`}
+                }`}
             />
             <span className="text-xs font-semibold text-[hsl(var(--foreground))]">
               {step === 1
@@ -230,13 +229,12 @@ export function ForgotPasswordForm() {
             {[1, 2, 3].map((s) => (
               <div
                 key={s}
-                className={`h-1 w-4 rounded-full transition-all duration-300 ${
-                  s < step
+                className={`h-1 w-4 rounded-full transition-all duration-300 ${s < step
                     ? 'bg-emerald-400'
                     : s === step
                       ? 'bg-indigo-500 shadow-sm shadow-indigo-500/50'
                       : 'bg-zinc-800'
-                }`}
+                  }`}
               />
             ))}
           </div>
@@ -252,12 +250,11 @@ export function ForgotPasswordForm() {
             type="text"
             icon={<Mail className="w-4 h-4" />}
             autoComplete="username"
-            placeholder="developer@example.com or username"
+            placeholder="username"
             value={identifier}
             onChange={(val) => setIdentifier(val)}
             required
             disabled={loading}
-            hint="We will dispatch a 6-digit numeric verification code to your email."
           />
 
           <Button
@@ -328,11 +325,10 @@ export function ForgotPasswordForm() {
               size="xs"
               onClick={handleResendOtp}
               disabled={resendCooldown > 0 || loading}
-              className={`text-[11px] font-medium ${
-                resendCooldown > 0
+              className={`text-[11px] font-medium ${resendCooldown > 0
                   ? 'text-[hsl(var(--muted-foreground))] cursor-not-allowed'
                   : 'text-indigo-400 hover:text-indigo-300'
-              }`}
+                }`}
             >
               {resendCooldown > 0 ? `Resend code in ${resendCooldown}s` : 'Resend Code'}
             </Button>
@@ -404,9 +400,8 @@ export function ForgotPasswordForm() {
                   {[1, 2, 3, 4].map((seg) => (
                     <div
                       key={seg}
-                      className={`h-1 rounded-full transition-all duration-300 ${
-                        passwordStrength.score >= seg ? passwordStrength.color : 'bg-zinc-800'
-                      }`}
+                      className={`h-1 rounded-full transition-all duration-300 ${passwordStrength.score >= seg ? passwordStrength.color : 'bg-zinc-800'
+                        }`}
                     />
                   ))}
                 </div>

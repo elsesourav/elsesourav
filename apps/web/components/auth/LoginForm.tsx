@@ -125,7 +125,7 @@ export function LoginForm() {
   return (
     <div className="space-y-4 sm:space-y-5 w-full">
       {errorMessage && (
-        <Alert variant="error" className="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800/60 text-red-700 dark:text-red-300 text-xs rounded-xl">
+        <Alert variant="error" className="text-xs">
           <AlertDescription>{errorMessage}</AlertDescription>
         </Alert>
       )}

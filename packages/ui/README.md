@@ -469,17 +469,15 @@ import { ... } from '@elsesourav/ui';
 
 ### `Alert`, `AlertTitle`, `AlertDescription`
 
-- **Purpose**: Inline contextual notices communicating errors, security warnings, or system confirmations.
+- **Purpose**: Inline contextual notices communicating errors, security warnings, or system confirmations with built-in semantic icons and WCAG AA/AAA compliant high-contrast color scales for light and dark modes.
 - **Variants**: `'info' | 'success' | 'warning' | 'error'`
 - **Usage Example**:
   ```tsx
   import { Alert, AlertTitle, AlertDescription } from '@elsesourav/ui';
-  import { AlertTriangle } from 'lucide-react';
 
-  <Alert variant="warning">
-    <AlertTriangle className="h-4 w-4" />
-    <AlertTitle>Password expirable</AlertTitle>
-    <AlertDescription>Your password hasn't been changed in 180 days.</AlertDescription>
+  <Alert variant="error">
+    <AlertTitle>Action required</AlertTitle>
+    <AlertDescription>Failed to verify the security code. Please try again.</AlertDescription>
   </Alert>;
   ```
 
