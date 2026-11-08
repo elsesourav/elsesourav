@@ -11,11 +11,18 @@ export async function GET(request: NextRequest) {
   const errorDescription = requestUrl.searchParams.get('error_description');
   const safeRedirectPath = sanitizeRedirectUrl(next, '/');
 
+  // Compute canonical public origin from proxy headers or environment, preventing localhost fallback
+  const forwardedHost = request.headers.get('x-forwarded-host');
+  const forwardedProto = request.headers.get('x-forwarded-proto') || 'https';
+  const canonicalOrigin = forwardedHost
+    ? `${forwardedProto}://${forwardedHost}`
+    : (process.env.NEXT_PUBLIC_SITE_URL || requestUrl.origin);
+
   // Handle provider-level error callback (e.g., user canceled consent or provider rejected)
   if (errorParam) {
     const message = errorDescription || errorParam;
     return NextResponse.redirect(
-      new URL(`/login?error=${encodeURIComponent(message)}`, requestUrl.origin)
+      new URL(`/login?error=${encodeURIComponent(message)}`, canonicalOrigin)
     );
   }
 
@@ -67,16 +74,16 @@ export async function GET(request: NextRequest) {
         console.error('Failed to sync OAuth user profile to database:', syncErr);
       }
 
-      return NextResponse.redirect(new URL(safeRedirectPath, requestUrl.origin));
+      return NextResponse.redirect(new URL(safeRedirectPath, canonicalOrigin));
     }
 
     if (error) {
       console.error('OAuth exchange error:', error.message);
       return NextResponse.redirect(
-        new URL(`/login?error=${encodeURIComponent(error.message)}`, requestUrl.origin)
+        new URL(`/login?error=${encodeURIComponent(error.message)}`, canonicalOrigin)
       );
     }
   }
 
-  return NextResponse.redirect(new URL('/login?error=oauth_exchange_failed', requestUrl.origin));
+  return NextResponse.redirect(new URL('/login?error=oauth_exchange_failed', canonicalOrigin));
 }
