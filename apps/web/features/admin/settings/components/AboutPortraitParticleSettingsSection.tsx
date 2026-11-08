@@ -11,6 +11,7 @@ export interface AboutPortraitParticleSettingsProps {
   glowBrightness: string;
   flightSpeed: string;
   pathSpread?: string;
+  lightIntensity?: string;
   showPathGuide?: boolean;
   imageDarkSrc?: string;
   imageLightSrc?: string;
@@ -57,12 +58,21 @@ const SPREAD_PRESETS = [
   { value: '5.2px', label: '5.2px Expansive', desc: 'Wide ethereal atmospheric aura' },
 ];
 
+const LIGHT_INTENSITY_PRESETS = [
+  { value: '0.0', label: '0.0 Off', desc: 'No rim illumination' },
+  { value: '0.25', label: '0.25 Soft', desc: 'Subtle photograph lighting' },
+  { value: '0.38', label: '0.38 Standard', desc: 'Default luminous rim' },
+  { value: '0.65', label: '0.65 Vivid', desc: 'Prominent neon radiance' },
+  { value: '1.0', label: '1.0 Maximum', desc: 'Full cyber neon intensity' },
+];
+
 export function AboutPortraitParticleSettingsSection({
   particleDensity = '1.0x',
   particleSize = '1.0x',
   glowBrightness = '1.0x',
   flightSpeed = '1.0x',
   pathSpread = '2.6px',
+  lightIntensity = '0.38',
   showPathGuide = false,
   imageDarkSrc = '/about/souravbarui-dark.png',
   imageLightSrc = '/about/souravbarui-light.png',
@@ -181,6 +191,7 @@ export function AboutPortraitParticleSettingsSection({
               glowBrightness={glowBrightness}
               flightSpeed={flightSpeed}
               pathSpread={pathSpread}
+              lightIntensity={parseFloat(lightIntensity) || 0.38}
               showPathGuide={guideEnabled}
               className="rounded-xl w-full"
             />
@@ -203,14 +214,14 @@ export function AboutPortraitParticleSettingsSection({
               key={preset.value}
               type="button"
               onClick={() => onChange('portrait_particle_density', preset.value)}
-              className={`p-2.5 rounded-xl border text-left transition-all ${
+              className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between h-full cursor-pointer ${
                 particleDensity === preset.value
                   ? 'bg-cyan-950/40 border-cyan-500/80 text-white shadow-[0_0_12px_rgba(6,182,212,0.2)]'
                   : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
               }`}
             >
               <div className="text-xs font-semibold">{preset.label}</div>
-              <div className="text-[10px] text-zinc-500 mt-0.5 leading-snug">{preset.desc}</div>
+              <div className="text-[10px] text-zinc-500 mt-1 leading-snug">{preset.desc}</div>
             </button>
           ))}
         </div>
@@ -231,14 +242,14 @@ export function AboutPortraitParticleSettingsSection({
               key={preset.value}
               type="button"
               onClick={() => onChange('portrait_particle_size', preset.value)}
-              className={`p-2.5 rounded-xl border text-left transition-all ${
+              className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between h-full cursor-pointer ${
                 particleSize === preset.value
                   ? 'bg-indigo-950/40 border-indigo-500/80 text-white shadow-[0_0_12px_rgba(99,102,241,0.2)]'
                   : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
               }`}
             >
               <div className="text-xs font-semibold">{preset.label}</div>
-              <div className="text-[10px] text-zinc-500 mt-0.5 leading-snug">{preset.desc}</div>
+              <div className="text-[10px] text-zinc-500 mt-1 leading-snug">{preset.desc}</div>
             </button>
           ))}
         </div>
@@ -259,14 +270,14 @@ export function AboutPortraitParticleSettingsSection({
               key={preset.value}
               type="button"
               onClick={() => onChange('portrait_glow_brightness', preset.value)}
-              className={`p-2.5 rounded-xl border text-left transition-all ${
+              className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between h-full cursor-pointer ${
                 glowBrightness === preset.value
                   ? 'bg-amber-950/40 border-amber-500/80 text-white shadow-[0_0_12px_rgba(245,158,11,0.2)]'
                   : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
               }`}
             >
               <div className="text-xs font-semibold">{preset.label}</div>
-              <div className="text-[10px] text-zinc-500 mt-0.5 leading-snug">{preset.desc}</div>
+              <div className="text-[10px] text-zinc-500 mt-1 leading-snug">{preset.desc}</div>
             </button>
           ))}
         </div>
@@ -287,14 +298,14 @@ export function AboutPortraitParticleSettingsSection({
               key={preset.value}
               type="button"
               onClick={() => onChange('portrait_flight_speed', preset.value)}
-              className={`p-2.5 rounded-xl border text-left transition-all ${
+              className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between h-full cursor-pointer ${
                 flightSpeed === preset.value
                   ? 'bg-emerald-950/40 border-emerald-500/80 text-white shadow-[0_0_12px_rgba(16,185,129,0.2)]'
                   : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
               }`}
             >
               <div className="text-xs font-semibold">{preset.label}</div>
-              <div className="text-[10px] text-zinc-500 mt-0.5 leading-snug">{preset.desc}</div>
+              <div className="text-[10px] text-zinc-500 mt-1 leading-snug">{preset.desc}</div>
             </button>
           ))}
         </div>
@@ -315,14 +326,42 @@ export function AboutPortraitParticleSettingsSection({
               key={preset.value}
               type="button"
               onClick={() => onChange('portrait_path_spread', preset.value)}
-              className={`p-2.5 rounded-xl border text-left transition-all ${
+              className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between h-full cursor-pointer ${
                 pathSpread === preset.value
                   ? 'bg-indigo-950/40 border-indigo-500/80 text-white shadow-[0_0_12px_rgba(99,102,241,0.2)]'
                   : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
               }`}
             >
               <div className="text-xs font-semibold">{preset.label}</div>
-              <div className="text-[10px] text-zinc-500 mt-0.5 leading-snug">{preset.desc}</div>
+              <div className="text-[10px] text-zinc-500 mt-1 leading-snug">{preset.desc}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 6. Dynamic Proximity Lighting Intensity */}
+      <div className="space-y-2.5">
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-semibold text-zinc-200 flex items-center gap-1.5">
+            <Flame className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Photograph Rim Proximity Lighting</span>
+          </label>
+          <span className="font-mono text-cyan-400 text-[11px] font-bold">{lightIntensity}</span>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+          {LIGHT_INTENSITY_PRESETS.map((preset) => (
+            <button
+              key={preset.value}
+              type="button"
+              onClick={() => onChange('portrait_light_intensity', preset.value)}
+              className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between h-full cursor-pointer ${
+                lightIntensity === preset.value
+                  ? 'bg-cyan-950/40 border-cyan-500/80 text-white shadow-[0_0_12px_rgba(6,182,212,0.2)]'
+                  : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+              }`}
+            >
+              <div className="text-xs font-semibold">{preset.label}</div>
+              <div className="text-[10px] text-zinc-500 mt-1 leading-snug">{preset.desc}</div>
             </button>
           ))}
         </div>

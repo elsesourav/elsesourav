@@ -42,9 +42,9 @@ export class SiteService {
     const parsedLight = rawPortraitLight ? parseFloat(rawPortraitLight) : 0.38;
     const portraitLightIntensity = isNaN(parsedLight) ? 0.38 : Math.max(0, Math.min(1.0, parsedLight));
     const portraitImageDarkUrl =
-      dbSettings['portrait_image_dark_url'] || '/about/souravbarui-dark-512.webp';
+      dbSettings['portrait_image_dark_url'] || '/about/souravbarui-dark.png';
     const portraitImageLightUrl =
-      dbSettings['portrait_image_light_url'] || '/about/souravbarui-light-512.webp';
+      dbSettings['portrait_image_light_url'] || '/about/souravbarui-light.png';
     const portraitParticleDensity = dbSettings['portrait_particle_density'] || '1.0x';
     const portraitParticleSize = dbSettings['portrait_particle_size'] || '1.0x';
     const portraitGlowBrightness = dbSettings['portrait_glow_brightness'] || '1.0x';

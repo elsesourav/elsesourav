@@ -92,7 +92,7 @@ export function LegalSettingsTab({
             <button
               type="button"
               onClick={() => setShowPrivacyEditor((v) => !v)}
-              className="text-[10px] px-2 py-0.5 rounded-md border border-zinc-700 text-zinc-400 hover:text-zinc-200"
+              className="text-[10px] px-2 py-0.5 rounded-md border border-zinc-700 text-zinc-400 hover:text-zinc-200 inline-flex items-center cursor-pointer"
             >
               {showPrivacyEditor ? 'Collapse' : 'Expand'}
             </button>

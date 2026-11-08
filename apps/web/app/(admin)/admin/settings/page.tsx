@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { requireAdmin } from '@/features/admin/guards/require-admin';
 import { AdminRepository } from '@elsesourav/database';
 import { SITE_CONFIG, CREATOR_CONFIG } from '@elsesourav/config';
+import { Badge } from '@elsesourav/ui';
 import { AdminSettingsForm } from '@/features/admin/settings/components/AdminSettingsForm';
 
 export const metadata: Metadata = {
@@ -55,6 +56,16 @@ export default async function AdminSettingsPage() {
     twitter_url: dbSettings['twitter_url'] || CREATOR_CONFIG.links.twitter,
     contact_email: dbSettings['contact_email'] || CREATOR_CONFIG.contact.email,
     support_url: dbSettings['support_url'] || CREATOR_CONFIG.contact.support,
+    // Portrait & Avatar Studio defaults
+    portrait_image_dark_url: dbSettings['portrait_image_dark_url'] || '/about/souravbarui-dark.png',
+    portrait_image_light_url: dbSettings['portrait_image_light_url'] || '/about/souravbarui-light.png',
+    portrait_particle_density: dbSettings['portrait_particle_density'] || '1.0x',
+    portrait_particle_size: dbSettings['portrait_particle_size'] || '1.0x',
+    portrait_glow_brightness: dbSettings['portrait_glow_brightness'] || '1.0x',
+    portrait_flight_speed: dbSettings['portrait_flight_speed'] || '1.0x',
+    portrait_path_spread: dbSettings['portrait_path_spread'] || '2.6px',
+    portrait_light_intensity: dbSettings['portrait_light_intensity'] || '0.38',
+    portrait_show_path_guide: dbSettings['portrait_show_path_guide'] || 'false',
     // Legal content defaults
     legal_privacy_md: dbSettings['legal_privacy_md'] || '',
     legal_terms_md: dbSettings['legal_terms_md'] || '',
@@ -63,6 +74,31 @@ export default async function AdminSettingsPage() {
 
   return (
     <div className="space-y-6">
+      {/* Standard Admin Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-zinc-800">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[10px] font-mono tracking-wider text-indigo-400 uppercase">
+              PORTAL CONFIG
+            </span>
+            <span className="text-zinc-600">/</span>
+            <Badge
+              variant="outline"
+              className="text-[10px] px-1.5 py-0 border-zinc-800 text-zinc-400 font-mono"
+            >
+              Settings
+            </Badge>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-100">
+            Portal Configuration
+          </h1>
+          <p className="text-xs sm:text-sm text-zinc-400 mt-1 max-w-2xl">
+            Configure site identity, creator biography, homepage narrative, and legal policies across
+            the platform.
+          </p>
+        </div>
+      </div>
+
       <AdminSettingsForm initialSettings={initialSettings} />
     </div>
   );

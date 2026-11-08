@@ -80,13 +80,15 @@ export function ImageInputWithLibrary({
             {label} {required && <span className="text-rose-400">*</span>}
           </label>
           {value && (
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="xs"
               onClick={() => onChange('')}
-              className="text-[11px] text-zinc-500 hover:text-rose-400 flex items-center gap-1 transition-colors"
+              className="text-[11px] text-zinc-500 hover:text-rose-400 flex items-center gap-1 transition-colors h-6 px-1.5 rounded-lg"
             >
               <X className="w-3 h-3" /> Clear
-            </button>
+            </Button>
           )}
         </div>
       )}
@@ -101,7 +103,7 @@ export function ImageInputWithLibrary({
         disabled={isUploading}
       />
 
-      <div className="flex items-center gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
         {/* Preview Thumbnail */}
         <div className={previewClasses}>
           {value ? (
@@ -119,24 +121,24 @@ export function ImageInputWithLibrary({
         </div>
 
         {/* Input & Action Buttons */}
-        <div className="flex-1 flex flex-wrap sm:flex-nowrap items-center gap-2">
+        <div className="flex-1 flex flex-col xl:flex-row items-stretch xl:items-center gap-2 min-w-0">
           <Input
             type="url"
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
             required={required}
-            className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100 flex-1 min-w-[200px]"
+            className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100 min-w-0 w-full"
           />
 
-          <div className="flex items-center gap-1.5 shrink-0">
+          <div className="flex items-center gap-1.5 shrink-0 justify-end">
             <Button
               type="button"
               variant="outline"
               size="sm"
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploading}
-              className="text-xs rounded-xl border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 gap-1.5 h-9 px-3 shrink-0"
+              className="text-xs rounded-xl border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 gap-1.5 h-9 px-3 shrink-0 flex-1 sm:flex-initial justify-center"
               title="Upload image file"
             >
               {isUploading ? (
@@ -152,7 +154,7 @@ export function ImageInputWithLibrary({
               variant="outline"
               size="sm"
               onClick={() => setIsModalOpen(true)}
-              className="text-xs rounded-xl border-indigo-500/30 bg-indigo-950/30 hover:bg-indigo-900/40 text-indigo-300 gap-1.5 h-9 px-3 shrink-0"
+              className="text-xs rounded-xl border-indigo-500/30 bg-indigo-950/30 hover:bg-indigo-900/40 text-indigo-300 gap-1.5 h-9 px-3 shrink-0 flex-1 sm:flex-initial justify-center"
               title="Select from Media Library"
             >
               <FolderOpen className="w-3.5 h-3.5 text-indigo-400" />

@@ -20,6 +20,7 @@ import {
   Loader2,
   User,
   Shield,
+  ExternalLink,
 } from 'lucide-react';
 
 const STATUS_OPTIONS = [
@@ -111,36 +112,37 @@ export function AdminTicketDetailView({ ticket: initialTicket }: AdminTicketDeta
     <div className="max-w-5xl mx-auto space-y-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-800/80 pb-4">
-        <div className="flex items-center gap-3">
+        <div className="flex items-start sm:items-center gap-3 min-w-0">
           <Link
             href="/admin/support"
-            className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-zinc-100 transition-colors"
+            aria-label="Back to support tickets"
+            className="p-2 shrink-0 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-zinc-100 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
-          <div>
-            <div className="flex items-center gap-2">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="font-mono text-xs font-bold text-indigo-400">
                 #{ticket.ticketNumber}
               </span>
               <span className="text-zinc-600">•</span>
               <span className="text-xs text-zinc-400 capitalize">{ticket.category}</span>
             </div>
-            <h1 className="text-xl sm:text-2xl font-bold text-zinc-100 tracking-tight">
+            <h1 className="text-lg sm:text-2xl font-bold text-zinc-100 tracking-tight break-words">
               {ticket.subject}
             </h1>
           </div>
         </div>
 
         {/* Status Selector */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between sm:justify-start gap-2 w-full sm:w-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-zinc-800/60">
           <label className="text-xs font-semibold text-zinc-400">Status:</label>
           <Dropdown
             items={STATUS_OPTIONS}
             value={status}
             disabled={isUpdatingStatus}
             onChange={(val) => handleStatusChange(val as SupportTicketStatus)}
-            className="w-48"
+            className="w-44 sm:w-48"
           />
         </div>
       </div>
@@ -182,18 +184,18 @@ export function AdminTicketDetailView({ ticket: initialTicket }: AdminTicketDeta
               return (
                 <div
                   key={msg.id}
-                  className={`p-5 rounded-2xl border transition-all ${
+                  className={`p-3.5 sm:p-5 rounded-2xl border transition-all ${
                     isNote
                       ? 'bg-amber-950/20 border-amber-500/40 shadow-sm'
                       : isStaff
-                        ? 'bg-indigo-950/20 border-indigo-500/30 ml-4'
-                        : 'bg-zinc-900/50 border-zinc-800 mr-4'
+                        ? 'bg-indigo-950/20 border-indigo-500/30 sm:ml-4'
+                        : 'bg-zinc-900/50 border-zinc-800 sm:mr-4'
                   }`}
                 >
-                  <div className="flex items-center justify-between gap-3 mb-2.5">
-                    <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-between gap-2 mb-2.5 flex-wrap">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <div
-                        className={`w-6 h-6 rounded-lg flex items-center justify-center text-xs ${
+                        className={`w-6 h-6 rounded-lg flex items-center justify-center text-xs shrink-0 ${
                           isNote
                             ? 'bg-amber-500/20 text-amber-300'
                             : isStaff
@@ -230,10 +232,10 @@ export function AdminTicketDetailView({ ticket: initialTicket }: AdminTicketDeta
                         </Badge>
                       )}
                     </div>
-                    <span className="text-[11px] text-zinc-500">{dateStr}</span>
+                    <span className="text-[11px] text-zinc-500 shrink-0">{dateStr}</span>
                   </div>
 
-                  <p className="text-xs text-zinc-300 whitespace-pre-wrap leading-relaxed">
+                  <p className="text-xs text-zinc-300 whitespace-pre-wrap leading-relaxed break-words">
                     {msg.message}
                   </p>
 
@@ -260,7 +262,7 @@ export function AdminTicketDetailView({ ticket: initialTicket }: AdminTicketDeta
           </div>
 
           {/* Response Form */}
-          <Card className="p-6 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl space-y-4">
+          <Card className="p-4 sm:p-6 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl space-y-4">
             <h4 className="text-xs font-bold text-zinc-200 uppercase tracking-wider flex items-center gap-2">
               <Send className="w-3.5 h-3.5 text-indigo-400" />
               <span>Post Staff Response / Internal Note</span>
@@ -287,7 +289,7 @@ export function AdminTicketDetailView({ ticket: initialTicket }: AdminTicketDeta
                 />
 
                 {/* Internal Note Toggle */}
-                <div className="flex items-center pt-5">
+                <div className="flex items-center pt-2 sm:pt-5">
                   <label className="flex items-center gap-2 text-xs font-semibold text-amber-300 cursor-pointer">
                     <input
                       type="checkbox"
@@ -305,7 +307,7 @@ export function AdminTicketDetailView({ ticket: initialTicket }: AdminTicketDeta
                   type="submit"
                   disabled={isSubmitting}
                   size="sm"
-                  className={`${
+                  className={`w-full sm:w-auto ${
                     isInternalNote
                       ? 'bg-amber-600 hover:bg-amber-500 text-white'
                       : 'bg-indigo-600 hover:bg-indigo-500 text-white'
@@ -331,18 +333,18 @@ export function AdminTicketDetailView({ ticket: initialTicket }: AdminTicketDeta
         {/* Sidebar Info */}
         <div className="space-y-6">
           {/* User Details */}
-          <Card className="p-5 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl space-y-3">
+          <Card className="p-4 sm:p-5 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl space-y-4">
             <h4 className="text-xs font-bold text-zinc-200 uppercase tracking-wider">
               Submitter Information
             </h4>
-            <div className="space-y-2 text-xs text-zinc-300">
+            <div className="space-y-2.5 text-xs text-zinc-300">
               <div>
                 <span className="text-zinc-500 block text-[11px]">Display Name:</span>
-                <span className="font-semibold">{ticket.userName || 'Anonymous'}</span>
+                <span className="font-semibold break-words">{ticket.userName || 'Anonymous'}</span>
               </div>
               <div>
                 <span className="text-zinc-500 block text-[11px]">Email:</span>
-                <span className="font-mono text-zinc-300">{ticket.userEmail || 'N/A'}</span>
+                <span className="font-mono text-zinc-300 break-all">{ticket.userEmail || 'N/A'}</span>
               </div>
               <div>
                 <span className="text-zinc-500 block text-[11px]">Priority:</span>
@@ -354,6 +356,18 @@ export function AdminTicketDetailView({ ticket: initialTicket }: AdminTicketDeta
                 <span className="text-zinc-500 block text-[11px]">Created Date:</span>
                 <span>{new Date(ticket.createdAt).toLocaleDateString()}</span>
               </div>
+            </div>
+
+            <div className="pt-2 border-t border-zinc-800/60">
+              <a
+                href={`/support/tickets/${ticket.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-1.5 w-full py-2 px-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-zinc-100 text-xs font-medium transition-colors"
+              >
+                <ExternalLink className="w-3.5 h-3.5 text-zinc-400" />
+                <span>View User Portal</span>
+              </a>
             </div>
           </Card>
         </div>

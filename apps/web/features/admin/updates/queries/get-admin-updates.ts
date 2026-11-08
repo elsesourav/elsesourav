@@ -5,19 +5,21 @@ import type { BlogPost, BlogCategory, BlogTag } from '@elsesourav/types';
 const blogRepo = new BlogRepository();
 const blogService = new BlogService(blogRepo);
 
-export interface AdminBlogListData {
+export interface AdminUpdatesListData {
   posts: BlogPost[];
   categories: BlogCategory[];
   tags: BlogTag[];
 }
 
-export async function getAdminBlogList(
+export type AdminBlogListData = AdminUpdatesListData;
+
+export async function getAdminUpdatesList(
   options: {
     status?: 'draft' | 'published' | 'archived';
     categorySlug?: string;
     search?: string;
   } = {}
-): Promise<AdminBlogListData> {
+): Promise<AdminUpdatesListData> {
   const context = await requireAdmin();
 
   const [posts, categories, tags] = await Promise.all([
@@ -33,13 +35,17 @@ export async function getAdminBlogList(
   };
 }
 
-export interface AdminBlogEditData {
+export const getAdminBlogList = getAdminUpdatesList;
+
+export interface AdminUpdateEditData {
   post: BlogPost;
   categories: BlogCategory[];
   tags: BlogTag[];
 }
 
-export async function getAdminPostForEdit(postId: string): Promise<AdminBlogEditData> {
+export type AdminBlogEditData = AdminUpdateEditData;
+
+export async function getAdminPostForEdit(postId: string): Promise<AdminUpdateEditData> {
   const context = await requireAdmin();
 
   const [post, categories, tags] = await Promise.all([

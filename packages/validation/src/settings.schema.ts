@@ -95,6 +95,10 @@ export const SiteSettingsSchema = z.object({
   portrait_glow_brightness: z.string().max(20).optional().or(z.literal('')),
   /** Interactive cyber portrait intro flight movement speed multiplier: 0.5x, 0.75x, 1.0x, 1.5x, 2.0x */
   portrait_flight_speed: z.string().max(20).optional().or(z.literal('')),
+  /** Interactive cyber portrait contour path spread ribbon width: 1.0px, 1.8px, 2.6px, 3.8px, 5.2px */
+  portrait_path_spread: z.string().max(20).optional().or(z.literal('')),
+  /** Admin-only silhouette contour path guide line toggle switch: 'true' | 'false' */
+  portrait_show_path_guide: z.string().max(10).optional().or(z.literal('')),
 
   // ── Footer Customization ───────────────────────────────────────────────────
   footer_text: z.string().max(500).optional().or(z.literal('')),

@@ -14,10 +14,12 @@ static inline float pseudoRand(float seed) {
 #define FLAG_NONE            0
 #define FLAG_BACK_PIXEL      (1 << 0) // Back layer: behind subject
 #define FLAG_RING_PIXEL      (1 << 1) // Back layer: halo ring
-#define FLAG_IMAGE_PIXEL     (1 << 2) // Middle layer: authentic portrait pixels
-#define FLAG_TOP_PARTICLE    (1 << 3) // Top layer: light up particles
-#define FLAG_EDGE_FLOW       (1 << 4) // Top layer: silhouette contour path
-#define FLAG_PATH_LINE       (1 << 5) // Top layer: continuous smooth edge path line
+#define FLAG_STAR_PIXEL      (1 << 2) // Back layer: animated pixel stars
+#define FLAG_ORBIT_PIXEL     (1 << 3) // Back layer: animated planetary orbit loops
+#define FLAG_IMAGE_PIXEL     (1 << 4) // Middle layer: authentic portrait pixels
+#define FLAG_TOP_PARTICLE    (1 << 5) // Top layer: light up particles
+#define FLAG_EDGE_FLOW       (1 << 6) // Top layer: silhouette contour path
+#define FLAG_PATH_LINE       (1 << 7) // Top layer: continuous smooth edge path line
 
 class Pixel {
 public:

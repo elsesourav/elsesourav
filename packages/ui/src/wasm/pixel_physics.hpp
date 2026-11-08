@@ -221,8 +221,14 @@ inline void PixelEngine::update(float dt, float mouseX, float mouseY, int isMous
                 float wander = sinf(globalTime * p.wanderFreq + p.wanderPhase) * p.wanderAmp;
                 float totalOffset = p.normalOffset + wander;
 
-                p.origX = cx + nx * totalOffset;
-                p.origY = cy + ny * totalOffset;
+                float ox = cx + nx * totalOffset;
+                float oy = cy + ny * totalOffset;
+                if (ox < 1.0f) ox = 1.0f;
+                if (ox > (float)width - 2.0f) ox = (float)width - 2.0f;
+                if (oy < 1.0f) oy = 1.0f;
+                if (oy > (float)height - 2.0f) oy = (float)height - 2.0f;
+                p.origX = ox;
+                p.origY = oy;
 
                 // Fade out smoothly at the lower shoulders so particles never touch bottom of shirt
                 if (cy >= (float)height * 0.82f) {
@@ -280,9 +286,21 @@ inline void PixelEngine::update(float dt, float mouseX, float mouseY, int isMous
             p.origY = p.baseY;
             float shimmer = 0.85f + 0.15f * sinf(globalTime * 2.2f + p.pathPhase * 2.0f);
             p.a = (uint8_t)(210.0f * shimmer);
+        } else if (p.flags & FLAG_STAR_PIXEL) {
+            p.origX = p.baseX + sinf(globalTime * 0.7f + p.pathPhase) * 1.2f;
+            p.origY = p.baseY + cosf(globalTime * 0.5f + p.pathPhase) * 1.2f;
+            float twinkle = 0.68f + 0.32f * sinf(globalTime * 3.2f + p.pathPhase);
+            p.a = (uint8_t)((float)p.baseA * twinkle);
+        } else if (p.flags & FLAG_ORBIT_PIXEL) {
+            float curAng = p.pathPhase + globalTime * p.pathSpeed;
+            p.origX = p.baseX + cosf(curAng) * p.normalOffset;
+            p.origY = p.baseY + sinf(curAng) * p.normalOffset;
+            p.a = (uint8_t)((float)p.baseA * (0.75f + 0.25f * sinf(curAng * 2.0f)));
         } else if (p.flags & FLAG_BACK_PIXEL) {
             p.origX = p.baseX;
             p.origY = p.baseY;
+            float shimmer = 0.85f + 0.15f * sinf(globalTime * 1.8f + p.pathPhase);
+            p.a = (uint8_t)((float)p.baseA * shimmer);
         } else {
             p.origX = p.baseX;
             p.origY = p.baseY;

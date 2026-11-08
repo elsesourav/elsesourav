@@ -23,6 +23,7 @@ import {
   Send,
   Archive,
   Trash2,
+  ExternalLink,
 } from 'lucide-react';
 import { AdminMarkdownEditor } from '@/features/admin/components/AdminMarkdownEditor';
 
@@ -162,22 +163,25 @@ export function AdminHelpForm({ article, categories }: AdminHelpFormProps) {
     }
   };
 
+  const currentCategory = categories.find((c) => c.id === categoryId);
+  const publicUrl = currentCategory && slug ? `/help/${currentCategory.slug}/${slug}` : `/help`;
+
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between gap-4 border-b border-zinc-800/80 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-800/80 pb-4">
         <div className="flex items-center gap-3">
           <Link
             href="/admin/help"
-            className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-zinc-100 transition-colors"
+            className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-zinc-100 transition-colors shrink-0"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
-          <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-zinc-100 tracking-tight">
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl font-bold text-zinc-100 tracking-tight truncate">
               {isEditing ? `Edit: ${article?.title}` : 'Create Help Article'}
             </h1>
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-zinc-400 truncate">
               {isEditing
                 ? `ID: ${article?.id} • Current status: ${status.toUpperCase()}`
                 : 'Add guides, tutorials, and documentation to the ElseSourav Help Center.'}
@@ -186,7 +190,18 @@ export function AdminHelpForm({ article, categories }: AdminHelpFormProps) {
         </div>
 
         {isEditing && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
+            {status === 'published' && currentCategory && (
+              <Link
+                href={publicUrl}
+                target="_blank"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-800/80 text-xs transition-colors"
+                title="View Live Guide"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">View Public</span>
+              </Link>
+            )}
             <Button
               type="button"
               variant="outline"
@@ -325,12 +340,12 @@ export function AdminHelpForm({ article, categories }: AdminHelpFormProps) {
         </Card>
 
         {/* Action Buttons */}
-        <div className="flex items-center justify-between pt-4">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-6 border-t border-zinc-800/80">
           <Button
             type="submit"
             disabled={isSaving}
             size="sm"
-            className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-5 py-2.5 rounded-xl gap-2 shadow-lg shadow-indigo-600/20"
+            className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-5 py-2.5 rounded-xl gap-2 shadow-lg shadow-indigo-600/20 justify-center w-full sm:w-auto"
           >
             {isSaving ? (
               <>
@@ -346,13 +361,13 @@ export function AdminHelpForm({ article, categories }: AdminHelpFormProps) {
           </Button>
 
           {isEditing && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 justify-end">
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
                 onClick={handleArchive}
-                className="text-xs border-zinc-800 text-zinc-400 hover:text-amber-300"
+                className="text-xs border-zinc-800 text-zinc-400 hover:text-amber-300 flex-1 sm:flex-none justify-center"
               >
                 <Archive className="w-3.5 h-3.5 mr-1" /> Archive
               </Button>
@@ -361,7 +376,7 @@ export function AdminHelpForm({ article, categories }: AdminHelpFormProps) {
                 variant="outline"
                 size="sm"
                 onClick={handleDelete}
-                className="text-xs border-zinc-800 text-zinc-400 hover:text-rose-400"
+                className="text-xs border-zinc-800 text-zinc-400 hover:text-rose-400 flex-1 sm:flex-none justify-center"
               >
                 <Trash2 className="w-3.5 h-3.5 mr-1" /> Delete
               </Button>

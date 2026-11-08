@@ -15,7 +15,7 @@ export async function createBlogPostAction(data: AdminSaveBlogSchemaInput) {
   if (!parsed.success) {
     return {
       success: false,
-      error: parsed.error.issues[0]?.message || 'Invalid blog post payload',
+      error: parsed.error.issues[0]?.message || 'Invalid update post payload',
     };
   }
 
@@ -31,7 +31,7 @@ export async function createBlogPostAction(data: AdminSaveBlogSchemaInput) {
       seoDescription: parsed.data.seoDescription || undefined,
     });
 
-    revalidatePath('/admin/blog');
+    revalidatePath('/admin/updates');
     revalidatePath('/admin');
     revalidatePath('/updates');
     revalidatePath('/');
@@ -44,7 +44,7 @@ export async function createBlogPostAction(data: AdminSaveBlogSchemaInput) {
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to create blog post',
+      error: error instanceof Error ? error.message : 'Failed to create update post',
     };
   }
 }
@@ -56,7 +56,7 @@ export async function updateBlogPostAction(postId: string, data: AdminSaveBlogSc
   if (!parsed.success) {
     return {
       success: false,
-      error: parsed.error.issues[0]?.message || 'Invalid blog post payload',
+      error: parsed.error.issues[0]?.message || 'Invalid update post payload',
     };
   }
 
@@ -73,8 +73,8 @@ export async function updateBlogPostAction(postId: string, data: AdminSaveBlogSc
       status: parsed.data.status.toLowerCase() as 'draft' | 'published' | 'archived',
     });
 
-    revalidatePath('/admin/blog');
-    revalidatePath(`/admin/blog/${postId}`);
+    revalidatePath('/admin/updates');
+    revalidatePath(`/admin/updates/${postId}`);
     revalidatePath('/admin');
     revalidatePath('/updates');
     revalidatePath(`/updates/${updated.slug}`);
@@ -88,7 +88,7 @@ export async function updateBlogPostAction(postId: string, data: AdminSaveBlogSc
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to update blog post',
+      error: error instanceof Error ? error.message : 'Failed to update post',
     };
   }
 }
@@ -99,8 +99,8 @@ export async function publishBlogPostAction(postId: string) {
   try {
     const published = await blogService.publishBlogPost(context.role, postId);
 
-    revalidatePath('/admin/blog');
-    revalidatePath(`/admin/blog/${postId}`);
+    revalidatePath('/admin/updates');
+    revalidatePath(`/admin/updates/${postId}`);
     revalidatePath('/admin');
     revalidatePath('/updates');
     revalidatePath(`/updates/${published.slug}`);
@@ -110,7 +110,7 @@ export async function publishBlogPostAction(postId: string) {
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to publish blog post',
+      error: error instanceof Error ? error.message : 'Failed to publish post',
     };
   }
 }
@@ -121,8 +121,8 @@ export async function archiveBlogPostAction(postId: string) {
   try {
     await blogService.archiveBlogPost(context.role, postId);
 
-    revalidatePath('/admin/blog');
-    revalidatePath(`/admin/blog/${postId}`);
+    revalidatePath('/admin/updates');
+    revalidatePath(`/admin/updates/${postId}`);
     revalidatePath('/admin');
     revalidatePath('/updates');
     revalidatePath('/');
@@ -131,7 +131,7 @@ export async function archiveBlogPostAction(postId: string) {
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to archive blog post',
+      error: error instanceof Error ? error.message : 'Failed to archive post',
     };
   }
 }
@@ -142,7 +142,7 @@ export async function deleteBlogPostAction(postId: string) {
   try {
     await blogService.deleteBlogPost(context.role, postId);
 
-    revalidatePath('/admin/blog');
+    revalidatePath('/admin/updates');
     revalidatePath('/admin');
     revalidatePath('/updates');
     revalidatePath('/');
@@ -151,7 +151,7 @@ export async function deleteBlogPostAction(postId: string) {
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to delete blog post',
+      error: error instanceof Error ? error.message : 'Failed to delete post',
     };
   }
 }

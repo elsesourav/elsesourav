@@ -12,7 +12,7 @@ import {
   publishBlogPostAction,
   archiveBlogPostAction,
   deleteBlogPostAction,
-} from '../actions/admin-blog-actions';
+} from '../actions/admin-update-actions';
 import {
   FileText,
   Sparkles,
@@ -28,13 +28,15 @@ import {
 import { AdminMarkdownEditor } from '@/features/admin/components/AdminMarkdownEditor';
 import { ImageInputWithLibrary } from '@/features/admin/media/components/ImageInputWithLibrary';
 
-interface AdminBlogFormProps {
+export interface AdminUpdateFormProps {
   post?: BlogPost;
   categories: readonly BlogCategory[];
   tags?: readonly BlogTag[];
 }
 
-export function AdminBlogForm({ post, categories }: AdminBlogFormProps) {
+export type AdminBlogFormProps = AdminUpdateFormProps;
+
+export function AdminUpdateForm({ post, categories }: AdminUpdateFormProps) {
   const router = useRouter();
   const isEditing = Boolean(post?.id);
 
@@ -96,17 +98,17 @@ export function AdminBlogForm({ post, categories }: AdminBlogFormProps) {
       if (isEditing && post?.id) {
         const res = await updateBlogPostAction(post.id, payload);
         if (res.success) {
-          setSuccess('Article updated successfully.');
+          setSuccess('Update saved successfully.');
         } else {
           setError(res.error || 'Failed to update article.');
         }
       } else {
         const res = await createBlogPostAction(payload);
         if (res.success && res.postId) {
-          setSuccess('Article created successfully. Redirecting...');
-          router.push(`/admin/blog/${res.postId}`);
+          setSuccess('Update created successfully. Redirecting...');
+          router.push(`/admin/updates/${res.postId}`);
         } else {
-          setError(res.error || 'Failed to create article.');
+          setError(res.error || 'Failed to create update.');
         }
       }
     } catch {
@@ -125,12 +127,12 @@ export function AdminBlogForm({ post, categories }: AdminBlogFormProps) {
       const res = await publishBlogPostAction(post.id);
       if (res.success) {
         setStatus('published');
-        setSuccess('Article published live to the public devlog!');
+        setSuccess('Update published live to the public updates feed!');
       } else {
-        setError(res.error || 'Failed to publish article.');
+        setError(res.error || 'Failed to publish update.');
       }
     } catch {
-      setError('Failed to publish article.');
+      setError('Failed to publish update.');
     } finally {
       setIsPublishing(false);
     }
@@ -142,43 +144,44 @@ export function AdminBlogForm({ post, categories }: AdminBlogFormProps) {
       const res = await archiveBlogPostAction(post.id);
       if (res.success) {
         setStatus('archived');
-        setSuccess('Article archived.');
+        setSuccess('Update archived.');
       }
     } catch {
-      setError('Failed to archive article.');
+      setError('Failed to archive update.');
     }
   };
 
   const handleDelete = async () => {
     if (!post?.id) return;
-    if (!window.confirm('Are you sure you want to permanently delete this article?')) return;
+    if (!window.confirm('Are you sure you want to permanently delete this update?')) return;
 
     try {
       const res = await deleteBlogPostAction(post.id);
       if (res.success) {
-        router.push('/admin/blog');
+        router.push('/admin/updates');
       }
     } catch {
-      setError('Failed to delete article.');
+      setError('Failed to delete update.');
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8 w-full">
       {/* Header */}
-      <div className="flex items-center justify-between gap-4 border-b border-zinc-800/80 pb-4">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-zinc-800/80 pb-4">
+        <div className="flex items-center gap-3 min-w-0">
           <Link
-            href="/admin/blog"
-            className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-zinc-100 transition-colors"
+            href="/admin/updates"
+            className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-zinc-100 transition-colors shrink-0"
+            aria-label="Back to Updates List"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
-          <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-zinc-100 tracking-tight">
-              {isEditing ? `Edit: ${post?.title}` : 'Write New Article'}
+          <div className="min-w-0">
+            <h1 className="text-lg sm:text-2xl font-bold text-zinc-100 tracking-tight truncate">
+              {isEditing ? `Edit: ${post?.title}` : 'Write New Update'}
             </h1>
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-zinc-400 truncate">
               {isEditing
                 ? `ID: ${post?.id} • Current status: ${status.toUpperCase()}`
                 : 'Create and publish developer updates, deep dives, and product changelogs.'}
@@ -187,7 +190,7 @@ export function AdminBlogForm({ post, categories }: AdminBlogFormProps) {
         </div>
 
         {isEditing && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
             <Button
               type="button"
               variant="outline"
@@ -208,31 +211,31 @@ export function AdminBlogForm({ post, categories }: AdminBlogFormProps) {
       </div>
 
       {success && (
-        <div className="p-4 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 flex items-center gap-2.5 text-xs text-emerald-300">
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 flex items-center gap-2.5 text-xs text-emerald-300">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
           <span>{success}</span>
         </div>
       )}
 
       {error && (
-        <div className="p-4 rounded-2xl bg-rose-950/40 border border-rose-500/30 flex items-center gap-2.5 text-xs text-rose-300">
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-rose-950/40 border border-rose-500/30 flex items-center gap-2.5 text-xs text-rose-300">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
       {/* Main Form */}
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <Card className="p-6 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
+        <Card className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl space-y-4 sm:space-y-5">
           <div className="flex items-center gap-2 text-xs font-bold text-zinc-300 uppercase tracking-wider">
-            <FileText className="w-4 h-4 text-indigo-400" />
-            <span>Article Content</span>
+            <FileText className="w-4 h-4 text-indigo-400 shrink-0" />
+            <span>Update Content</span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
             {/* Title */}
             <FloatingLabelInput
-              label="Article Title"
+              label="Update Title"
               type="text"
               value={title}
               onChange={(val) => handleTitleChange(val)}
@@ -266,7 +269,7 @@ export function AdminBlogForm({ post, categories }: AdminBlogFormProps) {
 
           {/* Markdown Content */}
           <AdminMarkdownEditor
-            label="Markdown Article Content"
+            label="Markdown Content"
             value={content}
             onChange={setContent}
             required
@@ -277,13 +280,13 @@ export function AdminBlogForm({ post, categories }: AdminBlogFormProps) {
         </Card>
 
         {/* Media & Category Card */}
-        <Card className="p-6 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl space-y-5">
+        <Card className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl space-y-4 sm:space-y-5">
           <div className="flex items-center gap-2 text-xs font-bold text-zinc-300 uppercase tracking-wider">
-            <Upload className="w-4 h-4 text-purple-400" />
+            <Upload className="w-4 h-4 text-purple-400 shrink-0" />
             <span>Media & Taxonomy</span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
             {/* Cover Image */}
             <ImageInputWithLibrary
               label="Cover Banner Image"
@@ -314,7 +317,7 @@ export function AdminBlogForm({ post, categories }: AdminBlogFormProps) {
             <div className="text-xs font-semibold text-zinc-300">
               SEO & Meta Information (Optional)
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
               <FloatingLabelInput
                 label="SEO Meta Title"
                 type="text"
@@ -336,12 +339,12 @@ export function AdminBlogForm({ post, categories }: AdminBlogFormProps) {
         </Card>
 
         {/* Action Buttons */}
-        <div className="flex items-center justify-between pt-4">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
           <Button
             type="submit"
             disabled={isSaving}
             size="sm"
-            className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-5 py-2.5 rounded-xl gap-2 shadow-lg shadow-indigo-600/20"
+            className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-5 py-2.5 rounded-xl gap-2 shadow-md shadow-indigo-600/20 justify-center w-full sm:w-auto"
           >
             {isSaving ? (
               <>
@@ -351,19 +354,19 @@ export function AdminBlogForm({ post, categories }: AdminBlogFormProps) {
             ) : (
               <>
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>{isEditing ? 'Save Changes' : 'Create Article'}</span>
+                <span>{isEditing ? 'Save Changes' : 'Create Update'}</span>
               </>
             )}
           </Button>
 
           {isEditing && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 justify-end">
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
                 onClick={handleArchive}
-                className="text-xs border-zinc-800 text-zinc-400 hover:text-amber-300"
+                className="text-xs border-zinc-800 text-zinc-400 hover:text-amber-300 flex-1 sm:flex-none justify-center"
               >
                 <Archive className="w-3.5 h-3.5 mr-1" /> Archive
               </Button>
@@ -372,7 +375,7 @@ export function AdminBlogForm({ post, categories }: AdminBlogFormProps) {
                 variant="outline"
                 size="sm"
                 onClick={handleDelete}
-                className="text-xs border-zinc-800 text-zinc-400 hover:text-rose-400"
+                className="text-xs border-zinc-800 text-zinc-400 hover:text-rose-400 flex-1 sm:flex-none justify-center"
               >
                 <Trash2 className="w-3.5 h-3.5 mr-1" /> Delete
               </Button>
@@ -383,3 +386,5 @@ export function AdminBlogForm({ post, categories }: AdminBlogFormProps) {
     </div>
   );
 }
+
+export const AdminBlogForm = AdminUpdateForm;

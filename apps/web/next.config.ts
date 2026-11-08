@@ -144,6 +144,16 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: '/admin/blog',
+        destination: '/admin/updates',
+        permanent: true,
+      },
+      {
+        source: '/admin/blog/:path*',
+        destination: '/admin/updates/:path*',
+        permanent: true,
+      },
+      {
         source: '/blog',
         destination: '/updates',
         permanent: true,

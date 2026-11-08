@@ -177,17 +177,19 @@ export class WasmPortraitBridge {
       const nw = img.naturalWidth || 1;
       const nh = img.naturalHeight || 1;
       const aspect = nw / nh;
-      let dw = this.simRes;
-      let dh = this.simRes;
-      let dx = 0;
-      let dy = 0;
+      const pad = Math.round(this.simRes * 0.04);
+      const avail = this.simRes - pad * 2;
+      let dw = avail;
+      let dh = avail;
+      let dx = pad;
+      let dy = pad;
 
       if (aspect < 1.0) {
-        dw = Math.round(this.simRes * aspect);
-        dx = Math.round((this.simRes - dw) / 2);
+        dw = Math.round(avail * aspect);
+        dx = pad + Math.round((avail - dw) / 2);
       } else if (aspect > 1.0) {
-        dh = Math.round(this.simRes / aspect);
-        dy = Math.round((this.simRes - dh) / 2);
+        dh = Math.round(avail / aspect);
+        dy = pad + Math.round((avail - dh) / 2);
       }
 
       this.offscreenCtx.drawImage(img, dx, dy, dw, dh);

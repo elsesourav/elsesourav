@@ -322,11 +322,11 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
 
             {/* Primary Language */}
             <FloatingLabelInput
-              label="Primary Language / Tech"
+              label="Content Locale / Language"
               type="text"
               value={primaryLanguage}
               onChange={(val) => setPrimaryLanguage(val)}
-              placeholder="e.g. en, TypeScript, English"
+              placeholder="e.g. en (default)"
               maxLength={50}
             />
           </div>
@@ -398,36 +398,34 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
         />
 
         {/* Submit Actions */}
-        <div className="flex items-center justify-between pt-4">
-          <div className="flex items-center gap-3">
-            <Button
-              type="submit"
-              disabled={isSaving}
-              size="sm"
-              className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-5 py-2.5 rounded-xl gap-2 shadow-lg shadow-indigo-600/20"
-            >
-              {isSaving ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>Saving...</span>
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>{isEditing ? 'Save App Changes' : 'Create Application'}</span>
-                </>
-              )}
-            </Button>
-          </div>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-6 border-t border-zinc-800/80">
+          <Button
+            type="submit"
+            disabled={isSaving}
+            size="sm"
+            className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-5 py-2.5 rounded-xl gap-2 shadow-lg shadow-indigo-600/20 justify-center w-full sm:w-auto"
+          >
+            {isSaving ? (
+              <>
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <span>Saving...</span>
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>{isEditing ? 'Save App Changes' : 'Create Application'}</span>
+              </>
+            )}
+          </Button>
 
           {isEditing && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 justify-end">
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
                 onClick={handleArchive}
-                className="text-xs border-zinc-800 text-zinc-400 hover:text-amber-300"
+                className="text-xs border-zinc-800 text-zinc-400 hover:text-amber-300 flex-1 sm:flex-none justify-center"
               >
                 <Archive className="w-3.5 h-3.5 mr-1" /> Archive
               </Button>
@@ -436,7 +434,7 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
                 variant="outline"
                 size="sm"
                 onClick={handleDelete}
-                className="text-xs border-zinc-800 text-zinc-400 hover:text-rose-400"
+                className="text-xs border-zinc-800 text-zinc-400 hover:text-rose-400 flex-1 sm:flex-none justify-center"
               >
                 <Trash2 className="w-3.5 h-3.5 mr-1" /> Delete
               </Button>

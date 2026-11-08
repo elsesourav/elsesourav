@@ -53,8 +53,8 @@ export function AboutHeroSection({ creator, site }: AboutHeroSectionProps) {
           <div className="min-[650px]:col-span-6 lg:col-span-6 xl:col-span-7 flex items-center justify-center w-full mx-auto">
             <AboutPortraitCard
               lightIntensity={site.portraitLightIntensity}
-              imageDarkSrc="/about/souravbarui-dark.png"
-              imageLightSrc="/about/souravbarui-light.png"
+              imageDarkSrc={site.portraitImageDarkUrl || '/about/souravbarui-dark.png'}
+              imageLightSrc={site.portraitImageLightUrl || '/about/souravbarui-light.png'}
               particleDensity={site.portraitParticleDensity}
               particleSize={site.portraitParticleSize}
               glowBrightness={site.portraitGlowBrightness}

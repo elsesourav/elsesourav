@@ -33,7 +33,7 @@ interface NavItem {
 const NAV_ITEMS: readonly NavItem[] = [
   { href: '/admin', label: 'Dashboard', icon: Activity, exact: true },
   { href: '/admin/apps', label: 'Applications', icon: Package },
-  { href: '/admin/blog', label: 'Devlogs CMS', icon: FileText },
+  { href: '/admin/updates', label: 'Updates CMS', icon: FileText },
   { href: '/admin/help', label: 'Help Articles', icon: BookOpen },
   { href: '/admin/support', label: 'Support Queue', icon: LifeBuoy },
   { href: '/admin/users', label: 'User Directory', icon: Users },

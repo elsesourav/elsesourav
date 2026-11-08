@@ -123,7 +123,7 @@ export class AdminRepository {
           title: `Post: ${b.title}`,
           subtitle: `Status: ${b.status}`,
           timestamp: b.updatedAt.getTime(),
-          link: `/admin/blog`,
+          link: `/admin/updates`,
           status: b.status,
           badgeVariant: (b.status === PublishStatus.PUBLISHED ? 'success' : 'outline') as
             'success' | 'outline',

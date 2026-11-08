@@ -50,15 +50,15 @@ export default async function AdminDashboardPage() {
             </Button>
           </Link>
 
-          <Link href="/admin/blog/new" className="w-full sm:w-auto">
+          <Link href="/admin/updates/new" className="w-full sm:w-auto">
             <Button
               variant="outline"
               size="sm"
               className="w-full sm:w-auto justify-center border-zinc-800 hover:bg-zinc-800 text-zinc-300 text-xs px-2.5 sm:px-3 py-2 gap-1.5 rounded-xl"
             >
               <FilePlus className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-              <span className="hidden min-[480px]:inline">Write Devlog</span>
-              <span className="min-[480px]:hidden">Devlog</span>
+              <span className="hidden min-[480px]:inline">Write Update</span>
+              <span className="min-[480px]:hidden">Update</span>
             </Button>
           </Link>
 

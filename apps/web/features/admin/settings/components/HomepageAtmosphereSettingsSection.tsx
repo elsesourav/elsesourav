@@ -95,7 +95,7 @@ export function HomepageAtmosphereSettingsSection({
               key={opt.value}
               type="button"
               onClick={() => onChange('homepage_atmosphere_density', opt.value)}
-              className={`p-2.5 rounded-xl border text-left transition-all ${
+              className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between h-full cursor-pointer ${
                 atmosphereDensity === opt.value
                   ? 'bg-indigo-950/40 border-indigo-500/80 text-white shadow-[0_0_12px_rgba(99,102,241,0.2)]'
                   : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
@@ -122,7 +122,7 @@ export function HomepageAtmosphereSettingsSection({
               key={opt.value}
               type="button"
               onClick={() => onChange('homepage_meteor_frequency', opt.value)}
-              className={`p-2.5 rounded-xl border text-left transition-all ${
+              className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between h-full cursor-pointer ${
                 meteorFrequency === opt.value
                   ? 'bg-indigo-950/40 border-indigo-500/80 text-white shadow-[0_0_12px_rgba(99,102,241,0.2)]'
                   : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
@@ -147,7 +147,7 @@ export function HomepageAtmosphereSettingsSection({
               key={opt.value}
               type="button"
               onClick={() => onChange('homepage_stars_speed', opt.value)}
-              className={`p-2.5 rounded-xl border text-left transition-all ${
+              className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between h-full cursor-pointer ${
                 starsSpeed === opt.value
                   ? 'bg-indigo-950/40 border-indigo-500/80 text-white shadow-[0_0_12px_rgba(99,102,241,0.2)]'
                   : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
@@ -177,7 +177,7 @@ export function HomepageAtmosphereSettingsSection({
                 key={opt.value}
                 type="button"
                 onClick={() => onChange('homepage_mobile_effects', opt.value)}
-                className={`p-3.5 rounded-2xl border text-left transition-all space-y-1.5 ${
+                className={`p-3.5 rounded-2xl border text-left transition-all flex flex-col justify-between h-full cursor-pointer space-y-1.5 ${
                   isSelected
                     ? 'bg-indigo-950/40 border-indigo-500/80 text-white shadow-[0_0_12px_rgba(99,102,241,0.2)]'
                     : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'

@@ -2,19 +2,19 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Card, Badge, Button, Input, IconButton } from '@elsesourav/ui';
+import { Card, Badge, Input, IconButton } from '@elsesourav/ui';
 import { Dropdown } from '@elsesourav/ui/interior';
 import type { BlogPost, BlogCategory } from '@elsesourav/types';
-import { archiveBlogPostAction, deleteBlogPostAction } from '../actions/admin-blog-actions';
-import { FileText, Search, Plus, ExternalLink, Edit, Archive, Trash2, Loader2 } from 'lucide-react';
+import { archiveBlogPostAction, deleteBlogPostAction } from '../actions/admin-update-actions';
+import { FileText, Search, ExternalLink, Edit, Archive, Trash2 } from 'lucide-react';
 
-interface AdminBlogTableProps {
+export interface AdminUpdatesTableProps {
   initialPosts: readonly BlogPost[];
   categories: readonly BlogCategory[];
 }
 
-export function AdminBlogTable({ initialPosts, categories }: AdminBlogTableProps) {
-  const [posts, setPosts] = React.useState(initialPosts);
+export function AdminUpdatesTable({ initialPosts, categories }: AdminUpdatesTableProps) {
+  const [posts, setPosts] = React.useState<readonly BlogPost[]>(initialPosts);
   const [search, setSearch] = React.useState('');
   const [selectedCategory, setSelectedCategory] = React.useState<string>('all');
   const [selectedStatus, setSelectedStatus] = React.useState<string>('all');
@@ -90,73 +90,63 @@ export function AdminBlogTable({ initialPosts, categories }: AdminBlogTableProps
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6 w-full max-w-full">
       {/* Search & Filter Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-        <div className="flex flex-wrap items-center gap-3 flex-1">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
+        <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3 flex-1 min-w-0">
           {/* Search Input */}
-          <div className="relative flex-1 min-w-[200px] max-w-sm">
+          <div className="relative flex-1 min-w-[180px] max-w-full sm:max-w-sm">
             <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
             <Input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search articles by title or slug..."
-              className="bg-zinc-900/60 border-zinc-800 text-xs pl-9 rounded-xl text-zinc-100 placeholder:text-zinc-500"
+              placeholder="Search updates by title or slug..."
+              className="bg-zinc-900/60 border-zinc-800 text-xs pl-9 rounded-xl text-zinc-100 placeholder:text-zinc-500 w-full"
             />
           </div>
 
-          {/* Category Dropdown */}
-          <Dropdown
-            items={categoryItems}
-            value={selectedCategory}
-            onChange={(val) => setSelectedCategory(val)}
-            className="w-full sm:w-44"
-          />
+          {/* Filter Dropdowns Grid on mobile, inline on tablet/desktop */}
+          <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 sm:gap-3">
+            <Dropdown
+              items={categoryItems}
+              value={selectedCategory}
+              onChange={(val) => setSelectedCategory(val)}
+              className="w-full sm:w-44"
+            />
 
-          {/* Status Dropdown */}
-          <Dropdown
-            items={statusItems}
-            value={selectedStatus}
-            onChange={(val) => setSelectedStatus(val)}
-            className="w-full sm:w-36"
-          />
+            <Dropdown
+              items={statusItems}
+              value={selectedStatus}
+              onChange={(val) => setSelectedStatus(val)}
+              className="w-full sm:w-36"
+            />
+          </div>
         </div>
-
-        {/* Create Blog Action */}
-        <Link href="/admin/blog/new">
-          <Button
-            size="sm"
-            className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2 rounded-xl gap-1.5 shadow-lg shadow-indigo-600/20 w-full sm:w-auto"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>Write New Article</span>
-          </Button>
-        </Link>
       </div>
 
-      {/* Blog Articles Table Card */}
-      <Card className="rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl overflow-hidden">
+      {/* Updates Articles Table Card */}
+      <Card className="rounded-2xl sm:rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl overflow-hidden w-full">
         {filteredPosts.length === 0 ? (
-          <div className="py-16 px-4 text-center space-y-3">
+          <div className="py-12 sm:py-16 px-4 text-center space-y-3">
             <FileText className="w-10 h-10 text-zinc-600 mx-auto" />
-            <h4 className="text-sm font-semibold text-zinc-300">No articles found</h4>
-            <p className="text-xs text-zinc-500 max-w-xs mx-auto">
+            <h4 className="text-sm font-semibold text-zinc-300">No updates found</h4>
+            <p className="text-xs text-zinc-500 max-w-xs mx-auto leading-relaxed">
               No devlogs or articles match your selected filters. Create a new article to publish
               updates.
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-zinc-300 border-collapse">
+          <div className="overflow-x-auto w-full">
+            <table className="w-full text-left text-xs text-zinc-300 border-collapse table-fixed">
               <thead>
                 <tr className="border-b border-zinc-800/80 bg-zinc-950/40 text-zinc-400 font-medium">
-                  <th className="py-3.5 px-4 font-semibold">Article Title</th>
-                  <th className="py-3.5 px-4 font-semibold hidden md:table-cell">Category</th>
-                  <th className="py-3.5 px-4 font-semibold">Status</th>
-                  <th className="py-3.5 px-4 font-semibold hidden sm:table-cell">Views</th>
-                  <th className="py-3.5 px-4 font-semibold hidden lg:table-cell">Updated</th>
-                  <th className="py-3.5 px-4 font-semibold text-right">Actions</th>
+                  <th className="py-3 px-3.5 sm:px-4 font-semibold">Article Title</th>
+                  <th className="py-3 px-3.5 sm:px-4 font-semibold hidden md:table-cell w-48 sm:w-52 whitespace-nowrap">Category</th>
+                  <th className="py-3 px-3.5 sm:px-4 font-semibold hidden sm:table-cell w-28 whitespace-nowrap">Status</th>
+                  <th className="py-3 px-3.5 sm:px-4 font-semibold hidden lg:table-cell w-16 whitespace-nowrap">Views</th>
+                  <th className="py-3 px-3.5 sm:px-4 font-semibold hidden xl:table-cell w-28 whitespace-nowrap">Updated</th>
+                  <th className="py-3 px-3.5 sm:px-4 font-semibold text-right w-32 sm:w-36 whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-800/50">
@@ -169,10 +159,10 @@ export function AdminBlogTable({ initialPosts, categories }: AdminBlogTableProps
 
                   return (
                     <tr key={post.id} className="hover:bg-zinc-800/30 transition-colors group">
-                      {/* Title & Slug */}
-                      <td className="py-3.5 px-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl bg-zinc-800 border border-zinc-700/60 overflow-hidden flex items-center justify-center shrink-0">
+                      {/* Title & Slug & Mobile Status Badge */}
+                      <td className="py-3 px-3.5 sm:px-4">
+                        <div className="flex items-center gap-2.5 sm:gap-3">
+                          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-zinc-800 border border-zinc-700/60 overflow-hidden flex items-center justify-center shrink-0">
                             {post.coverImageUrl ? (
                               <img
                                 src={post.coverImageUrl}
@@ -183,67 +173,85 @@ export function AdminBlogTable({ initialPosts, categories }: AdminBlogTableProps
                               <FileText className="w-4 h-4 text-zinc-500" />
                             )}
                           </div>
-                          <div className="min-w-0">
-                            <div className="font-semibold text-zinc-100 truncate group-hover:text-indigo-300 transition-colors max-w-xs sm:max-w-md">
+                          <div className="min-w-0 flex-1">
+                            <div className="font-semibold text-zinc-100 truncate group-hover:text-indigo-300 transition-colors text-xs sm:text-sm">
                               {post.title}
                             </div>
-                            <div className="text-[11px] text-zinc-500 font-mono truncate">
-                              /blog/{post.slug}
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <span className="text-[11px] text-zinc-500 font-mono truncate max-w-[110px] sm:max-w-[180px]">
+                                /updates/{post.slug}
+                              </span>
+                              {/* Mobile-only inline status badge */}
+                              <span className="sm:hidden shrink-0">
+                                {post.status === 'published' ? (
+                                  <Badge variant="success" className="text-[9px] uppercase font-mono px-1 py-0 leading-tight">
+                                    Live
+                                  </Badge>
+                                ) : post.status === 'draft' ? (
+                                  <Badge variant="warning" className="text-[9px] uppercase font-mono px-1 py-0 leading-tight">
+                                    Draft
+                                  </Badge>
+                                ) : (
+                                  <Badge variant="outline" className="text-[9px] uppercase font-mono px-1 py-0 leading-tight">
+                                    Archived
+                                  </Badge>
+                                )}
+                              </span>
                             </div>
                           </div>
                         </div>
                       </td>
 
                       {/* Category */}
-                      <td className="py-3.5 px-4 hidden md:table-cell">
-                        <span className="px-2 py-0.5 rounded-lg bg-zinc-800/60 border border-zinc-700/40 text-zinc-300 text-[11px]">
+                      <td className="py-3 px-3.5 sm:px-4 hidden md:table-cell whitespace-nowrap">
+                        <span className="px-2 py-0.5 rounded-lg bg-zinc-800/60 border border-zinc-700/40 text-zinc-300 text-[11px] truncate max-w-[180px] inline-block align-middle">
                           {post.category?.name || 'General'}
                         </span>
                       </td>
 
-                      {/* Status Badge */}
-                      <td className="py-3.5 px-4">
+                      {/* Status Badge (desktop / tablet) */}
+                      <td className="py-3 px-3.5 sm:px-4 hidden sm:table-cell whitespace-nowrap">
                         {post.status === 'published' ? (
-                          <Badge variant="success" className="text-[10px] uppercase font-mono">
+                          <Badge variant="success" className="text-[10px] uppercase font-mono px-1.5 py-0.5">
                             Published
                           </Badge>
                         ) : post.status === 'draft' ? (
-                          <Badge variant="warning" className="text-[10px] uppercase font-mono">
+                          <Badge variant="warning" className="text-[10px] uppercase font-mono px-1.5 py-0.5">
                             Draft
                           </Badge>
                         ) : (
-                          <Badge variant="outline" className="text-[10px] uppercase font-mono">
+                          <Badge variant="outline" className="text-[10px] uppercase font-mono px-1.5 py-0.5">
                             Archived
                           </Badge>
                         )}
                       </td>
 
                       {/* Views Count */}
-                      <td className="py-3.5 px-4 hidden sm:table-cell text-zinc-400 font-mono text-[11px]">
+                      <td className="py-3 px-3.5 sm:px-4 hidden lg:table-cell text-zinc-400 font-mono text-[11px] whitespace-nowrap">
                         {post.viewsCount ?? 0}
                       </td>
 
                       {/* Updated Date */}
-                      <td className="py-3.5 px-4 hidden lg:table-cell text-zinc-500 text-[11px]">
+                      <td className="py-3 px-3.5 sm:px-4 hidden xl:table-cell text-zinc-500 text-[11px] whitespace-nowrap">
                         {updatedDate}
                       </td>
 
                       {/* Actions */}
-                      <td className="py-3.5 px-4 text-right">
-                        <div className="flex items-center justify-end gap-1.5">
+                      <td className="py-3 px-3.5 sm:px-4 text-right whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-1">
                           {post.status === 'published' && (
                             <Link
-                              href={`/blog/${post.slug}`}
+                              href={`/updates/${post.slug}`}
                               target="_blank"
-                              className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 transition-colors"
+                              className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 transition-colors inline-flex items-center justify-center"
                               title="View Public Article"
                             >
                               <ExternalLink className="w-3.5 h-3.5" />
                             </Link>
                           )}
                           <Link
-                            href={`/admin/blog/${post.id}`}
-                            className="p-1.5 rounded-lg text-zinc-400 hover:text-indigo-300 hover:bg-zinc-800 transition-colors"
+                            href={`/admin/updates/${post.id}`}
+                            className="p-1.5 rounded-lg text-zinc-400 hover:text-indigo-300 hover:bg-zinc-800 transition-colors inline-flex items-center justify-center"
                             title="Edit Article"
                           >
                             <Edit className="w-3.5 h-3.5" />

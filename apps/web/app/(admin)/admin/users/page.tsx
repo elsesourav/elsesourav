@@ -1,11 +1,11 @@
 import { Metadata } from 'next';
 import { getAdminUsersList } from '@/features/admin/users/queries/get-admin-users';
 import { AdminUsersTable } from '@/features/admin/users/components/AdminUsersTable';
-import { PageHeader, Badge } from '@elsesourav/ui';
+import { Badge } from '@elsesourav/ui';
 
 export const metadata: Metadata = {
-  title: 'User Management | Admin Portal',
-  description: 'Manage registered users, roles, account permissions, and developer accounts.',
+  title: 'User Directory | Admin Portal',
+  description: 'Manage registered user accounts, role authorizations, account lifecycles, and support metrics.',
   robots: {
     index: false,
     follow: false,
@@ -16,18 +16,26 @@ export default async function AdminUsersPage() {
   const { users, total, totalPages } = await getAdminUsersList();
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
+    <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
       {/* Header */}
-      <PageHeader
-        eyebrow="Account Directory"
-        badge={
-          <Badge variant="primary" className="text-xs px-2.5 py-0.5 font-medium">
-            {total} {total === 1 ? 'User' : 'Users'}
-          </Badge>
-        }
-        title="User & Identity Management"
-        description="Manage registered user accounts, role authorizations, account lifecycles, and support metrics."
-      />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-800/80 pb-6">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-400">
+              Account Directory
+            </span>
+            <Badge variant="outline" className="text-[10px] font-mono border-zinc-800 text-zinc-400">
+              {total} {total === 1 ? 'User' : 'Users'}
+            </Badge>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-100 tracking-tight">
+            User & Identity Directory
+          </h1>
+          <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl">
+            Manage registered user accounts, role authorizations, account lifecycles, and support metrics.
+          </p>
+        </div>
+      </div>
 
       <AdminUsersTable initialUsers={users} total={total} totalPages={totalPages} />
     </div>

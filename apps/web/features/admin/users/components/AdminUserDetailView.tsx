@@ -113,25 +113,27 @@ export function AdminUserDetailView({ user: initialUser }: AdminUserDetailViewPr
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between gap-4 border-b border-zinc-800/80 pb-4">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-800/80 pb-4">
+        <div className="flex items-start sm:items-center gap-3 min-w-0">
           <Link
             href="/admin/users"
-            className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-zinc-100 transition-colors"
+            aria-label="Back to user directory"
+            className="p-2 shrink-0 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-zinc-100 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
-          <div className="flex items-center gap-3">
+          <div className="flex items-start sm:items-center gap-3 min-w-0">
             <UserAvatar
               src={user.photoUrl}
               name={user.displayName}
               identifier={user.id || user.email}
               alt={user.displayName}
-              size="lg"
+              size="md"
+              className="sm:w-16 sm:h-16 shrink-0"
             />
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-xl sm:text-2xl font-bold text-zinc-100 tracking-tight">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="text-lg sm:text-2xl font-bold text-zinc-100 tracking-tight break-words">
                   {user.displayName}
                 </h1>
                 {user.role === 'ADMIN' ? (
@@ -169,7 +171,7 @@ export function AdminUserDetailView({ user: initialUser }: AdminUserDetailViewPr
                   </Badge>
                 )}
               </div>
-              <p className="text-xs text-zinc-400 font-mono">
+              <p className="text-xs text-zinc-400 font-mono break-all mt-0.5">
                 {user.username ? `@${user.username}` : user.id} • {user.email}
               </p>
             </div>
@@ -195,20 +197,20 @@ export function AdminUserDetailView({ user: initialUser }: AdminUserDetailViewPr
         {/* Account Details & Role Management */}
         <div className="md:col-span-2 space-y-6">
           {/* Identity Card */}
-          <Card className="p-6 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl space-y-4">
+          <Card className="p-4 sm:p-6 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl space-y-4">
             <div className="flex items-center gap-2 text-xs font-bold text-zinc-300 uppercase tracking-wider">
               <UserCheck className="w-4 h-4 text-indigo-400" />
               <span>Identity & Account Info</span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              <div className="p-3 rounded-2xl bg-zinc-950/40 border border-zinc-800/60 space-y-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs">
+              <div className="p-3 rounded-2xl bg-zinc-950/40 border border-zinc-800/60 space-y-1 min-w-0">
                 <span className="text-zinc-500 text-[11px] block">Full Email Address</span>
-                <span className="font-mono text-zinc-200">{user.email}</span>
+                <span className="font-mono text-zinc-200 break-all">{user.email}</span>
               </div>
-              <div className="p-3 rounded-2xl bg-zinc-950/40 border border-zinc-800/60 space-y-1">
+              <div className="p-3 rounded-2xl bg-zinc-950/40 border border-zinc-800/60 space-y-1 min-w-0">
                 <span className="text-zinc-500 text-[11px] block">PostgreSQL User ID</span>
-                <span className="font-mono text-zinc-400 text-[11px]">{user.id}</span>
+                <span className="font-mono text-zinc-400 text-[11px] break-all">{user.id}</span>
               </div>
               <div className="p-3 rounded-2xl bg-zinc-950/40 border border-zinc-800/60 space-y-1">
                 <span className="text-zinc-500 text-[11px] block">Registered On</span>
@@ -223,24 +225,24 @@ export function AdminUserDetailView({ user: initialUser }: AdminUserDetailViewPr
             {user.bio && (
               <div className="p-3 rounded-2xl bg-zinc-950/40 border border-zinc-800/60 space-y-1 text-xs">
                 <span className="text-zinc-500 text-[11px] block">Biography</span>
-                <p className="text-zinc-300 leading-relaxed">{user.bio}</p>
+                <p className="text-zinc-300 leading-relaxed break-words">{user.bio}</p>
               </div>
             )}
           </Card>
 
           {/* Role Authorization Card */}
-          <Card className="p-6 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl space-y-4">
+          <Card className="p-4 sm:p-6 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl space-y-4">
             <div className="flex items-center gap-2 text-xs font-bold text-zinc-300 uppercase tracking-wider">
               <Shield className="w-4 h-4 text-purple-400" />
               <span>Role & Permission Level</span>
             </div>
 
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-zinc-400 leading-relaxed">
               Update this user's application permissions. Only Super Administrators can modify
               roles.
             </p>
 
-            <form onSubmit={handleRoleChange} className="flex items-center gap-3">
+            <form onSubmit={handleRoleChange} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <Dropdown
                 items={ROLE_OPTIONS}
                 value={selectedRole}
@@ -252,7 +254,7 @@ export function AdminUserDetailView({ user: initialUser }: AdminUserDetailViewPr
                 type="submit"
                 disabled={isUpdatingRole || selectedRole === user.role}
                 size="sm"
-                className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2 rounded-xl gap-1.5 shadow-lg"
+                className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2.5 rounded-xl gap-1.5 shadow-lg justify-center"
               >
                 {isUpdatingRole ? (
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -265,7 +267,7 @@ export function AdminUserDetailView({ user: initialUser }: AdminUserDetailViewPr
           </Card>
 
           {/* Danger Zone */}
-          <Card className="p-6 rounded-3xl border-rose-900/30 bg-rose-950/10 backdrop-blur-xl space-y-4">
+          <Card className="p-4 sm:p-6 rounded-3xl border-rose-900/30 bg-rose-950/10 backdrop-blur-xl space-y-4">
             <div className="flex items-center gap-2 text-xs font-bold text-rose-400 uppercase tracking-wider">
               <AlertTriangle className="w-4 h-4 text-rose-400" />
               <span>Danger Zone</span>
@@ -284,7 +286,7 @@ export function AdminUserDetailView({ user: initialUser }: AdminUserDetailViewPr
                 size="sm"
                 disabled={isDeleting || user.status === 'deleted'}
                 onClick={handleDeleteUser}
-                className="border-rose-800/80 text-rose-400 hover:bg-rose-950/40 text-xs font-semibold px-4 py-2 rounded-xl gap-1.5 shrink-0"
+                className="w-full sm:w-auto border-rose-800/80 text-rose-400 hover:bg-rose-950/40 text-xs font-semibold px-4 py-2.5 rounded-xl gap-1.5 shrink-0 justify-center"
               >
                 {isDeleting ? (
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -300,7 +302,7 @@ export function AdminUserDetailView({ user: initialUser }: AdminUserDetailViewPr
         {/* Sidebar Activity & Summaries */}
         <div className="space-y-6">
           {/* Support Ticket Summary */}
-          <Card className="p-5 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl space-y-3">
+          <Card className="p-4 sm:p-5 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl space-y-3">
             <div className="flex items-center justify-between">
               <h4 className="text-xs font-bold text-zinc-200 uppercase tracking-wider flex items-center gap-1.5">
                 <LifeBuoy className="w-3.5 h-3.5 text-indigo-400" />
@@ -331,7 +333,7 @@ export function AdminUserDetailView({ user: initialUser }: AdminUserDetailViewPr
           </Card>
 
           {/* Library Summary */}
-          <Card className="p-5 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl space-y-3">
+          <Card className="p-4 sm:p-5 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl space-y-3">
             <h4 className="text-xs font-bold text-zinc-200 uppercase tracking-wider flex items-center gap-1.5">
               <BookMarked className="w-3.5 h-3.5 text-purple-400" />
               <span>Library Summary</span>

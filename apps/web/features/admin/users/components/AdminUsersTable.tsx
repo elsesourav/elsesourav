@@ -96,44 +96,48 @@ export function AdminUsersTable({ initialUsers, total, totalPages }: AdminUsersT
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Search & Filters Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-        <div className="flex flex-wrap items-center gap-3 flex-1">
+      <div className="space-y-3">
+        <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-center">
           {/* Search Input */}
-          <div className="relative flex-1 min-w-[220px] max-w-sm">
-            <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+          <div className="relative sm:col-span-6 lg:col-span-7">
+            <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <Input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by name, email, or @username..."
-              className="bg-zinc-900/60 border-zinc-800 text-xs pl-9 rounded-xl text-zinc-100 placeholder:text-zinc-500"
+              className="bg-zinc-900/60 border-zinc-800 text-xs pl-9 rounded-xl text-zinc-100 placeholder:text-zinc-500 h-9"
             />
           </div>
 
-          {/* Role Dropdown */}
-          <Dropdown
-            items={roleItems}
-            value={selectedRole}
-            onChange={(val) => setSelectedRole(val)}
-            className="w-full sm:w-36"
-          />
-
-          {/* Status Dropdown */}
-          <Dropdown
-            items={statusItems}
-            value={selectedStatus}
-            onChange={(val) => setSelectedStatus(val)}
-            className="w-full sm:w-36"
-          />
+          {/* Role & Status Dropdowns */}
+          <div className="grid grid-cols-2 sm:col-span-6 lg:col-span-5 gap-2">
+            <Dropdown
+              items={roleItems}
+              value={selectedRole}
+              onChange={(val) => setSelectedRole(val)}
+              className="w-full"
+            />
+            <Dropdown
+              items={statusItems}
+              value={selectedStatus}
+              onChange={(val) => setSelectedStatus(val)}
+              className="w-full"
+            />
+          </div>
         </div>
 
         {/* Total Users Count */}
-        <div className="text-xs font-mono text-zinc-400">
-          Showing <span className="text-zinc-200 font-bold">{filteredUsers.length}</span> of{' '}
-          <span className="text-zinc-200 font-bold">{total}</span> total ({totalPages}{' '}
-          {totalPages === 1 ? 'page' : 'pages'})
+        <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400 px-1">
+          <span>
+            Showing <strong className="text-zinc-200">{filteredUsers.length}</strong> of{' '}
+            <strong className="text-zinc-200">{total}</strong> total users
+          </span>
+          <span>
+            {totalPages} {totalPages === 1 ? 'page' : 'pages'}
+          </span>
         </div>
       </div>
 
@@ -149,17 +153,33 @@ export function AdminUsersTable({ initialUsers, total, totalPages }: AdminUsersT
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-zinc-300 border-collapse">
+            <table className="table-fixed w-full text-left text-xs text-zinc-300 border-collapse">
               <thead>
                 <tr className="border-b border-zinc-800/80 bg-zinc-950/40 text-zinc-400 font-medium">
-                  <th className="py-3.5 px-4 font-semibold">User</th>
-                  <th className="py-3.5 px-4 font-semibold hidden md:table-cell">Email Address</th>
-                  <th className="py-3.5 px-4 font-semibold">Role</th>
-                  <th className="py-3.5 px-4 font-semibold">Status</th>
-                  <th className="py-3.5 px-4 font-semibold hidden lg:table-cell">Library</th>
-                  <th className="py-3.5 px-4 font-semibold hidden lg:table-cell">Support</th>
-                  <th className="py-3.5 px-4 font-semibold hidden sm:table-cell">Joined</th>
-                  <th className="py-3.5 px-4 font-semibold text-right">Action</th>
+                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-300 w-auto min-w-[180px]">
+                    User
+                  </th>
+                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-300 hidden md:table-cell w-44 lg:w-48">
+                    Email Address
+                  </th>
+                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-300 hidden sm:table-cell w-20">
+                    Role
+                  </th>
+                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-300 hidden sm:table-cell w-20">
+                    Status
+                  </th>
+                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-300 hidden lg:table-cell w-16">
+                    Library
+                  </th>
+                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-300 hidden lg:table-cell w-16">
+                    Support
+                  </th>
+                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-300 hidden md:table-cell w-24">
+                    Joined
+                  </th>
+                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-300 text-right w-20 sm:w-24">
+                    Action
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-800/50">
@@ -173,8 +193,8 @@ export function AdminUsersTable({ initialUsers, total, totalPages }: AdminUsersT
                   return (
                     <tr key={user.id} className="hover:bg-zinc-800/30 transition-colors group">
                       {/* User Avatar & Name */}
-                      <td className="py-3.5 px-4">
-                        <div className="flex items-center gap-3">
+                      <td className="py-3 px-3 sm:px-4 min-w-0">
+                        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
                           <UserAvatar
                             src={user.photoUrl}
                             name={user.displayName}
@@ -182,27 +202,51 @@ export function AdminUsersTable({ initialUsers, total, totalPages }: AdminUsersT
                             alt={user.displayName}
                             size="sm"
                           />
-                          <div className="min-w-0">
-                            <div className="font-semibold text-zinc-100 truncate group-hover:text-indigo-300 transition-colors max-w-[140px] sm:max-w-[200px]">
+                          <div className="min-w-0 flex-1">
+                            <div className="font-semibold text-zinc-100 truncate group-hover:text-indigo-300 transition-colors">
                               {user.displayName}
                             </div>
-                            <div className="text-[11px] text-zinc-500 font-mono truncate">
-                              {user.username ? `@${user.username}` : user.id.slice(0, 8)}
+                            <div className="text-[11px] text-zinc-500 font-mono truncate flex items-center gap-1.5 flex-wrap">
+                              <span>
+                                {user.username ? `@${user.username}` : user.id.slice(0, 8)}
+                              </span>
+                              {/* Mobile inline badges for complete visibility without side-scrolling */}
+                              <span className="sm:hidden text-zinc-700">•</span>
+                              <span className="sm:hidden">{getRoleBadge(user.role)}</span>
+                              <span className="sm:hidden">
+                                {user.status === 'active' ? (
+                                  <Badge
+                                    variant="success"
+                                    className="text-[9px] py-0 px-1 font-mono uppercase"
+                                  >
+                                    Act
+                                  </Badge>
+                                ) : (
+                                  <Badge
+                                    variant="outline"
+                                    className="text-[9px] py-0 px-1 font-mono uppercase border-rose-500/40 text-rose-300"
+                                  >
+                                    Del
+                                  </Badge>
+                                )}
+                              </span>
                             </div>
                           </div>
                         </div>
                       </td>
 
                       {/* Email */}
-                      <td className="py-3.5 px-4 hidden md:table-cell font-mono text-[11px] text-zinc-300">
+                      <td className="py-3 px-3 sm:px-4 hidden md:table-cell font-mono text-[11px] text-zinc-300 truncate">
                         {user.email}
                       </td>
 
                       {/* Role Badge */}
-                      <td className="py-3.5 px-4">{getRoleBadge(user.role)}</td>
+                      <td className="py-3 px-3 sm:px-4 hidden sm:table-cell">
+                        {getRoleBadge(user.role)}
+                      </td>
 
                       {/* Status */}
-                      <td className="py-3.5 px-4">
+                      <td className="py-3 px-3 sm:px-4 hidden sm:table-cell">
                         {user.status === 'active' ? (
                           <Badge variant="success" className="text-[10px] uppercase font-mono">
                             Active
@@ -218,34 +262,35 @@ export function AdminUsersTable({ initialUsers, total, totalPages }: AdminUsersT
                       </td>
 
                       {/* Library count */}
-                      <td className="py-3.5 px-4 hidden lg:table-cell text-zinc-400 font-mono text-[11px]">
+                      <td className="py-3 px-3 sm:px-4 hidden lg:table-cell text-zinc-400 font-mono text-[11px] truncate">
                         <div className="flex items-center gap-1.5">
-                          <BookMarked className="w-3 h-3 text-zinc-500" />
-                          <span>{user.libraryCount} apps</span>
+                          <BookMarked className="w-3 h-3 text-zinc-500 shrink-0" />
+                          <span>{user.libraryCount}</span>
                         </div>
                       </td>
 
                       {/* Support ticket count */}
-                      <td className="py-3.5 px-4 hidden lg:table-cell text-zinc-400 font-mono text-[11px]">
+                      <td className="py-3 px-3 sm:px-4 hidden lg:table-cell text-zinc-400 font-mono text-[11px] truncate">
                         <div className="flex items-center gap-1.5">
-                          <LifeBuoy className="w-3 h-3 text-zinc-500" />
-                          <span>{user.supportTicketCount} tickets</span>
+                          <LifeBuoy className="w-3 h-3 text-zinc-500 shrink-0" />
+                          <span>{user.supportTicketCount}</span>
                         </div>
                       </td>
 
                       {/* Joined Date */}
-                      <td className="py-3.5 px-4 hidden sm:table-cell text-zinc-500 text-[11px]">
+                      <td className="py-3 px-3 sm:px-4 hidden md:table-cell text-zinc-500 text-[11px] truncate">
                         {joinedDate}
                       </td>
 
                       {/* Action */}
-                      <td className="py-3.5 px-4 text-right">
+                      <td className="py-3 px-3 sm:px-4 text-right">
                         <Link
                           href={`/admin/users/${user.id}`}
-                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-zinc-800/80 hover:bg-indigo-600 hover:text-white text-zinc-300 transition-colors text-[11px] font-medium"
+                          aria-label={`Manage user ${user.displayName}`}
+                          className="inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-lg bg-zinc-800/80 hover:bg-indigo-600 hover:text-white text-zinc-300 transition-colors text-[11px] font-medium shrink-0"
                         >
                           <span>Manage</span>
-                          <ExternalLink className="w-3 h-3" />
+                          <ExternalLink className="w-3 h-3 shrink-0" />
                         </Link>
                       </td>
                     </tr>

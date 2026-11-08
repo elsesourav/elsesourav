@@ -57,6 +57,164 @@ inline void PixelEngine::generatePixels() {
         rp.pathPhase = angle;
     }
 
+    // 1B. Side Star-type Points (32 delicate retro diamond stars on image sides)
+    static const float STAR_SEEDS[32][2] = {
+        {0.14f, 0.16f}, {0.86f, 0.15f}, {0.18f, 0.34f}, {0.82f, 0.32f},
+        {0.08f, 0.50f}, {0.92f, 0.48f}, {0.24f, 0.10f}, {0.76f, 0.08f},
+        {0.10f, 0.25f}, {0.90f, 0.22f}, {0.29f, 0.20f}, {0.71f, 0.18f},
+        {0.06f, 0.66f}, {0.94f, 0.64f}, {0.15f, 0.72f}, {0.85f, 0.70f},
+        {0.05f, 0.12f}, {0.95f, 0.10f}, {0.12f, 0.42f}, {0.88f, 0.40f},
+        {0.20f, 0.06f}, {0.80f, 0.05f}, {0.32f, 0.14f}, {0.68f, 0.12f},
+        {0.04f, 0.38f}, {0.96f, 0.35f}, {0.22f, 0.28f}, {0.78f, 0.26f},
+        {0.09f, 0.58f}, {0.91f, 0.56f}, {0.17f, 0.68f}, {0.83f, 0.66f}
+    };
+
+    int starCount = (int)(32.0f * densityMultiplier);
+    if (starCount > 32) starCount = 32;
+    if (starCount < 8) starCount = 8;
+
+    for (int s = 0; s < starCount; s++) {
+        if (particleCount >= MAX_PARTICLES - 8) break;
+        float sx = STAR_SEEDS[s][0] * (float)w;
+        float sy = STAR_SEEDS[s][1] * (float)h;
+
+        // Ensure star does not touch or overlap the subject (3px clearance)
+        int isx = (int)roundf(sx);
+        int isy = (int)roundf(sy);
+        bool nearSubject = false;
+        for (int dy = -3; dy <= 3 && !nearSubject; dy++) {
+            int py = isy + dy;
+            if (py < 0 || py >= h) continue;
+            for (int dx = -3; dx <= 3; dx++) {
+                int px = isx + dx;
+                if (px < 0 || px >= w) continue;
+                if (inputImage[(py * w + px) * 4 + 3] > 16) {
+                    nearSubject = true;
+                    break;
+                }
+            }
+        }
+        if (nearSubject) continue;
+
+        bool isLeft = (STAR_SEEDS[s][0] < 0.5f);
+        uint8_t sr, sg, sb;
+        if (isDark) {
+            sr = isLeft ? 0 : 195;
+            sg = isLeft ? 235 : 95;
+            sb = 255;
+        } else {
+            sr = isLeft ? 0 : 145;
+            sg = isLeft ? 150 : 55;
+            sb = isLeft ? 235 : 225;
+        }
+
+        // Center star pixel (delicate diamond point)
+        Pixel& sp = particles[particleCount++];
+        sp.init(sx, sy, sr, sg, sb, 240, basePixelSize * 1.05f, FLAG_STAR_PIXEL | FLAG_BACK_PIXEL);
+        sp.pathPhase = (float)s * 1.618f;
+
+        // 4 Cross arms forming classic 5-pixel diamond cross star
+        float armDist = basePixelSize * 0.72f;
+        float armSize = basePixelSize * 0.58f;
+        static const float ARMS[4][2] = {{-1.0f, 0.0f}, {1.0f, 0.0f}, {0.0f, -1.0f}, {0.0f, 1.0f}};
+        for (int a = 0; a < 4; a++) {
+            if (particleCount >= MAX_PARTICLES - 4) break;
+            Pixel& ap = particles[particleCount++];
+            ap.init(sx + ARMS[a][0] * armDist, sy + ARMS[a][1] * armDist, sr, sg, sb, 195, armSize, FLAG_STAR_PIXEL | FLAG_BACK_PIXEL);
+            ap.pathPhase = sp.pathPhase;
+        }
+    }
+
+    // 1C. Side Orbit Loops (digital celestial orbits on left and right sides)
+    static const float ORBITS[2][3] = {
+        {0.16f, 0.26f, 13.0f}, // left orbit: x, y, radius
+        {0.84f, 0.24f, 14.0f}  // right orbit
+    };
+
+    for (int o = 0; o < 2; o++) {
+        float ocx = ORBITS[o][0] * (float)w;
+        float ocy = ORBITS[o][1] * (float)h;
+        float orad = ORBITS[o][2];
+        bool isLeft = (o == 0);
+        int dotCount = 18;
+
+        uint8_t orr, org, orb;
+        if (isDark) {
+            orr = isLeft ? 0 : 190;
+            org = isLeft ? 230 : 95;
+            orb = 255;
+        } else {
+            orr = isLeft ? 0 : 145;
+            org = isLeft ? 150 : 55;
+            orb = isLeft ? 235 : 225;
+        }
+
+        for (int d = 0; d < dotCount; d++) {
+            if (particleCount >= MAX_PARTICLES - 4) break;
+            float oang = ((float)d / (float)dotCount) * 2.0f * (float)M_PI;
+            float opx = ocx + cosf(oang) * orad;
+            float opy = ocy + sinf(oang) * orad;
+
+            int cpx = (int)roundf(opx);
+            int cpy = (int)roundf(opy);
+            if (cpx >= 0 && cpx < w && cpy >= 0 && cpy < h) {
+                if (inputImage[(cpy * w + cpx) * 4 + 3] > 16) continue;
+            }
+
+            Pixel& op = particles[particleCount++];
+            op.init(opx, opy, orr, org, orb, 185, basePixelSize * 0.85f, FLAG_ORBIT_PIXEL | FLAG_BACK_PIXEL);
+            op.pathPhase = oang;
+            op.pathSpeed = isLeft ? 0.9f : -0.75f;
+            op.normalOffset = orad;
+            op.baseX = ocx;
+            op.baseY = ocy;
+        }
+    }
+
+    // 1D. Extra ambient micro-pixel specks (outside portrait on sides)
+    for (int y = 0; y < (int)((float)h * 0.78f); y += 4) {
+        for (int x = 0; x < w; x += 4) {
+            if (particleCount >= MAX_PARTICLES - 4) break;
+            if (x > (int)((float)w * 0.32f) && x < (int)((float)w * 0.68f)) continue;
+
+            int idx = (y * w + x) * 4;
+            if (inputImage[idx + 3] <= 16) {
+                bool nearSubject = false;
+                for (int dy = -2; dy <= 2 && !nearSubject; dy++) {
+                    int cy = y + dy;
+                    if (cy < 0 || cy >= h) continue;
+                    for (int dx = -2; dx <= 2; dx++) {
+                        int cx = x + dx;
+                        if (cx < 0 || cx >= w) continue;
+                        if (inputImage[(cy * w + cx) * 4 + 3] > 16) {
+                            nearSubject = true;
+                            break;
+                        }
+                    }
+                }
+                if (nearSubject) continue;
+
+                float n = pseudoRand((float)x * 3.7f + (float)y * 7.1f);
+                if (n > 0.942f) {
+                    bool isLeft = (x < w / 2);
+                    uint8_t ar, ag, ab;
+                    if (isDark) {
+                        ar = isLeft ? 0 : 185;
+                        ag = isLeft ? 225 : 90;
+                        ab = 255;
+                    } else {
+                        ar = isLeft ? 0 : 145;
+                        ag = isLeft ? 150 : 55;
+                        ab = isLeft ? 235 : 225;
+                    }
+
+                    Pixel& ap = particles[particleCount++];
+                    ap.init((float)x, (float)y, ar, ag, ab, 140, basePixelSize * 0.60f, FLAG_BACK_PIXEL);
+                }
+            }
+        }
+    }
+
     // =========================================================================
     // LAYER 2: MIDDLE IMAGE PIXELS (Authentic photograph, clean, normal face)
     // =========================================================================
@@ -146,6 +304,10 @@ inline void PixelEngine::generatePixels() {
 
             float spawnX = cx + nx * laneOffset;
             float spawnY = cy + ny * laneOffset;
+            if (spawnX < 1.0f) spawnX = 1.0f;
+            if (spawnX > (float)w - 2.0f) spawnX = (float)w - 2.0f;
+            if (spawnY < 1.0f) spawnY = 1.0f;
+            if (spawnY > (float)h - 2.0f) spawnY = (float)h - 2.0f;
 
             float relX = cx / (float)w;
             uint8_t gr, gg, gb;
