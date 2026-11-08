@@ -22,6 +22,7 @@ export const ROUTES = {
   SETTINGS: '/settings',
   ADMIN: {
     ROOT: '/admin',
+    LOGIN: '/admin/login',
     APPS: '/admin/apps',
     BLOG: '/admin/blog',
     HELP: '/admin/help',

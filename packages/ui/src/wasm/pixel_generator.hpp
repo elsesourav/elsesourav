@@ -77,6 +77,13 @@ inline void PixelEngine::generatePixels() {
         if (particleCount >= MAX_PARTICLES - 8) break;
         float sx = STAR_SEEDS[s][0] * (float)w;
         float sy = STAR_SEEDS[s][1] * (float)h;
+
+        // Skip star if it overlaps the subject
+        int checkIdx = ((int)sy * w + (int)sx) * 4;
+        if (checkIdx >= 0 && checkIdx + 3 < w * h * 4 && inputImage[checkIdx + 3] > 16) {
+            continue;
+        }
+
         bool isLeft = (STAR_SEEDS[s][0] < 0.5f);
 
         uint8_t sr = isDark ? (isLeft ? 140 : 215) : (isLeft ? 0 : 160);
@@ -166,11 +173,8 @@ inline void PixelEngine::generatePixels() {
             uint8_t pa = inputImage[idx + 3];
 
             if (pa > 16) {
-                float relX = (float)x / (float)w;
-                float relY = (float)y / (float)h;
                 Pixel& p = particles[particleCount++];
                 p.init((float)x, (float)y, pr, pg, pb, pa, basePixelSize, FLAG_IMAGE_PIXEL);
-                p.applyBaseTopHairGlow(isDark, relX, relY, lightIntensity);
             }
         }
     }
@@ -220,9 +224,9 @@ inline void PixelEngine::generatePixels() {
     // LAYER 3: TOP PARTICLES (Light up pixels traveling along silhouette edges)
     // =========================================================================
     if (contourCount > 10) {
-        int edgeParticleCount = (int)((float)w * 0.72f * densityMultiplier);
-        if (edgeParticleCount < 24) edgeParticleCount = 24;
-        if (edgeParticleCount > 120) edgeParticleCount = 120;
+        int edgeParticleCount = (int)((float)w * 1.55f * densityMultiplier);
+        if (edgeParticleCount < 80) edgeParticleCount = 80;
+        if (edgeParticleCount > 380) edgeParticleCount = 380;
         for (int k = 0; k < edgeParticleCount; k++) {
             if (particleCount >= MAX_PARTICLES - 8) break;
 
@@ -230,20 +234,19 @@ inline void PixelEngine::generatePixels() {
             float dir = (k % 2 == 0) ? 1.0f : -1.0f;
             float speed = (11.0f + pseudoRand((float)k * 2.3f) * 15.0f) * speedMultiplier;
 
-            float laneOffset = (pseudoRand((float)k * 3.7f) - 0.25f) * 7.0f;
+            // Follow the exact edge silhouette line without wide offsets or extra width tracks
+            float laneOffset = 0.0f;
             float wPhase = pseudoRand((float)k * 5.1f) * 6.28f;
-            float wAmp = 0.5f + pseudoRand((float)k * 7.9f) * 1.2f;
-            float wFreq = 1.2f + pseudoRand((float)k * 9.3f) * 1.8f;
+            float wAmp = 0.0f;
+            float wFreq = 1.0f;
 
             int idx0 = (int)initProgress;
             if (idx0 >= contourCount) idx0 = contourCount - 1;
             float cx = contour[idx0].x;
             float cy = contour[idx0].y;
-            float nx = contour[idx0].nx;
-            float ny = contour[idx0].ny;
 
-            float spawnX = cx + nx * laneOffset;
-            float spawnY = cy + ny * laneOffset;
+            float spawnX = cx;
+            float spawnY = cy;
 
             float relX = cx / (float)w;
             uint8_t gr, gg, gb;

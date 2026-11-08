@@ -9,10 +9,16 @@ import { createAuthBrowserClient, sanitizeRedirectUrl, AuthError } from '@elseso
 import { OAuthButtons } from './OAuthButtons';
 import { Eye, EyeOff, Lock, UserCheck } from 'lucide-react';
 
-export function LoginForm() {
+export interface LoginFormProps {
+  isAdmin?: boolean;
+  defaultRedirect?: string;
+}
+
+export function LoginForm({ isAdmin = false, defaultRedirect }: LoginFormProps = {}) {
   const searchParams = useSearchParams();
   const next = searchParams.get('next') || searchParams.get('redirect');
-  const safeRedirect = sanitizeRedirectUrl(next, '/');
+  const fallbackRedirect = defaultRedirect || (isAdmin ? '/admin' : '/');
+  const safeRedirect = sanitizeRedirectUrl(next, fallbackRedirect);
 
   const [identifier, setIdentifier] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -130,23 +136,27 @@ export function LoginForm() {
         </Alert>
       )}
 
-      <OAuthButtons redirectTo={safeRedirect} onError={(msg) => setErrorMessage(msg)} />
+      {!isAdmin && (
+        <>
+          <OAuthButtons redirectTo={safeRedirect} onError={(msg) => setErrorMessage(msg)} />
 
-      <div className="relative flex items-center justify-center my-1">
-        <Separator className="bg-slate-200/80 dark:bg-white/10" />
-        <span className="absolute bg-white dark:bg-zinc-900 px-3 text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider select-none">
-          Or continue with
-        </span>
-      </div>
+          <div className="relative flex items-center justify-center my-1">
+            <Separator className="bg-slate-200/80 dark:bg-white/10" />
+            <span className="absolute bg-white dark:bg-zinc-900 px-3 text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider select-none">
+              Or continue with
+            </span>
+          </div>
+        </>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4">
         <FloatingLabelInput
           id="login-identifier"
           name="identifier"
-          label="Email Address or Username"
+          label={isAdmin ? 'Admin Email or Username' : 'Email Address or Username'}
           type="text"
           autoComplete="username"
-          placeholder="you@example.com or username"
+          placeholder={isAdmin ? 'admin@elsesourav.com' : 'you@example.com or username'}
           value={identifier}
           onChange={(val) => setIdentifier(val)}
           required
@@ -194,7 +204,7 @@ export function LoginForm() {
           loadingText="Signing in..."
           className="w-full text-xs sm:text-sm font-semibold py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-md shadow-indigo-600/25 active:scale-[0.98] transition-all"
         >
-          Sign In to ElseSourav
+          {isAdmin ? 'Sign In to Admin Portal' : 'Sign In to ElseSourav'}
         </Button>
       </form>
     </div>

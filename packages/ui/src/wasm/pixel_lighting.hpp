@@ -100,14 +100,14 @@ inline void applyProximityLighting(
                 float avgG = lightMapG[cellIdx] / totalW;
                 float avgB = lightMapB[cellIdx] / totalW;
 
-                float densityFactor = totalW / (totalW + 1.0f);
+                float densityFactor = totalW / (totalW + 1.5f);
                 float intensity = densityFactor * effLight * glowMultiplier;
 
                 if (isDark) {
                     // Dark mode: Luminous screen glow lighting
-                    float addR = avgR * intensity * 0.95f;
-                    float addG = avgG * intensity * 0.95f;
-                    float addB = avgB * intensity * 0.95f;
+                    float addR = avgR * intensity * 0.75f;
+                    float addG = avgG * intensity * 0.75f;
+                    float addB = avgB * intensity * 0.75f;
 
                     float litR = (float)p.baseR + addR;
                     float litG = (float)p.baseG + addG;
@@ -118,13 +118,13 @@ inline void applyProximityLighting(
                     p.b = (uint8_t)(litB > 255.0f ? 255.0f : litB);
                 } else {
                     // Light mode: Vibrant atmospheric tint lighting
-                    float tintR = avgR * intensity * 0.70f;
-                    float tintG = avgG * intensity * 0.70f;
-                    float tintB = avgB * intensity * 0.70f;
+                    float tintR = avgR * intensity * 0.65f;
+                    float tintG = avgG * intensity * 0.65f;
+                    float tintB = avgB * intensity * 0.65f;
 
-                    float litR = (float)p.baseR * (1.0f - intensity * 0.25f) + tintR;
-                    float litG = (float)p.baseG * (1.0f - intensity * 0.25f) + tintG;
-                    float litB = (float)p.baseB * (1.0f - intensity * 0.25f) + tintB;
+                    float litR = (float)p.baseR * (1.0f - intensity * 0.20f) + tintR;
+                    float litG = (float)p.baseG * (1.0f - intensity * 0.20f) + tintG;
+                    float litB = (float)p.baseB * (1.0f - intensity * 0.20f) + tintB;
 
                     p.r = (uint8_t)(litR > 255.0f ? 255.0f : litR);
                     p.g = (uint8_t)(litG > 255.0f ? 255.0f : litG);

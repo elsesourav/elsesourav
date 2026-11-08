@@ -48,7 +48,7 @@ inline void extractSilhouetteContour(
         int rowOffset = y * w * 4;
 
         for (int x = 0; x < w; x++) {
-            if (inputImage[rowOffset + x * 4 + 3] > 20) {
+            if (inputImage[rowOffset + x * 4 + 3] > 28) {
                 firstX = x;
                 break;
             }
@@ -56,7 +56,7 @@ inline void extractSilhouetteContour(
 
         if (firstX >= 0) {
             for (int x = w - 1; x >= firstX; x--) {
-                if (inputImage[rowOffset + x * 4 + 3] > 20) {
+                if (inputImage[rowOffset + x * 4 + 3] > 28) {
                     lastX = x;
                     break;
                 }
@@ -73,32 +73,12 @@ inline void extractSilhouetteContour(
 
     if (topY < 0 || bottomY < 0) return;
 
-    // Optional infill: Ensure any small matting holes inside subject have positive alpha
-    for (int y = topY; y <= bottomY; y++) {
-        if (!hasRow[y]) continue;
-        int lx = (int)leftX[y];
-        int rx = (int)rightX[y];
-        int rowOffset = y * w * 4;
-        for (int x = lx; x <= rx; x++) {
-            int idx = rowOffset + x * 4;
-            if (inputImage[idx + 3] <= 20) {
-                inputImage[idx + 3] = 255;
-                // Inherit color from nearest positive pixel
-                if (x > lx) {
-                    inputImage[idx]     = inputImage[idx - 4];
-                    inputImage[idx + 1] = inputImage[idx - 3];
-                    inputImage[idx + 2] = inputImage[idx - 2];
-                }
-            }
-        }
-    }
-
     // Assemble continuous edge path:
     static float rawX[MAX_CONTOUR];
     static float rawY[MAX_CONTOUR];
     int rawCount = 0;
 
-    // 1. Left side from bottom-left up to top-left
+    // 1. Left side from bottom-left up to top-left apex
     for (int y = bottomY; y >= topY; y--) {
         if (hasRow[y] && rawCount < MAX_CONTOUR - 16) {
             rawX[rawCount] = leftX[y];
@@ -107,21 +87,7 @@ inline void extractSilhouetteContour(
         }
     }
 
-    // 2. Smooth bridge across top crown of hair
-    if (rightX[topY] > leftX[topY] + 1.0f) {
-        int steps = (int)(rightX[topY] - leftX[topY]);
-        if (steps > 24) steps = 24;
-        for (int s = 1; s <= steps; s++) {
-            if (rawCount < MAX_CONTOUR - 16) {
-                float t = (float)s / (float)(steps + 1);
-                rawX[rawCount] = leftX[topY] * (1.0f - t) + rightX[topY] * t;
-                rawY[rawCount] = (float)topY;
-                rawCount++;
-            }
-        }
-    }
-
-    // 3. Right side from top-right down to bottom-right
+    // 2. Right side from top-right apex down to bottom-right
     for (int y = topY; y <= bottomY; y++) {
         if (hasRow[y] && rawCount < MAX_CONTOUR - 16) {
             rawX[rawCount] = rightX[y];

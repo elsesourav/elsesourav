@@ -25,7 +25,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   });
 
   if (!session?.user) {
-    redirect('/login?next=/admin');
+    redirect('/admin/login?next=/admin');
   }
 
   // Strict Server-Side Role Gate
@@ -46,9 +46,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                 Return Home
               </Button>
             </Link>
-            <Link href={ROUTES.SETTINGS}>
-              <Button size="sm" className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs">
-                Account Settings
+            <Link href="/admin/login">
+              <Button size="sm" className="bg-amber-600 hover:bg-amber-500 text-white text-xs">
+                Admin Sign In
               </Button>
             </Link>
           </div>

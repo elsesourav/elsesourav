@@ -4,7 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
-import { Home, Layers, Sparkles, Info, Shield } from 'lucide-react';
+import { Layers, Sparkles, Info, User } from 'lucide-react';
 import { ROUTES } from '@elsesourav/config';
 import type { AuthenticatedUser } from '@elsesourav/auth';
 
@@ -68,12 +68,6 @@ export function MobileBottomNav({ user }: MobileBottomNavProps) {
 
   const navItems = [
     {
-      href: ROUTES.HOME,
-      label: 'Home',
-      icon: Home,
-      isActive: pathname === ROUTES.HOME,
-    },
-    {
       href: ROUTES.APPS,
       label: 'Apps',
       icon: Layers,
@@ -95,16 +89,19 @@ export function MobileBottomNav({ user }: MobileBottomNavProps) {
         window.dispatchEvent(new CustomEvent('elsesourav:about-activate'));
       },
     },
-    ...(user?.role === 'ADMIN'
-      ? [
-          {
-            href: ROUTES.ADMIN.ROOT,
-            label: 'Admin',
-            icon: Shield,
-            isActive: pathname.startsWith('/admin'),
-          },
-        ]
-      : []),
+    {
+      href: user ? ROUTES.ACCOUNT : ROUTES.LOGIN,
+      label: 'Account',
+      icon: User,
+      isActive:
+        pathname === ROUTES.ACCOUNT ||
+        pathname.startsWith('/account') ||
+        pathname === ROUTES.PROFILE ||
+        pathname.startsWith('/profile') ||
+        pathname === ROUTES.SETTINGS ||
+        pathname === ROUTES.LOGIN ||
+        pathname === ROUTES.SIGNUP,
+    },
   ];
 
   return (

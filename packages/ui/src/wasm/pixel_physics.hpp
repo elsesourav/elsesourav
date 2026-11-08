@@ -204,11 +204,9 @@ inline void PixelEngine::update(float dt, float mouseX, float mouseY, int isMous
                 float nx = contour[idx0].nx * (1.0f - frac) + contour[idx1].nx * frac;
                 float ny = contour[idx0].ny * (1.0f - frac) + contour[idx1].ny * frac;
 
-                float wander = sinf(globalTime * p.wanderFreq + p.wanderPhase) * p.wanderAmp;
-                float totalOffset = p.normalOffset + wander;
-
-                p.origX = cx + nx * totalOffset;
-                p.origY = cy + ny * totalOffset;
+                // Follow exactly on the edge line of the silhouette without outward path drift
+                p.origX = cx;
+                p.origY = cy;
 
                 // Fade out smoothly at the lower shoulders so particles never touch bottom of shirt
                 if (cy >= (float)height * 0.82f) {

@@ -160,7 +160,23 @@ export function PublicHeader({
                 )}
                 <UserAvatarMenu user={user} />
               </div>
-            ) : null}
+            ) : (
+              <div className="hidden md:flex items-center gap-2 ml-1">
+                <div className="w-px h-5 bg-slate-200 dark:bg-zinc-800 mx-0.5" />
+                <Link
+                  href={ROUTES.LOGIN}
+                  className="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href={ROUTES.SIGNUP}
+                  className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-indigo-600 via-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 shadow-xs hover:shadow-md hover:shadow-indigo-500/25 transition-all duration-200 active:scale-95"
+                >
+                  Sign Up
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
