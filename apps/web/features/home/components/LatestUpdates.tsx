@@ -152,7 +152,7 @@ export function LatestUpdates(_props: LatestUpdatesProps) {
             </div>
 
             <Link
-              href={ROUTES.BLOG}
+              href={ROUTES.UPDATES}
               className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-indigo-400 hover:text-indigo-300 transition-colors group shrink-0"
             >
               <span>View All Updates</span>
@@ -172,13 +172,13 @@ export function LatestUpdates(_props: LatestUpdatesProps) {
             return (
               <Link
                 key={item.id}
-                href={ROUTES.BLOG_POST(item.slug)}
-                className="group relative flex flex-col justify-between rounded-2xl bg-[#0c0d1b]/90 hover:bg-[#111226] border border-white/8 hover:border-white/20 transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-xl overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                href={ROUTES.UPDATE_DETAIL(item.slug)}
+                className="group relative flex flex-col justify-between rounded-2xl bg-[#0c0d1b]/90 hover:bg-[#111226] border border-white/8 hover:border-white/20 transition-all duration-300 shadow-sm hover:shadow-xl overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
               >
                 <div>
                   {/* Aspect Ratio Header with Smooth Wave Gradient Banner & Category Pill */}
                   <div
-                    className={`relative h-32 sm:h-36 w-full overflow-hidden bg-gradient-to-tr ${item.bannerGradient} border-b border-white/8 flex items-end p-3.5 sm:p-4`}
+                    className={`relative h-32 sm:h-36 w-full overflow-hidden bg-gradient-to-tr ${item.bannerGradient} border-b border-white/8 flex items-end p-2.5 sm:p-3`}
                   >
                     {item.coverImageUrl ? (
                       <img
@@ -198,7 +198,7 @@ export function LatestUpdates(_props: LatestUpdatesProps) {
                   </div>
 
                   {/* Body Content: Title & Date + Read Time */}
-                  <div className="p-4 sm:p-5 space-y-1.5">
+                  <div className="p-3 sm:p-3.5 md:p-4 space-y-1.5">
                     <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-indigo-300 transition-colors line-clamp-1">
                       {item.title}
                     </h3>

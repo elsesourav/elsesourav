@@ -1,7 +1,6 @@
 import * as React from 'react';
 import type { BlogPostListItem } from '@elsesourav/types';
 import { BlogCard } from './BlogCard';
-import { Sparkles } from 'lucide-react';
 
 interface RelatedPostsProps {
   posts: readonly BlogPostListItem[];

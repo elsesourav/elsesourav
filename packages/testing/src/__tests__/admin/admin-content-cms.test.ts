@@ -142,4 +142,31 @@ describe('Admin Content Management Layer — Homepage, Creator, About (Prompt 26
     expect(identity.homepage.heroHeadline).toBe('Custom Headline');
     expect(identity.creator.principles).toEqual(['Custom Principle 1']);
   });
+
+  it('validates and merges homepage atmosphere canvas settings (WebGL/WASM) in SiteService', async () => {
+    const rawSettings = {
+      homepage_atmosphere_density: '1.25',
+      homepage_meteor_frequency: 'frequent',
+      homepage_stars_speed: '1.5',
+      homepage_mobile_effects: 'enhanced',
+    };
+
+    const parsed = parseKnownSettings(rawSettings);
+    expect(parsed.homepage_atmosphere_density).toBe('1.25');
+    expect(parsed.homepage_meteor_frequency).toBe('frequent');
+    expect(parsed.homepage_stars_speed).toBe('1.5');
+    expect(parsed.homepage_mobile_effects).toBe('enhanced');
+
+    const mockAdminRepo = {
+      getAllSettings: vi.fn().mockResolvedValue(rawSettings),
+    } as unknown as AdminRepository;
+
+    const siteService = new SiteService(mockAdminRepo);
+    const identity = await siteService.getSiteAndCreatorIdentity();
+
+    expect(identity.homepage.atmosphereDensity).toBe('1.25');
+    expect(identity.homepage.meteorFrequency).toBe('frequent');
+    expect(identity.homepage.starsSpeed).toBe('1.5');
+    expect(identity.homepage.mobileEffects).toBe('enhanced');
+  });
 });

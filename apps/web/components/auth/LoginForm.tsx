@@ -11,7 +11,7 @@ import { Eye, EyeOff, Lock, UserCheck } from 'lucide-react';
 
 export function LoginForm() {
   const searchParams = useSearchParams();
-  const next = searchParams.get('next');
+  const next = searchParams.get('next') || searchParams.get('redirect');
   const safeRedirect = sanitizeRedirectUrl(next, '/');
 
   const [identifier, setIdentifier] = React.useState('');
@@ -175,10 +175,11 @@ export function LoginForm() {
 
         <Button
           type="submit"
-          isLoading={loading}
-          className="w-full bg-[hsl(var(--primary))] hover:opacity-90 text-white text-sm font-medium py-2.5 rounded-xl shadow-lg shadow-indigo-600/20 cursor-pointer"
+          loading={loading}
+          loadingText="Signing in..."
+          className="w-full text-sm font-medium py-2.5 rounded-xl shadow-lg shadow-indigo-600/20"
         >
-          <span>{loading ? 'Signing in...' : 'Sign In to ElseSourav'}</span>
+          Sign In to ElseSourav
         </Button>
       </form>
     </div>

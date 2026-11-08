@@ -4,7 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Card } from '@elsesourav/ui';
 import type { AdminDashboardStats } from '@elsesourav/types';
-import { Package, FileText, BookOpen, LifeBuoy, Users, ArrowUpRight, Sparkles } from 'lucide-react';
+import { Package, FileText, BookOpen, LifeBuoy, Users, ArrowUpRight } from 'lucide-react';
 
 interface AdminStatsGridProps {
   stats: AdminDashboardStats;
@@ -71,7 +71,7 @@ export function AdminStatsGrid({ stats }: AdminStatsGridProps) {
         const Icon = card.icon;
         return (
           <Link key={card.title} href={card.href} className="group block">
-            <Card className="p-5 rounded-2xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl hover:border-zinc-700 transition-all space-y-4 h-full flex flex-col justify-between">
+            <Card className="p-3 sm:p-3.5 md:p-4 rounded-2xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl hover:border-zinc-700 transition-colors space-y-3 h-full flex flex-col justify-between">
               <div className="flex items-start justify-between gap-2">
                 <div
                   className={`w-10 h-10 rounded-xl ${card.bgColor} border ${card.borderColor} flex items-center justify-center ${card.accentColor} shrink-0`}

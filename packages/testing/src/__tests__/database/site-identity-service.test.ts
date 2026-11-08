@@ -16,6 +16,7 @@ describe('SiteService & Unified Identity Architecture (Prompt 03)', () => {
     expect(identity.site.tagline).toBe(SITE_CONFIG.tagline);
     expect(identity.site.description).toBe(SITE_CONFIG.description);
     expect(identity.site.url).toBe(SITE_CONFIG.url);
+    expect(identity.site.effectsLevel).toBe('high');
 
     // Creator Identity verification
     expect(identity.creator.name).toBe(CREATOR_CONFIG.name);
@@ -42,6 +43,7 @@ describe('SiteService & Unified Identity Architecture (Prompt 03)', () => {
         site_description: 'Custom platform description',
         site_logo_url: 'https://cdn.elsesourav.com/logo.svg',
         site_status_badge: '● 99.9% Uptime',
+        effects_level: 'low',
         creator_name: 'Sourav S.',
         creator_title: 'Staff Engineer & Builder',
         creator_role: 'Founder & Software Architect',
@@ -105,6 +107,7 @@ describe('SiteService & Unified Identity Architecture (Prompt 03)', () => {
     expect(identity.site.tagline).toBe('Custom Engineering & Tools');
     expect(identity.site.logoUrl).toBe('https://cdn.elsesourav.com/logo.svg');
     expect(identity.site.statusBadge).toBe('● 99.9% Uptime');
+    expect(identity.site.effectsLevel).toBe('low');
 
     // Creator Identity
     expect(identity.creator.name).toBe('Sourav S.');

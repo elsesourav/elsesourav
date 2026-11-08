@@ -64,6 +64,7 @@ All colors and surfaces are driven by HSL CSS custom variables defined in `globa
 | **`--warning`**                 | `hsl(var(--warning))`          | `#fbbf24` (`45 93% 58%`)     | `#d97706` (`38 92% 50%`)     | Warnings, pending states, cautious actions   |
 | **`--error` / `--destructive`** | `hsl(var(--error))`            | `#f87171` (`0 62.8% 50.6%`)  | `#dc2626` (`0 72% 51%`)      | Form validation errors, destructive buttons  |
 | **`--info`**                    | `hsl(var(--info))`             | `#38bdf8` (`199 89% 60%`)    | `#0284c7` (`201 96% 32%`)    | Information badges, tooltips, system notices |
+| **`--ambient-pointer-glow`**    | `var(--ambient-pointer-glow)`  | `rgba(99, 102, 241, 0.08)`   | `rgba(99, 102, 241, 0.14)`   | Desktop cursor follow ambient illumination   |
 
 ---
 
@@ -74,6 +75,34 @@ All colors and surfaces are driven by HSL CSS custom variables defined in `globa
 3. **Layer 2 (Solid Surface — `.depth-2`)**: Standard content cards, data tables, sidebars (`bg-surface` or `bg-surface-elevated`).
 4. **Layer 3 (Overlays — `.depth-3`)**: Dropdown menus, tooltips, dialogs, drawers (`bg-surface-overlay` with `shadow-xl`).
 5. **Layer 4 (Focused — `.depth-4`)**: Active selection rings, brand illumination rings (`ring-2 ring-primary/40`).
+
+---
+
+## Visual Effects & Scroll Performance Fidelity Engine (`data-effects`)
+
+The platform supports a 3-tier visual effects and scroll performance engine controlled exclusively via database `SiteSetting[effects_level]` in the Admin Dashboard (`/admin/settings` -> Visual Effects) and rendered platform-wide on `<html data-effects="high" | "medium" | "low">`. Regular users cannot modify this setting.
+
+| Fidelity Level | `data-effects` | Backdrop Blur | Elevation Shadows | Ambient Glow Fields | Target Device / Profile |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **High (Default)** | `'high'` | Full multi-layer (up to 40px) | Deep 3D elevation + neon cards | Dynamic drifting cosmic orbs | High-end desktop GPUs |
+| **Medium (Balanced)** | `'medium'` | Clamped light blur (4px max) | Single-layer soft shadows (4–6px) | Static dimmed glow (paused) | Laptops & smooth 60 FPS scrolling |
+| **Low (Performance)** | `'low'` | **Zero** (`backdrop-filter: none`) | **Flat** (crisp hairline borders) | **Disabled** (zero GPU convolution) | Ultra-smooth butter scroll on all devices |
+
+### Global Token Overrides in `low` Mode:
+- Zero backdrop-filter shaders across all `[class*='backdrop-blur']` and glass cards, eliminating GPU compositor re-rasterization during scroll.
+- Flat elevation shadows (`box-shadow: none !important`), converting floating card depth into crisp, accessible hairline borders across all card and button variants.
+- Background glow orbs (`.ambient-glow-orb`, `div[class*='blur-3xl']`, `div[class*='blur-2xl']`, `div[class*='blur-xl']`) and atmospheric canvas loops (`.hero-atmospheric-canvas`) are hidden (`display: none !important`), eliminating offscreen Gaussian blur calculations and RAF render loops.
+- Translucent cards, sticky headers, and navigations solidified with opaque canvas colors (`hsl(var(--surface))` / `hsl(var(--background))`) to ensure zero background bleed.
+
+---
+
+## Typography Architecture
+
+The platform uses a unified 3-tier font system loaded with zero layout shift (CLS) via `next/font/google`:
+
+- **Display & Headings (`--font-display` / `font-display`)**: **Outfit** — Geometric, crisp, and high-impact across hero headlines, section titles, and modal headers.
+- **Body & UI Elements (`--font-sans` / `font-sans`)**: **Plus Jakarta Sans** — Highly legible, modern neutral grotesque optimized for dashboard widgets, reading comfort, and small UI scales.
+- **Monospace & Metrics (`--font-mono` / `font-mono`)**: **JetBrains Mono** — Technical precision for code blocks, badges, system metrics, and numeric telemetry.
 
 ---
 
@@ -89,29 +118,65 @@ import { ... } from '@elsesourav/ui';
 
 ### `Button` & `IconButton`
 
-- **Purpose**: High-contrast, accessible triggers for actions, submissions, navigation, and modal dismissals.
-- **Key Features**: Full keyboard focus ring, tactile press animation (`active:scale-[0.98]`), integrated loading spinner state, zero layout shift.
+- **Purpose**: Tactile, accessible, physics-enhanced triggers for actions, submissions, navigation, and modal dismissals.
+- **Key Features**:
+  - **Motion Physics**: Driven by `motion/react` spring physics (`CELL = { stiffness: 520, damping: 34, mass: 0.45 }`) with tactile micro-press `whileTap: { y: 1, scale: 0.985 }`.
+  - **Accessibility First**: Automatic `prefers-reduced-motion` fallback via `useReducedMotion()`, ARIA live regions for copy/loading states, keyboard navigation.
+  - **Integrated Loading State**: Seamless rotating SVG spinner with `loadingText` blur/crossfade and layout stabilization (zero CLS).
+  - **Integrated Copy to Clipboard**: Pass `copyValue="text"` to transform any button into a morphing copy trigger with SVG checkmark path draw animation and fallback clipboard writer.
+  - **Ripple Bloom**: Optional radial physics ripple on pointer/keyboard press (`ripple?: boolean`).
+  - **Slots**: Zero layout-shift `leftIcon` and `rightIcon` slots.
 - **Props**:
-  - `variant`: `'primary' | 'secondary' | 'outline' | 'ghost' | 'danger'` (default: `'primary'`)
-  - `size`: `'sm' | 'md' | 'lg' | 'icon'` (default: `'md'`)
-  - `loading?: boolean`
+  - `variant`: `'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'destructive' | 'subtle' | 'elevated'` (default: `'primary'`)
+  - `size`: `'xs' | 'sm' | 'md' | 'lg' | 'icon' | 'icon-xs' | 'icon-sm' | 'icon-lg'` (default: `'md'`)
+  - `loading?: boolean` / `isLoading?: boolean`
+  - `loadingText?: string`
+  - `copyValue?: string`
+  - `copiedLabel?: string`
+  - `leftIcon?: React.ReactNode`
+  - `rightIcon?: React.ReactNode`
+  - `ripple?: boolean`
   - `disabled?: boolean`
   - `children: React.ReactNode`
 - **Usage Example**:
   ```tsx
   import { Button, IconButton } from '@elsesourav/ui';
-  import { Sparkles, Trash2 } from 'lucide-react';
+  import { Sparkles, Trash2, ArrowRight } from 'lucide-react';
 
-  <Button variant="primary" size="md" loading={isPending} onClick={handleSave}>
-    <Sparkles className="h-4 w-4" />
-    <span>Save Changes</span>
+  // Tactile primary with loading state and icons
+  <Button
+    variant="primary"
+    size="md"
+    loading={isPending}
+    loadingText="Saving..."
+    leftIcon={<Sparkles className="h-4 w-4" />}
+    rightIcon={<ArrowRight className="h-4 w-4" />}
+    onClick={handleSave}
+  >
+    Save Changes
   </Button>
 
-  <IconButton variant="ghost" size="sm" aria-label="Delete item" onClick={handleDelete}>
-    <Trash2 className="h-4 w-4 text-red-400" />
-  </IconButton>
+  // Morphing copy button
+  <Button
+    variant="outline"
+    size="sm"
+    copyValue="https://elsesourav.com/apps/nexus"
+    copiedLabel="Link Copied!"
+  >
+    Copy Link
+  </Button>
+
+  // Accessible icon button
+  <IconButton
+    variant="ghost"
+    size="icon-sm"
+    aria-label="Delete item"
+    icon={<Trash2 className="h-4 w-4 text-rose-400" />}
+    onClick={handleDelete}
+  />
   ```
-- **When & Where to Use**: Use across all forms, dialog footers, navigation bars, and toolbars. Use `danger` only for irreversible or sensitive operations.
+- **When & Where to Use**: Use across all forms, dialog footers, navigation bars, cards, and toolbars. Use `destructive` / `danger` only for irreversible or sensitive operations.
+- **Responsive Ergonomics & Anti-Duplication**: In mobile viewports (`< 640px`, including compact 350px and phablet 600px screens), always prefer `size="xs"` or `size="sm"` with responsive padding classes (e.g. `text-[10px] sm:text-xs h-6.5 sm:h-7 px-2 sm:px-3`), enabling `ripple` for physical click feedback and responsive text labels (e.g. `Change` on mobile, `Change Password` on desktop) to prevent button wrapping and preserve compact form alignment. Native `<button>` elements must never be used directly in user pages—always compose `@elsesourav/ui` `Button` or `@elsesourav/ui/interior` `LoadingButton`.
 
 ---
 
@@ -191,11 +256,14 @@ import { ... } from '@elsesourav/ui';
 
 ### `PageShell`
 
-- **Purpose**: Unified outer viewport wrapper providing consistent background depth, top padding, and bottom layout rhythm.
-- **Key Features**: Coordinates ambient background effects, skip-link integration, and SEO semantics.
+- **Purpose**: Unified outer viewport wrapper providing consistent background depth, compact responsive top padding (`pt-3 sm:pt-5`) under sticky headers, and bottom layout rhythm (`pb-12 sm:pb-16`).
+- **Key Features**: Coordinates ambient background effects, skip-link integration, and SEO semantics. Prevents excessive top margin/padding under sticky navigation headers.
 - **Props**:
-  - `children: React.ReactNode`
+  - `size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'prose' | 'full'`
+  - `glow?: boolean`
+  - `padded?: boolean` (defaults to `true`, applying `pt-3 sm:pt-5 pb-12 sm:pb-16`)
   - `className?: string`
+  - `children: React.ReactNode`
 - **Usage Example**:
   ```tsx
   import { PageShell, Container } from '@elsesourav/ui';
@@ -240,7 +308,7 @@ import { ... } from '@elsesourav/ui';
 ### `AmbientBackground`
 
 - **Purpose**: Non-intrusive GPU-accelerated gradient aura and micro-dot grid providing subtle depth to hero sections and settings headers. Calibrated with restrained ambient opacities to preserve deep obsidian space contrast (`#0a0b14`) without muddy purple over-glow.
-- **Key Features**: Automatically disables heavy filters when `prefers-reduced-motion` is active. Zero CPU drag.
+- **Key Features**: Automatically integrates with `data-effects="high" | "medium" | "low"` and `prefers-reduced-motion`. In `medium` mode, animations are paused and opacities dimmed. In `low` mode, blurred gradient orbs are removed from the compositor completely for maximum scroll performance.
 - **Usage Example**:
   ```tsx
   import { AmbientBackground } from '@elsesourav/ui';
@@ -346,6 +414,8 @@ import { ... } from '@elsesourav/ui';
 
 - **Purpose**: Primary surface container for chunking related information, stats, or configuration settings.
 - **Subcomponents**: `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter`.
+- **Responsive Padding**: Standardized fluid padding scale (`p-3 sm:p-4 md:p-5`): compact on mobile devices, gently expanding on tablet, and optimized for desktop clarity without oversized padding.
+- **Hover & Interaction Convention**: Card containers avoid whole-card hover scaling or translation shifts (`hover:scale-*`, `hover:-translate-y-*`); interaction emphasis is directed cleanly to inner image zoom (`group-hover:scale-105 duration-300/500`) and subtle border/shadow transitions.
 - **Props**:
   - `variant`: `'default' | 'solid' | 'subtle' | 'elevated' | 'glass' | 'interactive'`
   - `depth`: `0 | 1 | 2 | 3 | 4`
@@ -444,6 +514,27 @@ import { ... } from '@elsesourav/ui';
     description="Connect your GitHub account or create a new repository to get started."
     action={<Button size="sm">Create Repository</Button>}
   />;
+  ```
+
+---
+
+### `Skeleton` Suite & Content Loading Architecture
+
+- **Purpose**: Shimmering content placeholder primitives designed for in-page asynchronous streaming and filter state transitions (preventing disruptive full-screen takeovers during search/filtering).
+- **Subcomponents**: `Skeleton`, `SkeletonText`, `SkeletonBadge`, `SkeletonButton`, `SkeletonAvatar`, `SkeletonImage`, `CardSkeleton`, `TableSkeleton`, `DetailSkeleton`.
+- **Loading Architecture Guidelines**:
+  - **In-Page Changes (Filters, Queries, Tags, Search, Sorting)**: ALWAYS use in-page content skeletons (`AppsCatalogSkeleton`, `UpdatesCatalogSkeleton`, `SearchLoadingSkeleton`, etc.). Never display full-screen loading screens for inside-page modifications.
+  - **Cross-Route Transitions (Page Changes)**: Full-screen canvas logo loader (`PageTransitionLoader`) triggers strictly when navigating between different pathnames (`targetUrl.pathname !== currentPathname`), running a single smooth convergence animation without loops or restarts.
+- **Usage Example**:
+  ```tsx
+  import { Skeleton, SkeletonBadge, CardSkeleton } from '@elsesourav/ui';
+
+  // In-page catalog filter loading state
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <CardSkeleton />
+    <CardSkeleton />
+    <CardSkeleton />
+  </div>
   ```
 
 ---
@@ -568,6 +659,50 @@ import { ... } from '@elsesourav/ui';
 
 ---
 
+### `BrandLogo`
+
+- **Purpose**: Unified, responsive wordmark component presenting the signature ElseSourav identity with zero layout shift (CLS = 0).
+- **Key Features**:
+  - Automatically switches between crisp solid black (light mode) and glowing solid white (dark mode) via `variant="theme"`.
+  - Supports color SVG/PNG variant (`variant="color"`) featuring the full vibrant magenta to cyan gradient.
+  - Scaled down 40% for optimal ergonomic fit in desktop, tablet, and mobile (350×750) headers and footers.
+  - Screen-reader accessible with `<span className="sr-only">ElseSourav</span>`.
+- **Props**:
+  - `size`: `'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'custom'` (default: `'md'`)
+  - `variant`: `'color' | 'theme' | 'white' | 'black'` (default: `'color'`)
+  - `priority?: boolean`
+- **Usage Example**:
+  ```tsx
+  import { BrandLogo } from '@/components/brand/BrandLogo';
+
+  // Theme-adaptive brand wordmark (black in light, white in dark)
+  <BrandLogo size="md" variant="theme" />
+
+  // Full color brand SVG version
+  <BrandLogo size="md" variant="color" />
+  ```
+
+---
+
+### `BackToTopButton`
+
+- **Purpose**: Accessible, smooth-scrolling tactile trigger returning viewport to top of page (`window.scrollTo({ top: 0, behavior: 'smooth' })`).
+- **Key Features**:
+  - Works globally across all routes regardless of target section IDs.
+  - Animated directional arrow with spring elevation on hover and tap.
+  - Full keyboard focus ring and ARIA label.
+- **Props**:
+  - `label?: string` (default: `'Back to Top'`)
+  - `className?: string`
+- **Usage Example**:
+  ```tsx
+  import { BackToTopButton } from '@/components/navigation/BackToTopButton';
+
+  <BackToTopButton />
+  ```
+
+---
+
 ### `Navigation Headroom & Auto-Hide`
 
 - **Purpose**: High-performance auto-hiding header navigation powered by `useHeaderHeadroom`. Smoothly hides on downward scroll and reveals on upward scroll, maximizing mobile and desktop reading canvas while maintaining instant access to navigation.
@@ -575,6 +710,29 @@ import { ... } from '@elsesourav/ui';
   - Hardware-accelerated CSS transforms (`translate-y-0` vs `-translate-y-full`) with `cubic-bezier(0.16, 1, 0.3, 1)`.
   - Directional hysteresis threshold (10px) to prevent micro-jitter and trackpad bounce fluttering.
   - Zero layout thrashing via `requestAnimationFrame` and passive scroll event listeners.
+
+---
+
+### `MobileBottomNav`
+
+- **Purpose**: Full-width mobile bottom navigation bar (`md:hidden`) attached directly to the bottom edge, mirroring the top header, offering streamlined, reciprocal scroll-aware navigation across primary destinations (`Apps`, `Updates`, `About`, `Account`).
+- **Key Features**:
+  - **Full-Width Edge-to-Edge Architecture**: Flushed against the bottom viewport edge with safe-area inset compensation (`env(safe-area-inset-bottom)`) and frosted glassmorphism backdrop (`backdrop-blur-xl`).
+  - **Reciprocal Scroll Synchronization**: Automatically reveals when scrolling down or at the page bottom; smoothly slides down when scrolling up or at the top of the viewport (when the top header is active).
+  - **Gliding Active Indicator**: Morphing active pill indicator powered by `layoutId="mobile-bottom-nav-active-indicator"` and spring dynamics.
+  - **Tactile Micro-Interactions**: Haptic-style scale tap feedback and icon spring lift.
+  - **Fluid Transitions**: Entrance and exit orchestrated with `AnimatePresence` and spring physics (`stiffness: 360, damping: 32`), with automatic `prefers-reduced-motion` override.
+- **Destinations**:
+  - `Apps` (`/apps`, `<Layers />`)
+  - `Updates` (`/updates`, `<Sparkles />`)
+  - `About` (`/about`, `<Info />` with `elsesourav:about-activate` custom event)
+  - `Account` (`/profile` or `/login`, `<User />`)
+- **Usage Example**:
+  ```tsx
+  import { MobileBottomNav } from '@/components/navigation/MobileBottomNav';
+
+  <MobileBottomNav user={session?.user || null} />
+  ```
   - Keyboard accessibility: automatically reveals if keyboard focus (`focusin`) moves inside the header.
   - Pinned visible at page top (`scrollY <= topOffset`) and when mobile dialogs/menus are active (`isLocked`).
 
@@ -980,63 +1138,66 @@ The `@elsesourav/ui/interior` collection contains **54 physics-based animated UI
 
 ## Complete Directory: All 54 Interior.dev Components
 
-| Component               | Primary Props / Types             | Physics & Animation Behavior                         | Ideal Use Case                              |
-| :---------------------- | :-------------------------------- | :--------------------------------------------------- | :------------------------------------------ |
-| **`Accordion`**         | `items: { id, title, content }[]` | Spring height disclosure with chevron rotation       | FAQ sections, collapsible settings          |
-| **`BlurUpImage`**       | `src, alt, width, height, fill, blur, imgClassName` | Smooth progressive reveal with instant cache bypass | Hero backdrops, avatar studios, media cards |
-| **`CollapsibleBanner`** | `open, onDismiss, children`       | Elastic collapse with top-border bounce              | System announcements, discount alerts       |
-| **`CommandPalette`**    | `open, onOpenChange, items`       | Centered floating scale-in with instant fuzzy search | Quick action palette (`Cmd+K`)              |
-| **`ContextMenu`**       | `items, children`                 | Cursor-anchored spring reveal with bounds collision  | Table row right-click actions               |
-| **`CopyButton`**        | `value, timeout, label`           | Tactile icon morph from Copy to Checkmark            | Code blocks, shareable links, API tokens    |
-| **`Drawer`**            | `open, onOpenChange, side`        | Side slide-in with elastic overshoot                 | Mobile menus, side inspectors, filter decks |
-| **`Dropdown`**          | `items, value, defaultValue, onChange, placeholder, label, error, icon, triggerClassName` | Scaled fade with active item highlight & dynamic selected label | Form selection, filter criteria, responsive dropdowns |
-| **`ExpandingSearch`**   | `placeholder, onSearch`           | Smooth horizontal width expansion on click           | Minimalist navigation headers               |
-| **`FilterGrid`**        | `items, filters, getKey, renderItem, fluid` | Layout reflow with FLIP spring animation & counts | Portfolio filters, project showcases        |
-| **`FloatingLabelInput`** | `label, value, onChange, placeholder, type, icon, rightElement, hint, error, invalid` | Fluid micro-label lift transition with spring physics, leading icon & trailing action slots | Authentication, account management, administrative forms |
-| **`HideOnScroll`**      | `children, bar, useWindow`        | Smooth vertical transform header hide/reveal (with `useHideOnScroll` hook) | Sticky navigation bars, mobile toolbars     |
-| **`HoldToConfirm`**     | `onConfirm, duration, variant`    | Progressive stroke fill with release decay           | Irreversible deletions, critical actions    |
-| **`IconMorph`**         | `iconA, iconB, active`            | Smooth SVG path crossfade                            | Play/Pause, Hamburger/Close buttons         |
-| **`InlineValidation`**  | `status, message`                 | Slide-down error pill with red accent pulse          | Real-time email and username checkers       |
-| **`Lightbox`**          | `src, alt, open, onClose, onPrev, onNext, index, total` | Fullscreen zoom from clicked element thumbnail with spring physics & gallery navigation | Image gallery previews, proof viewing, apps showcase |
-| **`LikeBurst`**         | `liked, onLike, count`            | Particle burst explosion with heart scale punch      | Social likes, upvoting blog posts           |
-| **`LiveActivity`**      | `title, status, time`             | Dynamic island capsule expansion                     | Audio player status, background job tracker |
-| **`LoadMore`**          | `onLoad, hasMore, loading`        | Spinner crossfade with content injection             | Paginated blog posts, endless lists         |
-| **`LoadingButton`**     | `onAction, pendingLabel`          | Morphing width button with spinner and checkmark     | Async forms, checkout, authentication       |
-| **`LogoMarquee`**       | `logos, speed, pauseOnHover`      | Seamless infinite CSS ticker                         | Partner logos, client trust badges          |
-| **`LongPress`**         | `onLongPress, delay`              | Radial progress ring indicator                       | Mobile quick-actions, preview triggers      |
-| **`Modal`**             | `open, onClose, title`            | Backdrop blur scrim with centered pop                | Confirmation dialogs, modal forms           |
-| **`MorphSlider`**       | `items, transition, intensity, aberration, drift, autoplay, autoplayDelay` | WebGL GPU displacement morph with melt, ripple, shear, swirl shaders & auto-timer | Hero showcases, visual portfolios, interactive galleries |
-| **`NewItemsPill`**      | `count, onClick`                  | Floating pill drop-in at top of feed                 | "3 new posts" feed notification             |
-| **`OtpInput`**          | `length, onComplete, mode`        | Cell-by-cell focus glide and clipboard auto-fill     | 2FA verification, SMS login codes           |
-| **`Pagination`**        | `page, total, onChange`           | Floating sliding pill over active page number        | Multi-page data tables, search results      |
-| **`PasswordStrength`**  | `value, rules, showRules`         | Multi-bar entropy rating with live rule tests        | New account creation, password resets       |
-| **`PollResults`**       | `options, totalVotes`             | Animated percentage bar widths                       | Community voting, survey widgets            |
-| **`Popover`**           | `trigger, content, align`         | Anchored floating card with pointer arrow            | Rich tooltips, user preview hovercards      |
-| **`PresenceAvatars`**   | `users, max`                      | Overlapping avatar stack with hover expansion        | Active collaborators, live viewers          |
-| **`PressDepth`**        | `depth, tilt, onClick`            | 3D tactile button push with directional lean         | Primary CTA buttons, game-like triggers     |
-| **`ProgressBar`**       | `value, max, animated`            | Smooth progress bar with glowing tip                 | Onboarding checklist, file upload progress  |
-| **`ReadingProgress`**   | `targetRef`                       | Window top scroll tracker hairline                   | Long-form editorial and technical articles  |
-| **`ReorderList`**       | `items, onReorder`                | Drag-and-drop reorder with spring physics            | Task priority lists, navigation organizers  |
-| **`Ripple`**            | `children, color`                 | Radial water ripple radiating from click coordinate  | Material buttons, interactive surface tiles |
-| **`ScrollSpy`**         | `sections, activeId`              | Active marker that tracks scroll position            | Table of contents in documentation          |
-| **`SegmentedControl`**  | `options, value, onChange`        | Spring thumb gliding across segmented options        | Filter modes, theme pickers, view switches  |
-| **`ShowMore`**          | `lines, moreLabel`                | Spring height clamp disclosure                       | Long user bios, project descriptions        |
-| **`SkeletonSwap`**      | `loading, skeleton, children`     | Seamless crossfade between skeleton and content      | API data loading transitions                |
-| **`SliderDetents`**     | `value, min, max, steps`          | Slider thumb with magnetic snap to notches           | Volume controls, pricing tier sliders       |
-| **`SnapCarousel`**      | `children, gap, peek`             | Momentum flick carousel with snap points             | Project showcases, photo galleries          |
-| **`SortableTable`**     | `columns, data, onSort`           | Column header sort arrow animation                   | Administrative data grids                   |
-| **`StickyHeader`**      | `children, offset`                | Glass transition when page scrolls beyond threshold  | Sticky navigation bars                      |
-| **`StreamingText`**     | `text, speed`                     | Typewriter word-by-word streaming effect             | AI chatbot responses, terminal greetings    |
-| **`SwipeDeck`**         | `cards, onSwipe`                  | Tinder-style swipe cards with fling velocity         | Match cards, card sorting workflows         |
-| **`Tabs`**              | `tabs, activeTab, onChange`       | Floating sliding underline indicator                 | Tabbed interfaces                           |
-| **`TagInput`**          | `tags, onAdd, onRemove`           | Pill tag insertion with spring entrance              | Blog tagging, tech stack selection          |
-| **`TaskSteps`**         | `steps, currentStep`              | Stepper bar with connected progress lines            | Multi-step setup wizards                    |
-| **`TextReveal`**        | `text, by, stagger, delay, className` | Word-by-word or character-by-character de-blur spring rise | Hero titles, landing page headlines         |
-| **`TooltipGroup`**      | `tooltips, activeIndex`           | Shared tooltip bubble that glides between items      | App toolbars, icon ribbons                  |
-| **`TreeView`**          | `nodes, onSelect`                 | Nested folder disclosure with connecting lines       | File explorers, hierarchical category trees |
-| **`TypingIndicator`**   | `size, color`                     | Three oscillating dots in speech bubble              | Live chat waiting status                    |
-| **`ValueFlash`**        | `value`                           | Green/Red pulse whenever numeric value updates       | Live crypto prices, analytics counters      |
-| **`WizardSteps`**       | `steps, activeIndex`              | Step-by-step progress cards with validation          | Multi-step checkout, user onboarding        |
+| Component                | Primary Props / Types                                                                     | Physics & Animation Behavior                                                                | Ideal Use Case                                           |
+| :----------------------- | :---------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------ | :------------------------------------------------------- |
+| **`Accordion`**          | `items: { id, title, content }[]`                                                         | Spring height disclosure with chevron rotation                                              | FAQ sections, collapsible settings                       |
+| **`BlurUpImage`**        | `src, alt, width, height, fill, blur, imgClassName`                                       | Smooth progressive reveal with instant cache bypass                                         | Hero backdrops, avatar studios, media cards              |
+| **`CollapsibleBanner`**  | `open, onDismiss, children`                                                               | Elastic collapse with top-border bounce                                                     | System announcements, discount alerts                    |
+| **`CommandPalette`**     | `open, onOpenChange, items`                                                               | Centered floating scale-in with instant fuzzy search                                        | Quick action palette (`Cmd+K`)                           |
+| **`ContextMenu`**        | `items, children`                                                                         | Cursor-anchored spring reveal with bounds collision                                         | Table row right-click actions                            |
+| **`CopyButton`**         | `value, timeout, label`                                                                   | Tactile icon morph from Copy to Checkmark                                                   | Code blocks, shareable links, API tokens                 |
+| **`Drawer`**             | `open, onOpenChange, side`                                                                | Side slide-in with elastic overshoot                                                        | Mobile menus, side inspectors, filter decks              |
+| **`Dropdown`**           | `items, value, defaultValue, onChange, placeholder, label, error, icon, triggerClassName` | Scaled fade with active item highlight & dynamic selected label                             | Form selection, filter criteria, responsive dropdowns    |
+| **`ExpandingSearch`**    | `placeholder, onSearch`                                                                   | Smooth horizontal width expansion on click                                                  | Minimalist navigation headers                            |
+| **`FilterGrid`**         | `items, filters, getKey, renderItem, fluid`                                               | Layout reflow with FLIP spring animation & counts                                           | Portfolio filters, project showcases                     |
+| **`FloatingLabelInput`** | `label, value, onChange, placeholder, type, icon, rightElement, hint, error, invalid`     | Fluid micro-label lift transition with spring physics, leading icon & trailing action slots | Authentication, account management, administrative forms |
+| **`HideOnScroll`**       | `children, bar, useWindow`                                                                | Smooth vertical transform header hide/reveal (with `useHideOnScroll` hook)                  | Sticky navigation bars, mobile toolbars                  |
+| **`HoldToConfirm`**      | `onConfirm, duration, variant`                                                            | Progressive stroke fill with release decay                                                  | Irreversible deletions, critical actions                 |
+| **`IconMorph`**          | `iconA, iconB, active`                                                                    | Smooth SVG path crossfade                                                                   | Play/Pause, Hamburger/Close buttons                      |
+| **`InlineValidation`**   | `status, message`                                                                         | Slide-down error pill with red accent pulse                                                 | Real-time email and username checkers                    |
+| **`InteractivePortrait`**| `imageDarkSrc, imageLightSrc, alt, isDark, effectsLevel, size`                             | WebAssembly C++ physics engine with raw WebGL point sprite pipeline & glowing halo shader  | Creator profile showcases, interactive portrait avatars |
+| **`WasmPortraitCanvas`** | `imageDarkSrc, imageLightSrc, alt, isDark, effectsLevel, size, lightIntensity, simulationResolution, particleDensity, particleSize, glowBrightness, flightSpeed` | WebAssembly (C++) 4x micro-pixel engine with single-canvas dynamic viewport resizing (starts full-screen `window.innerWidth` & `window.innerHeight` across the display during entrance flight, then smoothly resizes into the card dimensions), cosmic perimeter spawning far outside viewport bounds, per-particle individualized flight speeds with magnetic quartic ease-out deceleration, transverse swooping curves, 2x density crystalline micro-pixel retro stars, continuous top-pixel starlight glow along hair crown & upper silhouette, bottom boundary particle occlusion (hidden as particles go to the bottom edge, preventing border clutter), halo ring, hardware-adaptive device capability auto-scaling, dynamic Admin Dashboard multiplier controls (`0.5x`–`3.0x`), and zero-overhead scroll visibility pausing | High-performance interactive developer portraits with full-screen particle stream entrance, single-canvas resizing architecture, hardware-adaptive performance scaling & complete Admin Dashboard customization |
+| **`WasmAtmosphereCanvas`** | `isDark, isSceneActive, particleDensityMultiplier, speedMultiplier, meteorFrequencyMultiplier, mobileEffectsMode, className, onLoaded` | High-performance WebGL + WebAssembly (C++) atmospheric particle engine replacing 2D canvas drawing. Renders crisp retro micro-pixel celestial stars (1.5px–2.5px solid square point sprites with zero blur, accompanied by 5-pixel retro diamond cross stars matching the About portrait side stars with sinusoidal opacity twinkle), sleek small & medium shooting stars / asteroids (1.2px–2.6px nucleus with 45px–125px tapered plasma streak and trailing stardust sparks), volumetric morning fog puffs, and sunlit motes in a single GPU draw call. Features active 60 FPS mobile rendering with touch swipe meteors, real-time hardware-adaptive performance scaling, and complete Admin Dashboard customization. | Homepage hero cosmic background, daylight atmospheric clouds, interactive sky canvas with zero JS GC overhead |
+| **`Lightbox`**           | `src, alt, open, onClose, onPrev, onNext, index, total`                                   | Fullscreen zoom from clicked element thumbnail with spring physics & gallery navigation     | Image gallery previews, proof viewing, apps showcase     |
+| **`LikeBurst`**          | `liked, onLike, count`                                                                    | Particle burst explosion with heart scale punch                                             | Social likes, upvoting blog posts                        |
+| **`LiveActivity`**       | `title, status, time`                                                                     | Dynamic island capsule expansion                                                            | Audio player status, background job tracker              |
+| **`LoadMore`**           | `onLoad, hasMore, loading`                                                                | Spinner crossfade with content injection                                                    | Paginated blog posts, endless lists                      |
+| **`LoadingButton`**      | `onAction, pendingLabel`                                                                  | Morphing width button with spinner and checkmark                                            | Async forms, checkout, authentication                    |
+| **`LogoMarquee`**        | `logos, speed, pauseOnHover`                                                              | Seamless infinite CSS ticker                                                                | Partner logos, client trust badges                       |
+| **`LongPress`**          | `onLongPress, delay`                                                                      | Radial progress ring indicator                                                              | Mobile quick-actions, preview triggers                   |
+| **`Modal`**              | `open, onClose, title`                                                                    | Backdrop blur scrim with centered pop                                                       | Confirmation dialogs, modal forms                        |
+| **`MorphSlider`**        | `items, transition, intensity, aberration, drift, autoplay, autoplayDelay`                | WebGL GPU displacement morph with melt, ripple, shear, swirl shaders & auto-timer           | Hero showcases, visual portfolios, interactive galleries |
+| **`NewItemsPill`**       | `count, onClick`                                                                          | Floating pill drop-in at top of feed                                                        | "3 new posts" feed notification                          |
+| **`OtpInput`**           | `length, onComplete, mode`                                                                | Cell-by-cell focus glide and clipboard auto-fill                                            | 2FA verification, SMS login codes                        |
+| **`Pagination`**         | `page, total, onChange`                                                                   | Floating sliding pill over active page number                                               | Multi-page data tables, search results                   |
+| **`PasswordStrength`**   | `value, rules, showRules`                                                                 | Multi-bar entropy rating with live rule tests                                               | New account creation, password resets                    |
+| **`PollResults`**        | `options, totalVotes`                                                                     | Animated percentage bar widths                                                              | Community voting, survey widgets                         |
+| **`Popover`**            | `trigger, content, align`                                                                 | Anchored floating card with pointer arrow                                                   | Rich tooltips, user preview hovercards                   |
+| **`PresenceAvatars`**    | `users, max`                                                                              | Overlapping avatar stack with hover expansion                                               | Active collaborators, live viewers                       |
+| **`PressDepth`**         | `depth, tilt, onClick`                                                                    | 3D tactile button push with directional lean                                                | Primary CTA buttons, game-like triggers                  |
+| **`ProgressBar`**        | `value, max, animated`                                                                    | Smooth progress bar with glowing tip                                                        | Onboarding checklist, file upload progress               |
+| **`ReadingProgress`**    | `targetRef`                                                                               | Window top scroll tracker hairline                                                          | Long-form editorial and technical articles               |
+| **`ReorderList`**        | `items, onReorder`                                                                        | Drag-and-drop reorder with spring physics                                                   | Task priority lists, navigation organizers               |
+| **`Ripple`**             | `children, color`                                                                         | Radial water ripple radiating from click coordinate                                         | Material buttons, interactive surface tiles              |
+| **`ScrollSpy`**          | `sections, activeId`                                                                      | Active marker that tracks scroll position                                                   | Table of contents in documentation                       |
+| **`SegmentedControl`**   | `options, value, onChange`                                                                | Spring thumb gliding across segmented options                                               | Filter modes, theme pickers, view switches               |
+| **`ShowMore`**           | `lines, moreLabel`                                                                        | Spring height clamp disclosure                                                              | Long user bios, project descriptions                     |
+| **`SkeletonSwap`**       | `loading, skeleton, children`                                                             | Seamless crossfade between skeleton and content                                             | API data loading transitions                             |
+| **`SliderDetents`**      | `value, min, max, steps`                                                                  | Slider thumb with magnetic snap to notches                                                  | Volume controls, pricing tier sliders                    |
+| **`SnapCarousel`**       | `children, gap, peek`                                                                     | Momentum flick carousel with snap points                                                    | Project showcases, photo galleries                       |
+| **`SortableTable`**      | `columns, data, onSort`                                                                   | Column header sort arrow animation                                                          | Administrative data grids                                |
+| **`StickyHeader`**       | `children, offset`                                                                        | Glass transition when page scrolls beyond threshold                                         | Sticky navigation bars                                   |
+| **`StreamingText`**      | `text, speed`                                                                             | Typewriter word-by-word streaming effect                                                    | AI chatbot responses, terminal greetings                 |
+| **`SwipeDeck`**          | `cards, onSwipe`                                                                          | Tinder-style swipe cards with fling velocity                                                | Match cards, card sorting workflows                      |
+| **`Tabs`**               | `tabs, activeTab, onChange`                                                               | Floating sliding underline indicator                                                        | Tabbed interfaces                                        |
+| **`TagInput`**           | `tags, onAdd, onRemove`                                                                   | Pill tag insertion with spring entrance                                                     | Blog tagging, tech stack selection                       |
+| **`TaskSteps`**          | `steps, currentStep`                                                                      | Stepper bar with connected progress lines                                                   | Multi-step setup wizards                                 |
+| **`TextReveal`**         | `text, by, stagger, delay, className`                                                     | Word-by-word or character-by-character de-blur spring rise                                  | Hero titles, landing page headlines                      |
+| **`TooltipGroup`**       | `tooltips, activeIndex`                                                                   | Shared tooltip bubble that glides between items                                             | App toolbars, icon ribbons                               |
+| **`TreeView`**           | `nodes, onSelect`                                                                         | Nested folder disclosure with connecting lines                                              | File explorers, hierarchical category trees              |
+| **`TypingIndicator`**    | `size, color`                                                                             | Three oscillating dots in speech bubble                                                     | Live chat waiting status                                 |
+| **`ValueFlash`**         | `value`                                                                                   | Green/Red pulse whenever numeric value updates                                              | Live crypto prices, analytics counters                   |
+| **`WizardSteps`**        | `steps, activeIndex`                                                                      | Step-by-step progress cards with validation                                                 | Multi-step checkout, user onboarding                     |
 
 ---
 
@@ -1192,3 +1353,33 @@ The `@elsesourav/ui/micro` collection contains **34 playful, high-tactility micr
    - ❌ `import { BlurUpImage } from '@elsesourav/ui';` (causes webpack runtime call issues!)
 4. **Accessibility Compliance**: Every interactive element MUST include an accessible label (`aria-label` or visible text), keyboard navigation (`onKeyDown` handling for Space/Enter), and automatic `prefers-reduced-motion` fallbacks.
 5. **Always Update Documentation**: When adding new components or altering existing props, update this `README.md` immediately to reflect changes.
+6. **Global Scrollbar System**: Custom sleek 9px translucent capsule scrollbar with transparent gutters is enabled globally across WebKit and Firefox (`globals.css`), eliminating native operating-system scrollbar jumps. To hide horizontal carousels or shelf scrollbars, use `.no-scrollbar` or `.scrollbar-none`.
+7. **App Hero & Dynamic Metrics Architecture**: App detail pages implement a minimalist eyebrow header (category chip and critical auth state only) and a 5-column Key Stats Strip (`RATINGS`, `AGE`, `CATEGORY`, `LANGUAGE`, `SIZE`). Age is dynamically computed from project creation/publish date (`getProjectAge`), size is dynamic/non-constant (`getAppDisplaySize`), and redundant clutter or action bloat (such as non-auth save to library) is strictly omitted.
+8. **Ratings & Reviews System Architecture**:
+   - **Two-Line Layout**: App detail pages display the Ratings overview and Reviews carousel on two separate lines. The ratings overview spans full width with numerical score (`X.X out of 5`) and wide, high-fidelity horizontal star distribution bars with total ratings count right-aligned under the bars.
+   - **Horizontal Review Carousel**: Renders below the ratings overview as its own dedicated row with responsive width cards, drag-to-scroll, and edge navigation chevrons.
+   - **Floating Fullscreen Window**: Clicking "Ratings & Reviews" opens a focused floating fullscreen modal window (`AllReviewsModal`) over the current page without navigating away, featuring detailed star breakdowns, sort filters (`Newest`, `Oldest`, `Highest`, `Lowest`), and full paginated review feeds. When reviews exist (`totalCount > 0`), exactly one review button (`Write a Review`) is rendered at the bottom of the left column beneath the star breakdown card, keeping the review feed purely focused on reading community feedback. When no previous reviews exist (`totalCount === 0`), the review feed presents a single, centered "Write First Review" action button with no sort controls or redundant text. The modal is portaled directly into `document.body` via React's `createPortal`, preventing nested CSS transform inheritance from `<Reveal>` or layout boundaries and ensuring zero top-gap or layout bleed across all viewports.
+   - **Default Zero Rating Score**: When an application has no ratings submitted yet, the score card renders a clean, crisp `0` by default rather than a thick em-dash (`—`), preserving typography hierarchy and readability. The redundant `0 Total` badge in the modal header title cluster is omitted for visual cleanliness.
+   - **Dedicated Review Composer**: Clicking "Write a Review" opens a dedicated modal (`WriteReviewModal`) portaled cleanly to `document.body` with `z-[110]`, showing strictly and only review options (interactive 5-star rating with sentiment feedback, title, review body, and submission actions) without unrelated options or clutter.
+   - **Per-User Helpful Vote Tracking**: Review helpful/like reactions are tracked at the database level (`AppFeedbackLike`) per user (and per IP/identifier for anonymous visitors), preventing duplicate votes, returning persistent `hasLiked` state across page reloads, and ensuring authentic community engagement.
+9. **Native View Transitions Circular Expansion Architecture**:
+   - **API & Hardware Acceleration Pipeline**: Theme switching in `ThemeProvider` wraps theme state and DOM mutations inside `document.startViewTransition()`. To achieve 60/120fps GPU compositor performance and eliminate main-thread lag, `transition.ready` executes the circular wipe exclusively via the Web Animations API (`document.documentElement.animate`) on `::view-transition-new(root)`. In `globals.css`, `::view-transition-new(root)` is set to `animation: none;` to eliminate competing CSS keyframe animations and prevent fill-mode conflicts.
+   - **Pixel-Perfect Source Location**: The expansion origin coordinates (`originX`, `originY`) are determined directly from the Theme Button's live bounding rect (`rect.left + rect.width / 2`, `rect.top + rect.height / 2`) in `ThemePopup`, with dynamic DOM fallback (`[aria-label="Change theme"]`). The circular wipe always originates cleanly from `circle(0px at originX originY)` directly at the Sun/Moon icon on all screen resolutions, rather than arbitrary percentages or un-interpolated CSS variables.
+   - **Full Viewport Hypotenuse Coverage**: The target wipe radius is computed geometrically using `Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) + 32px`, guaranteeing that 100% of the screen (all 4 corners) is fully covered before the transition completes without any clipping, popping, or visual edge stutter. An `ease-in-out` 500ms curve provides perceptible, smooth acceleration from 0 size to full viewport coverage.
+   - **Synchronous flushSync DOM Synchronization**: `ThemePopup` synchronously unmounts from the DOM via `flushSync` before `startViewTransition()` takes its initial snapshot, preventing ghost popup menus from appearing in the outgoing snapshot. `ThemeProvider` similarly flushes theme state inside the transition callback for synchronous DOM capture.
+   - **Accessibility First**: Automatically gates the transition under `@media (prefers-reduced-motion: no-preference)`, providing an instant switch without motion for users with vestibular sensitivities.
+10. **App Media Showcase & Video/Image Card Controls Architecture**:
+
+- **Fully Normal Hover (Zero Image Dimming)**: Images and video cards maintain 100% natural visual clarity on hover. Dark overlays (`bg-black/25`), zoom effects, and large center play/expand circles are eliminated so media previews remain completely unobstructed.
+- **Bottom Line Control Bar**: Interactive actions are housed exclusively along the bottom line of the card with smooth entrance transitions (`opacity-0 translate-y-1` -> `opacity-100 translate-y-0` with `transition-all duration-300 ease-out`):
+  - **Video Cards (`AppMediaVideoCard`)**: Features a sleek glassmorphic bottom bar with Replay on the left, and Play/Pause, Mute/Unmute, and Fullscreen/Expand buttons grouped on the right.
+  - **Image Cards (`AppMediaShowcase`)**: Displays strictly and only the Fullscreen/Expand icon button in the exact same bottom-right position (`bottom-3 right-3`) as the video card's expand trigger, preserving layout consistency across media types.
+- **2-Image Viewport Fit & Stepped Carousel Scrolling**: Carousel cards are sized responsively (`w-[86vw] sm:w-[calc(50%-8px)] shrink-0 aspect-[16/10]`) so that on screens `sm` and above, exactly two image/video cards fit cleanly side-by-side within the container width with zero awkward cutoff. Scrolling advances by `clientWidth`, smoothly stepping the carousel by 2 images at a time with native snap alignment (`snap-x snap-mandatory`).
+- **Dynamic Dual-Directional Navigation Chevrons**: Navigation buttons follow the canonical `ShelfCarouselRow` pattern, rendering Left/Right floating buttons governed by real-time scroll position (`ResizeObserver` + passive scroll tracking):
+  - **At Start**: Left button is hidden (`opacity-0 scale-90 pointer-events-none`), Right button is active (`opacity-100 scale-100 pointer-events-auto`).
+  - **Scrolled in Middle (Both Sides)**: Both Left and Right buttons show simultaneously with smooth scale/opacity transitions.
+  - **At End**: Right button smoothly fades out, while Left button remains active.
+11. **Global Search Overlay Scroll Preservation Architecture**:
+- **Zero Auto-Scroll on Open & Close**: Opening or closing the global search overlay (via `⌘K`, `/`, escape, or click-outside) strictly preserves the user's scroll position anywhere on the page without jumping or scrolling towards the header.
+- **Scroll-Free Focus Restoration**: Both input autofocus and search button focus restoration use `element.focus({ preventScroll: true })`. This prevents browser layout engines from scrolling the window to bring the off-screen or hidden sticky header button into view.
+- **Exact Pixel Scroll Locking**: When search opens, `window.scrollY` is captured. When `document.body.style.overflow = 'hidden'` is removed upon unmounting/closing, the window scroll position is verified and instantly re-locked (`window.scrollTo({ top: savedScrollY, behavior: 'instant' })`), eliminating subpixel layout jumps.

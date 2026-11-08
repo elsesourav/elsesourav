@@ -2,8 +2,9 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { User, Settings, LifeBuoy, Bell, Menu, X, LogOut, Shield, ArrowRight } from 'lucide-react';
+import { Button, IconButton } from '@elsesourav/ui';
 import type { AuthenticatedUser } from '@elsesourav/auth';
 
 interface UserNavProps {
@@ -13,9 +14,9 @@ interface UserNavProps {
 }
 
 const NAV_LINKS = [
-  { href: '/profile', label: 'Profile', icon: User, description: 'View & manage your identity' },
+  { href: '/account', label: 'Account', icon: User, description: 'View & manage your identity' },
   {
-    href: '/settings',
+    href: '/account?tab=settings',
     label: 'Settings',
     icon: Settings,
     description: 'Security, password & preferences',
@@ -36,7 +37,20 @@ const NAV_LINKS = [
 
 export function UserNav({ user, desktopOnly = false, mobileOnly = false }: UserNavProps) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+
+  const isLinkActive = React.useCallback(
+    (href: string) => {
+      const [path, query] = href.split('?');
+      if (query) {
+        const expectedTab = new URLSearchParams(query).get('tab');
+        return pathname === path && searchParams.get('tab') === expectedTab;
+      }
+      return (pathname === path && !searchParams.get('tab')) || pathname.startsWith(`${path}/`);
+    },
+    [pathname, searchParams]
+  );
   const [isClosing, setIsClosing] = React.useState(false);
   const mobileMenuRef = React.useRef<HTMLDivElement>(null);
   const toggleBtnRef = React.useRef<HTMLButtonElement>(null);
@@ -59,11 +73,7 @@ export function UserNav({ user, desktopOnly = false, mobileOnly = false }: UserN
   // Lock body scroll and listen for Escape key when mobile menu is open
   React.useEffect(() => {
     if (mobileMenuOpen) {
-      const scrollY = window.scrollY;
       const originalBodyOverflow = document.body.style.overflow;
-      const originalHtmlOverflow = document.documentElement.style.overflow;
-
-      document.documentElement.style.overflow = 'hidden';
       document.body.style.overflow = 'hidden';
 
       const handleKeyDown = (e: KeyboardEvent) => {
@@ -75,9 +85,7 @@ export function UserNav({ user, desktopOnly = false, mobileOnly = false }: UserN
       window.addEventListener('keydown', handleKeyDown);
 
       return () => {
-        document.documentElement.style.overflow = originalHtmlOverflow;
         document.body.style.overflow = originalBodyOverflow;
-        window.scrollTo(0, scrollY);
         window.removeEventListener('keydown', handleKeyDown);
       };
     }
@@ -120,7 +128,7 @@ export function UserNav({ user, desktopOnly = false, mobileOnly = false }: UserN
           className="hidden md:flex items-center gap-1 text-xs font-medium text-muted-foreground"
         >
           {NAV_LINKS.slice(0, 3).map(({ href, label, icon: Icon }) => {
-            const isActive = pathname === href || pathname.startsWith(`${href}/`);
+            const isActive = isLinkActive(href);
             return (
               <Link
                 key={href}
@@ -158,9 +166,11 @@ export function UserNav({ user, desktopOnly = false, mobileOnly = false }: UserN
       {/* Mobile Menu Button */}
       {!desktopOnly && (
         <div className="md:hidden">
-          <button
+          <IconButton
             ref={toggleBtnRef}
             type="button"
+            variant="ghost"
+            size="icon"
             onClick={() => {
               if (mobileMenuOpen) {
                 requestClose();
@@ -169,12 +179,11 @@ export function UserNav({ user, desktopOnly = false, mobileOnly = false }: UserN
                 setMobileMenuOpen(true);
               }
             }}
-            className="flex items-center justify-center h-10 w-10 min-h-[40px] min-w-[40px] rounded-xl text-muted-foreground hover:text-foreground hover:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer active:scale-95 transition-all"
+            className="rounded-xl min-h-[40px] min-w-[40px]"
             aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
             aria-expanded={mobileMenuOpen}
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+            icon={mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          />
         </div>
       )}
 
@@ -213,7 +222,7 @@ export function UserNav({ user, desktopOnly = false, mobileOnly = false }: UserN
 
               <nav aria-label="Mobile account navigation" className="space-y-2">
                 {NAV_LINKS.map(({ href, label, icon: Icon, description }) => {
-                  const isActive = pathname === href || pathname.startsWith(`${href}/`);
+                  const isActive = isLinkActive(href);
                   return (
                     <Link
                       key={href}
@@ -274,13 +283,15 @@ export function UserNav({ user, desktopOnly = false, mobileOnly = false }: UserN
           {/* Bottom Sign-out Drawer Footer */}
           <div className="pt-6 mt-6 border-t border-border/80 space-y-3">
             <form action="/api/auth/logout" method="POST">
-              <button
+              <Button
                 type="submit"
-                className="w-full flex items-center justify-center gap-2 p-3 rounded-xl text-xs font-semibold text-rose-600 dark:text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 transition-colors cursor-pointer"
+                variant="danger"
+                size="md"
+                leftIcon={<LogOut className="w-4 h-4" />}
+                className="w-full justify-center rounded-xl"
               >
-                <LogOut className="w-4 h-4" />
-                <span>Sign Out</span>
-              </button>
+                Sign Out
+              </Button>
             </form>
           </div>
         </div>

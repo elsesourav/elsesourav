@@ -77,7 +77,8 @@ export function useBlurUpImage({ src, srcSet, onReady, onError }: UseBlurUpImage
     const onLoad = () => {
       if (!alive) return;
       if (typeof img.decode === 'function') {
-        img.decode()
+        img
+          .decode()
           .then(reveal)
           .catch(() => {
             if (img.naturalWidth > 0) {

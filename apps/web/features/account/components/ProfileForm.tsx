@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import type { User } from '@elsesourav/types';
-import { Card, CardDescription, CardHeader, CardTitle, Input } from '@elsesourav/ui';
+import { Card, CardDescription, CardHeader, CardTitle, Input, Button, IconButton } from '@elsesourav/ui';
 import { FloatingLabelInput } from '@elsesourav/ui/interior';
 import { LoadingButton } from '@/components/interior/LoadingButton';
 import {
@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { ProfileAvatarStudio } from './ProfileAvatarStudio';
 import { updateProfileFormAction } from '../actions/account-actions';
+import { useUsernameAvailability } from '../hooks/use-username-availability';
 
 interface ProfileFormProps {
   user: User;
@@ -35,72 +36,16 @@ export function ProfileForm({ user }: ProfileFormProps) {
   const [isEditingUsername, setIsEditingUsername] = React.useState(false);
   const [editUsernameValue, setEditUsernameValue] = React.useState(username);
   const [isSavingUsername, setIsSavingUsername] = React.useState(false);
-  const [usernameStatus, setUsernameStatus] = React.useState<
-    'idle' | 'checking' | 'available' | 'invalid' | 'taken'
-  >('idle');
-  const [usernameError, setUsernameError] = React.useState<string | null>(null);
+  const {
+    status: usernameStatus,
+    error: usernameError,
+    setError: setUsernameError,
+  } = useUsernameAvailability(username, editUsernameValue, isEditingUsername);
 
   const [isEditingBio, setIsEditingBio] = React.useState(false);
   const [editBioValue, setEditBioValue] = React.useState(bio);
   const [isSavingBio, setIsSavingBio] = React.useState(false);
   const [bioError, setBioError] = React.useState<string | null>(null);
-
-  React.useEffect(() => {
-    if (!isEditingUsername) {
-      setUsernameStatus('idle');
-      setUsernameError(null);
-      return;
-    }
-
-    const trimmed = editUsernameValue.trim().toLowerCase();
-
-    if (!trimmed) {
-      setUsernameStatus('idle');
-      setUsernameError(null);
-      return;
-    }
-
-    if (trimmed === (username || '').toLowerCase()) {
-      setUsernameStatus('idle');
-      setUsernameError(null);
-      return;
-    }
-
-    if (trimmed.length < 4) {
-      setUsernameStatus('invalid');
-      setUsernameError('Username must be at least 4 characters long');
-      return;
-    }
-
-    if (!/^[a-z0-9_-]+$/.test(trimmed)) {
-      setUsernameStatus('invalid');
-      setUsernameError('Only lowercase letters, numbers, hyphens, and underscores allowed');
-      return;
-    }
-
-    setUsernameStatus('checking');
-    setUsernameError(null);
-
-    const timer = setTimeout(async () => {
-      try {
-        const res = await fetch(
-          `/api/users/check-username?username=${encodeURIComponent(trimmed)}`
-        );
-        const data = await res.json();
-        if (data.available) {
-          setUsernameStatus('available');
-          setUsernameError(null);
-        } else {
-          setUsernameStatus('taken');
-          setUsernameError(data.error || 'Username is already taken');
-        }
-      } catch {
-        setUsernameStatus('idle');
-      }
-    }, 450);
-
-    return () => clearTimeout(timer);
-  }, [editUsernameValue, isEditingUsername, username]);
 
   const handleApplyName = async () => {
     const trimmed = editNameValue.trim();
@@ -196,20 +141,20 @@ export function ProfileForm({ user }: ProfileFormProps) {
 
   return (
     <div className="w-full">
-      <Card className="bg-card text-card-foreground border-border shadow-sm rounded-2xl sm:rounded-3xl overflow-hidden">
-        <CardHeader className="pb-2.5 sm:pb-3">
-          <div className="flex items-center gap-2">
-            <UserIcon className="w-4 h-4 text-primary" />
-            <CardTitle className="text-sm sm:text-base font-bold text-foreground">
+      <Card className="bg-card text-card-foreground border-border/50 sm:border-border shadow-xs sm:shadow-sm rounded-xl sm:rounded-2xl md:rounded-3xl overflow-hidden transition-all">
+        <CardHeader className="pb-2 sm:pb-2.5 md:pb-3 px-3 sm:px-5 pt-3 sm:pt-4 md:pt-5 border-b border-border/40 sm:border-border/60">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <UserIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary shrink-0" />
+            <CardTitle className="text-xs sm:text-sm md:text-base font-bold text-foreground">
               Profile Information
             </CardTitle>
           </div>
-          <CardDescription className="text-xs text-muted-foreground">
+          <CardDescription className="text-[10px] sm:text-[11px] md:text-xs text-muted-foreground mt-0.5">
             Update your public name, username handle, developer bio, and profile image.
           </CardDescription>
         </CardHeader>
 
-        <div className="p-4 sm:p-5 pt-1 space-y-3">
+        <div className="p-2.5 sm:p-4 md:p-5 pt-2 sm:pt-3 space-y-2 sm:space-y-3 md:space-y-3.5">
           <ProfileAvatarStudio
             user={user}
             displayName={displayName}
@@ -217,46 +162,54 @@ export function ProfileForm({ user }: ProfileFormProps) {
             onPhotoSaved={setPhotoUrl}
           />
 
-          <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-muted/20 border border-border/80 space-y-3 transition-colors">
+          <div
+            data-section="profile-name"
+            className="p-2.5 sm:p-3.5 md:p-4 rounded-lg sm:rounded-xl md:rounded-2xl bg-muted/15 border border-border/50 sm:border-border/80 space-y-1.5 sm:space-y-2.5 md:space-y-3 transition-colors"
+          >
             <div className="flex items-center justify-between gap-2">
-              <span className="text-xs font-semibold text-foreground">Full Name</span>
+              <span className="text-[11px] sm:text-xs md:text-sm font-semibold text-foreground">
+                Full Name
+              </span>
               {!isEditingName && (
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="xs"
                   onClick={() => {
                     setEditNameValue(displayName);
                     setIsEditingName(true);
                     setNameError(null);
                   }}
-                  className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1 px-2 py-1 rounded-md hover:bg-muted transition-colors cursor-pointer"
+                  leftIcon={<Pencil className="w-2.5 h-2.5 sm:w-3 sm:h-3" />}
+                  className="h-6 sm:h-7 px-2 sm:px-2.5 text-[10px] sm:text-xs text-muted-foreground hover:text-foreground rounded-md sm:rounded-lg"
                 >
-                  <Pencil className="w-3 h-3" />
-                  <span>Edit</span>
-                </button>
+                  Edit
+                </Button>
               )}
             </div>
 
             {!isEditingName ? (
-              <div className="p-2.5 rounded-xl bg-background/80 border border-border/70 text-xs font-medium text-foreground">
+              <div className="p-2 sm:p-2.5 rounded-md sm:rounded-xl bg-background/60 border border-border/50 text-[11px] sm:text-xs md:text-sm font-medium text-foreground">
                 {displayName || <span className="text-muted-foreground italic">Not set</span>}
               </div>
             ) : (
-              <div className="p-3 rounded-xl bg-background border border-primary/30 space-y-2.5 animate-in fade-in duration-150">
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <div className="p-2.5 sm:p-3 rounded-lg sm:rounded-xl bg-background border border-primary/30 space-y-2 animate-in fade-in duration-150">
+                <div className="flex items-center justify-between text-[11px] sm:text-xs text-muted-foreground">
                   <span className="font-medium text-foreground">Edit Name</span>
-                  <button
+                  <IconButton
                     type="button"
+                    variant="ghost"
+                    size="icon-xs"
                     onClick={() => {
                       setIsEditingName(false);
                       setNameError(null);
                     }}
-                    className="p-1 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
+                    aria-label="Cancel editing name"
+                    icon={<X className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
+                  />
                 </div>
 
-                <div className="flex gap-2 items-center">
+                <div className="flex gap-1.5 sm:gap-2 items-center">
                   <FloatingLabelInput
                     label="Display Name"
                     type="text"
@@ -274,14 +227,14 @@ export function ProfileForm({ user }: ProfileFormProps) {
                     pendingLabel="Applying..."
                     successLabel="Applied"
                     errorLabel="Failed"
-                    className="text-xs font-semibold h-10 px-3.5 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 mt-5"
+                    className="text-[10px] sm:text-xs font-semibold h-8 sm:h-9 md:h-10 px-2.5 sm:px-3.5 rounded-lg sm:rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 mt-5 shrink-0"
                   >
                     Save
                   </LoadingButton>
                 </div>
 
                 {nameError && (
-                  <p className="text-[11px] text-rose-500 flex items-center gap-1 font-medium">
+                  <p className="text-[10px] sm:text-[11px] text-rose-500 flex items-center gap-1 font-medium">
                     <AlertCircle className="w-3 h-3" /> {nameError}
                   </p>
                 )}
@@ -289,56 +242,64 @@ export function ProfileForm({ user }: ProfileFormProps) {
             )}
           </div>
 
-          <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-muted/20 border border-border/80 space-y-3 transition-colors">
+          <div
+            data-section="profile-username"
+            className="p-2.5 sm:p-3.5 md:p-4 rounded-lg sm:rounded-xl md:rounded-2xl bg-muted/15 border border-border/50 sm:border-border/80 space-y-1.5 sm:space-y-2.5 md:space-y-3 transition-colors"
+          >
             <div className="flex items-center justify-between gap-2">
               <div>
-                <span className="text-xs font-semibold text-foreground">Username Handle</span>
-                <span className="text-[11px] text-muted-foreground block mt-0.5">
+                <span className="text-[11px] sm:text-xs md:text-sm font-semibold text-foreground">
+                  Username Handle
+                </span>
+                <span className="text-[10px] sm:text-[11px] md:text-xs text-muted-foreground block mt-0.5">
                   Used for your public URL profile: /{username || 'username'}
                 </span>
               </div>
               {!isEditingUsername && (
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="xs"
                   onClick={() => {
                     setEditUsernameValue(username);
                     setIsEditingUsername(true);
                     setUsernameError(null);
                   }}
-                  className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1 px-2 py-1 rounded-md hover:bg-muted transition-colors cursor-pointer shrink-0"
+                  leftIcon={<Pencil className="w-2.5 h-2.5 sm:w-3 sm:h-3" />}
+                  className="h-6 sm:h-7 px-2 sm:px-2.5 text-[10px] sm:text-xs text-muted-foreground hover:text-foreground shrink-0 rounded-md sm:rounded-lg"
                 >
-                  <Pencil className="w-3 h-3" />
-                  <span>Change</span>
-                </button>
+                  Change
+                </Button>
               )}
             </div>
 
             {!isEditingUsername ? (
-              <div className="p-2.5 rounded-xl bg-background/80 border border-border/70 text-xs font-mono text-foreground flex items-center justify-between">
+              <div className="p-2 sm:p-2.5 rounded-md sm:rounded-xl bg-background/60 border border-border/50 text-[11px] sm:text-xs md:text-sm font-mono text-foreground flex items-center justify-between">
                 <span>@{username || 'not_set'}</span>
                 {username && (
-                  <span className="text-[10px] text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full font-sans font-medium">
+                  <span className="text-[9px] sm:text-[10px] text-emerald-500 bg-emerald-500/10 px-1.5 sm:px-2 py-0.5 rounded-full font-sans font-medium">
                     Unique
                   </span>
                 )}
               </div>
             ) : (
-              <div className="p-3 rounded-xl bg-background border border-primary/30 space-y-2.5 animate-in fade-in duration-150">
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <div className="p-2.5 sm:p-3 rounded-lg sm:rounded-xl bg-background border border-primary/30 space-y-2 animate-in fade-in duration-150">
+                <div className="flex items-center justify-between text-[11px] sm:text-xs text-muted-foreground">
                   <label className="font-medium text-foreground">New Username Handle</label>
-                  <button
+                  <IconButton
                     type="button"
+                    variant="ghost"
+                    size="icon-xs"
                     onClick={() => {
                       setIsEditingUsername(false);
                       setUsernameError(null);
                     }}
-                    className="p-1 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
+                    aria-label="Cancel editing username"
+                    icon={<X className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
+                  />
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-1.5 sm:gap-2">
                   <div className="relative flex-1">
                     <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-mono text-muted-foreground pointer-events-none">
                       @
@@ -350,17 +311,17 @@ export function ProfileForm({ user }: ProfileFormProps) {
                       placeholder="username"
                       maxLength={30}
                       autoFocus
-                      className="bg-background border-border text-xs rounded-lg text-foreground pl-6 pr-8 h-8 sm:h-9 font-mono"
+                      className="bg-background border-border text-[11px] sm:text-xs rounded-lg text-foreground pl-6 pr-8 h-7.5 sm:h-8 md:h-9 font-mono"
                     />
                     <div className="absolute right-2.5 top-1/2 -translate-y-1/2">
                       {usernameStatus === 'checking' && (
-                        <Loader2 className="w-3.5 h-3.5 animate-spin text-muted-foreground" />
+                        <Loader2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 animate-spin text-muted-foreground" />
                       )}
                       {usernameStatus === 'available' && (
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                        <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-500" />
                       )}
                       {(usernameStatus === 'taken' || usernameStatus === 'invalid') && (
-                        <AlertCircle className="w-3.5 h-3.5 text-rose-500" />
+                        <AlertCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-rose-500" />
                       )}
                     </div>
                   </div>
@@ -377,19 +338,19 @@ export function ProfileForm({ user }: ProfileFormProps) {
                     pendingLabel="Applying..."
                     successLabel="Applied"
                     errorLabel="Failed"
-                    className="h-8 sm:h-9 px-3.5 text-xs font-semibold shrink-0"
+                    className="h-7.5 sm:h-8 md:h-9 px-2.5 sm:px-3.5 text-[10px] sm:text-xs font-semibold shrink-0 rounded-lg sm:rounded-xl"
                   >
                     Apply
                   </LoadingButton>
                 </div>
 
                 {usernameError && (
-                  <p className="text-[11px] text-rose-500 flex items-center gap-1 font-medium">
+                  <p className="text-[10px] sm:text-[11px] text-rose-500 flex items-center gap-1 font-medium">
                     <AlertCircle className="w-3 h-3" /> {usernameError}
                   </p>
                 )}
                 {usernameStatus === 'available' && (
-                  <p className="text-[11px] text-emerald-500 flex items-center gap-1 font-medium">
+                  <p className="text-[10px] sm:text-[11px] text-emerald-500 flex items-center gap-1 font-medium">
                     <Check className="w-3 h-3" /> @{editUsernameValue} is available!
                   </p>
                 )}
@@ -397,34 +358,41 @@ export function ProfileForm({ user }: ProfileFormProps) {
             )}
           </div>
 
-          <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-muted/20 border border-border/80 space-y-3 transition-colors">
+          <div
+            data-section="profile-bio"
+            className="p-2.5 sm:p-3.5 md:p-4 rounded-lg sm:rounded-xl md:rounded-2xl bg-muted/15 border border-border/50 sm:border-border/80 space-y-1.5 sm:space-y-2.5 md:space-y-3 transition-colors"
+          >
             <div className="flex items-center justify-between gap-2">
-              <span className="text-xs font-semibold text-foreground">Bio / About</span>
+              <span className="text-[11px] sm:text-xs md:text-sm font-semibold text-foreground">
+                Bio / About
+              </span>
               {!isEditingBio && (
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="xs"
                   onClick={() => {
                     setEditBioValue(bio);
                     setIsEditingBio(true);
                     setBioError(null);
                   }}
-                  className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1 px-2 py-1 rounded-md hover:bg-muted transition-colors cursor-pointer"
+                  leftIcon={<Pencil className="w-2.5 h-2.5 sm:w-3 sm:h-3" />}
+                  className="h-6 sm:h-7 px-2 sm:px-2.5 text-[10px] sm:text-xs text-muted-foreground hover:text-foreground rounded-md sm:rounded-lg"
                 >
-                  <Pencil className="w-3 h-3" />
-                  <span>Edit</span>
-                </button>
+                  Edit
+                </Button>
               )}
             </div>
 
             {!isEditingBio ? (
-              <div className="p-2.5 rounded-xl bg-background/80 border border-border/70 text-xs text-foreground leading-relaxed">
+              <div className="p-2 sm:p-2.5 rounded-md sm:rounded-xl bg-background/60 border border-border/50 text-[11px] sm:text-xs md:text-sm text-foreground leading-relaxed">
                 {bio || <span className="text-muted-foreground italic">No bio provided yet.</span>}
               </div>
             ) : (
-              <div className="p-3 rounded-xl bg-background border border-primary/30 space-y-2.5 animate-in fade-in duration-150">
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <div className="p-2.5 sm:p-3 rounded-lg sm:rounded-xl bg-background border border-primary/30 space-y-2 animate-in fade-in duration-150">
+                <div className="flex items-center justify-between text-[11px] sm:text-xs text-muted-foreground">
                   <label className="font-medium text-foreground">Short Bio (max 250 chars)</label>
-                  <span className="text-[11px] font-mono">{editBioValue.length}/250</span>
+                  <span className="text-[10px] sm:text-[11px] font-mono">{editBioValue.length}/250</span>
                 </div>
 
                 <textarea
@@ -434,36 +402,38 @@ export function ProfileForm({ user }: ProfileFormProps) {
                   maxLength={250}
                   rows={3}
                   autoFocus
-                  className="w-full bg-background border border-border rounded-lg p-2.5 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none transition-colors"
+                  className="w-full bg-background border border-border/70 rounded-lg p-2 sm:p-2.5 text-[11px] sm:text-xs md:text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none transition-colors"
                 />
 
-                <div className="flex items-center justify-between pt-1">
+                <div className="flex items-center justify-between pt-0.5 sm:pt-1">
                   {bioError ? (
-                    <p className="text-[11px] text-rose-500 flex items-center gap-1 font-medium">
+                    <p className="text-[10px] sm:text-[11px] text-rose-500 flex items-center gap-1 font-medium">
                       <AlertCircle className="w-3 h-3" /> {bioError}
                     </p>
                   ) : (
                     <div />
                   )}
 
-                  <div className="flex items-center gap-2">
-                    <button
+                  <div className="flex items-center gap-1.5 sm:gap-2">
+                    <Button
                       type="button"
+                      variant="ghost"
+                      size="xs"
                       onClick={() => {
                         setIsEditingBio(false);
                         setBioError(null);
                       }}
-                      className="text-xs text-muted-foreground hover:text-foreground px-2.5 py-1.5 rounded-lg hover:bg-muted transition-colors cursor-pointer"
+                      className="h-6.5 sm:h-7 px-2 sm:px-2.5 text-[10px] sm:text-xs text-muted-foreground hover:text-foreground rounded-md sm:rounded-lg"
                     >
                       Cancel
-                    </button>
+                    </Button>
                     <LoadingButton
                       onAction={handleApplyBio}
                       disabled={isSavingBio || editBioValue === bio}
                       pendingLabel="Applying..."
                       successLabel="Applied"
                       errorLabel="Failed"
-                      className="h-8 px-3.5 text-xs font-semibold"
+                      className="h-6.5 sm:h-7 md:h-8 px-2.5 sm:px-3 text-[10px] sm:text-xs font-semibold rounded-lg sm:rounded-xl"
                     >
                       Apply
                     </LoadingButton>

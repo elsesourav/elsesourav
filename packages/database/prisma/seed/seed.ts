@@ -161,6 +161,14 @@ async function main() {
       icon: 'Wrench',
       orderIndex: 6,
     },
+    {
+      name: 'Games & Play',
+      slug: 'games',
+      description:
+        'WebAssembly games, interactive canvas physics, puzzles, and arcade simulations.',
+      icon: 'Gamepad2',
+      orderIndex: 7,
+    },
   ];
 
   const catMap: Record<string, string> = {};
@@ -355,9 +363,10 @@ An academic and research portfolio website engineered for **Dr. Debayan Ganguly*
       featuredImageUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&q=80',
       demoUrl: 'https://elsesourav.github.io/breakout-ball',
       githubUrl: 'https://github.com/elsesourav/breakout-ball',
-      categoryId: catMap['simulations']!,
+      categoryId: catMap['games']!,
       status: PublishStatus.PUBLISHED,
       isFeatured: false,
+      orientation: 'portrait',
       currentVersion: '1.0.0',
       publishedAt: new Date('2024-07-13T14:00:00Z'),
       tags: ['cpp', 'webassembly', 'games', 'canvas', 'firebase', 'open-source'],
@@ -390,6 +399,7 @@ An academic and research portfolio website engineered for **Dr. Debayan Ganguly*
       categoryId: catMap['utilities']!,
       status: PublishStatus.PUBLISHED,
       isFeatured: false,
+      orientation: 'portrait',
       currentVersion: '1.0.0',
       publishedAt: new Date('2025-05-18T10:00:00Z'),
       tags: ['react-native', 'expo', 'typescript', 'open-source'],
@@ -444,6 +454,7 @@ A standalone WiFi car control system where the **ESP32-CAM** functions as the co
       categoryId: catMap['hardware-iot']!,
       status: PublishStatus.PUBLISHED,
       isFeatured: false,
+      orientation: 'portrait',
       currentVersion: '1.0.0',
       publishedAt: new Date('2026-06-22T08:00:00Z'),
       tags: ['cpp', 'embedded', 'iot', 'open-source'],
@@ -731,7 +742,7 @@ A browser typing speed test measuring WPM and keystroke accuracy in real time.
       featuredImageUrl: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=1200&q=80',
       demoUrl: 'https://elsesourav.github.io/edu-khel-games',
       githubUrl: 'https://github.com/elsesourav/edu-khel-games',
-      categoryId: catMap['simulations']!,
+      categoryId: catMap['games']!,
       status: PublishStatus.PUBLISHED,
       isFeatured: false,
       currentVersion: '1.0.0',
@@ -814,14 +825,18 @@ Prototype interface exploring administrative user table controls and search perf
     },
   ];
 
-  for (const app of appsData) {
+  for (let i = 0; i < appsData.length; i++) {
+    const app = appsData[i]!;
     const { tags, githubUrl, ...appFields } = app;
+    const sortOrder = (appFields as { sortOrder?: number }).sortOrder ?? i + 1;
     const createdApp = await prisma.app.upsert({
       where: { slug: app.slug },
       update: {
+        sortOrder,
         ...appFields,
       },
       create: {
+        sortOrder,
         ...appFields,
       },
     });
@@ -1224,6 +1239,7 @@ ElseSourav is built with respect for user privacy:
     { key: 'contact_email', value: CREATOR_CONFIG.contact.email },
     { key: 'support_url', value: CREATOR_CONFIG.contact.support },
     { key: 'footer_status_text', value: '● All Systems Operational' },
+    { key: 'effects_level', value: 'high' },
   ];
 
   for (const setting of siteSettings) {

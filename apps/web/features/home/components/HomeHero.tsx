@@ -3,12 +3,10 @@
 import { useTheme } from '@/components/theme/ThemeProvider';
 import { ROUTES } from '@elsesourav/config';
 import { Container, Reveal, Section } from '@elsesourav/ui';
-import { TextReveal } from '@elsesourav/ui/interior';
+import { TextReveal, WasmAtmosphereCanvas } from '@elsesourav/ui/interior';
 import { ArrowRight, Code, Layers, Star, Users } from 'lucide-react';
 import Link from 'next/link';
-import { DaylightFogCanvas } from './DaylightFogCanvas';
 import { EarthScene } from './EarthScene';
-import { StarsCanvas } from './StarsCanvas';
 import { useProgressiveImage } from './useProgressiveImage';
 import { useScenePerformance } from './useScenePerformance';
 
@@ -20,6 +18,10 @@ interface HomeHeroProps {
   primaryCtaLabel?: string;
   secondaryCtaLabel?: string;
   totalAppsCount?: number;
+  atmosphereDensity?: string;
+  meteorFrequency?: string;
+  starsSpeed?: string;
+  mobileEffects?: string;
 }
 
 function renderHighlightedHeadline(headline: string, isLight: boolean) {
@@ -81,6 +83,10 @@ export function HomeHero({
   primaryCtaLabel,
   secondaryCtaLabel,
   totalAppsCount = 10,
+  atmosphereDensity,
+  meteorFrequency,
+  starsSpeed,
+  mobileEffects,
 }: HomeHeroProps) {
   const { resolvedTheme } = useTheme();
   const isLight = resolvedTheme === 'light';
@@ -95,7 +101,7 @@ export function HomeHero({
     <Section
       id="hero"
       spacing="none"
-      className="relative isolate overflow-hidden min-h-[100dvh] sm:min-h-[720px] lg:min-h-[800px] xl:min-h-[860px] flex items-center justify-center pt-20 sm:pt-28 lg:pt-32 pb-8 sm:pb-16"
+      className="relative isolate overflow-hidden min-h-[calc(100dvh-3.5rem)] sm:min-h-[720px] lg:min-h-[800px] xl:min-h-[860px] flex items-center justify-center pt-16 sm:pt-24 lg:pt-32 pb-6 sm:pb-12 lg:pb-16"
     >
       {/* ── 1. Full-Cover Window Background (Starts at y=0 from top of viewport) ── */}
       <div
@@ -158,12 +164,29 @@ export function HomeHero({
           />
         </div>
 
-        {/* ── 2. Atmospheric Layer: Cosmic Stars (Dark) OR Daylight Volumetric Fog (Light) ── */}
-        {isLight ? (
-          <DaylightFogCanvas isSceneActive={isSceneActive} />
-        ) : (
-          <StarsCanvas isSceneActive={isSceneActive} />
-        )}
+        {/* ── 2. Atmospheric Layer: Cosmic Stars / Volumetric Fog (WebGL + WebAssembly C++ Engine) ── */}
+        <WasmAtmosphereCanvas
+          isDark={!isLight}
+          isSceneActive={isSceneActive}
+          particleDensityMultiplier={
+            atmosphereDensity ? parseFloat(atmosphereDensity) || 1.0 : 1.0
+          }
+          speedMultiplier={starsSpeed ? parseFloat(starsSpeed) || 1.0 : 1.0}
+          meteorFrequencyMultiplier={
+            meteorFrequency === 'off'
+              ? 0.0
+              : meteorFrequency === 'rare'
+              ? 0.4
+              : meteorFrequency === 'frequent'
+              ? 1.8
+              : 1.0
+          }
+          mobileEffectsMode={
+            mobileEffects === 'battery_saver' || mobileEffects === 'enhanced'
+              ? mobileEffects
+              : 'standard'
+          }
+        />
 
         {/* Ambient Contrast Gradient: Left-weighted on desktop, soft diagonal on mobile to showcase right-side nebula */}
         <div
@@ -207,9 +230,9 @@ export function HomeHero({
       {/* ── Content Container (12-column responsive layout) ── */}
       <Container
         size="full"
-        className="relative z-10 w-full max-w-[1536px] px-4 sm:px-6 lg:px-8 xl:px-12 my-auto"
+        className="relative z-10 w-full max-w-[1536px] px-3 sm:px-6 lg:px-8 xl:px-12 my-auto"
       >
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-6 items-center relative">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-6 items-center relative">
           {/* Mobile-Only Static Floating Island Image: Single lightweight static image with high blur for soft atmospheric depth & 0% lag */}
           <div
             aria-hidden="true"
@@ -227,11 +250,11 @@ export function HomeHero({
           </div>
 
           {/* Left Column: Hero Narrative, CTAs & Metrics (7 columns on iPad & desktop for wider text lines & larger headline) */}
-          <div className="relative z-10 md:col-span-7 xl:col-span-7 space-y-6 text-left max-w-2xl lg:max-w-[44rem] xl:max-w-[48rem]">
+          <div className="relative z-10 md:col-span-7 xl:col-span-7 space-y-4 sm:space-y-6 text-left max-w-2xl lg:max-w-[44rem] xl:max-w-[48rem]">
             <Reveal direction="down" distance={12}>
               {/* Studio Pill Badge */}
               <div
-                className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-medium tracking-wide backdrop-blur-md transition-colors ${
+                className={`inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full border text-[11px] sm:text-xs font-medium tracking-wide backdrop-blur-md transition-colors ${
                   isLight
                     ? 'border-indigo-600/25 bg-indigo-50/80 text-indigo-700'
                     : 'border-indigo-500/25 bg-indigo-500/10 text-indigo-400'
@@ -260,7 +283,7 @@ export function HomeHero({
 
             {/* Main Highlight: Showcases application ecosystem & why this studio is helpful */}
             <Reveal direction="up" distance={16} delay={100}>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.15rem] xl:text-[3.6rem] font-bold tracking-tight leading-[1.18] sm:leading-[1.16] lg:leading-[1.14] break-words">
+              <h1 className="text-[1.65rem] sm:text-3xl md:text-4xl lg:text-[3.15rem] xl:text-[3.6rem] font-bold tracking-tight leading-[1.18] sm:leading-[1.16] lg:leading-[1.14] break-words">
                 {renderHighlightedHeadline(
                   heroHeadline ||
                     'Building software, tools, games, and experiments that solve real problems and spark new ideas.',
@@ -272,7 +295,7 @@ export function HomeHero({
             {/* Bottom Subtext: Highlights creator details & studio context */}
             <Reveal direction="up" distance={14} delay={150}>
               <p
-                className={`text-sm sm:text-base lg:text-lg leading-relaxed max-w-xl ${
+                className={`text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed max-w-xl ${
                   isLight ? 'text-slate-700' : 'text-zinc-300/90'
                 }`}
               >
@@ -294,19 +317,19 @@ export function HomeHero({
 
             {/* Action Buttons Cluster */}
             <Reveal direction="up" distance={12} delay={200}>
-              <div className="flex flex-wrap items-center gap-3 pt-2">
+              <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 pt-1 sm:pt-2">
                 <Link
                   href={ROUTES.APPS}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 shadow-lg shadow-indigo-600/30 active:scale-95 transition-all duration-200 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                  className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold text-white bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 shadow-md sm:shadow-lg shadow-indigo-600/30 active:scale-95 transition-all duration-200 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
                 >
-                  <Layers className="w-4 h-4" />
+                  <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   <span>{primaryCtaLabel || 'Explore Apps'}</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
 
                 <Link
-                  href={ROUTES.BLOG}
-                  className={`inline-flex items-center justify-center px-6 py-2.5 rounded-full text-sm font-semibold backdrop-blur-md active:scale-95 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+                  href={ROUTES.UPDATES}
+                  className={`inline-flex items-center justify-center px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold backdrop-blur-md active:scale-95 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                     isLight
                       ? 'text-slate-800 bg-black/5 hover:bg-black/10 border border-black/10 hover:border-black/20'
                       : 'text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20'
@@ -320,20 +343,20 @@ export function HomeHero({
             {/* Trust Metrics */}
             <Reveal direction="up" distance={10} delay={250}>
               <div
-                className={`pt-6 grid grid-cols-3 gap-2 sm:gap-4 max-w-lg border-t ${
+                className={`pt-4 sm:pt-6 grid grid-cols-3 gap-1.5 sm:gap-3 md:gap-4 max-w-lg border-t ${
                   isLight ? 'border-black/10' : 'border-white/10'
                 }`}
               >
                 {/* Metric 1: Projects */}
                 <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
                   <div
-                    className={`w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shrink-0 border ${
+                    className={`w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 border ${
                       isLight
                         ? 'bg-purple-500/15 border-purple-500/30 text-purple-600'
                         : 'bg-purple-500/10 border-purple-500/25 text-purple-400'
                     }`}
                   >
-                    <Code className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <Code className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4" />
                   </div>
                   <div className="min-w-0">
                     <div
@@ -344,7 +367,7 @@ export function HomeHero({
                       {displayCount}
                     </div>
                     <div
-                      className={`text-[10px] sm:text-[11px] truncate ${
+                      className={`text-[9px] sm:text-[10px] md:text-[11px] leading-tight truncate ${
                         isLight ? 'text-slate-600' : 'text-[hsl(var(--muted-foreground))]'
                       }`}
                     >
@@ -356,13 +379,13 @@ export function HomeHero({
                 {/* Metric 2: Passion */}
                 <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
                   <div
-                    className={`w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shrink-0 border ${
+                    className={`w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 border ${
                       isLight
                         ? 'bg-blue-500/15 border-blue-500/30 text-blue-600'
                         : 'bg-blue-500/10 border-blue-500/25 text-blue-400'
                     }`}
                   >
-                    <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <Users className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4" />
                   </div>
                   <div className="min-w-0">
                     <div
@@ -373,11 +396,11 @@ export function HomeHero({
                       100%
                     </div>
                     <div
-                      className={`text-[10px] sm:text-[11px] truncate ${
+                      className={`text-[9px] sm:text-[10px] md:text-[11px] leading-tight ${
                         isLight ? 'text-slate-600' : 'text-[hsl(var(--muted-foreground))]'
                       }`}
                     >
-                      Passion Driven
+                      Passion
                     </div>
                   </div>
                 </div>
@@ -385,13 +408,13 @@ export function HomeHero({
                 {/* Metric 3: Opportunities */}
                 <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
                   <div
-                    className={`w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shrink-0 border ${
+                    className={`w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 border ${
                       isLight
                         ? 'bg-indigo-500/15 border-indigo-500/30 text-indigo-600'
                         : 'bg-indigo-500/10 border-indigo-500/25 text-indigo-400'
                     }`}
                   >
-                    <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <Star className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4" />
                   </div>
                   <div className="min-w-0">
                     <div
@@ -402,7 +425,7 @@ export function HomeHero({
                       Open
                     </div>
                     <div
-                      className={`text-[10px] sm:text-[11px] leading-tight truncate ${
+                      className={`text-[9px] sm:text-[10px] md:text-[11px] leading-tight truncate ${
                         isLight ? 'text-slate-600' : 'text-[hsl(var(--muted-foreground))]'
                       }`}
                     >

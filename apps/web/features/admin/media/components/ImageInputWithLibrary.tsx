@@ -5,7 +5,7 @@ import { Button, Input } from '@elsesourav/ui';
 import { MediaPickerModal } from './MediaPickerModal';
 import { adminUploadImageFileAction } from '../actions/admin-media-actions';
 import type { MediaDomain, MediaFolder } from '@elsesourav/types';
-import { Image as ImageIcon, Upload, FolderOpen, X, Loader2, ExternalLink } from 'lucide-react';
+import { Image as ImageIcon, Upload, FolderOpen, X, Loader2 } from 'lucide-react';
 
 export interface ImageInputWithLibraryProps {
   value: string;
@@ -15,7 +15,7 @@ export interface ImageInputWithLibraryProps {
   required?: boolean;
   folder?: MediaFolder;
   defaultCategory?: MediaDomain;
-  previewShape?: 'circle' | 'square' | 'banner';
+  previewShape?: 'circle' | 'square' | 'banner' | 'portrait';
   className?: string;
 }
 
@@ -68,6 +68,8 @@ export function ImageInputWithLibrary({
       'w-12 h-12 rounded-xl overflow-hidden shrink-0 border border-zinc-800 bg-zinc-950 flex items-center justify-center',
     banner:
       'w-20 h-12 rounded-xl overflow-hidden shrink-0 border border-zinc-800 bg-zinc-950 flex items-center justify-center',
+    portrait:
+      'w-10 h-13 rounded-xl overflow-hidden shrink-0 border border-zinc-800 bg-zinc-950 flex items-center justify-center',
   }[previewShape];
 
   return (

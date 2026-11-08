@@ -2,22 +2,11 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Card, Badge, Button, Input } from '@elsesourav/ui';
+import { Card, Badge, Button, Input, IconButton } from '@elsesourav/ui';
 import { Dropdown } from '@elsesourav/ui/interior';
 import type { BlogPost, BlogCategory } from '@elsesourav/types';
 import { archiveBlogPostAction, deleteBlogPostAction } from '../actions/admin-blog-actions';
-import {
-  FileText,
-  Search,
-  Plus,
-  ExternalLink,
-  Edit,
-  Archive,
-  Trash2,
-  Calendar,
-  Eye,
-  Loader2,
-} from 'lucide-react';
+import { FileText, Search, Plus, ExternalLink, Edit, Archive, Trash2, Loader2 } from 'lucide-react';
 
 interface AdminBlogTableProps {
   initialPosts: readonly BlogPost[];
@@ -31,17 +20,23 @@ export function AdminBlogTable({ initialPosts, categories }: AdminBlogTableProps
   const [selectedStatus, setSelectedStatus] = React.useState<string>('all');
   const [isDeletingId, setIsDeletingId] = React.useState<string | null>(null);
 
-  const categoryItems = React.useMemo(() => [
-    { value: 'all', label: 'All Categories' },
-    ...categories.map((c) => ({ value: c.slug, label: c.name })),
-  ], [categories]);
+  const categoryItems = React.useMemo(
+    () => [
+      { value: 'all', label: 'All Categories' },
+      ...categories.map((c) => ({ value: c.slug, label: c.name })),
+    ],
+    [categories]
+  );
 
-  const statusItems = React.useMemo(() => [
-    { value: 'all', label: 'All Statuses' },
-    { value: 'published', label: 'Published' },
-    { value: 'draft', label: 'Draft' },
-    { value: 'archived', label: 'Archived' },
-  ], []);
+  const statusItems = React.useMemo(
+    () => [
+      { value: 'all', label: 'All Statuses' },
+      { value: 'published', label: 'Published' },
+      { value: 'draft', label: 'Draft' },
+      { value: 'archived', label: 'Archived' },
+    ],
+    []
+  );
 
   const filteredPosts = React.useMemo(() => {
     return posts.filter((post) => {
@@ -254,28 +249,29 @@ export function AdminBlogTable({ initialPosts, categories }: AdminBlogTableProps
                             <Edit className="w-3.5 h-3.5" />
                           </Link>
                           {post.status !== 'archived' && (
-                            <button
+                            <IconButton
                               type="button"
+                              variant="ghost"
+                              size="icon-xs"
                               onClick={() => handleArchive(post.id)}
-                              className="p-1.5 rounded-lg text-zinc-400 hover:text-amber-300 hover:bg-zinc-800 transition-colors"
+                              aria-label="Archive Article"
                               title="Archive Article"
-                            >
-                              <Archive className="w-3.5 h-3.5" />
-                            </button>
+                              icon={<Archive className="w-3.5 h-3.5" />}
+                              className="rounded-lg text-zinc-400 hover:text-amber-300"
+                            />
                           )}
-                          <button
+                          <IconButton
                             type="button"
+                            variant="ghost"
+                            size="icon-xs"
                             onClick={() => handleDelete(post.id)}
                             disabled={isDeletingId === post.id}
-                            className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-400 hover:bg-zinc-800 transition-colors"
+                            loading={isDeletingId === post.id}
+                            aria-label="Delete Article"
                             title="Delete Article"
-                          >
-                            {isDeletingId === post.id ? (
-                              <Loader2 className="w-3.5 h-3.5 animate-spin text-rose-400" />
-                            ) : (
-                              <Trash2 className="w-3.5 h-3.5" />
-                            )}
-                          </button>
+                            icon={<Trash2 className="w-3.5 h-3.5" />}
+                            className="rounded-lg text-zinc-400 hover:text-rose-400"
+                          />
                         </div>
                       </td>
                     </tr>

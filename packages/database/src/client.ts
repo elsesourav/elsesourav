@@ -15,8 +15,25 @@ function getOrCreatePrismaClient(): PrismaClient {
     dotenv.config({ path: path.resolve(process.cwd(), '.env') });
   }
 
-  const connectionString = process.env.DATABASE_URL || process.env.DIRECT_URL || '';
-  _pool = new pg.Pool({ connectionString });
+  const connectionString = process.env.DATABASE_URL || process.env.DIRECT_URL;
+  if (!connectionString) {
+    throw new Error(
+      '[ElseSourav Database] No database connection string found. Set DATABASE_URL or DIRECT_URL in your environment.'
+    );
+  }
+
+  _pool = new pg.Pool({
+    connectionString,
+    max: 10, // Maximum 10 connections in the pool
+    idleTimeoutMillis: 30000, // Close idle connections after 30 seconds
+    connectionTimeoutMillis: 5000, // Fail if connection takes more than 5 seconds
+  });
+
+  // Log pool errors to prevent unhandled rejections from crashing the process
+  _pool.on('error', (err) => {
+    console.error('[ElseSourav Database] Unexpected pool error:', err.message);
+  });
+
   const adapter = new PrismaPg(_pool);
 
   _client = new PrismaClient({

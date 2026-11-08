@@ -2,19 +2,70 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
+import { getPublicAppBySlug, getRelatedProjects } from '@/features/apps/queries/get-apps';
 import {
-  getPublicAppBySlug,
-  getPublishedApps,
-  getRelatedProjects,
-} from '@/features/apps/queries/get-apps';
-import { AppDetailHero } from '@/features/apps/components/AppDetailHero';
-import { AppScreenshotGallery } from '@/features/apps/components/AppScreenshotGallery';
-import { AppDetailLinks } from '@/features/apps/components/AppDetailLinks';
-import { AppVersionHistory } from '@/features/apps/components/AppVersionHistory';
-import { AppCard } from '@/features/apps/components/AppCard';
-import { BlogContentRenderer } from '@/features/blog/components/BlogContentRenderer';
-import { PageShell, Reveal, RevealGroup } from '@elsesourav/ui';
-import { Sparkles, FileText, BookOpen, ArrowLeft, ArrowRight } from 'lucide-react';
+  AppDetailHero,
+  AppDetailDescription,
+  AppInformationSpecs,
+} from '@/features/apps/components/detail';
+import { AppMediaShowcase } from '@/features/apps/components/media';
+import { AppFeedbackSection } from '@/features/apps/components/reviews';
+import { ShelfCarouselRow } from '@/features/apps/components/editorial';
+import { PageShell, Reveal } from '@elsesourav/ui';
+import { Sparkles, Gamepad2, Layers, Cpu, Radio, Wrench, ChevronRight } from 'lucide-react';
+import { getServerSession } from '@elsesourav/auth';
+import { cookies } from 'next/headers';
+
+function getCategoryDetails(categorySlug?: string, primaryCategory?: string) {
+  const slug = (categorySlug || '').toLowerCase();
+  const name = (primaryCategory || '').toLowerCase();
+
+  if (slug.includes('game') || name.includes('game') || name.includes('play')) {
+    return {
+      icon: <Gamepad2 className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />,
+      subtitle: 'WebAssembly arcade games, interactive canvases, and physics playgrounds',
+    };
+  }
+  if (slug.includes('sim') || name.includes('sim') || name.includes('algo')) {
+    return {
+      icon: <Layers className="w-4 h-4 text-violet-500 dark:text-violet-400" />,
+      subtitle: 'Interactive physics models, cellular automata, and algorithmic labs',
+    };
+  }
+  if (
+    slug.includes('ai') ||
+    slug.includes('ml') ||
+    name.includes('ai') ||
+    name.includes('machine') ||
+    name.includes('learning')
+  ) {
+    return {
+      icon: <Sparkles className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />,
+      subtitle: 'Multi-model assistants, on-device OCR, and neural classification engines',
+    };
+  }
+  if (slug.includes('auto') || name.includes('auto') || name.includes('workflow')) {
+    return {
+      icon: <Cpu className="w-4 h-4 text-amber-500 dark:text-amber-400" />,
+      subtitle: 'Marketplace bulk tools, SKU synchronizers, and productivity systems',
+    };
+  }
+  if (
+    slug.includes('iot') ||
+    slug.includes('hardware') ||
+    name.includes('iot') ||
+    name.includes('hardware')
+  ) {
+    return {
+      icon: <Radio className="w-4 h-4 text-cyan-500 dark:text-cyan-400" />,
+      subtitle: 'Microcontroller telemetry, non-destructive tools, and developer utilities',
+    };
+  }
+  return {
+    icon: <Wrench className="w-4 h-4 text-blue-500 dark:text-blue-400" />,
+    subtitle: 'Microcontroller telemetry, non-destructive tools, and developer utilities',
+  };
+}
 
 interface AppDetailPageProps {
   params: Promise<{
@@ -51,17 +102,14 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
     notFound();
   }
 
-  // Fetch all published apps to determine related apps and next/previous exploration
-  const [allApps, fallbackRelated] = await Promise.all([
-    getPublishedApps({ limit: 50 }),
-    getRelatedProjects(app, 3),
+  // Fetch related apps and auth session in parallel
+  const cookieStore = await cookies();
+  const [fallbackRelated, session] = await Promise.all([
+    getRelatedProjects(app, 8),
+    getServerSession({ getAll: () => cookieStore.getAll() }).catch(() => null),
   ]);
-
-  // Find adjacent items for sequence navigation
-  const currentIndex = allApps.findIndex((item) => item.id === app.id);
-  const prevApp = currentIndex > 0 ? allApps[currentIndex - 1] : null;
-  const nextApp =
-    currentIndex >= 0 && currentIndex < allApps.length - 1 ? allApps[currentIndex + 1] : null;
+  const isAuthenticated = Boolean(session?.user?.id);
+  const categoryMeta = getCategoryDetails(app.categorySlug, app.primaryCategory);
 
   const appUrl = `${SITE_CONFIG.url}/apps/${app.slug}`;
 
@@ -126,155 +174,86 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
 
       <div className="space-y-16 max-w-5xl mx-auto">
         {/* 1. App Hero Section (Immediately visible, no initial scroll delay) */}
-        <AppDetailHero app={app} />
+        <AppDetailHero app={app} isAuthenticated={isAuthenticated} />
 
-        {/* 2. Visual Showcase / Screenshot Gallery */}
-        {(app.featuredImageUrl || (app.screenshots && app.screenshots.length > 0)) && (
+        {/* 2. Visual Showcase / Media Carousel (Videos & Screenshots with Drag/Scroll) */}
+        {(app.featuredImageUrl ||
+          (app.screenshots && app.screenshots.length > 0) ||
+          app.videoUrl) && (
           <Reveal direction="up" distance={16}>
-            <AppScreenshotGallery
+            <AppMediaShowcase
               appName={app.name}
               screenshots={app.screenshots || []}
               featuredImageUrl={app.featuredImageUrl}
+              videoUrl={app.videoUrl}
+              platforms={app.platforms}
             />
           </Reveal>
         )}
 
-        {/* 3. The Project Story & Architectural Documentation */}
-        {app.documentationMd ? (
-          <Reveal direction="up" distance={16}>
-            <section aria-labelledby="technical-architecture-heading" className="space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-[hsl(var(--border-subtle))]">
-                <div className="flex items-center gap-2 text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold">
-                  <BookOpen className="w-4 h-4" />
-                  <h2
-                    id="technical-architecture-heading"
-                    className="text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold"
-                  >
-                    Technical Architecture & Implementation
-                  </h2>
-                </div>
-                <span className="text-xs font-mono text-[hsl(var(--muted-foreground))]">
-                  Verified Implementation
-                </span>
-              </div>
-              <div className="p-6 sm:p-10 rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] backdrop-blur-xl shadow-2xl">
-                <BlogContentRenderer content={app.documentationMd} />
-              </div>
-            </section>
-          </Reveal>
-        ) : app.description ? (
-          <Reveal direction="up" distance={16}>
-            <section aria-labelledby="project-story-heading" className="space-y-4">
-              <div className="flex items-center gap-2 text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold pb-3 border-b border-[hsl(var(--border-subtle))]">
-                <FileText className="w-4 h-4" />
-                <h2
-                  id="project-story-heading"
-                  className="text-xs font-mono text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold"
-                >
-                  About the Project
-                </h2>
-              </div>
-              <div className="p-6 sm:p-10 rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] backdrop-blur-xl shadow-2xl">
-                <BlogContentRenderer content={app.description} />
-              </div>
-            </section>
-          </Reveal>
-        ) : null}
-
-        {/* 4. Platform Downloads & Distribution Links */}
-        {app.links && app.links.length > 0 && (
+        {/* 3. Description & Technical Story with App Store style more toggle */}
+        {app.description && (
           <Reveal direction="up" distance={14}>
-            <AppDetailLinks links={app.links} />
+            <AppDetailDescription
+              description={app.description}
+              documentationMd={app.documentationMd}
+            />
           </Reveal>
         )}
 
-        {/* 5. Version History & Changelog */}
-        {app.versions && app.versions.length > 0 && (
-          <Reveal direction="up" distance={14}>
-            <AppVersionHistory versions={app.versions} />
-          </Reveal>
-        )}
+        {/* 4. Community Feedback, Ratings & Reviews */}
+        <Reveal direction="up" distance={14}>
+          <div id="community-feedback" className="scroll-mt-24">
+            <AppFeedbackSection
+              appSlug={app.slug}
+              appName={app.name}
+              isAuthenticated={isAuthenticated}
+            />
+          </div>
+        </Reveal>
 
-        {/* 6. Adjacent Sequence Navigation (Previous / Next Project) */}
-        {(prevApp || nextApp) && (
-          <Reveal direction="up" distance={14}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-8 border-t border-[hsl(var(--border-subtle))]">
-              {prevApp ? (
-                <Link
-                  href={`/apps/${prevApp.slug}`}
-                  className="group p-5 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-subtle))] hover:border-indigo-500/40 transition-all flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
-                >
-                  <span className="text-xs font-mono text-[hsl(var(--muted-foreground))] flex items-center gap-1">
-                    <ArrowLeft className="w-3 h-3 group-hover:-translate-x-0.5 transition-transform" />
-                    <span>Previous Project</span>
-                  </span>
-                  <span className="text-sm font-semibold text-[hsl(var(--foreground))] group-hover:text-indigo-600 dark:group-hover:text-white pt-1">
-                    {prevApp.name}
-                  </span>
-                </Link>
-              ) : (
-                <div />
-              )}
+        {/* 5. App Store Information & Technical Specifications */}
+        <Reveal direction="up" distance={14}>
+          <AppInformationSpecs app={app} />
+        </Reveal>
 
-              {nextApp ? (
-                <Link
-                  href={`/apps/${nextApp.slug}`}
-                  className="group p-5 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-subtle))] hover:border-indigo-500/40 transition-all flex flex-col justify-between sm:text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
-                >
-                  <span className="text-xs font-mono text-[hsl(var(--muted-foreground))] flex items-center justify-end gap-1">
-                    <span>Next Project</span>
-                    <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-                  </span>
-                  <span className="text-sm font-semibold text-[hsl(var(--foreground))] group-hover:text-indigo-600 dark:group-hover:text-white pt-1">
-                    {nextApp.name}
-                  </span>
-                </Link>
-              ) : (
-                <div />
-              )}
-            </div>
-          </Reveal>
-        )}
-
-        {/* 7. Related Projects Section */}
+        {/* 8. Suggestions & Related Projects Shelf (Matches Apps page shelf style) */}
         {fallbackRelated.length > 0 && (
           <section
             aria-labelledby="related-projects-heading"
-            className="space-y-6 pt-8 border-t border-[hsl(var(--border-subtle))]"
+            className="w-full max-w-full min-w-0 space-y-3 pt-8 border-t border-[hsl(var(--border-subtle))]"
           >
             <Reveal direction="up" distance={14}>
-              <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                  <h2
-                    id="related-projects-heading"
-                    className="text-xl font-bold text-[hsl(var(--foreground))] tracking-tight flex items-center gap-2"
-                  >
-                    <Sparkles className="w-5 h-5 text-indigo-500" />
-                    <span>More in {app.primaryCategory}</span>
-                  </h2>
-                  <p className="text-xs text-[hsl(var(--muted-foreground))]">
-                    Explore related tools, systems, and applications built by Sourav.
-                  </p>
+              <div className="flex items-center justify-between gap-3 pb-1 border-b border-[hsl(var(--border-subtle))]">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-7 h-7 rounded-lg bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] flex items-center justify-center shrink-0 shadow-xs">
+                    {categoryMeta.icon}
+                  </span>
+                  <div>
+                    <h2
+                      id="related-projects-heading"
+                      className="text-base sm:text-lg font-bold tracking-tight text-[hsl(var(--foreground))] font-display"
+                    >
+                      More in {app.primaryCategory}
+                    </h2>
+                    <p className="text-xs text-[hsl(var(--muted-foreground))] hidden sm:block">
+                      {categoryMeta.subtitle}
+                    </p>
+                  </div>
                 </div>
+
                 <Link
-                  href={ROUTES.APPS}
-                  className="text-xs font-mono text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded p-1"
+                  href={app.categorySlug ? `/apps?category=${app.categorySlug}` : ROUTES.APPS}
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 transition-colors shrink-0 group/link"
                 >
-                  <span>View all apps</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <span>See all</span>
+                  <ChevronRight className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" />
                 </Link>
               </div>
             </Reveal>
 
-            <RevealGroup
-              staggerDelay={0.06}
-              baseDelay={0.08}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-            >
-              {fallbackRelated.map((related, idx) => (
-                <AppCard key={related.id} app={related} index={idx} />
-              ))}
-            </RevealGroup>
+            {/* Shelf Horizontal Carousel with Left/Right Buttons & Drag */}
+            <ShelfCarouselRow items={fallbackRelated} />
           </section>
         )}
       </div>

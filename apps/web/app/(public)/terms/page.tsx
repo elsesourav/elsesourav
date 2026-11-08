@@ -1,10 +1,12 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { Card } from '@elsesourav/ui';
+import { PageShell, Card } from '@elsesourav/ui';
 import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
-import { FileText, ArrowLeft, CheckCircle2, Scale, Terminal } from 'lucide-react';
-
+import { Scale, ArrowLeft } from 'lucide-react';
+import { AdminRepository } from '@elsesourav/database';
 import { buildPageMetadata } from '@/lib/seo-metadata';
+import { MarkdownRenderer } from '@/components/markdown/MarkdownRenderer';
+import { DEFAULT_TERMS_OF_SERVICE_MD } from '@/lib/legal-defaults';
 
 export const metadata: Metadata = buildPageMetadata({
   title: 'Terms of Service',
@@ -13,7 +15,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: '/terms',
 });
 
-export default function TermsPage() {
+export default async function TermsPage() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
@@ -27,78 +29,47 @@ export default function TermsPage() {
     },
   };
 
+  // Load from database, fall back to default
+  let termsContent = DEFAULT_TERMS_OF_SERVICE_MD;
+  try {
+    const adminRepo = new AdminRepository();
+    const settings = await adminRepo.getAllSettings();
+    if (settings['legal_terms_md']?.trim()) {
+      termsContent = settings['legal_terms_md'];
+    }
+  } catch {
+    // Silently fall back to default content
+  }
+
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <PageShell size="lg" glow>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+      <div className="max-w-4xl mx-auto space-y-8">
         <Link
           href={ROUTES.HOME}
-          className="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" /> Back to Home
         </Link>
 
         {/* Header */}
         <div className="space-y-3">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-950/60 border border-indigo-500/30 text-indigo-400 text-xs font-medium">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-600 dark:text-indigo-400 text-xs font-medium">
             <Scale className="w-3.5 h-3.5" />
             <span>Legal & Software Terms</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-zinc-100 tracking-tight">
-            Terms of Service
-          </h1>
-          <p className="text-sm text-zinc-400">
-            Last revised: August 29, 2026. Please read these terms carefully before accessing
-            ElseSourav.
-          </p>
         </div>
 
-        {/* Terms Content */}
-        <Card className="p-6 sm:p-8 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-sm space-y-6">
-          <section className="space-y-3">
-            <h2 className="text-lg font-bold text-zinc-100 flex items-center gap-2">
-              <FileText className="w-5 h-5 text-indigo-400" /> 1. Acceptance of Terms
-            </h2>
-            <p className="text-sm text-zinc-300 leading-relaxed">
-              By accessing or using ElseSourav tools, software applications, or technical
-              documentation, you agree to be bound by these Terms of Service. If you disagree with
-              any part, you may not access our services.
-            </p>
-          </section>
-
-          <section className="space-y-3">
-            <h2 className="text-lg font-bold text-zinc-100 flex items-center gap-2">
-              <Terminal className="w-5 h-5 text-cyan-400" /> 2. Software Licensing & Permitted Use
-            </h2>
-            <p className="text-sm text-zinc-300 leading-relaxed">
-              ElseSourav grants you a personal, non-exclusive, revocable license to access our web
-              applications and documentation in accordance with their designated license models
-              (open source or proprietary).
-            </p>
-          </section>
-
-          <section className="space-y-3">
-            <h2 className="text-lg font-bold text-zinc-100 flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-emerald-400" /> 3. User Conduct & Security
-            </h2>
-            <p className="text-sm text-zinc-300 leading-relaxed">
-              You agree not to exploit vulnerabilities, attempt unauthorized privilege escalation,
-              reverse engineer closed-source modules, or disrupt server infrastructure.
-            </p>
-          </section>
-
-          <section className="space-y-3">
-            <h2 className="text-lg font-bold text-zinc-100">4. Disclaimer of Warranties</h2>
-            <p className="text-sm text-zinc-300 leading-relaxed">
-              The services and applications are provided on an &ldquo;AS IS&rdquo; and &ldquo;AS
-              AVAILABLE&rdquo; basis without warranties of any kind, either express or implied.
-            </p>
-          </section>
+        {/* Dynamic Markdown Content */}
+        <Card className="p-4 sm:p-5 md:p-6 rounded-2xl sm:rounded-3xl border-[hsl(var(--border))] bg-[hsl(var(--card))] shadow-xl">
+          <div className="prose prose-sm dark:prose-invert max-w-none prose-headings:text-[hsl(var(--foreground))] prose-p:text-[hsl(var(--muted-foreground))] prose-a:text-indigo-600 dark:prose-a:text-indigo-400 prose-strong:text-[hsl(var(--foreground))] prose-li:text-[hsl(var(--muted-foreground))] prose-th:text-[hsl(var(--foreground))] prose-td:text-[hsl(var(--muted-foreground))]">
+            <MarkdownRenderer content={termsContent} />
+          </div>
         </Card>
       </div>
-    </div>
+    </PageShell>
   );
 }

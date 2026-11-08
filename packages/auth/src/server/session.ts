@@ -4,14 +4,19 @@ import type { AuthenticatedUser, AuthSession } from '../types/auth.types';
 import type { UserRole } from '@elsesourav/types';
 
 function getDevFallbackSession(): AuthSession | null {
-  if (process.env['NODE_ENV'] === 'development' || process.env['DEV_AUTH_BYPASS'] === 'true') {
+  // SECURITY: Never allow auth bypass in production, even if the env var is accidentally set
+  if (process.env.NODE_ENV === 'production') {
+    return null;
+  }
+
+  if (process.env['DEV_AUTH_BYPASS'] === 'true') {
     const devUser: AuthenticatedUser = {
       id: 'fce86899-0da4-452d-85e3-7ec74bca0dc9',
       supabaseAuthId: 'fce86899-0da4-452d-85e3-7ec74bca0dc9',
       email: 'souravbarui8040@gmail.com',
       displayName: 'Sourav Barui',
       photoUrl: '/avatars/avatar-1.svg',
-      role: 'USER',
+      role: 'ADMIN',
       isEmailVerified: true,
       provider: 'email',
       createdAt: Date.now() - 30 * 24 * 60 * 60 * 1000,

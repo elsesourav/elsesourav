@@ -64,44 +64,38 @@ export function NotificationList({
       {/* Filter Tabs Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
         <div className="inline-flex items-center gap-1.5 bg-muted/60 p-1 rounded-xl border border-border text-xs">
-          <button
+          <Button
             type="button"
+            variant={filter === 'all' ? 'secondary' : 'ghost'}
+            size="xs"
             onClick={() => setFilter('all')}
-            className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
-              filter === 'all'
-                ? 'bg-background text-foreground shadow-sm font-semibold'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
+            className={`rounded-lg ${filter === 'all' ? 'shadow-sm font-semibold' : ''}`}
           >
             All ({notifications.length})
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant={filter === 'unread' ? 'secondary' : 'ghost'}
+            size="xs"
             onClick={() => setFilter('unread')}
-            className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
-              filter === 'unread'
-                ? 'bg-background text-foreground shadow-sm font-semibold'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
+            className={`rounded-lg ${filter === 'unread' ? 'shadow-sm font-semibold' : ''}`}
           >
             Unread ({unreadCount})
-          </button>
+          </Button>
         </div>
 
         {unreadCount > 0 && (
           <Button
             variant="outline"
-            size="sm"
+            size="xs"
             onClick={handleMarkAllRead}
             disabled={isMarkingAll}
-            className="text-xs border-border hover:bg-accent text-foreground gap-1.5 rounded-xl cursor-pointer"
+            loading={isMarkingAll}
+            loadingText="Marking all read..."
+            leftIcon={<CheckCheck className="w-3.5 h-3.5 text-primary" />}
+            className="rounded-xl"
           >
-            {isMarkingAll ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-            ) : (
-              <CheckCheck className="w-3.5 h-3.5 text-primary" />
-            )}
-            <span>Mark all as read</span>
+            Mark all as read
           </Button>
         )}
       </div>
@@ -121,7 +115,7 @@ export function NotificationList({
             </p>
           </div>
           <div className="pt-1">
-            <Link href="/settings?tab=preferences">
+            <Link href="/account?tab=settings">
               <Button
                 variant="outline"
                 size="sm"

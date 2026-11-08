@@ -22,6 +22,8 @@ export type AppActionType =
   | 'download'
   | 'visit_website';
 
+export type AppOrientation = 'portrait' | 'landscape';
+
 export interface AppLink {
   readonly id: ID;
   readonly appId: ID;
@@ -61,6 +63,7 @@ export interface App {
   readonly documentationMd?: string;
   readonly iconUrl: string;
   readonly featuredImageUrl?: string;
+  readonly featuredImageMobileUrl?: string;
   readonly screenshots: readonly string[];
   readonly demoUrl?: string;
   readonly videoUrl?: string;
@@ -68,6 +71,7 @@ export interface App {
   readonly categoryId?: string;
   readonly tags: readonly string[];
   readonly status: AppStatus;
+  readonly orientation?: AppOrientation;
   readonly platforms: readonly AppPlatform[];
   readonly links: readonly AppLink[];
   readonly versions?: readonly AppVersion[];
@@ -79,7 +83,11 @@ export interface App {
   readonly stats: AppStatistics;
   readonly isFeatured: boolean;
   readonly isPinned: boolean;
+  readonly requiresAuth?: boolean;
   readonly sortOrder: number;
+  readonly bundleSize?: string;
+  readonly primaryLanguage?: string;
+  readonly languages?: readonly string[];
   readonly publishedAt?: Timestamp;
   readonly createdAt: Timestamp;
   readonly updatedAt: Timestamp;
@@ -97,13 +105,16 @@ export interface AppListItem {
   readonly shortDescription: string;
   readonly iconUrl: string;
   readonly featuredImageUrl?: string;
+  readonly featuredImageMobileUrl?: string;
   readonly primaryCategory: string;
   readonly categorySlug: string;
   readonly platforms: readonly AppPlatform[];
   readonly isFeatured: boolean;
   readonly isPinned: boolean;
+  readonly requiresAuth?: boolean;
   readonly currentVersion?: string;
   readonly sortOrder: number;
+  readonly orientation?: AppOrientation;
   readonly publishedAt?: Timestamp;
   readonly ratingAverage?: number;
   readonly ratingCount?: number;
@@ -121,6 +132,7 @@ export interface PublicApp {
   readonly documentationMd?: string;
   readonly iconUrl: string;
   readonly featuredImageUrl?: string;
+  readonly featuredImageMobileUrl?: string;
   readonly screenshots: readonly string[];
   readonly demoUrl?: string;
   readonly videoUrl?: string;
@@ -134,11 +146,17 @@ export interface PublicApp {
   readonly releaseDate?: Timestamp;
   readonly isFeatured: boolean;
   readonly isPinned: boolean;
+  readonly requiresAuth?: boolean;
+  readonly orientation?: AppOrientation;
   readonly seoTitle?: string;
   readonly seoDescription?: string;
   readonly socialImageUrl?: string;
   readonly stats: AppStatistics;
+  readonly bundleSize?: string;
+  readonly primaryLanguage?: string;
+  readonly languages?: readonly string[];
   readonly publishedAt?: Timestamp;
+  readonly createdAt?: Timestamp;
   readonly updatedAt: Timestamp;
 }
 
@@ -166,13 +184,18 @@ export interface CreateAppInput {
   readonly documentationMd?: string;
   readonly iconUrl: string;
   readonly featuredImageUrl?: string;
+  readonly featuredImageMobileUrl?: string;
   readonly categoryId: string;
   readonly tagIds?: readonly string[];
   readonly demoUrl?: string;
   readonly videoUrl?: string;
   readonly isFeatured?: boolean;
   readonly isPinned?: boolean;
+  readonly requiresAuth?: boolean;
+  readonly orientation?: AppOrientation;
   readonly sortOrder?: number;
+  readonly bundleSize?: string;
+  readonly primaryLanguage?: string;
   readonly seoTitle?: string;
   readonly seoDescription?: string;
 }
@@ -185,13 +208,18 @@ export interface UpdateAppInput {
   readonly documentationMd?: string;
   readonly iconUrl?: string;
   readonly featuredImageUrl?: string;
+  readonly featuredImageMobileUrl?: string;
   readonly categoryId?: string;
   readonly tagIds?: readonly string[];
   readonly demoUrl?: string;
   readonly videoUrl?: string;
   readonly isFeatured?: boolean;
   readonly isPinned?: boolean;
+  readonly requiresAuth?: boolean;
+  readonly orientation?: AppOrientation;
   readonly sortOrder?: number;
+  readonly bundleSize?: string;
+  readonly primaryLanguage?: string;
   readonly seoTitle?: string;
   readonly seoDescription?: string;
 }

@@ -246,7 +246,9 @@ export function FilterGrid<T>({
               <span
                 aria-hidden
                 className={`pointer-events-none absolute inset-0 rounded-full border transition-colors ${
-                  on ? 'border-transparent' : 'border-[hsl(var(--border))] bg-[hsl(var(--surface-subtle))] group-hover:bg-[hsl(var(--accent))]'
+                  on
+                    ? 'border-transparent'
+                    : 'border-[hsl(var(--border))] bg-[hsl(var(--surface-subtle))] group-hover:bg-[hsl(var(--accent))]'
                 }`}
               />
               <span className="relative col-start-1 row-start-1 inline-grid">

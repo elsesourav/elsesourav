@@ -23,7 +23,7 @@ export function StatCard({
   ...props
 }: StatCardProps) {
   return (
-    <Card className={cn('p-6 space-y-2', className)} {...props}>
+    <Card className={cn('p-3 sm:p-4 md:p-5 space-y-2', className)} {...props}>
       <div className="flex items-center justify-between">
         <span className="text-xs font-medium text-zinc-400">{label}</span>
         {Icon && (

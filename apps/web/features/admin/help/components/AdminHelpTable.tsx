@@ -6,17 +6,7 @@ import { Card, Badge, Button, Input } from '@elsesourav/ui';
 import { Dropdown } from '@elsesourav/ui/interior';
 import type { HelpArticle, HelpCategoryWithArticles } from '@elsesourav/types';
 import { archiveHelpArticleAction, deleteHelpArticleAction } from '../actions/admin-help-actions';
-import {
-  HelpCircle,
-  Search,
-  Plus,
-  ExternalLink,
-  Edit,
-  Archive,
-  Trash2,
-  ThumbsUp,
-  Loader2,
-} from 'lucide-react';
+import { HelpCircle, Search, Plus, Edit, Archive, Trash2, Loader2 } from 'lucide-react';
 
 interface AdminHelpTableProps {
   initialArticles: readonly HelpArticle[];
@@ -29,10 +19,13 @@ export function AdminHelpTable({ initialArticles, categories }: AdminHelpTablePr
   const [selectedCategory, setSelectedCategory] = React.useState<string>('all');
   const [isDeletingId, setIsDeletingId] = React.useState<string | null>(null);
 
-  const categoryItems = React.useMemo(() => [
-    { value: 'all', label: 'All Categories' },
-    ...categories.map((c) => ({ value: c.id, label: c.name })),
-  ], [categories]);
+  const categoryItems = React.useMemo(
+    () => [
+      { value: 'all', label: 'All Categories' },
+      ...categories.map((c) => ({ value: c.id, label: c.name })),
+    ],
+    [categories]
+  );
 
   const filteredArticles = React.useMemo(() => {
     return articles.filter((article) => {

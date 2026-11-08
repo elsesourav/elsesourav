@@ -220,7 +220,7 @@ describe('PROMPT 5 OF 5: Final Favicon, SEO, Social Sharing and Release Audit', 
       const endpoints = [
         path.join(webAppDir, 'app/opengraph-image.tsx'),
         path.join(webAppDir, 'app/(public)/apps/[slug]/opengraph-image.tsx'),
-        path.join(webAppDir, 'app/(public)/notes/[slug]/opengraph-image.tsx'),
+        path.join(webAppDir, 'app/(public)/updates/[slug]/opengraph-image.tsx'),
         path.join(webAppDir, 'app/(public)/about/opengraph-image.tsx'),
       ];
 
@@ -239,7 +239,7 @@ describe('PROMPT 5 OF 5: Final Favicon, SEO, Social Sharing and Release Audit', 
       const navPath = path.join(webAppDir, 'components/navigation/PublicHeader.tsx');
       const content = fs.readFileSync(navPath, 'utf8');
       expect(content).toContain('ROUTES.APPS');
-      expect(content).toContain('ROUTES.BLOG');
+      expect(content).toContain('ROUTES.UPDATES');
       expect(content).toContain('ROUTES.ABOUT');
       expect(content).not.toMatch(/\/lab["'\s]/);
       expect(content).not.toContain('ROUTES.LAB');

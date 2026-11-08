@@ -219,7 +219,11 @@ export function renderPaletteDemo(
     ctx.fillText('⚡', previewLeft + 14, item1Y + 17);
     ctx.fillStyle = '#ffffff';
     ctx.font = '8.5px sans-serif';
-    ctx.fillText(isInteracted ? 'Deploying to Edge...' : 'Deploy Project', previewLeft + 30, item1Y + 16);
+    ctx.fillText(
+      isInteracted ? 'Deploying to Edge...' : 'Deploy Project',
+      previewLeft + 30,
+      item1Y + 16
+    );
 
     if (isInteracted) {
       ctx.fillStyle = '#34d399';
@@ -231,7 +235,15 @@ export function renderPaletteDemo(
   // Item 2: AI Chat
   if (typedLineCount >= 7) {
     const item2Y = menuY + 72;
-    drawRoundedRect(ctx, previewLeft + 8, item2Y, previewW - 16, 26, 4, 'rgba(255, 255, 255, 0.04)');
+    drawRoundedRect(
+      ctx,
+      previewLeft + 8,
+      item2Y,
+      previewW - 16,
+      26,
+      4,
+      'rgba(255, 255, 255, 0.04)'
+    );
     ctx.font = '10px monospace';
     ctx.fillText('✨', previewLeft + 14, item2Y + 17);
     ctx.fillStyle = '#e2e8f0';

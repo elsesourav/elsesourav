@@ -13,3 +13,4 @@ export * from './audit.types';
 export * from './media.types';
 export * from './admin.types';
 export * from './global-search.types';
+export * from './feedback.types';

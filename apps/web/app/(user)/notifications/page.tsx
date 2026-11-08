@@ -47,7 +47,7 @@ export default async function NotificationsPage() {
             description="Support replies, app releases, security alerts, and system updates."
           />
 
-          <Link href="/settings?tab=preferences" className="self-start sm:self-auto sm:pt-4">
+          <Link href="/account?tab=settings" className="self-start sm:self-auto sm:pt-4">
             <Button
               variant="outline"
               size="sm"

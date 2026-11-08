@@ -8,7 +8,7 @@ interface BlogCardSkeletonProps {
 export function BlogCardSkeleton({ isFeatured = false }: BlogCardSkeletonProps) {
   return (
     <Card
-      className={`flex flex-col justify-between overflow-hidden rounded-2xl border-[hsl(var(--border))] bg-[hsl(var(--card))] p-0 shadow-sm ${
+      className={`flex flex-col justify-between overflow-hidden rounded-xl sm:rounded-2xl border-[hsl(var(--border))] bg-[hsl(var(--card))] p-0 shadow-sm ${
         isFeatured ? 'sm:col-span-2 lg:col-span-3 lg:flex-row' : ''
       }`}
     >
@@ -22,7 +22,7 @@ export function BlogCardSkeleton({ isFeatured = false }: BlogCardSkeletonProps) 
       </div>
 
       {/* Body */}
-      <div className="p-5 sm:p-6 flex flex-col justify-between flex-1 space-y-4">
+      <div className="p-2.5 sm:p-3.5 md:p-4.5 flex flex-col justify-between flex-1 space-y-2.5 sm:space-y-3.5">
         <div className="space-y-3">
           {/* Metadata row */}
           <div className="flex items-center justify-between gap-2">

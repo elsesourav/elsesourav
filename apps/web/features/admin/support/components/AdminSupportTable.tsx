@@ -4,16 +4,8 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Card, Badge, Input } from '@elsesourav/ui';
 import { Dropdown } from '@elsesourav/ui/interior';
-import type { SupportTicketListItem, SupportTicketStatus } from '@elsesourav/types';
-import {
-  LifeBuoy,
-  Search,
-  ExternalLink,
-  MessageSquare,
-  Clock,
-  AlertCircle,
-  CheckCircle2,
-} from 'lucide-react';
+import type { SupportTicketListItem } from '@elsesourav/types';
+import { LifeBuoy, Search, ExternalLink, MessageSquare } from 'lucide-react';
 
 interface AdminSupportTableProps {
   initialTickets: readonly SupportTicketListItem[];
@@ -25,22 +17,28 @@ export function AdminSupportTable({ initialTickets }: AdminSupportTableProps) {
   const [selectedStatus, setSelectedStatus] = React.useState<string>('all');
   const [selectedPriority, setSelectedPriority] = React.useState<string>('all');
 
-  const statusItems = React.useMemo(() => [
-    { value: 'all', label: 'All Statuses' },
-    { value: 'open', label: 'Open' },
-    { value: 'in_progress', label: 'In Progress' },
-    { value: 'waiting_for_user', label: 'Waiting for User' },
-    { value: 'resolved', label: 'Resolved' },
-    { value: 'closed', label: 'Closed' },
-  ], []);
+  const statusItems = React.useMemo(
+    () => [
+      { value: 'all', label: 'All Statuses' },
+      { value: 'open', label: 'Open' },
+      { value: 'in_progress', label: 'In Progress' },
+      { value: 'waiting_for_user', label: 'Waiting for User' },
+      { value: 'resolved', label: 'Resolved' },
+      { value: 'closed', label: 'Closed' },
+    ],
+    []
+  );
 
-  const priorityItems = React.useMemo(() => [
-    { value: 'all', label: 'All Priorities' },
-    { value: 'urgent', label: 'Urgent' },
-    { value: 'high', label: 'High' },
-    { value: 'medium', label: 'Medium' },
-    { value: 'low', label: 'Low' },
-  ], []);
+  const priorityItems = React.useMemo(
+    () => [
+      { value: 'all', label: 'All Priorities' },
+      { value: 'urgent', label: 'Urgent' },
+      { value: 'high', label: 'High' },
+      { value: 'medium', label: 'Medium' },
+      { value: 'low', label: 'Low' },
+    ],
+    []
+  );
 
   const filteredTickets = React.useMemo(() => {
     return tickets.filter((ticket) => {

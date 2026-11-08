@@ -52,8 +52,7 @@ export function Section({
   );
 }
 
-export interface SectionHeaderProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
+export interface SectionHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   caption?: string;
   title: React.ReactNode;
   description?: React.ReactNode;
@@ -151,7 +150,7 @@ export function PageHeader({
   return (
     <div
       className={cn(
-        'pb-8 pt-2 sm:pt-4 border-b border-[hsl(var(--border-subtle))] mb-8 sm:mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between',
+        'pb-6 sm:pb-8 pt-0 border-b border-[hsl(var(--border-subtle))] mb-6 sm:mb-8 flex flex-col gap-6 md:flex-row md:items-end md:justify-between',
         align === 'center' && 'text-center md:flex-col md:items-center',
         className
       )}

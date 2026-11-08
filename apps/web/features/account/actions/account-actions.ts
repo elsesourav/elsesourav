@@ -42,6 +42,7 @@ export async function updateProfileFormAction(data: {
 
   try {
     const updated = await userService.updateProfile(user.id, user.id, parsed.data);
+    revalidatePath('/account');
     revalidatePath('/settings');
     revalidatePath('/profile');
     revalidatePath('/dashboard');
@@ -85,6 +86,7 @@ export async function updatePreferencesAction(data: {
 
   try {
     const updated = await userService.updatePreferences(user.id, user.id, parsed.data);
+    revalidatePath('/account');
     revalidatePath('/settings');
     revalidatePath('/profile');
 
@@ -119,9 +121,7 @@ export async function sendEmailOtpAction(
   try {
     // Generate secure 6-digit numeric OTP
     const otp = crypto.randomInt(100000, 999999).toString();
-    console.log(
-      `[OTP ACTION] Generated 6-digit OTP code for ${user.email}: >>> ${otp} <<< (purpose: ${purpose})`
-    );
+    console.log(`[OTP ACTION] Generated 6-digit OTP code for ${user.email} (purpose: ${purpose})`);
 
     // Store in database with 10-min expiration
     await otpRepo.createOtp(user.email, otp, purpose, 10);
@@ -163,9 +163,7 @@ export async function verifyEmailOtpAction(
   otp: string,
   purpose: 'EMAIL_VERIFY' | 'PASSWORD_RESET' = 'EMAIL_VERIFY'
 ) {
-  console.log(
-    `[OTP ACTION] 🔍 verifyEmailOtpAction received code: "${otp}" for purpose: ${purpose}`
-  );
+  console.log(`[OTP ACTION] 🔍 verifyEmailOtpAction received for purpose: ${purpose}`);
   const user = await getSessionUser();
   if (!user?.email || !user?.id) {
     console.warn(`[OTP ACTION] ❌ Unauthorized verification attempt.`);
@@ -173,7 +171,7 @@ export async function verifyEmailOtpAction(
   }
 
   if (!otp || otp.length !== 6 || !/^\d{6}$/.test(otp)) {
-    console.warn(`[OTP ACTION] ⚠️ Invalid code format received: "${otp}"`);
+    console.warn(`[OTP ACTION] ⚠️ Invalid code format received`);
     return { success: false, error: 'Please enter a valid 6-digit verification code' };
   }
 
@@ -190,6 +188,7 @@ export async function verifyEmailOtpAction(
       console.log(
         `[OTP ACTION] ✅ User ${user.id} (${user.email}) email marked as verified in database!`
       );
+      revalidatePath('/account');
       revalidatePath('/settings');
     }
 
@@ -216,6 +215,7 @@ export async function scheduleAccountDeletionAction(reason?: string) {
 
   try {
     await userService.requestAccountDeletion(user.id, user.id, '', reason);
+    revalidatePath('/account');
     revalidatePath('/settings');
     return { success: true };
   } catch (error) {
@@ -237,6 +237,7 @@ export async function cancelAccountDeletionAction() {
 
   try {
     await userService.cancelScheduledDeletion(user.id, user.id);
+    revalidatePath('/account');
     revalidatePath('/settings');
     return { success: true };
   } catch (error) {

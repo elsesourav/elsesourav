@@ -1,7 +1,7 @@
 'use client';
 
 import type { AuthenticatedUser } from '@elsesourav/auth';
-import { UserAvatar } from '@elsesourav/ui';
+import { UserAvatar, Button } from '@elsesourav/ui';
 import { AtSign, LogOut, Shield, ShieldCheck, User } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
@@ -61,7 +61,7 @@ export function UserAvatarMenu({ user, hasImportantAlert = false }: UserAvatarMe
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && open) {
         requestClose(() => {
-          triggerRef.current?.focus();
+          triggerRef.current?.focus({ preventScroll: true });
         });
       }
     };
@@ -130,35 +130,35 @@ export function UserAvatarMenu({ user, hasImportantAlert = false }: UserAvatarMe
             <p className="text-[11px] text-muted-foreground truncate mt-0.5">{user.email}</p>
           </div>
 
-          {/* Profile & Settings Navigation */}
+          {/* Account & Settings Navigation */}
           <Link
-            href="/profile"
+            href="/account"
             role="menuitem"
             onClick={() => requestClose()}
             className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-foreground hover:bg-accent transition-colors cursor-pointer"
           >
             <User className="w-3.5 h-3.5 text-primary" />
             <div className="flex flex-col">
-              <span className="font-medium">Profile</span>
+              <span className="font-medium">Account</span>
               <span className="text-[10px] text-muted-foreground">Overview & identity</span>
             </div>
           </Link>
 
           <Link
-            href="/settings?tab=profile"
+            href="/account?tab=settings"
             role="menuitem"
             onClick={() => requestClose()}
             className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-foreground hover:bg-accent transition-colors cursor-pointer"
           >
             <AtSign className="w-3.5 h-3.5 text-primary" />
             <div className="flex flex-col">
-              <span className="font-medium">Account</span>
+              <span className="font-medium">Settings</span>
               <span className="text-[10px] text-muted-foreground">Edit details & bio</span>
             </div>
           </Link>
 
           <Link
-            href="/settings?tab=account"
+            href="/account?tab=security"
             role="menuitem"
             onClick={() => requestClose()}
             className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-foreground hover:bg-accent transition-colors cursor-pointer"
@@ -188,14 +188,15 @@ export function UserAvatarMenu({ user, hasImportantAlert = false }: UserAvatarMe
           {/* Sign Out */}
           <div className="pt-1 border-t border-border/80">
             <form action="/api/auth/logout" method="POST">
-              <button
+              <Button
                 type="submit"
-                role="menuitem"
-                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer text-left font-medium"
+                variant="ghost"
+                size="sm"
+                leftIcon={<LogOut className="w-3.5 h-3.5 text-rose-400" />}
+                className="w-full justify-start text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 px-3 py-2 rounded-xl"
               >
-                <LogOut className="w-3.5 h-3.5 text-rose-400" />
-                <span>Sign Out</span>
-              </button>
+                Sign Out
+              </Button>
             </form>
           </div>
         </div>

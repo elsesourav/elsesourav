@@ -117,9 +117,12 @@ export function MorphSlider({
     clearAutoplayTimer();
     if (!autoplay || hovering || isDragging) return;
 
-    autoplayTimerRef.current = window.setTimeout(() => {
-      engineRef.current?.next();
-    }, Math.max(autoplayDelay, 1) * 1000);
+    autoplayTimerRef.current = window.setTimeout(
+      () => {
+        engineRef.current?.next();
+      },
+      Math.max(autoplayDelay, 1) * 1000
+    );
   }, [autoplay, autoplayDelay, hovering, isDragging, clearAutoplayTimer]);
 
   useEffect(() => {

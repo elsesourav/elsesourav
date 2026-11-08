@@ -1,12 +1,30 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 import { Search } from 'lucide-react';
 import { SearchOverlay } from './SearchOverlay';
+import { AnimatedSearchPlaceholder } from './AnimatedSearchPlaceholder';
 
-export function SearchButton() {
+export interface SearchButtonProps {
+  className?: string;
+}
+
+export function SearchButton({ className = '' }: SearchButtonProps) {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const isAppsSection = pathname.startsWith('/apps');
+  const isUpdatesSection = pathname.startsWith('/updates');
+  const isAccountSection =
+    pathname.startsWith('/profile') ||
+    pathname.startsWith('/settings') ||
+    pathname.startsWith('/dashboard') ||
+    pathname.startsWith('/library') ||
+    pathname.startsWith('/notifications') ||
+    pathname.startsWith('/account') ||
+    pathname.startsWith('/support');
 
   // Global Cmd+K / Ctrl+K keyboard shortcut
   useEffect(() => {
@@ -22,7 +40,16 @@ export function SearchButton() {
         (!e.metaKey && !e.ctrlKey && !e.altKey && e.key === '/')
       ) {
         e.preventDefault();
-        setOpen((prev) => !prev);
+        setOpen((prev) => {
+          if (prev) {
+            // Restore focus to button without auto-scrolling the page
+            setTimeout(() => {
+              buttonRef.current?.focus({ preventScroll: true });
+            }, 50);
+            return false;
+          }
+          return true;
+        });
       }
     };
 
@@ -32,8 +59,10 @@ export function SearchButton() {
 
   const handleClose = useCallback(() => {
     setOpen(false);
-    // Restore focus to the search button
-    setTimeout(() => buttonRef.current?.focus(), 50);
+    // Restore focus to the search button strictly without scrolling the window
+    setTimeout(() => {
+      buttonRef.current?.focus({ preventScroll: true });
+    }, 50);
   }, []);
 
   return (
@@ -42,19 +71,55 @@ export function SearchButton() {
         ref={buttonRef}
         type="button"
         onClick={() => setOpen(true)}
-        className="shrink-0 flex items-center justify-center md:justify-between gap-2.5 h-9 w-9 md:w-auto md:h-9 md:px-3 md:py-1.5 rounded-xl md:rounded-full border border-black/10 dark:border-white/10 bg-white/10 dark:bg-white/5 backdrop-blur-[6px] hover:bg-white/20 dark:hover:bg-white/10 hover:border-black/20 dark:hover:border-white/20 text-[hsl(var(--foreground))]/80 hover:text-[hsl(var(--foreground))] active:scale-95 transition-all duration-150 ease-smooth focus:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] cursor-pointer group whitespace-nowrap shadow-2xs"
-        aria-label="Search apps and updates"
+        className={`flex items-center justify-between gap-2 h-9 px-3 py-1.5 w-full rounded-full border border-black/10 dark:border-white/10 bg-black/[0.04] dark:bg-white/[0.06] backdrop-blur-[6px] hover:bg-black/[0.07] dark:hover:bg-white/[0.1] hover:border-black/20 dark:hover:border-white/20 text-[hsl(var(--foreground))]/80 hover:text-[hsl(var(--foreground))] active:scale-[0.98] transition-all duration-150 ease-smooth focus:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] cursor-pointer group whitespace-nowrap shadow-2xs ${className}`}
+        aria-label={
+          isAccountSection
+            ? 'Search in Account'
+            : isAppsSection
+              ? 'Search in Apps'
+              : isUpdatesSection
+                ? 'Search in Updates'
+                : 'Search apps, updates, and projects'
+        }
       >
-        <div className="flex items-center gap-2 min-w-0">
-          <Search className="w-3.5 h-3.5 shrink-0 text-[hsl(var(--foreground))]/75 group-hover:text-[hsl(var(--foreground))] transition-colors" />
-          <span className="hidden lg:inline text-xs font-normal text-[hsl(var(--foreground))]/75 group-hover:text-[hsl(var(--foreground))] transition-colors truncate">
-            Search apps and updates...
-          </span>
-          <span className="hidden md:inline lg:hidden text-xs font-normal text-[hsl(var(--foreground))]/75 group-hover:text-[hsl(var(--foreground))] transition-colors truncate">
-            Search...
-          </span>
+        <div className="flex items-center gap-2 min-w-0 overflow-hidden flex-1">
+          <Search className="w-3.5 h-3.5 shrink-0 text-[hsl(var(--foreground))]/70 group-hover:text-[hsl(var(--foreground))] transition-colors" />
+
+          {/* Section Indicator Text: normal neutral text matching other pages */}
+          {isAccountSection && (
+            <span className="hidden sm:inline text-xs font-normal text-[hsl(var(--foreground))]/90 shrink-0 select-none">
+              Account &gt;
+            </span>
+          )}
+
+          {isAppsSection && (
+            <span className="hidden sm:inline text-xs font-normal text-[hsl(var(--foreground))]/90 shrink-0 select-none">
+              Apps &gt;
+            </span>
+          )}
+
+          {isUpdatesSection && (
+            <span className="hidden sm:inline text-xs font-normal text-[hsl(var(--foreground))]/90 shrink-0 select-none">
+              Updates &gt;
+            </span>
+          )}
+
+          <AnimatedSearchPlaceholder
+            prefix="Search "
+            words={
+              isAccountSection
+                ? ['profile', 'security', 'settings', 'notifications', 'library']
+                : isAppsSection
+                  ? ['apps', 'tools', 'games', 'systems']
+                  : isUpdatesSection
+                    ? ['updates', 'devlogs', 'articles', 'releases']
+                    : ['apps', 'updates', 'tools', 'articles', 'projects', 'experiments']
+            }
+            className="inline-flex text-[11px] sm:text-xs font-normal text-[hsl(var(--muted-foreground))] group-hover:text-[hsl(var(--foreground))] transition-colors truncate"
+          />
         </div>
-        <kbd className="hidden md:inline-flex shrink-0 items-center px-1.5 py-0.5 text-[10px] font-mono text-[hsl(var(--foreground))]/60 bg-white/15 dark:bg-white/10 border border-black/10 dark:border-white/10 rounded backdrop-blur-xs">
+
+        <kbd className="hidden lg:inline-flex shrink-0 items-center px-1.5 py-0.5 text-[10px] font-mono text-[hsl(var(--foreground))]/60 bg-white/40 dark:bg-white/10 border border-black/10 dark:border-white/10 rounded backdrop-blur-xs">
           ⌘ K
         </kbd>
       </button>

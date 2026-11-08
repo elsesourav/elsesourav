@@ -27,9 +27,28 @@ export class SiteService {
     const siteDescription = dbSettings['site_description'] || SITE_CONFIG.description;
     const siteUrl = SITE_CONFIG.url;
     const siteLogoUrl = dbSettings['site_logo_url'] || undefined;
+    const siteBrandLogoUrl = dbSettings['site_brand_logo_url'] || undefined;
+    const siteLogoPixelsJson = dbSettings['site_logo_pixels_json'] || undefined;
     const siteOgImageUrl = dbSettings['site_og_image_url'] || undefined;
     const siteKeywords = dbSettings['site_keywords'] || undefined;
     const siteStatusBadge = dbSettings['site_status_badge'] || undefined;
+    const rawEffects = dbSettings['effects_level'];
+    const effectsLevel =
+      rawEffects === 'low' || rawEffects === 'medium' || rawEffects === 'high'
+        ? rawEffects
+        : 'high';
+
+    const rawPortraitLight = dbSettings['portrait_light_intensity'];
+    const parsedLight = rawPortraitLight ? parseFloat(rawPortraitLight) : 0.38;
+    const portraitLightIntensity = isNaN(parsedLight) ? 0.38 : Math.max(0, Math.min(1.0, parsedLight));
+    const portraitImageDarkUrl =
+      dbSettings['portrait_image_dark_url'] || '/about/souravbarui-dark-512.webp';
+    const portraitImageLightUrl =
+      dbSettings['portrait_image_light_url'] || '/about/souravbarui-light-512.webp';
+    const portraitParticleDensity = dbSettings['portrait_particle_density'] || '1.0x';
+    const portraitParticleSize = dbSettings['portrait_particle_size'] || '1.0x';
+    const portraitGlowBrightness = dbSettings['portrait_glow_brightness'] || '1.0x';
+    const portraitFlightSpeed = dbSettings['portrait_flight_speed'] || '1.0x';
 
     const footerCopyright =
       dbSettings['footer_copyright'] ||
@@ -65,16 +84,30 @@ export class SiteService {
       dbSettings['closing_cta_subtitle'] ||
       'Every application, utility, and update is built independently with a focus on craft, performance, and usability.';
 
+    const philosophyBadge = dbSettings['philosophy_badge'] || 'Craft & Principles';
+    const philosophyCtaLabel = dbSettings['philosophy_cta_label'] || 'About the journey';
+    const philosophyCtaUrl = dbSettings['philosophy_cta_url'] || '/about';
+
+    const atmosphereDensity = dbSettings['homepage_atmosphere_density'] || '1.0';
+    const meteorFrequency = dbSettings['homepage_meteor_frequency'] || 'standard';
+    const starsSpeed = dbSettings['homepage_stars_speed'] || '1.0';
+    const mobileEffects = dbSettings['homepage_mobile_effects'] || 'standard';
+
     const creatorName = dbSettings['creator_name'] || CREATOR_CONFIG.name;
     const creatorFullName = dbSettings['creator_full_name'] || CREATOR_CONFIG.fullName;
     const creatorHandle = CREATOR_CONFIG.handle;
     const creatorTitle = dbSettings['creator_title'] || CREATOR_CONFIG.identity.title;
     const creatorRole = dbSettings['creator_role'] || CREATOR_CONFIG.identity.role;
     const creatorLocation = dbSettings['creator_location'] || CREATOR_CONFIG.identity.location;
-    const creatorAvatarUrl = dbSettings['creator_avatar_url'] || undefined;
+    const dbAvatar = dbSettings['creator_avatar_url'];
+    const isGenericStock = dbAvatar && dbAvatar.includes('photo-1534528741775-53994a69daeb');
+    const creatorAvatarUrl =
+      !isGenericStock && dbAvatar
+        ? dbAvatar
+        : portraitImageDarkUrl || '/about/souravbarui-dark-512.webp';
     const creatorStatement =
       dbSettings['creator_statement'] ||
-      'I care about software that is understandable, useful, fast, and considerate.';
+      'I care about software that is useful, fast, and considerate.';
     const creatorShortBio = dbSettings['creator_short_bio'] || CREATOR_CONFIG.shortBio;
     const creatorLongBio = dbSettings['creator_long_bio'] || CREATOR_CONFIG.longBio;
     const creatorPositioning =
@@ -99,9 +132,19 @@ export class SiteService {
         description: siteDescription,
         url: siteUrl,
         logoUrl: siteLogoUrl,
+        brandLogoUrl: siteBrandLogoUrl,
+        logoPixelsJson: siteLogoPixelsJson,
         ogImageUrl: siteOgImageUrl,
         keywords: siteKeywords,
         statusBadge: siteStatusBadge,
+        effectsLevel,
+        portraitLightIntensity,
+        portraitImageDarkUrl,
+        portraitImageLightUrl,
+        portraitParticleDensity,
+        portraitParticleSize,
+        portraitGlowBrightness,
+        portraitFlightSpeed,
       },
       footer: {
         copyright: footerCopyright,
@@ -124,6 +167,13 @@ export class SiteService {
         blogSubtitle,
         closingCtaTitle,
         closingCtaSubtitle,
+        philosophyBadge,
+        philosophyCtaLabel,
+        philosophyCtaUrl,
+        atmosphereDensity,
+        meteorFrequency,
+        starsSpeed,
+        mobileEffects,
       },
       creator: {
         name: creatorName,
@@ -133,6 +183,8 @@ export class SiteService {
         role: creatorRole,
         location: creatorLocation,
         avatarUrl: creatorAvatarUrl,
+        portraitImageDarkUrl,
+        portraitImageLightUrl,
         statement: creatorStatement,
         shortBio: creatorShortBio,
         longBio: creatorLongBio,

@@ -86,3 +86,72 @@ export function getBlogCoverUrl(publicIdOrUrl: string, width = 1200, height = 63
     gravity: 'center',
   });
 }
+
+export function getAppBannerDesktopUrl(
+  publicIdOrUrl: string,
+  width = 2100,
+  height = 900
+): string {
+  return buildCloudinaryUrl(publicIdOrUrl, {
+    width,
+    height,
+    crop: 'fill',
+  });
+}
+
+export function getAppBannerMobileUrl(
+  publicIdOrUrl: string,
+  width = 1200,
+  height = 1600
+): string {
+  return buildCloudinaryUrl(publicIdOrUrl, {
+    width,
+    height,
+    crop: 'fill',
+  });
+}
+
+export interface BrandLogoVariantOptions {
+  width?: number;
+  height?: number;
+  format?: 'svg' | 'webp' | 'png' | 'auto';
+  size?: number;
+}
+
+/**
+ * Returns an optimized brand logo image URL for the requested dimensions and format.
+ * - Leaves SVGs intact as resolution-independent vector graphics.
+ * - Generates high-efficiency Cloudinary transformations for cloud-hosted assets.
+ * - Formats width/height query parameters for local or custom image links.
+ */
+export function getBrandLogoVariant(
+  publicIdOrUrl: string,
+  options: BrandLogoVariantOptions = {}
+): string {
+  if (!publicIdOrUrl) return '';
+
+  const clean = publicIdOrUrl.trim();
+
+  // SVGs are infinite-resolution vectors
+  if (clean.endsWith('.svg') || clean.includes('data:image/svg+xml')) {
+    return clean;
+  }
+
+  const width = options.width || options.size || 128;
+  const height = options.height || options.size || 128;
+
+  if (clean.includes('res.cloudinary.com')) {
+    return buildCloudinaryUrl(clean, {
+      width,
+      height,
+      crop: 'fit',
+    });
+  }
+
+  if (clean.startsWith('/') || clean.startsWith('http')) {
+    const separator = clean.includes('?') ? '&' : '?';
+    return `${clean}${separator}w=${width}&h=${height}`;
+  }
+
+  return clean;
+}

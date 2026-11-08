@@ -58,6 +58,7 @@ model User {
   notifications    Notification[]
   auditLogs        AuditLog[]
   feedback         AppFeedback[]
+  feedbackLikes    AppFeedbackLike[]
 
   @@index([role])
   @@index([createdAt])
@@ -72,13 +73,18 @@ model App {
   documentationMd  String?
   iconUrl          String
   featuredImageUrl String?
+  featuredImageMobileUrl String?
   demoUrl          String?
   videoUrl         String?
   status           PublishStatus    @default(DRAFT)
   sortOrder        Int              @default(0)
   isFeatured       Boolean          @default(false)
   isPinned         Boolean          @default(false)
+  requiresAuth     Boolean          @default(false)
+  orientation      String?          @default("landscape")
   currentVersion   String?
+  bundleSize       String?
+  primaryLanguage  String?          @default("en")
   seoTitle         String?
   seoDescription   String?
   publishedAt      DateTime?
@@ -311,11 +317,31 @@ model AppFeedback {
   appId       String
   app         App      @relation(fields: [appId], references: [id], onDelete: Cascade)
   rating      Int
-  message     String
-  status      String   @default("pending")
+  message     String?
+  status      String   @default("approved")
+  helpfulCount Int     @default(0)
   createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  likes       AppFeedbackLike[]
 
+  @@unique([userId, appId])
   @@index([appId])
+  @@index([userId])
+  @@index([appId, status])
+}
+
+model AppFeedbackLike {
+  id         String      @id @default(uuid())
+  feedbackId String
+  feedback   AppFeedback @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
+  userId     String?
+  user       User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  identifier String      // "user:<userId>" or "ip:<ip>"
+  createdAt  DateTime    @default(now())
+
+  @@unique([feedbackId, identifier])
+  @@index([feedbackId])
+  @@index([identifier])
   @@index([userId])
 }
 

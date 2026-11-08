@@ -29,8 +29,8 @@ export default function RootError({
           </CardDescription>
         </CardHeader>
         <div className="p-6 pt-0 flex justify-center">
-          <Button onClick={() => reset()} variant="primary" className="gap-2">
-            <RefreshCw className="w-4 h-4" /> Try Again
+          <Button onClick={() => reset()} variant="primary" leftIcon={<RefreshCw className="w-4 h-4" />}>
+            Try Again
           </Button>
         </div>
       </Card>

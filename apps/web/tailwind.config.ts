@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import typography from '@tailwindcss/typography';
 
 const config: Config = {
   darkMode: ['class'],
@@ -11,6 +12,13 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
+        display: [
+          'var(--font-display)',
+          'var(--font-sans)',
+          'system-ui',
+          '-apple-system',
+          'sans-serif',
+        ],
         sans: [
           'var(--font-sans)',
           'system-ui',
@@ -171,7 +179,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [typography],
 };
 
 export default config;

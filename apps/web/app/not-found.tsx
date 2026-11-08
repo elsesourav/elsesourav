@@ -18,8 +18,8 @@ export default function NotFound() {
         </CardHeader>
         <div className="p-6 pt-0 flex justify-center">
           <Link href={ROUTES.HOME}>
-            <Button variant="primary" className="gap-2">
-              <ArrowLeft className="w-4 h-4" /> Return to Home
+            <Button variant="primary" leftIcon={<ArrowLeft className="w-4 h-4" />}>
+              Return to Home
             </Button>
           </Link>
         </div>

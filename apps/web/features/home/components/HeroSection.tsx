@@ -6,7 +6,7 @@ import { Button, Container, Section, ActionGroup } from '@elsesourav/ui';
 import { ROUTES } from '@elsesourav/config';
 import type { AppListItem } from '@elsesourav/types';
 import { HeroProjectVisual } from './HeroProjectVisual';
-import { Layers, User, Sparkles } from 'lucide-react';
+import { Layers, User } from 'lucide-react';
 
 interface HeroSectionProps {
   creatorName: string;
@@ -114,20 +114,20 @@ export function HeroSection({
               <Link href={ROUTES.APPS}>
                 <Button
                   size="lg"
-                  className="gap-2 shadow-xl shadow-indigo-600/25 px-6 font-semibold min-h-[48px] rounded-2xl active:scale-[0.98] transition-transform"
+                  leftIcon={<Layers className="w-4 h-4" />}
+                  className="shadow-xl shadow-indigo-600/25 px-6 font-semibold min-h-[48px] rounded-2xl active:scale-[0.98] transition-transform"
                 >
-                  <Layers className="w-4 h-4" />
-                  <span>{primaryCtaLabel || 'Explore Apps'}</span>
+                  {primaryCtaLabel || 'Explore Apps'}
                 </Button>
               </Link>
               <Link href={ROUTES.ABOUT}>
                 <Button
                   variant="secondary"
                   size="lg"
-                  className="gap-2 px-6 min-h-[48px] rounded-2xl active:scale-[0.98] transition-transform border border-[hsl(var(--border))]"
+                  leftIcon={<User className="w-4 h-4" />}
+                  className="px-6 min-h-[48px] rounded-2xl active:scale-[0.98] transition-transform border border-[hsl(var(--border))]"
                 >
-                  <User className="w-4 h-4" />
-                  <span>{secondaryCtaLabel || 'About Me'}</span>
+                  {secondaryCtaLabel || 'About Me'}
                 </Button>
               </Link>
             </ActionGroup>

@@ -3,7 +3,6 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Container, Reveal } from '@elsesourav/ui';
-import { TextReveal } from '@elsesourav/ui/interior';
 import { ROUTES } from '@elsesourav/config';
 import {
   ArrowRight,
@@ -18,13 +17,20 @@ import {
 interface PhilosophySectionProps {
   creator: {
     name: string;
+    fullName?: string | null;
     title: string;
+    location?: string | null;
     avatarUrl?: string | null;
+    portraitImageDarkUrl?: string | null;
+    portraitImageLightUrl?: string | null;
     statement?: string | null;
     shortBio?: string | null;
     positioning?: string | null;
     principles?: readonly string[];
   };
+  badge?: string;
+  ctaLabel?: string;
+  ctaUrl?: string;
 }
 
 interface PrincipleItem {
@@ -101,14 +107,30 @@ const PRINCIPLES: PrincipleItem[] = [
   },
 ];
 
-export function PhilosophySection({ creator }: PhilosophySectionProps) {
+export function PhilosophySection({
+  creator,
+  badge = 'Craft & Principles',
+  ctaLabel = 'About the journey',
+  ctaUrl = ROUTES.ABOUT,
+}: PhilosophySectionProps) {
   const creatorName = creator.name || 'Sourav';
   const creatorTitle = creator.title || 'Software Engineer & Creator';
+  const creatorStatement =
+    creator.statement || 'I care about software that is useful, fast, and considerate.';
+  const creatorPositioning =
+    creator.positioning ||
+    'Independent creator building practical software, developer tools, and thoughtful web experiences with strong engineering fundamentals.';
+
+  // Default to Sourav's authentic portrait
+  const avatarSrc =
+    creator.avatarUrl ||
+    creator.portraitImageDarkUrl ||
+    '/about/souravbarui-dark-512.webp';
 
   return (
     <section
       id="philosophy"
-      className="relative isolate overflow-hidden py-14 sm:py-20 lg:py-24 transition-colors duration-500 bg-[#f8fafc] dark:bg-[#07090e]"
+      className="relative isolate overflow-hidden py-8 sm:py-14 lg:py-20 scroll-mt-16 sm:scroll-mt-20 transition-colors duration-500 bg-[#f8fafc] dark:bg-[#07090e]"
     >
       {/* ── 1. Top Edge Horizon Beam ── */}
       <div
@@ -116,7 +138,7 @@ export function PhilosophySection({ creator }: PhilosophySectionProps) {
         className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500/40 dark:via-indigo-400/30 to-transparent pointer-events-none"
       />
 
-      {/* ── 2. Ambient Gradient Auroras (Zero Canvas, Pure CSS) ── */}
+      {/* ── 2. Ambient Gradient Auroras ── */}
       <div
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none select-none overflow-hidden -z-10"
@@ -132,105 +154,112 @@ export function PhilosophySection({ creator }: PhilosophySectionProps) {
         />
       </div>
 
-      <Container size="full" className="max-w-[1536px] px-4 sm:px-6 lg:px-8 xl:px-12">
+      <Container size="full" className="max-w-[1536px] px-3 sm:px-6 lg:px-8 xl:px-12">
         <Reveal direction="up" distance={16}>
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start">
             {/* Left Column: Creator Identity & Philosophy Statement */}
-            <div className="lg:col-span-5 space-y-5 lg:sticky lg:top-28">
+            <div className="lg:col-span-5 space-y-3.5 sm:space-y-5 lg:sticky lg:top-28">
               {/* Studio Pill Badge */}
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-500/25 bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 text-xs font-mono font-semibold uppercase tracking-wider backdrop-blur-md">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full border border-indigo-500/25 bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 text-[10px] sm:text-xs font-mono font-semibold uppercase tracking-wider backdrop-blur-md">
                 <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
-                <span>Craft & Principles</span>
+                <span>{badge}</span>
               </div>
 
-              {/* Headline */}
-              <h2 className="text-2xl sm:text-3xl lg:text-[2.25rem] font-extrabold tracking-tight text-[hsl(var(--foreground))] leading-snug">
-                <TextReveal
-                  text="I care about software that is useful, fast, and considerate."
-                  by="word"
-                  stagger={0.06}
-                  className="font-extrabold"
-                />
+              {/* Main Headline (Crisp, Accessible, Zero-Duplication) */}
+              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-[2.25rem] font-extrabold tracking-tight text-[hsl(var(--foreground))] leading-snug">
+                {creatorStatement}
               </h2>
 
-              {/* Subtitle */}
-              <p className="text-sm sm:text-base text-[hsl(var(--muted-foreground))] leading-relaxed max-w-lg">
-                <TextReveal
-                  text="Independent creator building practical software, developer tools, and thoughtful web experiences with strong engineering fundamentals."
-                  by="word"
-                  stagger={0.03}
-                  delay={0.2}
-                  className="text-[hsl(var(--muted-foreground))]"
-                />
+              {/* Subtitle / Positioning Narrative */}
+              <p className="text-xs sm:text-sm md:text-base text-[hsl(var(--muted-foreground))] leading-relaxed max-w-lg">
+                {creatorPositioning}
               </p>
 
-              {/* Creator Compact Badge */}
-              <div className="flex items-center gap-3 pt-1">
-                <div className="relative w-10 h-10 rounded-xl bg-indigo-950/60 border border-indigo-500/30 overflow-hidden shrink-0 shadow-inner">
-                  {creator.avatarUrl ? (
+              {/* Heroic Creator Spotlight Card */}
+              <div className="p-2.5 sm:p-4 rounded-xl sm:rounded-2xl border border-[hsl(var(--border))]/90 bg-[hsl(var(--card))]/80 dark:bg-[hsl(var(--surface-subtle))]/70 backdrop-blur-md shadow-sm space-y-2.5 sm:space-y-3 max-w-md">
+                <div className="flex items-center gap-2.5 sm:gap-3.5">
+                  {/* High-res squircle portrait with ambient neon glow */}
+                  <div className="relative w-12 h-12 sm:w-16 sm:h-16 aspect-square rounded-xl sm:rounded-2xl bg-gradient-to-br from-indigo-500/20 via-violet-500/10 to-sky-500/20 p-0.5 border border-indigo-500/35 dark:border-indigo-400/40 shadow-md shrink-0 group/avatar overflow-visible">
                     <img
-                      src={creator.avatarUrl}
-                      alt={creatorName}
-                      className="w-full h-full object-cover"
+                      src={avatarSrc}
+                      alt={`${creatorName} — ${creatorTitle}`}
+                      className="w-full h-full object-cover rounded-[10px] sm:rounded-[14px] aspect-square transition-transform duration-300 group-hover/avatar:scale-105"
+                      loading="lazy"
                     />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-indigo-400">
-                      <Sparkles className="w-5 h-5" />
-                    </div>
-                  )}
-                  <span
-                    title="Active Builder"
-                    className="absolute bottom-0.5 right-0.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-[hsl(var(--card))]"
-                  />
-                </div>
-                <div className="min-w-0">
-                  <div className="text-sm font-semibold text-[hsl(var(--foreground))] truncate">
-                    {creatorName}
+                    {/* Live builder status indicator */}
+                    <span
+                      title="Active Studio Builder"
+                      className="absolute -bottom-1 -right-1 flex items-center justify-center w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-[hsl(var(--background))] border border-[hsl(var(--border))] shadow-xs"
+                    >
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-500/30 animate-pulse" />
+                    </span>
                   </div>
-                  <div className="text-xs text-[hsl(var(--muted-foreground))] truncate">
-                    {creatorTitle}
-                  </div>
-                </div>
-              </div>
 
-              {/* Action Button */}
-              <div className="pt-2">
-                <Link
-                  href={ROUTES.ABOUT}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold text-[hsl(var(--foreground))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] border border-[hsl(var(--border))] hover:border-indigo-500/40 active:scale-95 transition-all shadow-sm group"
-                >
-                  <span>About the journey</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                </Link>
+                  {/* Creator Identity Meta */}
+                  <div className="min-w-0 flex-1 space-y-0.5">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs sm:text-sm md:text-base font-bold text-[hsl(var(--foreground))] truncate">
+                        {creatorName}
+                      </span>
+                      <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-mono font-semibold bg-indigo-500/12 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
+                        Builder
+                      </span>
+                    </div>
+                    <div className="text-[11px] sm:text-xs text-[hsl(var(--muted-foreground))] truncate">
+                      {creatorTitle}
+                    </div>
+                    {creator.location && (
+                      <div className="text-[10px] sm:text-[11px] text-[hsl(var(--subtle-foreground))] flex items-center gap-1">
+                        <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500/70" />
+                        <span>{creator.location}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Action Link: About the Journey */}
+                <div className="pt-2 sm:pt-2.5 border-t border-[hsl(var(--border))]/60 flex items-center justify-between">
+                  <Link
+                    href={ctaUrl}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-semibold text-[hsl(var(--foreground))] bg-[hsl(var(--surface-elevated))] hover:bg-[hsl(var(--surface))] border border-[hsl(var(--border))] hover:border-indigo-500/40 active:scale-95 transition-all shadow-xs group"
+                  >
+                    <span>{ctaLabel}</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-indigo-500 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+
+                  <span className="text-[10px] sm:text-[11px] font-mono text-[hsl(var(--subtle-foreground))]">
+                    Solo Studio
+                  </span>
+                </div>
               </div>
             </div>
 
             {/* Right Column: 6 Concise, Clean Principle Cards */}
-            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3.5">
               {PRINCIPLES.map((item) => {
                 const Icon = item.icon;
                 return (
                   <div
                     key={item.id}
-                    className={`group p-4 sm:p-5 rounded-xl border border-[hsl(var(--border))]/80 bg-[hsl(var(--card))]/70 dark:bg-[hsl(var(--card))]/50 hover:bg-[hsl(var(--surface-elevated))] ${item.borderColor} hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 flex flex-col justify-between shadow-sm`}
+                    className={`group p-3 sm:p-3.5 md:p-4 rounded-xl border border-[hsl(var(--border))]/80 bg-[hsl(var(--card))]/70 dark:bg-[hsl(var(--card))]/50 hover:bg-[hsl(var(--surface-elevated))] ${item.borderColor} hover:shadow-md transition-colors duration-200 flex flex-col justify-between shadow-xs`}
                   >
-                    <div className="space-y-2.5">
+                    <div className="space-y-1.5 sm:space-y-2.5">
                       <div className="flex items-center justify-between">
                         <div
-                          className={`w-8 h-8 rounded-lg flex items-center justify-center border ${item.iconBg} ${item.iconColor} group-hover:scale-105 transition-transform duration-200`}
+                          className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center border ${item.iconBg} ${item.iconColor} group-hover:scale-105 transition-transform duration-200`}
                         >
-                          <Icon className="w-4 h-4" />
+                          <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         </div>
                         <span className="font-mono text-[10px] text-[hsl(var(--muted-foreground))] font-semibold">
                           {item.num}
                         </span>
                       </div>
 
-                      <h3 className="text-sm font-bold text-[hsl(var(--foreground))] group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors">
+                      <h3 className="text-xs sm:text-sm md:text-base font-bold text-[hsl(var(--foreground))] group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors">
                         {item.title}
                       </h3>
 
-                      <p className="text-xs text-[hsl(var(--muted-foreground))] leading-relaxed">
+                      <p className="text-[11px] sm:text-xs text-[hsl(var(--muted-foreground))] leading-relaxed">
                         {item.tagline}
                       </p>
                     </div>

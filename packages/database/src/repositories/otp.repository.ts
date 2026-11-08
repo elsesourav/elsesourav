@@ -3,7 +3,12 @@ import { AppError } from '@elsesourav/types';
 import crypto from 'node:crypto';
 
 function hashOtp(otp: string, email: string): string {
-  const secret = process.env.OTP_SECRET || 'elsesourav-otp-security-salt-2026';
+  const secret = process.env.OTP_SECRET;
+  if (!secret) {
+    throw new Error(
+      '[ElseSourav Security] OTP_SECRET environment variable is not configured. Generate a 64-character random string and set it in your production environment.'
+    );
+  }
   return crypto.createHmac('sha256', secret).update(`${email.toLowerCase()}:${otp}`).digest('hex');
 }
 

@@ -54,6 +54,8 @@ export const SiteFooterLinkSchema = z.object({
   isActive: z.boolean().default(true),
 });
 
+export const EffectsLevelSchema = z.enum(['high', 'medium', 'low']);
+
 /**
  * Typed Zod schema for all known SiteSetting keys managed via Admin.
  *
@@ -69,10 +71,30 @@ export const SiteSettingsSchema = z.object({
   site_name: z.string().min(1).max(100).optional(),
   site_tagline: z.string().min(1).max(200).optional(),
   site_description: z.string().min(1).max(500).optional(),
-  site_logo_url: z.string().url().optional().or(z.literal('')),
+  site_logo_url: z.string().max(1000).optional().or(z.literal('')),
+  site_brand_logo_url: z.string().max(1000).optional().or(z.literal('')),
+  site_logo_pixels_json: z.string().optional().or(z.literal('')),
   site_og_image_url: z.string().url().optional().or(z.literal('')),
   site_keywords: z.string().max(400).optional().or(z.literal('')),
   site_status_badge: z.string().max(120).optional().or(z.literal('')),
+
+  // ── Visual Fidelity & Scroll Performance ──────────────────────────────────
+  /** Visual effects fidelity level: high (full blur/shadows), medium (subdued), low (performance-first/flat) */
+  effects_level: z.enum(['high', 'medium', 'low']).default('high').optional().or(z.literal('')),
+  /** Interactive cyber portrait neon lighting intensity: 0.0 to 1.0 (subdued to vibrant) */
+  portrait_light_intensity: z.string().max(10).optional().or(z.literal('')),
+  /** 1:1 Aspect ratio square portrait image URL for dark mode (Cloudinary or optimized local) */
+  portrait_image_dark_url: z.string().max(1000).optional().or(z.literal('')),
+  /** 1:1 Aspect ratio square portrait image URL for light mode (Cloudinary or optimized local) */
+  portrait_image_light_url: z.string().max(1000).optional().or(z.literal('')),
+  /** Interactive cyber portrait particle density multiplier: 0.5x, 1.0x, 1.5x, 2.0x, 3.0x */
+  portrait_particle_density: z.string().max(20).optional().or(z.literal('')),
+  /** Interactive cyber portrait particle size multiplier: 0.6x, 0.8x, 1.0x, 1.3x, 1.6x */
+  portrait_particle_size: z.string().max(20).optional().or(z.literal('')),
+  /** Interactive cyber portrait glow brightness multiplier: 0.5x, 1.0x, 1.5x, 2.0x, 3.0x */
+  portrait_glow_brightness: z.string().max(20).optional().or(z.literal('')),
+  /** Interactive cyber portrait intro flight movement speed multiplier: 0.5x, 0.75x, 1.0x, 1.5x, 2.0x */
+  portrait_flight_speed: z.string().max(20).optional().or(z.literal('')),
 
   // ── Footer Customization ───────────────────────────────────────────────────
   footer_text: z.string().max(500).optional().or(z.literal('')),
@@ -96,6 +118,13 @@ export const SiteSettingsSchema = z.object({
   homepage_blog_subtitle: z.string().max(300).optional().or(z.literal('')),
   closing_cta_title: z.string().max(150).optional().or(z.literal('')),
   closing_cta_subtitle: z.string().max(300).optional().or(z.literal('')),
+  homepage_atmosphere_density: z.string().max(20).optional().or(z.literal('')),
+  homepage_meteor_frequency: z.string().max(30).optional().or(z.literal('')),
+  homepage_stars_speed: z.string().max(20).optional().or(z.literal('')),
+  homepage_mobile_effects: z.string().max(30).optional().or(z.literal('')),
+  philosophy_badge: z.string().max(100).optional().or(z.literal('')),
+  philosophy_cta_label: z.string().max(100).optional().or(z.literal('')),
+  philosophy_cta_url: z.string().max(300).optional().or(z.literal('')),
 
   // ── Creator Identity & Profile ─────────────────────────────────────────────
   creator_name: z.string().min(1).max(100).optional(),
@@ -103,7 +132,12 @@ export const SiteSettingsSchema = z.object({
   creator_title: z.string().max(150).optional().or(z.literal('')),
   creator_role: z.string().max(150).optional().or(z.literal('')),
   creator_location: z.string().max(100).optional().or(z.literal('')),
-  creator_avatar_url: z.string().url().optional().or(z.literal('')),
+  creator_avatar_url: z
+    .string()
+    .url()
+    .or(z.string().regex(/^\/[a-zA-Z0-9_\-./]+$/))
+    .optional()
+    .or(z.literal('')),
   creator_positioning: z.string().max(500).optional().or(z.literal('')),
   creator_statement: z.string().max(500).optional().or(z.literal('')),
   creator_short_bio: z.string().max(400).optional().or(z.literal('')),
@@ -133,6 +167,12 @@ export const SiteSettingsSchema = z.object({
   // ── Media Library Asset Registry ──────────────────────────────────────────
   /** Direct uploads saved to Media Library */
   media_library_items_json: z.string().optional().or(z.literal('')),
+
+  // ── Legal & Compliance Content ────────────────────────────────────────────
+  /** Full Privacy Policy content in Markdown — rendered on /privacy */
+  legal_privacy_md: z.string().max(50000).optional().or(z.literal('')),
+  /** Full Terms of Service content in Markdown — rendered on /terms */
+  legal_terms_md: z.string().max(50000).optional().or(z.literal('')),
 });
 
 export type SiteSettingsInput = z.infer<typeof SiteSettingsSchema>;

@@ -89,7 +89,7 @@ The following content is dynamically editable via the administrative portal with
 
 The following architectural constants **must never** be stored in the database as CMS content:
 
-- ❌ **Internal Route Constants**: `ROUTES.HOME`, `ROUTES.APPS`, `ROUTES.BLOG` (Kept in `@elsesourav/config/routes.ts`).
+- ❌ **Internal Route Constants**: `ROUTES.HOME`, `ROUTES.APPS`, `ROUTES.UPDATES` (Kept in `@elsesourav/config/routes.ts`).
 - ❌ **Security Policies & RBAC Matrix**: Role definitions and layout guards (Kept in `@elsesourav/auth`).
 - ❌ **Prisma Schema & Migrations**: Relational definitions (Kept in `packages/database/prisma/schema.prisma`).
 - ❌ **Theme & Design Tokens**: HSL variables, duration timings, border radii (Kept in `@elsesourav/ui/src/styles/globals.css`).

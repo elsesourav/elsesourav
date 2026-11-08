@@ -101,7 +101,7 @@ export function NotificationItemCard({
 
   const cardContent = (
     <Card
-      className={`p-5 rounded-2xl border transition-all ${
+      className={`p-3 sm:p-3.5 md:p-4 rounded-2xl border transition-all ${
         !isRead
           ? 'border-primary/40 bg-primary/5 shadow-sm'
           : 'border-border bg-card text-card-foreground shadow-sm hover:border-primary/30'

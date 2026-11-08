@@ -26,9 +26,9 @@ const STATIC_PAGES: GlobalSearchResult[] = [
   },
   {
     type: 'page',
-    title: 'Notes',
-    description: 'Engineering field notes, technical writing, and ideas.',
-    url: '/notes',
+    title: 'Updates',
+    description: 'Engineering updates, technical writing, and release devlogs.',
+    url: '/updates',
   },
   {
     type: 'page',
@@ -42,6 +42,48 @@ const STATIC_PAGES: GlobalSearchResult[] = [
     title: 'Archive',
     description: 'Historical and archived projects.',
     url: '/archive',
+  },
+  {
+    type: 'page',
+    title: 'Profile',
+    description: 'View and edit your personal profile information.',
+    url: '/profile',
+  },
+  {
+    type: 'page',
+    title: 'Account Settings',
+    description: 'Manage username, email, display name, and preferences.',
+    url: '/settings?tab=profile',
+  },
+  {
+    type: 'page',
+    title: 'Security & Password',
+    description: 'Update password, credentials, and account security.',
+    url: '/settings?tab=account',
+  },
+  {
+    type: 'page',
+    title: 'Notifications',
+    description: 'Activity alerts, emails, and notification preferences.',
+    url: '/notifications',
+  },
+  {
+    type: 'page',
+    title: 'Library',
+    description: 'Saved apps, bookmarks, and starred items.',
+    url: '/library',
+  },
+  {
+    type: 'page',
+    title: 'Dashboard',
+    description: 'Personal overview, statistics, and quick actions.',
+    url: '/dashboard',
+  },
+  {
+    type: 'page',
+    title: 'Help & Support',
+    description: 'Submit support tickets and get assistance.',
+    url: '/support/tickets',
   },
 ];
 

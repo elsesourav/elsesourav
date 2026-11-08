@@ -300,7 +300,9 @@ export function Dropdown({
 
   const cell = reduced ? NONE : CELL;
   const isFullWidth = className.includes('w-full');
-  const displayLabel = selectedItem ? selectedItem.label : placeholder || label || 'Select an option';
+  const displayLabel = selectedItem
+    ? selectedItem.label
+    : placeholder || label || 'Select an option';
 
   return (
     <div
@@ -313,9 +315,7 @@ export function Dropdown({
         {...triggerProps}
         className={`flex h-10 min-h-[40px] select-none items-center justify-between gap-2 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--surface-subtle))] px-3.5 text-xs sm:text-sm font-medium text-[hsl(var(--foreground))] outline-none transition-all duration-150 disabled:cursor-not-allowed disabled:opacity-50 ${
           isFullWidth ? 'w-full' : ''
-        } ${
-          error ? 'border-rose-500 focus-visible:ring-rose-500' : ''
-        } ${
+        } ${error ? 'border-rose-500 focus-visible:ring-rose-500' : ''} ${
           open
             ? 'border-indigo-500/80 shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)] ring-2 ring-indigo-500/20'
             : 'hover:border-[hsl(var(--border-hover,var(--border)))] hover:bg-[hsl(var(--surface-elevated))]'

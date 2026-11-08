@@ -17,7 +17,6 @@ import {
   UserCheck,
 } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import * as React from 'react';
 import { adminDeleteUserAction, adminUpdateUserRoleAction } from '../actions/admin-users-actions';
 
@@ -32,7 +31,6 @@ interface AdminUserDetailViewProps {
 }
 
 export function AdminUserDetailView({ user: initialUser }: AdminUserDetailViewProps) {
-  const router = useRouter();
   const [user, setUser] = React.useState(initialUser);
   const [selectedRole, setSelectedRole] = React.useState<UserRole>(initialUser.role);
   const [isUpdatingRole, setIsUpdatingRole] = React.useState(false);

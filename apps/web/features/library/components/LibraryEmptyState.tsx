@@ -20,8 +20,11 @@ export function LibraryEmptyState() {
 
       <div className="pt-2">
         <Link href="/apps">
-          <Button className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs gap-1.5 shadow-lg shadow-indigo-600/20">
-            <Compass className="w-4 h-4" /> Explore Applications
+          <Button
+            leftIcon={<Compass className="w-4 h-4" />}
+            className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs shadow-lg shadow-indigo-600/20"
+          >
+            Explore Applications
           </Button>
         </Link>
       </div>

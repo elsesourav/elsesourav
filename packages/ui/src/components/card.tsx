@@ -16,7 +16,7 @@ export function Card({ className, variant = 'default', depth, ...props }: CardPr
     elevated: 'border-[hsl(var(--border-strong))] bg-[hsl(var(--surface-elevated))] shadow-xl',
     glass: 'border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-xl shadow-xl',
     interactive:
-      'border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:border-indigo-500/40 dark:hover:border-indigo-400/40 hover:bg-[hsl(var(--surface-elevated))] hover:shadow-xl hover:shadow-indigo-500/5 hover:-translate-y-1 transition-all duration-300 ease-out cursor-pointer active:scale-[0.99] active:translate-y-0',
+      'border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:border-indigo-500/40 dark:hover:border-indigo-400/40 hover:bg-[hsl(var(--surface-elevated))] hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-300 ease-out cursor-pointer',
   };
 
   const depths = {
@@ -30,7 +30,7 @@ export function Card({ className, variant = 'default', depth, ...props }: CardPr
   return (
     <div
       className={cn(
-        'rounded-2xl border p-6 text-[hsl(var(--foreground))]',
+        'rounded-2xl border p-3 sm:p-4 md:p-5 text-[hsl(var(--foreground))]',
         depth !== undefined ? depths[depth] : variants[variant],
         className
       )}

@@ -31,3 +31,5 @@ export * from './services/media.service';
 export * from './services/audit.service';
 export * from './services/site.service';
 export * from './services/search.service';
+export * from './repositories/feedback.repository';
+export * from './services/feedback.service';

@@ -30,7 +30,7 @@ export function HeroProjectVisual({ apps }: HeroProjectVisualProps) {
         {flagshipApp && (
           <Link
             href={`/apps/${flagshipApp.slug}`}
-            className="group block rounded-3xl border border-indigo-500/35 bg-[hsl(var(--card))] p-4 sm:p-5 backdrop-blur-xl shadow-2xl shadow-indigo-950/20 hover:border-indigo-400 dark:hover:border-indigo-400 hover:shadow-indigo-500/20 hover:-translate-y-1.5 active:scale-[0.99] active:translate-y-0 transition-all duration-300 ease-out relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+            className="group block rounded-3xl border border-indigo-500/35 bg-[hsl(var(--card))] p-3 sm:p-3.5 md:p-4 backdrop-blur-xl shadow-2xl shadow-indigo-950/20 hover:border-indigo-400 dark:hover:border-indigo-400 hover:shadow-indigo-500/20 transition-colors duration-200 ease-out relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
           >
             {/* Window Top Chrome Bar */}
             <div className="flex items-center justify-between text-xs pb-3 mb-3 border-b border-[hsl(var(--border-subtle))]">
@@ -59,7 +59,7 @@ export function HeroProjectVisual({ apps }: HeroProjectVisualProps) {
                   fill
                   priority
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover object-top group-hover:scale-[1.02] transition-transform duration-500 ease-out"
+                  className="object-cover object-top group-hover:scale-105 transition-transform duration-500 ease-out"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
               </div>
@@ -130,7 +130,7 @@ export function HeroProjectVisual({ apps }: HeroProjectVisualProps) {
             {secondaryApp && (
               <Link
                 href={`/apps/${secondaryApp.slug}`}
-                className="group p-3.5 sm:p-4 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] hover:border-cyan-500/40 hover:-translate-y-1 active:scale-[0.99] active:translate-y-0 transition-all duration-300 ease-out backdrop-blur-md flex flex-col justify-between space-y-2.5 shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
+                className="group p-2.5 sm:p-3 md:p-3.5 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] hover:border-cyan-500/40 transition-colors duration-200 backdrop-blur-md flex flex-col justify-between space-y-2 shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
               >
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 rounded-xl overflow-hidden bg-cyan-500/15 border border-cyan-500/30 shrink-0 flex items-center justify-center text-cyan-600 dark:text-cyan-400 group-hover:scale-105 transition-transform duration-200 shadow-sm">
@@ -171,7 +171,7 @@ export function HeroProjectVisual({ apps }: HeroProjectVisualProps) {
             {tertiaryApp && (
               <Link
                 href={`/apps/${tertiaryApp.slug}`}
-                className="group p-3.5 sm:p-4 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] hover:border-purple-500/40 hover:-translate-y-1 active:scale-[0.99] active:translate-y-0 transition-all duration-300 ease-out backdrop-blur-md flex flex-col justify-between space-y-2.5 shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
+                className="group p-2.5 sm:p-3 md:p-3.5 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] hover:border-purple-500/40 transition-colors duration-200 backdrop-blur-md flex flex-col justify-between space-y-2 shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
               >
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 rounded-xl overflow-hidden bg-purple-500/15 border border-purple-500/30 shrink-0 flex items-center justify-center text-purple-600 dark:text-purple-400 group-hover:scale-105 transition-transform duration-200 shadow-sm">

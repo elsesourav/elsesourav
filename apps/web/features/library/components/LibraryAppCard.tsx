@@ -41,7 +41,7 @@ export function LibraryAppCard({ item, onRemove }: LibraryAppCardProps) {
   });
 
   return (
-    <Card className="border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/70 hover:border-zinc-700/80 p-5 rounded-2xl transition-all flex flex-col justify-between h-full backdrop-blur-sm group">
+    <Card className="border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/70 hover:border-zinc-700/80 p-3 sm:p-3.5 md:p-4 rounded-2xl transition-colors flex flex-col justify-between h-full backdrop-blur-sm group">
       <div className="space-y-3">
         {/* Top Icon & Info */}
         <div className="flex items-start gap-3.5">

@@ -38,6 +38,7 @@ import {
   Plus,
   RefreshCw,
   Save,
+  Scale,
   Send,
   Share2,
   Sparkles,
@@ -47,6 +48,10 @@ import {
 } from 'lucide-react';
 import * as React from 'react';
 import { updateSiteSettingsAction } from '../actions/admin-settings-actions';
+import { LegalSettingsTab } from './LegalSettingsTab';
+import { HomepageAtmosphereSettingsSection } from './HomepageAtmosphereSettingsSection';
+import { AboutPortraitParticleSettingsSection } from './AboutPortraitParticleSettingsSection';
+import { PhilosophySettingsSection } from './PhilosophySettingsSection';
 
 export interface AdminSettingsFormProps {
   initialSettings: Record<string, string>;
@@ -100,7 +105,15 @@ const CONTACT_TYPE_DROPDOWN_ITEMS = CONTACT_TYPE_OPTIONS.map((o) => ({
 }));
 
 type SettingsTab =
-  'identity' | 'footer' | 'homepage' | 'profile' | 'creator_narrative' | 'links' | 'contact';
+  | 'identity'
+  | 'appearance'
+  | 'footer'
+  | 'homepage'
+  | 'profile'
+  | 'creator_narrative'
+  | 'links'
+  | 'contact'
+  | 'legal';
 
 export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
   const [activeTab, setActiveTab] = React.useState<SettingsTab>('identity');
@@ -472,6 +485,19 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
         >
           <Mail className="w-3.5 h-3.5 text-indigo-400" />
           <span>Contact ({contacts.length})</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('legal')}
+          className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors ${
+            activeTab === 'legal'
+              ? 'bg-zinc-800 text-white border border-zinc-700'
+              : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60'
+          }`}
+        >
+          <Scale className="w-3.5 h-3.5 text-indigo-400" />
+          <span>Legal Pages</span>
         </button>
       </div>
 
@@ -902,6 +928,14 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
               ))}
             </div>
           </div>
+
+          <AboutPortraitParticleSettingsSection
+            particleDensity={settings['portrait_particle_density'] || '1.0x'}
+            particleSize={settings['portrait_particle_size'] || '1.0x'}
+            glowBrightness={settings['portrait_glow_brightness'] || '1.0x'}
+            flightSpeed={settings['portrait_flight_speed'] || '1.0x'}
+            onChange={handleChange}
+          />
         </Card>
       )}
 
@@ -980,12 +1014,7 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
             />
           </div>
 
-          <FloatingLabelInput
-            label="Creator Statement ('How I Build' Headline)"
-            value={settings['creator_statement'] || ''}
-            onChange={(val) => handleChange('creator_statement', val)}
-            placeholder="I care about software that is understandable, useful, fast, and considerate."
-          />
+          <PhilosophySettingsSection settings={settings} onChange={handleChange} />
 
           <div className="pt-3 border-t border-zinc-800 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FloatingLabelInput
@@ -1002,6 +1031,14 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
               placeholder="Every application, utility, and field note is built independently with a focus on craft, performance, and usability."
             />
           </div>
+
+          <HomepageAtmosphereSettingsSection
+            atmosphereDensity={settings['homepage_atmosphere_density'] || '1.0'}
+            meteorFrequency={settings['homepage_meteor_frequency'] || 'standard'}
+            starsSpeed={settings['homepage_stars_speed'] || '1.0'}
+            mobileEffects={settings['homepage_mobile_effects'] || 'standard'}
+            onChange={handleChange}
+          />
         </Card>
       )}
 
@@ -1404,6 +1441,20 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
             )}
           </div>
         </Card>
+      )}
+
+      {/* Tab 8: Legal Pages — Privacy & Terms */}
+      {activeTab === 'legal' && (
+        <LegalSettingsTab
+          privacyMd={settings['legal_privacy_md'] || ''}
+          termsMd={settings['legal_terms_md'] || ''}
+          onPrivacyChange={(val) =>
+            setSettings((prev) => ({ ...prev, legal_privacy_md: val }))
+          }
+          onTermsChange={(val) =>
+            setSettings((prev) => ({ ...prev, legal_terms_md: val }))
+          }
+        />
       )}
     </div>
   );

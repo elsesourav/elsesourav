@@ -11,10 +11,14 @@ export function createAuthServerClient(
   supabaseUrl?: string,
   supabaseAnonKey?: string
 ): SupabaseClient {
-  const url =
-    supabaseUrl || process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
-  const key =
-    supabaseAnonKey || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key';
+  const url = supabaseUrl || process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = supabaseAnonKey || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!url || !key) {
+    throw new Error(
+      '[ElseSourav Auth] Missing Supabase configuration. Ensure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are set in your environment.'
+    );
+  }
 
   return createServerClient(url, key, {
     cookies: {

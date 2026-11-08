@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { flushSync } from 'react-dom';
 import { Sun, Moon, Monitor, Check } from 'lucide-react';
 import { useTheme, type Theme } from './ThemeProvider';
 
@@ -62,7 +63,7 @@ export function ThemePopup() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && open) {
         requestClose(() => {
-          triggerRef.current?.focus();
+          triggerRef.current?.focus({ preventScroll: true });
         });
       }
     };
@@ -76,13 +77,37 @@ export function ThemePopup() {
   // Current display icon
   const CurrentIcon = resolvedTheme === 'dark' ? Moon : Sun;
 
+  const handleSelectTheme = (value: Theme, e?: React.MouseEvent) => {
+    // Exact center coordinates of the theme trigger icon button in the header
+    const rect = triggerRef.current?.getBoundingClientRect();
+    const origin = rect
+      ? {
+          clientX: Math.round(rect.left + rect.width / 2),
+          clientY: Math.round(rect.top + rect.height / 2),
+        }
+      : e && typeof e.clientX === 'number' && e.clientX > 0
+        ? {
+            clientX: Math.round(e.clientX),
+            clientY: Math.round(e.clientY),
+          }
+        : undefined;
+
+    // Immediately unmount popup synchronously from the DOM before taking the view transition snapshot
+    flushSync(() => {
+      setOpen(false);
+      setIsClosing(false);
+    });
+
+    setTheme(value, origin);
+  };
+
   return (
     <div className="relative shrink-0" ref={menuRef}>
       <button
         ref={triggerRef}
         type="button"
         onClick={handleToggle}
-        className="shrink-0 flex items-center justify-center w-10 h-10 rounded-xl text-[hsl(var(--foreground))]/75 hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--surface-subtle))]/60 active:scale-95 transition-all duration-150 ease-smooth focus:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))] min-h-[40px] min-w-[40px] cursor-pointer"
+        className="shrink-0 flex items-center justify-center w-9 h-9 min-h-[36px] min-w-[36px] rounded-xl border border-black/10 dark:border-white/10 bg-black/[0.04] dark:bg-white/[0.06] backdrop-blur-[6px] hover:bg-black/[0.07] dark:hover:bg-white/[0.1] hover:border-black/20 dark:hover:border-white/20 text-[hsl(var(--foreground))]/80 hover:text-[hsl(var(--foreground))] active:scale-95 transition-all duration-150 ease-smooth focus:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))] cursor-pointer shadow-2xs"
         aria-label="Change theme"
         aria-expanded={open}
         aria-haspopup="menu"
@@ -94,12 +119,12 @@ export function ThemePopup() {
         <div
           role="menu"
           aria-label="Appearance"
-          className={`absolute right-0 mt-2 w-44 rounded-2xl bg-[hsl(var(--surface-elevated))] border border-[hsl(var(--border))] shadow-2xl p-1.5 z-50 text-xs backdrop-blur-xl ${
+          className={`absolute right-0 mt-2 w-52 rounded-2xl bg-[hsl(var(--surface-elevated))] border border-[hsl(var(--border))] shadow-2xl p-1.5 z-50 text-xs backdrop-blur-xl ${
             isClosing ? 'animate-popup-out' : 'animate-popup-in'
           }`}
         >
           <div className="px-3 py-1.5 text-[11px] font-semibold text-[hsl(var(--muted-foreground))] uppercase tracking-wider">
-            Appearance
+            Theme
           </div>
 
           {THEME_OPTIONS.map((option) => {
@@ -111,12 +136,7 @@ export function ThemePopup() {
                 key={option.value}
                 role="menuitem"
                 type="button"
-                onClick={() => {
-                  setTheme(option.value);
-                  requestClose(() => {
-                    triggerRef.current?.focus();
-                  });
-                }}
+                onClick={(e) => handleSelectTheme(option.value, e)}
                 className={`w-full flex items-center justify-between gap-2 px-3 py-2 rounded-xl transition-colors text-left font-medium select-none focus:outline-none focus-visible:bg-[hsl(var(--accent))] ${
                   isSelected
                     ? 'text-[hsl(var(--primary))] bg-[hsl(var(--accent))]'

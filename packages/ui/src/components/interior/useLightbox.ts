@@ -70,7 +70,14 @@ export type UseLightboxOptions = {
 export function useLightbox<
   Frame extends HTMLElement = HTMLDivElement,
   Content extends HTMLElement = HTMLImageElement,
->({ maxScale = 4, steps = 8, disabled = false, onDismiss, onPrev, onNext }: UseLightboxOptions = {}) {
+>({
+  maxScale = 4,
+  steps = 8,
+  disabled = false,
+  onDismiss,
+  onPrev,
+  onNext,
+}: UseLightboxOptions = {}) {
   const cells = Math.max(1, Math.round(steps));
   const top = Math.max(1.1, maxScale);
 

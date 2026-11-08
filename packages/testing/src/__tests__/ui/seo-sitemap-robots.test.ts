@@ -130,7 +130,7 @@ describe('SEO, Sitemap, and Discoverability Boundary Verification', () => {
     expect(disallowList).toContain('/notifications');
     expect(disallowList).toContain('/api/');
     expect(disallowList).not.toContain('/apps');
-    expect(disallowList).not.toContain('/notes');
+    expect(disallowList).not.toContain('/updates');
     expect(disallowList).not.toContain('/help');
   });
 });

@@ -89,7 +89,7 @@ export default async function SupportPage() {
         {/* Support Ticket Submission Card */}
         <div className="max-w-2xl mx-auto w-full">
           {isAuthenticated ? (
-            <Card className="p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-border bg-card text-card-foreground shadow-sm space-y-6">
+            <Card className="p-3.5 sm:p-4.5 md:p-5 rounded-2xl sm:rounded-3xl border border-border bg-card text-card-foreground shadow-sm space-y-6">
               <div className="space-y-1 pb-4 border-b border-border">
                 <h2 className="text-lg font-bold text-foreground">Create Support Ticket</h2>
                 <p className="text-xs text-muted-foreground">
@@ -101,7 +101,7 @@ export default async function SupportPage() {
               <CreateTicketForm />
             </Card>
           ) : (
-            <Card className="p-8 text-center rounded-2xl sm:rounded-3xl border border-border bg-card text-card-foreground shadow-sm space-y-6">
+            <Card className="p-4 sm:p-5 md:p-6 text-center rounded-2xl sm:rounded-3xl border border-border bg-card text-card-foreground shadow-sm space-y-6">
               <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto text-primary shadow-sm">
                 <Lock className="w-7 h-7" />
               </div>
@@ -116,18 +116,20 @@ export default async function SupportPage() {
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
                 <Link href="/login?next=/support" className="w-full sm:w-auto">
-                  <Button className="w-full sm:w-auto text-xs font-semibold px-5 py-2.5 rounded-xl gap-2 shadow-sm cursor-pointer">
-                    <span>Sign In to Continue</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                  <Button
+                    rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
+                    className="w-full sm:w-auto text-xs font-semibold px-5 py-2.5 rounded-xl shadow-sm"
+                  >
+                    Sign In to Continue
                   </Button>
                 </Link>
                 <Link href="/help" className="w-full sm:w-auto">
                   <Button
                     variant="outline"
-                    className="w-full sm:w-auto border-border hover:bg-accent text-foreground text-xs gap-2 rounded-xl cursor-pointer"
+                    leftIcon={<LifeBuoy className="w-3.5 h-3.5 text-primary" />}
+                    className="w-full sm:w-auto border-border hover:bg-accent text-foreground text-xs rounded-xl"
                   >
-                    <LifeBuoy className="w-3.5 h-3.5 text-primary" />
-                    <span>Browse Help Center</span>
+                    Browse Help Center
                   </Button>
                 </Link>
               </div>
@@ -136,7 +138,7 @@ export default async function SupportPage() {
         </div>
 
         {/* Knowledge Base Help-First Callout */}
-        <Card className="p-6 rounded-2xl border border-border bg-card text-card-foreground shadow-sm max-w-2xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <Card className="p-3 sm:p-3.5 md:p-4 rounded-2xl border border-border bg-card text-card-foreground shadow-sm max-w-2xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
             <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
               <LifeBuoy className="w-5 h-5" />

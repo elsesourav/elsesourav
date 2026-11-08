@@ -63,11 +63,13 @@ export function useHideOnScroll<T extends HTMLElement = HTMLDivElement>({
     const isWindowScroll = useWindow || !el || el.scrollHeight <= el.clientHeight;
     const target: EventTarget = isWindowScroll ? window : el;
 
-    const readY = () => (isWindowScroll ? Math.max(0, window.scrollY) : (el ? el.scrollTop : 0));
+    const readY = () => (isWindowScroll ? Math.max(0, window.scrollY) : el ? el.scrollTop : 0);
     const readMax = () =>
       isWindowScroll
         ? Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
-        : (el ? el.scrollHeight - el.clientHeight : 0);
+        : el
+          ? el.scrollHeight - el.clientHeight
+          : 0;
 
     const evaluate = () => {
       frame.current = 0;
@@ -161,7 +163,14 @@ export function useHideOnScroll<T extends HTMLElement = HTMLDivElement>({
 }
 
 export type HideOnScrollHeaderProps = {
-  children: React.ReactNode | ((props: { isVisible: boolean; isScrolled: boolean; hidden: boolean; atTop: boolean }) => React.ReactNode);
+  children:
+    | React.ReactNode
+    | ((props: {
+        isVisible: boolean;
+        isScrolled: boolean;
+        hidden: boolean;
+        atTop: boolean;
+      }) => React.ReactNode);
   className?: string;
   hideAfter?: number;
   revealAfter?: number;
@@ -211,7 +220,9 @@ export function HideOnScrollHeader({
       transition={slide}
       className={`sticky top-0 z-50 w-full ${className}`}
     >
-      {typeof children === 'function' ? children({ isVisible, isScrolled, hidden, atTop }) : children}
+      {typeof children === 'function'
+        ? children({ isVisible, isScrolled, hidden, atTop })
+        : children}
     </motion.header>
   );
 }

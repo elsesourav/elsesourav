@@ -29,13 +29,16 @@ export async function updateSiteSettingsAction(settings: Record<string, string>)
       }
     }
 
+    revalidatePath('/', 'layout');
     revalidatePath('/admin/settings');
     revalidatePath('/admin');
     revalidatePath('/');
     revalidatePath('/about');
     revalidatePath('/apps');
-    revalidatePath('/blog');
+    revalidatePath('/updates');
     revalidatePath('/help');
+    revalidatePath('/privacy');
+    revalidatePath('/terms');
 
     return { success: true };
   } catch (error) {

@@ -13,9 +13,11 @@ import type {
   AppPlatform,
   AppActionType,
   AppStatus,
+  AppOrientation,
 } from '@elsesourav/types';
 
-export type PrismaAppWithRelations = PrismaApp & {
+export type PrismaAppWithRelations = Omit<PrismaApp, 'requiresAuth'> & {
+  requiresAuth?: boolean | null;
   category?: Category | null;
   tags?: { tag: Tag }[];
   links?: PrismaAppLink[];
@@ -24,7 +26,31 @@ export type PrismaAppWithRelations = PrismaApp & {
   documentationMd?: string | null;
 };
 
+/**
+ * Curated preview screenshots for flagship applications to enhance visual media showcase.
+ */
+const CURATED_APP_SCREENSHOTS: Record<string, string[]> = {
+  'debayan-ganguly-portfolio': [
+    'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&q=80',
+    'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&q=80',
+    'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80',
+  ],
+  'breakout-ball': [
+    'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&q=80',
+    'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1200&q=80',
+  ],
+  spectralens: [
+    'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=1200&q=80',
+    'https://images.unsplash.com/photo-1542744094-3a31f272c490?w=1200&q=80',
+  ],
+};
+
 export function mapPrismaAppToDomain(prismaApp: PrismaAppWithRelations): DomainApp {
+  const screenshots =
+    (prismaApp as unknown as { screenshots?: string[] }).screenshots?.length
+      ? (prismaApp as unknown as { screenshots?: string[] }).screenshots!
+      : CURATED_APP_SCREENSHOTS[prismaApp.slug] ?? [];
+
   return {
     id: prismaApp.id,
     slug: prismaApp.slug,
@@ -33,7 +59,8 @@ export function mapPrismaAppToDomain(prismaApp: PrismaAppWithRelations): DomainA
     description: prismaApp.description,
     iconUrl: prismaApp.iconUrl,
     featuredImageUrl: prismaApp.featuredImageUrl ?? undefined,
-    screenshots: [],
+    featuredImageMobileUrl: prismaApp.featuredImageMobileUrl ?? undefined,
+    screenshots,
     demoUrl: prismaApp.demoUrl ?? undefined,
     videoUrl: prismaApp.videoUrl ?? undefined,
     primaryCategory: prismaApp.category?.name || 'General',
@@ -67,6 +94,10 @@ export function mapPrismaAppToDomain(prismaApp: PrismaAppWithRelations): DomainA
     status: prismaApp.status.toLowerCase() as AppStatus,
     isFeatured: prismaApp.isFeatured,
     isPinned: prismaApp.isPinned,
+    requiresAuth: (prismaApp as unknown as { requiresAuth?: boolean }).requiresAuth ?? false,
+    orientation:
+      ((prismaApp as unknown as { orientation?: string }).orientation as AppOrientation) ||
+      'landscape',
     sortOrder: prismaApp.sortOrder,
     currentVersion: prismaApp.currentVersion ?? '1.0.0',
     seoTitle: prismaApp.seoTitle ?? undefined,
@@ -78,6 +109,10 @@ export function mapPrismaAppToDomain(prismaApp: PrismaAppWithRelations): DomainA
       ratingAverage: prismaApp.stats?.ratingAverage,
       ratingCount: prismaApp.stats?.ratingCount,
     },
+    bundleSize: (prismaApp as unknown as { bundleSize?: string }).bundleSize ?? undefined,
+    primaryLanguage:
+      (prismaApp as unknown as { primaryLanguage?: string }).primaryLanguage ?? undefined,
+    languages: (prismaApp as unknown as { languages?: string[] }).languages ?? undefined,
     publishedAt: prismaApp.publishedAt ? prismaApp.publishedAt.getTime() : undefined,
     createdAt: prismaApp.createdAt.getTime(),
     updatedAt: prismaApp.updatedAt.getTime(),
@@ -93,6 +128,7 @@ export function mapPrismaAppToListItem(prismaApp: PrismaAppWithRelations): AppLi
     shortDescription: prismaApp.shortDescription,
     iconUrl: prismaApp.iconUrl,
     featuredImageUrl: prismaApp.featuredImageUrl ?? undefined,
+    featuredImageMobileUrl: prismaApp.featuredImageMobileUrl ?? undefined,
     primaryCategory: prismaApp.category?.name || 'General',
     categorySlug: prismaApp.category?.slug || 'general',
     platforms: (prismaApp.links?.map((l) => l.platform as AppPlatform) || [
@@ -100,6 +136,10 @@ export function mapPrismaAppToListItem(prismaApp: PrismaAppWithRelations): AppLi
     ]) as readonly AppPlatform[],
     isFeatured: prismaApp.isFeatured,
     isPinned: prismaApp.isPinned,
+    requiresAuth: (prismaApp as unknown as { requiresAuth?: boolean }).requiresAuth ?? false,
+    orientation:
+      ((prismaApp as unknown as { orientation?: string }).orientation as AppOrientation) ||
+      undefined,
     currentVersion: prismaApp.currentVersion ?? undefined,
     sortOrder: prismaApp.sortOrder,
     publishedAt: prismaApp.publishedAt ? prismaApp.publishedAt.getTime() : undefined,
@@ -118,6 +158,7 @@ export function mapPrismaAppToPublicDetail(prismaApp: PrismaAppWithRelations): P
     description: domain.description,
     iconUrl: domain.iconUrl,
     featuredImageUrl: domain.featuredImageUrl,
+    featuredImageMobileUrl: domain.featuredImageMobileUrl,
     screenshots: domain.screenshots,
     demoUrl: domain.demoUrl,
     videoUrl: domain.videoUrl,
@@ -132,11 +173,17 @@ export function mapPrismaAppToPublicDetail(prismaApp: PrismaAppWithRelations): P
     documentationMd: domain.documentationMd,
     isFeatured: domain.isFeatured,
     isPinned: domain.isPinned,
+    requiresAuth: domain.requiresAuth,
+    orientation: domain.orientation,
     seoTitle: domain.seoTitle,
     seoDescription: domain.seoDescription,
     socialImageUrl: domain.socialImageUrl,
     stats: domain.stats,
+    bundleSize: domain.bundleSize,
+    primaryLanguage: domain.primaryLanguage,
+    languages: domain.languages,
     publishedAt: domain.publishedAt,
+    createdAt: domain.createdAt,
     updatedAt: domain.updatedAt,
   };
 }

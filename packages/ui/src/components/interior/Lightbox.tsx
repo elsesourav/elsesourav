@@ -3,15 +3,7 @@
 import React, { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion } from 'motion/react';
-import {
-  useLightbox,
-  HOME,
-  VEIL,
-  EASE,
-  EXIT,
-  GLYPH,
-  TOGGLE,
-} from './useLightbox';
+import { useLightbox, HOME, VEIL, EASE, EXIT, GLYPH, TOGGLE } from './useLightbox';
 
 export { useLightbox };
 export type { UseLightboxOptions } from './useLightbox';
@@ -353,7 +345,13 @@ function Stage({
             aria-label="Previous image (Left Arrow)"
             className={`${NAV_BUTTON} pointer-events-auto`}
           >
-            <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth={2.5}>
+            <svg
+              viewBox="0 0 24 24"
+              className="size-5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2.5}
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
           </button>
@@ -374,7 +372,13 @@ function Stage({
             aria-label="Next image (Right Arrow)"
             className={`${NAV_BUTTON} pointer-events-auto`}
           >
-            <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth={2.5}>
+            <svg
+              viewBox="0 0 24 24"
+              className="size-5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2.5}
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
           </button>

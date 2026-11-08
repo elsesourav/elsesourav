@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { createAuthBrowserClient } from '@elsesourav/auth';
-import { Button } from '@elsesourav/ui';
+import { Button, IconButton } from '@elsesourav/ui';
 import { FloatingLabelInput } from '@elsesourav/ui/interior';
 import {
   Lock,
@@ -103,16 +103,21 @@ export function AccountPasswordCard({ email, onEmailVerified }: AccountPasswordC
   };
 
   return (
-    <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-muted/20 border border-border/80 space-y-3 transition-colors">
+    <div
+      data-section="security-password"
+      className="p-2.5 sm:p-3.5 md:p-4 rounded-lg sm:rounded-xl md:rounded-2xl bg-muted/15 border border-border/50 sm:border-border/80 space-y-1.5 sm:space-y-2.5 md:space-y-3 transition-colors"
+    >
       <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <Lock className="w-4 h-4 text-primary" />
-          <span className="text-xs font-semibold text-foreground">Password</span>
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
+          <span className="text-[11px] sm:text-xs md:text-sm font-semibold text-foreground">
+            Password
+          </span>
         </div>
 
         {pwStep === 'idle' && pwSuccess && (
-          <span className="text-[11px] text-emerald-500 flex items-center gap-1 font-medium">
-            <Check className="w-3 h-3" /> Updated
+          <span className="text-[10px] sm:text-[11px] text-emerald-500 flex items-center gap-1 font-medium">
+            <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> Updated
           </span>
         )}
 
@@ -121,16 +126,20 @@ export function AccountPasswordCard({ email, onEmailVerified }: AccountPasswordC
             type="button"
             variant="outline"
             size="sm"
+            ripple
             onClick={handleSendPwOtp}
-            className="text-xs border-border hover:bg-accent gap-1.5 h-7 px-3 rounded-lg cursor-pointer"
+            leftIcon={<KeyRound className="w-2.5 h-2.5 sm:w-3 sm:h-3" />}
+            className="text-[10px] sm:text-xs h-6 sm:h-7 px-2 sm:px-3 rounded-md sm:rounded-lg whitespace-nowrap cursor-pointer"
           >
-            <KeyRound className="w-3 h-3" />
-            <span>Change Password</span>
+            <span className="hidden sm:inline">Change Password</span>
+            <span className="sm:hidden">Change</span>
           </Button>
         ) : (
           pwStep !== 'done' && (
-            <button
+            <IconButton
               type="button"
+              variant="ghost"
+              size="icon-xs"
               onClick={() => {
                 setPwStep('idle');
                 setPwOtp('');
@@ -139,26 +148,26 @@ export function AccountPasswordCard({ email, onEmailVerified }: AccountPasswordC
                 setNewPassword('');
                 setConfirmPassword('');
               }}
-              className="p-1 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
               aria-label="Cancel"
-            >
-              <X className="w-3.5 h-3.5" />
-            </button>
+              icon={<X className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
+            />
           )
         )}
       </div>
 
       {pwStep === 'idle' && (
-        <div className="flex items-center justify-between text-xs text-muted-foreground p-2.5 rounded-xl bg-background/80 border border-border/70 font-mono">
+        <div className="flex items-center justify-between text-[11px] sm:text-xs text-muted-foreground p-2 sm:p-2.5 rounded-md sm:rounded-xl bg-background/60 border border-border/50 font-mono">
           <span>••••••••••••••••</span>
-          <span className="text-[11px] text-muted-foreground font-sans">Protected by OTP</span>
+          <span className="text-[10px] sm:text-[11px] text-muted-foreground font-sans">
+            Protected by OTP
+          </span>
         </div>
       )}
 
       {pwStep !== 'idle' && (
-        <div className="p-3.5 rounded-xl bg-background border border-primary/25 space-y-3 animate-in fade-in duration-150">
+        <div className="p-2.5 sm:p-3.5 rounded-lg sm:rounded-xl bg-background border border-primary/25 space-y-2.5 sm:space-y-3 animate-in fade-in duration-150">
           {pwStep !== 'done' && (
-            <div className="flex items-center justify-between text-[11px] text-muted-foreground pb-1 border-b border-border/60">
+            <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-muted-foreground pb-1 border-b border-border/60">
               {['Send OTP', 'Verify Code', 'New Password'].map((label, i) => {
                 const stepIdx =
                   pwStep === 'sending' || pwStep === 'otp' ? 0 : pwStep === 'verifying' ? 1 : 2;
@@ -207,13 +216,15 @@ export function AccountPasswordCard({ email, onEmailVerified }: AccountPasswordC
                 />
               </div>
               <div className="flex items-center justify-between pt-1">
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="xs"
                   onClick={handleSendPwOtp}
-                  className="text-xs text-muted-foreground hover:text-foreground underline cursor-pointer"
+                  className="underline text-muted-foreground hover:text-foreground h-auto p-0"
                 >
                   Resend Code
-                </button>
+                </Button>
                 <LoadingButton
                   onAction={handleVerifyPwOtp}
                   disabled={pwOtp.length !== 6 || pwStep === 'verifying'}
@@ -256,17 +267,19 @@ export function AccountPasswordCard({ email, onEmailVerified }: AccountPasswordC
               )}
 
               <div className="flex items-center justify-between pt-1 border-t border-border/60">
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="xs"
                   onClick={() => {
                     setPwStep('otp');
                     setPwOtp('');
                   }}
-                  className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1 cursor-pointer"
+                  leftIcon={<ChevronLeft className="w-3.5 h-3.5" />}
+                  className="text-muted-foreground hover:text-foreground"
                 >
-                  <ChevronLeft className="w-3.5 h-3.5" />
-                  <span>Back</span>
-                </button>
+                  Back
+                </Button>
 
                 <LoadingButton
                   onAction={handleSetPassword}
@@ -288,16 +301,17 @@ export function AccountPasswordCard({ email, onEmailVerified }: AccountPasswordC
                 <CheckCircle2 className="w-4 h-4" />
                 Password updated successfully!
               </span>
-              <button
+              <Button
                 type="button"
+                variant="outline"
+                size="xs"
                 onClick={() => {
                   setPwStep('idle');
                   setPwSuccess(null);
                 }}
-                className="text-muted-foreground hover:text-foreground text-xs underline cursor-pointer"
               >
                 Done
-              </button>
+              </Button>
             </div>
           )}
         </div>

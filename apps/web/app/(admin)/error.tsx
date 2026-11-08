@@ -28,8 +28,13 @@ export default function AdminError({
           </CardDescription>
         </CardHeader>
         <div className="p-6 pt-0 flex justify-center">
-          <Button onClick={() => reset()} variant="danger" size="sm" className="gap-2">
-            <RefreshCw className="w-3.5 h-3.5" /> Re-authenticate & Retry
+          <Button
+            onClick={() => reset()}
+            variant="danger"
+            size="sm"
+            leftIcon={<RefreshCw className="w-3.5 h-3.5" />}
+          >
+            Re-authenticate & Retry
           </Button>
         </div>
       </Card>

@@ -91,7 +91,8 @@ export function AmbientBackground({
           1. Base Atmosphere Gradient Mesh (Continuous full-page multi-radial shading)
           ========================================================================= */}
       <div
-        className="absolute inset-0 opacity-60 dark:opacity-50 pointer-events-none"
+        data-ambient-mesh="true"
+        className="ambient-base-gradient absolute inset-0 opacity-60 dark:opacity-50 pointer-events-none transition-opacity duration-300"
         style={{
           background:
             'radial-gradient(110% 70% at 50% 0%, var(--ambient-glow-1) 0%, transparent 60%), radial-gradient(60% 45% at 80% 20%, var(--ambient-glow-3) 0%, transparent 55%), radial-gradient(50% 35% at 15% 55%, var(--ambient-glow-2) 0%, transparent 50%)',
@@ -107,8 +108,9 @@ export function AmbientBackground({
         <>
           {/* Upper-right soft cosmic aura directly behind the orb */}
           <div
+            data-ambient-orb="true"
             className={cn(
-              'absolute top-[6%] right-[6%] sm:right-[10%] w-[380px] sm:w-[580px] lg:w-[720px] h-[380px] sm:h-[580px] lg:h-[720px] rounded-full blur-[100px] sm:blur-[140px] opacity-75 dark:opacity-65',
+              'ambient-glow-orb absolute top-[6%] right-[6%] sm:right-[10%] w-[380px] sm:w-[580px] lg:w-[720px] h-[380px] sm:h-[580px] lg:h-[720px] rounded-full blur-[100px] sm:blur-[140px] opacity-75 dark:opacity-65',
               enableMotion && 'animate-ambient-drift-2'
             )}
             style={{
@@ -119,7 +121,8 @@ export function AmbientBackground({
 
           {/* Gentle top-left headline ambient wash */}
           <div
-            className="absolute -top-24 left-[10%] w-[320px] sm:w-[500px] h-[260px] sm:h-[400px] rounded-full blur-[90px] sm:blur-[130px] opacity-50 dark:opacity-40"
+            data-ambient-orb="true"
+            className="ambient-glow-orb absolute -top-24 left-[10%] w-[320px] sm:w-[500px] h-[260px] sm:h-[400px] rounded-full blur-[90px] sm:blur-[130px] opacity-50 dark:opacity-40"
             style={{
               background:
                 'radial-gradient(ellipse at center, var(--ambient-glow-2) 0%, transparent 65%)',
@@ -128,7 +131,8 @@ export function AmbientBackground({
 
           {/* Subtle mid-page left-side accent for featured apps */}
           <div
-            className="absolute top-[48%] -left-20 w-[300px] sm:w-[480px] h-[300px] sm:h-[480px] rounded-full blur-[100px] sm:blur-[140px] opacity-40 dark:opacity-35"
+            data-ambient-orb="true"
+            className="ambient-glow-orb absolute top-[48%] -left-20 w-[300px] sm:w-[480px] h-[300px] sm:h-[480px] rounded-full blur-[100px] sm:blur-[140px] opacity-40 dark:opacity-35"
             style={{
               background:
                 'radial-gradient(circle at center, var(--ambient-glow-2) 0%, transparent 65%)',
@@ -137,7 +141,8 @@ export function AmbientBackground({
 
           {/* Subtle lower-page right-side accent for updates */}
           <div
-            className="absolute top-[72%] -right-20 w-[320px] sm:w-[500px] h-[320px] sm:h-[500px] rounded-full blur-[110px] sm:blur-[150px] opacity-40 dark:opacity-35"
+            data-ambient-orb="true"
+            className="ambient-glow-orb absolute top-[72%] -right-20 w-[320px] sm:w-[500px] h-[320px] sm:h-[500px] rounded-full blur-[110px] sm:blur-[150px] opacity-40 dark:opacity-35"
             style={{
               background:
                 'radial-gradient(circle at center, var(--ambient-glow-3) 0%, transparent 65%)',
@@ -151,8 +156,9 @@ export function AmbientBackground({
         <>
           {/* Technical upper ambient horizon */}
           <div
+            data-ambient-orb="true"
             className={cn(
-              'absolute -top-24 sm:-top-36 left-1/2 -translate-x-1/2 w-[340px] sm:w-[800px] lg:w-[1150px] h-[240px] sm:h-[480px] lg:h-[620px] rounded-full blur-[60px] sm:blur-[110px] lg:blur-[140px] opacity-90 dark:opacity-85',
+              'ambient-glow-orb absolute -top-24 sm:-top-36 left-1/2 -translate-x-1/2 w-[340px] sm:w-[800px] lg:w-[1150px] h-[240px] sm:h-[480px] lg:h-[620px] rounded-full blur-[60px] sm:blur-[110px] lg:blur-[140px] opacity-90 dark:opacity-85',
               enableMotion && 'animate-ambient-drift-1'
             )}
             style={{
@@ -163,7 +169,8 @@ export function AmbientBackground({
 
           {/* Mid-page subtle matrix glow */}
           <div
-            className="hidden sm:block absolute top-1/2 -left-24 w-[450px] h-[450px] rounded-full blur-[120px] opacity-50 dark:opacity-40"
+            data-ambient-orb="true"
+            className="ambient-glow-orb hidden sm:block absolute top-1/2 -left-24 w-[450px] h-[450px] rounded-full blur-[120px] opacity-50 dark:opacity-40"
             style={{
               background:
                 'radial-gradient(circle at center, var(--ambient-glow-2) 0%, transparent 65%)',
@@ -177,8 +184,9 @@ export function AmbientBackground({
         <>
           {/* Product showcase focused upper aura */}
           <div
+            data-ambient-orb="true"
             className={cn(
-              'absolute -top-20 sm:-top-32 left-1/2 -translate-x-1/2 w-[340px] sm:w-[750px] lg:w-[1050px] h-[250px] sm:h-[460px] lg:h-[580px] rounded-full blur-[60px] sm:blur-[100px] lg:blur-[130px] opacity-95 dark:opacity-90',
+              'ambient-glow-orb absolute -top-20 sm:-top-32 left-1/2 -translate-x-1/2 w-[340px] sm:w-[750px] lg:w-[1050px] h-[250px] sm:h-[460px] lg:h-[580px] rounded-full blur-[60px] sm:blur-[100px] lg:blur-[130px] opacity-95 dark:opacity-90',
               enableMotion && 'animate-ambient-drift-1'
             )}
             style={{
@@ -189,7 +197,8 @@ export function AmbientBackground({
 
           {/* Right edge secondary depth accent */}
           <div
-            className="hidden md:block absolute top-1/3 -right-20 w-[400px] h-[400px] rounded-full blur-[110px] opacity-60 dark:opacity-50"
+            data-ambient-orb="true"
+            className="ambient-glow-orb hidden md:block absolute top-1/3 -right-20 w-[400px] h-[400px] rounded-full blur-[110px] opacity-60 dark:opacity-50"
             style={{
               background:
                 'radial-gradient(circle at center, var(--ambient-glow-2) 0%, transparent 65%)',
@@ -203,7 +212,8 @@ export function AmbientBackground({
         <>
           {/* Calm, restful reading atmosphere centered at top */}
           <div
-            className="absolute -top-20 sm:-top-32 left-1/2 -translate-x-1/2 w-[320px] sm:w-[700px] lg:w-[950px] h-[220px] sm:h-[420px] lg:h-[520px] rounded-full blur-[60px] sm:blur-[110px] lg:blur-[140px] opacity-75 dark:opacity-70"
+            data-ambient-orb="true"
+            className="ambient-glow-orb absolute -top-20 sm:-top-32 left-1/2 -translate-x-1/2 w-[320px] sm:w-[700px] lg:w-[950px] h-[220px] sm:h-[420px] lg:h-[520px] rounded-full blur-[60px] sm:blur-[110px] lg:blur-[140px] opacity-75 dark:opacity-70"
             style={{
               background:
                 'radial-gradient(ellipse at center, var(--ambient-glow-1) 0%, var(--ambient-glow-2) 40%, transparent 70%)',
@@ -217,8 +227,9 @@ export function AmbientBackground({
         <>
           {/* Warm, personal ambient highlight */}
           <div
+            data-ambient-orb="true"
             className={cn(
-              'absolute -top-16 sm:-top-28 right-1/4 translate-x-1/4 w-[340px] sm:w-[720px] lg:w-[1000px] h-[240px] sm:h-[450px] lg:h-[560px] rounded-full blur-[60px] sm:blur-[110px] lg:blur-[140px] opacity-85 dark:opacity-80',
+              'ambient-glow-orb absolute -top-16 sm:-top-28 right-1/4 translate-x-1/4 w-[340px] sm:w-[720px] lg:w-[1000px] h-[240px] sm:h-[450px] lg:h-[560px] rounded-full blur-[60px] sm:blur-[110px] lg:blur-[140px] opacity-85 dark:opacity-80',
               enableMotion && 'animate-ambient-drift-1'
             )}
             style={{
@@ -229,7 +240,8 @@ export function AmbientBackground({
 
           {/* Left subtle secondary warmth */}
           <div
-            className="hidden md:block absolute top-1/2 -left-20 w-[420px] h-[420px] rounded-full blur-[120px] opacity-50 dark:opacity-45"
+            data-ambient-orb="true"
+            className="ambient-glow-orb hidden md:block absolute top-1/2 -left-20 w-[420px] h-[420px] rounded-full blur-[120px] opacity-50 dark:opacity-45"
             style={{
               background:
                 'radial-gradient(circle at center, var(--ambient-glow-4) 0%, transparent 65%)',
@@ -243,7 +255,8 @@ export function AmbientBackground({
         <>
           {/* Restrained, crisp diffuse glow */}
           <div
-            className="absolute -top-20 sm:-top-32 left-1/2 -translate-x-1/2 w-[320px] sm:w-[680px] lg:w-[900px] h-[220px] sm:h-[380px] lg:h-[480px] rounded-full blur-[55px] sm:blur-[95px] lg:blur-[120px] opacity-65 dark:opacity-60"
+            data-ambient-orb="true"
+            className="ambient-glow-orb absolute -top-20 sm:-top-32 left-1/2 -translate-x-1/2 w-[320px] sm:w-[680px] lg:w-[900px] h-[220px] sm:h-[380px] lg:h-[480px] rounded-full blur-[55px] sm:blur-[95px] lg:blur-[120px] opacity-65 dark:opacity-60"
             style={{
               background:
                 'radial-gradient(circle at center, var(--ambient-glow-1) 0%, transparent 65%)',
@@ -255,7 +268,8 @@ export function AmbientBackground({
       {/* --- MINIMAL VARIANT (Auth / Modal / Utility) --- */}
       {variant === 'minimal' && (
         <div
-          className="absolute -top-12 sm:-top-20 left-1/2 -translate-x-1/2 w-[300px] sm:w-[600px] h-[200px] sm:h-[350px] rounded-full blur-[50px] sm:blur-[90px] opacity-55 dark:opacity-50"
+          data-ambient-orb="true"
+          className="ambient-glow-orb absolute -top-12 sm:-top-20 left-1/2 -translate-x-1/2 w-[300px] sm:w-[600px] h-[200px] sm:h-[350px] rounded-full blur-[50px] sm:blur-[90px] opacity-55 dark:opacity-50"
           style={{
             background:
               'radial-gradient(circle at center, var(--ambient-glow-1) 0%, transparent 60%)',
@@ -268,7 +282,8 @@ export function AmbientBackground({
           ========================================================================= */}
       {enablePointerGlow && pointerPos.active && (
         <div
-          className="hidden md:block absolute pointer-events-none -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full blur-[80px] transition-opacity duration-500 ease-out"
+          data-ambient-orb="true"
+          className="ambient-glow-orb ambient-pointer-orb hidden md:block absolute pointer-events-none -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full blur-[80px] transition-opacity duration-500 ease-out"
           style={{
             left: `${pointerPos.x}px`,
             top: `${pointerPos.y}px`,

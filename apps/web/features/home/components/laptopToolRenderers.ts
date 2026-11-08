@@ -46,13 +46,26 @@ export function renderSoundDeckDemo(
 
     ctx.fillStyle = '#f59e0b';
     ctx.font = 'bold 10px monospace';
-    ctx.fillText(isInteracted ? '132.0 BPM' : '128.0 BPM', previewLeft + previewW - 65, mixerY + 21);
+    ctx.fillText(
+      isInteracted ? '132.0 BPM' : '128.0 BPM',
+      previewLeft + previewW - 65,
+      mixerY + 21
+    );
   }
 
   // Waveform oscilloscope (line >= 5)
   if (typedLineCount >= 5) {
     const waveY = mixerY + 40;
-    drawRoundedRect(ctx, previewLeft + 12, waveY, previewW - 24, 34, 5, '#04070d', 'rgba(255, 255, 255, 0.08)');
+    drawRoundedRect(
+      ctx,
+      previewLeft + 12,
+      waveY,
+      previewW - 24,
+      34,
+      5,
+      '#04070d',
+      'rgba(255, 255, 255, 0.08)'
+    );
 
     ctx.strokeStyle = '#38bdf8';
     ctx.lineWidth = 1.6;
@@ -111,7 +124,11 @@ export function renderSoundDeckDemo(
     );
     ctx.fillStyle = '#fbbf24';
     ctx.font = 'bold 7.5px monospace';
-    ctx.fillText(isInteracted ? 'MASTER: +4.2dB (LIMITER ACTIVE)' : 'MASTER: +0.0dB (OPTIMAL)', previewLeft + 18, mixerY + mixerH - 12);
+    ctx.fillText(
+      isInteracted ? 'MASTER: +4.2dB (LIMITER ACTIVE)' : 'MASTER: +0.0dB (OPTIMAL)',
+      previewLeft + 18,
+      mixerY + mixerH - 12
+    );
   }
 }
 
@@ -154,7 +171,15 @@ export function renderAgentConsoleDemo(
     ctx.font = 'bold 9px monospace';
     ctx.fillText('✨ ANTIGRAVITY AGENT', previewLeft + 12, termY + 18);
 
-    drawRoundedRect(ctx, previewLeft + previewW - 48, termY + 8, 38, 14, 3, 'rgba(168, 85, 247, 0.15)');
+    drawRoundedRect(
+      ctx,
+      previewLeft + previewW - 48,
+      termY + 8,
+      38,
+      14,
+      3,
+      'rgba(168, 85, 247, 0.15)'
+    );
     ctx.fillStyle = '#e9d5ff';
     ctx.font = 'bold 7.5px monospace';
     ctx.fillText('v2.0', previewLeft + previewW - 40, termY + 18);
@@ -177,7 +202,11 @@ export function renderAgentConsoleDemo(
     ctx.fillText('THOUGHT STREAM:', previewLeft + 16, termY + 42);
     ctx.fillStyle = '#38bdf8';
     ctx.font = '8px monospace';
-    ctx.fillText(isInteracted ? '✓ Optimization patch ready' : 'Analyzing AST graph...', previewLeft + 16, termY + 54);
+    ctx.fillText(
+      isInteracted ? '✓ Optimization patch ready' : 'Analyzing AST graph...',
+      previewLeft + 16,
+      termY + 54
+    );
   }
 
   // Code Diff Output (line >= 6)
@@ -214,11 +243,19 @@ export function renderAgentConsoleDemo(
 
     ctx.fillStyle = isInteracted ? '#34d399' : '#818cf8';
     ctx.font = 'bold 8.5px monospace';
-    ctx.fillText(isInteracted ? '✓ 10/10 UNIT TESTS PASSED' : '● RUNNING CARGO TEST...', previewLeft + 16, statY + 18);
+    ctx.fillText(
+      isInteracted ? '✓ 10/10 UNIT TESTS PASSED' : '● RUNNING CARGO TEST...',
+      previewLeft + 16,
+      statY + 18
+    );
 
     ctx.fillStyle = '#cbd5e1';
     ctx.font = '7.5px monospace';
-    ctx.fillText(isInteracted ? 'Deployed to Edge: 4ms global latency' : 'Validating memory boundaries...', previewLeft + 16, statY + 34);
+    ctx.fillText(
+      isInteracted ? 'Deployed to Edge: 4ms global latency' : 'Validating memory boundaries...',
+      previewLeft + 16,
+      statY + 34
+    );
   }
 }
 
@@ -295,7 +332,16 @@ export function renderProductShowcaseDemo(
   // Terminal Snippet (line >= 6)
   if (typedLineCount >= 6) {
     const termY = cardY + 98;
-    drawRoundedRect(ctx, previewLeft + 14, termY, previewW - 28, 26, 5, '#05070c', 'rgba(255, 255, 255, 0.08)');
+    drawRoundedRect(
+      ctx,
+      previewLeft + 14,
+      termY,
+      previewW - 28,
+      26,
+      5,
+      '#05070c',
+      'rgba(255, 255, 255, 0.08)'
+    );
 
     ctx.fillStyle = '#38bdf8';
     ctx.font = '8px monospace';
@@ -320,7 +366,12 @@ export function renderProductShowcaseDemo(
       ctx.fillText('✓ Installed Successfully', previewLeft + previewW / 2, btnY + 19);
       ctx.textAlign = 'left';
     } else {
-      const btnGrad = ctx.createLinearGradient(previewLeft + 14, btnY, previewLeft + 14 + btnW, btnY);
+      const btnGrad = ctx.createLinearGradient(
+        previewLeft + 14,
+        btnY,
+        previewLeft + 14 + btnW,
+        btnY
+      );
       btnGrad.addColorStop(0, '#f59e0b');
       btnGrad.addColorStop(1, '#ea580c');
       drawRoundedRect(ctx, previewLeft + 14, btnY, btnW, btnH, 6, btnGrad);

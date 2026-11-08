@@ -10,3 +10,4 @@ export * from './media.schema';
 export * from './notification.schema';
 export * from './audit.schema';
 export * from './settings.schema';
+export * from './feedback.schema';

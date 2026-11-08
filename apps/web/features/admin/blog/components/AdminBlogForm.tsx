@@ -308,6 +308,31 @@ export function AdminBlogForm({ post, categories }: AdminBlogFormProps) {
               />
             </div>
           </div>
+
+          {/* SEO Metadata */}
+          <div className="pt-4 border-t border-zinc-800/60 space-y-3">
+            <div className="text-xs font-semibold text-zinc-300">
+              SEO & Meta Information (Optional)
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FloatingLabelInput
+                label="SEO Meta Title"
+                type="text"
+                value={seoTitle}
+                onChange={(val) => setSeoTitle(val)}
+                placeholder="Custom title for search results"
+                maxLength={100}
+              />
+              <FloatingLabelInput
+                label="SEO Meta Description"
+                type="text"
+                value={seoDescription}
+                onChange={(val) => setSeoDescription(val)}
+                placeholder="Meta description snippet for search engines"
+                maxLength={200}
+              />
+            </div>
+          </div>
         </Card>
 
         {/* Action Buttons */}

@@ -35,8 +35,16 @@ export function renderSpaceArcadeDemo(
 
   // Background Starfield
   const stars: Array<[number, number]> = [
-    [15, 20], [60, 45], [110, 15], [150, 50], [30, 90],
-    [95, 110], [140, 95], [45, 150], [120, 160], [80, 180]
+    [15, 20],
+    [60, 45],
+    [110, 15],
+    [150, 50],
+    [30, 90],
+    [95, 110],
+    [140, 95],
+    [45, 150],
+    [120, 160],
+    [80, 180],
   ];
   ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
   for (const [sx, sy] of stars) {
@@ -126,15 +134,7 @@ export function renderSpaceArcadeDemo(
 
     // Shield status
     drawRoundedRect(ctx, previewLeft + 12, gameY + 175, previewW - 24, 12, 3, '#1e293b');
-    drawRoundedRect(
-      ctx,
-      previewLeft + 12,
-      gameY + 175,
-      (previewW - 24) * 0.85,
-      12,
-      3,
-      '#10b981'
-    );
+    drawRoundedRect(ctx, previewLeft + 12, gameY + 175, (previewW - 24) * 0.85, 12, 3, '#10b981');
     ctx.fillStyle = '#ffffff';
     ctx.font = 'bold 7px monospace';
     ctx.fillText('SHIELD: 85%', previewLeft + 18, gameY + 184);
@@ -220,29 +220,13 @@ export function renderNeonPongDemo(
   // Left Player Paddle
   if (typedLineCount >= 5) {
     const padLY = arenaY + 70;
-    drawRoundedRect(
-      ctx,
-      previewLeft + 8,
-      padLY,
-      6,
-      44,
-      3,
-      '#38bdf8'
-    );
+    drawRoundedRect(ctx, previewLeft + 8, padLY, 6, 44, 3, '#38bdf8');
   }
 
   // Right AI Paddle
   if (typedLineCount >= 6) {
     const padRY = arenaY + 95;
-    drawRoundedRect(
-      ctx,
-      previewLeft + previewW - 14,
-      padRY,
-      6,
-      40,
-      3,
-      '#ec4899'
-    );
+    drawRoundedRect(ctx, previewLeft + previewW - 14, padRY, 6, 40, 3, '#ec4899');
   }
 
   // Neon Bouncing Ball with Glow & Particle Trail
@@ -279,7 +263,11 @@ export function renderNeonPongDemo(
     );
     ctx.fillStyle = '#38bdf8';
     ctx.font = 'bold 7.5px monospace';
-    ctx.fillText(isInteracted ? '⚡ SMASH SHOT: 3.2x SPEED' : '● BALL VELOCITY: 2.4x', previewLeft + 18, arenaY + arenaH - 14);
+    ctx.fillText(
+      isInteracted ? '⚡ SMASH SHOT: 3.2x SPEED' : '● BALL VELOCITY: 2.4x',
+      previewLeft + 18,
+      arenaY + arenaH - 14
+    );
   }
 }
 
@@ -308,12 +296,29 @@ export function renderPixelRunnerDemo(
   const skyGrad = ctx.createLinearGradient(previewLeft, stageY, previewLeft, stageY + stageH);
   skyGrad.addColorStop(0, '#1e1b4b');
   skyGrad.addColorStop(1, '#312e81');
-  drawRoundedRect(ctx, previewLeft, stageY, previewW, stageH, 10, skyGrad, 'rgba(129, 140, 248, 0.35)');
+  drawRoundedRect(
+    ctx,
+    previewLeft,
+    stageY,
+    previewW,
+    stageH,
+    10,
+    skyGrad,
+    'rgba(129, 140, 248, 0.35)'
+  );
 
   // Cloud layer
   ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
   drawRoundedRect(ctx, previewLeft + 18, stageY + 25, 42, 12, 6, 'rgba(255,255,255,0.2)');
-  drawRoundedRect(ctx, previewLeft + previewW - 60, stageY + 35, 48, 14, 7, 'rgba(255,255,255,0.2)');
+  drawRoundedRect(
+    ctx,
+    previewLeft + previewW - 60,
+    stageY + 35,
+    48,
+    14,
+    7,
+    'rgba(255,255,255,0.2)'
+  );
 
   // Ground Tiles (line >= 4)
   if (typedLineCount >= 4) {

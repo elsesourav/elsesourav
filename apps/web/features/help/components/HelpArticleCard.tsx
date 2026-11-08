@@ -11,7 +11,7 @@ interface HelpArticleCardProps {
 export function HelpArticleCard({ article }: HelpArticleCardProps) {
   return (
     <Link href={`/help/${article.categorySlug}/${article.slug}`} className="block group">
-      <Card className="p-5 rounded-2xl border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] hover:border-indigo-500/40 dark:hover:border-indigo-400/40 hover:-translate-y-1 hover:shadow-lg hover:shadow-indigo-500/5 transition-all duration-300 ease-out active:scale-[0.99] active:translate-y-0 backdrop-blur-sm h-full flex flex-col justify-between space-y-3">
+      <Card className="p-2.5 sm:p-3 md:p-3.5 rounded-2xl border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] hover:border-indigo-500/40 dark:hover:border-indigo-400/40 hover:shadow-lg hover:shadow-indigo-500/5 transition-colors duration-200 backdrop-blur-sm h-full flex flex-col justify-between space-y-2.5">
         <div className="space-y-2">
           <div className="flex items-center justify-between gap-2">
             <Badge variant="info" className="text-[10px] px-2 py-0.5">

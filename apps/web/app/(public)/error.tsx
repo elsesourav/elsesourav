@@ -28,8 +28,8 @@ export default function PublicError({
           </CardDescription>
         </CardHeader>
         <div className="p-6 pt-0 flex justify-center">
-          <Button onClick={() => reset()} size="sm" variant="secondary" className="gap-2">
-            <RefreshCw className="w-3.5 h-3.5" /> Try Again
+          <Button onClick={() => reset()} size="sm" variant="secondary" leftIcon={<RefreshCw className="w-3.5 h-3.5" />}>
+            Try Again
           </Button>
         </div>
       </Card>

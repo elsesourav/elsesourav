@@ -32,9 +32,12 @@ export default async function AdminSettingsPage() {
     announcement_banner: dbSettings['announcement_banner'] || '',
     homepage_apps_title: dbSettings['homepage_apps_title'] || 'Software Crafted with Purpose',
     homepage_blog_title: dbSettings['homepage_blog_title'] || 'Engineering Updates & Devlogs',
+    philosophy_badge: dbSettings['philosophy_badge'] || 'Craft & Principles',
+    philosophy_cta_label: dbSettings['philosophy_cta_label'] || 'About the journey',
+    philosophy_cta_url: dbSettings['philosophy_cta_url'] || '/about',
     creator_statement:
       dbSettings['creator_statement'] ||
-      'I care about software that is understandable, useful, fast, and considerate.',
+      'I care about software that is useful, fast, and considerate.',
     closing_cta_title: dbSettings['closing_cta_title'] || 'Explore the ElseSourav Archive',
     closing_cta_subtitle:
       dbSettings['closing_cta_subtitle'] ||
@@ -52,6 +55,9 @@ export default async function AdminSettingsPage() {
     twitter_url: dbSettings['twitter_url'] || CREATOR_CONFIG.links.twitter,
     contact_email: dbSettings['contact_email'] || CREATOR_CONFIG.contact.email,
     support_url: dbSettings['support_url'] || CREATOR_CONFIG.contact.support,
+    // Legal content defaults
+    legal_privacy_md: dbSettings['legal_privacy_md'] || '',
+    legal_terms_md: dbSettings['legal_terms_md'] || '',
     ...dbSettings,
   };
 

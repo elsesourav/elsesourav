@@ -14,7 +14,7 @@ describe('Homepage Hero & First-Viewport Architecture', () => {
   it('exposes approved first-viewport navigation links and exploration CTAs', () => {
     expect(ROUTES.HOME).toBe('/');
     expect(ROUTES.APPS).toBe('/apps');
-    expect(ROUTES.BLOG).toBe('/notes');
+    expect(ROUTES.UPDATES).toBe('/updates');
     expect(ROUTES.ABOUT).toBe('/about');
   });
 

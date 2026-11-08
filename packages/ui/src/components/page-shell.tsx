@@ -6,6 +6,7 @@ export interface PageShellProps extends React.HTMLAttributes<HTMLDivElement> {
   size?: ContainerProps['size'];
   glow?: boolean;
   padded?: boolean;
+  containerClassName?: string;
 }
 
 export function PageShell({
@@ -13,14 +14,15 @@ export function PageShell({
   glow = false,
   padded = true,
   className,
+  containerClassName,
   children,
   ...props
 }: PageShellProps) {
   return (
     <div
       className={cn(
-        'relative min-h-[calc(100vh-4rem)] w-full overflow-hidden',
-        padded && 'py-8 sm:py-12 lg:py-16',
+        'relative min-h-[calc(100vh-4rem)] w-full overflow-x-clip',
+        padded && 'pt-2 sm:pt-4 md:pt-5 pb-8 sm:pb-12 md:pb-16',
         className
       )}
       {...props}
@@ -33,7 +35,7 @@ export function PageShell({
           <div className="w-full max-w-[600px] sm:max-w-[900px] h-[350px] bg-gradient-to-b from-indigo-500/10 via-indigo-600/5 to-transparent blur-3xl rounded-full transform -translate-y-1/2" />
         </div>
       )}
-      <Container size={size}>{children}</Container>
+      <Container size={size} className={containerClassName}>{children}</Container>
     </div>
   );
 }

@@ -1,12 +1,15 @@
-import { AppDiscoveryBar } from '@/features/apps/components/AppDiscoveryBar';
-import { AppPagination } from '@/features/apps/components/AppPagination';
-import { AppsEmptyState } from '@/features/apps/components/AppsEmptyState';
-import { AppsFilterGrid } from '@/features/apps/components/AppsFilterGrid';
-import { AppsMorphHeroLoader } from '@/features/apps/components/AppsMorphHeroLoader';
+import {
+  AppDiscoveryBar,
+  AppPagination,
+  AppsEmptyState,
+} from '@/features/apps/components/discovery';
+import { AppCuratedShelves, AppEditorialGrid } from '@/features/apps/components/editorial';
+import { AppsMorphHeroLoader } from '@/features/apps/components/morph-hero';
 import {
   discoverPublishedApps,
   getActiveCategories,
   getActiveTags,
+  getPublishedApps,
 } from '@/features/apps/queries/get-apps';
 import { buildPageMetadata } from '@/lib/seo-metadata';
 import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
@@ -64,7 +67,7 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
   const sort = (params.sort as AppSortOption) || 'sortOrder';
 
   // Parallel server fetching
-  const [categories, tags, searchResult] = await Promise.all([
+  const [categories, tags, searchResult, allPublishedApps] = await Promise.all([
     getActiveCategories(),
     getActiveTags(),
     discoverPublishedApps({
@@ -78,6 +81,7 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
       page,
       limit: 12,
     }),
+    getPublishedApps({ limit: 50 }),
   ]);
 
   const hasFilters = Boolean(
@@ -141,20 +145,20 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
   };
 
   return (
-    <PageShell size="lg" glow>
+    <PageShell size="lg" glow className="!pt-2.5 sm:!pt-5 pb-24 sm:pb-16 px-0">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="space-y-10 sm:space-y-12">
-        {/* 1. Very Top: Apps Title & Subtitle (No project number) */}
-        <Reveal direction="down" distance={10}>
-          <div className="space-y-2">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-[hsl(var(--foreground))]">
+      <div className="w-full max-w-full min-w-0 overflow-visible space-y-4 sm:space-y-6">
+        {/* 1. Very Top: Compact Apps Title & Subtitle */}
+        <Reveal direction="down" distance={8}>
+          <div className="flex flex-col gap-0.5 sm:gap-1 pb-0.5 sm:pb-1">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-[hsl(var(--foreground))] font-display">
               {hasFilters ? 'Filtered Projects' : 'Apps'}
             </h1>
-            <p className="text-sm sm:text-base text-[hsl(var(--muted-foreground))] max-w-2xl leading-relaxed">
+            <p className="text-xs sm:text-sm text-[hsl(var(--muted-foreground))]">
               {hasFilters
                 ? 'Showing software matching selected filter criteria.'
                 : "Software, tools, games, and practical systems I've built and shipped."}
@@ -162,72 +166,60 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
           </div>
         </Reveal>
 
-        {/* 2. Top Hero Section: Desktop 2-column split (40% Left: Filters, 60% Right: Slider) / Mobile & Tablet Compact */}
-        {isDefaultView && heroSliderItems.length > 0 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-10 gap-6 lg:gap-8 items-start">
-            {/* Desktop Left (40%) / Mobile & Tablet Bottom: Search & Filters Panel */}
-            <div className="order-2 lg:order-1 lg:col-span-4">
-              <Reveal direction="up" distance={10}>
-                <div className="rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4 sm:p-5 lg:p-6 shadow-sm backdrop-blur-md">
-                  <AppDiscoveryBar
-                    categories={categories}
-                    tags={tags}
-                  />
-                </div>
-              </Reveal>
-            </div>
-
-            {/* Desktop Right (60%) / Mobile & Tablet Top: Featured MorphSlider */}
-            <div className="order-1 lg:order-2 lg:col-span-6">
-              <Reveal direction="up" distance={12}>
-                <AppsMorphHeroLoader apps={heroSliderItems} />
-              </Reveal>
-            </div>
-          </div>
-        ) : (
-          /* When filters are active, show the discovery bar in a streamlined card */
-          <Reveal direction="up" distance={8}>
-            <div className="rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4 sm:p-5 lg:p-6 shadow-sm backdrop-blur-md">
-              <AppDiscoveryBar
-                categories={categories}
-                tags={tags}
-                showCategoryPills={true}
-              />
-            </div>
+        {/* 2. Full-Width Featured Carousel / Slider */}
+        {isDefaultView && heroSliderItems.length > 0 && (
+          <Reveal direction="up" distance={10} className="w-full overflow-visible">
+            <AppsMorphHeroLoader apps={heroSliderItems} autoplayIntervalSeconds={5} />
           </Reveal>
         )}
 
-        {/* 3. Applications Catalog Grid or Empty State */}
+        {/* 3. Filter System at the bottom of the carousel / slider (like updates section) */}
+        <Reveal direction="up" distance={8}>
+          <div
+            id="apps-discovery-bar"
+            className="rounded-xl sm:rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-2.5 sm:p-4 md:p-5 shadow-sm backdrop-blur-md"
+          >
+            <AppDiscoveryBar categories={categories} tags={tags} />
+          </div>
+        </Reveal>
+
+        {/* 3. Curated Shelves Section (Image 2 - Google Play style shelves) */}
+        <Reveal direction="up" distance={10}>
+          <AppCuratedShelves
+            apps={allPublishedApps}
+            activeCategorySlug={categorySlug}
+            activeTagSlug={tagSlug}
+          />
+        </Reveal>
+
+        {/* 4. Big Editorial Cards Showcase (Image 1 - Apple App Store style bento grid) */}
         {searchResult.items.length === 0 ? (
           <Reveal direction="up" distance={12}>
             <AppsEmptyState hasFilters={hasFilters} />
           </Reveal>
         ) : (
-          <div className="space-y-8">
-            {/* Catalog Grid Header */}
-            <section aria-labelledby="catalog-apps-heading" className="space-y-4">
-              <div className="flex items-center justify-between pb-2 border-b border-[hsl(var(--border-subtle))] text-xs font-mono text-[hsl(var(--muted-foreground))]">
-                <div className="flex items-center gap-2 uppercase tracking-wider font-semibold">
-                  <LayoutGrid className="w-4 h-4 text-indigo-500" />
+          <div className="space-y-6 sm:space-y-8 pt-2 sm:pt-4">
+            {/* Editorial Showcase Header */}
+            <section aria-labelledby="catalog-apps-heading" className="space-y-3 sm:space-y-4">
+              <div className="flex items-center justify-between pb-2 border-b border-[hsl(var(--border-subtle))] text-[11px] sm:text-xs font-mono text-[hsl(var(--muted-foreground))]">
+                <div className="flex items-center gap-1.5 sm:gap-2 uppercase tracking-wider font-semibold min-w-0">
+                  <LayoutGrid className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-indigo-500 shrink-0" />
                   <h2
                     id="catalog-apps-heading"
-                    className="text-xs font-mono text-[hsl(var(--muted-foreground))] uppercase tracking-wider font-semibold"
+                    className="text-[11px] sm:text-xs font-mono text-[hsl(var(--muted-foreground))] uppercase tracking-wider font-semibold truncate"
                   >
                     {hasFilters
-                      ? `Filtered Catalog (${searchResult.totalCount})`
-                      : 'All Software Catalog'}
+                      ? `Filtered Releases (${searchResult.totalCount})`
+                      : 'Featured Editorial Catalog'}
                   </h2>
                 </div>
-                <span className="text-[hsl(var(--subtle-foreground))]">
+                <span className="text-[hsl(var(--subtle-foreground))] shrink-0 ml-2">
                   Page {searchResult.page} of {searchResult.totalPages}
                 </span>
               </div>
 
-              <AppsFilterGrid
+              <AppEditorialGrid
                 apps={catalogItems}
-                categories={categories}
-                initialCategory={categorySlug}
-                showCategoryFilter={false}
                 startIndex={
                   (searchResult.page - 1) * 12 + (isDefaultView ? heroSliderItems.length : 0)
                 }
@@ -249,25 +241,25 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
 
         {/* Discovery Bridges: The Archive & Notes */}
         <Reveal direction="up" distance={14}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-10 border-t border-[hsl(var(--border-subtle))]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-6 sm:pt-10 border-t border-[hsl(var(--border-subtle))]">
             {/* The Archive Callout */}
             <Link
               href="/archive"
-              className="group p-6 rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] hover:border-indigo-500/40 transition-all flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              className="group p-3.5 sm:p-5 md:p-6 rounded-2xl sm:rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] hover:border-indigo-500/40 transition-all flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
             >
-              <div className="space-y-2">
-                <div className="w-10 h-10 rounded-2xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-sm">
-                  <Archive className="w-5 h-5" />
+              <div className="space-y-1.5 sm:space-y-2">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-sm">
+                  <Archive className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <h3 className="text-base font-bold text-[hsl(var(--foreground))] group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors">
+                <h3 className="text-sm sm:text-base font-bold text-[hsl(var(--foreground))] group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors">
                   The Archive
                 </h3>
-                <p className="text-xs text-[hsl(var(--muted-foreground))] leading-relaxed">
+                <p className="text-[11px] sm:text-xs text-[hsl(var(--muted-foreground))] leading-relaxed">
                   Chronological timeline of earlier projects, legacy utilities, and exploratory
                   implementations.
                 </p>
               </div>
-              <span className="text-xs font-mono text-indigo-600 dark:text-indigo-400 flex items-center gap-1 pt-4 group-hover:translate-x-1 transition-transform">
+              <span className="text-[11px] sm:text-xs font-mono text-indigo-600 dark:text-indigo-400 flex items-center gap-1 pt-3 sm:pt-4 group-hover:translate-x-1 transition-transform">
                 <span>Explore historical archive</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </span>
@@ -275,22 +267,22 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
 
             {/* Updates / Devlogs Callout */}
             <Link
-              href={ROUTES.BLOG}
-              className="group p-6 rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] hover:border-cyan-500/40 transition-all flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
+              href={ROUTES.UPDATES}
+              className="group p-3.5 sm:p-5 md:p-6 rounded-2xl sm:rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] hover:border-cyan-500/40 transition-all flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
             >
-              <div className="space-y-2">
-                <div className="w-10 h-10 rounded-2xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-600 dark:text-cyan-400 shadow-sm">
-                  <BookOpen className="w-5 h-5" />
+              <div className="space-y-1.5 sm:space-y-2">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-600 dark:text-cyan-400 shadow-sm">
+                  <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <h3 className="text-base font-bold text-[hsl(var(--foreground))] group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
+                <h3 className="text-sm sm:text-base font-bold text-[hsl(var(--foreground))] group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
                   Engineering Updates
                 </h3>
-                <p className="text-xs text-[hsl(var(--muted-foreground))] leading-relaxed">
+                <p className="text-[11px] sm:text-xs text-[hsl(var(--muted-foreground))] leading-relaxed">
                   Technical write-ups, architecture decisions, release logs, and lessons learned
                   while building.
                 </p>
               </div>
-              <span className="text-xs font-mono text-cyan-600 dark:text-cyan-400 flex items-center gap-1 pt-4 group-hover:translate-x-1 transition-transform">
+              <span className="text-[11px] sm:text-xs font-mono text-cyan-600 dark:text-cyan-400 flex items-center gap-1 pt-3 sm:pt-4 group-hover:translate-x-1 transition-transform">
                 <span>Read engineering updates</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </span>

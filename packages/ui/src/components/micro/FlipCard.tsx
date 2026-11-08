@@ -80,7 +80,7 @@ export default function FlipCard({
   tiltMax = 12,
   glare = true,
   glareOpacity = 0.22,
-  hoverScale = 1.03,
+  hoverScale = 1.0,
   perspective = 1100,
   stiffness = 170,
   damping = 20,

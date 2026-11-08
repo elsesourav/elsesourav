@@ -18,7 +18,7 @@ export function HelpArticleFeedback({
 }: HelpArticleFeedbackProps) {
   const [hasVoted, setHasVoted] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [counts, setCounts] = React.useState({
+  const [_counts, setCounts] = React.useState({
     helpful: initialHelpfulCount,
     unhelpful: initialUnhelpfulCount,
   });

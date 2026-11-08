@@ -11,8 +11,8 @@ describe('Public Navigation Information Architecture & Route Contracts', () => {
   it('exposes approved primary public navigation routes', () => {
     expect(ROUTES.HOME).toBe('/');
     expect(ROUTES.APPS).toBe('/apps');
-    expect(ROUTES.BLOG).toBe('/notes');
-    expect(ROUTES.NOTES).toBe('/notes');
+    expect(ROUTES.UPDATES).toBe('/updates');
+    expect(ROUTES.UPDATE_DETAIL('test-post')).toBe('/updates/test-post');
     expect(ROUTES.HELP).toBe('/help');
     expect(ROUTES.ABOUT).toBe('/about');
     expect(ROUTES.SUPPORT).toBe('/support');
@@ -27,12 +27,12 @@ describe('Public Navigation Information Architecture & Route Contracts', () => {
     // Apps section
     expect(isRouteActive('/apps', ROUTES.APPS)).toBe(true);
     expect(isRouteActive('/apps/terminal-pro', ROUTES.APPS)).toBe(true);
-    expect(isRouteActive('/notes', ROUTES.APPS)).toBe(false);
+    expect(isRouteActive('/updates', ROUTES.APPS)).toBe(false);
 
-    // Notes section
-    expect(isRouteActive('/notes', ROUTES.NOTES)).toBe(true);
-    expect(isRouteActive('/notes/clean-architecture', ROUTES.NOTES)).toBe(true);
-    expect(isRouteActive('/apps', ROUTES.NOTES)).toBe(false);
+    // Updates section
+    expect(isRouteActive('/updates', ROUTES.UPDATES)).toBe(true);
+    expect(isRouteActive('/updates/clean-architecture', ROUTES.UPDATES)).toBe(true);
+    expect(isRouteActive('/apps', ROUTES.UPDATES)).toBe(false);
 
     // Help section
     expect(isRouteActive('/help', ROUTES.HELP)).toBe(true);
@@ -54,7 +54,6 @@ describe('Public Navigation Information Architecture & Route Contracts', () => {
   it('exposes complete secondary footer navigation and compliance routes', () => {
     expect(ROUTES.PRIVACY).toBe('/privacy');
     expect(ROUTES.TERMS).toBe('/terms');
-    expect(ROUTES.ACCESSIBILITY).toBe('/accessibility');
     expect(ROUTES.SUPPORT).toBe('/support');
   });
 

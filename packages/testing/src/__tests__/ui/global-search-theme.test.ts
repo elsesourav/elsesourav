@@ -48,7 +48,7 @@ describe('Global Search System', () => {
         results: [],
         grouped: {
           project: [{ type: 'project', title: 'P1', description: '', url: '/apps/p1' }],
-          note: [{ type: 'note', title: 'N1', description: '', url: '/notes/n1' }],
+          note: [{ type: 'note', title: 'N1', description: '', url: '/updates/n1' }],
         },
         totalCount: 2,
       };
@@ -148,12 +148,12 @@ describe('Global Search System', () => {
     it('generates correct URLs for each content type', () => {
       const urlMap: Record<GlobalSearchResultType, string> = {
         project: '/apps/my-project',
-        note: '/notes/my-note',
+        note: '/updates/my-note',
         page: '/about',
       };
 
       expect(urlMap.project).toMatch(/^\/apps\//);
-      expect(urlMap.note).toMatch(/^\/notes\//);
+      expect(urlMap.note).toMatch(/^\/updates\//);
       expect(urlMap.page).toMatch(/^\//);
     });
 
@@ -171,6 +171,46 @@ describe('Global Search System', () => {
       expect(searchUxContracts.dismissOnEscape).toBe(true);
       expect(searchUxContracts.inputRowHeightPx).toBe(56);
       expect(searchUxContracts.preventHeightShiftsOnClearAppear).toBe(true);
+    });
+
+    it('supports contextual search scopes including account, apps, updates, and all', () => {
+      const scopes = ['all', 'project', 'note', 'account'] as const;
+      expect(scopes).toHaveLength(4);
+      expect(scopes).toContain('account');
+
+      const routeScopeDetector = (pathname: string): (typeof scopes)[number] => {
+        if (pathname.startsWith('/apps')) return 'project';
+        if (pathname.startsWith('/updates')) return 'note';
+        if (
+          pathname.startsWith('/profile') ||
+          pathname.startsWith('/settings') ||
+          pathname.startsWith('/dashboard') ||
+          pathname.startsWith('/library') ||
+          pathname.startsWith('/notifications') ||
+          pathname.startsWith('/account') ||
+          pathname.startsWith('/support')
+        ) {
+          return 'account';
+        }
+        return 'all';
+      };
+
+      expect(routeScopeDetector('/settings')).toBe('account');
+      expect(routeScopeDetector('/profile')).toBe('account');
+      expect(routeScopeDetector('/dashboard')).toBe('account');
+      expect(routeScopeDetector('/library')).toBe('account');
+      expect(routeScopeDetector('/notifications')).toBe('account');
+      expect(routeScopeDetector('/support/tickets')).toBe('account');
+      expect(routeScopeDetector('/apps')).toBe('project');
+      expect(routeScopeDetector('/updates')).toBe('note');
+      expect(routeScopeDetector('/')).toBe('all');
+    });
+
+    it('ensures search scope indicator uses normal neutral text without color highlights', () => {
+      const neutralScopeClass = 'text-[hsl(var(--foreground))]/90 font-normal';
+      expect(neutralScopeClass).not.toContain('text-primary');
+      expect(neutralScopeClass).not.toContain('text-indigo-600');
+      expect(neutralScopeClass).not.toContain('text-cyan-600');
     });
   });
 

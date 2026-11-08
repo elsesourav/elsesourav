@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
+import { getServerSession } from '@elsesourav/auth';
 import { UserRepository } from '@elsesourav/database';
 import { checkRateLimit, extractClientIp } from '@elsesourav/utils';
 import { SyncUserAuthSchema } from '@elsesourav/validation';
@@ -14,6 +16,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Too many sync requests. Please wait.' }, { status: 429 });
     }
 
+    // Verify the caller is authenticated
+    const cookieStore = await cookies();
+    const session = await getServerSession({
+      getAll: () => cookieStore.getAll(),
+    });
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
+
     const rawBody = await request.json();
     const parsed = SyncUserAuthSchema.safeParse(rawBody);
 
@@ -22,6 +34,11 @@ export async function POST(request: NextRequest) {
         { error: parsed.error.issues[0]?.message || 'Invalid sync payload' },
         { status: 400 }
       );
+    }
+
+    // Verify the supabaseAuthId matches the authenticated user
+    if (parsed.data.supabaseAuthId !== session.user.supabaseAuthId) {
+      return NextResponse.json({ error: "Cannot sync another user's profile" }, { status: 403 });
     }
 
     const { supabaseAuthId, email, displayName, username, photoUrl } = parsed.data;

@@ -295,7 +295,7 @@ export function DaylightFogCanvas({ isSceneActive = true }: DaylightFogCanvasPro
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      className="absolute inset-0 z-[1] w-full h-full pointer-events-none select-none"
+      className="hero-atmospheric-canvas absolute inset-0 z-[1] w-full h-full pointer-events-none select-none"
     />
   );
 }

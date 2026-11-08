@@ -1,0 +1,204 @@
+'use client';
+
+import * as React from 'react';
+import { Badge } from '@elsesourav/ui';
+import { Sparkles, Cpu, Zap, Eye, Compass } from 'lucide-react';
+
+export interface AboutPortraitParticleSettingsProps {
+  particleDensity: string;
+  particleSize: string;
+  glowBrightness: string;
+  flightSpeed: string;
+  onChange: (key: string, value: string) => void;
+}
+
+const DENSITY_PRESETS = [
+  { value: '0.5x', label: '0.5x Minimal', desc: 'Light halo & subtle stars' },
+  { value: '1.0x', label: '1.0x Standard', desc: 'Balanced default fidelity' },
+  { value: '1.5x', label: '1.5x Dense', desc: 'Rich starry boundary' },
+  { value: '2.0x', label: '2.0x Ultra', desc: 'Double contour micro-pixels' },
+  { value: '3.0x', label: '3.0x Extreme', desc: 'Maximum crystalline particles' },
+];
+
+const SIZE_PRESETS = [
+  { value: '0.6x', label: '0.6x Micro', desc: 'Ultra-fine starlight sparkles' },
+  { value: '0.8x', label: '0.8x Compact', desc: 'Crisp delicate particles' },
+  { value: '1.0x', label: '1.0x Standard', desc: 'Default pixel proportions' },
+  { value: '1.3x', label: '1.3x Bold', desc: 'Enhanced pixel presence' },
+  { value: '1.6x', label: '1.6x Retro', desc: 'Classic arcade chunkiness' },
+];
+
+const GLOW_PRESETS = [
+  { value: '0.5x', label: '0.5x Soft', desc: 'Subtle ethereal bloom' },
+  { value: '1.0x', label: '1.0x Standard', desc: 'Balanced neon vibrancy' },
+  { value: '1.5x', label: '1.5x Bright', desc: 'Luminous cyber radiance' },
+  { value: '2.0x', label: '2.0x Vivid', desc: 'Intense high-voltage aura' },
+  { value: '3.0x', label: '3.0x Supernova', desc: 'Maximum glow saturation' },
+];
+
+const SPEED_PRESETS = [
+  { value: '0.5x', label: '0.5x Zen Drift', desc: 'Ultra-slow floating arrival' },
+  { value: '0.75x', label: '0.75x Cinematic', desc: 'Graceful magnetic docking' },
+  { value: '1.0x', label: '1.0x Standard', desc: 'Variable organic trajectory' },
+  { value: '1.5x', label: '1.5x Swift', desc: 'Brisk dynamic warp flight' },
+  { value: '2.0x', label: '2.0x Hyperdrive', desc: 'Instant rapid convergence' },
+];
+
+export function AboutPortraitParticleSettingsSection({
+  particleDensity = '1.0x',
+  particleSize = '1.0x',
+  glowBrightness = '1.0x',
+  flightSpeed = '1.0x',
+  onChange,
+}: AboutPortraitParticleSettingsProps) {
+  return (
+    <div className="pt-5 border-t border-zinc-800 space-y-6">
+      {/* Header Eyebrow */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-cyan-400" />
+          <h4 className="text-sm font-semibold text-zinc-100">
+            About Portrait Particle Engine (WebGL + WebAssembly C++)
+          </h4>
+        </div>
+        <Badge variant="primary" className="text-[10px] font-mono">
+          C++ WASM Engine
+        </Badge>
+      </div>
+
+      <p className="text-xs text-zinc-400 leading-relaxed">
+        Configure the WebGL cyber portrait particle simulation, outer cosmic flight speed,
+        micro-pixel sizing, and neon bloom. Dynamically combines with client device capability
+        (CPU cores, memory, mobile status) to ensure a fluid 60–120 FPS experience across all screens.
+      </p>
+
+      {/* 1. Particle Quantity / Density Multiplier */}
+      <div className="space-y-2.5">
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-semibold text-zinc-200 flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Particle Quantity / Density</span>
+          </label>
+          <span className="font-mono text-cyan-400 text-[11px] font-bold">{particleDensity}</span>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+          {DENSITY_PRESETS.map((preset) => (
+            <button
+              key={preset.value}
+              type="button"
+              onClick={() => onChange('portrait_particle_density', preset.value)}
+              className={`p-2.5 rounded-xl border text-left transition-all ${
+                particleDensity === preset.value
+                  ? 'bg-cyan-950/40 border-cyan-500/80 text-white shadow-[0_0_12px_rgba(6,182,212,0.2)]'
+                  : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+              }`}
+            >
+              <div className="text-xs font-semibold">{preset.label}</div>
+              <div className="text-[10px] text-zinc-500 mt-0.5 leading-snug">{preset.desc}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 2. Particle Size Multiplier */}
+      <div className="space-y-2.5">
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-semibold text-zinc-200 flex items-center gap-1.5">
+            <Eye className="w-3.5 h-3.5 text-indigo-400" />
+            <span>Particle & Retro Star Size</span>
+          </label>
+          <span className="font-mono text-indigo-400 text-[11px] font-bold">{particleSize}</span>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+          {SIZE_PRESETS.map((preset) => (
+            <button
+              key={preset.value}
+              type="button"
+              onClick={() => onChange('portrait_particle_size', preset.value)}
+              className={`p-2.5 rounded-xl border text-left transition-all ${
+                particleSize === preset.value
+                  ? 'bg-indigo-950/40 border-indigo-500/80 text-white shadow-[0_0_12px_rgba(99,102,241,0.2)]'
+                  : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+              }`}
+            >
+              <div className="text-xs font-semibold">{preset.label}</div>
+              <div className="text-[10px] text-zinc-500 mt-0.5 leading-snug">{preset.desc}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 3. Glow Brightness / Intensity */}
+      <div className="space-y-2.5">
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-semibold text-zinc-200 flex items-center gap-1.5">
+            <Zap className="w-3.5 h-3.5 text-amber-400" />
+            <span>Glow Brightness & Bloom</span>
+          </label>
+          <span className="font-mono text-amber-400 text-[11px] font-bold">{glowBrightness}</span>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+          {GLOW_PRESETS.map((preset) => (
+            <button
+              key={preset.value}
+              type="button"
+              onClick={() => onChange('portrait_glow_brightness', preset.value)}
+              className={`p-2.5 rounded-xl border text-left transition-all ${
+                glowBrightness === preset.value
+                  ? 'bg-amber-950/40 border-amber-500/80 text-white shadow-[0_0_12px_rgba(245,158,11,0.2)]'
+                  : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+              }`}
+            >
+              <div className="text-xs font-semibold">{preset.label}</div>
+              <div className="text-[10px] text-zinc-500 mt-0.5 leading-snug">{preset.desc}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 4. Movement & Flight Speed Multiplier */}
+      <div className="space-y-2.5">
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-semibold text-zinc-200 flex items-center gap-1.5">
+            <Compass className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Flight Movement Speed & Docking</span>
+          </label>
+          <span className="font-mono text-emerald-400 text-[11px] font-bold">{flightSpeed}</span>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+          {SPEED_PRESETS.map((preset) => (
+            <button
+              key={preset.value}
+              type="button"
+              onClick={() => onChange('portrait_flight_speed', preset.value)}
+              className={`p-2.5 rounded-xl border text-left transition-all ${
+                flightSpeed === preset.value
+                  ? 'bg-emerald-950/40 border-emerald-500/80 text-white shadow-[0_0_12px_rgba(16,185,129,0.2)]'
+                  : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+              }`}
+            >
+              <div className="text-xs font-semibold">{preset.label}</div>
+              <div className="text-[10px] text-zinc-500 mt-0.5 leading-snug">{preset.desc}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 5. Device Capability Auto-Adjustment Information Card */}
+      <div className="p-3.5 rounded-2xl border border-zinc-800/80 bg-zinc-950/40 flex items-start gap-3">
+        <Cpu className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+        <div className="text-xs space-y-1">
+          <div className="font-semibold text-zinc-200">
+            Hardware-Adaptive Multiplier Scaling
+          </div>
+          <p className="text-zinc-400 text-[11px] leading-relaxed">
+            The C++ engine measures client CPU concurrency (<span className="text-zinc-300 font-mono">navigator.hardwareConcurrency</span>),
+            device memory, and screen density. On mobile devices or lower-core hardware, particle
+            density and glow radius automatically scale down (0.75x–0.85x) to maintain strict 60 FPS,
+            while high-end workstations get full unconstrained fidelity.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}

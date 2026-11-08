@@ -96,51 +96,43 @@ export function SupportTicketList({ tickets, onOpenCreateModal }: SupportTicketL
       {/* Filter Tabs Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
         <div className="inline-flex items-center gap-1.5 bg-muted/60 p-1 rounded-xl border border-border text-xs">
-          <button
+          <Button
             type="button"
+            variant={filter === 'all' ? 'secondary' : 'ghost'}
+            size="xs"
             onClick={() => setFilter('all')}
-            className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
-              filter === 'all'
-                ? 'bg-background text-foreground shadow-sm font-semibold'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
+            className={`rounded-lg ${filter === 'all' ? 'shadow-sm font-semibold' : ''}`}
           >
             All ({tickets.length})
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant={filter === 'open' ? 'secondary' : 'ghost'}
+            size="xs"
             onClick={() => setFilter('open')}
-            className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
-              filter === 'open'
-                ? 'bg-background text-foreground shadow-sm font-semibold'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
+            className={`rounded-lg ${filter === 'open' ? 'shadow-sm font-semibold' : ''}`}
           >
-            Active ({tickets.filter((t) => t.status !== 'closed' && t.status !== 'resolved').length}
-            )
-          </button>
-          <button
+            Active ({tickets.filter((t) => t.status !== 'closed' && t.status !== 'resolved').length})
+          </Button>
+          <Button
             type="button"
+            variant={filter === 'closed' ? 'secondary' : 'ghost'}
+            size="xs"
             onClick={() => setFilter('closed')}
-            className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
-              filter === 'closed'
-                ? 'bg-background text-foreground shadow-sm font-semibold'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
+            className={`rounded-lg ${filter === 'closed' ? 'shadow-sm font-semibold' : ''}`}
           >
-            Resolved (
-            {tickets.filter((t) => t.status === 'closed' || t.status === 'resolved').length})
-          </button>
+            Resolved ({tickets.filter((t) => t.status === 'closed' || t.status === 'resolved').length})
+          </Button>
         </div>
 
         {onOpenCreateModal && (
           <Button
             onClick={onOpenCreateModal}
             size="sm"
-            className="text-xs font-semibold rounded-xl gap-1.5 shrink-0 shadow-sm cursor-pointer"
+            leftIcon={<Plus className="w-3.5 h-3.5" />}
+            className="text-xs font-semibold rounded-xl shrink-0 shadow-sm"
           >
-            <Plus className="w-3.5 h-3.5" />
-            <span>New Ticket</span>
+            New Ticket
           </Button>
         )}
       </div>
@@ -194,7 +186,7 @@ export function SupportTicketList({ tickets, onOpenCreateModal }: SupportTicketL
 
             return (
               <Link key={ticket.id} href={`/support/tickets/${ticket.id}`} className="block group">
-                <Card className="bg-card text-card-foreground border-border shadow-sm rounded-2xl p-5 hover:border-primary/40 hover:shadow-md transition-all duration-200">
+                <Card className="bg-card text-card-foreground border-border shadow-sm rounded-2xl p-3 sm:p-3.5 md:p-4 hover:border-primary/40 hover:shadow-md transition-all duration-200">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="space-y-1.5 min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">

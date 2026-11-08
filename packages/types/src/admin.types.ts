@@ -85,6 +85,8 @@ export interface SiteFooterLink {
   readonly isActive: boolean;
 }
 
+export type EffectsLevel = 'high' | 'medium' | 'low';
+
 export interface SiteSetting {
   readonly key: string;
   readonly value: string;
@@ -100,9 +102,19 @@ export interface SiteAndCreatorIdentity {
     readonly description: string;
     readonly url: string;
     readonly logoUrl?: string;
+    readonly brandLogoUrl?: string;
+    readonly logoPixelsJson?: string;
     readonly ogImageUrl?: string;
     readonly keywords?: string;
     readonly statusBadge?: string;
+    readonly effectsLevel: EffectsLevel;
+    readonly portraitLightIntensity?: number;
+    readonly portraitImageDarkUrl?: string;
+    readonly portraitImageLightUrl?: string;
+    readonly portraitParticleDensity?: string;
+    readonly portraitParticleSize?: string;
+    readonly portraitGlowBrightness?: string;
+    readonly portraitFlightSpeed?: string;
   };
   readonly footer: {
     readonly copyright: string;
@@ -125,6 +137,13 @@ export interface SiteAndCreatorIdentity {
     readonly blogSubtitle: string;
     readonly closingCtaTitle?: string;
     readonly closingCtaSubtitle?: string;
+    readonly philosophyBadge?: string;
+    readonly philosophyCtaLabel?: string;
+    readonly philosophyCtaUrl?: string;
+    readonly atmosphereDensity?: string;
+    readonly meteorFrequency?: string;
+    readonly starsSpeed?: string;
+    readonly mobileEffects?: string;
   };
   readonly creator: {
     readonly name: string;
@@ -134,6 +153,8 @@ export interface SiteAndCreatorIdentity {
     readonly role: string;
     readonly location: string;
     readonly avatarUrl?: string;
+    readonly portraitImageDarkUrl?: string;
+    readonly portraitImageLightUrl?: string;
     readonly statement?: string;
     readonly shortBio: string;
     readonly longBio: string;

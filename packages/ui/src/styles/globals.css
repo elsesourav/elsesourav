@@ -10,24 +10,24 @@
   .dark,
   [data-theme='dark'] {
     /* Canvas & Core Backgrounds */
-    --background: 240 18% 4.5%;          /* #0a0b14 deep midnight space */
-    --foreground: 0 0% 98%;             /* #fafafa */
-    
+    --background: 240 18% 4.5%; /* #0a0b14 deep midnight space */
+    --foreground: 0 0% 98%; /* #fafafa */
+
     /* Surfaces */
-    --surface: 240 16% 6%;              /* #0e0f1d */
-    --surface-subtle: 240 14% 8%;       /* #131424 */
-    --surface-elevated: 240 14% 11%;    /* #191b30 */
+    --surface: 240 16% 6%; /* #0e0f1d */
+    --surface-subtle: 240 14% 8%; /* #131424 */
+    --surface-elevated: 240 14% 11%; /* #191b30 */
     --surface-overlay: 240 18% 4.5%;
-    --surface-sunken: 240 20% 3%;       /* #06070e */
+    --surface-sunken: 240 20% 3%; /* #06070e */
 
     /* Cards & Popovers */
-    --card: 240 16% 6.5%;               /* #0e101f */
+    --card: 240 16% 6.5%; /* #0e101f */
     --card-foreground: 0 0% 98%;
     --popover: 240 14% 11%;
     --popover-foreground: 0 0% 98%;
 
     /* Brand & Accents */
-    --primary: 238.7 83.5% 66.7%;        /* Indigo #6366f1 / #818cf8 */
+    --primary: 238.7 83.5% 66.7%; /* Indigo #6366f1 / #818cf8 */
     --primary-foreground: 0 0% 98%;
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
@@ -36,35 +36,35 @@
 
     /* Foregrounds & Typography */
     --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;   /* #a1a1aa */
-    --subtle-foreground: 240 5% 45%;    /* #71717a */
+    --muted-foreground: 240 5% 64.9%; /* #a1a1aa */
+    --subtle-foreground: 240 5% 45%; /* #71717a */
 
     /* Statuses */
-    --success: 152 69% 52%;             /* Emerald #34d399 */
+    --success: 152 69% 52%; /* Emerald #34d399 */
     --success-foreground: 0 0% 98%;
-    --warning: 45 93% 58%;              /* Amber #fbbf24 */
+    --warning: 45 93% 58%; /* Amber #fbbf24 */
     --warning-foreground: 240 10% 3.9%;
-    --destructive: 0 62.8% 50.6%;        /* Red #f87171 */
+    --destructive: 0 62.8% 50.6%; /* Red #f87171 */
     --destructive-foreground: 0 0% 98%;
     --error: 0 62.8% 50.6%;
     --error-foreground: 0 0% 98%;
-    --info: 199 89% 60%;                /* Sky #38bdf8 / Cyan */
+    --info: 199 89% 60%; /* Sky #38bdf8 / Cyan */
     --info-foreground: 0 0% 98%;
 
     /* Borders & Inputs */
-    --border: 240 14% 14%;              /* #1c1d2e */
-    --border-subtle: 240 14% 10%;       /* #131422 */
-    --border-strong: 240 14% 22%;       /* #2d2e46 */
+    --border: 240 14% 14%; /* #1c1d2e */
+    --border-subtle: 240 14% 10%; /* #131422 */
+    --border-strong: 240 14% 22%; /* #2d2e46 */
     --input: 240 14% 14%;
     --ring: 238.7 83.5% 66.7%;
 
     /* Radii */
-    --radius-sm: 0.375rem;              /* 6px */
-    --radius-md: 0.5rem;                /* 8px */
-    --radius: 0.75rem;                  /* 12px */
-    --radius-lg: 0.75rem;               /* 12px */
-    --radius-xl: 1rem;                  /* 16px */
-    --radius-2xl: 1.5rem;               /* 24px */
+    --radius-sm: 0.375rem; /* 6px */
+    --radius-md: 0.5rem; /* 8px */
+    --radius: 0.75rem; /* 12px */
+    --radius-lg: 0.75rem; /* 12px */
+    --radius-xl: 1rem; /* 16px */
+    --radius-2xl: 1.5rem; /* 24px */
     --radius-full: 9999px;
 
     /* Glass Tokens (Glassmorphism 2.0) */
@@ -78,10 +78,10 @@
     --glass-blur-lg: 24px;
 
     /* Ambient Lighting Tokens (Subtle, Focused Cosmic Atmosphere - NO OVERGLOW) */
-    --ambient-glow-1: rgba(99, 102, 241, 0.16);       /* Focused Indigo */
-    --ambient-glow-2: rgba(56, 189, 248, 0.12);       /* Soft Cyan */
-    --ambient-glow-3: rgba(168, 85, 247, 0.14);       /* Soft Violet */
-    --ambient-glow-4: rgba(244, 63, 94, 0.08);        /* Subtle Rose */
+    --ambient-glow-1: rgba(99, 102, 241, 0.16); /* Focused Indigo */
+    --ambient-glow-2: rgba(56, 189, 248, 0.12); /* Soft Cyan */
+    --ambient-glow-3: rgba(168, 85, 247, 0.14); /* Soft Violet */
+    --ambient-glow-4: rgba(244, 63, 94, 0.08); /* Subtle Rose */
     --ambient-pointer-glow: rgba(99, 102, 241, 0.08); /* Desktop pointer follow glow */
     --ambient-noise-opacity: 0.02;
 
@@ -97,7 +97,7 @@
   [data-theme='light'] {
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
-    
+
     --surface: 0 0% 98%;
     --surface-subtle: 240 5% 96%;
     --surface-elevated: 0 0% 100%;
@@ -144,11 +144,16 @@
     --glass-border-strong: rgba(0, 0, 0, 0.15);
 
     /* Ambient Lighting Tokens (Subtle Editorial Depth) */
-    --ambient-glow-1: rgba(99, 102, 241, 0.055);      /* Soft Indigo wash */
-    --ambient-glow-2: rgba(14, 165, 233, 0.04);       /* Soft Sky wash */
-    --ambient-glow-3: rgba(147, 51, 234, 0.035);      /* Soft Violet wash */
-    --ambient-glow-4: rgba(249, 115, 22, 0.025);      /* Warm Amber / Editorial tone */
-    --ambient-pointer-glow: rgba(99, 102, 241, 0.025);/* Desktop pointer follow glow */
+    --ambient-glow-1: rgba(99, 102, 241, 0.055); /* Soft Indigo wash */
+    --ambient-glow-2: rgba(14, 165, 233, 0.04); /* Soft Sky wash */
+    --ambient-glow-3: rgba(147, 51, 234, 0.035); /* Soft Violet wash */
+    --ambient-glow-4: rgba(249, 115, 22, 0.025); /* Warm Amber / Editorial tone */
+    --ambient-pointer-glow: rgba(
+      99,
+      102,
+      241,
+      0.14
+    ); /* Desktop pointer follow glow - tuned for light theme visibility */
     --ambient-noise-opacity: 0.012;
   }
 }
@@ -160,9 +165,19 @@ html {
 
 html,
 body {
+  margin: 0;
+  padding: 0;
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
-  font-family: var(--font-sans, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  font-family: var(
+    --font-sans,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif
+  );
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: clip;
@@ -172,6 +187,23 @@ body {
 /* ==========================================================================
    Typography Scale Utilities
    ========================================================================== */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.text-display,
+.text-h1,
+.text-h2,
+.text-h3,
+.font-display {
+  font-family: var(
+    --font-display,
+    var(--font-sans, system-ui, -apple-system, sans-serif)
+  );
+}
+
 .text-display {
   font-size: clamp(2.25rem, 5vw, 3.75rem);
   line-height: 1.08;
@@ -303,7 +335,9 @@ body {
 .depth-4 {
   background-color: hsl(var(--surface-elevated));
   border: 1px solid hsl(var(--primary));
-  box-shadow: 0 0 20px -3px rgba(99, 102, 241, 0.25), 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  box-shadow:
+    0 0 20px -3px rgba(99, 102, 241, 0.25),
+    0 25px 50px -12px rgba(0, 0, 0, 0.7);
 }
 
 /* Domain-Specific Surface Helpers */
@@ -549,11 +583,9 @@ body {
 @keyframes pageTransitionIn {
   from {
     opacity: 0;
-    transform: translateY(4px);
   }
   to {
     opacity: 1;
-    transform: none;
   }
 }
 
@@ -565,7 +597,8 @@ body {
    Unified Skeleton Loading & Shimmer System (Prompt 24)
    ========================================================================== */
 @keyframes skeletonPulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -655,7 +688,8 @@ body {
 
 /* Ambient Background Drift Animations (Extremely slow & hardware-accelerated) */
 @keyframes ambientDrift1 {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate3d(0, 0, 0) scale(1);
   }
   50% {
@@ -664,7 +698,8 @@ body {
 }
 
 @keyframes ambientDrift2 {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate3d(0, 0, 0) scale(1);
   }
   50% {
@@ -748,13 +783,15 @@ body {
 
     /* Card Glow Shadows */
     --shadow-neon-card: 0 20px 50px rgba(0, 0, 0, 0.6);
-    --shadow-neon-card-hover: 0 20px 60px rgba(99, 102, 241, 0.1), 0 0 0 1px rgba(99, 102, 241, 0.25);
+    --shadow-neon-card-hover:
+      0 20px 60px rgba(99, 102, 241, 0.1), 0 0 0 1px rgba(99, 102, 241, 0.25);
   }
 }
 
 /* Concentric Neon Avatar Ring */
 @keyframes neonPulse {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow:
       0 0 0 2.5px rgba(99, 102, 241, 0.85),
       0 0 24px rgba(99, 102, 241, 0.4),
@@ -783,7 +820,9 @@ body {
   border: 1px solid rgba(99, 102, 241, 0.15);
   border-radius: 1.5rem;
   box-shadow: var(--shadow-neon-card);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .card-obsidian-glass:hover {
@@ -823,4 +862,413 @@ body {
 }
 .border-glow-emerald:hover {
   border-color: rgba(16, 185, 129, 0.5);
+}
+
+/* ==========================================================================
+   Custom Global Scrollbar Architecture (Sleek, Refined, Premium)
+   ========================================================================== */
+
+/* Universal Scrollbar for Webkit/Blink browsers (Chrome, Edge, Safari, Opera) */
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: background-color 0.2s ease;
+}
+
+.light ::-webkit-scrollbar-thumb,
+[data-theme='light'] ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.18);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.32);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.light ::-webkit-scrollbar-thumb:hover,
+[data-theme='light'] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.35);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: hsl(var(--primary) / 0.7);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox Support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+
+.light *,
+[data-theme='light'] * {
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+/* Hidden scrollbar utilities */
+.no-scrollbar::-webkit-scrollbar,
+.scrollbar-none::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.no-scrollbar,
+.scrollbar-none {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+/* Hero Slider Progress & Content Transitions */
+@keyframes heroSlideProgress {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.animate-hero-progress {
+  animation: heroSlideProgress 5s linear forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-hero-progress {
+    animation: none;
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   Native View Transitions API — Circular Expansion Theme Wipe
+   (W3C View Transitions Level 1 + Web Animations API)
+   ========================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-image-pair(root) {
+    isolation: auto;
+  }
+
+  /* Keep the outgoing snapshot stationary underneath */
+  ::view-transition-old(root) {
+    animation: none;
+    z-index: 1;
+    mix-blend-mode: normal;
+  }
+
+  /* Incoming snapshot is animated exclusively via Web Animations API (JS)
+     from circle(0px at x y) to circle(endRadius at x y).
+     animation: none disables default UA crossfade and prevents CSS keyframe conflicts,
+     ensuring smooth GPU-composited expansion strictly from source coordinates to full screen */
+  ::view-transition-new(root) {
+    animation: none;
+    z-index: 9999;
+    mix-blend-mode: normal;
+  }
+}
+
+/* ==========================================================================
+   Visual Effects & Scroll Performance Fidelity Engine
+   Controls: high (default), medium, low
+   Configured via backend SiteSetting `effects_level` and html[data-effects]
+   ========================================================================== */
+
+/* ── HIGH FIDELITY (Default / Current Richness) ──────────────────────────── */
+:root,
+[data-effects='high'] {
+  --effects-level: 'high';
+}
+
+/* ── MEDIUM FIDELITY (Balanced & Smooth Scrolling) ───────────────────────── */
+[data-effects='medium'] {
+  /* Subdued glass tokens */
+  --glass-blur-sm: 4px;
+  --glass-blur-md: 6px;
+  --glass-blur-lg: 8px;
+  --glass-bg-subtle: rgba(10, 11, 20, 0.75);
+  --glass-bg: rgba(14, 16, 29, 0.88);
+  --glass-bg-elevated: rgba(25, 27, 48, 0.94);
+
+  /* Subdued ambient lighting */
+  --ambient-glow-1: rgba(99, 102, 241, 0.08);
+  --ambient-glow-2: rgba(56, 189, 248, 0.06);
+  --ambient-glow-3: rgba(168, 85, 247, 0.06);
+  --ambient-glow-4: rgba(244, 63, 94, 0.04);
+  --ambient-pointer-glow: rgba(99, 102, 241, 0.04);
+}
+
+.light[data-effects='medium'],
+[data-theme='light'][data-effects='medium'] {
+  --glass-blur-sm: 4px;
+  --glass-blur-md: 6px;
+  --glass-blur-lg: 8px;
+  --glass-bg-subtle: rgba(255, 255, 255, 0.85);
+  --glass-bg: rgba(255, 255, 255, 0.92);
+  --glass-bg-elevated: rgba(255, 255, 255, 0.96);
+  --ambient-glow-1: rgba(99, 102, 241, 0.03);
+  --ambient-glow-2: rgba(14, 165, 233, 0.02);
+  --ambient-glow-3: rgba(147, 51, 234, 0.02);
+  --ambient-glow-4: rgba(249, 115, 22, 0.015);
+}
+
+/* Medium: Clamp all backdrop blurs to 4px max */
+[data-effects='medium'] [class*='backdrop-blur'] {
+  --tw-backdrop-blur: blur(4px) !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+}
+
+[data-effects='medium'] .surface-glass,
+[data-effects='medium'] .surface-glass-subtle,
+[data-effects='medium'] .surface-glass-elevated,
+[data-effects='medium'] .card-obsidian-glass {
+  backdrop-filter: blur(var(--glass-blur-md)) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur-md)) !important;
+}
+
+/* Medium: Subdue heavy elevation shadows to soft lightweight single-layer shadows */
+[data-effects='medium'] .shadow-2xl,
+[data-effects='medium'] .shadow-xl,
+[data-effects='medium'] .shadow-lg,
+[data-effects='medium'] .shadow-neon-card,
+[data-effects='medium'] .shadow-glow-indigo,
+[data-effects='medium'] [class*='shadow-2xl'],
+[data-effects='medium'] [class*='shadow-xl'],
+[data-effects='medium'] [class*='shadow-lg'],
+[data-effects='medium'] [class*='shadow-['] {
+  --tw-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.22), 0 2px 4px -2px rgba(0, 0, 0, 0.22) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.22), 0 2px 4px -2px rgba(0, 0, 0, 0.22) !important;
+}
+
+[data-effects='medium'] [class*='hover:shadow']:hover,
+[data-effects='medium'] .group:hover [class*='group-hover:shadow'] {
+  --tw-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.25) !important;
+  box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.25) !important;
+}
+
+[data-effects='medium'] [class*='drop-shadow'],
+[data-effects='medium'] [class*='drop-shadow-['] {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25)) !important;
+}
+
+[data-effects='medium'] .depth-2,
+[data-effects='medium'] .depth-3,
+[data-effects='medium'] .depth-4,
+[data-effects='medium'] .surface-elevated,
+[data-effects='medium'] .surface-overlay,
+[data-effects='medium'] .surface-glass-elevated {
+  box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Medium: Dim background glow fields & pause continuous drift to keep 60fps scroll */
+[data-effects='medium'] .ambient-glow-orb,
+[data-effects='medium'] [data-ambient-orb],
+[data-effects='medium'] .hero-island-fog-1,
+[data-effects='medium'] .hero-island-fog-2,
+[data-effects='medium'] .hero-island-shadow,
+[data-effects='medium'] div:not([class*='backdrop-blur'])[class*='blur-3xl'],
+[data-effects='medium'] div:not([class*='backdrop-blur'])[class*='blur-2xl'],
+[data-effects='medium'] div:not([class*='backdrop-blur'])[class*='blur-xl'],
+[data-effects='medium'] div:not([class*='backdrop-blur'])[class*='blur-[8'],
+[data-effects='medium'] div:not([class*='backdrop-blur'])[class*='blur-[9'],
+[data-effects='medium'] div:not([class*='backdrop-blur'])[class*='blur-[1'] {
+  filter: blur(20px) !important;
+  opacity: 0.25 !important;
+  animation-play-state: paused !important;
+}
+
+[data-effects='medium'] .hero-atmospheric-canvas {
+  opacity: 0.35 !important;
+}
+
+[data-effects='medium'] .hero-main-island {
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.35)) !important;
+}
+
+[data-effects='medium'] .ambient-base-gradient {
+  opacity: 0.35 !important;
+}
+
+/* ── LOW FIDELITY / PERFORMANCE-FIRST (Maximum Scroll Speed) ─────────────── */
+[data-effects='low'] {
+  /* Flatten glass tokens into solid surfaces */
+  --glass-blur-sm: 0px;
+  --glass-blur-md: 0px;
+  --glass-blur-lg: 0px;
+  --glass-bg-subtle: hsl(var(--surface-subtle));
+  --glass-bg: hsl(var(--surface));
+  --glass-bg-elevated: hsl(var(--surface-elevated));
+
+  /* Disable ambient lighting */
+  --ambient-glow-1: transparent;
+  --ambient-glow-2: transparent;
+  --ambient-glow-3: transparent;
+  --ambient-glow-4: transparent;
+  --ambient-pointer-glow: transparent;
+}
+
+.light[data-effects='low'],
+[data-theme='light'][data-effects='low'] {
+  --glass-blur-sm: 0px;
+  --glass-blur-md: 0px;
+  --glass-blur-lg: 0px;
+  --glass-bg-subtle: hsl(var(--surface-subtle));
+  --glass-bg: hsl(var(--surface));
+  --glass-bg-elevated: hsl(var(--surface-elevated));
+  --ambient-glow-1: transparent;
+  --ambient-glow-2: transparent;
+  --ambient-glow-3: transparent;
+  --ambient-glow-4: transparent;
+  --ambient-pointer-glow: transparent;
+}
+
+/* Low: ZERO backdrop-filter shaders — eliminates composite thrashing during scroll */
+[data-effects='low'] [class*='backdrop-blur'] {
+  --tw-backdrop-blur: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+[data-effects='low'] .surface-glass,
+[data-effects='low'] .surface-glass-subtle,
+[data-effects='low'] .surface-glass-elevated,
+[data-effects='low'] .card-obsidian-glass {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background-color: hsl(var(--surface)) !important;
+}
+
+/* Low: Flatten all elevation and glow shadows — zero blur convolutions */
+[data-effects='low'] .shadow,
+[data-effects='low'] .shadow-2xl,
+[data-effects='low'] .shadow-xl,
+[data-effects='low'] .shadow-lg,
+[data-effects='low'] .shadow-md,
+[data-effects='low'] .shadow-sm,
+[data-effects='low'] .shadow-xs,
+[data-effects='low'] .shadow-2xs,
+[data-effects='low'] [class*='shadow-'],
+[data-effects='low'] [class*='shadow'],
+[data-effects='low'] .shadow-neon-card,
+[data-effects='low'] .shadow-neon-ring,
+[data-effects='low'] .shadow-glow-indigo,
+[data-effects='low'] .depth-2,
+[data-effects='low'] .depth-3,
+[data-effects='low'] .depth-4,
+[data-effects='low'] .surface-elevated,
+[data-effects='low'] .surface-overlay,
+[data-effects='low'] .surface-glass-elevated,
+[data-effects='low'] .card-obsidian-glass {
+  --tw-shadow: 0 0 #0000 !important;
+  --tw-shadow-colored: 0 0 #0000 !important;
+  box-shadow: none !important;
+}
+
+[data-effects='low'] [class*='hover:shadow']:hover,
+[data-effects='low'] [class*='hover:shadow-']:hover,
+[data-effects='low'] .group:hover [class*='group-hover:shadow'],
+[data-effects='low'] .group:hover [class*='group-hover:shadow-'] {
+  --tw-shadow: 0 0 #0000 !important;
+  --tw-shadow-colored: 0 0 #0000 !important;
+  box-shadow: none !important;
+}
+
+[data-effects='low'] [class*='drop-shadow'],
+[data-effects='low'] [class*='drop-shadow-['] {
+  filter: none !important;
+}
+
+/* Low: Solidify translucent surfaces so content passing behind does not bleed or jitter */
+[data-effects='low'] header,
+[data-effects='low'] header > div,
+[data-effects='low'] footer,
+[data-effects='low'] footer > div,
+[data-effects='low'] nav.fixed,
+[data-effects='low'] [class*='sticky'] {
+  background-color: hsl(var(--background)) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+[data-effects='low'] [role='menu'],
+[data-effects='low'] [role='dialog'],
+[data-effects='low'] .dropdown-menu {
+  background-color: hsl(var(--surface-elevated)) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+[data-effects='low'] [class*='bg-background/'],
+[data-effects='low'] [class*='bg-[hsl(var(--background))]/'] {
+  background-color: hsl(var(--background)) !important;
+}
+
+[data-effects='low'] [class*='bg-card/'],
+[data-effects='low'] [class*='bg-[hsl(var(--card))]/'] {
+  background-color: hsl(var(--card)) !important;
+}
+
+[data-effects='low'] [class*='bg-surface/'],
+[data-effects='low'] [class*='bg-[hsl(var(--surface))]/'] {
+  background-color: hsl(var(--surface)) !important;
+}
+
+[data-effects='low'] [class*='bg-zinc-900/'] {
+  background-color: hsl(var(--surface)) !important;
+}
+
+/* Low: Hide decorative large blurred gradient orbs — saves massive offscreen raster passes */
+[data-effects='low'] .ambient-glow-orb,
+[data-effects='low'] [data-ambient-orb],
+[data-effects='low'] .hero-island-fog-1,
+[data-effects='low'] .hero-island-fog-2,
+[data-effects='low'] .hero-island-shadow,
+[data-effects='low'] .hero-atmospheric-canvas,
+[data-effects='low'] div:not([class*='backdrop-blur'])[class*='blur-3xl'],
+[data-effects='low'] div:not([class*='backdrop-blur'])[class*='blur-2xl'],
+[data-effects='low'] div:not([class*='backdrop-blur'])[class*='blur-xl'],
+[data-effects='low'] div:not([class*='backdrop-blur'])[class*='blur-[8'],
+[data-effects='low'] div:not([class*='backdrop-blur'])[class*='blur-[9'],
+[data-effects='low'] div:not([class*='backdrop-blur'])[class*='blur-[1'] {
+  display: none !important;
+}
+
+[data-effects='low'] .hero-main-island {
+  filter: none !important;
+}
+
+[data-effects='low'] .ambient-base-gradient {
+  display: none !important;
+}
+
+/* Low: Disable continuous infinite animation loops while scrolling */
+[data-effects='low'] .animate-pulse-slow,
+[data-effects='low'] .animate-ambient-drift-1,
+[data-effects='low'] .animate-ambient-drift-2,
+[data-effects='low'] .animate-neon-pulse,
+[data-effects='low'] .avatar-neon-concentric {
+  animation: none !important;
 }

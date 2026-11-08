@@ -119,20 +119,18 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  async rewrites() {
-    return [
-      {
-        source: '/updates',
-        destination: '/notes',
-      },
-      {
-        source: '/updates/:slug*',
-        destination: '/notes/:slug*',
-      },
-    ];
-  },
   async redirects() {
     return [
+      {
+        source: '/achievement',
+        destination: '/archive',
+        permanent: true,
+      },
+      {
+        source: '/achievements',
+        destination: '/archive',
+        permanent: true,
+      },
       {
         source: '/notes',
         destination: '/updates',
@@ -204,6 +202,16 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
     ];
+  },
+  webpack: (config, { dev }) => {
+    if (dev) {
+      config.watchOptions = {
+        ...config.watchOptions,
+        aggregateTimeout: 500,
+        ignored: ['**/node_modules/**', '**/.git/**', '**/dist/**', '**/.turbo/**'],
+      };
+    }
+    return config;
   },
 };
 

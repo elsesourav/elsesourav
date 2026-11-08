@@ -47,6 +47,24 @@ describe('Site Settings & Content Architecture (Prompt 01 + Prompt 02 Extended)'
       expect(KNOWN_SETTING_KEYS).toContain('hero_headline');
       expect(KNOWN_SETTING_KEYS).toContain('github_url');
       expect(KNOWN_SETTING_KEYS).toContain('contact_email');
+      expect(KNOWN_SETTING_KEYS).toContain('effects_level');
+    });
+
+    it('validates effects_level with allowed options and default', () => {
+      const high = SiteSettingsSchema.parse({ effects_level: 'high' });
+      expect(high.effects_level).toBe('high');
+
+      const medium = SiteSettingsSchema.parse({ effects_level: 'medium' });
+      expect(medium.effects_level).toBe('medium');
+
+      const low = SiteSettingsSchema.parse({ effects_level: 'low' });
+      expect(low.effects_level).toBe('low');
+
+      expect(() =>
+        SiteSettingsSchema.parse({
+          effects_level: 'ultra' as unknown as 'high',
+        })
+      ).toThrow();
     });
 
     it('parses string list JSON arrays with fallback', () => {
@@ -350,13 +368,17 @@ describe('Site Settings & Content Architecture (Prompt 01 + Prompt 02 Extended)'
       documentationMd: '## Terminal Pro Documentation\n\nFull guide here.',
       iconUrl: 'https://elsesourav.com/icon.png',
       featuredImageUrl: null,
+      featuredImageMobileUrl: null,
       demoUrl: null,
       videoUrl: null,
       status: PublishStatus.PUBLISHED,
       sortOrder: 1,
       isFeatured: true,
       isPinned: false,
+      orientation: 'landscape',
       currentVersion: '2.1.0',
+      bundleSize: null,
+      primaryLanguage: 'en',
       seoTitle: null,
       seoDescription: null,
       publishedAt: new Date('2026-01-01T00:00:00Z'),

@@ -6,12 +6,15 @@
   "packageManager": "pnpm@9.15.9",
   "scripts": {
     "dev": "turbo dev",
+    "dev:manual": "NEXT_PUBLIC_DISABLE_HMR=true turbo dev",
+    "dev:turbo": "turbo dev -- --turbo",
     "build": "turbo build",
     "start": "pnpm --filter @elsesourav/web start",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
     "seed": "pnpm --filter @elsesourav/database db:seed",
+    "sync:portrait": "pnpm --filter @elsesourav/database exec tsx ../../scripts/upload-portrait-assets.ts",
     "admin:create": "pnpm --filter @elsesourav/database exec tsx prisma/seed/create-admin-user.ts",
     "db:migrate": "pnpm --filter @elsesourav/database db:migrate",
     "db:generate": "pnpm --filter @elsesourav/database db:generate",
@@ -19,8 +22,9 @@
     "prisma": "pnpm --filter @elsesourav/database exec prisma",
     "preinstall": "npx only-allow pnpm",
     "postinstall": "pnpm db:generate",
-    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
-    "format:check": "prettier --check \"**/*.{ts,tsx,md,json}\""
+    "format": "eslint . --fix && prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,md,json}\"",
+    "lint:fix": "eslint . --fix"
   },
   "devDependencies": {
     "@eslint/js": "^9.20.0",
@@ -29,7 +33,9 @@
     "eslint": "^9.20.1",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
+    "eslint-plugin-unused-imports": "^4.4.1",
     "globals": "^15.15.0",
+    "playwright-core": "^1.65.0",
     "prettier": "^3.5.1",
     "turbo": "^2.4.4",
     "typescript": "^5.7.3",

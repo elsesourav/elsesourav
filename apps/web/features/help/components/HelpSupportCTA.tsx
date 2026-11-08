@@ -5,7 +5,7 @@ import { Headphones, ArrowRight } from 'lucide-react';
 
 export function HelpSupportCTA() {
   return (
-    <Card className="p-8 rounded-3xl border-indigo-500/30 bg-gradient-to-br from-indigo-500/10 via-[hsl(var(--card))] to-[hsl(var(--surface-subtle))] backdrop-blur-md shadow-2xl">
+    <Card className="p-4 sm:p-5 md:p-6 rounded-2xl sm:rounded-3xl border-indigo-500/30 bg-gradient-to-br from-indigo-500/10 via-[hsl(var(--card))] to-[hsl(var(--surface-subtle))] backdrop-blur-md shadow-2xl">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div className="flex items-start sm:items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
@@ -23,9 +23,11 @@ export function HelpSupportCTA() {
         </div>
 
         <Link href="/support" className="shrink-0">
-          <Button className="w-full sm:w-auto bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary-hover))] text-[hsl(var(--primary-foreground))] text-xs font-semibold px-5 py-2.5 rounded-xl gap-1.5 shadow-lg">
-            <span>Contact Support Desk</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+          <Button
+            rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
+            className="w-full sm:w-auto bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary-hover))] text-[hsl(var(--primary-foreground))] text-xs font-semibold px-5 py-2.5 rounded-xl shadow-lg"
+          >
+            Contact Support Desk
           </Button>
         </Link>
       </div>

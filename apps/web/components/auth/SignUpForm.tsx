@@ -543,9 +543,7 @@ export function SignUpForm() {
               autoComplete="username"
               placeholder="alexsmith"
               value={username}
-              onChange={(val) =>
-                setUsername(val.toLowerCase().replace(/[^a-z0-9_-]/g, ''))
-              }
+              onChange={(val) => setUsername(val.toLowerCase().replace(/[^a-z0-9_-]/g, ''))}
               required
               disabled={loading}
               icon={<AtSign className="w-4 h-4" />}
@@ -587,14 +585,14 @@ export function SignUpForm() {
           <Button
             type="submit"
             disabled={!isStep1Valid}
-            className={`w-full text-white text-sm font-medium py-2.5 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all mt-1 ${
+            rightIcon={<ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />}
+            className={`w-full text-white text-sm font-medium py-2.5 rounded-xl shadow-lg mt-1 ${
               isStep1Valid
-                ? 'bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-600 shadow-indigo-600/25 cursor-pointer active:scale-[0.99]'
-                : 'bg-zinc-800 text-zinc-400 opacity-60 cursor-not-allowed'
+                ? 'bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-600 shadow-indigo-600/25'
+                : 'bg-zinc-800 text-zinc-400 opacity-60'
             }`}
           >
-            <span>Continue</span>
-            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+            Continue
           </Button>
         </form>
       )}
@@ -755,15 +753,9 @@ export function SignUpForm() {
               required
               disabled={loading}
               icon={<Lock className="w-4 h-4" />}
-              hint={
-                confirmPassword && !confirmPasswordError
-                  ? 'Passwords match ✓'
-                  : undefined
-              }
+              hint={confirmPassword && !confirmPasswordError ? 'Passwords match ✓' : undefined}
               error={
-                touched.confirmPassword && confirmPasswordError
-                  ? confirmPasswordError
-                  : undefined
+                touched.confirmPassword && confirmPasswordError ? confirmPasswordError : undefined
               }
             />
 
@@ -774,18 +766,19 @@ export function SignUpForm() {
                 variant="outline"
                 onClick={() => setStep(1)}
                 disabled={loading}
-                className="w-1/3 border-[hsl(var(--border))] hover:bg-[hsl(var(--surface-subtle))] text-xs text-[hsl(var(--foreground))] py-2.5 rounded-xl flex items-center justify-center gap-1.5"
+                leftIcon={<ArrowLeft className="w-3.5 h-3.5" />}
+                className="w-1/3 text-xs py-2.5 rounded-xl"
               >
-                <ArrowLeft className="w-3.5 h-3.5" />
-                <span>Back</span>
+                Back
               </Button>
 
               <Button
                 type="submit"
-                isLoading={loading}
+                loading={loading}
+                loadingText="Creating..."
                 className="flex-1 bg-[hsl(var(--primary))] hover:opacity-90 text-white text-sm font-medium py-2.5 rounded-xl shadow-lg shadow-indigo-600/20"
               >
-                <span>{loading ? 'Creating...' : 'Create Account'}</span>
+                Create Account
               </Button>
             </div>
           </form>

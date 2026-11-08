@@ -189,9 +189,11 @@ export async function sendOtpEmail({
 
     // Neither Resend nor SMTP is configured
     console.error(`[MAILER] ❌ Error: Neither Resend nor Gmail SMTP credentials are configured!`);
-    console.info(
-      `\n[DEVELOPMENT EMAIL OTP]\nTo: ${to}\nPurpose: ${purpose}\n6-Digit OTP Code: >>> ${otp} <<<\n`
-    );
+    if (process.env.NODE_ENV === 'development') {
+      console.info(
+        `\n[DEVELOPMENT EMAIL OTP]\nTo: ${to}\nPurpose: ${purpose}\n6-Digit OTP Code: >>> ${otp} <<<\n`
+      );
+    }
     return {
       success: false,
       error:

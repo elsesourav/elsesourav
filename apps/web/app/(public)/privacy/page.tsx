@@ -1,10 +1,12 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { Card } from '@elsesourav/ui';
+import { PageShell, Card } from '@elsesourav/ui';
 import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
-import { Shield, ArrowLeft, Lock, Eye, Database } from 'lucide-react';
-
+import { Shield, ArrowLeft } from 'lucide-react';
+import { AdminRepository } from '@elsesourav/database';
 import { buildPageMetadata } from '@/lib/seo-metadata';
+import { MarkdownRenderer } from '@/components/markdown/MarkdownRenderer';
+import { DEFAULT_PRIVACY_POLICY_MD } from '@/lib/legal-defaults';
 
 export const metadata: Metadata = buildPageMetadata({
   title: 'Privacy Policy',
@@ -13,7 +15,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: '/privacy',
 });
 
-export default function PrivacyPage() {
+export default async function PrivacyPage() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
@@ -27,97 +29,47 @@ export default function PrivacyPage() {
     },
   };
 
+  // Load from database, fall back to default
+  let privacyContent = DEFAULT_PRIVACY_POLICY_MD;
+  try {
+    const adminRepo = new AdminRepository();
+    const settings = await adminRepo.getAllSettings();
+    if (settings['legal_privacy_md']?.trim()) {
+      privacyContent = settings['legal_privacy_md'];
+    }
+  } catch {
+    // Silently fall back to default content
+  }
+
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <PageShell size="lg" glow>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+      <div className="max-w-4xl mx-auto space-y-8">
         <Link
           href={ROUTES.HOME}
-          className="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" /> Back to Home
         </Link>
 
         {/* Header */}
         <div className="space-y-3">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 text-xs font-medium">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-medium">
             <Shield className="w-3.5 h-3.5" />
             <span>Data Protection & Privacy</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-zinc-100 tracking-tight">
-            Privacy Policy
-          </h1>
-          <p className="text-sm text-zinc-400">
-            Last revised: August 29, 2026. Effective for all ElseSourav applications, services, and
-            web tools.
-          </p>
         </div>
 
-        {/* Policy Content */}
-        <div className="space-y-6">
-          <Card className="p-6 sm:p-8 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-sm space-y-6">
-            <section className="space-y-3">
-              <h2 className="text-lg font-bold text-zinc-100 flex items-center gap-2">
-                <Lock className="w-5 h-5 text-indigo-400" /> 1. Commitment to User Privacy
-              </h2>
-              <p className="text-sm text-zinc-300 leading-relaxed">
-                ElseSourav (&ldquo;we&rdquo;, &ldquo;our&rdquo;, or &ldquo;platform&rdquo;) develops
-                high-performance developer software, web applications, and technical content. We
-                prioritize minimal data collection, transparency, and strict protection of your
-                information.
-              </p>
-            </section>
-
-            <section className="space-y-3">
-              <h2 className="text-lg font-bold text-zinc-100 flex items-center gap-2">
-                <Eye className="w-5 h-5 text-cyan-400" /> 2. Information We Collect
-              </h2>
-              <ul className="text-sm text-zinc-300 space-y-2 list-disc list-inside">
-                <li>
-                  <strong className="text-zinc-100">Account Information:</strong> When you register
-                  via Supabase Auth, we store your email, username, and authentication identifiers.
-                </li>
-                <li>
-                  <strong className="text-zinc-100">Support Interactions:</strong> Inquiries,
-                  tickets, and feedback submitted through our support desk.
-                </li>
-                <li>
-                  <strong className="text-zinc-100">Anonymous Telemetry:</strong> Aggregated,
-                  non-identifiable usage statistics to optimize low-latency performance and diagnose
-                  errors.
-                </li>
-              </ul>
-            </section>
-
-            <section className="space-y-3">
-              <h2 className="text-lg font-bold text-zinc-100 flex items-center gap-2">
-                <Database className="w-5 h-5 text-emerald-400" /> 3. Data Storage & Security
-              </h2>
-              <p className="text-sm text-zinc-300 leading-relaxed">
-                Your data is stored in PostgreSQL databases protected by role-based access controls
-                (RBAC) and row-level security (RLS). We never sell, monetize, or transfer your
-                personal data to third-party advertising networks.
-              </p>
-            </section>
-
-            <section className="space-y-3">
-              <h2 className="text-lg font-bold text-zinc-100">4. Your Rights & Account Deletion</h2>
-              <p className="text-sm text-zinc-300 leading-relaxed">
-                You retain full ownership of your data. You may update your profile information,
-                manage communication preferences, or request full account deletion at any time via
-                your{' '}
-                <Link href={ROUTES.SETTINGS} className="text-indigo-400 hover:underline">
-                  Account Settings
-                </Link>
-                .
-              </p>
-            </section>
-          </Card>
-        </div>
+        {/* Dynamic Markdown Content */}
+        <Card className="p-4 sm:p-5 md:p-6 rounded-2xl sm:rounded-3xl border-[hsl(var(--border))] bg-[hsl(var(--card))] shadow-xl">
+          <div className="prose prose-sm dark:prose-invert max-w-none prose-headings:text-[hsl(var(--foreground))] prose-p:text-[hsl(var(--muted-foreground))] prose-a:text-indigo-600 dark:prose-a:text-indigo-400 prose-strong:text-[hsl(var(--foreground))] prose-li:text-[hsl(var(--muted-foreground))] prose-th:text-[hsl(var(--foreground))] prose-td:text-[hsl(var(--muted-foreground))]">
+            <MarkdownRenderer content={privacyContent} />
+          </div>
+        </Card>
       </div>
-    </div>
+    </PageShell>
   );
 }

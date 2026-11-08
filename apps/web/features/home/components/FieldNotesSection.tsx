@@ -22,19 +22,13 @@ export function FieldNotesSection({ posts, totalCount, title, subtitle }: FieldN
   const supportingPosts = posts.slice(1, 3);
 
   return (
-    <Section id="updates" spacing="lg" className="border-t border-[hsl(var(--border))]/80">
-      <Container size="lg">
+    <Section id="updates" spacing="none" className="py-8 sm:py-14 lg:py-20 scroll-mt-16 sm:scroll-mt-20 border-t border-[hsl(var(--border))]/80">
+      <Container size="lg" className="px-3 sm:px-6 lg:px-8">
         <Reveal direction="up" distance={14}>
           <SectionHeader
             align="split"
             caption="Updates"
-            title={
-              <TextReveal
-                text={title || 'Latest Updates'}
-                by="word"
-                stagger={0.06}
-              />
-            }
+            title={<TextReveal text={title || 'Latest Updates'} by="word" stagger={0.06} />}
             description={
               <TextReveal
                 text={
@@ -48,49 +42,49 @@ export function FieldNotesSection({ posts, totalCount, title, subtitle }: FieldN
             }
             actions={
               <Link
-                href={ROUTES.BLOG}
-                className="text-sm font-semibold text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded p-1 group"
+                href={ROUTES.UPDATES}
+                className="text-xs sm:text-sm font-semibold text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded p-1 group"
               >
                 <span>Read all updates {totalCount > 0 ? `(${totalCount})` : ''}</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             }
           />
         </Reveal>
 
-        <div className="pt-4">
+        <div className="pt-3 sm:pt-4">
           {posts.length >= 2 ? (
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8 items-stretch">
               {/* Left Column: Emphasized Lead Editorial Essay */}
               {leadPost && (
                 <Reveal direction="up" distance={16} delay={0.06} className="lg:col-span-7">
                   <Link
                     href={`/updates/${leadPost.slug}`}
-                    className="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-3xl"
+                    className="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-2xl sm:rounded-3xl"
                   >
-                    <article className="h-full border border-[hsl(var(--border))] bg-gradient-to-br from-[hsl(var(--card))] to-[hsl(var(--surface-subtle))] hover:border-cyan-500/50 p-6 sm:p-8 md:p-9 rounded-3xl transition-all duration-300 flex flex-col justify-between backdrop-blur-md group-hover:shadow-2xl group-hover:shadow-cyan-500/10 group-hover:-translate-y-1 active:scale-[0.99] active:translate-y-0">
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between text-xs pb-3 border-b border-[hsl(var(--border-subtle))]">
-                          <span className="font-mono text-cyan-600 dark:text-cyan-400 text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5">
-                            <BookOpen className="w-3.5 h-3.5" />
-                            <span>Update // {leadPost.category?.name || 'Architecture'}</span>
+                    <article className="h-full border border-[hsl(var(--border))] bg-gradient-to-br from-[hsl(var(--card))] to-[hsl(var(--surface-subtle))] hover:border-cyan-500/50 p-3 sm:p-4 md:p-5 rounded-2xl sm:rounded-3xl transition-colors duration-200 flex flex-col justify-between backdrop-blur-md group-hover:shadow-xl group-hover:shadow-cyan-500/5">
+                      <div className="space-y-2.5 sm:space-y-4">
+                        <div className="flex items-center justify-between text-[10px] sm:text-xs pb-2 sm:pb-3 border-b border-[hsl(var(--border-subtle))]">
+                          <span className="font-mono text-cyan-600 dark:text-cyan-400 font-semibold uppercase tracking-wider flex items-center gap-1.5 truncate max-w-[210px] sm:max-w-none">
+                            <BookOpen className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+                            <span className="truncate">Update // {leadPost.category?.name || 'Architecture'}</span>
                           </span>
-                          <span className="text-[hsl(var(--muted-foreground))] text-xs font-mono flex items-center gap-1">
+                          <span className="text-[hsl(var(--muted-foreground))] font-mono flex items-center gap-1 shrink-0 ml-2">
                             <Clock className="w-3 h-3" />
                             <span>{leadPost.readingTime} min read</span>
                           </span>
                         </div>
 
-                        <h3 className="font-bold text-2xl sm:text-3xl text-[hsl(var(--foreground))] group-hover:text-cyan-600 dark:group-hover:text-cyan-200 transition-colors leading-tight">
+                        <h3 className="font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl text-[hsl(var(--foreground))] group-hover:text-cyan-600 dark:group-hover:text-cyan-200 transition-colors leading-snug sm:leading-tight">
                           {leadPost.title}
                         </h3>
 
-                        <p className="text-sm sm:text-base text-[hsl(var(--muted-foreground))] leading-relaxed line-clamp-3">
+                        <p className="text-xs sm:text-sm md:text-base text-[hsl(var(--muted-foreground))] leading-relaxed line-clamp-2 sm:line-clamp-3">
                           {leadPost.excerpt}
                         </p>
                       </div>
 
-                      <div className="flex items-center justify-between pt-6 mt-6 border-t border-[hsl(var(--border-subtle))] text-xs text-[hsl(var(--muted-foreground))]">
+                      <div className="flex items-center justify-between pt-3 sm:pt-5 mt-3 sm:mt-5 border-t border-[hsl(var(--border-subtle))] text-[10px] sm:text-xs text-[hsl(var(--muted-foreground))]">
                         {leadPost.publishedAt ? (
                           <time
                             dateTime={new Date(leadPost.publishedAt).toISOString()}
@@ -123,7 +117,7 @@ export function FieldNotesSection({ posts, totalCount, title, subtitle }: FieldN
                   direction="up"
                   distance={16}
                   delay={0.12}
-                  className="lg:col-span-5 flex flex-col justify-between divide-y divide-[hsl(var(--border-subtle))] rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-6 sm:p-7 backdrop-blur-sm shadow-md"
+                  className="lg:col-span-5 flex flex-col justify-between divide-y divide-[hsl(var(--border-subtle))] rounded-2xl sm:rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-3 sm:p-4 md:p-5 backdrop-blur-sm shadow-md"
                 >
                   {supportingPosts.map((post: BlogPostListItem, idx: number) => {
                     const formattedIdx = String(idx + 1).padStart(2, '0');
@@ -131,22 +125,22 @@ export function FieldNotesSection({ posts, totalCount, title, subtitle }: FieldN
                       <Link
                         key={post.id}
                         href={`/updates/${post.slug}`}
-                        className="group block py-5 first:pt-0 last:pb-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-xl"
+                        className="group block py-3 sm:py-4 first:pt-0 last:pb-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-xl"
                       >
-                        <article className="space-y-2">
-                          <div className="flex items-center justify-between text-xs text-[hsl(var(--muted-foreground))] font-mono">
-                            <div className="flex items-center gap-2">
-                              <span className="text-cyan-600 dark:text-cyan-400 font-bold text-xs bg-cyan-500/10 px-1.5 py-0.5 rounded border border-cyan-500/20">
+                        <article className="space-y-1.5 sm:space-y-2">
+                          <div className="flex items-center justify-between text-[10px] sm:text-xs text-[hsl(var(--muted-foreground))] font-mono">
+                            <div className="flex items-center gap-1.5 sm:gap-2">
+                              <span className="text-cyan-600 dark:text-cyan-400 font-bold text-[10px] sm:text-xs bg-cyan-500/10 px-1.5 py-0.5 rounded border border-cyan-500/20">
                                 {formattedIdx}
                               </span>
-                              <span className="text-cyan-600 dark:text-cyan-400 font-medium uppercase tracking-wider text-[11px]">
+                              <span className="text-cyan-600 dark:text-cyan-400 font-medium uppercase tracking-wider text-[10px] sm:text-[11px] truncate max-w-[120px] sm:max-w-none">
                                 {post.category?.name || 'Update'}
                               </span>
                             </div>
                             {post.publishedAt ? (
                               <time
                                 dateTime={new Date(post.publishedAt).toISOString()}
-                                className="uppercase text-[11px]"
+                                className="uppercase text-[10px] sm:text-[11px]"
                               >
                                 {new Date(post.publishedAt).toLocaleDateString('en-US', {
                                   month: 'short',
@@ -160,15 +154,15 @@ export function FieldNotesSection({ posts, totalCount, title, subtitle }: FieldN
                             )}
                           </div>
 
-                          <h4 className="font-bold text-base text-[hsl(var(--foreground))] group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors line-clamp-2 leading-snug">
+                          <h4 className="font-bold text-xs sm:text-sm md:text-base text-[hsl(var(--foreground))] group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors line-clamp-2 leading-snug">
                             {post.title}
                           </h4>
 
-                          <p className="text-xs text-[hsl(var(--muted-foreground))] line-clamp-2 leading-relaxed">
+                          <p className="text-[11px] sm:text-xs text-[hsl(var(--muted-foreground))] line-clamp-2 leading-relaxed">
                             {post.excerpt}
                           </p>
 
-                          <div className="pt-1 flex items-center text-xs text-cyan-600 dark:text-cyan-400 font-semibold gap-1 group-hover:translate-x-1 transition-transform">
+                          <div className="pt-0.5 sm:pt-1 flex items-center text-[10px] sm:text-xs text-cyan-600 dark:text-cyan-400 font-semibold gap-1 group-hover:translate-x-1 transition-transform">
                             <span>Read update</span>
                             <ArrowRight className="w-3 h-3" />
                           </div>
@@ -224,7 +218,7 @@ export function FieldNotesSection({ posts, totalCount, title, subtitle }: FieldN
           <Reveal direction="up" distance={10} delay={0.15}>
             <div className="text-center pt-8 sm:pt-10">
               <Link
-                href={ROUTES.BLOG}
+                href={ROUTES.UPDATES}
                 className="inline-flex items-center gap-2 text-xs font-mono text-[hsl(var(--muted-foreground))] hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded p-1"
               >
                 <span>Read all updates and technical write-ups ({totalCount} articles)</span>

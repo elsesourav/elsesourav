@@ -7,17 +7,7 @@ import {
   adminGetMediaListAction,
   adminUploadImageFileAction,
 } from '../actions/admin-media-actions';
-import {
-  Image as ImageIcon,
-  Search,
-  Upload,
-  X,
-  Check,
-  Loader2,
-  Folder,
-  Layers,
-  Sparkles,
-} from 'lucide-react';
+import { Image as ImageIcon, Search, Upload, X, Check, Loader2 } from 'lucide-react';
 
 interface MediaPickerModalProps {
   isOpen: boolean;

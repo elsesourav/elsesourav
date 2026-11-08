@@ -101,7 +101,7 @@ export function FeatureHighlights() {
             return (
               <div
                 key={feat.id}
-                className={`group relative flex flex-col justify-between p-5 rounded-2xl border border-[hsl(var(--border))]/80 bg-[hsl(var(--card))]/60 hover:bg-[hsl(var(--card))] ${feat.gradientBorder} shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-200 backdrop-blur-md`}
+                className={`group relative flex flex-col justify-between p-3 sm:p-3.5 md:p-4 rounded-2xl border border-[hsl(var(--border))]/80 bg-[hsl(var(--card))]/60 hover:bg-[hsl(var(--card))] ${feat.gradientBorder} shadow-sm hover:shadow-md transition-colors duration-200 backdrop-blur-md`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">

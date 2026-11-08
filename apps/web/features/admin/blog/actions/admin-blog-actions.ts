@@ -33,7 +33,7 @@ export async function createBlogPostAction(data: AdminSaveBlogSchemaInput) {
 
     revalidatePath('/admin/blog');
     revalidatePath('/admin');
-    revalidatePath('/blog');
+    revalidatePath('/updates');
     revalidatePath('/');
 
     return {
@@ -76,8 +76,8 @@ export async function updateBlogPostAction(postId: string, data: AdminSaveBlogSc
     revalidatePath('/admin/blog');
     revalidatePath(`/admin/blog/${postId}`);
     revalidatePath('/admin');
-    revalidatePath('/blog');
-    revalidatePath(`/blog/${updated.slug}`);
+    revalidatePath('/updates');
+    revalidatePath(`/updates/${updated.slug}`);
     revalidatePath('/');
 
     return {
@@ -102,8 +102,8 @@ export async function publishBlogPostAction(postId: string) {
     revalidatePath('/admin/blog');
     revalidatePath(`/admin/blog/${postId}`);
     revalidatePath('/admin');
-    revalidatePath('/blog');
-    revalidatePath(`/blog/${published.slug}`);
+    revalidatePath('/updates');
+    revalidatePath(`/updates/${published.slug}`);
     revalidatePath('/');
 
     return { success: true, post: published };
@@ -124,7 +124,7 @@ export async function archiveBlogPostAction(postId: string) {
     revalidatePath('/admin/blog');
     revalidatePath(`/admin/blog/${postId}`);
     revalidatePath('/admin');
-    revalidatePath('/blog');
+    revalidatePath('/updates');
     revalidatePath('/');
 
     return { success: true };
@@ -144,7 +144,7 @@ export async function deleteBlogPostAction(postId: string) {
 
     revalidatePath('/admin/blog');
     revalidatePath('/admin');
-    revalidatePath('/blog');
+    revalidatePath('/updates');
     revalidatePath('/');
 
     return { success: true };

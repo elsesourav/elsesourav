@@ -2,48 +2,64 @@
 
 import * as React from 'react';
 import { createPortal } from 'react-dom';
-import { useRouter } from 'next/navigation';
-import { Search, X, ArrowRight, FileText, Layout, Globe } from 'lucide-react';
-import { Skeleton } from '@elsesourav/ui';
+import { useRouter, usePathname } from 'next/navigation';
+import { Search, X } from 'lucide-react';
+import { AnimatedSearchPlaceholder } from './AnimatedSearchPlaceholder';
+import type { SearchScope } from './SearchSkeletons';
+import { SearchOverlayScopeBar } from './SearchOverlayScopeBar';
+import { SearchOverlayFooter } from './SearchOverlayFooter';
+import {
+  SearchOverlayResults,
+  type SearchState,
+  GROUP_ORDER,
+  RESULTS_PER_GROUP,
+} from './SearchOverlayResults';
+import { searchAccountPages } from './account-pages';
+import { triggerPageTransition } from '@/components/loading/PageTransitionLoader';
 import type {
   GlobalSearchResponse,
   GlobalSearchResult,
   GlobalSearchResultType,
 } from '@elsesourav/types';
 
-/** Per-category result limit */
-const RESULTS_PER_GROUP = 5;
-
-const TYPE_CONFIG: Record<
-  GlobalSearchResultType,
-  { label: string; icon: typeof Search; color: string }
-> = {
-  project: { label: 'Apps', icon: Layout, color: 'text-indigo-400' },
-  note: { label: 'Updates', icon: FileText, color: 'text-cyan-400' },
-  page: { label: 'Pages', icon: Globe, color: 'text-zinc-400' },
-};
-
-const GROUP_ORDER: GlobalSearchResultType[] = ['project', 'note', 'page'];
-
 interface SearchOverlayProps {
   open: boolean;
   onClose: () => void;
+  initialScope?: SearchScope;
 }
 
-type SearchState = 'empty' | 'searching' | 'results' | 'no-results' | 'error';
-
-export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
+export function SearchOverlay({ open, onClose, initialScope }: SearchOverlayProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const [mounted, setMounted] = React.useState(false);
   const panelRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const resultsRef = React.useRef<HTMLDivElement>(null);
+
+  const getRouteScope = React.useCallback((): SearchScope => {
+    if (initialScope) return initialScope;
+    if (pathname.startsWith('/apps')) return 'project';
+    if (pathname.startsWith('/updates')) return 'note';
+    if (
+      pathname.startsWith('/profile') ||
+      pathname.startsWith('/settings') ||
+      pathname.startsWith('/dashboard') ||
+      pathname.startsWith('/library') ||
+      pathname.startsWith('/notifications') ||
+      pathname.startsWith('/account') ||
+      pathname.startsWith('/support')
+    ) {
+      return 'account';
+    }
+    return 'all';
+  }, [initialScope, pathname]);
+
+  const [scope, setScope] = React.useState<SearchScope>(getRouteScope);
   const [query, setQuery] = React.useState('');
   const [data, setData] = React.useState<GlobalSearchResponse | null>(null);
   const [state, setState] = React.useState<SearchState>('empty');
   const [activeIndex, setActiveIndex] = React.useState(-1);
   const abortRef = React.useRef<AbortController | null>(null);
-
   const [isClosing, setIsClosing] = React.useState(false);
 
   React.useEffect(() => {
@@ -59,38 +75,34 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
     }, 150);
   }, [isClosing, onClose]);
 
-  // Focus input when overlay opens, lock body and html scroll
+  // Sync contextual scope and focus input when overlay opens
   React.useEffect(() => {
     if (open) {
       setIsClosing(false);
-      const scrollY = window.scrollY;
+      setScope(getRouteScope());
       const originalBodyOverflow = document.body.style.overflow;
-      const originalHtmlOverflow = document.documentElement.style.overflow;
-      const originalBodyPosition = document.body.style.position;
-      const originalBodyTop = document.body.style.top;
-      const originalBodyWidth = document.body.style.width;
-
-      document.documentElement.style.overflow = 'hidden';
+      const savedScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
       document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
 
-      const timeout = setTimeout(() => inputRef.current?.focus(), 40);
+      const timeout = setTimeout(() => {
+        inputRef.current?.focus({ preventScroll: true });
+      }, 40);
 
       return () => {
         clearTimeout(timeout);
-        document.documentElement.style.overflow = originalHtmlOverflow;
         document.body.style.overflow = originalBodyOverflow;
-        document.body.style.position = originalBodyPosition;
-        document.body.style.top = originalBodyTop;
-        document.body.style.width = originalBodyWidth;
-        window.scrollTo(0, scrollY);
+        if (typeof window !== 'undefined' && window.scrollY !== savedScrollY) {
+          window.scrollTo({
+            top: savedScrollY,
+            left: 0,
+            behavior: 'instant' as ScrollBehavior,
+          });
+        }
       };
     }
-  }, [open]);
+  }, [open, getRouteScope]);
 
-  // Handle outside click/tap to close overlay reliably everywhere
+  // Handle outside click/tap
   React.useEffect(() => {
     if (!open || isClosing) return;
 
@@ -132,10 +144,16 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
       return;
     }
 
+    if (scope === 'account') {
+      const matched = searchAccountPages(trimmed);
+      setState(matched.length > 0 ? 'results' : 'no-results');
+      setActiveIndex(-1);
+      return;
+    }
+
     setState('searching');
     setActiveIndex(-1);
 
-    // Cancel previous request
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
@@ -161,29 +179,53 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
       clearTimeout(timeout);
       controller.abort();
     };
-  }, [query, open]);
+  }, [query, open, scope]);
 
-  // Build flat list for keyboard nav, with per-group limits
+  const accountResults = React.useMemo(() => {
+    if (scope !== 'account') return [];
+    return searchAccountPages(query);
+  }, [scope, query]);
+
+  // Active groups based on scope filter
+  const activeGroups = React.useMemo<GlobalSearchResultType[]>(() => {
+    if (scope === 'project') return ['project'];
+    if (scope === 'note') return ['note'];
+    return GROUP_ORDER;
+  }, [scope]);
+
+  // Build flat list for keyboard nav according to active scope
   const flatResults = React.useMemo(() => {
+    if (scope === 'account') return accountResults;
     if (!data?.grouped) return [];
     const results: GlobalSearchResult[] = [];
-    for (const type of GROUP_ORDER) {
+    for (const type of activeGroups) {
       const group = data.grouped[type];
       if (group) results.push(...group.slice(0, RESULTS_PER_GROUP));
     }
     return results;
-  }, [data]);
+  }, [data, activeGroups, scope, accountResults]);
 
   // Navigate to result
   const navigateTo = React.useCallback(
     (url: string) => {
       requestClose();
+      triggerPageTransition(url);
       setTimeout(() => {
         router.push(url);
       }, 150);
     },
     [requestClose, router]
   );
+
+  const scrollResultIntoView = (index: number) => {
+    const container = resultsRef.current;
+    if (!container) return;
+    const items = container.querySelectorAll('[data-search-result]');
+    const item = items[index];
+    if (item) {
+      item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+  };
 
   // Keyboard navigation
   React.useEffect(() => {
@@ -224,18 +266,16 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [open, activeIndex, flatResults, requestClose, navigateTo]);
 
-  // Scroll active result into view within the results container
-  const scrollResultIntoView = (index: number) => {
-    const container = resultsRef.current;
-    if (!container) return;
-    const items = container.querySelectorAll('[data-search-result]');
-    const item = items[index];
-    if (item) {
-      item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Backspace' && query === '' && scope !== 'all') {
+      e.preventDefault();
+      setScope('all');
     }
   };
 
   if (!open || !mounted) return null;
+
+  const isScopeEmpty = state === 'results' && flatResults.length === 0;
 
   const modalContent = (
     <div
@@ -271,31 +311,70 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
         onTouchStart={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Search Input Row — Strict fixed height (56px / h-14) to eliminate any height popping or layout shift */}
-        <div className="h-14 min-h-[56px] max-h-[56px] flex items-center gap-3 px-4 sm:px-5 border-b border-[hsl(var(--border))] bg-[hsl(var(--card))] shrink-0">
+        {/* Search Input Row — Fixed 56px height */}
+        <div className="h-14 min-h-[56px] max-h-[56px] flex items-center gap-2.5 px-4 sm:px-5 border-b border-[hsl(var(--border))] bg-[hsl(var(--card))] shrink-0">
           <Search className="w-5 h-5 text-[hsl(var(--muted-foreground))] shrink-0" />
-          <input
-            ref={inputRef}
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search projects, updates, and experiments..."
-            className="h-full flex-1 bg-transparent text-base sm:text-sm text-[hsl(var(--foreground))] placeholder:text-[hsl(var(--muted-foreground))] outline-none min-w-0 font-normal"
-            aria-label="Search query"
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            spellCheck={false}
-          />
 
-          {/* Action buttons cluster with stable dimensions */}
+          {/* Section Filter Indicator: Normal text, normal backspace to delete */}
+          {scope === 'project' && (
+            <span className="text-base sm:text-sm font-normal text-[hsl(var(--foreground))] shrink-0 select-none">
+              Apps &gt;
+            </span>
+          )}
+
+          {scope === 'note' && (
+            <span className="text-base sm:text-sm font-normal text-[hsl(var(--foreground))] shrink-0 select-none">
+              Updates &gt;
+            </span>
+          )}
+
+          {scope === 'account' && (
+            <span className="text-base sm:text-sm font-normal text-[hsl(var(--foreground))] shrink-0 select-none">
+              Account &gt;
+            </span>
+          )}
+
+          <div className="relative flex-1 h-full flex items-center min-w-0">
+            <input
+              ref={inputRef}
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={handleInputKeyDown}
+              className="h-full w-full bg-transparent text-base sm:text-sm text-[hsl(var(--foreground))] outline-none min-w-0 font-normal relative z-10"
+              aria-label="Search query"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck={false}
+            />
+            {!query && (
+              <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none select-none z-0">
+                <AnimatedSearchPlaceholder
+                  prefix="Search "
+                  words={
+                    scope === 'project'
+                      ? ['apps', 'tools', 'games', 'systems']
+                      : scope === 'note'
+                        ? ['updates', 'devlogs', 'articles', 'releases']
+                        : scope === 'account'
+                          ? ['profile', 'security', 'settings', 'notifications', 'library']
+                          : ['apps', 'updates', 'tools', 'articles', 'projects', 'experiments']
+                  }
+                  className="text-base sm:text-sm text-[hsl(var(--muted-foreground))]"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Action buttons cluster */}
           <div className="flex items-center gap-1.5 shrink-0">
             {query.length > 0 && (
               <button
                 type="button"
                 onClick={() => {
                   setQuery('');
-                  inputRef.current?.focus();
+                  inputRef.current?.focus({ preventScroll: true });
                 }}
                 className="h-8 w-8 rounded-lg text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--surface-subtle))] transition-colors flex items-center justify-center active:scale-95 cursor-pointer"
                 aria-label="Clear search"
@@ -324,202 +403,30 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
           </div>
         </div>
 
+        {/* Section Filter Quick Selector Strip */}
+        <SearchOverlayScopeBar scope={scope} onScopeChange={setScope} />
+
         {/* Results Area */}
-        <div
-          ref={resultsRef}
-          className="max-h-[min(60vh,480px)] overflow-y-auto overscroll-contain"
-        >
-          {/* Empty State — hints */}
-          {state === 'empty' && (
-            <div className="px-5 py-6 text-center">
-              <p className="text-sm text-[hsl(var(--muted-foreground))]">
-                Search projects, updates, and experiments...
-              </p>
-              <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-[11px]">
-                {['Apps', 'Updates', 'About', 'Archive'].map((hint) => (
-                  <button
-                    key={hint}
-                    type="button"
-                    onClick={() => setQuery(hint)}
-                    className="px-2.5 py-1 rounded-lg bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:border-[hsl(var(--border-strong))] transition-colors cursor-pointer"
-                  >
-                    {hint}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Searching State: Result-shaped skeletons */}
-          {state === 'searching' && (
-            <div className="py-2.5 px-4 space-y-4 animate-fade-in" aria-label="Searching results">
-              {/* Apps group skeleton */}
-              <div className="space-y-2">
-                <Skeleton className="h-3 w-14 rounded" />
-                <div className="flex items-center gap-3 py-1.5 px-1">
-                  <Skeleton className="w-8 h-8 rounded-lg shrink-0" />
-                  <div className="space-y-1.5 flex-1 min-w-0">
-                    <Skeleton className="h-4 w-2/5 rounded" />
-                    <Skeleton className="h-3 w-3/5 rounded" />
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 py-1.5 px-1">
-                  <Skeleton className="w-8 h-8 rounded-lg shrink-0" />
-                  <div className="space-y-1.5 flex-1 min-w-0">
-                    <Skeleton className="h-4 w-1/2 rounded" />
-                    <Skeleton className="h-3 w-2/3 rounded" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Notes group skeleton */}
-              <div className="space-y-2 pt-2 border-t border-[hsl(var(--border-subtle))]">
-                <Skeleton className="h-3 w-14 rounded" />
-                <div className="flex items-center gap-3 py-1.5 px-1">
-                  <Skeleton className="w-8 h-8 rounded-lg shrink-0" />
-                  <div className="space-y-1.5 flex-1 min-w-0">
-                    <Skeleton className="h-4 w-3/5 rounded" />
-                    <Skeleton className="h-3 w-4/5 rounded" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* No Results */}
-          {state === 'no-results' && (
-            <div className="px-5 py-8 text-center space-y-1.5">
-              <p className="text-sm font-medium text-[hsl(var(--foreground))]">
-                No results for &ldquo;{query.trim()}&rdquo;
-              </p>
-              <p className="text-xs text-[hsl(var(--muted-foreground))]">
-                Try another search term.
-              </p>
-            </div>
-          )}
-
-          {/* Error */}
-          {state === 'error' && (
-            <div className="px-5 py-8 text-center space-y-1.5">
-              <p className="text-sm font-medium text-rose-400">Something went wrong.</p>
-              <p className="text-xs text-[hsl(var(--muted-foreground))]">Please try again.</p>
-            </div>
-          )}
-
-          {/* Grouped Results */}
-          {state === 'results' && data?.grouped && (
-            <div className="py-1.5">
-              {GROUP_ORDER.map((type) => {
-                const group = data.grouped[type];
-                if (!group || group.length === 0) return null;
-                const config = TYPE_CONFIG[type];
-                const limitedGroup = group.slice(0, RESULTS_PER_GROUP);
-
-                return (
-                  <div key={type} className="mb-1" role="group" aria-label={config.label}>
-                    {/* Group Header */}
-                    <div
-                      className={`px-5 py-1.5 text-[11px] font-semibold uppercase tracking-wider ${config.color}`}
-                    >
-                      {config.label}
-                    </div>
-
-                    {/* Group Items */}
-                    {limitedGroup.map((result) => {
-                      const globalIdx = flatResults.indexOf(result);
-                      const isActive = globalIdx === activeIndex;
-                      const Icon = config.icon;
-
-                      return (
-                        <button
-                          key={`${result.type}-${result.url}`}
-                          data-search-result
-                          type="button"
-                          onClick={() => navigateTo(result.url)}
-                          onMouseEnter={() => setActiveIndex(globalIdx)}
-                          className={`w-full flex items-center gap-3 px-5 py-2.5 text-left transition-colors group min-h-[44px] cursor-pointer ${
-                            isActive
-                              ? 'bg-[hsl(var(--accent))]'
-                              : 'hover:bg-[hsl(var(--surface-subtle))]'
-                          }`}
-                          role="option"
-                          aria-selected={isActive}
-                          aria-label={`${result.title}${result.category ? `, ${result.category}` : ''}`}
-                        >
-                          {/* Icon */}
-                          <div
-                            className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
-                              isActive
-                                ? 'bg-[hsl(var(--surface-elevated))]'
-                                : 'bg-[hsl(var(--surface-subtle))]'
-                            }`}
-                          >
-                            <Icon className={`w-4 h-4 ${config.color}`} />
-                          </div>
-
-                          {/* Content */}
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-[hsl(var(--foreground))] truncate">
-                              {result.title}
-                            </p>
-                            {result.description && (
-                              <p className="text-xs text-[hsl(var(--muted-foreground))] truncate mt-0.5">
-                                {result.description}
-                              </p>
-                            )}
-                          </div>
-
-                          {/* Category Badge */}
-                          {result.category && (
-                            <span className="text-[10px] font-medium text-[hsl(var(--subtle-foreground))] bg-[hsl(var(--surface-subtle))] px-2 py-0.5 rounded-md shrink-0 hidden sm:inline-flex">
-                              {result.category}
-                            </span>
-                          )}
-
-                          {/* Arrow indicator for active item */}
-                          <ArrowRight
-                            className={`w-3.5 h-3.5 shrink-0 transition-opacity ${
-                              isActive
-                                ? 'opacity-70 text-[hsl(var(--muted-foreground))]'
-                                : 'opacity-0'
-                            }`}
-                          />
-                        </button>
-                      );
-                    })}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
+        <SearchOverlayResults
+          state={state}
+          scope={scope}
+          query={query}
+          isScopeEmpty={isScopeEmpty}
+          data={data}
+          activeGroups={activeGroups}
+          flatResults={flatResults}
+          accountResults={accountResults}
+          activeIndex={activeIndex}
+          resultsRef={resultsRef}
+          onSelectResult={navigateTo}
+          onHoverResult={setActiveIndex}
+          onSelectHint={(hint) => setQuery(hint)}
+          onResetScope={() => setScope('all')}
+        />
 
         {/* Footer with count and keyboard hints */}
-        {(state === 'results' || state === 'no-results') && (
-          <div className="px-5 py-2 border-t border-[hsl(var(--border))] flex items-center justify-between text-[11px] text-[hsl(var(--subtle-foreground))]">
-            <span>
-              {data && data.totalCount > 0
-                ? `${data.totalCount} result${data.totalCount !== 1 ? 's' : ''}`
-                : '0 results'}
-            </span>
-            <span className="hidden sm:flex items-center gap-2">
-              <span className="flex items-center gap-1">
-                <kbd className="inline-flex items-center justify-center w-5 h-5 bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] rounded text-[10px] font-mono">
-                  ↑
-                </kbd>
-                <kbd className="inline-flex items-center justify-center w-5 h-5 bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] rounded text-[10px] font-mono">
-                  ↓
-                </kbd>
-                <span className="ml-0.5">navigate</span>
-              </span>
-              <span className="flex items-center gap-1">
-                <kbd className="inline-flex items-center justify-center px-1.5 h-5 bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] rounded text-[10px] font-mono">
-                  ↵
-                </kbd>
-                <span className="ml-0.5">open</span>
-              </span>
-            </span>
-          </div>
+        {(state === 'results' || state === 'no-results' || isScopeEmpty) && (
+          <SearchOverlayFooter count={flatResults.length} scope={scope} />
         )}
       </div>
     </div>

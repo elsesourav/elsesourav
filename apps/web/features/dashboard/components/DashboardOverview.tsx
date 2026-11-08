@@ -12,7 +12,6 @@ import {
   LifeBuoy,
   ArrowUpRight,
   ArrowRight,
-  Shield,
 } from 'lucide-react';
 
 interface DashboardOverviewProps {
@@ -25,7 +24,7 @@ export function DashboardOverview({ data }: DashboardOverviewProps) {
   return (
     <div className="space-y-8">
       {/* Welcome Banner Card */}
-      <div className="relative overflow-hidden rounded-3xl border border-zinc-800/80 bg-gradient-to-r from-indigo-950/40 via-zinc-900/60 to-zinc-900/40 p-6 sm:p-8 backdrop-blur-xl">
+      <div className="relative overflow-hidden rounded-3xl border border-zinc-800/80 bg-gradient-to-r from-indigo-950/40 via-zinc-900/60 to-zinc-900/40 p-3.5 sm:p-4.5 md:p-5 backdrop-blur-xl">
         <div className="relative z-10 space-y-3">
           <div className="flex items-center gap-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-indigo-400">
@@ -51,7 +50,7 @@ export function DashboardOverview({ data }: DashboardOverviewProps) {
       {/* Metric Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Link href="/library" className="group block focus:outline-none">
-          <Card className="p-5 rounded-2xl border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-indigo-500/40 transition-all">
+          <Card className="p-3 sm:p-3.5 md:p-4 rounded-2xl border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-indigo-500/40 transition-colors">
             <div className="flex items-center justify-between">
               <div className="w-10 h-10 rounded-xl bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
                 <Bookmark className="w-5 h-5" />
@@ -65,8 +64,8 @@ export function DashboardOverview({ data }: DashboardOverviewProps) {
           </Card>
         </Link>
 
-        <Link href="/profile" className="group block focus:outline-none">
-          <Card className="p-5 rounded-2xl border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-indigo-500/40 transition-all">
+        <Link href="/account" className="group block focus:outline-none">
+          <Card className="p-3 sm:p-3.5 md:p-4 rounded-2xl border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-indigo-500/40 transition-colors">
             <div className="flex items-center justify-between">
               <div className="w-10 h-10 rounded-xl bg-emerald-950/60 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
                 <User className="w-5 h-5" />
@@ -77,13 +76,13 @@ export function DashboardOverview({ data }: DashboardOverviewProps) {
               <div className="text-2xl font-bold text-zinc-100 truncate">
                 {user.displayName || 'Active'}
               </div>
-              <div className="text-xs text-zinc-400">Profile & Identity</div>
+              <div className="text-xs text-zinc-400">Account & Identity</div>
             </div>
           </Card>
         </Link>
 
         <Link href="/support/tickets" className="group block focus:outline-none">
-          <Card className="p-5 rounded-2xl border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-indigo-500/40 transition-all">
+          <Card className="p-3 sm:p-3.5 md:p-4 rounded-2xl border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/80 hover:border-indigo-500/40 transition-colors">
             <div className="flex items-center justify-between">
               <div className="w-10 h-10 rounded-xl bg-amber-950/60 border border-amber-500/30 flex items-center justify-center text-amber-400">
                 <LifeBuoy className="w-5 h-5" />

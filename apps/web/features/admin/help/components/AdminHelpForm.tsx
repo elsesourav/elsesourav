@@ -297,6 +297,31 @@ export function AdminHelpForm({ article, categories }: AdminHelpFormProps) {
             placeholder="Write full article guide with step-by-step instructions, checklists, and code snippets in Markdown..."
             helperText="Supports step guides, checklists, tables, terminal commands, and notes"
           />
+
+          {/* SEO Metadata */}
+          <div className="pt-4 border-t border-zinc-800/60 space-y-3">
+            <div className="text-xs font-semibold text-zinc-300">
+              SEO & Meta Information (Optional)
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FloatingLabelInput
+                label="SEO Meta Title"
+                type="text"
+                value={seoTitle}
+                onChange={(val) => setSeoTitle(val)}
+                placeholder="Custom title for search engines"
+                maxLength={100}
+              />
+              <FloatingLabelInput
+                label="SEO Meta Description"
+                type="text"
+                value={seoDescription}
+                onChange={(val) => setSeoDescription(val)}
+                placeholder="Brief summary for search engine snippet"
+                maxLength={200}
+              />
+            </div>
+          </div>
         </Card>
 
         {/* Action Buttons */}

@@ -26,10 +26,9 @@ describe('Homepage & About Visual and Content Integration Pass', () => {
   });
 
   it('exposes coherent navigation structure without a redundant Home link', () => {
-    // Nav items: Work (/apps), Notes (/notes), About (/about)
+    // Nav items: Apps (/apps), Updates (/updates), About (/about)
     expect(ROUTES.APPS).toBe('/apps');
-    expect(ROUTES.BLOG).toBe('/notes');
-    expect(ROUTES.NOTES).toBe('/notes');
+    expect(ROUTES.UPDATES).toBe('/updates');
     expect(ROUTES.ABOUT).toBe('/about');
     expect(ROUTES.HOME).toBe('/');
   });

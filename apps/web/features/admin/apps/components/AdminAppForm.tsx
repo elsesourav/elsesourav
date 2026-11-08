@@ -1,36 +1,33 @@
 'use client';
 
-import * as React from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { Card, CardHeader, CardTitle, CardDescription, Button, Badge } from '@elsesourav/ui';
-import { Dropdown, FloatingLabelInput } from '@elsesourav/ui/interior';
+import { AdminMarkdownEditor } from '@/features/admin/components/AdminMarkdownEditor';
+import { AdminAppMediaSection } from './AdminAppMediaSection';
 import type { App, CategorySummary, TagSummary } from '@elsesourav/types';
+import { Button, Card } from '@elsesourav/ui';
+import { FloatingLabelInput } from '@elsesourav/ui/interior';
 import {
-  createAppAction,
-  updateAppAction,
-  publishAppAction,
-  archiveAppAction,
-  deleteAppAction,
-} from '../actions/admin-app-actions';
-import {
-  Package,
-  Sparkles,
+  AlertCircle,
+  Archive,
   ArrowLeft,
   CheckCircle2,
-  AlertCircle,
   Loader2,
-  Upload,
-  Globe,
-  Tag,
-  Sliders,
-  ShieldAlert,
+  Package,
   Send,
-  Archive,
+  Sparkles,
   Trash2,
 } from 'lucide-react';
-import { AdminMarkdownEditor } from '@/features/admin/components/AdminMarkdownEditor';
-import { ImageInputWithLibrary } from '@/features/admin/media/components/ImageInputWithLibrary';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import * as React from 'react';
+import {
+  archiveAppAction,
+  createAppAction,
+  deleteAppAction,
+  publishAppAction,
+  updateAppAction,
+} from '../actions/admin-app-actions';
+import { AdminAppVisibilitySettings } from './AdminAppVisibilitySettings';
+import { PublishReleaseModal } from './PublishReleaseModal';
 
 interface AdminAppFormProps {
   app?: App;
@@ -50,6 +47,9 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
   const [documentationMd, setDocumentationMd] = React.useState(app?.documentationMd || '');
   const [iconUrl, setIconUrl] = React.useState(app?.iconUrl || '');
   const [featuredImageUrl, setFeaturedImageUrl] = React.useState(app?.featuredImageUrl || '');
+  const [featuredImageMobileUrl, setFeaturedImageMobileUrl] = React.useState(
+    app?.featuredImageMobileUrl || ''
+  );
   const [demoUrl, setDemoUrl] = React.useState(app?.demoUrl || '');
   const [videoUrl, setVideoUrl] = React.useState(app?.videoUrl || '');
   const [categoryId, setCategoryId] = React.useState(app?.categoryId || categories[0]?.id || '');
@@ -72,15 +72,15 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
   );
   const [isFeatured, setIsFeatured] = React.useState(app?.isFeatured ?? false);
   const [isPinned, setIsPinned] = React.useState(app?.isPinned ?? false);
+  const [requiresAuth, setRequiresAuth] = React.useState(app?.requiresAuth ?? false);
   const [sortOrder, setSortOrder] = React.useState(app?.sortOrder ?? 0);
   const [seoTitle, setSeoTitle] = React.useState(app?.seoTitle || '');
   const [seoDescription, setSeoDescription] = React.useState(app?.seoDescription || '');
+  const [bundleSize, setBundleSize] = React.useState(app?.bundleSize || '');
+  const [primaryLanguage, setPrimaryLanguage] = React.useState(app?.primaryLanguage || 'en');
 
   // Publish Dialog State
   const [isPublishModalOpen, setIsPublishModalOpen] = React.useState(false);
-  const [releaseVersion, setReleaseVersion] = React.useState('1.0.0');
-  const [releaseChangelog, setReleaseChangelog] = React.useState('Initial production release.');
-  const [releaseDownloadUrl, setReleaseDownloadUrl] = React.useState('');
   const [isPublishing, setIsPublishing] = React.useState(false);
 
   // Status & Feedback
@@ -115,13 +115,17 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
       documentationMd: documentationMd.trim() || undefined,
       iconUrl: iconUrl.trim(),
       featuredImageUrl: featuredImageUrl.trim() || undefined,
+      featuredImageMobileUrl: featuredImageMobileUrl.trim() || undefined,
       demoUrl: demoUrl.trim() || undefined,
       videoUrl: videoUrl.trim() || undefined,
       categoryId,
       status,
       isFeatured,
       isPinned,
+      requiresAuth,
       sortOrder: Number(sortOrder),
+      bundleSize: bundleSize.trim() || undefined,
+      primaryLanguage: primaryLanguage.trim() || undefined,
       seoTitle: seoTitle.trim() || undefined,
       seoDescription: seoDescription.trim() || undefined,
     };
@@ -150,8 +154,11 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
     }
   };
 
-  const handlePublishRelease = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handlePublishRelease = async (versionData: {
+    version: string;
+    changelog: string;
+    downloadUrl?: string;
+  }) => {
     if (!app?.id || isPublishing) return;
 
     setIsPublishing(true);
@@ -159,15 +166,15 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
 
     try {
       const res = await publishAppAction(app.id, {
-        version: releaseVersion.trim(),
-        changelog: releaseChangelog.trim(),
-        downloadUrl: releaseDownloadUrl.trim() || undefined,
+        version: versionData.version.trim(),
+        changelog: versionData.changelog.trim(),
+        downloadUrl: versionData.downloadUrl?.trim() || undefined,
       });
 
       if (res.success) {
         setStatus('published');
         setIsPublishModalOpen(false);
-        setSuccess(`Application successfully published as ${releaseVersion}!`);
+        setSuccess(`Application successfully published as ${versionData.version}!`);
       } else {
         setError(res.error || 'Failed to publish release.');
       }
@@ -302,6 +309,28 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
             maxLength={250}
           />
 
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Custom / Calculated Bundle Size */}
+            <FloatingLabelInput
+              label="Build / Bundle Size (Optional)"
+              type="text"
+              value={bundleSize}
+              onChange={(val) => setBundleSize(val)}
+              placeholder="e.g. 2.4 MB, 850 KB (empty = auto calculated)"
+              maxLength={50}
+            />
+
+            {/* Primary Language */}
+            <FloatingLabelInput
+              label="Primary Language / Tech"
+              type="text"
+              value={primaryLanguage}
+              onChange={(val) => setPrimaryLanguage(val)}
+              placeholder="e.g. en, TypeScript, English"
+              maxLength={50}
+            />
+          </div>
+
           {/* Marketing Overview Description */}
           <div className="space-y-1.5">
             <label className="block text-xs font-semibold text-zinc-300">
@@ -333,131 +362,40 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
         </Card>
 
         {/* Media & URLs Card */}
-        <Card className="p-6 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl space-y-5">
-          <div className="flex items-center gap-2 text-xs font-bold text-zinc-300 uppercase tracking-wider">
-            <Upload className="w-4 h-4 text-purple-400" />
-            <span>Media Assets & Links</span>
-          </div>
+        <AdminAppMediaSection
+          iconUrl={iconUrl}
+          setIconUrl={setIconUrl}
+          featuredImageUrl={featuredImageUrl}
+          setFeaturedImageUrl={setFeaturedImageUrl}
+          featuredImageMobileUrl={featuredImageMobileUrl}
+          setFeaturedImageMobileUrl={setFeaturedImageMobileUrl}
+          demoUrl={demoUrl}
+          setDemoUrl={setDemoUrl}
+          videoUrl={videoUrl}
+          setVideoUrl={setVideoUrl}
+        />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* App Icon */}
-            <ImageInputWithLibrary
-              label="Application Icon"
-              value={iconUrl}
-              onChange={setIconUrl}
-              required
-              folder="apps"
-              defaultCategory="apps"
-              previewShape="square"
-              placeholder="Icon URL or upload/select from library"
-            />
-
-            {/* Featured Image Banner */}
-            <ImageInputWithLibrary
-              label="Featured Banner Image"
-              value={featuredImageUrl}
-              onChange={setFeaturedImageUrl}
-              folder="apps"
-              defaultCategory="apps"
-              previewShape="banner"
-              placeholder="Banner URL or upload/select from library"
-            />
-
-            {/* Demo URL */}
-            <FloatingLabelInput
-              label="Interactive Demo URL"
-              type="url"
-              value={demoUrl}
-              onChange={(val) => setDemoUrl(val)}
-              placeholder="https://demo.elsesourav.com/..."
-            />
-
-            {/* Video URL */}
-            <FloatingLabelInput
-              label="Showcase Video URL"
-              type="url"
-              value={videoUrl}
-              onChange={(val) => setVideoUrl(val)}
-              placeholder="https://youtube.com/..."
-            />
-          </div>
-        </Card>
-
-        {/* Taxonomy & Configuration Card */}
-        <Card className="p-6 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl space-y-5">
-          <div className="flex items-center gap-2 text-xs font-bold text-zinc-300 uppercase tracking-wider">
-            <Sliders className="w-4 h-4 text-emerald-400" />
-            <span>Taxonomy & Visibility</span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {/* Category */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-zinc-300">
-                Primary Category <span className="text-rose-400">*</span>
-              </label>
-              <Dropdown
-                items={categoryItems}
-                value={categoryId}
-                onChange={(val) => setCategoryId(val)}
-                className="w-full"
-              />
-            </div>
-
-            {/* Status */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-zinc-300">Publish Status</label>
-              <Dropdown
-                items={statusItems}
-                value={status}
-                onChange={(val) => setStatus(val as 'draft' | 'published' | 'archived')}
-                className="w-full"
-              />
-            </div>
-
-            {/* Sort Order */}
-            <FloatingLabelInput
-              label="Display Sort Order"
-              type="number"
-              value={String(sortOrder)}
-              onChange={(val) => setSortOrder(Number(val))}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-zinc-800/60">
-            {/* Featured Switch */}
-            <label className="flex items-center justify-between p-3 rounded-xl bg-zinc-950/40 border border-zinc-800/60 cursor-pointer">
-              <div>
-                <div className="text-xs font-semibold text-zinc-200">Featured Application</div>
-                <div className="text-[11px] text-zinc-400">
-                  Highlights app on homepage hero spotlight.
-                </div>
-              </div>
-              <input
-                type="checkbox"
-                checked={isFeatured}
-                onChange={(e) => setIsFeatured(e.target.checked)}
-                className="rounded border-zinc-800 bg-zinc-900 text-indigo-600 focus:ring-indigo-500 w-4 h-4"
-              />
-            </label>
-
-            {/* Pinned Switch */}
-            <label className="flex items-center justify-between p-3 rounded-xl bg-zinc-950/40 border border-zinc-800/60 cursor-pointer">
-              <div>
-                <div className="text-xs font-semibold text-zinc-200">Pinned to Top</div>
-                <div className="text-[11px] text-zinc-400">
-                  Always ranks first in catalog grids.
-                </div>
-              </div>
-              <input
-                type="checkbox"
-                checked={isPinned}
-                onChange={(e) => setIsPinned(e.target.checked)}
-                className="rounded border-zinc-800 bg-zinc-900 text-indigo-600 focus:ring-indigo-500 w-4 h-4"
-              />
-            </label>
-          </div>
-        </Card>
+        {/* Taxonomy & Configuration Settings */}
+        <AdminAppVisibilitySettings
+          categoryId={categoryId}
+          setCategoryId={setCategoryId}
+          categoryItems={categoryItems}
+          status={status}
+          setStatus={setStatus}
+          statusItems={statusItems}
+          sortOrder={sortOrder}
+          setSortOrder={setSortOrder}
+          isFeatured={isFeatured}
+          setIsFeatured={setIsFeatured}
+          isPinned={isPinned}
+          setIsPinned={setIsPinned}
+          requiresAuth={requiresAuth}
+          setRequiresAuth={setRequiresAuth}
+          seoTitle={seoTitle}
+          setSeoTitle={setSeoTitle}
+          seoDescription={seoDescription}
+          setSeoDescription={setSeoDescription}
+        />
 
         {/* Submit Actions */}
         <div className="flex items-center justify-between pt-4">
@@ -508,82 +446,12 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
       </form>
 
       {/* Publish Release Modal */}
-      {isPublishModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-3xl border border-indigo-500/40 bg-zinc-900 p-6 space-y-5 shadow-2xl">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-indigo-950/80 border border-indigo-500/40 flex items-center justify-center text-indigo-400 shrink-0">
-                <Send className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-base font-bold text-zinc-100">Publish Application Release</h3>
-                <p className="text-xs text-zinc-400">Creates an immutable version release entry.</p>
-              </div>
-            </div>
-
-            <form onSubmit={handlePublishRelease} className="space-y-4 text-xs">
-              <FloatingLabelInput
-                label="Release Version"
-                type="text"
-                value={releaseVersion}
-                onChange={(val) => setReleaseVersion(val)}
-                placeholder="e.g. 1.0.0"
-                required
-              />
-
-              <div className="space-y-1.5">
-                <label className="block font-semibold text-zinc-300">
-                  Changelog Summary <span className="text-rose-400">*</span>
-                </label>
-                <textarea
-                  value={releaseChangelog}
-                  onChange={(e) => setReleaseChangelog(e.target.value)}
-                  placeholder="What is new in this release version..."
-                  required
-                  rows={4}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs text-zinc-100 focus:border-indigo-500 focus:outline-none"
-                />
-              </div>
-
-              <FloatingLabelInput
-                label="Download Asset URL (optional)"
-                type="url"
-                value={releaseDownloadUrl}
-                onChange={(val) => setReleaseDownloadUrl(val)}
-                placeholder="https://github.com/.../release.zip"
-              />
-
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-zinc-800">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  disabled={isPublishing}
-                  onClick={() => setIsPublishModalOpen(false)}
-                  className="text-xs text-zinc-400"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={isPublishing}
-                  size="sm"
-                  className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2 rounded-xl gap-1.5"
-                >
-                  {isPublishing ? (
-                    <>
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      <span>Publishing...</span>
-                    </>
-                  ) : (
-                    <span>Publish Release</span>
-                  )}
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <PublishReleaseModal
+        isOpen={isPublishModalOpen}
+        onClose={() => setIsPublishModalOpen(false)}
+        onPublish={handlePublishRelease}
+        isPublishing={isPublishing}
+      />
     </div>
   );
 }

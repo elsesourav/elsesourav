@@ -77,12 +77,17 @@ export function AccountDeleteCard({ targetUsername, scheduledDeletionAt }: Accou
   return (
     <>
       {isPendingDeletion ? (
-        <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-rose-500/10 border border-rose-500/30 space-y-2.5">
-          <div className="flex items-start gap-2.5">
-            <AlertTriangle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
+        <div
+          data-section="security-delete"
+          className="p-2.5 sm:p-3.5 md:p-4 rounded-lg sm:rounded-xl md:rounded-2xl bg-rose-500/10 border border-rose-500/30 space-y-2 sm:space-y-2.5"
+        >
+          <div className="flex items-start gap-2 sm:gap-2.5">
+            <AlertTriangle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-rose-500 shrink-0 mt-0.5" />
             <div className="space-y-0.5 flex-1">
-              <h4 className="text-xs font-semibold text-rose-500">Account Deletion Scheduled</h4>
-              <p className="text-xs text-muted-foreground leading-relaxed">
+              <h4 className="text-[11px] sm:text-xs md:text-sm font-semibold text-rose-500">
+                Account Deletion Scheduled
+              </h4>
+              <p className="text-[10px] sm:text-[11px] md:text-xs text-muted-foreground leading-relaxed">
                 Your account will be permanently deleted on{' '}
                 <span className="font-semibold text-rose-400">{deletionDate}</span>. You can cancel
                 at any time during this 30-day grace period.
@@ -95,16 +100,21 @@ export function AccountDeleteCard({ targetUsername, scheduledDeletionAt }: Accou
             pendingLabel="Cancelling..."
             successLabel="Cancelled"
             errorLabel="Failed"
-            className="border border-rose-500/40 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs rounded-lg h-7 px-3"
+            className="border border-rose-500/40 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-[10px] sm:text-xs rounded-md sm:rounded-lg h-6.5 sm:h-7 px-2.5 sm:px-3"
           >
             Cancel Deletion
           </LoadingButton>
         </div>
       ) : (
-        <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-rose-500/5 border border-rose-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div
+          data-section="security-delete"
+          className="p-2.5 sm:p-3.5 md:p-4 rounded-lg sm:rounded-xl md:rounded-2xl bg-rose-500/5 border border-rose-500/20 sm:border-rose-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3"
+        >
           <div className="space-y-0.5">
-            <h4 className="text-xs font-semibold text-rose-500">Delete Account</h4>
-            <p className="text-xs text-muted-foreground">
+            <h4 className="text-[11px] sm:text-xs md:text-sm font-semibold text-rose-500">
+              Delete Account
+            </h4>
+            <p className="text-[10px] sm:text-[11px] md:text-xs text-muted-foreground leading-relaxed">
               Schedule your account for permanent deletion with a 30-day recovery grace period.
             </p>
           </div>
@@ -114,7 +124,7 @@ export function AccountDeleteCard({ targetUsername, scheduledDeletionAt }: Accou
             variant="outline"
             size="sm"
             onClick={() => setIsDeleteModalOpen(true)}
-            className="border-rose-500/30 hover:bg-rose-500/10 text-rose-500 text-xs gap-1.5 shrink-0 rounded-lg cursor-pointer h-7 px-3 self-start sm:self-auto"
+            className="border-rose-500/30 hover:bg-rose-500/10 text-rose-500 text-[10px] sm:text-xs gap-1 shrink-0 rounded-md sm:rounded-lg cursor-pointer h-6.5 sm:h-7 px-2.5 sm:px-3 self-start sm:self-auto"
           >
             <Trash2 className="w-3 h-3" />
             <span>Delete Account</span>
@@ -136,7 +146,7 @@ export function AccountDeleteCard({ targetUsername, scheduledDeletionAt }: Accou
             }
           }}
         >
-          <div className="w-full max-w-md rounded-2xl sm:rounded-3xl border border-rose-500/40 bg-card p-5 sm:p-6 space-y-4 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+          <div className="w-full max-w-md rounded-2xl sm:rounded-3xl border border-rose-500/40 bg-card p-3.5 sm:p-4.5 md:p-5 space-y-4 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-500 shrink-0">
                 <AlertTriangle className="w-5 h-5" />

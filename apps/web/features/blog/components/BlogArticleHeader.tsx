@@ -8,7 +8,7 @@ import { Lightbox } from '@elsesourav/ui/interior';
 import { getBlogCoverUrl } from '@elsesourav/media';
 import type { PublicBlogPost } from '@elsesourav/types';
 import { BlogShareButtons } from './BlogShareButtons';
-import { ArrowLeft, Calendar, Clock, Eye, Sparkles, Maximize2 } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Eye, Maximize2 } from 'lucide-react';
 
 interface BlogArticleHeaderProps {
   post: PublicBlogPost;

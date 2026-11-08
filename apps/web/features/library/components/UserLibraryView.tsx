@@ -4,7 +4,6 @@ import * as React from 'react';
 import type { LibraryItem } from '@elsesourav/types';
 import { LibraryAppCard } from './LibraryAppCard';
 import { LibraryEmptyState } from './LibraryEmptyState';
-import { Badge } from '@elsesourav/ui';
 
 interface UserLibraryViewProps {
   initialItems: readonly LibraryItem[];
@@ -26,8 +25,8 @@ export function UserLibraryView({ initialItems, totalCount }: UserLibraryViewPro
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <span className="text-xs text-zinc-400">
-          Showing <span className="text-zinc-200 font-medium">{items.length}</span> saved
-          applications
+          Showing <span className="text-zinc-200 font-medium">{items.length}</span> of{' '}
+          <span className="text-zinc-200 font-medium">{totalCount}</span> saved applications
         </span>
       </div>
 

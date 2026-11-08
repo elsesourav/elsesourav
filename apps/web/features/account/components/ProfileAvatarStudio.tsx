@@ -4,7 +4,7 @@ import { BlurUpImage } from '@/components/interior/BlurUpImage';
 import { LoadingButton } from '@/components/interior/LoadingButton';
 import { ImageCropperModal } from '@/components/media/ImageCropperModal';
 import type { User } from '@elsesourav/types';
-import { UserAvatar } from '@elsesourav/ui';
+import { UserAvatar, Button } from '@elsesourav/ui';
 import { AlertCircle, Camera, Check, RotateCcw, Sparkles, UploadCloud } from 'lucide-react';
 import * as React from 'react';
 import { updateProfileFormAction } from '../actions/account-actions';
@@ -128,41 +128,48 @@ export function ProfileAvatarStudio({
   };
 
   return (
-    <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-muted/30 border border-border/80 space-y-3.5 overflow-hidden max-w-full">
-      <div className="flex items-center justify-between gap-2 flex-wrap">
-        <div className="flex items-center gap-2">
-          <Sparkles className="w-3.5 h-3.5 text-primary" />
-          <span className="text-xs font-semibold text-foreground">Profile Image</span>
+    <div
+      data-section="profile-avatar"
+      className="p-2.5 sm:p-3.5 md:p-4 rounded-xl sm:rounded-2xl bg-muted/20 border border-border/60 sm:border-border/80 space-y-2.5 sm:space-y-3.5 overflow-hidden max-w-full transition-all"
+    >
+      <div className="flex items-center justify-between gap-1.5 sm:gap-2 flex-wrap">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-primary" />
+          <span className="text-[11px] sm:text-xs md:text-sm font-semibold text-foreground">
+            Profile Image
+          </span>
           {hasPhotoChanged && (
-            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-primary/15 text-primary border border-primary/25">
-              Unsaved changes
+            <span className="text-[9px] sm:text-[10px] font-semibold px-1.5 py-0.2 sm:px-2 sm:py-0.5 rounded-full bg-primary/15 text-primary border border-primary/25">
+              Unsaved
             </span>
           )}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           {photoSaveSuccess && (
-            <span className="text-[11px] text-emerald-400 flex items-center gap-1 font-medium animate-in fade-in">
-              <Check className="w-3 h-3" /> Image saved
+            <span className="text-[10px] sm:text-[11px] text-emerald-400 flex items-center gap-1 font-medium animate-in fade-in">
+              <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> Saved
             </span>
           )}
           {photoSaveError && (
-            <span className="text-[11px] text-rose-400 flex items-center gap-1 font-medium animate-in fade-in">
-              <AlertCircle className="w-3 h-3" /> {photoSaveError}
+            <span className="text-[10px] sm:text-[11px] text-rose-400 flex items-center gap-1 font-medium animate-in fade-in">
+              <AlertCircle className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> {photoSaveError}
             </span>
           )}
 
           {hasPhotoChanged && (
-            <button
+            <Button
               type="button"
+              variant="outline"
+              size="xs"
               onClick={handleResetPhoto}
               disabled={isSavingPhoto}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-border bg-background hover:bg-accent text-muted-foreground hover:text-foreground text-xs font-medium transition-colors cursor-pointer"
+              leftIcon={<RotateCcw className="w-2.5 h-2.5 sm:w-3 sm:h-3" />}
+              className="h-6 sm:h-7 px-2 text-[10px] sm:text-xs"
               title="Reset to current saved image"
             >
-              <RotateCcw className="w-3 h-3" />
-              <span>Reset</span>
-            </button>
+              Reset
+            </Button>
           )}
 
           <LoadingButton
@@ -171,26 +178,26 @@ export function ProfileAvatarStudio({
             pendingLabel="Saving..."
             successLabel="Saved"
             errorLabel="Failed"
-            className="h-8 px-3 text-xs font-semibold"
+            className="h-6.5 sm:h-7 md:h-8 px-2.5 sm:px-3 text-[10px] sm:text-xs font-semibold rounded-lg sm:rounded-xl shadow-xs"
           >
             Save Image
           </LoadingButton>
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row items-center sm:items-stretch gap-4 sm:gap-5 w-full min-w-0 max-w-full">
+      <div className="flex flex-col sm:flex-row items-center sm:items-stretch gap-3 sm:gap-4 md:gap-5 w-full min-w-0 max-w-full">
         <div
           onClick={() => fileInputRef.current?.click()}
-          className="group relative w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-[25%] overflow-hidden border-2 border-primary/30 bg-muted/60 shadow-md shrink-0 cursor-pointer transition-all duration-200 hover:border-primary hover:shadow-lg flex items-center justify-center"
+          className="group relative w-20 h-20 sm:w-28 sm:h-28 md:w-36 md:h-36 rounded-2xl sm:rounded-[25%] overflow-hidden border border-primary/30 sm:border-2 bg-muted/50 shadow-xs shrink-0 cursor-pointer transition-all duration-200 hover:border-primary hover:shadow-sm flex items-center justify-center"
           title="Click to upload new photo"
         >
           {draftPhotoUrl ? (
             <BlurUpImage
               src={draftPhotoUrl}
               alt={displayName || 'Profile preview'}
-              width={160}
-              height={160}
-              radius={36}
+              width={144}
+              height={144}
+              radius={24}
               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
@@ -199,26 +206,26 @@ export function ProfileAvatarStudio({
               name={displayName}
               identifier={user.id || user.email}
               size="xl"
-              className="w-full h-full rounded-2xl sm:rounded-3xl text-3xl md:text-4xl font-bold"
+              className="w-full h-full rounded-2xl sm:rounded-3xl text-2xl sm:text-3xl md:text-4xl font-bold"
             />
           )}
 
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center text-white gap-1 p-2 text-center">
-            <Camera className="w-6 h-6" />
-            <span className="text-[10px] font-semibold">Change Photo</span>
+          <div className="absolute inset-0 bg-black/45 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center text-white gap-0.5 sm:gap-1 p-1 text-center">
+            <Camera className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+            <span className="text-[9px] sm:text-[10px] font-semibold">Change</span>
           </div>
         </div>
 
-        <div className="flex-1 w-full flex flex-col justify-between gap-3 min-w-0 max-w-full overflow-hidden">
+        <div className="flex-1 w-full flex flex-col justify-between gap-2 sm:gap-3 min-w-0 max-w-full overflow-hidden">
           <div
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
-            className={`w-full rounded-xl sm:rounded-2xl border border-dashed flex items-center gap-3.5 p-3 sm:p-3.5 text-left cursor-pointer transition-all duration-200 group ${
+            className={`w-full rounded-lg sm:rounded-xl md:rounded-2xl border border-dashed flex items-center gap-2 sm:gap-3 p-2 sm:p-3 text-left cursor-pointer transition-all duration-200 group ${
               isDraggingOver
                 ? 'border-primary bg-primary/10 scale-[1.01]'
-                : 'border-border/90 hover:border-primary/60 hover:bg-primary/5 bg-background/50'
+                : 'border-border/80 hover:border-primary/60 hover:bg-primary/5 bg-background/50'
             }`}
           >
             <input
@@ -228,34 +235,34 @@ export function ProfileAvatarStudio({
               onChange={handleFileInputChange}
               className="hidden"
             />
-            <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-200">
-              <UploadCloud className="w-5 h-5 text-primary" />
+            <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-200">
+              <UploadCloud className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-semibold text-foreground truncate">
-                Drop an image here, or <span className="text-primary underline">browse</span>
+              <p className="text-[11px] sm:text-xs font-semibold text-foreground truncate">
+                Drop an image, or <span className="text-primary underline">browse</span>
               </p>
-              <p className="text-[11px] text-muted-foreground mt-0.5 truncate">
-                Square JPG, PNG, WEBP • Max 5MB (1:1 recommended)
+              <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 truncate">
+                JPG, PNG, WEBP • Max 5MB (1:1)
               </p>
             </div>
           </div>
 
-          <div className="space-y-1.5 pt-0.5 w-full min-w-0 max-w-full">
-            <div className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
-              Or select a preset:
+          <div className="space-y-1 sm:space-y-1.5 pt-0.5 w-full min-w-0 max-w-full">
+            <div className="text-[9px] sm:text-[10px] md:text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+              Or select preset:
             </div>
 
-            <div className="w-full max-w-full overflow-x-auto py-1 scrollbar-none pl-1">
-              <div className="flex items-center gap-2 sm:gap-2.5 min-w-max">
+            <div className="w-full max-w-full overflow-x-auto py-0.5 scrollbar-none pl-0.5">
+              <div className="flex items-center gap-1.5 sm:gap-2 min-w-max">
                 <button
                   type="button"
                   onClick={() => handleSelectPresetOrDraft('')}
                   title="Default Monogram"
-                  className={`group relative w-10 h-10 sm:w-11 sm:h-11 rounded-xl border flex items-center justify-center transition-all duration-200 shrink-0 cursor-pointer overflow-hidden ${
+                  className={`group relative w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg sm:rounded-xl border flex items-center justify-center transition-all duration-200 shrink-0 cursor-pointer overflow-hidden ${
                     !draftPhotoUrl
-                      ? 'border-primary ring-2 ring-primary/40 shadow-md scale-105'
-                      : 'border-border/70 hover:border-primary/40 bg-muted/40'
+                      ? 'border-primary ring-2 ring-primary/40 shadow-xs scale-105'
+                      : 'border-border/60 hover:border-primary/40 bg-muted/40'
                   }`}
                 >
                   <UserAvatar
@@ -263,11 +270,11 @@ export function ProfileAvatarStudio({
                     name={displayName}
                     identifier={user.id || user.email}
                     size="sm"
-                    className="w-full h-full rounded-xl text-xs font-bold"
+                    className="w-full h-full rounded-lg text-[10px] sm:text-xs font-bold"
                   />
                   {!draftPhotoUrl && (
                     <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
-                      <Check className="w-3.5 h-3.5 text-primary" />
+                      <Check className="w-3 h-3 text-primary" />
                     </div>
                   )}
                 </button>
@@ -280,23 +287,23 @@ export function ProfileAvatarStudio({
                       type="button"
                       onClick={() => handleSelectPresetOrDraft(preset.url)}
                       title={preset.name}
-                      className={`group relative w-10 h-10 sm:w-11 sm:h-11 rounded-xl border flex items-center justify-center transition-all duration-200 shrink-0 cursor-pointer overflow-hidden ${
+                      className={`group relative w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg sm:rounded-xl border flex items-center justify-center transition-all duration-200 shrink-0 cursor-pointer overflow-hidden ${
                         isSelected
-                          ? 'border-primary ring-2 ring-primary/40 shadow-md scale-105'
-                          : 'border-border/70 hover:border-primary/40 bg-muted/40'
+                          ? 'border-primary ring-2 ring-primary/40 shadow-xs scale-105'
+                          : 'border-border/60 hover:border-primary/40 bg-muted/40'
                       }`}
                     >
                       <BlurUpImage
                         src={preset.url}
                         alt={preset.name}
-                        width={44}
-                        height={44}
-                        radius={12}
+                        width={40}
+                        height={40}
+                        radius={10}
                         className="w-full h-full object-cover"
                       />
                       {isSelected && (
                         <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                          <Check className="w-3.5 h-3.5 text-white" />
+                          <Check className="w-3 h-3 text-white" />
                         </div>
                       )}
                     </button>

@@ -48,8 +48,10 @@ playwright-report/
 test-results/
 
 # Prisma
-prisma/*.db
-prisma/*.db-journal
+**/prisma/*.db
+**/prisma/*.db-journal
+*.db
+*.db-journal
 
 # Tool Caches & Temp
 .firebase/

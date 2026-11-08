@@ -351,10 +351,11 @@ export function ForgotPasswordForm() {
 
           <Button
             type="submit"
-            isLoading={loading}
+            loading={loading}
+            loadingText="Sending Code..."
             className="w-full bg-[hsl(var(--primary))] hover:opacity-90 text-white text-sm font-medium py-2.5 rounded-xl shadow-lg shadow-indigo-600/20 cursor-pointer"
           >
-            <span>{loading ? 'Sending Code...' : 'Send Verification Code'}</span>
+            Send Verification Code
           </Button>
         </form>
       )}
@@ -374,16 +375,18 @@ export function ForgotPasswordForm() {
                 </p>
               </div>
             </div>
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="xs"
               onClick={() => {
                 setStep(1);
                 setErrorMessage(null);
               }}
-              className="text-[11px] font-medium text-indigo-400 hover:text-indigo-300 hover:underline px-2 py-1 rounded-md hover:bg-indigo-500/10 transition-colors"
+              className="text-[11px] font-medium text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10 px-2 py-1"
             >
               Change
-            </button>
+            </Button>
           </div>
 
           <div className="space-y-2 text-center">
@@ -394,39 +397,44 @@ export function ForgotPasswordForm() {
           </div>
 
           <div className="flex items-center justify-between text-xs pt-1">
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="xs"
+              leftIcon={<ArrowLeft className="w-3.5 h-3.5" />}
               onClick={() => {
                 setStep(1);
                 setErrorMessage(null);
               }}
-              className="text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] flex items-center gap-1 transition-colors"
+              className="text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]"
             >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Back</span>
-            </button>
+              Back
+            </Button>
 
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="xs"
               onClick={handleResendOtp}
               disabled={resendCooldown > 0 || loading}
-              className={`text-[11px] font-medium transition-colors ${
+              className={`text-[11px] font-medium ${
                 resendCooldown > 0
                   ? 'text-[hsl(var(--muted-foreground))] cursor-not-allowed'
-                  : 'text-indigo-400 hover:text-indigo-300 hover:underline cursor-pointer'
+                  : 'text-indigo-400 hover:text-indigo-300'
               }`}
             >
               {resendCooldown > 0 ? `Resend code in ${resendCooldown}s` : 'Resend Code'}
-            </button>
+            </Button>
           </div>
 
           <Button
             type="submit"
-            isLoading={loading}
+            loading={loading}
+            loadingText="Verifying..."
             disabled={otp.length !== 6 || loading}
             className="w-full bg-[hsl(var(--primary))] hover:opacity-90 text-white text-sm font-medium py-2.5 rounded-xl shadow-lg shadow-indigo-600/20 cursor-pointer"
           >
-            <span>{loading ? 'Verifying...' : 'Verify Code & Continue'}</span>
+            Verify Code & Continue
           </Button>
         </form>
       )}
@@ -519,11 +527,12 @@ export function ForgotPasswordForm() {
 
           <Button
             type="submit"
-            isLoading={loading}
+            loading={loading}
+            loadingText="Updating Password..."
             disabled={!password || password !== confirmPassword || loading}
             className="w-full bg-[hsl(var(--primary))] hover:opacity-90 text-white text-sm font-medium py-2.5 rounded-xl shadow-lg shadow-indigo-600/20 cursor-pointer mt-2"
           >
-            <span>{loading ? 'Updating Password...' : 'Set New Password'}</span>
+            Set New Password
           </Button>
         </form>
       )}
@@ -547,9 +556,11 @@ export function ForgotPasswordForm() {
 
           <div className="pt-2">
             <Link href="/login">
-              <Button className="w-full bg-[hsl(var(--primary))] hover:opacity-90 text-white text-sm font-medium py-2.5 rounded-xl shadow-lg shadow-indigo-600/20 gap-2 cursor-pointer">
-                <span>Sign In to Your Account</span>
-                <ArrowRight className="w-4 h-4" />
+              <Button
+                rightIcon={<ArrowRight className="w-4 h-4" />}
+                className="w-full bg-[hsl(var(--primary))] hover:opacity-90 text-white text-sm font-medium py-2.5 rounded-xl shadow-lg shadow-indigo-600/20 cursor-pointer"
+              >
+                Sign In to Your Account
               </Button>
             </Link>
           </div>

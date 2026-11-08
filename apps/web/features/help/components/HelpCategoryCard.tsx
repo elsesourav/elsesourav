@@ -13,7 +13,7 @@ export function HelpCategoryCard({ category }: HelpCategoryCardProps) {
   const totalCount = category.articleCount ?? category.articles.length;
 
   return (
-    <Card className="p-6 rounded-3xl border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:border-indigo-500/40 dark:hover:border-indigo-400/40 hover:bg-[hsl(var(--surface-elevated))] hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-300 ease-out active:scale-[0.99] active:translate-y-0 backdrop-blur-sm flex flex-col justify-between space-y-5">
+    <Card className="p-3 sm:p-4 md:p-5 rounded-3xl border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:border-indigo-500/40 dark:hover:border-indigo-400/40 hover:bg-[hsl(var(--surface-elevated))] hover:shadow-xl hover:shadow-indigo-500/5 transition-colors duration-200 backdrop-blur-sm flex flex-col justify-between space-y-4">
       {/* Category Header */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">

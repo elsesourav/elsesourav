@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Card, Badge, Input } from '@elsesourav/ui';
+import { Card, Badge, Input, Button, IconButton } from '@elsesourav/ui';
 import { Dropdown } from '@elsesourav/ui/interior';
 import type { AuditLog, AuditListResult, AuditSummaryMetrics } from '@elsesourav/types';
 import {
@@ -29,31 +29,40 @@ export function AdminAuditTable({ initialLogs, summary }: AdminAuditTableProps) 
   const [selectedAction, setSelectedAction] = React.useState<string>('all');
   const [selectedResource, setSelectedResource] = React.useState<string>('all');
 
-  const actionItems = React.useMemo(() => [
-    { value: 'all', label: 'All Actions' },
-    { value: 'USER_ROLE_CHANGED', label: 'USER_ROLE_CHANGED' },
-    { value: 'USER_DELETED', label: 'USER_DELETED' },
-    { value: 'APP_PUBLISHED', label: 'APP_PUBLISHED' },
-    { value: 'APP_ARCHIVED', label: 'APP_ARCHIVED' },
-    { value: 'APP_DELETED', label: 'APP_DELETED' },
-    { value: 'BLOG_PUBLISHED', label: 'BLOG_PUBLISHED' },
-    { value: 'HELP_PUBLISHED', label: 'HELP_PUBLISHED' },
-    { value: 'SUPPORT_STATUS_CHANGED', label: 'SUPPORT_STATUS_CHANGED' },
-    { value: 'MEDIA_DELETED', label: 'MEDIA_DELETED' },
-    { value: 'SECURITY_UNAUTHORIZED_ACCESS_ATTEMPT', label: 'SECURITY_UNAUTHORIZED_ACCESS_ATTEMPT' },
-  ], []);
+  const actionItems = React.useMemo(
+    () => [
+      { value: 'all', label: 'All Actions' },
+      { value: 'USER_ROLE_CHANGED', label: 'USER_ROLE_CHANGED' },
+      { value: 'USER_DELETED', label: 'USER_DELETED' },
+      { value: 'APP_PUBLISHED', label: 'APP_PUBLISHED' },
+      { value: 'APP_ARCHIVED', label: 'APP_ARCHIVED' },
+      { value: 'APP_DELETED', label: 'APP_DELETED' },
+      { value: 'BLOG_PUBLISHED', label: 'BLOG_PUBLISHED' },
+      { value: 'HELP_PUBLISHED', label: 'HELP_PUBLISHED' },
+      { value: 'SUPPORT_STATUS_CHANGED', label: 'SUPPORT_STATUS_CHANGED' },
+      { value: 'MEDIA_DELETED', label: 'MEDIA_DELETED' },
+      {
+        value: 'SECURITY_UNAUTHORIZED_ACCESS_ATTEMPT',
+        label: 'SECURITY_UNAUTHORIZED_ACCESS_ATTEMPT',
+      },
+    ],
+    []
+  );
 
-  const resourceItems = React.useMemo(() => [
-    { value: 'all', label: 'All Resource Types' },
-    { value: 'USER', label: 'USER' },
-    { value: 'APP', label: 'APP' },
-    { value: 'BLOG_POST', label: 'BLOG_POST' },
-    { value: 'HELP_ARTICLE', label: 'HELP_ARTICLE' },
-    { value: 'SUPPORT_TICKET', label: 'SUPPORT_TICKET' },
-    { value: 'MEDIA', label: 'MEDIA' },
-    { value: 'SECURITY', label: 'SECURITY' },
-    { value: 'SYSTEM', label: 'SYSTEM' },
-  ], []);
+  const resourceItems = React.useMemo(
+    () => [
+      { value: 'all', label: 'All Resource Types' },
+      { value: 'USER', label: 'USER' },
+      { value: 'APP', label: 'APP' },
+      { value: 'BLOG_POST', label: 'BLOG_POST' },
+      { value: 'HELP_ARTICLE', label: 'HELP_ARTICLE' },
+      { value: 'SUPPORT_TICKET', label: 'SUPPORT_TICKET' },
+      { value: 'MEDIA', label: 'MEDIA' },
+      { value: 'SECURITY', label: 'SECURITY' },
+      { value: 'SYSTEM', label: 'SYSTEM' },
+    ],
+    []
+  );
 
   // Metadata inspector modal
   const [inspectingLog, setInspectingLog] = React.useState<AuditLog | null>(null);
@@ -291,14 +300,16 @@ export function AdminAuditTable({ initialLogs, summary }: AdminAuditTableProps) 
 
                       {/* Details button */}
                       <td className="py-3.5 px-4 whitespace-nowrap text-right">
-                        <button
+                        <Button
                           type="button"
+                          variant="ghost"
+                          size="xs"
                           onClick={() => setInspectingLog(log)}
-                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 text-[11px] font-mono transition-colors"
+                          leftIcon={<Code2 className="w-3 h-3 text-indigo-400" />}
+                          className="font-mono text-[11px] bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 rounded-lg px-2.5 py-1"
                         >
-                          <Code2 className="w-3 h-3 text-indigo-400" />
-                          <span>Inspect</span>
-                        </button>
+                          Inspect
+                        </Button>
                       </td>
                     </tr>
                   );
@@ -315,21 +326,27 @@ export function AdminAuditTable({ initialLogs, summary }: AdminAuditTableProps) 
             <strong className="text-zinc-300">{initialLogs.total}</strong> records
           </span>
           <div className="flex items-center gap-2">
-            <button
+            <IconButton
+              type="button"
+              variant="outline"
+              size="icon-xs"
               disabled={initialLogs.page <= 1}
-              className="p-1 rounded-lg border border-zinc-800 disabled:opacity-40 hover:bg-zinc-800 text-zinc-400"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
+              aria-label="Previous page"
+              icon={<ChevronLeft className="w-4 h-4 text-zinc-400" />}
+              className="rounded-lg border-zinc-800"
+            />
             <span className="font-mono text-zinc-400">
               Page {initialLogs.page} of {initialLogs.totalPages}
             </span>
-            <button
+            <IconButton
+              type="button"
+              variant="outline"
+              size="icon-xs"
               disabled={initialLogs.page >= initialLogs.totalPages}
-              className="p-1 rounded-lg border border-zinc-800 disabled:opacity-40 hover:bg-zinc-800 text-zinc-400"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
+              aria-label="Next page"
+              icon={<ChevronRight className="w-4 h-4 text-zinc-400" />}
+              className="rounded-lg border-zinc-800"
+            />
           </div>
         </div>
       </Card>
@@ -343,13 +360,15 @@ export function AdminAuditTable({ initialLogs, summary }: AdminAuditTableProps) 
                 <Lock className="w-4 h-4 text-indigo-400" />
                 <h3 className="text-sm font-bold text-zinc-100">Audit Log Details</h3>
               </div>
-              <button
+              <IconButton
                 type="button"
+                variant="ghost"
+                size="icon-xs"
                 onClick={() => setInspectingLog(null)}
-                className="p-1.5 rounded-lg hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200"
-              >
-                <X className="w-4 h-4" />
-              </button>
+                aria-label="Close details"
+                icon={<X className="w-4 h-4 text-zinc-400 hover:text-zinc-200" />}
+                className="rounded-lg"
+              />
             </div>
 
             <div className="space-y-3 text-xs">

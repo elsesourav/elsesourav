@@ -6,7 +6,7 @@ import { Container, Reveal, RevealGroup } from '@elsesourav/ui';
 import { TextReveal } from '@elsesourav/ui/interior';
 import { ROUTES } from '@elsesourav/config';
 import type { AppListItem } from '@elsesourav/types';
-import { AppCard } from '@/features/apps/components/AppCard';
+import { AppCard } from '@/features/apps/components/discovery';
 import { ArrowRight, Sparkles, Layers } from 'lucide-react';
 
 interface SelectedAppsSectionProps {
@@ -30,7 +30,7 @@ export function SelectedAppsSection({
   return (
     <section
       id="selected-apps"
-      className="relative isolate overflow-hidden py-16 sm:py-24 lg:py-28 transition-colors duration-500 bg-[#f8fafc] dark:bg-[#07090e]"
+      className="relative isolate overflow-hidden py-8 sm:py-14 lg:py-20 scroll-mt-16 sm:scroll-mt-20 transition-colors duration-500 bg-[#f8fafc] dark:bg-[#07090e]"
     >
       {/* ── 1. Top Edge Horizon Beam (Seamless bridge from Hero above) ── */}
       <div
@@ -56,26 +56,25 @@ export function SelectedAppsSection({
         <div
           className="absolute inset-0 opacity-[0.035] dark:opacity-[0.045] [mask-image:radial-gradient(ellipse_75%_65%_at_50%_40%,#000_50%,transparent_100%)] pointer-events-none"
           style={{
-            backgroundImage:
-              'radial-gradient(currentColor 1.2px, transparent 1.2px)',
+            backgroundImage: 'radial-gradient(currentColor 1.2px, transparent 1.2px)',
             backgroundSize: '24px 24px',
           }}
         />
       </div>
 
-      <Container size="lg" className="relative z-10">
+      <Container size="lg" className="relative z-10 px-3 sm:px-6 lg:px-8">
         {/* ── 3. Polished Section Header ── */}
         <Reveal direction="up" distance={14}>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 sm:mb-12 pb-6 border-b border-slate-200/80 dark:border-white/10">
-            <div className="space-y-3 max-w-2xl text-left">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 sm:gap-4 mb-4 sm:mb-8 pb-3 sm:pb-5 border-b border-slate-200/80 dark:border-white/10">
+            <div className="space-y-1.5 sm:space-y-2.5 max-w-2xl text-left">
               {/* Pill Badge */}
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wide bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 backdrop-blur-md shadow-sm">
-                <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-xs font-semibold tracking-wide bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 backdrop-blur-md shadow-sm">
+                <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-indigo-500" />
                 <span className="uppercase tracking-wider">SELECTED APPS</span>
               </div>
 
               {/* Title */}
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
                 <TextReveal
                   text={title || 'Selected Apps'}
                   by="word"
@@ -85,7 +84,7 @@ export function SelectedAppsSection({
               </h2>
 
               {/* Subtitle */}
-              <p className="text-sm sm:text-base text-slate-600 dark:text-zinc-400 leading-relaxed max-w-xl">
+              <p className="text-xs sm:text-sm md:text-base text-slate-600 dark:text-zinc-400 leading-relaxed max-w-xl">
                 <TextReveal
                   text={
                     subtitle ||
@@ -100,20 +99,20 @@ export function SelectedAppsSection({
             </div>
 
             {/* Quick Action Button */}
-            <div className="shrink-0">
+            <div className="shrink-0 self-start md:self-auto pt-1 md:pt-0">
               <Link
                 href={ROUTES.APPS}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-semibold text-indigo-600 dark:text-indigo-300 bg-indigo-50 hover:bg-indigo-100/80 dark:bg-white/5 dark:hover:bg-white/10 border border-indigo-200/70 dark:border-white/10 shadow-sm hover:shadow transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-semibold text-indigo-600 dark:text-indigo-300 bg-indigo-50 hover:bg-indigo-100/80 dark:bg-white/5 dark:hover:bg-white/10 border border-indigo-200/70 dark:border-white/10 shadow-sm hover:shadow transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
               >
                 <span>Explore all apps {totalCount > 0 ? `(${totalCount})` : ''}</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           </div>
         </Reveal>
 
-        {/* ── 4. Apps Showcase Grid ── */}
-        <div className="space-y-6 pt-2">
+        {/* ── 4. Apps Showcase Grid (Compact) ── */}
+        <div className="space-y-3 sm:space-y-4 md:space-y-5 pt-1">
           {/* Flagship Lead Project */}
           {flagshipApp && (
             <Reveal direction="up" distance={16} delay={0.05}>
@@ -121,12 +120,12 @@ export function SelectedAppsSection({
             </Reveal>
           )}
 
-          {/* Supporting Projects Grid (up to 4 projects in 2x2) */}
+          {/* Supporting Projects Grid (up to 4 projects in compact 2x2) */}
           {supportingApps.length > 0 && (
             <RevealGroup
               staggerDelay={0.06}
               baseDelay={0.08}
-              className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 items-stretch"
+              className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-5 items-stretch"
             >
               {supportingApps.map((app: AppListItem, idx: number) => (
                 <AppCard key={app.id} app={app} index={idx + 1} />
@@ -137,24 +136,25 @@ export function SelectedAppsSection({
 
         {/* ── 5. Bottom Catalog Exploration Banner ── */}
         <Reveal direction="up" distance={12} delay={0.15}>
-          <div className="mt-12 sm:mt-16 p-6 sm:p-8 rounded-2xl border border-indigo-500/20 dark:border-white/10 bg-gradient-to-r from-indigo-500/5 via-violet-500/5 to-purple-500/5 dark:from-indigo-500/10 dark:via-purple-500/5 dark:to-transparent backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-5 text-center sm:text-left shadow-sm">
+          <div className="mt-8 sm:mt-12 lg:mt-16 p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl border border-indigo-500/20 dark:border-white/10 bg-gradient-to-r from-indigo-500/5 via-violet-500/5 to-purple-500/5 dark:from-indigo-500/10 dark:via-purple-500/5 dark:to-transparent backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-5 text-center sm:text-left shadow-sm">
             <div className="space-y-1">
-              <div className="flex items-center justify-center sm:justify-start gap-2 text-sm font-bold text-slate-900 dark:text-white">
-                <Layers className="w-4 h-4 text-indigo-500" />
+              <div className="flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 text-xs sm:text-sm md:text-base font-bold text-slate-900 dark:text-white">
+                <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-indigo-500" />
                 <span>Browse the Complete Ecosystem</span>
               </div>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400">
-                Discover all {totalCount} open-source experiments, production tools, and native software.
+              <p className="text-[11px] sm:text-xs md:text-sm text-slate-600 dark:text-zinc-400">
+                Discover all {totalCount} open-source experiments, production tools, and native
+                software.
               </p>
             </div>
 
             <Link
               href={ROUTES.APPS}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs sm:text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 shadow-md shadow-indigo-600/25 active:scale-95 transition-all group shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 shadow-md shadow-indigo-600/25 active:scale-95 transition-all group shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
             >
-              <Sparkles className="w-4 h-4" />
+              <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               <span>Explore Full Catalog</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
         </Reveal>

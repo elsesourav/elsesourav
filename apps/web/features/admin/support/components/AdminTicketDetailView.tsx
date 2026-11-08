@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Card, Button, Input, Badge } from '@elsesourav/ui';
+import { Card, Button, Badge } from '@elsesourav/ui';
 import { Dropdown, FloatingLabelInput } from '@elsesourav/ui/interior';
 import type { SupportTicketDetail, SupportTicketStatus } from '@elsesourav/types';
 import {
@@ -10,7 +10,6 @@ import {
   adminUpdateTicketStatusAction,
 } from '../actions/admin-support-actions';
 import {
-  LifeBuoy,
   ArrowLeft,
   Send,
   Lock,
@@ -19,7 +18,6 @@ import {
   CheckCircle2,
   AlertCircle,
   Loader2,
-  Clock,
   User,
   Shield,
 } from 'lucide-react';

@@ -99,7 +99,8 @@ export function EarthScene({ isSceneActive = true, isMobileBackdrop = false }: E
             left: '13.48%',
             top: '1.91%',
             width: '82.62%',
-            filter: 'drop-shadow(0 20px 35px rgba(0, 0, 0, 0.45)) drop-shadow(0 8px 20px rgba(244, 114, 182, 0.15))',
+            filter:
+              'drop-shadow(0 20px 35px rgba(0, 0, 0, 0.45)) drop-shadow(0 8px 20px rgba(244, 114, 182, 0.15))',
           }}
         >
           {/* Low-Quality Lightweight Placeholder (3.6 KB) - On mobile, this is the only image used with blur */}

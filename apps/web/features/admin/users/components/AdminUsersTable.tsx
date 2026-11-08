@@ -2,19 +2,10 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Card, Badge, Input, Button, UserAvatar } from '@elsesourav/ui';
+import { Card, Badge, Input, UserAvatar } from '@elsesourav/ui';
 import { Dropdown } from '@elsesourav/ui/interior';
 import type { AdminUserListItem, UserRole } from '@elsesourav/types';
-import {
-  Users,
-  Search,
-  ExternalLink,
-  ChevronLeft,
-  ChevronRight,
-  Shield,
-  BookMarked,
-  LifeBuoy,
-} from 'lucide-react';
+import { Users, Search, ExternalLink, BookMarked, LifeBuoy } from 'lucide-react';
 
 interface AdminUsersTableProps {
   initialUsers: readonly AdminUserListItem[];
@@ -28,18 +19,24 @@ export function AdminUsersTable({ initialUsers, total, totalPages }: AdminUsersT
   const [selectedRole, setSelectedRole] = React.useState<string>('all');
   const [selectedStatus, setSelectedStatus] = React.useState<string>('all');
 
-  const roleItems = React.useMemo(() => [
-    { value: 'all', label: 'All Roles' },
-    { value: 'USER', label: 'User' },
-    { value: 'STAFF', label: 'Staff' },
-    { value: 'ADMIN', label: 'Admin' },
-  ], []);
+  const roleItems = React.useMemo(
+    () => [
+      { value: 'all', label: 'All Roles' },
+      { value: 'USER', label: 'User' },
+      { value: 'STAFF', label: 'Staff' },
+      { value: 'ADMIN', label: 'Admin' },
+    ],
+    []
+  );
 
-  const statusItems = React.useMemo(() => [
-    { value: 'all', label: 'All Statuses' },
-    { value: 'active', label: 'Active' },
-    { value: 'deleted', label: 'Deleted' },
-  ], []);
+  const statusItems = React.useMemo(
+    () => [
+      { value: 'all', label: 'All Statuses' },
+      { value: 'active', label: 'Active' },
+      { value: 'deleted', label: 'Deleted' },
+    ],
+    []
+  );
 
   const filteredUsers = React.useMemo(() => {
     return users.filter((user) => {
@@ -135,7 +132,8 @@ export function AdminUsersTable({ initialUsers, total, totalPages }: AdminUsersT
         {/* Total Users Count */}
         <div className="text-xs font-mono text-zinc-400">
           Showing <span className="text-zinc-200 font-bold">{filteredUsers.length}</span> of{' '}
-          <span className="text-zinc-200 font-bold">{total}</span> total
+          <span className="text-zinc-200 font-bold">{total}</span> total ({totalPages}{' '}
+          {totalPages === 1 ? 'page' : 'pages'})
         </div>
       </div>
 

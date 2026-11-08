@@ -59,9 +59,7 @@ export function useScenePerformance<T extends HTMLElement = HTMLDivElement>(
 
   const evaluateState = React.useCallback(() => {
     const isNowActive =
-      isIntersectingRef.current &&
-      isDocVisibleRef.current &&
-      isWindowFocusedRef.current;
+      isIntersectingRef.current && isDocVisibleRef.current && isWindowFocusedRef.current;
 
     if (!isNowActive) {
       // Section is not visible or window/tab is inactive:
@@ -124,7 +122,8 @@ export function useScenePerformance<T extends HTMLElement = HTMLDivElement>(
 
     // Observe element intersection
     const element =
-      targetRef.current || (typeof document !== 'undefined' ? document.getElementById(elementId) : null);
+      targetRef.current ||
+      (typeof document !== 'undefined' ? document.getElementById(elementId) : null);
 
     let observer: IntersectionObserver | null = null;
     if (element && typeof IntersectionObserver !== 'undefined') {

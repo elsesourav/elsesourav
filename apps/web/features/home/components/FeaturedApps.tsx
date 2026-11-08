@@ -128,7 +128,7 @@ export function FeaturedApps({ apps }: FeaturedAppsProps) {
               <Link
                 key={tool.id}
                 href={ROUTES.APP_DETAIL(tool.slug)}
-                className="group relative flex flex-col justify-between p-5 rounded-2xl bg-[#0c0d1b]/90 hover:bg-[#111226] border border-white/8 hover:border-white/20 transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 min-h-[160px]"
+                className="group relative flex flex-col justify-between p-3 sm:p-3.5 md:p-4 rounded-2xl bg-[#0c0d1b]/90 hover:bg-[#111226] border border-white/8 hover:border-white/20 transition-all duration-300 shadow-sm hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 min-h-[160px]"
               >
                 <div className="space-y-3.5">
                   {/* Glowing Icon Square Box */}

@@ -12,7 +12,7 @@ import {
   X,
   Loader2,
 } from 'lucide-react';
-import { Button } from '@elsesourav/ui';
+import { Button, IconButton } from '@elsesourav/ui';
 import { LoadingButton } from '@/components/interior/LoadingButton';
 import { OtpInput } from '@/components/interior/OtpInput';
 import StatusMark from '@/components/micro/StatusMark';
@@ -72,33 +72,38 @@ export function AccountEmailCard({
   };
 
   return (
-    <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-muted/20 border border-border/80 space-y-3 transition-colors">
+    <div
+      data-section="security-email"
+      className="p-2.5 sm:p-3.5 md:p-4 rounded-lg sm:rounded-xl md:rounded-2xl bg-muted/15 border border-border/50 sm:border-border/80 space-y-1.5 sm:space-y-2.5 md:space-y-3 transition-colors"
+    >
       <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <Mail className="w-4 h-4 text-primary" />
-          <span className="text-xs font-semibold text-foreground">Primary Email</span>
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
+          <span className="text-[11px] sm:text-xs md:text-sm font-semibold text-foreground">
+            Primary Email
+          </span>
         </div>
 
         <div className="flex items-center gap-1.5">
           {isEmailVerified ? (
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
-              <StatusMark status="done" size={13} strokeWidth={2} doneColor="#34d399" />
+            <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-medium text-emerald-400 bg-emerald-500/10 px-2 sm:px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+              <StatusMark status="done" size={12} strokeWidth={2} doneColor="#34d399" />
               Verified
             </span>
           ) : !isOAuth ? (
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20">
+            <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-medium text-amber-400 bg-amber-500/10 px-2 sm:px-2.5 py-0.5 rounded-full border border-amber-500/20">
               <StatusMark
                 status={
                   emailStep === 'sending' || emailStep === 'verifying' ? 'running' : 'pending'
                 }
-                size={13}
+                size={12}
                 strokeWidth={2}
                 color="#f59e0b"
               />
               {emailStep === 'sending' || emailStep === 'verifying' ? 'Verifying…' : 'Unverified'}
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase text-primary bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
+            <span className="inline-flex items-center gap-1 text-[9px] sm:text-[10px] font-mono uppercase text-primary bg-primary/10 px-1.5 sm:px-2 py-0.5 rounded-full border border-primary/20">
               <Lock className="w-2.5 h-2.5" />
               {provider}
             </span>
@@ -107,8 +112,8 @@ export function AccountEmailCard({
       </div>
 
       {!isEditingEmail ? (
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 p-2.5 rounded-xl bg-background/80 border border-border/70">
-          <span className="text-xs font-mono text-foreground truncate select-all min-w-0">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2 sm:p-2.5 rounded-md sm:rounded-xl bg-background/60 border border-border/50">
+          <span className="text-[11px] sm:text-xs md:text-sm font-mono text-foreground truncate select-all min-w-0">
             {email}
           </span>
 
@@ -118,53 +123,57 @@ export function AccountEmailCard({
                 <Button
                   type="button"
                   size="sm"
+                  ripple
                   onClick={() => {
                     setIsEditingEmail(true);
                     setEmailStep('idle');
                     setEmailError(null);
                   }}
-                  className="text-xs font-semibold h-7 px-3 rounded-lg bg-amber-500 hover:bg-amber-600 text-black gap-1 cursor-pointer shadow-sm"
+                  leftIcon={<ShieldCheck className="w-3 h-3" />}
+                  className="text-[10px] sm:text-xs font-semibold h-6.5 sm:h-7 px-2.5 sm:px-3 rounded-md sm:rounded-lg bg-amber-500 hover:bg-amber-600 text-black shadow-xs cursor-pointer"
                 >
-                  <ShieldCheck className="w-3 h-3" />
-                  <span>Verify Email</span>
+                  Verify Email
                 </Button>
               ) : (
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="xs"
+                  ripple
                   onClick={() => {
                     setIsEditingEmail(true);
                     setEmailStep('idle');
                     setEmailError(null);
                   }}
-                  className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1 px-2 py-1 rounded-md hover:bg-muted transition-colors cursor-pointer"
+                  leftIcon={<Pencil className="w-2.5 h-2.5 sm:w-3 sm:h-3" />}
+                  className="h-6 sm:h-7 px-2 text-[10px] sm:text-xs text-muted-foreground hover:text-foreground rounded-md sm:rounded-lg cursor-pointer"
                 >
-                  <Pencil className="w-3 h-3" />
-                  <span>Change</span>
-                </button>
+                  Change
+                </Button>
               )}
             </div>
           )}
         </div>
       ) : (
-        <div className="p-3.5 rounded-xl bg-background border border-primary/25 space-y-3 animate-in fade-in duration-150">
-          <div className="flex items-center justify-between text-xs">
+        <div className="p-2.5 sm:p-3.5 rounded-lg sm:rounded-xl bg-background border border-primary/25 space-y-2.5 sm:space-y-3 animate-in fade-in duration-150">
+          <div className="flex items-center justify-between text-[11px] sm:text-xs">
             <span className="font-semibold text-foreground flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-primary" />
+              <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-primary" />
               Email Identity Verification
             </span>
-            <button
+            <IconButton
               type="button"
+              variant="ghost"
+              size="icon-xs"
               onClick={() => {
                 setIsEditingEmail(false);
                 setEmailStep('idle');
                 setEmailOtp('');
                 setEmailError(null);
               }}
-              className="p-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
               aria-label="Close"
-            >
-              <X className="w-3.5 h-3.5" />
-            </button>
+              icon={<X className="w-3.5 h-3.5" />}
+            />
           </div>
 
           {emailError && (
@@ -184,10 +193,10 @@ export function AccountEmailCard({
                 type="button"
                 onClick={handleSendEmailOtp}
                 size="sm"
-                className="text-xs font-semibold gap-1.5 h-8 px-3.5 rounded-lg cursor-pointer"
+                leftIcon={<Mail className="w-3.5 h-3.5" />}
+                className="text-xs font-semibold h-8 px-3.5 rounded-lg"
               >
-                <Mail className="w-3.5 h-3.5" />
-                <span>Send Verification Code</span>
+                Send Verification Code
               </Button>
             </div>
           )}
@@ -214,13 +223,15 @@ export function AccountEmailCard({
                 />
               </div>
               <div className="flex items-center justify-between pt-1">
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="xs"
                   onClick={handleSendEmailOtp}
-                  className="text-xs text-muted-foreground hover:text-foreground underline cursor-pointer transition-colors"
+                  className="underline text-muted-foreground hover:text-foreground h-auto p-0"
                 >
                   Resend Code
-                </button>
+                </Button>
                 <LoadingButton
                   onAction={handleVerifyEmailOtp}
                   disabled={emailOtp.length !== 6 || emailStep === 'verifying'}

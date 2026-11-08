@@ -22,6 +22,8 @@ export const AppActionTypeSchema = z.enum([
   'visit_website',
 ]);
 
+export const AppOrientationSchema = z.enum(['portrait', 'landscape']);
+
 export const AppLinkSchema = z.object({
   id: z.string().optional(),
   platform: AppPlatformSchema,
@@ -45,12 +47,15 @@ export const CreateAppSchema = z.object({
   documentationMd: z.string().optional(),
   iconUrl: z.string().url('Please provide a valid icon URL'),
   featuredImageUrl: z.string().url().optional(),
+  featuredImageMobileUrl: z.string().url().optional(),
   categoryId: z.string().min(1, 'Please select a category'),
   tagIds: z.array(z.string()).optional(),
   demoUrl: z.string().url().optional(),
   videoUrl: z.string().url().optional(),
   isFeatured: z.boolean().default(false),
   isPinned: z.boolean().default(false),
+  requiresAuth: z.boolean().default(false),
+  orientation: AppOrientationSchema.optional(),
   sortOrder: z.number().int().default(0),
   seoTitle: z.string().max(100).optional(),
   seoDescription: z.string().max(300).optional(),
@@ -76,6 +81,7 @@ export const AdminSaveAppSchema = z.object({
   documentationMd: z.string().optional().or(z.literal('')),
   iconUrl: z.string().url('Please provide a valid icon URL'),
   featuredImageUrl: z.string().url().optional().or(z.literal('')),
+  featuredImageMobileUrl: z.string().url().optional().or(z.literal('')),
   demoUrl: z.string().url().optional().or(z.literal('')),
   videoUrl: z.string().url().optional().or(z.literal('')),
   categoryId: z.string().min(1, 'Please select a category'),
@@ -84,7 +90,11 @@ export const AdminSaveAppSchema = z.object({
     .default('draft'),
   isFeatured: z.boolean().default(false),
   isPinned: z.boolean().default(false),
+  requiresAuth: z.boolean().default(false),
+  orientation: AppOrientationSchema.optional(),
   sortOrder: z.coerce.number().int().default(0),
+  bundleSize: z.string().max(50).optional().or(z.literal('')),
+  primaryLanguage: z.string().max(50).optional().or(z.literal('')),
   seoTitle: z.string().max(100).optional().or(z.literal('')),
   seoDescription: z.string().max(300).optional().or(z.literal('')),
 });
@@ -165,6 +175,7 @@ export const AppSchema = z.object({
   description: z.string().min(20),
   iconUrl: z.string().url(),
   featuredImageUrl: z.string().url().optional(),
+  featuredImageMobileUrl: z.string().url().optional(),
   screenshots: z.array(z.string().url()).default([]),
   demoUrl: z.string().url().optional(),
   videoUrl: z.string().url().optional(),

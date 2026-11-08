@@ -380,7 +380,7 @@ export function StarsCanvas({ isSceneActive = true }: StarsCanvasProps) {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full z-[2] pointer-events-none"
+      className="hero-atmospheric-canvas absolute inset-0 w-full h-full z-[2] pointer-events-none"
       aria-hidden="true"
     />
   );

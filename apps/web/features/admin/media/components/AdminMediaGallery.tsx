@@ -7,7 +7,7 @@ import type {
   MediaFolder,
   MediaType,
 } from '@elsesourav/types';
-import { Badge, Button, Card, Input } from '@elsesourav/ui';
+import { Badge, Button, Card, Input, IconButton } from '@elsesourav/ui';
 import { Dropdown } from '@elsesourav/ui/interior';
 import {
   AlertCircle,
@@ -378,36 +378,37 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
                   </div>
 
                   <div className="flex items-center justify-between gap-1 pt-1 border-t border-zinc-800/40">
-                    <button
+                    <IconButton
                       type="button"
-                      onClick={() => handleCopyUrl(asset.secureUrl, asset.publicId)}
-                      className="p-1 rounded-lg hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 transition-colors"
+                      variant="ghost"
+                      size="icon-xs"
+                      copyValue={asset.secureUrl}
+                      aria-label="Copy Public URL"
                       title="Copy Public URL"
-                    >
-                      {copiedId === asset.publicId ? (
-                        <Check className="w-3.5 h-3.5 text-emerald-400" />
-                      ) : (
-                        <Copy className="w-3.5 h-3.5" />
-                      )}
-                    </button>
+                      className="rounded-lg text-zinc-400 hover:text-zinc-200"
+                    />
 
-                    <button
+                    <IconButton
                       type="button"
+                      variant="ghost"
+                      size="icon-xs"
                       onClick={() => setSelectedAsset(asset)}
-                      className="p-1 rounded-lg hover:bg-zinc-800 text-zinc-400 hover:text-indigo-300 transition-colors"
+                      aria-label="Inspect Usage & References"
                       title="Inspect Usage & References"
-                    >
-                      <Info className="w-3.5 h-3.5" />
-                    </button>
+                      icon={<Info className="w-3.5 h-3.5" />}
+                      className="rounded-lg text-zinc-400 hover:text-indigo-300"
+                    />
 
-                    <button
+                    <IconButton
                       type="button"
+                      variant="ghost"
+                      size="icon-xs"
                       onClick={() => handleDeleteAsset(asset)}
-                      className="p-1 rounded-lg hover:bg-rose-950/60 text-zinc-400 hover:text-rose-400 transition-colors"
+                      aria-label="Delete from Media Storage"
                       title="Delete from Media Storage"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                      icon={<Trash2 className="w-3.5 h-3.5" />}
+                      className="rounded-lg text-zinc-400 hover:text-rose-400 hover:bg-rose-950/60"
+                    />
                   </div>
                 </div>
               </Card>
@@ -518,27 +519,24 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
                     type="button"
                     variant="outline"
                     size="sm"
-                    onClick={() => handleCopyUrl(selectedAsset.secureUrl, selectedAsset.publicId)}
-                    className="text-xs rounded-xl gap-1.5"
+                    copyValue={selectedAsset.secureUrl}
+                    className="text-xs rounded-xl"
                   >
-                    <Copy className="w-3.5 h-3.5" />
-                    <span>Copy URL</span>
+                    Copy URL
                   </Button>
 
                   <Button
                     type="button"
-                    variant="outline"
+                    variant="destructive"
                     size="sm"
                     disabled={isDeleting}
+                    loading={isDeleting}
+                    loadingText="Deleting..."
                     onClick={() => handleDeleteAsset(selectedAsset)}
-                    className="border-rose-900/60 text-rose-400 hover:bg-rose-950/40 text-xs rounded-xl gap-1.5"
+                    leftIcon={<Trash2 className="w-3.5 h-3.5" />}
+                    className="text-xs rounded-xl"
                   >
-                    {isDeleting ? (
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    ) : (
-                      <Trash2 className="w-3.5 h-3.5" />
-                    )}
-                    <span>Delete Asset</span>
+                    Delete Asset
                   </Button>
                 </div>
               </div>

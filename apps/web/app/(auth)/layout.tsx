@@ -1,7 +1,8 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
+import { BrandLogo } from '@/components/brand/BrandLogo';
 import { AmbientBackground } from '@elsesourav/ui';
+import { SiteService } from '@elsesourav/database';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,28 +12,30 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AuthLayout({ children }: { children: React.ReactNode }) {
+export default async function AuthLayout({ children }: { children: React.ReactNode }) {
+  const siteService = new SiteService();
+  const identity = await siteService.getSiteAndCreatorIdentity().catch(() => null);
+  const siteName = identity?.site.name || SITE_CONFIG.name;
+
   return (
     <div className="min-h-screen flex flex-col justify-between bg-[hsl(var(--background))] text-[hsl(var(--foreground))] relative overflow-x-hidden">
       <AmbientBackground variant="minimal" />
 
-      {/* Top Header with Brand Emblem */}
+      {/* Top Header with Brand Name Logo */}
       <header className="p-6 flex items-center justify-between relative z-10">
         <Link
           href={ROUTES.HOME}
-          className="flex items-center gap-2.5 font-bold text-base sm:text-lg text-[hsl(var(--foreground))] group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] rounded-lg p-1"
+          className="flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] rounded-lg p-1"
+          aria-label={`${siteName} Home`}
         >
-          <div className="w-8 h-8 rounded-xl overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform duration-200 shadow-md">
-            <Image
-              src="/logo-sm.png"
-              alt={`${SITE_CONFIG.name} Logo`}
-              width={32}
-              height={32}
-              className="w-full h-full object-contain"
-              priority
-            />
-          </div>
-          <span className="tracking-tight">{SITE_CONFIG.name}</span>
+          <BrandLogo
+            variant="color"
+            size="md"
+            priority
+            name={identity?.site.name}
+            logoUrl={identity?.site.logoUrl}
+            brandLogoUrl={identity?.site.brandLogoUrl}
+          />
         </Link>
       </header>
 

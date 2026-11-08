@@ -2,24 +2,11 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Card, Badge, Button, Input } from '@elsesourav/ui';
+import { Card, Badge, Button, Input, IconButton } from '@elsesourav/ui';
 import { Dropdown } from '@elsesourav/ui/interior';
 import type { App, CategorySummary } from '@elsesourav/types';
 import { archiveAppAction, deleteAppAction } from '../actions/admin-app-actions';
-import {
-  Package,
-  Search,
-  Plus,
-  ExternalLink,
-  Edit,
-  Archive,
-  Trash2,
-  Filter,
-  CheckCircle2,
-  Clock,
-  AlertTriangle,
-  Loader2,
-} from 'lucide-react';
+import { Package, Search, Plus, ExternalLink, Edit, Archive, Trash2, Loader2 } from 'lucide-react';
 
 interface AdminAppsTableProps {
   initialApps: readonly App[];
@@ -33,17 +20,23 @@ export function AdminAppsTable({ initialApps, categories }: AdminAppsTableProps)
   const [selectedStatus, setSelectedStatus] = React.useState<string>('all');
   const [isDeletingId, setIsDeletingId] = React.useState<string | null>(null);
 
-  const categoryItems = React.useMemo(() => [
-    { value: 'all', label: 'All Categories' },
-    ...categories.map((c) => ({ value: c.id, label: c.name })),
-  ], [categories]);
+  const categoryItems = React.useMemo(
+    () => [
+      { value: 'all', label: 'All Categories' },
+      ...categories.map((c) => ({ value: c.id, label: c.name })),
+    ],
+    [categories]
+  );
 
-  const statusItems = React.useMemo(() => [
-    { value: 'all', label: 'All Statuses' },
-    { value: 'published', label: 'Published' },
-    { value: 'draft', label: 'Draft' },
-    { value: 'archived', label: 'Archived' },
-  ], []);
+  const statusItems = React.useMemo(
+    () => [
+      { value: 'all', label: 'All Statuses' },
+      { value: 'published', label: 'Published' },
+      { value: 'draft', label: 'Draft' },
+      { value: 'archived', label: 'Archived' },
+    ],
+    []
+  );
 
   const filteredApps = React.useMemo(() => {
     return apps.filter((app) => {
@@ -256,28 +249,29 @@ export function AdminAppsTable({ initialApps, categories }: AdminAppsTableProps)
                             <Edit className="w-3.5 h-3.5" />
                           </Link>
                           {app.status !== 'archived' && (
-                            <button
+                            <IconButton
                               type="button"
+                              variant="ghost"
+                              size="icon-xs"
                               onClick={() => handleArchive(app.id)}
-                              className="p-1.5 rounded-lg text-zinc-400 hover:text-amber-300 hover:bg-zinc-800 transition-colors"
+                              aria-label="Archive Application"
                               title="Archive Application"
-                            >
-                              <Archive className="w-3.5 h-3.5" />
-                            </button>
+                              icon={<Archive className="w-3.5 h-3.5" />}
+                              className="rounded-lg text-zinc-400 hover:text-amber-300"
+                            />
                           )}
-                          <button
+                          <IconButton
                             type="button"
+                            variant="ghost"
+                            size="icon-xs"
                             onClick={() => handleDelete(app.id)}
                             disabled={isDeletingId === app.id}
-                            className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-400 hover:bg-zinc-800 transition-colors"
+                            loading={isDeletingId === app.id}
+                            aria-label="Delete Application"
                             title="Delete Application"
-                          >
-                            {isDeletingId === app.id ? (
-                              <Loader2 className="w-3.5 h-3.5 animate-spin text-rose-400" />
-                            ) : (
-                              <Trash2 className="w-3.5 h-3.5" />
-                            )}
-                          </button>
+                            icon={<Trash2 className="w-3.5 h-3.5" />}
+                            className="rounded-lg text-zinc-400 hover:text-rose-400"
+                          />
                         </div>
                       </td>
                     </tr>
