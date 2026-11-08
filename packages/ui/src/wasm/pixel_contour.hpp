@@ -98,18 +98,17 @@ inline void extractSilhouetteContour(
 
     if (rawCount < 4) return;
 
-    // 4. Moving average smoothing filter for a gentle, continuous contour line
-    const int WINDOW = 11;
-    const int HALF = WINDOW / 2;
+    // 4. Two-pass smoothing filter for a silky, straightened, elegant contour path
+    static float pass1X[MAX_CONTOUR];
+    static float pass1Y[MAX_CONTOUR];
 
+    const int WIN1 = 15;
+    const int HALF1 = WIN1 / 2;
     for (int i = 0; i < rawCount; i++) {
-        if (contourCount >= MAX_CONTOUR - 2) break;
-
         float sumX = 0.0f;
         float sumY = 0.0f;
         int count = 0;
-
-        for (int j = -HALF; j <= HALF; j++) {
+        for (int j = -HALF1; j <= HALF1; j++) {
             int idx = i + j;
             if (idx >= 0 && idx < rawCount) {
                 sumX += rawX[idx];
@@ -117,7 +116,26 @@ inline void extractSilhouetteContour(
                 count++;
             }
         }
+        pass1X[i] = sumX / (float)count;
+        pass1Y[i] = sumY / (float)count;
+    }
 
+    const int WIN2 = 11;
+    const int HALF2 = WIN2 / 2;
+    for (int i = 0; i < rawCount; i++) {
+        if (contourCount >= MAX_CONTOUR - 2) break;
+
+        float sumX = 0.0f;
+        float sumY = 0.0f;
+        int count = 0;
+        for (int j = -HALF2; j <= HALF2; j++) {
+            int idx = i + j;
+            if (idx >= 0 && idx < rawCount) {
+                sumX += pass1X[idx];
+                sumY += pass1Y[idx];
+                count++;
+            }
+        }
         contour[contourCount].x = sumX / (float)count;
         contour[contourCount].y = sumY / (float)count;
         contourCount++;

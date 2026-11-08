@@ -115,6 +115,7 @@ export interface SiteAndCreatorIdentity {
     readonly portraitParticleSize?: string;
     readonly portraitGlowBrightness?: string;
     readonly portraitFlightSpeed?: string;
+    readonly portraitPathSpread?: string;
   };
   readonly footer: {
     readonly copyright: string;

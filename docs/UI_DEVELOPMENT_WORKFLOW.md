@@ -8,7 +8,7 @@
 >
 > **Every developer and AI coding agent (including Gemini Code, Antigravity, Claude, etc.) must strictly adhere to the following mandatory workflow for all UI tasks:**
 >
-> 1. **Read & Follow Skills/Docs First**: Before making any UI changes or creating new components, always read and follow the relevant UI development skill or documentation first ([`packages/ui/README.md`](../packages/ui/README.md), [`docs/design/DESIGN_CONSTITUTION.md`](./design/DESIGN_CONSTITUTION.md), [`docs/design/THEME_TOKEN_ARCHITECTURE.md`](./design/THEME_TOKEN_ARCHITECTURE.md)).
+> 1. **Read & Follow Skills/Docs First**: Before making any UI changes or creating new components, always read and follow the relevant UI development skill or documentation first ([`packages/ui/README.md`](../packages/ui/README.md), [`docs/design/DESIGN_CONSTITUTION.md`](./design/DESIGN_CONSTITUTION.md), [`docs/design/THEME_TOKEN_ARCHITECTURE.md`](./design/THEME_TOKEN_ARCHITECTURE.md), [`docs/design/ADMIN_UI_DEVELOPMENT_GUIDELINES.md`](./design/ADMIN_UI_DEVELOPMENT_GUIDELINES.md)).
 > 2. **Mandatory Step**: Treat this as a mandatory step for every UI-related task, including updates, redesigns, bug fixes, and new components.
 > 3. **Design, Accessibility & Maintainability**: Use the skill's guidelines to ensure consistent design, WCAG AA accessibility, fluid responsive layouts, and maintainable code (**strictly under 500 lines of code per file**).
 > 4. **Synchronize Documentation**: After creating or modifying components, update [`packages/ui/README.md`](../packages/ui/README.md) to document the changes and keep it synchronized with the actual codebase.

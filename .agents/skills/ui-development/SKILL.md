@@ -7,7 +7,7 @@ description: Mandatory skill and workflow for all UI tasks in ElseSourav. Use wh
 
 > **CRITICAL POLICY FOR ALL AI CODING AGENTS (GEMINI CODE, ANTIGRAVITY, CLAUDE, ETC.) & DEVELOPERS:**
 >
-> 1. **Read & Follow Skills/Docs First**: Before making ANY UI changes or creating new components, ALWAYS read and follow this skill, [`docs/UI_DEVELOPMENT_WORKFLOW.md`](file:///Users/sourav/Developer/WEB/elsesourav/docs/UI_DEVELOPMENT_WORKFLOW.md), and [`packages/ui/README.md`](file:///Users/sourav/Developer/WEB/elsesourav/packages/ui/README.md) first.
+> 1. **Read & Follow Skills/Docs First**: Before making ANY UI changes or creating new components, ALWAYS read and follow this skill, [`docs/UI_DEVELOPMENT_WORKFLOW.md`](file:///Users/sourav/Developer/WEB/elsesourav/docs/UI_DEVELOPMENT_WORKFLOW.md), [`packages/ui/README.md`](file:///Users/sourav/Developer/WEB/elsesourav/packages/ui/README.md), and [`docs/design/ADMIN_UI_DEVELOPMENT_GUIDELINES.md`](file:///Users/sourav/Developer/WEB/elsesourav/docs/design/ADMIN_UI_DEVELOPMENT_GUIDELINES.md) first.
 > 2. **Mandatory Step**: Treat this as a mandatory first step for every UI-related task, including bug fixes, updates, redesigns, and new components.
 > 3. **Design Guidelines**:
 >    - Adhere strictly to the design token architecture defined in [`docs/design/THEME_TOKEN_ARCHITECTURE.md`](file:///Users/sourav/Developer/WEB/elsesourav/docs/design/THEME_TOKEN_ARCHITECTURE.md).

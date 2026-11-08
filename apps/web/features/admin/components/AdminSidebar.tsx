@@ -1,8 +1,11 @@
 'use client';
 
+import * as React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Badge } from '@elsesourav/ui';
 import { ROUTES } from '@elsesourav/config';
 import type { AdminContext } from '@elsesourav/types';
-import { Badge } from '@elsesourav/ui';
 import {
   Activity,
   ArrowLeft,
@@ -15,14 +18,19 @@ import {
   Sliders,
   Users,
 } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 
 interface AdminSidebarProps {
   context: AdminContext;
 }
 
-const NAV_ITEMS = [
+interface NavItem {
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  exact?: boolean;
+}
+
+const NAV_ITEMS: readonly NavItem[] = [
   { href: '/admin', label: 'Dashboard', icon: Activity, exact: true },
   { href: '/admin/apps', label: 'Applications', icon: Package },
   { href: '/admin/blog', label: 'Devlogs CMS', icon: FileText },
@@ -37,32 +45,37 @@ const NAV_ITEMS = [
 export function AdminSidebar({ context }: AdminSidebarProps) {
   const pathname = usePathname();
 
-  const isLinkActive = (href: string, exact?: boolean) => {
+  const isLinkActive = (href: string, exact?: boolean): boolean => {
     if (exact) return pathname === href;
     return pathname.startsWith(href);
   };
 
   return (
-    <aside className="w-64 border-r border-zinc-800/80 bg-zinc-950 p-6 flex flex-col justify-between hidden md:flex shrink-0 min-h-screen">
+    <aside
+      aria-label="Admin Navigation Sidebar"
+      className="hidden lg:flex w-64 border-r border-zinc-800/80 bg-zinc-950 p-6 pb-12 flex-col justify-between shrink-0 sticky top-0 h-screen overflow-y-auto"
+    >
       <div className="space-y-6">
-        {/* Portal Branding */}
-        <div className="flex items-center gap-2.5 px-1">
-          <div className="w-9 h-9 rounded-xl bg-indigo-950/80 border border-indigo-500/40 flex items-center justify-center text-indigo-400">
+        {/* Portal Branding & Identity Header */}
+        <div className="flex items-center gap-3 px-1">
+          <div className="w-10 h-10 rounded-xl bg-indigo-950/80 border border-indigo-500/40 flex items-center justify-center text-indigo-400 shrink-0">
             <Shield className="w-5 h-5" />
           </div>
-          <div>
-            <div className="font-bold text-sm text-zinc-100 flex items-center gap-2">
+          <div className="min-w-0">
+            <div className="font-bold text-sm text-zinc-100 flex items-center gap-1.5">
               <span>Admin Portal</span>
-              <Badge variant="warning" className="text-[10px] px-1.5 py-0.5">
+              <Badge variant="warning" className="text-[10px] px-1.5 py-0.5 font-mono uppercase">
                 {context.role}
               </Badge>
             </div>
-            <div className="text-[11px] text-zinc-500 truncate max-w-[130px]">{context.email}</div>
+            <div className="text-[11px] text-zinc-400 truncate max-w-[140px]" title={context.email}>
+              {context.email}
+            </div>
           </div>
         </div>
 
         {/* Navigation List */}
-        <nav className="space-y-1 text-xs font-medium">
+        <nav className="space-y-1 text-xs font-medium" aria-label="Desktop Admin Navigation">
           {NAV_ITEMS.map(({ href, label, icon: Icon, exact }) => {
             const active = isLinkActive(href, exact);
             return (
@@ -71,11 +84,11 @@ export function AdminSidebar({ context }: AdminSidebarProps) {
                 href={href}
                 className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
                   active
-                    ? 'bg-indigo-950/60 border border-indigo-500/30 text-indigo-300 shadow-sm font-semibold'
+                    ? 'bg-indigo-950/70 border border-indigo-500/40 text-indigo-200 shadow-sm font-semibold'
                     : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900/60'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${active ? 'text-indigo-400' : 'text-zinc-400'}`} />
+                <Icon className={`w-4 h-4 shrink-0 ${active ? 'text-indigo-400' : 'text-zinc-400'}`} />
                 <span>{label}</span>
               </Link>
             );
@@ -83,15 +96,15 @@ export function AdminSidebar({ context }: AdminSidebarProps) {
         </nav>
       </div>
 
-      {/* Return to Main Site */}
-      <div className="pt-6 border-t border-zinc-800/80 space-y-3">
-        <a
-          href="https://elsesourav.com"
-          className="flex items-center gap-2 text-xs text-zinc-400 hover:text-zinc-200 transition-colors px-1"
+      {/* Return to Main Public Site */}
+      <div className="pt-6 border-t border-zinc-800/80">
+        <Link
+          href={ROUTES.HOME}
+          className="flex items-center gap-2 text-xs text-zinc-400 hover:text-zinc-200 transition-colors px-1 py-1 rounded-lg"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
+          <ArrowLeft className="w-3.5 h-3.5 shrink-0" />
           <span>Return to Public Site</span>
-        </a>
+        </Link>
       </div>
     </aside>
   );

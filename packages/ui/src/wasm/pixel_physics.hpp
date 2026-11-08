@@ -204,9 +204,12 @@ inline void PixelEngine::update(float dt, float mouseX, float mouseY, int isMous
                 float nx = contour[idx0].nx * (1.0f - frac) + contour[idx1].nx * frac;
                 float ny = contour[idx0].ny * (1.0f - frac) + contour[idx1].ny * frac;
 
-                // Follow exactly on the edge line of the silhouette without outward path drift
-                p.origX = cx;
-                p.origY = cy;
+                // Follow the contour ribbon with controlled lateral spread and organic wandering
+                float wander = sinf(globalTime * p.wanderFreq + p.wanderPhase) * p.wanderAmp;
+                float totalOffset = p.normalOffset + wander;
+
+                p.origX = cx + nx * totalOffset;
+                p.origY = cy + ny * totalOffset;
 
                 // Fade out smoothly at the lower shoulders so particles never touch bottom of shirt
                 if (cy >= (float)height * 0.82f) {
@@ -264,19 +267,9 @@ inline void PixelEngine::update(float dt, float mouseX, float mouseY, int isMous
             p.origY = p.baseY;
             float shimmer = 0.85f + 0.15f * sinf(globalTime * 2.2f + p.pathPhase * 2.0f);
             p.a = (uint8_t)(210.0f * shimmer);
-        } else if (p.flags & FLAG_STAR_PIXEL) {
-            p.origX = p.baseX + sinf(globalTime * 0.7f + p.pathPhase) * 1.2f;
-            p.origY = p.baseY + cosf(globalTime * 0.5f + p.pathPhase) * 1.2f;
-            float twinkle = 0.70f + 0.30f * sinf(globalTime * 3.2f + p.pathPhase);
-            p.a = (uint8_t)(220.0f * twinkle);
-        } else if (p.flags & FLAG_ORBIT_PIXEL) {
-            float curAng = p.pathPhase + globalTime * p.pathSpeed;
-            p.origX = p.baseX + cosf(curAng) * p.normalOffset;
-            p.origY = p.baseY + sinf(curAng) * p.normalOffset;
-            p.a = (uint8_t)(170.0f + 50.0f * sinf(curAng));
         } else if (p.flags & FLAG_BACK_PIXEL) {
-            p.origX = p.baseX + sinf(p.pathPhase + globalTime * 0.6f) * 1.2f;
-            p.origY = p.baseY + cosf(p.pathPhase * 1.2f + globalTime * 0.5f) * 1.2f;
+            p.origX = p.baseX;
+            p.origY = p.baseY;
         } else {
             p.origX = p.baseX;
             p.origY = p.baseY;

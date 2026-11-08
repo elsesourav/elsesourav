@@ -14,6 +14,7 @@ export interface AboutPortraitCardProps {
   particleSize?: string;
   glowBrightness?: string;
   flightSpeed?: string;
+  pathSpread?: string;
   showPathGuide?: boolean;
 }
 
@@ -27,6 +28,7 @@ export function AboutPortraitCard({
   particleSize,
   glowBrightness,
   flightSpeed,
+  pathSpread,
   showPathGuide = false,
 }: AboutPortraitCardProps) {
   const { resolvedTheme, effectsLevel } = useTheme();
@@ -63,6 +65,7 @@ export function AboutPortraitCard({
           particleSize={particleSize}
           glowBrightness={glowBrightness}
           flightSpeed={flightSpeed}
+          pathSpread={pathSpread}
           showPathGuide={showPathGuide}
           className="w-full shadow-inner border border-[hsl(var(--border-subtle))] rounded-2xl"
         />

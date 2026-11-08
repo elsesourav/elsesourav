@@ -49,6 +49,7 @@ export class WasmPortraitBridge {
   private glowBrightness: number;
   private flightSpeed: number;
   private particleDensity: number;
+  private pathSpread: number;
   private showPathGuide: boolean;
 
   constructor(options: WasmPortraitBridgeOptions) {
@@ -61,6 +62,8 @@ export class WasmPortraitBridge {
     this.glowBrightness = options.glowBrightness ?? 1.0;
     this.flightSpeed = options.flightSpeed ?? 1.0;
     this.particleDensity = options.particleDensity ?? 1.0;
+    const rawSpread = typeof options.pathSpread === 'string' ? parseFloat(options.pathSpread) : (options.pathSpread ?? 2.4);
+    this.pathSpread = isNaN(rawSpread) ? 2.4 : Math.max(0.2, Math.min(8.0, rawSpread));
     this.showPathGuide = options.showPathGuide ?? false;
 
     this.offscreenCanvas = document.createElement('canvas');
@@ -148,6 +151,7 @@ export class WasmPortraitBridge {
       if (this.glowBrightness !== 1.0) this.wasmExports.engine_set_glow_brightness(this.enginePtr, this.glowBrightness);
       if (this.flightSpeed !== 1.0) this.wasmExports.engine_set_speed(this.enginePtr, this.flightSpeed);
       if (this.particleDensity !== 1.0) this.wasmExports.engine_set_density(this.enginePtr, this.particleDensity);
+      this.wasmExports.engine_set_path_spread(this.enginePtr, this.pathSpread);
       if (this.showPathGuide) this.wasmExports.engine_set_show_path_guide(this.enginePtr, 1);
 
       if (this.pendingImg) {
@@ -269,6 +273,17 @@ export class WasmPortraitBridge {
     this.particleDensity = mult;
     if (this.wasmExports && this.enginePtr) {
       this.wasmExports.engine_set_density(this.enginePtr, mult);
+    }
+  }
+
+  public setPathSpread(spread: number | string): void {
+    const parsed = typeof spread === 'string' ? parseFloat(spread) : spread;
+    const eff = isNaN(parsed) ? 2.4 : Math.max(0.2, Math.min(8.0, parsed));
+    if (Math.abs(this.pathSpread - eff) > 0.05) {
+      this.pathSpread = eff;
+      if (this.wasmExports && this.enginePtr) {
+        this.wasmExports.engine_set_path_spread(this.enginePtr, eff);
+      }
     }
   }
 

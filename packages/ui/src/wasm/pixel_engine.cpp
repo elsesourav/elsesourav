@@ -18,6 +18,7 @@ PixelEngine::PixelEngine() {
     glowMultiplier = 1.0f;
     speedMultiplier = 1.0f;
     densityMultiplier = 1.0f;
+    pathSpread = 2.4f;
     showPathGuide = 0; // Default off on public client side; toggleable in admin
 
     particleCount = 0;
@@ -80,6 +81,13 @@ void PixelEngine::setSpeed(float mult) {
 void PixelEngine::setDensity(float mult) {
     if (fabsf(densityMultiplier - mult) > 0.01f) {
         densityMultiplier = mult;
+        generatePixels();
+    }
+}
+
+void PixelEngine::setPathSpread(float spread) {
+    if (fabsf(pathSpread - spread) > 0.05f) {
+        pathSpread = spread;
         generatePixels();
     }
 }
@@ -181,6 +189,10 @@ void engine_set_speed(PixelEngine* engine, float mult) {
 
 void engine_set_density(PixelEngine* engine, float mult) {
     if (engine) engine->setDensity(mult);
+}
+
+void engine_set_path_spread(PixelEngine* engine, float spread) {
+    if (engine) engine->setPathSpread(spread);
 }
 
 void engine_set_show_path_guide(PixelEngine* engine, int show) {

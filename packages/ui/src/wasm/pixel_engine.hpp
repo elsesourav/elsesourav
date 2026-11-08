@@ -53,6 +53,7 @@ private:
     float glowMultiplier;
     float speedMultiplier;
     float densityMultiplier;
+    float pathSpread; // Width of glow particle spread band around silhouette (e.g. 1.0 - 5.5px)
     int showPathGuide; // 0: hidden (public client default), 1: visible (admin preview toggle)
 
     uint8_t inputImage[MAX_IMAGE_BYTES];
@@ -96,6 +97,7 @@ public:
     void setGlowBrightness(float mult);
     void setSpeed(float mult);
     void setDensity(float mult);
+    void setPathSpread(float spread);
     void setShowPathGuide(int show);
     int getShowPathGuide() const {
         return showPathGuide;

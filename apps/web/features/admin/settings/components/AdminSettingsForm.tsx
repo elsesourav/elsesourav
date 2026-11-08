@@ -934,6 +934,7 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
             particleSize={settings['portrait_particle_size'] || '1.0x'}
             glowBrightness={settings['portrait_glow_brightness'] || '1.0x'}
             flightSpeed={settings['portrait_flight_speed'] || '1.0x'}
+            pathSpread={settings['portrait_path_spread'] || '2.6px'}
             showPathGuide={settings['portrait_show_path_guide'] === 'true'}
             imageDarkSrc={settings['creator_avatar_url'] || '/about/souravbarui-dark-512.webp'}
             imageLightSrc={settings['creator_avatar_url_light'] || '/about/souravbarui-light-512.webp'}

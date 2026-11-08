@@ -3,13 +3,14 @@
 import * as React from 'react';
 import { Badge, Switch } from '@elsesourav/ui';
 import { WasmPortraitCanvas } from '@elsesourav/ui/interior';
-import { Sparkles, Cpu, Zap, Eye, Compass, Route, Sun, Moon, Flame } from 'lucide-react';
+import { Sparkles, Cpu, Zap, Eye, Compass, Route, Sun, Moon, Flame, Waves } from 'lucide-react';
 
 export interface AboutPortraitParticleSettingsProps {
   particleDensity: string;
   particleSize: string;
   glowBrightness: string;
   flightSpeed: string;
+  pathSpread?: string;
   showPathGuide?: boolean;
   imageDarkSrc?: string;
   imageLightSrc?: string;
@@ -48,14 +49,23 @@ const SPEED_PRESETS = [
   { value: '2.0x', label: '2.0x Hyperdrive', desc: 'Instant rapid convergence' },
 ];
 
+const SPREAD_PRESETS = [
+  { value: '1.0px', label: '1.0px Tight', desc: 'Locked directly to silhouette' },
+  { value: '1.8px', label: '1.8px Natural', desc: 'Subtle organic deviation' },
+  { value: '2.6px', label: '2.6px Balanced', desc: 'Gently spread ribbon with organic wave' },
+  { value: '3.8px', label: '3.8px Wide', desc: 'Broad luminous contour band' },
+  { value: '5.2px', label: '5.2px Expansive', desc: 'Wide ethereal atmospheric aura' },
+];
+
 export function AboutPortraitParticleSettingsSection({
   particleDensity = '1.0x',
   particleSize = '1.0x',
   glowBrightness = '1.0x',
   flightSpeed = '1.0x',
+  pathSpread = '2.6px',
   showPathGuide = false,
-  imageDarkSrc = '/about/souravbarui-dark-512.webp',
-  imageLightSrc = '/about/souravbarui-light-512.webp',
+  imageDarkSrc = '/about/souravbarui-dark.png',
+  imageLightSrc = '/about/souravbarui-light.png',
   onChange,
 }: AboutPortraitParticleSettingsProps) {
   const [previewTheme, setPreviewTheme] = React.useState<'dark' | 'light'>('dark');
@@ -170,6 +180,7 @@ export function AboutPortraitParticleSettingsSection({
               particleSize={particleSize}
               glowBrightness={glowBrightness}
               flightSpeed={flightSpeed}
+              pathSpread={pathSpread}
               showPathGuide={guideEnabled}
               className="rounded-xl w-full"
             />
@@ -289,7 +300,35 @@ export function AboutPortraitParticleSettingsSection({
         </div>
       </div>
 
-      {/* 5. Device Capability Auto-Adjustment Information Card */}
+      {/* 5. Glow Path Spread & Organic Ribbon Width */}
+      <div className="space-y-2.5">
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-semibold text-zinc-200 flex items-center gap-1.5">
+            <Waves className="w-3.5 h-3.5 text-indigo-400" />
+            <span>Path Spread & Random Deviation</span>
+          </label>
+          <span className="font-mono text-indigo-400 text-[11px] font-bold">{pathSpread}</span>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+          {SPREAD_PRESETS.map((preset) => (
+            <button
+              key={preset.value}
+              type="button"
+              onClick={() => onChange('portrait_path_spread', preset.value)}
+              className={`p-2.5 rounded-xl border text-left transition-all ${
+                pathSpread === preset.value
+                  ? 'bg-indigo-950/40 border-indigo-500/80 text-white shadow-[0_0_12px_rgba(99,102,241,0.2)]'
+                  : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+              }`}
+            >
+              <div className="text-xs font-semibold">{preset.label}</div>
+              <div className="text-[10px] text-zinc-500 mt-0.5 leading-snug">{preset.desc}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 6. Device Capability Auto-Adjustment Information Card */}
       <div className="p-3.5 rounded-2xl border border-zinc-800/80 bg-zinc-950/40 flex items-start gap-3">
         <Cpu className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
         <div className="text-xs space-y-1">

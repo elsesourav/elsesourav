@@ -49,6 +49,7 @@ export class SiteService {
     const portraitParticleSize = dbSettings['portrait_particle_size'] || '1.0x';
     const portraitGlowBrightness = dbSettings['portrait_glow_brightness'] || '1.0x';
     const portraitFlightSpeed = dbSettings['portrait_flight_speed'] || '1.0x';
+    const portraitPathSpread = dbSettings['portrait_path_spread'] || '2.4px';
 
     const footerCopyright =
       dbSettings['footer_copyright'] ||
@@ -145,6 +146,7 @@ export class SiteService {
         portraitParticleSize,
         portraitGlowBrightness,
         portraitFlightSpeed,
+        portraitPathSpread,
       },
       footer: {
         copyright: footerCopyright,

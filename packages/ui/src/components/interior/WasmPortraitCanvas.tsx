@@ -22,6 +22,7 @@ export interface WasmPortraitCanvasProps {
   particleSize?: string | number;
   glowBrightness?: string | number;
   flightSpeed?: string | number;
+  pathSpread?: string | number;
   showPathGuide?: boolean;
 }
 
@@ -39,6 +40,7 @@ export function WasmPortraitCanvas({
   particleSize = '1.0x',
   glowBrightness = '1.0x',
   flightSpeed = '1.0x',
+  pathSpread = '2.4px',
   showPathGuide = false,
 }: WasmPortraitCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -213,6 +215,7 @@ export function WasmPortraitCanvas({
       particleSize: rawSize,
       glowBrightness: effectiveGlow,
       flightSpeed: rawSpeed,
+      pathSpread,
       showPathGuide,
       onLoaded: () => {
         setIsWasmActive(true);
@@ -308,6 +311,13 @@ export function WasmPortraitCanvas({
       bridgeRef.current.setShowPathGuide(showPathGuide);
     }
   }, [showPathGuide]);
+
+  // 6d. Path spread width synchronization
+  useEffect(() => {
+    if (bridgeRef.current && pathSpread !== undefined) {
+      bridgeRef.current.setPathSpread(pathSpread);
+    }
+  }, [pathSpread]);
 
   // 7. Tab visibility pause
   useEffect(() => {

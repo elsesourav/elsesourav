@@ -9,6 +9,7 @@ export interface WasmPortraitBridgeOptions {
   glowBrightness?: number;
   flightSpeed?: number;
   particleDensity?: number;
+  pathSpread?: number | string;
   showPathGuide?: boolean;
   onLoaded?: () => void;
 }
@@ -29,6 +30,7 @@ export interface WasmExports {
   engine_set_glow_brightness: (engine: number, mult: number) => void;
   engine_set_speed: (engine: number, mult: number) => void;
   engine_set_density: (engine: number, mult: number) => void;
+  engine_set_path_spread: (engine: number, spread: number) => void;
   engine_set_show_path_guide: (engine: number, show: number) => void;
   engine_get_vertex_buffer: (engine: number) => number;
   engine_get_vertex_count: (engine: number) => number;

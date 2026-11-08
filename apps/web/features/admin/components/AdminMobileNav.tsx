@@ -1,8 +1,11 @@
 'use client';
 
+import * as React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Badge, Button } from '@elsesourav/ui';
 import { ROUTES } from '@elsesourav/config';
 import type { AdminContext } from '@elsesourav/types';
-import { Badge, Button } from '@elsesourav/ui';
 import {
   Activity,
   ArrowLeft,
@@ -16,16 +19,21 @@ import {
   Sliders,
   Users,
   X,
+  UserCheck,
 } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import * as React from 'react';
 
 interface AdminMobileNavProps {
   context: AdminContext;
 }
 
-const NAV_ITEMS = [
+interface NavItem {
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  exact?: boolean;
+}
+
+const NAV_ITEMS: readonly NavItem[] = [
   { href: '/admin', label: 'Dashboard', icon: Activity, exact: true },
   { href: '/admin/apps', label: 'Applications', icon: Package },
   { href: '/admin/blog', label: 'Devlogs CMS', icon: FileText },
@@ -39,88 +47,167 @@ const NAV_ITEMS = [
 
 export function AdminMobileNav({ context }: AdminMobileNavProps) {
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
   // Close menu on route change
   React.useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
 
-  // Handle escape key
+  // Lock body scrolling when drawer is open
+  React.useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isOpen]);
+
+  // Handle escape key to dismiss
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setIsOpen(false);
     };
     if (isOpen) {
       window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
     }
-    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen]);
 
-  const isLinkActive = (href: string, exact?: boolean) => {
+  const isLinkActive = (href: string, exact?: boolean): boolean => {
     if (exact) return pathname === href;
     return pathname.startsWith(href);
   };
 
   return (
-    <div className="md:hidden border-b border-zinc-800/80 bg-zinc-950 px-4 py-3 sticky top-0 z-40">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-indigo-950/80 border border-indigo-500/40 flex items-center justify-center text-indigo-400">
+    <div className="lg:hidden sticky top-0 z-40 border-b border-zinc-800/80 bg-zinc-950">
+      {/* Top Header Bar */}
+      <div className="px-3.5 sm:px-5 py-3 flex items-center justify-between">
+        <Link href="/admin" className="flex items-center gap-2.5 min-w-0">
+          <div className="w-8 h-8 rounded-xl bg-indigo-950/80 border border-indigo-500/40 flex items-center justify-center text-indigo-400 shrink-0">
             <Shield className="w-4 h-4" />
           </div>
-          <div>
-            <div className="font-bold text-xs text-zinc-100 flex items-center gap-1.5">
+          <div className="min-w-0">
+            <div className="font-bold text-xs sm:text-sm text-zinc-100 flex items-center gap-1.5 truncate">
               <span>Admin Portal</span>
-              <Badge variant="warning" className="text-[9px] px-1 py-0">
+              <Badge variant="warning" className="text-[9px] px-1.5 py-0 font-mono uppercase shrink-0">
                 {context.role}
               </Badge>
             </div>
+            <p className="text-[10px] text-zinc-400 truncate max-w-[180px] sm:max-w-xs">
+              {context.email}
+            </p>
           </div>
-        </div>
+        </Link>
 
+        {/* Accessible Hamburger Button (WCAG >= 44x44px touch target) */}
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => setIsOpen(!isOpen)}
-          className="h-8 w-8 p-0 text-zinc-400 hover:text-zinc-100"
-          aria-label="Toggle navigation menu"
+          onClick={() => setIsOpen(true)}
+          className="h-10 w-10 p-0 text-zinc-300 hover:text-white hover:bg-zinc-800/80 rounded-xl flex items-center justify-center"
+          aria-label="Open navigation menu"
+          aria-expanded={isOpen}
+          aria-controls="admin-mobile-drawer"
         >
-          {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          <Menu className="w-5 h-5" />
         </Button>
       </div>
 
-      {/* Drawer */}
+      {/* Fullscreen Mobile Drawer with Pinned Header */}
       {isOpen && (
-        <div className="fixed inset-0 top-[53px] z-50 bg-zinc-950/95 backdrop-blur-xl p-6 flex flex-col justify-between border-t border-zinc-800">
-          <nav className="space-y-1.5 text-sm font-medium">
-            {NAV_ITEMS.map(({ href, label, icon: Icon, exact }) => {
-              const active = isLinkActive(href, exact);
-              return (
-                <Link
-                  key={href}
-                  href={href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                    active
-                      ? 'bg-indigo-950/60 border border-indigo-500/30 text-indigo-300 shadow-sm font-semibold'
-                      : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900/60'
-                  }`}
-                >
-                  <Icon className={`w-4 h-4 ${active ? 'text-indigo-400' : 'text-zinc-400'}`} />
-                  <span>{label}</span>
-                </Link>
-              );
-            })}
-          </nav>
+        <div
+          id="admin-mobile-drawer"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Admin Navigation Menu"
+          className="fixed inset-0 z-50 bg-zinc-950 flex flex-col justify-between overflow-y-auto animate-in fade-in duration-150"
+        >
+          {/* Drawer Pinned Header */}
+          <div className="sticky top-0 z-10 px-3.5 sm:px-5 py-3 border-b border-zinc-800/80 bg-zinc-950 flex items-center justify-between">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-xl bg-indigo-950/80 border border-indigo-500/40 flex items-center justify-center text-indigo-400 shrink-0">
+                <Shield className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="font-bold text-xs sm:text-sm text-zinc-100 flex items-center gap-1.5 truncate">
+                  <span>Admin Portal</span>
+                  <Badge variant="warning" className="text-[9px] px-1.5 py-0 font-mono uppercase shrink-0">
+                    {context.role}
+                  </Badge>
+                </div>
+                <p className="text-[10px] text-zinc-400 truncate max-w-[180px] sm:max-w-xs">
+                  {context.email}
+                </p>
+              </div>
+            </div>
 
-          <div className="pt-6 border-t border-zinc-800/80">
-            <a
-              href="https://elsesourav.com"
-              className="flex items-center gap-2 text-sm text-zinc-400 hover:text-zinc-200 transition-colors"
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsOpen(false)}
+              className="h-10 w-10 p-0 text-zinc-300 hover:text-white hover:bg-zinc-800/80 rounded-xl flex items-center justify-center"
+              aria-label="Close navigation menu"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <X className="w-5 h-5" />
+            </Button>
+          </div>
+
+          {/* Drawer Body Content */}
+          <div className="p-4 sm:p-6 space-y-5 flex-1 overflow-y-auto">
+            {/* Authenticated Admin Identity Card */}
+            <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-indigo-950/80 border border-indigo-500/40 flex items-center justify-center text-indigo-400 shrink-0">
+                <UserCheck className="w-5 h-5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-semibold text-xs text-zinc-200 truncate">
+                    {context.displayName}
+                  </span>
+                  <Badge variant="warning" className="text-[9px] px-1.5 py-0 font-mono">
+                    {context.role}
+                  </Badge>
+                </div>
+                <p className="text-[11px] text-zinc-400 truncate">{context.email}</p>
+              </div>
+            </div>
+
+            {/* Navigation Item Links */}
+            <nav className="space-y-1 text-sm font-medium" aria-label="Mobile Admin Navigation">
+              {NAV_ITEMS.map(({ href, label, icon: Icon, exact }) => {
+                const active = isLinkActive(href, exact);
+                return (
+                  <Link
+                    key={href}
+                    href={href}
+                    onClick={() => setIsOpen(false)}
+                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
+                      active
+                        ? 'bg-indigo-950/70 border border-indigo-500/40 text-indigo-200 font-semibold shadow-sm'
+                        : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900/60'
+                    }`}
+                  >
+                    <Icon className={`w-4 h-4 shrink-0 ${active ? 'text-indigo-400' : 'text-zinc-400'}`} />
+                    <span className="text-xs sm:text-sm">{label}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
+
+          {/* Footer Return Link */}
+          <div className="p-4 sm:p-6 pt-3 border-t border-zinc-800/80 pb-10">
+            <Link
+              href={ROUTES.HOME}
+              onClick={() => setIsOpen(false)}
+              className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-zinc-800 text-xs sm:text-sm text-zinc-300 hover:text-white hover:bg-zinc-900 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4 shrink-0" />
               <span>Return to Public Site</span>
-            </a>
+            </Link>
           </div>
         </div>
       )}

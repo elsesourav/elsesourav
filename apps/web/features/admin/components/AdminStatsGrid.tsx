@@ -10,8 +10,20 @@ interface AdminStatsGridProps {
   stats: AdminDashboardStats;
 }
 
+interface StatCardConfig {
+  title: string;
+  value: number;
+  subtitle: string;
+  icon: React.ComponentType<{ className?: string }>;
+  href: string;
+  accentColor: string;
+  bgColor: string;
+  borderColor: string;
+  alert?: string;
+}
+
 export function AdminStatsGrid({ stats }: AdminStatsGridProps) {
-  const cards = [
+  const cards: readonly StatCardConfig[] = [
     {
       title: 'Applications',
       value: stats.totalApps,
@@ -66,34 +78,34 @@ export function AdminStatsGrid({ stats }: AdminStatsGridProps) {
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+    <div className="grid grid-cols-1 min-[480px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3.5 sm:gap-4">
       {cards.map((card) => {
         const Icon = card.icon;
         return (
-          <Link key={card.title} href={card.href} className="group block">
-            <Card className="p-3 sm:p-3.5 md:p-4 rounded-2xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl hover:border-zinc-700 transition-colors space-y-3 h-full flex flex-col justify-between">
+          <Link key={card.title} href={card.href} className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-2xl">
+            <Card className="p-3.5 sm:p-4 rounded-2xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl group-hover:border-zinc-700 transition-colors space-y-3 h-full flex flex-col justify-between">
               <div className="flex items-start justify-between gap-2">
                 <div
-                  className={`w-10 h-10 rounded-xl ${card.bgColor} border ${card.borderColor} flex items-center justify-center ${card.accentColor} shrink-0`}
+                  className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl ${card.bgColor} border ${card.borderColor} flex items-center justify-center ${card.accentColor} shrink-0`}
                 >
-                  <Icon className="w-5 h-5" />
+                  <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-zinc-300 transition-colors" />
+                <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-zinc-300 transition-colors shrink-0" />
               </div>
 
               <div>
-                <div className="flex items-baseline justify-between gap-2">
-                  <div className="text-2xl font-extrabold text-zinc-100 tracking-tight font-mono">
+                <div className="flex items-baseline justify-between gap-2 flex-wrap">
+                  <div className="text-xl sm:text-2xl font-extrabold text-zinc-100 tracking-tight font-mono">
                     {card.value}
                   </div>
                   {card.alert && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded-full font-medium bg-amber-950/60 border border-amber-500/30 text-amber-300">
+                    <span className="text-[10px] px-1.5 py-0.5 rounded-full font-medium font-mono bg-amber-950/60 border border-amber-500/30 text-amber-300">
                       {card.alert}
                     </span>
                   )}
                 </div>
                 <h3 className="text-xs font-semibold text-zinc-200 mt-1">{card.title}</h3>
-                <p className="text-[11px] text-zinc-400 mt-0.5">{card.subtitle}</p>
+                <p className="text-[11px] text-zinc-400 mt-0.5 leading-snug">{card.subtitle}</p>
               </div>
             </Card>
           </Link>
