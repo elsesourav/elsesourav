@@ -1,57 +1,19 @@
 'use client';
 
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
-import { Button, Alert, AlertDescription, Separator } from '@elsesourav/ui';
-import { FloatingLabelInput } from '@elsesourav/ui/interior';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { createAuthBrowserClient, AuthError } from '@elsesourav/auth';
 import { SignUpSchema, NAME_REGEX, USERNAME_REGEX, EMAIL_REGEX } from '@elsesourav/validation';
 import { OAuthButtons } from './OAuthButtons';
-import {
-  Eye,
-  EyeOff,
-  Lock,
-  Mail,
-  User,
-  AtSign,
-  CheckCircle2,
-  AlertCircle,
-  Loader2,
-  ArrowRight,
-  ArrowLeft,
-  Sparkles,
-  ShieldCheck,
-} from 'lucide-react';
-
-function calculatePasswordStrength(pass: string): { score: number; label: string; color: string } {
-  if (!pass) return { score: 0, label: '', color: 'bg-zinc-700' };
-
-  let score = 0;
-  // Baseline length check
-  if (pass.length >= 8) score += 1;
-  // Length >= 12 bonus
-  if (pass.length >= 12) score += 1;
-  // Mixed character types (letters + numbers)
-  if (/[a-zA-Z]/.test(pass) && /[0-9]/.test(pass)) score += 1;
-  // High complexity (symbols or uppercase + lowercase + numbers)
-  if (
-    /[^A-Za-z0-9]/.test(pass) ||
-    (/[a-z]/.test(pass) && /[A-Z]/.test(pass) && /[0-9]/.test(pass))
-  ) {
-    score += 1;
-  }
-
-  // Friendly non-red progression (no red to prevent user confusion)
-  if (score <= 1) return { score: 1, label: 'Basic', color: 'bg-zinc-400' };
-  if (score === 2) return { score: 2, label: 'Fair', color: 'bg-amber-400' };
-  if (score === 3) return { score: 3, label: 'Good', color: 'bg-indigo-400' };
-  return { score: 4, label: 'Strong', color: 'bg-emerald-400' };
-}
+import { SignUpStep1Profile } from './SignUpStep1Profile';
+import { SignUpStep2Security } from './SignUpStep2Security';
+import { AlertCircle } from 'lucide-react';
 
 export function SignUpForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  // Multi-step progressive disclosure state (1 = Identity, 2 = Credentials)
+  // Multi-step progressive disclosure state (1 = Profile, 2 = Security)
   const [step, setStep] = React.useState<1 | 2>(1);
 
   // Form Fields
@@ -63,6 +25,21 @@ export function SignUpForm() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
+
+  const oauthError = searchParams.get('error');
+  React.useEffect(() => {
+    if (oauthError) {
+      if (oauthError === 'oauth_exchange_failed') {
+        setErrorMessage(
+          'Failed to complete social sign-up. Please try again or create an account below.'
+        );
+      } else if (oauthError === 'access_denied') {
+        setErrorMessage('Social sign-up was canceled.');
+      } else {
+        setErrorMessage(decodeURIComponent(oauthError));
+      }
+    }
+  }, [oauthError]);
 
   // Field touch states (for clean inline validation)
   const [touched, setTouched] = React.useState({
@@ -87,11 +64,7 @@ export function SignUpForm() {
   const abortControllerRef = React.useRef<AbortController | null>(null);
   const suggestionAbortRef = React.useRef<AbortController | null>(null);
 
-  // ========================================================
-  // Client-Side Instant Pre-Validation Logic (Zero Server Load)
-  // ========================================================
-
-  // 1. Name Client Validation (Single word or full name)
+  // Client-Side Pre-Validation Logic
   const displayNameError = React.useMemo(() => {
     const trimmed = displayName.trim();
     if (!trimmed) return null;
@@ -102,7 +75,6 @@ export function SignUpForm() {
     return null;
   }, [displayName]);
 
-  // 2. Email Client Validation
   const emailError = React.useMemo(() => {
     const trimmed = email.trim();
     if (!trimmed) return null;
@@ -110,7 +82,6 @@ export function SignUpForm() {
     return null;
   }, [email]);
 
-  // 3. Password Client Validation (Any password accepted as long as length >= 8)
   const passwordError = React.useMemo(() => {
     if (!password) return null;
     if (password.length < 8) return 'Min 8 characters required';
@@ -118,7 +89,6 @@ export function SignUpForm() {
     return null;
   }, [password]);
 
-  // 4. Confirm Password Match Validation
   const confirmPasswordError = React.useMemo(() => {
     if (!confirmPassword) return null;
     if (confirmPassword !== password) return 'Passwords do not match';
@@ -184,7 +154,6 @@ export function SignUpForm() {
       return;
     }
 
-    // Client-Side Instant Rule 1: Length
     if (trimmed.length < 4) {
       setUsernameStatus('invalid');
       setUsernameMessage('Min 4 characters');
@@ -197,7 +166,6 @@ export function SignUpForm() {
       return;
     }
 
-    // Client-Side Instant Rule 2: Allowed Characters & Boundary Check
     if (!USERNAME_REGEX.test(trimmed)) {
       setUsernameStatus('invalid');
       setUsernameMessage('Must start & end with letter/number (4-30 chars)');
@@ -215,7 +183,6 @@ export function SignUpForm() {
       return;
     }
 
-    // All Client-Side Rules Passed: Dispatch Debounced Server Check
     setUsernameStatus('checking');
     setUsernameMessage('Checking availability...');
 
@@ -267,7 +234,6 @@ export function SignUpForm() {
     };
   }, [username, displayName]);
 
-  // Advance from Step 1 (Identity) to Step 2 (Credentials)
   const handleContinueToCredentials = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     setErrorMessage(null);
@@ -292,12 +258,6 @@ export function SignUpForm() {
     setStep(2);
   };
 
-  // Select a suggestion
-  const handleSelectSuggestion = (sug: string) => {
-    setUsername(sug);
-  };
-
-  // Submit complete signup form on Step 2
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
@@ -308,7 +268,6 @@ export function SignUpForm() {
       confirmPassword: true,
     });
 
-    // 1. Anti-spam honeypot detection
     if (honeypot.trim().length > 0) {
       setLoading(true);
       setTimeout(() => {
@@ -318,13 +277,11 @@ export function SignUpForm() {
       return;
     }
 
-    // 2. Anti-bot timing protection (< 400ms submissions)
     if (Date.now() - formMountTimeRef.current < 400) {
       setErrorMessage('Form submitted too quickly. Please try again.');
       return;
     }
 
-    // Instant Client Pre-Checks before sending to Server
     if (displayNameError) {
       setErrorMessage(displayNameError);
       setStep(1);
@@ -349,7 +306,6 @@ export function SignUpForm() {
 
     const normalizedUsername = username.trim().toLowerCase();
 
-    // Strict schema parse
     const validationResult = SignUpSchema.safeParse({
       email: trimmedEmail,
       password,
@@ -372,7 +328,6 @@ export function SignUpForm() {
       setLoading(true);
       const supabase = createAuthBrowserClient();
 
-      // 3. Supabase signup (No email verification barrier)
       const { data, error } = await supabase.auth.signUp({
         email: trimmedEmail,
         password,
@@ -392,7 +347,6 @@ export function SignUpForm() {
         return;
       }
 
-      // 4. Synchronize user profile into database with safety checks
       if (data.user?.id) {
         try {
           await fetch('/api/auth/sync', {
@@ -406,11 +360,10 @@ export function SignUpForm() {
             }),
           });
         } catch {
-          // Graceful fallback for non-blocking local sync
+          // Non-blocking fallback
         }
       }
 
-      // 5. Attempt instant login if session was not returned immediately
       if (!data.session) {
         const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
           email: trimmedEmail,
@@ -423,7 +376,6 @@ export function SignUpForm() {
         }
       }
 
-      // 6. Direct entry without email verification barrier
       window.location.href = '/';
     } catch {
       setErrorMessage('An unexpected error occurred during account creation.');
@@ -434,355 +386,105 @@ export function SignUpForm() {
   const isStep1Valid =
     displayName.trim().length >= 2 && displayNameError === null && usernameStatus === 'available';
 
-  const passwordStrength = calculatePasswordStrength(password);
-
   return (
     <div className="space-y-4 w-full">
       {errorMessage && (
-        <Alert variant="error" className="bg-red-950/40 border-red-800/60 text-red-300 text-xs">
-          <AlertDescription>{errorMessage}</AlertDescription>
-        </Alert>
+        <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 text-rose-700 dark:text-rose-300 text-xs flex items-start gap-2 shadow-sm animate-fade-in">
+          <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 dark:text-rose-400 mt-0.5" />
+          <span>{errorMessage}</span>
+        </div>
       )}
 
       {/* OAuth Fast Entry */}
       <OAuthButtons redirectTo="/" onError={(msg) => setErrorMessage(msg)} />
 
-      {/* Divider */}
-      <div className="relative flex items-center justify-center my-1">
-        <Separator className="bg-[hsl(var(--border))]" />
-        <span className="absolute bg-[hsl(var(--surface-overlay))] px-3 text-[11px] font-medium text-[hsl(var(--muted-foreground))] uppercase tracking-wider">
+      {/* Seamless High-Contrast Divider */}
+      <div className="relative flex items-center justify-center my-3 sm:my-4">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-slate-900/[0.08] dark:border-white/10" />
+        </div>
+        <span className="relative bg-white dark:bg-zinc-900 px-3 text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
           Or sign up with username
         </span>
       </div>
 
-      {/* Minimal Step Indicator Placed Directly After Divider */}
-      <div className="flex items-center justify-between pt-1 px-0.5">
+      {/* Minimal Step Indicator */}
+      <div className="flex items-center justify-between pt-0.5 px-0.5">
         <div className="flex items-center gap-1.5">
           <span
             className={`w-1.5 h-1.5 rounded-full ${
-              step === 1 ? 'bg-indigo-400 animate-pulse' : 'bg-emerald-400'
+              step === 1 ? 'bg-indigo-600 dark:bg-indigo-400 animate-pulse' : 'bg-emerald-500 dark:bg-emerald-400'
             }`}
           />
-          <span className="text-xs font-semibold text-[hsl(var(--foreground))]">
+          <span className="text-xs font-semibold text-slate-800 dark:text-zinc-200">
             {step === 1 ? '1. Profile Details' : '2. Security & Password'}
           </span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="text-[11px] font-mono text-[hsl(var(--muted-foreground))]">
+          <span className="text-[11px] font-mono text-slate-500 dark:text-zinc-400">
             {step}/2
           </span>
           <div
             className={`h-1 w-5 rounded-full transition-all duration-300 ${
-              step === 1 ? 'bg-indigo-500 shadow-sm shadow-indigo-500/50' : 'bg-emerald-400'
+              step === 1 ? 'bg-indigo-600 dark:bg-indigo-500 shadow-sm shadow-indigo-500/50' : 'bg-emerald-500 dark:bg-emerald-400'
             }`}
           />
           <div
             className={`h-1 w-5 rounded-full transition-all duration-300 ${
-              step === 2 ? 'bg-indigo-500 shadow-sm shadow-indigo-500/50' : 'bg-zinc-800'
+              step === 2 ? 'bg-indigo-600 dark:bg-indigo-500 shadow-sm shadow-indigo-500/50' : 'bg-slate-200 dark:bg-zinc-800'
             }`}
           />
         </div>
       </div>
 
-      {/* ======================================================== */}
-      {/* STEP 1: IDENTITY (Name & Live Checked Username) */}
-      {/* ======================================================== */}
       {step === 1 && (
-        <form onSubmit={handleContinueToCredentials} className="space-y-3.5 animate-fade-in">
-          {/* Anti-Spam Honeypot Trap (Invisible to humans) */}
-          <div
-            aria-hidden="true"
-            style={{
-              opacity: 0,
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              height: 0,
-              width: 0,
-              zIndex: -1,
-              overflow: 'hidden',
-              pointerEvents: 'none',
-            }}
-          >
-            <label htmlFor="website-hp-1">Website</label>
-            <input
-              id="website-hp-1"
-              type="text"
-              name="website"
-              tabIndex={-1}
-              autoComplete="off"
-              value={honeypot}
-              onChange={(e) => setHoneypot(e.target.value)}
-            />
-          </div>
-
-          {/* 1. Name with Instant Client Validation */}
-          <FloatingLabelInput
-            id="signup-name"
-            name="name"
-            label="Name"
-            type="text"
-            autoComplete="name"
-            placeholder="Sourav or Alex"
-            value={displayName}
-            onBlur={() => setTouched((prev) => ({ ...prev, displayName: true }))}
-            onChange={(val) => setDisplayName(val)}
-            required
-            disabled={loading}
-            icon={<User className="w-4 h-4" />}
-            error={touched.displayName && displayNameError ? displayNameError : undefined}
-          />
-
-          {/* 2. Username with Instant Client-Format Check + Debounced Availability */}
-          <div className="space-y-1">
-            <FloatingLabelInput
-              id="signup-username"
-              name="username"
-              label="Username"
-              type="text"
-              autoComplete="username"
-              placeholder="alexsmith"
-              value={username}
-              onChange={(val) => setUsername(val.toLowerCase().replace(/[^a-z0-9_-]/g, ''))}
-              required
-              disabled={loading}
-              icon={<AtSign className="w-4 h-4" />}
-              rightElement={
-                usernameStatus === 'checking' ? (
-                  <Loader2 className="w-4 h-4 animate-spin text-indigo-400" />
-                ) : usernameStatus === 'available' ? (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                ) : usernameStatus === 'unavailable' || usernameStatus === 'invalid' ? (
-                  <AlertCircle className="w-4 h-4 text-rose-400" />
-                ) : null
-              }
-              hint={usernameStatus !== 'idle' ? usernameMessage || undefined : undefined}
-              invalid={usernameStatus === 'unavailable' || usernameStatus === 'invalid'}
-            />
-
-            {/* 2 Verified Available Suggestions */}
-            {verifiedSuggestions.length > 0 && (
-              <div className="flex items-center gap-1.5 pt-1 flex-wrap">
-                <span className="text-[11px] text-[hsl(var(--muted-foreground))] flex items-center gap-1">
-                  <Sparkles className="w-2.5 h-2.5 text-indigo-400" />
-                  {usernameStatus === 'unavailable' ? 'Try available:' : 'Suggested:'}
-                </span>
-                {verifiedSuggestions.map((sug) => (
-                  <button
-                    key={sug}
-                    type="button"
-                    onClick={() => handleSelectSuggestion(sug)}
-                    className="inline-flex items-center gap-0.5 text-[11px] font-mono text-indigo-400 hover:text-indigo-200 bg-indigo-500/10 hover:bg-indigo-500/20 px-2 py-0.5 rounded-lg transition-all border border-indigo-500/25 active:scale-95"
-                  >
-                    @{sug}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Step 1 Continue Button */}
-          <Button
-            type="submit"
-            disabled={!isStep1Valid}
-            rightIcon={<ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />}
-            className={`w-full text-white text-sm font-medium py-2.5 rounded-xl shadow-lg mt-1 ${
-              isStep1Valid
-                ? 'bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-600 shadow-indigo-600/25'
-                : 'bg-zinc-800 text-zinc-400 opacity-60'
-            }`}
-          >
-            Continue
-          </Button>
-        </form>
+        <SignUpStep1Profile
+          displayName={displayName}
+          setDisplayName={setDisplayName}
+          displayNameError={displayNameError}
+          touchedDisplayName={touched.displayName}
+          onBlurDisplayName={() => setTouched((prev) => ({ ...prev, displayName: true }))}
+          username={username}
+          setUsername={setUsername}
+          usernameStatus={usernameStatus}
+          usernameMessage={usernameMessage}
+          verifiedSuggestions={verifiedSuggestions}
+          onSelectSuggestion={(sug) => setUsername(sug)}
+          honeypot={honeypot}
+          setHoneypot={setHoneypot}
+          loading={loading}
+          isStep1Valid={isStep1Valid}
+          onSubmit={handleContinueToCredentials}
+        />
       )}
 
-      {/* ======================================================== */}
-      {/* STEP 2: CREDENTIALS (Email & Password) */}
-      {/* ======================================================== */}
       {step === 2 && (
-        <div className="space-y-3.5 animate-fade-in">
-          {/* Confirmed Identity Pill */}
-          <div className="flex items-center justify-between p-2.5 rounded-2xl bg-[hsl(var(--surface-subtle))] border border-indigo-500/20 shadow-inner">
-            <div className="flex items-center gap-2 min-w-0">
-              <div className="w-7 h-7 rounded-lg bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 font-bold text-xs shrink-0 shadow-sm">
-                {displayName.charAt(0).toUpperCase()}
-              </div>
-              <div className="min-w-0">
-                <p className="text-xs font-semibold text-[hsl(var(--foreground))] truncate">
-                  {displayName}
-                </p>
-                <p className="text-[11px] font-mono text-emerald-400 truncate flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3 text-emerald-400 inline shrink-0" />@{username}
-                </p>
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={() => setStep(1)}
-              className="text-[11px] font-medium text-indigo-400 hover:text-indigo-300 hover:underline px-2 py-0.5 rounded-md hover:bg-indigo-500/10 transition-colors"
-            >
-              Edit
-            </button>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-3.5">
-            {/* Hidden Username field for Password Manager Identity Binding */}
-            <input type="hidden" name="username" autoComplete="username" value={username} />
-
-            {/* Anti-Spam Honeypot Trap */}
-            <div
-              aria-hidden="true"
-              style={{
-                opacity: 0,
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                height: 0,
-                width: 0,
-                zIndex: -1,
-                overflow: 'hidden',
-                pointerEvents: 'none',
-              }}
-            >
-              <label htmlFor="website-hp-2">Website</label>
-              <input
-                id="website-hp-2"
-                type="text"
-                name="website"
-                tabIndex={-1}
-                autoComplete="off"
-                value={honeypot}
-                onChange={(e) => setHoneypot(e.target.value)}
-              />
-            </div>
-
-            {/* 3. Email Address with Instant Client Validation */}
-            <FloatingLabelInput
-              id="signup-email"
-              name="email"
-              label="Email Address"
-              type="email"
-              autoComplete="email"
-              placeholder="you@example.com"
-              value={email}
-              onBlur={() => setTouched((prev) => ({ ...prev, email: true }))}
-              onChange={(val) => setEmail(val)}
-              required
-              disabled={loading}
-              autoFocus
-              icon={<Mail className="w-4 h-4" />}
-              error={touched.email && emailError ? emailError : undefined}
-            />
-
-            {/* 4. Password with Friendly Non-Red Strength Progress Meter */}
-            <div>
-              <FloatingLabelInput
-                id="signup-password"
-                name="new-password"
-                label="Password"
-                type={showPassword ? 'text' : 'password'}
-                autoComplete="new-password"
-                placeholder="At least 8 characters"
-                value={password}
-                onBlur={() => setTouched((prev) => ({ ...prev, password: true }))}
-                onChange={(val) => setPassword(val)}
-                required
-                disabled={loading}
-                icon={<Lock className="w-4 h-4" />}
-                rightElement={
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] focus:outline-none"
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                }
-                error={touched.password && passwordError ? passwordError : undefined}
-              />
-
-              {/* Dynamic Non-Red Password Strength Progress Bars */}
-              {password.length > 0 && (
-                <div className="space-y-1 -mt-2 mb-2">
-                  <div className="flex items-center justify-between text-[10px]">
-                    <span className="flex items-center gap-1 text-[hsl(var(--muted-foreground))]">
-                      <ShieldCheck className="w-3 h-3 text-indigo-400" />
-                      Strength:
-                    </span>
-                    <span
-                      className={
-                        passwordStrength.score >= 4
-                          ? 'text-emerald-400 font-semibold'
-                          : passwordStrength.score >= 3
-                            ? 'text-indigo-300 font-semibold'
-                            : passwordStrength.score >= 2
-                              ? 'text-amber-300'
-                              : 'text-zinc-400'
-                      }
-                    >
-                      {passwordStrength.label}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-4 gap-1">
-                    {[1, 2, 3, 4].map((seg) => (
-                      <div
-                        key={seg}
-                        className={`h-1 rounded-full transition-all duration-300 ${
-                          passwordStrength.score >= seg ? passwordStrength.color : 'bg-zinc-800'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* 5. Confirm Password with Instant Match Check */}
-            <FloatingLabelInput
-              id="signup-confirm-password"
-              name="confirm-password"
-              label="Confirm Password"
-              type={showPassword ? 'text' : 'password'}
-              autoComplete="new-password"
-              placeholder="Re-enter password"
-              value={confirmPassword}
-              onBlur={() => setTouched((prev) => ({ ...prev, confirmPassword: true }))}
-              onChange={(val) => setConfirmPassword(val)}
-              required
-              disabled={loading}
-              icon={<Lock className="w-4 h-4" />}
-              hint={confirmPassword && !confirmPasswordError ? 'Passwords match ✓' : undefined}
-              error={
-                touched.confirmPassword && confirmPasswordError ? confirmPasswordError : undefined
-              }
-            />
-
-            {/* Action Buttons: Back & Final Submit (Single Clean Spinner) */}
-            <div className="flex items-center gap-2.5 pt-1.5">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setStep(1)}
-                disabled={loading}
-                leftIcon={<ArrowLeft className="w-3.5 h-3.5" />}
-                className="w-1/3 text-xs py-2.5 rounded-xl"
-              >
-                Back
-              </Button>
-
-              <Button
-                type="submit"
-                loading={loading}
-                loadingText="Creating..."
-                className="flex-1 bg-[hsl(var(--primary))] hover:opacity-90 text-white text-sm font-medium py-2.5 rounded-xl shadow-lg shadow-indigo-600/20"
-              >
-                Create Account
-              </Button>
-            </div>
-          </form>
-        </div>
+        <SignUpStep2Security
+          displayName={displayName}
+          username={username}
+          email={email}
+          setEmail={setEmail}
+          emailError={emailError}
+          touchedEmail={touched.email}
+          onBlurEmail={() => setTouched((prev) => ({ ...prev, email: true }))}
+          password={password}
+          setPassword={setPassword}
+          passwordError={passwordError}
+          touchedPassword={touched.password}
+          onBlurPassword={() => setTouched((prev) => ({ ...prev, password: true }))}
+          confirmPassword={confirmPassword}
+          setConfirmPassword={setConfirmPassword}
+          confirmPasswordError={confirmPasswordError}
+          touchedConfirmPassword={touched.confirmPassword}
+          onBlurConfirmPassword={() => setTouched((prev) => ({ ...prev, confirmPassword: true }))}
+          showPassword={showPassword}
+          setShowPassword={setShowPassword}
+          honeypot={honeypot}
+          setHoneypot={setHoneypot}
+          loading={loading}
+          onBack={() => setStep(1)}
+          onSubmit={handleSubmit}
+        />
       )}
     </div>
   );

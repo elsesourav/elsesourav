@@ -28,6 +28,8 @@ const nextConfig: NextConfig = {
     '@elsesourav/database',
     'ogl',
     'gsap',
+    'motion',
+    'framer-motion',
   ],
   images: {
     formats: ['image/avif', 'image/webp'],

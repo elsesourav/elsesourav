@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 import { getServerSession } from '@elsesourav/auth';
 import type { SiteLinkItem } from '@elsesourav/types';
 import { AmbientBackground } from '@elsesourav/ui';
@@ -30,6 +31,13 @@ export const metadata: Metadata = buildPageMetadata({
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
+  const headersList = await headers();
+  const host = headersList.get('x-forwarded-host') || headersList.get('host') || '';
+  const hostname = (host.split(':')[0] || '').toLowerCase();
+  if (hostname.startsWith('admin.') || hostname === 'admin.elsesourav.com') {
+    redirect('/admin');
+  }
+
   const cookieStore = await cookies();
   const siteService = new SiteService();
 

@@ -205,17 +205,20 @@ export function WasmAtmosphereCanvas({
       ref={containerRef}
       aria-hidden="true"
       onClick={handleInteraction}
-      className={`absolute inset-0 w-full h-full pointer-events-auto select-none overflow-hidden z-[2] ${className}`}
+      className={`absolute inset-0 w-full h-full pointer-events-none md:pointer-events-auto select-none overflow-hidden z-[2] ${className}`}
+      style={{
+        touchAction: 'pan-y',
+      }}
     >
       <canvas
         ref={canvasRef}
         id="wasm-atmosphere-canvas"
         data-testid="wasm-atmosphere-canvas"
-        className={`w-full h-full block transition-opacity duration-700 ease-out ${
+        className={`w-full h-full block transition-opacity duration-700 ease-out pointer-events-none md:pointer-events-auto ${
           isReady ? 'opacity-100' : 'opacity-0'
         }`}
         style={{
-          touchAction: 'none',
+          touchAction: 'pan-y',
         }}
       />
     </div>

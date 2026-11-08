@@ -2,21 +2,14 @@
 #define PIXEL_ENGINE_HPP
 
 #include "pixel.hpp"
+#include "pixel_contour.hpp"
+#include "pixel_lighting.hpp"
 #include <stdint.h>
 
-#define MAX_IMAGE_DIM 288
 #define MAX_IMAGE_BYTES (MAX_IMAGE_DIM * MAX_IMAGE_DIM * 4)
 #define MAX_PARTICLES 65536
 #define MAX_EMITTERS 480
-#define MAX_CONTOUR 2048
 #define MAX_SHOCKWAVES 8
-
-struct ContourPoint {
-    float x;
-    float y;
-    float nx; // outward normal x
-    float ny; // outward normal y
-};
 
 struct Shockwave {
     float x;
@@ -60,6 +53,7 @@ private:
     float glowMultiplier;
     float speedMultiplier;
     float densityMultiplier;
+    int showPathGuide; // 0: hidden (public client default), 1: visible (admin preview toggle)
 
     uint8_t inputImage[MAX_IMAGE_BYTES];
     Pixel particles[MAX_PARTICLES];
@@ -73,6 +67,12 @@ private:
 
     WebGLVertex vertexBuffer[MAX_PARTICLES];
     Shockwave shockwaves[MAX_SHOCKWAVES];
+
+    // Dynamic proximity lighting buffers
+    float lightMapR[MAX_IMAGE_DIM * MAX_IMAGE_DIM];
+    float lightMapG[MAX_IMAGE_DIM * MAX_IMAGE_DIM];
+    float lightMapB[MAX_IMAGE_DIM * MAX_IMAGE_DIM];
+    float lightMapW[MAX_IMAGE_DIM * MAX_IMAGE_DIM];
 
 public:
     PixelEngine();
@@ -96,6 +96,10 @@ public:
     void setGlowBrightness(float mult);
     void setSpeed(float mult);
     void setDensity(float mult);
+    void setShowPathGuide(int show);
+    int getShowPathGuide() const {
+        return showPathGuide;
+    }
 
     float* getVertexBufferPtr() {
         return (float*)vertexBuffer;
@@ -105,17 +109,8 @@ public:
         return particleCount;
     }
 
-    int getWidth() const {
-        return width;
-    }
-
-    int getHeight() const {
-        return height;
-    }
-
 private:
     void generatePixels();
-    void extractSilhouetteContour();
     void updateBuffers();
 };
 

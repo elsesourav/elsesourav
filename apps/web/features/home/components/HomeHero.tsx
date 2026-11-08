@@ -107,18 +107,20 @@ export function HomeHero({
       <div
         aria-hidden="true"
         className="absolute inset-0 z-0 w-full h-full pointer-events-none select-none overflow-hidden"
+        style={{ touchAction: 'pan-y' }}
       >
         {/* Dark Theme Background Layers (Cosmic Night Sky - High blur on mobile for soft atmospheric depth) */}
         <div
-          className={`absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out blur-[4px] sm:blur-[5px] md:blur-0 scale-110 md:scale-100 ${
-            isLight ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          className={`absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-700 ease-in-out blur-[4px] sm:blur-[5px] md:blur-0 scale-110 md:scale-100 ${
+            isLight ? 'opacity-0' : 'opacity-100'
           }`}
+          style={{ touchAction: 'pan-y' }}
         >
           {/* Low-Quality Placeholder with blur effect (726 bytes) */}
           <img
             src="/hero/sky-bg-thumb.webp"
             alt=""
-            className={`w-full h-full object-cover object-[82%_center] md:object-center scale-[1.03] transition-all duration-700 ease-out ${
+            className={`w-full h-full object-cover object-[82%_center] md:object-center scale-[1.03] transition-all duration-700 ease-out pointer-events-none ${
               isDarkBgLoaded ? 'opacity-0' : 'opacity-100'
             }`}
             draggable={false}
@@ -127,7 +129,7 @@ export function HomeHero({
           <img
             src="/hero/sky-bg.webp"
             alt=""
-            className={`absolute inset-0 w-full h-full object-cover object-[82%_center] md:object-center scale-[1.02] transition-opacity duration-700 ease-out ${
+            className={`absolute inset-0 w-full h-full object-cover object-[82%_center] md:object-center scale-[1.02] transition-opacity duration-700 ease-out pointer-events-none ${
               isDarkBgLoaded ? 'opacity-100' : 'opacity-0'
             }`}
             loading="eager"
@@ -138,15 +140,16 @@ export function HomeHero({
 
         {/* Light Theme Background Layers (Daylight Cloudscape - High blur on mobile for soft atmospheric depth) */}
         <div
-          className={`absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out blur-[4px] sm:blur-[5px] md:blur-0 scale-110 md:scale-100 ${
-            isLight ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          className={`absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-700 ease-in-out blur-[4px] sm:blur-[5px] md:blur-0 scale-110 md:scale-100 ${
+            isLight ? 'opacity-100' : 'opacity-0'
           }`}
+          style={{ touchAction: 'pan-y' }}
         >
           {/* Low-Quality Placeholder with blur effect (282 bytes) */}
           <img
             src="/hero/sky-light-bg-thumb.webp"
             alt=""
-            className={`w-full h-full object-cover object-[82%_center] md:object-center scale-[1.03] transition-all duration-700 ease-out ${
+            className={`w-full h-full object-cover object-[82%_center] md:object-center scale-[1.03] transition-all duration-700 ease-out pointer-events-none ${
               isLightBgLoaded ? 'opacity-0' : 'opacity-100'
             }`}
             draggable={false}
@@ -155,7 +158,7 @@ export function HomeHero({
           <img
             src="/hero/sky-light-bg.webp"
             alt=""
-            className={`absolute inset-0 w-full h-full object-cover object-[82%_center] md:object-center scale-[1.02] transition-opacity duration-700 ease-out ${
+            className={`absolute inset-0 w-full h-full object-cover object-[82%_center] md:object-center scale-[1.02] transition-opacity duration-700 ease-out pointer-events-none ${
               isLightBgLoaded ? 'opacity-100' : 'opacity-0'
             }`}
             loading="eager"

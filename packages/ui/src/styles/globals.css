@@ -1,9 +1,9 @@
+@import './micro.css';
+@import './interior.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import './micro.css';
-@import './interior.css';
 
 @layer base {
   :root,

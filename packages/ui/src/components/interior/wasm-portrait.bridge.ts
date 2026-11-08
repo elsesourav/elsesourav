@@ -1,67 +1,8 @@
 import { getPixelEngineWasmBinary } from '../../wasm/pixel_engine_wasm_bytes';
+import { WasmPortraitBridgeOptions, WasmExports } from './wasm-portrait.types';
+import { PIXEL_VS, PIXEL_FS } from './wasm-portrait.shaders';
 
-export interface WasmPortraitBridgeOptions {
-  canvas: HTMLCanvasElement;
-  imageDarkSrc: string;
-  imageLightSrc: string;
-  isDark: boolean;
-  lightIntensity?: number;
-  simulationResolution?: number;
-  particleSize?: number;
-  glowBrightness?: number;
-  flightSpeed?: number;
-  particleDensity?: number;
-  onLoaded?: () => void;
-}
-
-interface WasmExports {
-  memory: WebAssembly.Memory;
-  engine_create: () => number;
-  engine_init: (engine: number, w: number, h: number, dark: number) => void;
-  engine_get_input_buffer: (engine: number) => number;
-  engine_process_image: (engine: number, w: number, h: number) => void;
-  engine_update: (engine: number, dt: number, mx: number, my: number, down: number) => void;
-  engine_add_burst: (engine: number, x: number, y: number, force: number) => void;
-  engine_trigger_entrance: (engine: number, duration: number) => void;
-  engine_is_entrancing: (engine: number) => number;
-  engine_set_theme: (engine: number, dark: number) => void;
-  engine_set_light_intensity: (engine: number, intensity: number) => void;
-  engine_set_particle_size: (engine: number, mult: number) => void;
-  engine_set_glow_brightness: (engine: number, mult: number) => void;
-  engine_set_speed: (engine: number, mult: number) => void;
-  engine_set_density: (engine: number, mult: number) => void;
-  engine_get_vertex_buffer: (engine: number) => number;
-  engine_get_vertex_count: (engine: number) => number;
-  engine_destroy: (engine: number) => void;
-}
-
-const PIXEL_VS = /* glsl */ `
-  attribute vec2 a_pos;
-  attribute vec4 a_color;
-  attribute float a_size;
-  uniform float u_point_scale;
-  uniform vec2 u_scale;
-  uniform vec2 u_offset;
-  uniform float u_scatter;
-  varying vec4 v_color;
-
-  void main() {
-    vec2 pos = a_pos * u_scale * u_scatter + u_offset;
-    gl_Position = vec4(pos, 0.0, 1.0);
-    gl_PointSize = a_size * u_point_scale;
-    v_color = a_color;
-  }
-`;
-
-const PIXEL_FS = /* glsl */ `
-  precision mediump float;
-  varying vec4 v_color;
-
-  void main() {
-    // Seamless solid square point sprites with zero mesh grid lines
-    gl_FragColor = v_color;
-  }
-`;
+export type { WasmPortraitBridgeOptions, WasmExports };
 
 export class WasmPortraitBridge {
   private canvas: HTMLCanvasElement;
@@ -108,6 +49,7 @@ export class WasmPortraitBridge {
   private glowBrightness: number;
   private flightSpeed: number;
   private particleDensity: number;
+  private showPathGuide: boolean;
 
   constructor(options: WasmPortraitBridgeOptions) {
     this.canvas = options.canvas;
@@ -119,6 +61,7 @@ export class WasmPortraitBridge {
     this.glowBrightness = options.glowBrightness ?? 1.0;
     this.flightSpeed = options.flightSpeed ?? 1.0;
     this.particleDensity = options.particleDensity ?? 1.0;
+    this.showPathGuide = options.showPathGuide ?? false;
 
     this.offscreenCanvas = document.createElement('canvas');
     this.offscreenCanvas.width = this.simRes;
@@ -180,7 +123,6 @@ export class WasmPortraitBridge {
     if (this.pixelProgram) {
       this.pixelVbo = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, this.pixelVbo);
-      // Allocate max 65536 vertices * 7 floats * 4 bytes
       gl.bufferData(gl.ARRAY_BUFFER, 65536 * 7 * 4, gl.DYNAMIC_DRAW);
     }
   }
@@ -206,8 +148,8 @@ export class WasmPortraitBridge {
       if (this.glowBrightness !== 1.0) this.wasmExports.engine_set_glow_brightness(this.enginePtr, this.glowBrightness);
       if (this.flightSpeed !== 1.0) this.wasmExports.engine_set_speed(this.enginePtr, this.flightSpeed);
       if (this.particleDensity !== 1.0) this.wasmExports.engine_set_density(this.enginePtr, this.particleDensity);
+      if (this.showPathGuide) this.wasmExports.engine_set_show_path_guide(this.enginePtr, 1);
 
-      // If an image was queued before WASM was ready, ingest it immediately
       if (this.pendingImg) {
         this.ingestImageElement(this.pendingImg);
       }
@@ -227,7 +169,24 @@ export class WasmPortraitBridge {
 
     try {
       this.offscreenCtx.clearRect(0, 0, this.simRes, this.simRes);
-      this.offscreenCtx.drawImage(img, 0, 0, this.simRes, this.simRes);
+
+      const nw = img.naturalWidth || 1;
+      const nh = img.naturalHeight || 1;
+      const aspect = nw / nh;
+      let dw = this.simRes;
+      let dh = this.simRes;
+      let dx = 0;
+      let dy = 0;
+
+      if (aspect < 1.0) {
+        dw = Math.round(this.simRes * aspect);
+        dx = Math.round((this.simRes - dw) / 2);
+      } else if (aspect > 1.0) {
+        dh = Math.round(this.simRes / aspect);
+        dy = Math.round((this.simRes - dh) / 2);
+      }
+
+      this.offscreenCtx.drawImage(img, dx, dy, dw, dh);
 
       const imgData = this.offscreenCtx.getImageData(0, 0, this.simRes, this.simRes);
       const inPtr = this.wasmExports.engine_get_input_buffer(this.enginePtr);
@@ -253,92 +212,96 @@ export class WasmPortraitBridge {
 
   public burst(normalizedX?: number, normalizedY?: number): void {
     if (!this.wasmExports || !this.enginePtr) return;
-    const bx = normalizedX !== undefined ? ((normalizedX + 1.0) * 0.5) * this.simRes : this.mouseX >= 0 ? this.mouseX : this.simRes * 0.5;
-    const by = normalizedY !== undefined ? ((1.0 - normalizedY) * 0.5) * this.simRes : this.mouseY >= 0 ? this.mouseY : this.simRes * 0.45;
-    this.wasmExports.engine_add_burst(this.enginePtr, bx, by, 2.8);
+    const bx = normalizedX !== undefined ? ((normalizedX + 1.0) * 0.5) * this.simRes : this.simRes * 0.5;
+    const by = normalizedY !== undefined ? ((1.0 - normalizedY) * 0.5) * this.simRes : this.simRes * 0.5;
+    this.wasmExports.engine_add_burst(this.enginePtr, bx, by, 1.8);
   }
 
-  public triggerEntrance(duration = 2.4): void {
+  public triggerEntrance(duration = 1.6): void {
     this.entranceDuration = duration;
     this.entranceStartTime = performance.now();
-    if (this.wasmExports && this.enginePtr) this.wasmExports.engine_trigger_entrance(this.enginePtr, duration);
-  }
-
-  public setFullscreenMode(active: boolean, getCardRect?: () => DOMRect | null): void {
-    this.isFullscreen = active;
-    this.getCardRect = getCardRect;
-    if (!active) {
-      this.transformScaleX = this.transformScaleY = this.transformScatter = 1.0;
-      this.transformOffsetX = this.transformOffsetY = 0.0;
+    if (this.wasmExports && this.enginePtr) {
+      this.wasmExports.engine_trigger_entrance(this.enginePtr, duration);
     }
   }
 
   public isEntrancing(): boolean {
-    return !!(this.wasmExports && this.enginePtr && this.wasmExports.engine_is_entrancing(this.enginePtr) === 1);
-  }
-
-  public isWebGLActive(): boolean {
-    return this.useWebGL && this.gl !== null;
-  }
-
-  public getVertexSnapshot(): Float32Array | null {
-    if (!this.wasmExports || !this.enginePtr) return null;
-    const vboPtr = this.wasmExports.engine_get_vertex_buffer(this.enginePtr);
-    const vCount = this.wasmExports.engine_get_vertex_count(this.enginePtr);
-    if (!vboPtr || vCount <= 0) return null;
-    return new Float32Array(new Float32Array(this.wasmExports.memory.buffer, vboPtr, vCount * 7));
-  }
-
-  public getParticleCount(): number {
-    return this.wasmExports && this.enginePtr ? this.wasmExports.engine_get_vertex_count(this.enginePtr) : 0;
-  }
-
-  public resize(newW: number, newH?: number): void {
-    const w = newW;
-    const h = newH ?? newW;
-    if (w > 0 && h > 0 && (this.canvas.width !== w || this.canvas.height !== h)) {
-      this.canvas.width = w;
-      this.canvas.height = h;
-      if (this.gl) this.gl.viewport(0, 0, w, h);
-    }
+    if (!this.wasmExports || !this.enginePtr) return false;
+    return this.wasmExports.engine_is_entrancing(this.enginePtr) === 1;
   }
 
   public setTheme(isDark: boolean): void {
-    if (this.isDark === isDark) return;
     this.isDark = isDark;
-    if (this.wasmExports && this.enginePtr) this.wasmExports.engine_set_theme(this.enginePtr, isDark ? 1 : 0);
+    if (this.wasmExports && this.enginePtr) {
+      this.wasmExports.engine_set_theme(this.enginePtr, isDark ? 1 : 0);
+    }
   }
 
   public setLightIntensity(intensity: number): void {
     this.lightIntensity = intensity;
-    if (this.wasmExports && this.enginePtr) this.wasmExports.engine_set_light_intensity(this.enginePtr, intensity);
+    if (this.wasmExports && this.enginePtr) {
+      this.wasmExports.engine_set_light_intensity(this.enginePtr, intensity);
+    }
   }
 
   public setParticleSize(mult: number): void {
     this.particleSize = mult;
-    if (this.wasmExports && this.enginePtr) this.wasmExports.engine_set_particle_size(this.enginePtr, mult);
+    if (this.wasmExports && this.enginePtr) {
+      this.wasmExports.engine_set_particle_size(this.enginePtr, mult);
+    }
   }
 
   public setGlowBrightness(mult: number): void {
     this.glowBrightness = mult;
-    if (this.wasmExports && this.enginePtr) this.wasmExports.engine_set_glow_brightness(this.enginePtr, mult);
+    if (this.wasmExports && this.enginePtr) {
+      this.wasmExports.engine_set_glow_brightness(this.enginePtr, mult);
+    }
   }
 
   public setFlightSpeed(mult: number): void {
     this.flightSpeed = mult;
-    if (this.wasmExports && this.enginePtr) this.wasmExports.engine_set_speed(this.enginePtr, mult);
+    if (this.wasmExports && this.enginePtr) {
+      this.wasmExports.engine_set_speed(this.enginePtr, mult);
+    }
   }
 
   public setDensity(mult: number): void {
     this.particleDensity = mult;
-    if (this.wasmExports && this.enginePtr) this.wasmExports.engine_set_density(this.enginePtr, mult);
+    if (this.wasmExports && this.enginePtr) {
+      this.wasmExports.engine_set_density(this.enginePtr, mult);
+    }
+  }
+
+  public setShowPathGuide(show: boolean): void {
+    this.showPathGuide = show;
+    if (this.wasmExports && this.enginePtr) {
+      this.wasmExports.engine_set_show_path_guide(this.enginePtr, show ? 1 : 0);
+    }
+  }
+
+  public setFullscreenMode(fullscreen: boolean, getCardRect?: () => DOMRect | null): void {
+    this.isFullscreen = fullscreen;
+    this.getCardRect = getCardRect;
+    if (!fullscreen) {
+      this.transformScaleX = 1.0;
+      this.transformScaleY = 1.0;
+      this.transformOffsetX = 0.0;
+      this.transformOffsetY = 0.0;
+      this.transformScatter = 1.0;
+    }
+  }
+
+  public resize(width: number, height: number): void {
+    if (this.gl) {
+      this.gl.viewport(0, 0, width, height);
+    }
   }
 
   public start(): void {
     if (this.isRunning) return;
     this.isRunning = true;
     this.lastTime = performance.now();
-    this.tick();
+    this.loop();
   }
 
   public pause(): void {
@@ -349,49 +312,61 @@ export class WasmPortraitBridge {
     }
   }
 
-  private tick = (): void => {
+  private loop = (): void => {
     if (!this.isRunning) return;
     const now = performance.now();
-    const dt = Math.min((now - this.lastTime) / 1000.0, 0.05);
+    const dt = Math.min((now - this.lastTime) / 1000, 0.05);
     this.lastTime = now;
 
-    if (this.isFullscreen) {
-      const elapsed = (now - this.entranceStartTime) / 1000.0;
-      const progress = Math.min(Math.max(elapsed / Math.max(this.entranceDuration, 0.001), 0.0), 1.0);
-      const remaining = 1.0 - progress;
-      const easeRemaining = remaining * remaining;
+    this.update(dt);
+    this.render();
 
-      const rect = this.getCardRect ? this.getCardRect() : null;
-      if (rect && rect.width > 0 && rect.height > 0) {
-        const cw = this.canvas.width;
-        const ch = this.canvas.height;
-        const cardW = rect.width;
-        const cardH = rect.height;
-        const cardCenterX = rect.left + cardW * 0.5;
-        const cardCenterY = rect.top + cardH * 0.5;
+    this.animFrameId = requestAnimationFrame(this.loop);
+  };
 
-        this.transformScaleX = cardW / cw;
-        this.transformScaleY = cardH / ch;
-        this.transformOffsetX = (cardCenterX / cw) * 2.0 - 1.0;
-        this.transformOffsetY = 1.0 - (cardCenterY / ch) * 2.0;
-
-        const maxScatter = Math.max(2.4, (Math.max(cw, ch) / cardW) * 1.4);
-        this.transformScatter = 1.0 + (maxScatter - 1.0) * easeRemaining;
-      }
-    }
-
-    if (this.targetMouseX >= 0) {
-      if (this.mouseX < 0) {
-        this.mouseX = this.targetMouseX;
-        this.mouseY = this.targetMouseY;
-      } else {
-        // Silky, gentle, slow cursor tracking (no fast jumps)
-        this.mouseX += (this.targetMouseX - this.mouseX) * 0.08;
-        this.mouseY += (this.targetMouseY - this.mouseY) * 0.08;
-      }
-    } else {
+  private update(dt: number): void {
+    if (this.targetMouseX < 0) {
       this.mouseX = -1;
       this.mouseY = -1;
+    } else {
+      const smoothing = 0.35;
+      this.mouseX = this.mouseX < 0 ? this.targetMouseX : this.mouseX + (this.targetMouseX - this.mouseX) * smoothing;
+      this.mouseY = this.mouseY < 0 ? this.targetMouseY : this.mouseY + (this.targetMouseY - this.mouseY) * smoothing;
+    }
+
+    if (this.isFullscreen && this.getCardRect) {
+      const rect = this.getCardRect();
+      if (rect && rect.width > 0 && rect.height > 0 && typeof window !== 'undefined') {
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+
+        const targetScaleX = rect.width / vw;
+        const targetScaleY = rect.height / vh;
+        const cardCenterX = rect.left + rect.width * 0.5;
+        const cardCenterY = rect.top + rect.height * 0.5;
+        const targetOffsetX = (cardCenterX / vw) * 2.0 - 1.0;
+        const targetOffsetY = 1.0 - (cardCenterY / vh) * 2.0;
+
+        const elapsed = (performance.now() - this.entranceStartTime) / 1000;
+        const p = Math.min(Math.max(elapsed / this.entranceDuration, 0), 1.0);
+        const rem = 1.0 - p;
+        const ease = 1.0 - rem * rem * rem * rem;
+
+        const startScaleX = Math.min(1.0, 520 / vw);
+        const startScaleY = Math.min(1.0, 520 / vh);
+
+        this.transformScaleX = startScaleX + (targetScaleX - startScaleX) * ease;
+        this.transformScaleY = startScaleY + (targetScaleY - startScaleY) * ease;
+        this.transformOffsetX = 0.0 + (targetOffsetX - 0.0) * ease;
+        this.transformOffsetY = 0.0 + (targetOffsetY - 0.0) * ease;
+        this.transformScatter = 1.0;
+      }
+    } else {
+      this.transformScaleX = 1.0;
+      this.transformScaleY = 1.0;
+      this.transformOffsetX = 0.0;
+      this.transformOffsetY = 0.0;
+      this.transformScatter = 1.0;
     }
 
     if (this.wasmExports && this.enginePtr) {
@@ -402,96 +377,87 @@ export class WasmPortraitBridge {
         this.mouseY,
         this.isMouseDown ? 1 : 0
       );
-
-      if (this.useWebGL && this.gl) {
-        this.renderWebGL();
-      } else if (this.ctx2d) {
-        this.render2DFallback();
-      }
-    }
-
-    this.animFrameId = requestAnimationFrame(this.tick);
-  };
-
-  private renderWebGL(): void {
-    const gl = this.gl;
-    if (!gl || !this.wasmExports || !this.enginePtr) return;
-
-    gl.viewport(0, 0, this.canvas.width, this.canvas.height);
-    gl.clearColor(0.0, 0.0, 0.0, 0.0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-
-    if (this.pixelProgram && this.pixelVbo) {
-      const vboPtr = this.wasmExports.engine_get_vertex_buffer(this.enginePtr);
-      const vCount = this.wasmExports.engine_get_vertex_count(this.enginePtr);
-
-      if (vboPtr && vCount > 0) {
-        const mem = this.wasmExports.memory;
-        const floatView = new Float32Array(mem.buffer, vboPtr, vCount * 7);
-
-        gl.useProgram(this.pixelProgram);
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.pixelVbo);
-        gl.bufferSubData(gl.ARRAY_BUFFER, 0, floatView);
-
-        const stride = 7 * 4;
-        const posLoc = gl.getAttribLocation(this.pixelProgram, 'a_pos');
-        const colLoc = gl.getAttribLocation(this.pixelProgram, 'a_color');
-        const sizeLoc = gl.getAttribLocation(this.pixelProgram, 'a_size');
-
-        gl.uniform2f(gl.getUniformLocation(this.pixelProgram, 'u_scale'), this.transformScaleX, this.transformScaleY);
-        gl.uniform2f(gl.getUniformLocation(this.pixelProgram, 'u_offset'), this.transformOffsetX, this.transformOffsetY);
-        gl.uniform1f(gl.getUniformLocation(this.pixelProgram, 'u_scatter'), this.transformScatter);
-
-        const rect = this.isFullscreen && this.getCardRect ? this.getCardRect() : null;
-        const effectiveWidth = rect && rect.width > 0 ? rect.width : this.canvas.width;
-        gl.uniform1f(gl.getUniformLocation(this.pixelProgram, 'u_point_scale'), effectiveWidth > 0 ? effectiveWidth / 580.0 : 1.0);
-
-        gl.enableVertexAttribArray(posLoc);
-        gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, stride, 0);
-        gl.enableVertexAttribArray(colLoc);
-        gl.vertexAttribPointer(colLoc, 4, gl.FLOAT, false, stride, 8);
-        gl.enableVertexAttribArray(sizeLoc);
-        gl.vertexAttribPointer(sizeLoc, 1, gl.FLOAT, false, stride, 24);
-        gl.drawArrays(gl.POINTS, 0, vCount);
-      }
     }
   }
 
-  private render2DFallback(): void {
-    if (!this.wasmExports || !this.enginePtr || !this.ctx2d) return;
-    const vboPtr = this.wasmExports.engine_get_vertex_buffer(this.enginePtr);
-    const vCount = this.wasmExports.engine_get_vertex_count(this.enginePtr);
-    if (!vboPtr || vCount === 0) return;
-
-    const ctx = this.ctx2d;
-    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    const floatView = new Float32Array(this.wasmExports.memory.buffer, vboPtr, vCount * 7);
-    const cw = this.canvas.width;
-    const ch = this.canvas.height;
-
-    for (let i = 0; i < vCount; i++) {
-      const base = i * 7;
-      const effX = (floatView[base] ?? 0) * this.transformScaleX * this.transformScatter + this.transformOffsetX;
-      const effY = (floatView[base + 1] ?? 0) * this.transformScaleY * this.transformScatter + this.transformOffsetY;
-      const r = Math.round((floatView[base + 2] ?? 0) * 255);
-      const g = Math.round((floatView[base + 3] ?? 0) * 255);
-      const b = Math.round((floatView[base + 4] ?? 0) * 255);
-      const a = floatView[base + 5] ?? 1.0;
-      const sz = floatView[base + 6] ?? 8;
-      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
-      ctx.fillRect(((effX + 1.0) * 0.5) * cw - sz * 0.5, ((1.0 - effY) * 0.5) * ch - sz * 0.5, sz, sz);
+  private render(): void {
+    if (this.useWebGL && this.gl) {
+      this.renderWebGL(this.gl);
+    } else if (this.ctx2d) {
+      this.render2D(this.ctx2d);
     }
+  }
+
+  private renderWebGL(gl: WebGLRenderingContext | WebGL2RenderingContext): void {
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    if (!this.wasmExports || !this.enginePtr || !this.pixelProgram || !this.pixelVbo) return;
+
+    const count = this.wasmExports.engine_get_vertex_count(this.enginePtr);
+    if (count <= 0) return;
+
+    const vPtr = this.wasmExports.engine_get_vertex_buffer(this.enginePtr);
+    if (!vPtr) return;
+
+    const mem = this.wasmExports.memory;
+    const vertexFloats = new Float32Array(mem.buffer, vPtr, count * 7);
+
+    gl.useProgram(this.pixelProgram);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.pixelVbo);
+    gl.bufferSubData(gl.ARRAY_BUFFER, 0, vertexFloats);
+
+    const stride = 7 * 4;
+    const posLoc = gl.getAttribLocation(this.pixelProgram, 'a_pos');
+    const colLoc = gl.getAttribLocation(this.pixelProgram, 'a_color');
+    const sizeLoc = gl.getAttribLocation(this.pixelProgram, 'a_size');
+
+    if (posLoc >= 0 && colLoc >= 0 && sizeLoc >= 0) {
+      gl.uniform2f(gl.getUniformLocation(this.pixelProgram, 'u_scale'), this.transformScaleX, this.transformScaleY);
+      gl.uniform2f(gl.getUniformLocation(this.pixelProgram, 'u_offset'), this.transformOffsetX, this.transformOffsetY);
+      gl.uniform1f(gl.getUniformLocation(this.pixelProgram, 'u_scatter'), this.transformScatter);
+
+      const rect = this.isFullscreen && this.getCardRect ? this.getCardRect() : null;
+      const effectiveWidth = rect && rect.width > 0 ? rect.width : this.canvas.width;
+      gl.uniform1f(gl.getUniformLocation(this.pixelProgram, 'u_point_scale'), effectiveWidth > 0 ? effectiveWidth / 580.0 : 1.0);
+
+      gl.enableVertexAttribArray(posLoc);
+      gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, stride, 0);
+      gl.enableVertexAttribArray(colLoc);
+      gl.vertexAttribPointer(colLoc, 4, gl.FLOAT, false, stride, 8);
+      gl.enableVertexAttribArray(sizeLoc);
+      gl.vertexAttribPointer(sizeLoc, 1, gl.FLOAT, false, stride, 24);
+
+      gl.drawArrays(gl.POINTS, 0, count);
+
+      gl.disableVertexAttribArray(posLoc);
+      gl.disableVertexAttribArray(colLoc);
+      gl.disableVertexAttribArray(sizeLoc);
+    }
+  }
+
+  private render2D(ctx: CanvasRenderingContext2D): void {
+    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
+  public isWebGLActive(): boolean {
+    return this.useWebGL && this.gl !== null;
   }
 
   public dispose(): void {
     this.pause();
+    if (this.gl && this.pixelProgram) {
+      this.gl.deleteProgram(this.pixelProgram);
+    }
+    if (this.gl && this.pixelVbo) {
+      this.gl.deleteBuffer(this.pixelVbo);
+    }
     if (this.wasmExports && this.enginePtr) {
       this.wasmExports.engine_destroy(this.enginePtr);
       this.enginePtr = 0;
     }
-    if (this.gl && this.pixelProgram) {
-      this.gl.deleteProgram(this.pixelProgram);
-      if (this.pixelVbo) this.gl.deleteBuffer(this.pixelVbo);
-    }
+    this.offscreenCanvas.width = 0;
+    this.offscreenCanvas.height = 0;
+    this.offscreenCtx = null;
   }
 }

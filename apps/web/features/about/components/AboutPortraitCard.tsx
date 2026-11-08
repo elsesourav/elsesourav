@@ -14,18 +14,20 @@ export interface AboutPortraitCardProps {
   particleSize?: string;
   glowBrightness?: string;
   flightSpeed?: string;
+  showPathGuide?: boolean;
 }
 
 export function AboutPortraitCard({
   className = '',
   size = 520,
   lightIntensity = 0.38,
-  imageDarkSrc = '/about/souravbarui-dark-512.webp',
-  imageLightSrc = '/about/souravbarui-light-512.webp',
+  imageDarkSrc = '/about/souravbarui-dark.png',
+  imageLightSrc = '/about/souravbarui-light.png',
   particleDensity,
   particleSize,
   glowBrightness,
   flightSpeed,
+  showPathGuide = false,
 }: AboutPortraitCardProps) {
   const { resolvedTheme, effectsLevel } = useTheme();
   const isDark = resolvedTheme === 'dark';
@@ -61,6 +63,7 @@ export function AboutPortraitCard({
           particleSize={particleSize}
           glowBrightness={glowBrightness}
           flightSpeed={flightSpeed}
+          showPathGuide={showPathGuide}
           className="w-full shadow-inner border border-[hsl(var(--border-subtle))] rounded-2xl"
         />
       </div>

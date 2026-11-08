@@ -85,13 +85,13 @@ export function AdminSidebar({ context }: AdminSidebarProps) {
 
       {/* Return to Main Site */}
       <div className="pt-6 border-t border-zinc-800/80 space-y-3">
-        <Link
-          href={ROUTES.HOME}
+        <a
+          href="https://elsesourav.com"
           className="flex items-center gap-2 text-xs text-zinc-400 hover:text-zinc-200 transition-colors px-1"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Return to Public Site</span>
-        </Link>
+        </a>
       </div>
     </aside>
   );

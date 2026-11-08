@@ -4,6 +4,12 @@
 #include <stdint.h>
 #include <math.h>
 
+// Fast deterministic pseudo-random generator
+static inline float pseudoRand(float seed) {
+    float val = sinf(seed * 12.9898f + 78.233f) * 43758.5453f;
+    return val - floorf(val);
+}
+
 // Pixel state flags
 #define FLAG_NONE            0
 #define FLAG_BACK_PIXEL      (1 << 0) // Back layer: ambient specks
@@ -13,6 +19,7 @@
 #define FLAG_IMAGE_PIXEL     (1 << 4) // Middle layer: authentic portrait pixels
 #define FLAG_TOP_PARTICLE    (1 << 5) // Top layer: light up particles
 #define FLAG_EDGE_FLOW       (1 << 6) // Top layer: silhouette contour path
+#define FLAG_PATH_LINE       (1 << 7) // Top layer: continuous smooth edge path line
 
 class Pixel {
 public:
@@ -136,87 +143,9 @@ public:
     }
 
     void applyBaseTopColor(int isDark, float relX, float relY, float lightIntensity = 0.38f) {
-        if (!active || baseA == 0 || lightIntensity <= 0.02f) return;
-
-        // Strictly protect facial features (eyes, nose, mouth, cheeks)
-        // Authentic natural photographic skin tones
-        float faceDistX = fabsf(relX - 0.50f);
-        if (faceDistX < 0.22f && relY >= 0.22f && relY <= 0.54f) {
-            return; // zero contamination on face features
-        }
-
-        float leftWeight = 0.0f;
-        float rightWeight = 0.0f;
-
-        // 1. Top of Head & Hair Crown: subtle edge rim only on outermost silhouette
-        if (relY <= 0.38f) {
-            // In light mode, preserve 100% natural authentic photographic dark hair
-            // The top glow is provided by the floating glowing particles & halo!
-            if (!isDark) {
-                return;
-            }
-            float topDistX = fabsf(relX - 0.50f);
-            if (topDistX > 0.16f) {
-                float crownWeight = ((topDistX - 0.16f) / 0.34f) * lightIntensity * 1.8f;
-                if (relX < 0.50f) {
-                    leftWeight = crownWeight;
-                } else {
-                    rightWeight = crownWeight;
-                }
-            }
-        } else if (relY <= 0.95f) {
-            // 2. Shoulders & Lateral Arms down both sides
-            // Only on the outer edges (arms/sleeves), leaving the chest/shirt center clean
-            if (relX < 0.35f) {
-                float distFromCenter = (0.35f - relX) / 0.35f;
-                leftWeight = powf(distFromCenter, 0.75f) * lightIntensity * 2.8f;
-            } else if (relX > 0.65f) {
-                float distFromCenter = (relX - 0.65f) / 0.35f;
-                rightWeight = powf(distFromCenter, 0.75f) * lightIntensity * 2.8f;
-            }
-        }
-        // At the very bottom hem of the shirt (relY > 0.95f), leftWeight and rightWeight remain 0.0f:
-        // Zero glow at bottom edge, completely clean & dark!
-
-        if (leftWeight > 1.0f) leftWeight = 1.0f;
-        if (rightWeight > 1.0f) rightWeight = 1.0f;
-
-        float cr = (float)baseR;
-        float cg = (float)baseG;
-        float cb = (float)baseB;
-
-        if (isDark) {
-            if (leftWeight > 0.01f) {
-                // Electric Cyan: vibrant cyber glow illuminating dark hoodie fabric
-                cr = cr * (1.0f - leftWeight * 0.25f) + 0.0f * leftWeight;
-                cg = cg * (1.0f - leftWeight * 0.25f) + 242.0f * leftWeight;
-                cb = cb * (1.0f - leftWeight * 0.25f) + 255.0f * leftWeight;
-            } else if (rightWeight > 0.01f) {
-                // Cyber Neon Violet/Purple
-                cr = cr * (1.0f - rightWeight * 0.25f) + 195.0f * rightWeight;
-                cg = cg * (1.0f - rightWeight * 0.25f) + 85.0f * rightWeight;
-                cb = cb * (1.0f - rightWeight * 0.25f) + 255.0f * rightWeight;
-            }
-        } else {
-            // Light Mode: Clean luminous cyber cyan & cyber violet rim tint on hoodie edges
-            if (leftWeight > 0.01f) {
-                cr = cr * (1.0f - leftWeight * 0.25f) + 0.0f * (leftWeight * 0.25f);
-                cg = cg * (1.0f - leftWeight * 0.25f) + 200.0f * (leftWeight * 0.25f);
-                cb = cb * (1.0f - leftWeight * 0.25f) + 245.0f * (leftWeight * 0.25f);
-            } else if (rightWeight > 0.01f) {
-                cr = cr * (1.0f - rightWeight * 0.25f) + 160.0f * (rightWeight * 0.25f);
-                cg = cg * (1.0f - rightWeight * 0.25f) + 70.0f * (rightWeight * 0.25f);
-                cb = cb * (1.0f - rightWeight * 0.25f) + 245.0f * (rightWeight * 0.25f);
-            }
-        }
-
-        if (cr > 255.0f) cr = 255.0f;
-        if (cg > 255.0f) cg = 255.0f;
-        if (cb > 255.0f) cb = 255.0f;
-
-        r = (uint8_t)cr;
-        g = (uint8_t)cg;
-        b = (uint8_t)cb;
+        // Static color overrides removed — all edge/side image pixel illumination is now
+        // computed dynamically in real-time based on the distance, density, and color of
+        // the nearest moving glowing particles!
     }
 };
 

@@ -24,6 +24,7 @@ echo "Compiling pixel_engine.cpp to WebAssembly..."
   -Wl,--export=engine_set_glow_brightness \
   -Wl,--export=engine_set_speed \
   -Wl,--export=engine_set_density \
+  -Wl,--export=engine_set_show_path_guide \
   -Wl,--export=engine_get_vertex_buffer \
   -Wl,--export=engine_get_vertex_count \
   -Wl,--export=engine_destroy \

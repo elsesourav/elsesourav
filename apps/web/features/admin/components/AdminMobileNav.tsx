@@ -114,13 +114,13 @@ export function AdminMobileNav({ context }: AdminMobileNavProps) {
           </nav>
 
           <div className="pt-6 border-t border-zinc-800/80">
-            <Link
-              href={ROUTES.HOME}
+            <a
+              href="https://elsesourav.com"
               className="flex items-center gap-2 text-sm text-zinc-400 hover:text-zinc-200 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Return to Public Site</span>
-            </Link>
+            </a>
           </div>
         </div>
       )}

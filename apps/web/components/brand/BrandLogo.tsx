@@ -149,17 +149,29 @@ export function BrandLogo({
             className="w-auto h-full object-contain group-hover/logo:scale-[1.02] transition-transform duration-200 ease-smooth"
           />
         ) : (
-          /* Full color SVG brand logo */
-          <Image
-            src="/brand-name-logo-color.svg"
-            alt={brandDisplayName}
-            width={797}
-            height={128}
-            priority={priority}
-            unoptimized
-            style={{ width: 'auto', height: '100%', maxHeight: '100%' }}
-            className="w-auto h-full object-contain group-hover/logo:scale-[1.02] transition-transform duration-200 ease-smooth"
-          />
+          /* Full color SVG brand logo in dark mode; clean outline-free black logo in light mode */
+          <>
+            <Image
+              src="/brand-name-logo-black.svg"
+              alt={brandDisplayName}
+              width={797}
+              height={128}
+              priority={priority}
+              unoptimized
+              style={{ width: 'auto', height: '100%', maxHeight: '100%' }}
+              className="w-auto h-full object-contain dark:hidden group-hover/logo:scale-[1.02] transition-transform duration-200 ease-smooth"
+            />
+            <Image
+              src="/brand-name-logo-color.svg"
+              alt={brandDisplayName}
+              width={797}
+              height={128}
+              priority={priority}
+              unoptimized
+              style={{ width: 'auto', height: '100%', maxHeight: '100%' }}
+              className="w-auto h-full object-contain hidden dark:block group-hover/logo:scale-[1.02] transition-transform duration-200 ease-smooth"
+            />
+          </>
         )}
       </div>
       <span className="sr-only">{brandDisplayName}</span>

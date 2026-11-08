@@ -3,7 +3,6 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Button } from '@elsesourav/ui';
 import { SITE_CONFIG, ROUTES } from '@elsesourav/config';
 import { BrandLogo } from '@/components/brand/BrandLogo';
 import { Shield, Layers, FileText, Sparkles } from 'lucide-react';
@@ -72,15 +71,15 @@ export function PublicHeader({
       <div
         className={`transition-[background-color,border-color,backdrop-filter,box-shadow] duration-300 ${
           isScrolled
-            ? 'border-b border-black/[0.08] dark:border-white/[0.12] bg-white/92 dark:bg-[#07090e]/88 backdrop-blur-2xl shadow-sm shadow-black/[0.04] dark:shadow-black/30'
-            : 'border-b border-black/[0.06] dark:border-white/[0.08] bg-white/75 dark:bg-[#07090e]/65 backdrop-blur-xl shadow-xs shadow-black/[0.02] dark:shadow-none'
+            ? 'border-b border-black/[0.08] dark:border-white/[0.12] bg-white/95 dark:bg-zinc-950/95 backdrop-blur-2xl shadow-sm shadow-black/[0.04] dark:shadow-black/40'
+            : 'border-b border-black/[0.06] dark:border-white/[0.08] bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl shadow-xs shadow-black/[0.02] dark:shadow-none'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-2.5 sm:px-4 lg:px-8 h-15 sm:h-16 flex items-center justify-between gap-1.5 sm:gap-2.5 lg:gap-4">
+        <div className="max-w-7xl mx-auto px-3.5 xs:px-4 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-3 lg:gap-4">
           {/* Brand Logo: compact and proportional on mobile, standard on desktop */}
           <Link
             href={ROUTES.HOME}
-            className="flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg p-0.5 sm:p-1 shrink-0"
+            className="flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg p-1 shrink-0"
             aria-label={`${siteName || SITE_CONFIG.name} Home`}
           >
             <BrandLogo
@@ -137,7 +136,7 @@ export function PublicHeader({
           </nav>
 
           {/* Search Input Box: larger and prominent on both mobile & desktop */}
-          <div className="flex-1 max-w-[240px] xs:max-w-[280px] sm:max-w-sm md:max-w-xs lg:max-w-sm mx-1 sm:mx-2 min-w-0">
+          <div className="flex-1 max-w-[200px] xs:max-w-[260px] sm:max-w-xs md:max-w-xs lg:max-w-sm mx-1.5 sm:mx-2 min-w-0">
             <SearchButton />
           </div>
 
@@ -151,36 +150,17 @@ export function PublicHeader({
               <div className="hidden md:flex items-center gap-2.5 ml-1">
                 <div className="w-px h-5 bg-slate-200 dark:bg-zinc-800 mx-0.5" />
                 {user.role === 'ADMIN' && (
-                  <Link href={ROUTES.ADMIN.ROOT}>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="gap-1.5 text-xs text-amber-700 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/25"
-                    >
-                      <Shield className="w-3.5 h-3.5" />
-                      <span>Admin</span>
-                    </Button>
+                  <Link
+                    href={ROUTES.ADMIN.ROOT}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-semibold text-amber-700 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/25 transition-colors shadow-2xs"
+                  >
+                    <Shield className="w-3.5 h-3.5" />
+                    <span>Admin</span>
                   </Link>
                 )}
                 <UserAvatarMenu user={user} />
               </div>
-            ) : (
-              <div className="hidden md:flex items-center gap-2 ml-1">
-                <div className="w-px h-5 bg-slate-200 dark:bg-zinc-800 mx-0.5" />
-                <Link
-                  href={ROUTES.LOGIN}
-                  className="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href={ROUTES.SIGNUP}
-                  className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-indigo-600 via-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 shadow-xs hover:shadow-md hover:shadow-indigo-500/25 transition-all duration-200 active:scale-95"
-                >
-                  Sign Up
-                </Link>
-              </div>
-            )}
+            ) : null}
           </div>
         </div>
       </div>

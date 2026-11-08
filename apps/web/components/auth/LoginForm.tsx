@@ -20,6 +20,21 @@ export function LoginForm() {
   const [loading, setLoading] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
+  const oauthError = searchParams.get('error');
+  React.useEffect(() => {
+    if (oauthError) {
+      if (oauthError === 'oauth_exchange_failed') {
+        setErrorMessage(
+          'Failed to complete social sign-in. Please try again or sign in with your email/username.'
+        );
+      } else if (oauthError === 'access_denied') {
+        setErrorMessage('Social sign-in was canceled.');
+      } else {
+        setErrorMessage(decodeURIComponent(oauthError));
+      }
+    }
+  }, [oauthError]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
@@ -108,23 +123,23 @@ export function LoginForm() {
   };
 
   return (
-    <div className="space-y-6 w-full">
+    <div className="space-y-4 sm:space-y-5 w-full">
       {errorMessage && (
-        <Alert variant="error" className="bg-red-950/40 border-red-800/60 text-red-300 text-xs">
+        <Alert variant="error" className="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800/60 text-red-700 dark:text-red-300 text-xs rounded-xl">
           <AlertDescription>{errorMessage}</AlertDescription>
         </Alert>
       )}
 
       <OAuthButtons redirectTo={safeRedirect} onError={(msg) => setErrorMessage(msg)} />
 
-      <div className="relative flex items-center justify-center">
-        <Separator className="bg-[hsl(var(--border))]" />
-        <span className="absolute bg-[hsl(var(--surface-overlay))] px-3 text-xs text-[hsl(var(--muted-foreground))] uppercase tracking-wider">
+      <div className="relative flex items-center justify-center my-1">
+        <Separator className="bg-slate-200/80 dark:bg-white/10" />
+        <span className="absolute bg-white dark:bg-zinc-900 px-3 text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider select-none">
           Or continue with
         </span>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4">
         <FloatingLabelInput
           id="login-identifier"
           name="identifier"
@@ -156,17 +171,17 @@ export function LoginForm() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] focus:outline-none"
+                className="text-slate-400 dark:text-zinc-400 hover:text-slate-700 dark:hover:text-zinc-200 focus:outline-none"
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             }
           />
-          <div className="flex justify-end -mt-3 mb-2">
+          <div className="flex justify-end -mt-2 mb-1">
             <Link
               href="/forgot-password"
-              className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 hover:underline transition-colors"
+              className="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 hover:underline transition-colors py-0.5"
             >
               Forgot password?
             </Link>
@@ -177,7 +192,7 @@ export function LoginForm() {
           type="submit"
           loading={loading}
           loadingText="Signing in..."
-          className="w-full text-sm font-medium py-2.5 rounded-xl shadow-lg shadow-indigo-600/20"
+          className="w-full text-xs sm:text-sm font-semibold py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-md shadow-indigo-600/25 active:scale-[0.98] transition-all"
         >
           Sign In to ElseSourav
         </Button>
