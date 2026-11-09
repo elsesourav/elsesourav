@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { DashboardPageSkeleton } from '@/components/skeletons';
+import { SupportTicketDetailSkeleton } from '@/components/skeletons';
 
 export default function TicketDetailLoading() {
-  return <DashboardPageSkeleton />;
+  return <SupportTicketDetailSkeleton />;
 }

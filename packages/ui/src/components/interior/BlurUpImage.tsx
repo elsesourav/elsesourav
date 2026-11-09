@@ -64,9 +64,8 @@ export function useBlurUpImage({ src, srcSet, onReady, onError }: UseBlurUpImage
       failed.current?.();
     };
 
-    if (img.complete) {
-      if (cached) reveal();
-      else fail();
+    if (img.complete && img.naturalWidth > 0) {
+      reveal();
       return () => {
         alive = false;
       };

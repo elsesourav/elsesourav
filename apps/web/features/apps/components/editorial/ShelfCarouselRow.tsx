@@ -199,10 +199,10 @@ export function ShelfCarouselRow({ items }: ShelfCarouselRowProps) {
                   hasDraggedRef.current = false;
                 }
               }}
-              className="group/item block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 w-[230px] xs:w-[260px] sm:w-[300px] md:w-[340px] shrink-0 snap-start"
+              className="group/item block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 w-[230px] xs:w-[260px] sm:w-[300px] md:w-[340px] shrink-0 snap-start h-full flex flex-col"
             >
               {/* Unified Card Container */}
-              <div className="relative rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] hover:border-zinc-300 dark:hover:border-zinc-700 shadow-xs hover:shadow-md transition-all duration-300 ease-out group-hover/item:-translate-y-1 overflow-hidden p-2 sm:p-2.5 md:p-3 flex flex-col space-y-2 sm:space-y-2.5">
+              <div className="relative rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] hover:border-zinc-300 dark:hover:border-zinc-700 shadow-xs hover:shadow-md transition-all duration-300 ease-out group-hover/item:-translate-y-1 overflow-hidden p-2 sm:p-2.5 md:p-3 flex flex-col space-y-2 sm:space-y-2.5 h-full flex-1">
                 {/* 16:10 Banner Cover */}
                 <div className="relative aspect-[16/10] w-full rounded-md overflow-hidden bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border-subtle))]">
                   {bannerUrl ? (
@@ -234,16 +234,16 @@ export function ShelfCarouselRow({ items }: ShelfCarouselRowProps) {
                       </span>
                     )}
                     {app.currentVersion && (
-                      <span className="rounded-full bg-black/60 backdrop-blur-md px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-mono font-medium text-white/80 border border-white/15">
+                      <span className="rounded-full bg-white/70 dark:bg-black/60 backdrop-blur-md px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-mono font-medium text-zinc-900 dark:text-white/90 border border-black/10 dark:border-white/15 shadow-xs transition-colors">
                         v{app.currentVersion}
                       </span>
                     )}
                   </div>
                 </div>
 
-                {/* App Metadata Row: Icon + Title + Rating */}
-                <div className="flex items-start gap-2 sm:gap-2.5 md:gap-3 px-0.5">
-                  {/* App Icon */}
+                {/* App Metadata Row: Icon + Title + Rating (Centered vertically for balanced space management) */}
+                <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3 px-0.5 flex-1">
+                  {/* App Icon (y-centered) */}
                   <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-md overflow-hidden bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border-subtle))] shrink-0 shadow-xs flex items-center justify-center">
                     {iconUrl ? (
                       <Image
@@ -263,10 +263,10 @@ export function ShelfCarouselRow({ items }: ShelfCarouselRowProps) {
 
                   {/* Title & Category Info */}
                   <div className="min-w-0 flex-1">
-                    <h4 className="font-bold text-xs sm:text-sm md:text-base text-[hsl(var(--foreground))] group-hover/item:text-indigo-600 dark:group-hover/item:text-indigo-400 transition-colors line-clamp-2 leading-snug font-display">
+                    <h4 className="font-bold text-xs sm:text-[13px] md:text-sm text-[hsl(var(--foreground))] group-hover/item:text-indigo-600 dark:group-hover/item:text-indigo-400 transition-colors truncate leading-snug font-display">
                       {app.name}
                     </h4>
-                    <p className="text-[10px] sm:text-xs text-[hsl(var(--muted-foreground))] truncate leading-normal">
+                    <p className="text-[10px] sm:text-xs text-[hsl(var(--muted-foreground))] truncate leading-tight mt-0.5">
                       {app.primaryCategory}
                     </p>
                     <div className="flex items-center gap-1 sm:gap-1.5 mt-0.5 text-[10px] sm:text-[11px] font-medium text-[hsl(var(--muted-foreground))]">

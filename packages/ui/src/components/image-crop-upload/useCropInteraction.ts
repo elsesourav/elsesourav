@@ -262,7 +262,9 @@ export function useCropInteraction({
     dragTypeRef.current = null;
     try {
       (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
-    } catch {}
+    } catch {
+      /* ignore if pointer capture was already released */
+    }
   };
 
   // Compute displayed overlay position relative to displayed image element

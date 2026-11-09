@@ -120,7 +120,6 @@ export function WasmPortraitCanvas({
   const effClickRadius = parseClickRadius(clickRadius);
   const effIntroDuration = parseIntroDuration(introDuration);
 
-  const [isInView, setIsInView] = useState(true);
   const [isWasmActive, setIsWasmActive] = useState(false);
   const [hasWebGLError, setHasWebGLError] = useState(false);
 
@@ -220,7 +219,6 @@ export function WasmPortraitCanvas({
   useEffect(() => {
     const el = containerRef.current;
     if (!el || typeof IntersectionObserver === 'undefined') {
-      setIsInView(true);
       return;
     }
 
@@ -229,7 +227,6 @@ export function WasmPortraitCanvas({
         const entry = entries[0];
         if (entry) {
           const isFullyVisible = entry.isIntersecting && entry.intersectionRatio >= 0.9;
-          setIsInView(isFullyVisible);
           if (isFullyVisible) {
             bridgeRef.current?.start();
           } else {

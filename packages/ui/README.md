@@ -562,6 +562,11 @@ import { ... } from '@elsesourav/ui';
 
 - **Purpose**: Shimmering content placeholder primitives designed for in-page asynchronous streaming and filter state transitions (preventing disruptive full-screen takeovers during search/filtering).
 - **Subcomponents**: `Skeleton`, `SkeletonText`, `SkeletonBadge`, `SkeletonButton`, `SkeletonAvatar`, `SkeletonImage`, `CardSkeleton`, `TableSkeleton`, `DetailSkeleton`.
+- **Dedicated Route Skeletons**:
+  - `SupportDeskPageSkeleton`: Mirrored responsive skeleton for the public support desk (`/support`), matching ticket creation form, dropdowns, and callout banner.
+  - `SupportTicketsPageSkeleton`: Mirrored responsive skeleton for ticket lists (`/support/tickets`), matching filter tabs and ticket item cards across mobile (350px/600px), tablet (768px), and desktop (1280px).
+  - `SupportTicketDetailSkeleton`: Mirrored responsive skeleton for ticket conversations (`/support/tickets/[id]`), matching breadcrumbs, metadata badges, message thread bubbles, and reply composer.
+  - `HelpCategoryArticlesSkeleton`: Mirrored responsive skeleton for category articles grid (`/help/[categorySlug]`).
 - **Loading Architecture Guidelines**:
   - **In-Page Changes (Filters, Queries, Tags, Search, Sorting)**: ALWAYS use in-page content skeletons (`AppsCatalogSkeleton`, `UpdatesCatalogSkeleton`, `SearchLoadingSkeleton`, etc.). Never display full-screen loading screens for inside-page modifications.
   - **Cross-Route Transitions (Page Changes)**: Full-screen canvas logo loader (`PageTransitionLoader`) triggers strictly when navigating between different pathnames (`targetUrl.pathname !== currentPathname`), running a single smooth convergence animation without loops or restarts.
@@ -1425,3 +1430,10 @@ The `@elsesourav/ui/micro` collection contains **34 playful, high-tactility micr
 - **Zero Auto-Scroll on Open & Close**: Opening or closing the global search overlay (via `⌘K`, `/`, escape, or click-outside) strictly preserves the user's scroll position anywhere on the page without jumping or scrolling towards the header.
 - **Scroll-Free Focus Restoration**: Both input autofocus and search button focus restoration use `element.focus({ preventScroll: true })`. This prevents browser layout engines from scrolling the window to bring the off-screen or hidden sticky header button into view.
 - **Exact Pixel Scroll Locking**: When search opens, `window.scrollY` is captured. When `document.body.style.overflow = 'hidden'` is removed upon unmounting/closing, the window scroll position is verified and instantly re-locked (`window.scrollTo({ top: savedScrollY, behavior: 'instant' })`), eliminating subpixel layout jumps.
+12. **Editorial Software Shelf Card Geometry & Badge Theming Architecture (`ShelfCarouselRow`)**:
+- **Compact Single-Line Title with Ellipsis Truncation**: App card titles use a sleek, proportional typography scale (`text-xs sm:text-[13px] md:text-sm font-bold truncate leading-snug`). Long titles truncate cleanly with an ellipsis (`...`), keeping cards uniformly compact across all shelf carousels.
+- **Vertical Icon Centering (`items-center`)**: The app icon on the left is vertically centered along the y-axis relative to the title, category, and rating row, creating balanced and harmonious spacing.
+- **Theme-Adaptive Frosted Version Badges**: The top-right version badge uses theme-reactive styling:
+  - **Light Mode**: `bg-white/70 backdrop-blur-md text-zinc-900 border-black/10 shadow-xs`, replacing dark black boxes with an airy, translucent frosted pill that remains legible over any banner art.
+  - **Dark Mode**: `dark:bg-black/60 dark:text-white/90 dark:border-white/15`, maintaining sleek cosmic contrast.
+

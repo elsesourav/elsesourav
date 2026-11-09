@@ -252,7 +252,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                   Username Handle
                 </span>
                 <span className="text-[10px] sm:text-[11px] md:text-xs text-muted-foreground block mt-0.5">
-                  Used for your public URL profile: /{username || 'username'}
+                  Used for your public URL profile: /{username || 'username'} · You can customize anytime
                 </span>
               </div>
               {!isEditingUsername && (

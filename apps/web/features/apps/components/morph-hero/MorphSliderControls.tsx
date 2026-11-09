@@ -31,6 +31,8 @@ export function MorphSliderControls({
             className="pointer-events-auto inline-flex items-center justify-center w-10 h-10 rounded-full text-white border border-white/20 bg-[rgba(12,12,14,0.6)] backdrop-blur-md cursor-pointer transition-colors duration-200 hover:bg-[rgba(24,24,28,0.8)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/80 shadow-lg"
             aria-label="Previous slide"
             onClick={onPrev}
+            onPointerDown={(e) => e.stopPropagation()}
+            onPointerUp={(e) => e.stopPropagation()}
           >
             <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
               <path
@@ -48,6 +50,8 @@ export function MorphSliderControls({
             className="pointer-events-auto inline-flex items-center justify-center w-10 h-10 rounded-full text-white border border-white/20 bg-[rgba(12,12,14,0.6)] backdrop-blur-md cursor-pointer transition-colors duration-200 hover:bg-[rgba(24,24,28,0.8)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/80 shadow-lg"
             aria-label="Next slide"
             onClick={onNext}
+            onPointerDown={(e) => e.stopPropagation()}
+            onPointerUp={(e) => e.stopPropagation()}
           >
             <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
               <path
@@ -80,6 +84,8 @@ export function MorphSliderControls({
                 i === index ? 'w-[22px] bg-white/95' : 'w-2 bg-white/35'
               }`}
               onClick={() => onIndicatorClick(i)}
+              onPointerDown={(e) => e.stopPropagation()}
+              onPointerUp={(e) => e.stopPropagation()}
             />
           ))}
         </div>

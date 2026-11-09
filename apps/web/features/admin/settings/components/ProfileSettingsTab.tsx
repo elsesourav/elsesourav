@@ -1,10 +1,11 @@
 'use client';
 
 import * as React from 'react';
-import { Card, FormField, Textarea, Badge } from '@elsesourav/ui';
+import { Card, FormField, Textarea, Badge, Button } from '@elsesourav/ui';
 import { FloatingLabelInput } from '@elsesourav/ui/interior';
 import { ImageInputWithLibrary } from '@/features/admin/media/components/ImageInputWithLibrary';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { Sparkles, ArrowRight, UserCheck, Image as ImageIcon } from 'lucide-react';
+import { DEFAULT_AVATAR_PRESETS } from '@/features/account/constants/avatar-presets';
 
 export interface ProfileSettingsTabProps {
   settings: Record<string, string>;
@@ -27,15 +28,83 @@ export function ProfileSettingsTab({ settings, onChange }: ProfileSettingsTabPro
         </Badge>
       </div>
 
-      <ImageInputWithLibrary
-        label="Creator Avatar & Profile Photo"
-        value={settings['creator_avatar_url'] || ''}
-        onChange={(val) => onChange('creator_avatar_url', val)}
-        folder="users"
-        defaultCategory="users"
-        previewShape="circle"
-        placeholder="Avatar image URL or upload/select from library"
-      />
+      <div className="space-y-3">
+        <ImageInputWithLibrary
+          label="Creator Avatar & Profile Photo"
+          value={settings['creator_avatar_url'] || ''}
+          onChange={(val) => onChange('creator_avatar_url', val)}
+          folder="users"
+          defaultCategory="users"
+          previewShape="circle"
+          placeholder="Avatar image URL or upload/select from library"
+        />
+
+        {/* Quick Portrait Preset Selectors */}
+        <div className="flex flex-wrap items-center gap-2 p-2.5 rounded-xl bg-zinc-950/60 border border-zinc-800/60 text-xs">
+          <span className="text-[11px] font-medium text-zinc-400 flex items-center gap-1.5">
+            <ImageIcon className="w-3.5 h-3.5 text-indigo-400" />
+            Quick Creator Presets:
+          </span>
+          <button
+            type="button"
+            onClick={() => onChange('creator_avatar_url', '/about/souravbarui-dark-512.webp')}
+            className="px-2.5 py-1 rounded-lg border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[11px] font-medium transition-colors cursor-pointer"
+          >
+            Sourav Dark Portrait
+          </button>
+          <button
+            type="button"
+            onClick={() => onChange('creator_avatar_url', '/about/souravbarui-light-512.webp')}
+            className="px-2.5 py-1 rounded-lg border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[11px] font-medium transition-colors cursor-pointer"
+          >
+            Sourav Light Portrait
+          </button>
+        </div>
+      </div>
+
+      {/* Account User Preset Avatars Catalog */}
+      <div className="p-3.5 sm:p-4 rounded-2xl bg-zinc-950/50 border border-zinc-800 space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <UserCheck className="w-4 h-4 text-primary" />
+            <span className="text-xs font-semibold text-zinc-200">
+              Account Studio User Preset Avatars
+            </span>
+          </div>
+          <span className="text-[10px] text-zinc-400 font-mono">
+            {DEFAULT_AVATAR_PRESETS.length} Default Presets
+          </span>
+        </div>
+
+        <p className="text-[11px] text-zinc-400">
+          These preset avatars are offered to logged-in users in their Account Profile Image Studio. Click any preset to preview or set as the primary creator avatar.
+        </p>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
+          {DEFAULT_AVATAR_PRESETS.map((preset) => (
+            <div
+              key={preset.id}
+              className="p-2 rounded-xl bg-zinc-900/70 border border-zinc-800 hover:border-zinc-700 flex items-center gap-2.5 group transition-colors"
+            >
+              <img
+                src={preset.url}
+                alt={preset.name}
+                className="w-8 h-8 rounded-lg object-cover border border-zinc-700 shrink-0"
+              />
+              <div className="min-w-0 flex-1">
+                <p className="text-[10px] font-medium text-zinc-200 truncate">{preset.name}</p>
+                <button
+                  type="button"
+                  onClick={() => onChange('creator_avatar_url', preset.url)}
+                  className="text-[9px] text-primary hover:underline block cursor-pointer"
+                >
+                  Apply to Creator
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FloatingLabelInput

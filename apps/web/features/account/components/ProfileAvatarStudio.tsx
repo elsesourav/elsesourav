@@ -1,35 +1,28 @@
 'use client';
 
-import { BlurUpImage } from '@/components/interior/BlurUpImage';
-import { LoadingButton } from '@/components/interior/LoadingButton';
+import { LoadingButton } from '@elsesourav/ui/interior';
 import { ImageCropperModal } from '@/components/media/ImageCropperModal';
 import type { User } from '@elsesourav/types';
 import { UserAvatar, Button } from '@elsesourav/ui';
 import { AlertCircle, Camera, Check, RotateCcw, Sparkles, UploadCloud } from 'lucide-react';
 import * as React from 'react';
 import { updateProfileFormAction } from '../actions/account-actions';
+import { DEFAULT_AVATAR_PRESETS, type AvatarPreset } from '../constants/avatar-presets';
 
 interface ProfileAvatarStudioProps {
   user: User;
   displayName: string;
   photoUrl: string;
   onPhotoSaved: (url: string) => void;
+  presetAvatars?: readonly AvatarPreset[];
 }
-
-const PRESET_AVATARS = [
-  { id: 'cosmic', name: 'Cosmic Indigo', url: '/avatars/avatar-1.svg' },
-  { id: 'emerald', name: 'Terminal Emerald', url: '/avatars/avatar-2.svg' },
-  { id: 'amber', name: 'Solar Amber', url: '/avatars/avatar-3.svg' },
-  { id: 'cyan', name: 'Systems Cyan', url: '/avatars/avatar-4.svg' },
-  { id: 'rose', name: 'Visual Rose', url: '/avatars/avatar-5.svg' },
-  { id: 'violet', name: 'Neural Violet', url: '/avatars/avatar-6.svg' },
-];
 
 export function ProfileAvatarStudio({
   user,
   displayName,
   photoUrl,
   onPhotoSaved,
+  presetAvatars = DEFAULT_AVATAR_PRESETS,
 }: ProfileAvatarStudioProps) {
   const [draftPhotoUrl, setDraftPhotoUrl] = React.useState(photoUrl);
   const [isSavingPhoto, setIsSavingPhoto] = React.useState(false);
@@ -192,12 +185,9 @@ export function ProfileAvatarStudio({
           title="Click to upload new photo"
         >
           {draftPhotoUrl ? (
-            <BlurUpImage
+            <img
               src={draftPhotoUrl}
               alt={displayName || 'Profile preview'}
-              width={144}
-              height={144}
-              radius={24}
               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
@@ -279,7 +269,7 @@ export function ProfileAvatarStudio({
                   )}
                 </button>
 
-                {PRESET_AVATARS.map((preset) => {
+                {presetAvatars.map((preset) => {
                   const isSelected = draftPhotoUrl === preset.url;
                   return (
                     <button
@@ -293,13 +283,11 @@ export function ProfileAvatarStudio({
                           : 'border-border/60 hover:border-primary/40 bg-muted/40'
                       }`}
                     >
-                      <BlurUpImage
+                      <img
                         src={preset.url}
                         alt={preset.name}
-                        width={40}
-                        height={40}
-                        radius={10}
                         className="w-full h-full object-cover"
+                        loading="lazy"
                       />
                       {isSelected && (
                         <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
@@ -317,6 +305,9 @@ export function ProfileAvatarStudio({
 
       <ImageCropperModal
         isOpen={isCropperOpen}
+        aspectRatio="1:1"
+        lockRatio={true}
+        title="Crop & Resize Profile Avatar"
         onClose={() => {
           setIsCropperOpen(false);
           setDroppedImageUrl(undefined);

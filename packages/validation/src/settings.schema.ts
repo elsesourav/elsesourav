@@ -180,6 +180,8 @@ export const SiteSettingsSchema = z.object({
     .or(z.string().regex(/^\/[a-zA-Z0-9_\-./]+$/))
     .optional()
     .or(z.literal('')),
+  /** Dynamic JSON array of AvatarPreset objects for user account studio */
+  account_preset_avatars_json: z.string().optional().or(z.literal('')),
   creator_positioning: z.string().max(500).optional().or(z.literal('')),
   creator_statement: z.string().max(500).optional().or(z.literal('')),
   creator_short_bio: z.string().max(400).optional().or(z.literal('')),

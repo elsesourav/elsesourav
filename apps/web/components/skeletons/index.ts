@@ -5,3 +5,4 @@ export * from './AboutPageSkeleton';
 export * from './DashboardSkeletons';
 export * from './GenericContentSkeleton';
 export * from './AccountPageSkeleton';
+export * from './SupportSkeletons';

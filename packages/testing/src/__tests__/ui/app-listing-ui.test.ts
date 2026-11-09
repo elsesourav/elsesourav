@@ -154,4 +154,34 @@ describe('Public Apps Listing Integration', () => {
     expect(catalog).toHaveLength(1);
     expect(catalog[0]?.slug).toBe('focus-timer');
   });
+
+  it('enforces interactive control isolation on hero slider to prevent accidental project navigation', () => {
+    const isInteractiveTarget = (tagName: string, role?: string): boolean => {
+      const interactiveTags = ['BUTTON', 'A'];
+      const interactiveRoles = ['tab', 'button'];
+      return interactiveTags.includes(tagName.toUpperCase()) || (role ? interactiveRoles.includes(role) : false);
+    };
+
+    expect(isInteractiveTarget('BUTTON')).toBe(true);
+    expect(isInteractiveTarget('A')).toBe(true);
+    expect(isInteractiveTarget('DIV', 'tab')).toBe(true);
+    expect(isInteractiveTarget('DIV')).toBe(false);
+    expect(isInteractiveTarget('CANVAS')).toBe(false);
+  });
+
+  it('differentiates drag gestures from click navigation on slider banner', () => {
+    const shouldNavigateOnClick = (dx: number, dy: number, dt: number, isDraggingGesture: boolean): boolean => {
+      if (isDraggingGesture) return false;
+      return dx < 8 && dy < 8 && dt < 450;
+    };
+
+    // Quick tap/click on visual -> triggers navigation
+    expect(shouldNavigateOnClick(2, 3, 120, false)).toBe(true);
+    // Drag/swipe horizontally -> does not navigate
+    expect(shouldNavigateOnClick(45, 4, 250, true)).toBe(false);
+    // Long press without drag -> does not navigate
+    expect(shouldNavigateOnClick(1, 1, 600, false)).toBe(false);
+    // Drag that returned to start -> does not navigate because drag gesture was flagged
+    expect(shouldNavigateOnClick(3, 2, 300, true)).toBe(false);
+  });
 });

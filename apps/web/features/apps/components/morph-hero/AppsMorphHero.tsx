@@ -51,6 +51,7 @@ export function AppsMorphHero({
 
   // Track click vs drag to avoid accidental navigation during swipe/drag
   const pointerStartRef = React.useRef<{ x: number; y: number; time: number } | null>(null);
+  const isDraggingGestureRef = React.useRef(false);
 
   // Responsive media query listener for mobile vs desktop aspect ratio image source
   React.useEffect(() => {
@@ -89,36 +90,71 @@ export function AppsMorphHero({
     });
   }, [apps, isMobile]);
 
-  const handlePrev = React.useCallback((e?: React.MouseEvent) => {
+  const handlePrev = React.useCallback((e?: React.MouseEvent | React.PointerEvent) => {
     e?.preventDefault();
     e?.stopPropagation();
+    pointerStartRef.current = null;
+    isDraggingGestureRef.current = false;
     sliderRef.current?.prev();
   }, []);
 
-  const handleNext = React.useCallback((e?: React.MouseEvent) => {
+  const handleNext = React.useCallback((e?: React.MouseEvent | React.PointerEvent) => {
     e?.preventDefault();
     e?.stopPropagation();
+    pointerStartRef.current = null;
+    isDraggingGestureRef.current = false;
     sliderRef.current?.next();
   }, []);
 
-  const handleGoToIndex = React.useCallback((targetIndex: number, e?: React.MouseEvent) => {
+  const handleGoToIndex = React.useCallback((targetIndex: number, e?: React.MouseEvent | React.PointerEvent) => {
     e?.preventDefault();
     e?.stopPropagation();
+    pointerStartRef.current = null;
+    isDraggingGestureRef.current = false;
     sliderRef.current?.goToIndex(targetIndex);
   }, []);
 
+  const isInteractiveTarget = (target: EventTarget | null): boolean => {
+    if (!target || !(target instanceof Element)) return false;
+    return Boolean(target.closest('button, [role="tab"], [role="button"], a'));
+  };
+
   // Pointer interactions for click vs drag detection
   const handlePointerDown = (e: React.PointerEvent) => {
+    if (isInteractiveTarget(e.target)) {
+      pointerStartRef.current = null;
+      isDraggingGestureRef.current = false;
+      return;
+    }
+    isDraggingGestureRef.current = false;
     pointerStartRef.current = { x: e.clientX, y: e.clientY, time: Date.now() };
   };
 
-  const handlePointerUp = (e: React.PointerEvent) => {
+  const handlePointerMove = (e: React.PointerEvent) => {
     if (!pointerStartRef.current) return;
+    const dx = Math.abs(e.clientX - pointerStartRef.current.x);
+    const dy = Math.abs(e.clientY - pointerStartRef.current.y);
+    if (dx > 8 || dy > 8) {
+      isDraggingGestureRef.current = true;
+    }
+  };
+
+  const handlePointerUp = (e: React.PointerEvent) => {
+    if (isInteractiveTarget(e.target)) {
+      pointerStartRef.current = null;
+      isDraggingGestureRef.current = false;
+      return;
+    }
+    if (!pointerStartRef.current || isDraggingGestureRef.current) {
+      pointerStartRef.current = null;
+      isDraggingGestureRef.current = false;
+      return;
+    }
     const dx = Math.abs(e.clientX - pointerStartRef.current.x);
     const dy = Math.abs(e.clientY - pointerStartRef.current.y);
     const dt = Date.now() - pointerStartRef.current.time;
 
-    // If pointer barely moved (< 8px) and was quick (< 450ms), treat as click
+    // If pointer barely moved (< 8px) and was quick (< 450ms), treat as click on slide banner
     if (dx < 8 && dy < 8 && dt < 450) {
       const activeApp = apps[activeIndex];
       if (activeApp?.slug) {
@@ -127,6 +163,12 @@ export function AppsMorphHero({
       }
     }
     pointerStartRef.current = null;
+    isDraggingGestureRef.current = false;
+  };
+
+  const handlePointerCancel = () => {
+    pointerStartRef.current = null;
+    isDraggingGestureRef.current = false;
   };
 
   const activeApp = apps[activeIndex] ?? apps[0];
@@ -157,7 +199,9 @@ export function AppsMorphHero({
           maskImage: 'radial-gradient(white, black)',
         }}
         onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerCancel}
         className="relative w-full aspect-[16/10] xs:aspect-[16/9] sm:aspect-[21/9] max-h-[420px] sm:max-h-[460px] overflow-hidden rounded-[14px] isolate [transform:translateZ(0)] cursor-pointer"
       >
         <MorphSlider
@@ -187,6 +231,14 @@ export function AppsMorphHero({
             <button
               type="button"
               onClick={handlePrev}
+              onPointerDown={(e) => {
+                e.stopPropagation();
+                pointerStartRef.current = null;
+              }}
+              onPointerUp={(e) => {
+                e.stopPropagation();
+                pointerStartRef.current = null;
+              }}
               aria-label="Previous project"
               className="pointer-events-auto absolute left-1.5 sm:left-4 top-1/2 -translate-y-1/2 z-[20] w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center bg-white/85 text-zinc-900 border border-zinc-200/90 shadow-md dark:bg-black/60 dark:text-white dark:border-white/20 hover:bg-white dark:hover:bg-zinc-900 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 backdrop-blur-md opacity-95 translate-x-0 sm:opacity-0 sm:-translate-x-3 sm:pointer-events-none sm:group-hover/hero:opacity-100 sm:group-hover/hero:translate-x-0 sm:group-hover/hero:pointer-events-auto active:scale-95 transition-all duration-300 ease-out group/btn"
             >
@@ -196,6 +248,14 @@ export function AppsMorphHero({
             <button
               type="button"
               onClick={handleNext}
+              onPointerDown={(e) => {
+                e.stopPropagation();
+                pointerStartRef.current = null;
+              }}
+              onPointerUp={(e) => {
+                e.stopPropagation();
+                pointerStartRef.current = null;
+              }}
               aria-label="Next project"
               className="pointer-events-auto absolute right-1.5 sm:right-4 top-1/2 -translate-y-1/2 z-[20] w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center bg-white/85 text-zinc-900 border border-zinc-200/90 shadow-md dark:bg-black/60 dark:text-white dark:border-white/20 hover:bg-white dark:hover:bg-zinc-900 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 backdrop-blur-md opacity-95 translate-x-0 sm:opacity-0 sm:translate-x-3 sm:pointer-events-none sm:group-hover/hero:opacity-100 sm:group-hover/hero:translate-x-0 sm:group-hover/hero:pointer-events-auto active:scale-95 transition-all duration-300 ease-out group/btn"
             >
@@ -206,6 +266,14 @@ export function AppsMorphHero({
             <div
               role="tablist"
               aria-label="Project slides"
+              onPointerDown={(e) => {
+                e.stopPropagation();
+                pointerStartRef.current = null;
+              }}
+              onPointerUp={(e) => {
+                e.stopPropagation();
+                pointerStartRef.current = null;
+              }}
               className="pointer-events-auto absolute bottom-2 right-2 sm:bottom-3 sm:right-4 z-[20] flex items-center gap-1 sm:gap-1.5 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-full bg-black/40 dark:bg-black/60 backdrop-blur-md border border-white/10 shadow-sm"
             >
               {apps.map((app, index) => {
@@ -218,6 +286,14 @@ export function AppsMorphHero({
                     aria-selected={isActive}
                     aria-label={`Go to slide ${index + 1}: ${app.name}`}
                     onClick={(e) => handleGoToIndex(index, e)}
+                    onPointerDown={(e) => {
+                      e.stopPropagation();
+                      pointerStartRef.current = null;
+                    }}
+                    onPointerUp={(e) => {
+                      e.stopPropagation();
+                      pointerStartRef.current = null;
+                    }}
                     className={`cursor-pointer rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
                       isActive
                         ? 'w-4 sm:w-6 h-1 sm:h-1.5 bg-white shadow-xs'

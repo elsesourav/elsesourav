@@ -20,7 +20,52 @@ export class UserRepository {
     try {
       const email = input.email.trim().toLowerCase();
       const displayName = input.displayName?.trim() || email.split('@')[0] || 'Developer';
-      const username = input.username?.trim().toLowerCase() || undefined;
+      const rawUsername = input.username?.trim().toLowerCase() || undefined;
+
+      // Handle username collision edge-case (e.g. OAuth login where username is already taken by a self-registered user)
+      let finalUsername = rawUsername;
+      if (typeof this.prisma.user?.findUnique === 'function') {
+        // If no username provided on create, derive fallback candidate from email
+        const candidateBase = (finalUsername || email.split('@')[0] || 'user')
+          .toLowerCase()
+          .replace(/[^a-z0-9_-]/g, '')
+          .slice(0, 25);
+        const targetHandle = finalUsername || candidateBase;
+
+        const existingWithUsername = await this.prisma.user.findUnique({
+          where: { username: targetHandle },
+        });
+
+        if (
+          existingWithUsername &&
+          existingWithUsername.supabaseAuthId !== input.supabaseAuthId &&
+          existingWithUsername.email !== email
+        ) {
+          // Username is already taken by another account: append random numbers until unique
+          let isUnique = false;
+          let attempts = 0;
+          let candidate = targetHandle;
+
+          while (!isUnique && attempts < 10) {
+            const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+            candidate = `${candidateBase.slice(0, 25)}${randomSuffix}`;
+            const collision = await this.prisma.user.findUnique({
+              where: { username: candidate },
+            });
+            if (!collision) {
+              isUnique = true;
+              finalUsername = candidate;
+            }
+            attempts++;
+          }
+
+          if (!isUnique) {
+            finalUsername = `${candidateBase.slice(0, 20)}${Date.now().toString().slice(-4)}`;
+          }
+        } else {
+          finalUsername = targetHandle;
+        }
+      }
 
       const adminEmail = (
         process.env.ADMIN_EMAIL ||
@@ -45,7 +90,7 @@ export class UserRepository {
           data: {
             supabaseAuthId: input.supabaseAuthId,
             ...(input.photoUrl ? { photoUrl: input.photoUrl } : {}),
-            ...(username ? { username } : {}),
+            ...(finalUsername ? { username: finalUsername } : {}),
             ...(isDesignatedAdmin ? { role: PrismaRole.ADMIN } : {}),
           },
         });
@@ -55,14 +100,14 @@ export class UserRepository {
           update: {
             email,
             ...(input.photoUrl ? { photoUrl: input.photoUrl } : {}),
-            ...(username ? { username } : {}),
+            ...(finalUsername ? { username: finalUsername } : {}),
             ...(isDesignatedAdmin ? { role: PrismaRole.ADMIN } : {}),
           },
           create: {
             supabaseAuthId: input.supabaseAuthId,
             email,
             displayName,
-            username,
+            username: finalUsername,
             photoUrl: input.photoUrl,
             role: initialRole,
             preferences: {

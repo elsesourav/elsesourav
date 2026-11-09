@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { HelpOverviewSkeleton } from '@/features/help/components/HelpSkeleton';
+import { HelpCategoryArticlesSkeleton } from '@/components/skeletons';
 
 export default function HelpCategoryLoading() {
-  return <HelpOverviewSkeleton />;
+  return <HelpCategoryArticlesSkeleton />;
 }

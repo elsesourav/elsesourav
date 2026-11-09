@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@elsesourav/ui';
-import { Crop, ZoomIn, RotateCw, Check, Upload } from 'lucide-react';
+import { Crop, ZoomIn, RotateCw, Check, Upload, Lock } from 'lucide-react';
 
 export interface ImageCropperModalProps {
   isOpen: boolean;
@@ -145,6 +145,27 @@ export function ImageCropperModal({
     setIsDragging(false);
   };
 
+  const handleTouchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (e.touches.length === 1 && e.touches[0]) {
+      const touch = e.touches[0];
+      setIsDragging(true);
+      setDragStart({ x: touch.clientX - pan.x, y: touch.clientY - pan.y });
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (!isDragging || e.touches.length !== 1 || !e.touches[0]) return;
+    const touch = e.touches[0];
+    setPan({
+      x: touch.clientX - dragStart.x,
+      y: touch.clientY - dragStart.y,
+    });
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+  };
+
   const handleCropAndSave = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -157,19 +178,19 @@ export function ImageCropperModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto bg-zinc-950 border border-zinc-800 rounded-3xl p-6 shadow-2xl">
+      <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto bg-zinc-950 border border-zinc-800 rounded-3xl p-4 sm:p-6 shadow-2xl">
         <DialogHeader>
           <div className="flex items-center gap-2">
             <Crop className="w-5 h-5 text-indigo-400" />
-            <DialogTitle className="text-lg font-bold text-zinc-100">{title}</DialogTitle>
+            <DialogTitle className="text-base sm:text-lg font-bold text-zinc-100">{title}</DialogTitle>
           </div>
         </DialogHeader>
 
-        <div className="space-y-4 py-3">
+        <div className="space-y-3 sm:space-y-4 py-2 sm:py-3">
           {/* File Picker if no image */}
           {!imageSrc ? (
-            <div className="border-2 border-dashed border-zinc-800 hover:border-indigo-500/60 rounded-2xl p-8 text-center transition-colors">
-              <Upload className="w-10 h-10 text-zinc-500 mx-auto mb-3" />
+            <div className="border-2 border-dashed border-zinc-800 hover:border-indigo-500/60 rounded-2xl p-6 sm:p-8 text-center transition-colors">
+              <Upload className="w-8 h-8 sm:w-10 sm:h-10 text-zinc-500 mx-auto mb-3" />
               <p className="text-xs text-zinc-300 font-medium mb-1">
                 Select an image to crop and adjust
               </p>
@@ -190,9 +211,10 @@ export function ImageCropperModal({
               <div className="flex flex-wrap items-center justify-between gap-2 bg-zinc-900/60 p-2 rounded-xl border border-zinc-800/60">
                 <span className="text-[11px] font-medium text-zinc-400 px-2">Aspect Ratio:</span>
                 {isLockedToOneToOne ? (
-                  <span className="text-[11px] font-mono font-semibold text-indigo-400 bg-indigo-950/60 border border-indigo-500/30 px-2.5 py-1 rounded-lg">
-                    1:1 Square (Avatar Profile - Locked)
-                  </span>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-950/60 border border-indigo-500/30 text-indigo-300 text-[11px] font-mono font-semibold">
+                    <Lock className="w-3 h-3 text-indigo-400 shrink-0" />
+                    <span>1:1 Square (Avatar Profile - Locked)</span>
+                  </div>
                 ) : (
                   <div className="flex items-center gap-1.5">
                     {(['1:1', '16:9', '16:10', 'free'] as const).map((ratio) => (
@@ -214,13 +236,17 @@ export function ImageCropperModal({
               </div>
 
               {/* Interactive Canvas Container */}
-              <div className="relative rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800 flex items-center justify-center p-2 min-h-[260px] max-h-[360px] select-none">
+              <div className="relative rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800 flex items-center justify-center p-2 min-h-[220px] sm:min-h-[260px] max-h-[360px] select-none touch-none">
                 <canvas
                   ref={canvasRef}
                   onMouseDown={handleMouseDown}
                   onMouseMove={handleMouseMove}
                   onMouseUp={handleMouseUp}
                   onMouseLeave={handleMouseUp}
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
+                  onTouchCancel={handleTouchEnd}
                   className={`max-w-full max-h-[320px] object-contain cursor-grab ${
                     isDragging ? 'cursor-grabbing' : ''
                   } ${selectedRatio === '1:1' ? 'rounded-full' : 'rounded-xl'}`}
