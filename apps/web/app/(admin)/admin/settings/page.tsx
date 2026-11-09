@@ -56,6 +56,8 @@ export default async function AdminSettingsPage() {
     twitter_url: dbSettings['twitter_url'] || CREATOR_CONFIG.links.twitter,
     contact_email: dbSettings['contact_email'] || CREATOR_CONFIG.contact.email,
     support_url: dbSettings['support_url'] || CREATOR_CONFIG.contact.support,
+    // UI & Appearance fidelity
+    effects_level: dbSettings['effects_level'] || 'high',
     // Portrait & Avatar Studio defaults
     portrait_image_dark_url: dbSettings['portrait_image_dark_url'] || '/about/souravbarui-dark.png',
     portrait_image_light_url: dbSettings['portrait_image_light_url'] || '/about/souravbarui-light.png',

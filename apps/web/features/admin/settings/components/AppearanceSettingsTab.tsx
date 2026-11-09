@@ -1,30 +1,13 @@
 'use client';
 
 import * as React from 'react';
-import { Card, Badge, Input, Button } from '@elsesourav/ui';
-import {
-  Sparkles,
-  Gauge,
-  Zap,
-  CheckCircle2,
-  Info,
-  Image as ImageIcon,
-  Upload,
-  RotateCcw,
-  Loader2,
-} from 'lucide-react';
+import { Card, Badge } from '@elsesourav/ui';
+import { Sparkles, Gauge, Zap, CheckCircle2, Info } from 'lucide-react';
 import type { EffectsLevel } from '@elsesourav/types';
-import { adminUploadImageFileAction } from '../../media/actions/admin-media-actions';
 
 export interface AppearanceSettingsTabProps {
   effectsLevel: string;
-  portraitLightIntensity?: string;
-  portraitImageDarkUrl?: string;
-  portraitImageLightUrl?: string;
   onChange: (level: EffectsLevel) => void;
-  onPortraitLightChange?: (val: string) => void;
-  onPortraitImageDarkChange?: (val: string) => void;
-  onPortraitImageLightChange?: (val: string) => void;
 }
 
 interface FidelityOption {
@@ -42,11 +25,11 @@ interface FidelityOption {
   };
 }
 
-const FIDELITY_OPTIONS: FidelityOption[] = [
+const FIDELITY_OPTIONS: readonly FidelityOption[] = [
   {
     value: 'high',
     title: 'High Fidelity (Maximum Visual Depth)',
-    badge: 'Current / Default',
+    badge: 'Default / Cinematic',
     badgeVariant: 'primary',
     icon: Sparkles,
     description:
@@ -92,62 +75,12 @@ const FIDELITY_OPTIONS: FidelityOption[] = [
 
 export function AppearanceSettingsTab({
   effectsLevel = 'high',
-  portraitLightIntensity = '0.38',
-  portraitImageDarkUrl = '',
-  portraitImageLightUrl = '',
   onChange,
-  onPortraitLightChange,
-  onPortraitImageDarkChange,
-  onPortraitImageLightChange,
 }: AppearanceSettingsTabProps) {
   const currentLevel: EffectsLevel =
     effectsLevel === 'low' || effectsLevel === 'medium' || effectsLevel === 'high'
       ? effectsLevel
       : 'high';
-
-  const currentLight = parseFloat(portraitLightIntensity) || 0.38;
-
-  const [uploadingDark, setUploadingDark] = React.useState(false);
-  const [uploadingLight, setUploadingLight] = React.useState(false);
-  const darkInputRef = React.useRef<HTMLInputElement>(null);
-  const lightInputRef = React.useRef<HTMLInputElement>(null);
-
-  const handleFileUpload = async (file: File, mode: 'dark' | 'light') => {
-    const isDarkUpload = mode === 'dark';
-    if (isDarkUpload) setUploadingDark(true);
-    else setUploadingLight(true);
-
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('folder', 'about');
-
-      const res = await adminUploadImageFileAction(formData);
-      if (res.success && res.url) {
-        let finalUrl = res.url;
-        // Inject 1:1 square auto-crop with face gravity for Cloudinary URLs
-        if (finalUrl.includes('cloudinary.com') && !finalUrl.includes('c_fill,ar_1:1')) {
-          finalUrl = finalUrl.replace(
-            '/image/upload/',
-            '/image/upload/c_fill,ar_1:1,w_512,h_512,g_face,q_auto,f_auto/'
-          );
-        }
-        if (isDarkUpload) {
-          onPortraitImageDarkChange?.(finalUrl);
-        } else {
-          onPortraitImageLightChange?.(finalUrl);
-        }
-      } else {
-        alert(res.error || 'Failed to upload image');
-      }
-    } catch (err) {
-      console.error(err);
-      alert('Error uploading portrait image');
-    } finally {
-      if (isDarkUpload) setUploadingDark(false);
-      else setUploadingLight(false);
-    }
-  };
 
   const handleSelect = (val: EffectsLevel) => {
     onChange(val);
@@ -156,18 +89,10 @@ export function AppearanceSettingsTab({
       try {
         localStorage.setItem('effects_level', val);
       } catch {
-        // fallback
+        // Ignore localStorage quota errors
       }
     }
   };
-
-  const LIGHT_PRESETS = [
-    { label: 'Off', val: '0.0', desc: 'Natural photo pixels, no neon rim lighting' },
-    { label: 'Subtle', val: '0.22', desc: 'Cinematic soft edges, very delicate glow' },
-    { label: 'Balanced (Recommended)', val: '0.38', desc: 'Refined neon rim light with authentic skin protection' },
-    { label: 'Vibrant', val: '0.65', desc: 'High cyber glow on shoulders and silhouette' },
-    { label: 'Cyberpunk', val: '0.85', desc: 'Maximized electric neon illumination' },
-  ];
 
   return (
     <Card className="p-5 sm:p-6 space-y-6 rounded-3xl border-zinc-800 bg-zinc-900/40">
@@ -175,13 +100,13 @@ export function AppearanceSettingsTab({
         <div className="flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-indigo-400" />
           <h3 className="text-sm font-bold text-white tracking-wide uppercase">
-            Visual Effects & Scroll Performance Fidelity
+            Visual Effects &amp; Scroll Performance Fidelity
           </h3>
         </div>
         <p className="text-xs text-zinc-400 leading-relaxed max-w-2xl">
-          Configure the platform-wide visual rendering fidelity. This canonical backend setting
-          controls backdrop blur filters, box-shadow convolutions, and ambient gradient glow orbs
-          across all public and authenticated pages to optimize scrolling performance.
+          Configure platform-wide visual rendering fidelity. This canonical backend setting controls
+          backdrop blur filters, box-shadow convolutions, and ambient gradient glow orbs across all
+          public and authenticated pages to optimize scrolling performance.
         </p>
       </div>
 
@@ -282,198 +207,13 @@ export function AppearanceSettingsTab({
         })}
       </div>
 
-      {/* Cyber Portrait Neon Lighting Controller */}
-      <div className="pt-6 border-t border-zinc-800 space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <Zap className="w-4 h-4 text-cyan-400" />
-              <h4 className="text-sm font-bold text-white tracking-wide uppercase">
-                Interactive Cyber Portrait Light Intensity
-              </h4>
-            </div>
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              Control the neon rim light and proximity glow on the About page interactive cyber portrait.
-              Prevents harsh burnout while preserving natural photographic skin tones.
-            </p>
-          </div>
-          <Badge variant="primary" className="font-mono text-xs">
-            {Math.round(currentLight * 100)}%
-          </Badge>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-5 gap-2.5">
-          {LIGHT_PRESETS.map((p) => {
-            const isMatch = Math.abs(currentLight - parseFloat(p.val)) < 0.08;
-            return (
-              <button
-                key={p.val}
-                type="button"
-                onClick={() => onPortraitLightChange?.(p.val)}
-                className={`p-3 rounded-2xl text-left border transition-all duration-200 ${
-                  isMatch
-                    ? 'border-cyan-500 bg-cyan-950/30 text-white shadow-sm ring-1 ring-cyan-500/50'
-                    : 'border-zinc-800 bg-zinc-950/40 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-semibold">{p.label}</span>
-                  {isMatch && <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" />}
-                </div>
-                <p className="text-[10px] text-zinc-500 leading-tight">{p.desc}</p>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Cyber Portrait Images (1:1 Aspect Ratio) */}
-      <div className="pt-6 border-t border-zinc-800 space-y-4">
-        <div className="flex items-center justify-between flex-wrap gap-2">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <ImageIcon className="w-4 h-4 text-cyan-400" />
-              <h4 className="text-sm font-bold text-white tracking-wide uppercase">
-                Interactive Cyber Portrait Images (1:1 Ratio)
-              </h4>
-            </div>
-            <p className="text-xs text-zinc-400 leading-relaxed max-w-2xl">
-              Control the dark and light mode portrait images rendered by the WebAssembly C++ &amp; WebGL engine.
-              Uploads automatically enforce a square 1:1 aspect ratio with Cloudinary face-detection auto-crop.
-            </p>
-          </div>
-          <Badge variant="primary" className="font-mono text-xs">
-            1:1 Square Auto-Crop
-          </Badge>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* Dark Mode Portrait */}
-          <div className="p-4 rounded-2xl bg-zinc-950/60 border border-zinc-800/80 space-y-3.5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-zinc-200">Dark Mode Image (1:1)</span>
-              <span className="text-[10px] text-zinc-500 font-mono">WebP / PNG</span>
-            </div>
-
-            <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={portraitImageDarkUrl || '/about/souravbarui-dark-512.webp'}
-                alt="Dark portrait preview"
-                className="w-14 h-14 rounded-xl border border-zinc-700/80 bg-zinc-900 object-cover shrink-0"
-              />
-              <div className="flex-1 space-y-1 min-w-0">
-                <input
-                  type="text"
-                  value={portraitImageDarkUrl || ''}
-                  onChange={(e) => onPortraitImageDarkChange?.(e.target.value)}
-                  placeholder="/about/souravbarui-dark-512.webp or Cloudinary URL"
-                  className="w-full text-xs font-mono px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-cyan-500"
-                />
-                <div className="flex items-center gap-2 pt-1">
-                  <input
-                    ref={darkInputRef}
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => {
-                      const f = e.target.files?.[0];
-                      if (f) handleFileUpload(f, 'dark');
-                    }}
-                  />
-                  <button
-                    type="button"
-                    disabled={uploadingDark}
-                    onClick={() => darkInputRef.current?.click()}
-                    className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1 rounded-lg bg-cyan-950/40 border border-cyan-800/60 text-cyan-300 hover:bg-cyan-900/50 transition-colors disabled:opacity-50"
-                  >
-                    {uploadingDark ? (
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                    ) : (
-                      <Upload className="w-3 h-3" />
-                    )}
-                    Upload 1:1
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => onPortraitImageDarkChange?.('/about/souravbarui-dark-512.webp')}
-                    className="inline-flex items-center gap-1 text-[11px] text-zinc-500 hover:text-zinc-300 transition-colors"
-                  >
-                    <RotateCcw className="w-3 h-3" />
-                    Reset
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Light Mode Portrait */}
-          <div className="p-4 rounded-2xl bg-zinc-950/60 border border-zinc-800/80 space-y-3.5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-zinc-200">Light Mode Image (1:1)</span>
-              <span className="text-[10px] text-zinc-500 font-mono">WebP / PNG</span>
-            </div>
-
-            <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={portraitImageLightUrl || '/about/souravbarui-light-512.webp'}
-                alt="Light portrait preview"
-                className="w-14 h-14 rounded-xl border border-zinc-700/80 bg-zinc-900 object-cover shrink-0"
-              />
-              <div className="flex-1 space-y-1 min-w-0">
-                <input
-                  type="text"
-                  value={portraitImageLightUrl || ''}
-                  onChange={(e) => onPortraitImageLightChange?.(e.target.value)}
-                  placeholder="/about/souravbarui-light-512.webp or Cloudinary URL"
-                  className="w-full text-xs font-mono px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-cyan-500"
-                />
-                <div className="flex items-center gap-2 pt-1">
-                  <input
-                    ref={lightInputRef}
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => {
-                      const f = e.target.files?.[0];
-                      if (f) handleFileUpload(f, 'light');
-                    }}
-                  />
-                  <button
-                    type="button"
-                    disabled={uploadingLight}
-                    onClick={() => lightInputRef.current?.click()}
-                    className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1 rounded-lg bg-indigo-950/40 border border-indigo-800/60 text-indigo-300 hover:bg-indigo-900/50 transition-colors disabled:opacity-50"
-                  >
-                    {uploadingLight ? (
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                    ) : (
-                      <Upload className="w-3 h-3" />
-                    )}
-                    Upload 1:1
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => onPortraitImageLightChange?.('/about/souravbarui-light-512.webp')}
-                    className="inline-flex items-center gap-1 text-[11px] text-zinc-500 hover:text-zinc-300 transition-colors"
-                  >
-                    <RotateCcw className="w-3 h-3" />
-                    Reset
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      {/* Architecture & SSR Explanation Callout */}
       <div className="p-4 rounded-2xl bg-zinc-950/60 border border-zinc-800 flex items-start gap-3">
         <Info className="w-4 h-4 text-indigo-400 mt-0.5 shrink-0" />
         <div className="text-xs text-zinc-400 space-y-1">
           <p className="font-medium text-zinc-300">How This Setting Works</p>
           <p>
-            When you save changes here, this setting updates the database{' '}
+            When saved, this updates the database{' '}
             <code className="text-indigo-300 bg-indigo-950/40 px-1 py-0.5 rounded font-mono">
               SiteSetting[effects_level]
             </code>
@@ -481,7 +221,7 @@ export function AppearanceSettingsTab({
             <code className="text-indigo-300 bg-indigo-950/40 px-1 py-0.5 rounded font-mono">
               &lt;html data-effects=&quot;{currentLevel}&quot;&gt;
             </code>{' '}
-            attribute on page load. All backdrop filters, box-shadows, and background atmosphere
+            attribute on initial page load. All backdrop filters, box-shadows, and background atmosphere
             layers adjust globally without requiring client-side re-renders.
           </p>
         </div>

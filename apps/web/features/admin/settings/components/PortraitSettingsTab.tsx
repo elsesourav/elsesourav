@@ -1,12 +1,10 @@
 'use client';
 
 import * as React from 'react';
-import { Card, Badge, Button } from '@elsesourav/ui';
-import { ImageInputWithLibrary } from '@/features/admin/media/components/ImageInputWithLibrary';
-import { Moon, Sun, User, Info, RefreshCw } from 'lucide-react';
 import type { PortraitDraftSettings } from './portrait/portrait.types';
 import { PortraitStudioToolbar } from './portrait/PortraitStudioToolbar';
 import { PortraitLivePreviewCard } from './portrait/PortraitLivePreviewCard';
+import { PortraitImageUploadControls } from './portrait/PortraitImageUploadControls';
 import { EdgeDetectionControls } from './portrait/EdgeDetectionControls';
 import { TopParticleControls } from './portrait/TopParticleControls';
 import { BacksideObjectControls } from './portrait/BacksideObjectControls';
@@ -94,12 +92,8 @@ export function PortraitSettingsTab({ settings, onChange, onSave }: PortraitSett
   const lightUrl = draftSettings.portrait_image_light_url;
   const avatarUrl = settings['creator_avatar_url'] || '';
 
-  const handleSyncDarkToAvatar = () => {
-    onChange('creator_avatar_url', darkUrl || '/about/souravbarui-dark.png');
-  };
-
-  const handleSyncLightToAvatar = () => {
-    onChange('creator_avatar_url', lightUrl || '/about/souravbarui-light.png');
+  const handleSyncToAvatar = (url: string) => {
+    onChange('creator_avatar_url', url);
   };
 
   return (
@@ -120,7 +114,16 @@ export function PortraitSettingsTab({ settings, onChange, onSave }: PortraitSett
         }
       />
 
-      {/* 3. Section: Silhouette Contour & Edge Detection */}
+      {/* 3. Section: Dual-Theme Portrait Assets & 1:1 Square Crop */}
+      <PortraitImageUploadControls
+        darkUrl={darkUrl}
+        lightUrl={lightUrl}
+        avatarUrl={avatarUrl}
+        onChange={handleDraftChange}
+        onSyncToAvatar={handleSyncToAvatar}
+      />
+
+      {/* 4. Section: Silhouette Contour & Edge Detection */}
       <EdgeDetectionControls
         algorithm={draftSettings.portrait_edge_algorithm}
         threshold={draftSettings.portrait_edge_threshold}
@@ -128,7 +131,7 @@ export function PortraitSettingsTab({ settings, onChange, onSave }: PortraitSett
         onChange={handleDraftChange}
       />
 
-      {/* 4. Section: Top Globe & Edge Flow Particles */}
+      {/* 5. Section: Top Globe & Edge Flow Particles */}
       <TopParticleControls
         topSize={draftSettings.portrait_top_particle_size}
         topQuantity={draftSettings.portrait_top_particle_quantity}
@@ -138,7 +141,7 @@ export function PortraitSettingsTab({ settings, onChange, onSave }: PortraitSett
         onChange={handleDraftChange}
       />
 
-      {/* 5. Section: Backside Space, Halo & Retro Stars */}
+      {/* 6. Section: Backside Space, Halo & Retro Stars */}
       <BacksideObjectControls
         halo={draftSettings.portrait_backside_halo}
         stars={draftSettings.portrait_backside_stars}
@@ -147,186 +150,19 @@ export function PortraitSettingsTab({ settings, onChange, onSave }: PortraitSett
         onChange={handleDraftChange}
       />
 
-      {/* 6. Section: Photographic Image Quality & Simulation Grid */}
+      {/* 7. Section: Photographic Image Quality & Simulation Grid */}
       <ImagePixelQualityControls
         resolution={draftSettings.portrait_image_resolution}
         onChange={handleDraftChange}
       />
 
-      {/* 7. Section: Touch Dynamics, Click Blast & Flight Arrival */}
+      {/* 8. Section: Touch Dynamics, Click Blast & Flight Arrival */}
       <PhysicsInteractionControls
         clickForce={draftSettings.portrait_click_force}
         bounceSpeed={draftSettings.portrait_bounce_speed}
         introAnimation={draftSettings.portrait_intro_animation}
         onChange={handleDraftChange}
       />
-
-      {/* 8. Dual-Theme Portrait Images Upload Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        {/* Dark Theme Portrait Card */}
-        <Card className="p-5 rounded-3xl border-zinc-800 bg-zinc-900/40 space-y-4 flex flex-col justify-between">
-          <div className="space-y-3">
-            <div className="flex items-center justify-between border-b border-zinc-800/80 pb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-cyan-950/60 border border-cyan-500/40 flex items-center justify-center text-cyan-400">
-                  <Moon className="w-3.5 h-3.5" />
-                </div>
-                <div>
-                  <h3 className="text-xs font-bold text-zinc-100">Dark Theme Portrait</h3>
-                  <p className="text-[11px] text-zinc-400">Active when visitors browse in Dark Mode</p>
-                </div>
-              </div>
-              <Badge variant="outline" className="text-[10px] font-mono border-cyan-500/30 text-cyan-300">
-                Dark Mode
-              </Badge>
-            </div>
-
-            <ImageInputWithLibrary
-              label="Portrait Image (Transparent PNG / WebP)"
-              value={darkUrl}
-              onChange={(val) => handleDraftChange('portrait_image_dark_url', val)}
-              folder="users"
-              defaultCategory="users"
-              previewShape="square"
-              placeholder="/about/souravbarui-dark.png or select from media"
-            />
-
-            <div className="p-3 rounded-2xl bg-zinc-950/70 border border-zinc-800/80 space-y-1.5 text-[11px] text-zinc-400">
-              <div className="flex items-center gap-1.5 font-semibold text-zinc-300">
-                <Info className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                <span>Image Requirements</span>
-              </div>
-              <p className="leading-relaxed">
-                Use a <strong>1:1 square image</strong> with a completely{' '}
-                <strong>transparent background (alpha = 0)</strong>.
-              </p>
-            </div>
-          </div>
-
-          <div className="pt-2 border-t border-zinc-800/60 flex items-center justify-between">
-            <span className="text-[11px] text-zinc-500">
-              {darkUrl ? 'Custom Image Active' : 'Default Asset Active'}
-            </span>
-            <Button
-              type="button"
-              variant="outline"
-              size="xs"
-              onClick={() => handleDraftChange('portrait_image_dark_url', '/about/souravbarui-dark.png')}
-              className="text-[11px] border-zinc-800 hover:bg-zinc-800 text-zinc-300 gap-1 rounded-xl h-7 px-2.5"
-            >
-              <RefreshCw className="w-3 h-3 text-cyan-400" />
-              <span>Reset to Default</span>
-            </Button>
-          </div>
-        </Card>
-
-        {/* Light Theme Portrait Card */}
-        <Card className="p-5 rounded-3xl border-zinc-800 bg-zinc-900/40 space-y-4 flex flex-col justify-between">
-          <div className="space-y-3">
-            <div className="flex items-center justify-between border-b border-zinc-800/80 pb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-amber-950/60 border border-amber-500/40 flex items-center justify-center text-amber-400">
-                  <Sun className="w-3.5 h-3.5" />
-                </div>
-                <div>
-                  <h3 className="text-xs font-bold text-zinc-100">Light Theme Portrait</h3>
-                  <p className="text-[11px] text-zinc-400">Active when visitors browse in Light Mode</p>
-                </div>
-              </div>
-              <Badge variant="outline" className="text-[10px] font-mono border-amber-500/30 text-amber-300">
-                Light Mode
-              </Badge>
-            </div>
-
-            <ImageInputWithLibrary
-              label="Portrait Image (Transparent PNG / WebP)"
-              value={lightUrl}
-              onChange={(val) => handleDraftChange('portrait_image_light_url', val)}
-              folder="users"
-              defaultCategory="users"
-              previewShape="square"
-              placeholder="/about/souravbarui-light.png or select from media"
-            />
-
-            <div className="p-3 rounded-2xl bg-zinc-950/70 border border-zinc-800/80 space-y-1.5 text-[11px] text-zinc-400">
-              <div className="flex items-center gap-1.5 font-semibold text-zinc-300">
-                <Info className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                <span>Image Requirements</span>
-              </div>
-              <p className="leading-relaxed">
-                Use a <strong>1:1 square image</strong> with a completely{' '}
-                <strong>transparent background (alpha = 0)</strong>.
-              </p>
-            </div>
-          </div>
-
-          <div className="pt-2 border-t border-zinc-800/60 flex items-center justify-between">
-            <span className="text-[11px] text-zinc-500">
-              {lightUrl ? 'Custom Image Active' : 'Default Asset Active'}
-            </span>
-            <Button
-              type="button"
-              variant="outline"
-              size="xs"
-              onClick={() => handleDraftChange('portrait_image_light_url', '/about/souravbarui-light.png')}
-              className="text-[11px] border-zinc-800 hover:bg-zinc-800 text-zinc-300 gap-1 rounded-xl h-7 px-2.5"
-            >
-              <RefreshCw className="w-3 h-3 text-amber-400" />
-              <span>Reset to Default</span>
-            </Button>
-          </div>
-        </Card>
-      </div>
-
-      {/* 9. Global Creator Avatar Fallback Card */}
-      <Card className="p-4 sm:p-5 rounded-3xl border-zinc-800 bg-zinc-900/40 space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-800/80 pb-3">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-indigo-950/60 border border-indigo-500/40 flex items-center justify-center text-indigo-400">
-              <User className="w-3.5 h-3.5" />
-            </div>
-            <div>
-              <h3 className="text-xs font-bold text-zinc-100">Global Creator Avatar Photo</h3>
-              <p className="text-[11px] text-zinc-400">
-                Used in header navigation, author badges, and compact user cards
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              variant="ghost"
-              size="xs"
-              onClick={handleSyncDarkToAvatar}
-              className="text-[11px] text-zinc-400 hover:text-cyan-300 gap-1 rounded-xl h-7 px-2.5 border border-zinc-800"
-            >
-              <Moon className="w-3 h-3 text-cyan-400" />
-              <span>Copy from Dark</span>
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="xs"
-              onClick={handleSyncLightToAvatar}
-              className="text-[11px] text-zinc-400 hover:text-amber-300 gap-1 rounded-xl h-7 px-2.5 border border-zinc-800"
-            >
-              <Sun className="w-3 h-3 text-amber-400" />
-              <span>Copy from Light</span>
-            </Button>
-          </div>
-        </div>
-
-        <ImageInputWithLibrary
-          label="Avatar Photo URL"
-          value={avatarUrl}
-          onChange={(val) => onChange('creator_avatar_url', val)}
-          folder="users"
-          defaultCategory="users"
-          previewShape="circle"
-          placeholder="Avatar photo URL or select from media"
-        />
-      </Card>
     </div>
   );
 }

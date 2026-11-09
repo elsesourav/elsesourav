@@ -24,11 +24,13 @@ import {
   Save,
   Scale,
   Share2,
+  SlidersHorizontal,
   Sparkles,
   User,
 } from 'lucide-react';
 import { updateSiteSettingsAction } from '../actions/admin-settings-actions';
 import { IdentitySettingsTab } from './IdentitySettingsTab';
+import { AppearanceSettingsTab } from './AppearanceSettingsTab';
 import { PortraitSettingsTab } from './PortraitSettingsTab';
 import { FooterSettingsTab } from './FooterSettingsTab';
 import { ProfileSettingsTab } from './ProfileSettingsTab';
@@ -44,6 +46,7 @@ export interface AdminSettingsFormProps {
 
 export type SettingsTab =
   | 'identity'
+  | 'appearance'
   | 'portrait'
   | 'profile'
   | 'creator_narrative'
@@ -61,6 +64,7 @@ interface TabItem {
 
 const TAB_CONFIG: readonly TabItem[] = [
   { id: 'identity', label: 'Site & Brand', icon: Globe },
+  { id: 'appearance', label: 'UI & Effects', icon: SlidersHorizontal },
   { id: 'portrait', label: 'Portrait Studio', icon: Sparkles },
   { id: 'profile', label: 'Creator Profile', icon: User },
   { id: 'creator_narrative', label: 'About & Narrative', icon: BookOpen },
@@ -287,6 +291,13 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
       {/* Tab Panels */}
       {activeTab === 'identity' && (
         <IdentitySettingsTab settings={settings} onChange={handleChange} />
+      )}
+
+      {activeTab === 'appearance' && (
+        <AppearanceSettingsTab
+          effectsLevel={settings['effects_level'] || 'high'}
+          onChange={(level) => handleChange('effects_level', level)}
+        />
       )}
 
       {activeTab === 'portrait' && (

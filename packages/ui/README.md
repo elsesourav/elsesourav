@@ -80,7 +80,7 @@ All colors and surfaces are driven by HSL CSS custom variables defined in `globa
 
 ## Visual Effects & Scroll Performance Fidelity Engine (`data-effects`)
 
-The platform supports a 3-tier visual effects and scroll performance engine controlled exclusively via database `SiteSetting[effects_level]` in the Admin Dashboard (`/admin/settings` -> Visual Effects) and rendered platform-wide on `<html data-effects="high" | "medium" | "low">`. Regular users cannot modify this setting.
+The platform supports a 3-tier visual effects and scroll performance engine controlled exclusively via database `SiteSetting[effects_level]` in the Admin Dashboard (`/admin/settings` -> UI & Effects tab) and rendered platform-wide on `<html data-effects="high" | "medium" | "low">`. Regular users cannot modify this setting.
 
 | Fidelity Level | `data-effects` | Backdrop Blur | Elevation Shadows | Ambient Glow Fields | Target Device / Profile |
 | :--- | :--- | :--- | :--- | :--- | :--- |
