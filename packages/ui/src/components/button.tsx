@@ -214,7 +214,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     );
 
     const baseStyles =
-      'relative isolate inline-flex items-center justify-center font-medium select-none outline-none overflow-hidden ' +
+      'relative isolate inline-flex items-center justify-center whitespace-nowrap font-medium select-none outline-none overflow-hidden ' +
       'transition-[color,background-color,border-color,box-shadow,opacity] duration-150 ease-smooth ' +
       'focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))] ' +
       'disabled:opacity-50 disabled:pointer-events-none cursor-pointer';

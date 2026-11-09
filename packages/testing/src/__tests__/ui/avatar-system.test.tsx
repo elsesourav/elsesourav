@@ -41,16 +41,17 @@ describe('Avatar & UserAvatar System', () => {
   });
 
   describe('3. Avatar Component Rendering & Determinism', () => {
-    it('renders custom avatar image when src is provided', () => {
-      render(
+    it('renders custom avatar image when src is provided with no-referrer policy', () => {
+      const { container } = render(
         <Avatar
-          src="https://images.unsplash.com/photo-1534528741775-53994a69daeb"
+          src="https://lh3.googleusercontent.com/a/mock-avatar-hash"
           name="Sourav Barui"
           alt="Sourav Barui"
         />
       );
-      const img = screen.getByRole('img', { name: 'Sourav Barui' });
-      expect(img).toBeDefined();
+      const img = container.querySelector('img');
+      expect(img).not.toBeNull();
+      expect(img?.getAttribute('referrerpolicy')).toBe('no-referrer');
     });
 
     it('renders deterministic initials fallback when src is absent', () => {

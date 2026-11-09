@@ -57,7 +57,22 @@ export async function GET(request: NextRequest) {
         const username = rawUsername
           ? String(rawUsername).toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 30)
           : undefined;
-        const photoUrl = metadata.avatar_url || metadata.picture;
+        const identityPhoto = data.user.identities
+          ?.map(
+            (id: { identity_data?: Record<string, unknown> }) =>
+              id.identity_data?.['avatar_url'] ||
+              id.identity_data?.['picture'] ||
+              id.identity_data?.['avatarUrl'] ||
+              id.identity_data?.['photoUrl']
+          )
+          .find(Boolean) as string | undefined;
+
+        const photoUrl =
+          metadata.avatar_url ||
+          metadata.picture ||
+          metadata.avatarUrl ||
+          metadata.photoUrl ||
+          identityPhoto;
 
         if (email) {
           const userRepo = new UserRepository();

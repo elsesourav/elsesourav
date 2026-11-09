@@ -32,29 +32,48 @@ export class UserRepository {
       const isDesignatedAdmin = email === adminEmail;
       const initialRole = isDesignatedAdmin ? PrismaRole.ADMIN : PrismaRole.USER;
 
-      const user = await this.prisma.user.upsert({
-        where: { supabaseAuthId: input.supabaseAuthId },
-        update: {
-          email,
-          ...(input.photoUrl ? { photoUrl: input.photoUrl } : {}),
-          ...(username ? { username } : {}),
-          ...(isDesignatedAdmin ? { role: PrismaRole.ADMIN } : {}),
-        },
-        create: {
-          supabaseAuthId: input.supabaseAuthId,
-          email,
-          displayName,
-          username,
-          photoUrl: input.photoUrl,
-          role: initialRole,
-          preferences: {
-            theme: 'dark',
-            emailNotifications: true,
-            reduceMotion: false,
-            compactView: false,
+      // Check if user already exists by email (e.g. created via email/pass before OAuth linking)
+      let existingByEmail = null;
+      if (typeof this.prisma.user?.findUnique === 'function') {
+        existingByEmail = await this.prisma.user.findUnique({ where: { email } });
+      }
+
+      let user;
+      if (existingByEmail && existingByEmail.supabaseAuthId !== input.supabaseAuthId) {
+        user = await this.prisma.user.update({
+          where: { id: existingByEmail.id },
+          data: {
+            supabaseAuthId: input.supabaseAuthId,
+            ...(input.photoUrl ? { photoUrl: input.photoUrl } : {}),
+            ...(username ? { username } : {}),
+            ...(isDesignatedAdmin ? { role: PrismaRole.ADMIN } : {}),
           },
-        },
-      });
+        });
+      } else {
+        user = await this.prisma.user.upsert({
+          where: { supabaseAuthId: input.supabaseAuthId },
+          update: {
+            email,
+            ...(input.photoUrl ? { photoUrl: input.photoUrl } : {}),
+            ...(username ? { username } : {}),
+            ...(isDesignatedAdmin ? { role: PrismaRole.ADMIN } : {}),
+          },
+          create: {
+            supabaseAuthId: input.supabaseAuthId,
+            email,
+            displayName,
+            username,
+            photoUrl: input.photoUrl,
+            role: initialRole,
+            preferences: {
+              theme: 'dark',
+              emailNotifications: true,
+              reduceMotion: false,
+              compactView: false,
+            },
+          },
+        });
+      }
 
       return mapPrismaUserToDomain(user);
     } catch (error) {

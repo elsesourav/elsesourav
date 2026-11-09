@@ -74,8 +74,20 @@ export async function getUserAccountData(): Promise<
       };
     }
 
+    if (user && !user.photoUrl && session.user.photoUrl) {
+      userRepo
+        .syncUserAuth({
+          supabaseAuthId: session.user.id,
+          email: session.user.email,
+          displayName: user.displayName,
+          photoUrl: session.user.photoUrl,
+        })
+        .catch(() => null);
+    }
+
     return {
       ...user,
+      photoUrl: user.photoUrl || session.user.photoUrl || undefined,
       provider: session.user.provider || 'email',
     };
   } catch (error) {

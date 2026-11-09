@@ -137,18 +137,17 @@ export function Avatar({
           theme.text,
           className
         )}
-        role="img"
-        aria-label={alt || name || 'User avatar'}
+        {...(!hasValidImage ? { role: 'img', 'aria-label': alt || name || 'User avatar' } : {})}
         {...props}
       >
         {hasValidImage ? (
           <img
             src={src!}
-            alt=""
-            aria-hidden="true"
+            alt={alt || name || 'User avatar'}
             onError={() => setImgError(true)}
             className="w-full h-full object-cover"
             loading="lazy"
+            referrerPolicy="no-referrer"
           />
         ) : (
           <span className="tracking-tight">{initials}</span>

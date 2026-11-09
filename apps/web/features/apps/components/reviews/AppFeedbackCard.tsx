@@ -1,7 +1,8 @@
 'use client';
 
-import { Trash2, User } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import { motion } from 'motion/react';
+import { UserAvatar } from '@elsesourav/ui';
 import { AppStarRating } from './AppStarRating';
 import type { AppFeedbackItem } from '@elsesourav/types';
 
@@ -59,18 +60,14 @@ export function AppFeedbackCard({
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
           {/* Avatar */}
-          <div className="shrink-0 w-9 h-9 rounded-full overflow-hidden bg-[hsl(var(--surface-subtle))] flex items-center justify-center">
-            {feedback.user.photoUrl ? (
-              <img
-                src={feedback.user.photoUrl}
-                alt={feedback.user.displayName}
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            ) : (
-              <User className="w-4 h-4 text-[hsl(var(--muted-foreground))]" />
-            )}
-          </div>
+          <UserAvatar
+            src={feedback.user.photoUrl}
+            name={feedback.user.displayName}
+            identifier={feedback.user.username || feedback.user.displayName}
+            alt={feedback.user.displayName}
+            size="sm"
+            className="shrink-0"
+          />
 
           {/* Name + Rating */}
           <div className="min-w-0">

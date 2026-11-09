@@ -66,6 +66,29 @@ export async function getServerSession(
         ? rawRole
         : 'USER';
 
+    const identityPhoto = user.identities
+      ?.map(
+        (id) =>
+          (id.identity_data?.['avatar_url'] ||
+            id.identity_data?.['picture'] ||
+            id.identity_data?.['avatarUrl'] ||
+            id.identity_data?.['photoUrl']) as string | undefined
+      )
+      .find(Boolean);
+
+    const rawPhotoUrl =
+      (user.user_metadata?.['avatar_url'] as string | undefined) ||
+      (user.user_metadata?.['picture'] as string | undefined) ||
+      (user.user_metadata?.['avatarUrl'] as string | undefined) ||
+      (user.user_metadata?.['photoUrl'] as string | undefined) ||
+      identityPhoto ||
+      undefined;
+
+    const detectedProvider =
+      (user.app_metadata?.['provider'] as 'email' | 'google' | 'github' | undefined) ||
+      (user.identities?.[0]?.provider as 'email' | 'google' | 'github' | undefined) ||
+      'email';
+
     const authenticatedUser: AuthenticatedUser = {
       id: user.id,
       supabaseAuthId: user.id,
@@ -75,10 +98,10 @@ export async function getServerSession(
         user.user_metadata?.['name'] ||
         user.email?.split('@')[0] ||
         'User',
-      photoUrl: user.user_metadata?.['avatar_url'] || user.user_metadata?.['picture'],
+      photoUrl: rawPhotoUrl ? String(rawPhotoUrl).trim() : undefined,
       role,
       isEmailVerified: Boolean(user.email_confirmed_at),
-      provider: (user.app_metadata?.['provider'] as 'email' | 'google' | 'github') || 'email',
+      provider: detectedProvider,
       createdAt: new Date(user.created_at).getTime(),
     };
 

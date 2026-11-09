@@ -202,7 +202,7 @@ import { ... } from '@elsesourav/ui';
 ### `Avatar`
 
 - **Purpose**: Circular visual representation of a user, organization, or identity.
-- **Key Features**: Smooth fallback initials generator, image load error handling with zero broken text overflow during network loading or offline fallback, border ring for dark mode definition.
+- **Key Features**: Smooth fallback initials generator, image load error handling with zero broken text overflow during network loading or offline fallback, automatic `referrerPolicy="no-referrer"` for secure Google/GitHub OAuth CDN loading, border ring for dark mode definition.
 - **Props**:
   - `src?: string`
   - `alt: string`
@@ -813,6 +813,7 @@ The `@elsesourav/ui/interior` collection contains **54 physics-based animated UI
 - **Key Features**:
   - Instant reveal for already cached browser images (zero unnecessary re-fade).
   - Smooth spring exposure transition (`duration: 0.65`, `cubic-bezier(0.23, 1, 0.32, 1)`).
+  - Cross-origin CDN safety with automatic `referrerPolicy="no-referrer"` for Google/GitHub user avatars.
   - Automatic error and retry callbacks.
 - **Props**:
   - `src?: string`

@@ -183,6 +183,7 @@ export function BlurUpImage({
           alt=""
           aria-hidden
           draggable={false}
+          referrerPolicy="no-referrer"
           className={`absolute inset-0 h-full w-full object-cover ${imgClassName}`}
           style={{ filter: `blur(${blur}px)`, transform: 'scale(1.08)' }}
         />
@@ -200,6 +201,7 @@ export function BlurUpImage({
         fetchPriority={fetchPriority}
         decoding="async"
         draggable={false}
+        referrerPolicy="no-referrer"
         className={`absolute inset-0 h-full w-full object-cover ${imgClassName}`}
         initial={false}
         animate={
