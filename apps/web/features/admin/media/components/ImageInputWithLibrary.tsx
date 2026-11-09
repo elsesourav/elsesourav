@@ -121,32 +121,32 @@ export function ImageInputWithLibrary({
         </div>
 
         {/* Input & Action Buttons */}
-        <div className="flex-1 flex flex-col xl:flex-row items-stretch xl:items-center gap-2 min-w-0">
+        <div className="flex-1 flex flex-col md:flex-row items-stretch md:items-center gap-2 min-w-0">
           <Input
             type="url"
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
             required={required}
-            className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100 min-w-0 w-full"
+            className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100 min-w-[140px] flex-1"
           />
 
-          <div className="flex items-center gap-1.5 shrink-0 justify-end">
+          <div className="flex items-center gap-1.5 shrink-0 justify-end flex-wrap sm:flex-nowrap">
             <Button
               type="button"
               variant="outline"
               size="sm"
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploading}
-              className="text-xs rounded-xl border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 gap-1.5 h-9 px-3 shrink-0 flex-1 sm:flex-initial justify-center"
+              className="text-xs rounded-xl border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 gap-1.5 h-9 px-3 shrink-0 justify-center whitespace-nowrap"
               title="Upload image file"
             >
               {isUploading ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <Loader2 className="w-3.5 h-3.5 animate-spin shrink-0" />
               ) : (
-                <Upload className="w-3.5 h-3.5" />
+                <Upload className="w-3.5 h-3.5 shrink-0" />
               )}
-              <span>Upload</span>
+              <span className="whitespace-nowrap">Upload</span>
             </Button>
 
             <Button
@@ -154,11 +154,11 @@ export function ImageInputWithLibrary({
               variant="outline"
               size="sm"
               onClick={() => setIsModalOpen(true)}
-              className="text-xs rounded-xl border-indigo-500/30 bg-indigo-950/30 hover:bg-indigo-900/40 text-indigo-300 gap-1.5 h-9 px-3 shrink-0 flex-1 sm:flex-initial justify-center"
+              className="text-xs rounded-xl border-indigo-500/30 bg-indigo-950/30 hover:bg-indigo-900/40 text-indigo-300 gap-1.5 h-9 px-3 shrink-0 justify-center whitespace-nowrap"
               title="Select from Media Library"
             >
-              <FolderOpen className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Media Library</span>
+              <FolderOpen className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+              <span className="whitespace-nowrap">Media Library</span>
             </Button>
           </div>
         </div>

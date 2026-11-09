@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import type { PortraitDraftSettings } from './portrait/portrait.types';
-import { PortraitStudioToolbar } from './portrait/PortraitStudioToolbar';
 import { PortraitLivePreviewCard } from './portrait/PortraitLivePreviewCard';
 import { PortraitImageUploadControls } from './portrait/PortraitImageUploadControls';
 import { EdgeDetectionControls } from './portrait/EdgeDetectionControls';
@@ -144,17 +143,14 @@ export function PortraitSettingsTab({ settings, onChange, onSave }: PortraitSett
         />
       </div>
 
-      {/* Right Column: Sticky Live Preview Sandbox & Actions (5 cols on desktop) */}
-      <div className="lg:col-span-5 lg:sticky lg:top-6 space-y-3 order-1 lg:order-2">
-        <PortraitStudioToolbar
+      {/* Right Column: Sticky Live Preview Studio & Actions (5 cols on desktop) */}
+      <div className="lg:col-span-5 lg:sticky lg:top-4 self-start order-1 lg:order-2">
+        <PortraitLivePreviewCard
+          settings={draftSettings}
           hasUnappliedChanges={hasUnappliedChanges}
           isApplying={isApplying}
           onApply={handleApply}
           onRevert={handleRevert}
-        />
-
-        <PortraitLivePreviewCard
-          settings={draftSettings}
           onToggleGuide={(enabled) =>
             handleDraftChange('portrait_show_path_guide', enabled ? 'true' : 'false')
           }

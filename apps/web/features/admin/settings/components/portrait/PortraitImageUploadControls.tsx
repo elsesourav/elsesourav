@@ -35,10 +35,10 @@ export function PortraitImageUploadControls({
         </Badge>
       </div>
 
-      {/* Upload Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+      {/* Upload Cards Stack (Full-width for generous room) */}
+      <div className="grid grid-cols-1 gap-3.5">
         {/* Dark Theme Portrait Card */}
-        <div className="p-3.5 rounded-xl border border-zinc-800/80 bg-zinc-950/50 space-y-3 flex flex-col justify-between">
+        <div className="p-3.5 rounded-xl border border-zinc-800/80 bg-zinc-950/50 space-y-3">
           <div className="space-y-2.5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
@@ -46,7 +46,7 @@ export function PortraitImageUploadControls({
                 <span className="text-xs font-semibold text-zinc-200">Dark Mode Asset</span>
               </div>
               <Badge variant="outline" className="text-[9px] font-mono border-cyan-500/30 text-cyan-300">
-                Dark
+                Dark Cutout
               </Badge>
             </div>
 
@@ -67,10 +67,10 @@ export function PortraitImageUploadControls({
               variant="outline"
               size="xs"
               onClick={() => onChange('portrait_image_dark_url', '/about/souravbarui-dark.png')}
-              className="text-[10px] border-zinc-800 hover:bg-zinc-800 text-zinc-400 gap-1 rounded-lg h-6 px-2"
+              className="text-[10px] border-zinc-800 hover:bg-zinc-800 text-zinc-400 gap-1 rounded-lg h-6 px-2 whitespace-nowrap"
             >
               <RefreshCw className="w-2.5 h-2.5 text-cyan-400" />
-              <span>Reset</span>
+              <span>Reset Default</span>
             </Button>
 
             <Button
@@ -78,16 +78,16 @@ export function PortraitImageUploadControls({
               variant="outline"
               size="xs"
               onClick={() => onSyncToAvatar(darkUrl || '/about/souravbarui-dark.png')}
-              className="text-[10px] border-zinc-800 hover:bg-zinc-800 text-zinc-300 gap-1 rounded-lg h-6 px-2"
+              className="text-[10px] border-zinc-800 hover:bg-zinc-800 text-zinc-300 gap-1 rounded-lg h-6 px-2 whitespace-nowrap"
             >
               <User className="w-2.5 h-2.5 text-indigo-400" />
-              <span>Set as Avatar</span>
+              <span>Sync to Creator Avatar</span>
             </Button>
           </div>
         </div>
 
         {/* Light Theme Portrait Card */}
-        <div className="p-3.5 rounded-xl border border-zinc-800/80 bg-zinc-950/50 space-y-3 flex flex-col justify-between">
+        <div className="p-3.5 rounded-xl border border-zinc-800/80 bg-zinc-950/50 space-y-3">
           <div className="space-y-2.5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
@@ -95,7 +95,7 @@ export function PortraitImageUploadControls({
                 <span className="text-xs font-semibold text-zinc-200">Light Mode Asset</span>
               </div>
               <Badge variant="outline" className="text-[9px] font-mono border-amber-500/30 text-amber-300">
-                Light
+                Light Cutout
               </Badge>
             </div>
 
@@ -116,10 +116,10 @@ export function PortraitImageUploadControls({
               variant="outline"
               size="xs"
               onClick={() => onChange('portrait_image_light_url', '/about/souravbarui-light.png')}
-              className="text-[10px] border-zinc-800 hover:bg-zinc-800 text-zinc-400 gap-1 rounded-lg h-6 px-2"
+              className="text-[10px] border-zinc-800 hover:bg-zinc-800 text-zinc-400 gap-1 rounded-lg h-6 px-2 whitespace-nowrap"
             >
               <RefreshCw className="w-2.5 h-2.5 text-amber-400" />
-              <span>Reset</span>
+              <span>Reset Default</span>
             </Button>
 
             <Button
@@ -127,10 +127,10 @@ export function PortraitImageUploadControls({
               variant="outline"
               size="xs"
               onClick={() => onSyncToAvatar(lightUrl || '/about/souravbarui-light.png')}
-              className="text-[10px] border-zinc-800 hover:bg-zinc-800 text-zinc-300 gap-1 rounded-lg h-6 px-2"
+              className="text-[10px] border-zinc-800 hover:bg-zinc-800 text-zinc-300 gap-1 rounded-lg h-6 px-2 whitespace-nowrap"
             >
               <User className="w-2.5 h-2.5 text-indigo-400" />
-              <span>Set as Avatar</span>
+              <span>Sync to Creator Avatar</span>
             </Button>
           </div>
         </div>

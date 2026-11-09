@@ -203,7 +203,7 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
   }));
 
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className="space-y-6 max-w-5xl xl:max-w-6xl">
       {/* Action / Toolbar Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-zinc-800/80">
         <div className="text-xs text-zinc-400">
