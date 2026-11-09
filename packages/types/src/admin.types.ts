@@ -116,6 +116,20 @@ export interface SiteAndCreatorIdentity {
     readonly portraitGlowBrightness?: string;
     readonly portraitFlightSpeed?: string;
     readonly portraitPathSpread?: string;
+    readonly portraitEdgeAlgorithm?: string;
+    readonly portraitEdgeThreshold?: string;
+    readonly portraitPinBottomEdge?: string;
+    readonly portraitTopParticleSize?: string;
+    readonly portraitTopParticleQuantity?: string;
+    readonly portraitTopParticleSpeed?: string;
+    readonly portraitBacksideStars?: string;
+    readonly portraitBacksideHalo?: string;
+    readonly portraitBacksideOrbits?: string;
+    readonly portraitBacksideSpecks?: string;
+    readonly portraitImageResolution?: string;
+    readonly portraitClickForce?: string;
+    readonly portraitBounceSpeed?: string;
+    readonly portraitIntroAnimation?: string;
   };
   readonly footer: {
     readonly copyright: string;

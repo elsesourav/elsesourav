@@ -21,6 +21,20 @@ PixelEngine::PixelEngine() {
     pathSpread = 2.4f;
     showPathGuide = 0; // Default off on public client side; toggleable in admin
 
+    // Advanced Customizations defaults
+    edgeAlgorithm = 0;
+    edgeThreshold = 28;
+    pinBottomEdge = 1;
+    topParticleSizeMult = 1.0f;
+    topParticleQuantityMult = 1.0f;
+    topParticleSpeedMult = 1.0f;
+    backsideStarsCount = 32;
+    backsideHaloMult = 1.0f;
+    backsideOrbitsEnabled = 1;
+    backsideSpecksMult = 1.0f;
+    clickForceMult = 1.0f;
+    bounceSpeedMult = 1.0f;
+
     particleCount = 0;
     emitterCount = 0;
     contourCount = 0;
@@ -97,6 +111,88 @@ void PixelEngine::setShowPathGuide(int show) {
         showPathGuide = show;
         generatePixels();
     }
+}
+
+void PixelEngine::setEdgeAlgorithm(int algo) {
+    if (edgeAlgorithm != algo) {
+        edgeAlgorithm = algo;
+        generatePixels();
+    }
+}
+
+void PixelEngine::setEdgeThreshold(int threshold) {
+    if (edgeThreshold != threshold) {
+        edgeThreshold = threshold;
+        generatePixels();
+    }
+}
+
+void PixelEngine::setPinBottomEdge(int pin) {
+    if (pinBottomEdge != pin) {
+        pinBottomEdge = pin;
+        generatePixels();
+    }
+}
+
+void PixelEngine::setTopParticleSize(float mult) {
+    if (fabsf(topParticleSizeMult - mult) > 0.01f) {
+        topParticleSizeMult = mult;
+        generatePixels();
+    }
+}
+
+void PixelEngine::setTopParticleQuantity(float mult) {
+    if (fabsf(topParticleQuantityMult - mult) > 0.01f) {
+        topParticleQuantityMult = mult;
+        generatePixels();
+    }
+}
+
+void PixelEngine::setTopParticleSpeed(float mult) {
+    if (fabsf(topParticleSpeedMult - mult) > 0.01f) {
+        topParticleSpeedMult = mult;
+        for (int i = 0; i < particleCount; i++) {
+            if (particles[i].flags & FLAG_EDGE_FLOW) {
+                particles[i].pathSpeed = (11.0f + pseudoRand((float)i * 2.3f) * 15.0f) * speedMultiplier * mult;
+            }
+        }
+    }
+}
+
+void PixelEngine::setBacksideStars(int count) {
+    if (backsideStarsCount != count) {
+        backsideStarsCount = count;
+        generatePixels();
+    }
+}
+
+void PixelEngine::setBacksideHalo(float mult) {
+    if (fabsf(backsideHaloMult - mult) > 0.01f) {
+        backsideHaloMult = mult;
+        generatePixels();
+    }
+}
+
+void PixelEngine::setBacksideOrbits(int enabled) {
+    if (backsideOrbitsEnabled != enabled) {
+        backsideOrbitsEnabled = enabled;
+        generatePixels();
+    }
+}
+
+void PixelEngine::setBacksideSpecks(float mult) {
+    if (fabsf(backsideSpecksMult - mult) > 0.01f) {
+        backsideSpecksMult = mult;
+        generatePixels();
+    }
+}
+
+void PixelEngine::setClickForce(float mult) {
+    clickForceMult = mult;
+}
+
+void PixelEngine::setBounceSpeed(float mult) {
+    bounceSpeedMult = mult;
 }
 
 void PixelEngine::processImage(int w, int h) {
@@ -197,6 +293,54 @@ void engine_set_path_spread(PixelEngine* engine, float spread) {
 
 void engine_set_show_path_guide(PixelEngine* engine, int show) {
     if (engine) engine->setShowPathGuide(show);
+}
+
+void engine_set_edge_algorithm(PixelEngine* engine, int algo) {
+    if (engine) engine->setEdgeAlgorithm(algo);
+}
+
+void engine_set_edge_threshold(PixelEngine* engine, int threshold) {
+    if (engine) engine->setEdgeThreshold(threshold);
+}
+
+void engine_set_pin_bottom_edge(PixelEngine* engine, int pin) {
+    if (engine) engine->setPinBottomEdge(pin);
+}
+
+void engine_set_top_particle_size(PixelEngine* engine, float mult) {
+    if (engine) engine->setTopParticleSize(mult);
+}
+
+void engine_set_top_particle_quantity(PixelEngine* engine, float mult) {
+    if (engine) engine->setTopParticleQuantity(mult);
+}
+
+void engine_set_top_particle_speed(PixelEngine* engine, float mult) {
+    if (engine) engine->setTopParticleSpeed(mult);
+}
+
+void engine_set_backside_stars(PixelEngine* engine, int count) {
+    if (engine) engine->setBacksideStars(count);
+}
+
+void engine_set_backside_halo(PixelEngine* engine, float mult) {
+    if (engine) engine->setBacksideHalo(mult);
+}
+
+void engine_set_backside_orbits(PixelEngine* engine, int enabled) {
+    if (engine) engine->setBacksideOrbits(enabled);
+}
+
+void engine_set_backside_specks(PixelEngine* engine, float mult) {
+    if (engine) engine->setBacksideSpecks(mult);
+}
+
+void engine_set_click_force(PixelEngine* engine, float mult) {
+    if (engine) engine->setClickForce(mult);
+}
+
+void engine_set_bounce_speed(PixelEngine* engine, float mult) {
+    if (engine) engine->setBounceSpeed(mult);
 }
 
 float* engine_get_vertex_buffer(PixelEngine* engine) {

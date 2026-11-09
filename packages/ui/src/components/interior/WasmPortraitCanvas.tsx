@@ -4,6 +4,15 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { WasmPortraitBridge } from './wasm-portrait.bridge';
 import {
   parseMultiplier,
+  parseEdgeAlgorithm,
+  parseEdgeThreshold,
+  parseStarsCount,
+  parseHaloMultiplier,
+  parseOrbitsEnabled,
+  parseSpecksMultiplier,
+  parseClickForce,
+  parseBounceSpeed,
+  parseIntroDuration,
   detectDeviceCapability,
   detectAdaptiveResolution,
 } from './wasm-portrait.utils';
@@ -17,13 +26,27 @@ export interface WasmPortraitCanvasProps {
   effectsLevel?: 'high' | 'medium' | 'low';
   size?: number;
   lightIntensity?: number;
-  simulationResolution?: number;
+  simulationResolution?: number | string;
   particleDensity?: string | number;
   particleSize?: string | number;
   glowBrightness?: string | number;
   flightSpeed?: string | number;
   pathSpread?: string | number;
   showPathGuide?: boolean;
+  // Advanced Customizations
+  edgeAlgorithm?: string | number;
+  edgeThreshold?: string | number;
+  pinBottomEdge?: boolean | number;
+  topParticleSize?: string | number;
+  topParticleQuantity?: string | number;
+  topParticleSpeed?: string | number;
+  backsideStars?: string | number;
+  backsideHalo?: string | number;
+  backsideOrbits?: string | number | boolean;
+  backsideSpecks?: string | number;
+  clickForce?: string | number;
+  bounceSpeed?: string | number;
+  introDuration?: string | number;
 }
 
 export function WasmPortraitCanvas({
@@ -42,6 +65,19 @@ export function WasmPortraitCanvas({
   flightSpeed = '1.0x',
   pathSpread = '2.4px',
   showPathGuide = false,
+  edgeAlgorithm = 0,
+  edgeThreshold = 28,
+  pinBottomEdge = 1,
+  topParticleSize = '1.0x',
+  topParticleQuantity = '1.0x',
+  topParticleSpeed = '1.0x',
+  backsideStars = 32,
+  backsideHalo = '1.0x',
+  backsideOrbits = 1,
+  backsideSpecks = '1.0x',
+  clickForce = '1.0x',
+  bounceSpeed = '1.0x',
+  introDuration = '1.6s',
 }: WasmPortraitCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasMountRef = useRef<HTMLDivElement>(null);
@@ -60,6 +96,21 @@ export function WasmPortraitCanvas({
   const { densityScale, glowScale } = detectDeviceCapability();
   const effectiveDensity = rawDensity * densityScale;
   const effectiveGlow = rawGlow * glowScale;
+
+  // Parsed custom values
+  const effAlgorithm = parseEdgeAlgorithm(edgeAlgorithm);
+  const effThreshold = parseEdgeThreshold(edgeThreshold);
+  const effPinBottom = pinBottomEdge === false || pinBottomEdge === 0 ? 0 : 1;
+  const effTopSize = parseMultiplier(topParticleSize);
+  const effTopQty = parseMultiplier(topParticleQuantity);
+  const effTopSpeed = parseMultiplier(topParticleSpeed);
+  const effStars = parseStarsCount(backsideStars);
+  const effHalo = parseHaloMultiplier(backsideHalo);
+  const effOrbits = parseOrbitsEnabled(backsideOrbits);
+  const effSpecks = parseSpecksMultiplier(backsideSpecks);
+  const effClickForce = parseClickForce(clickForce);
+  const effBounceSpeed = parseBounceSpeed(bounceSpeed);
+  const effIntroDuration = parseIntroDuration(introDuration);
 
   const [isInView, setIsInView] = useState(true);
   const [isWasmActive, setIsWasmActive] = useState(false);
@@ -111,6 +162,15 @@ export function WasmPortraitCanvas({
     const bridge = bridgeRef.current;
     if (!canvas || !bridge || typeof window === 'undefined') return;
 
+    // Mobile Height / SVH fix: skip fullscreen reparenting on mobile devices
+    // to prevent mobile address bar shift and canvas resize jumping
+    const isMobile = window.innerWidth < 650 || 'ontouchstart' in window;
+    if (isMobile) {
+      switchToCard();
+      bridge.triggerEntrance(effIntroDuration);
+      return;
+    }
+
     if (introTimerRef.current) clearTimeout(introTimerRef.current);
 
     if (canvas.parentElement !== document.body) {
@@ -121,7 +181,7 @@ export function WasmPortraitCanvas({
     canvas.style.top = '0';
     canvas.style.left = '0';
     canvas.style.width = '100vw';
-    canvas.style.height = '100vh';
+    canvas.style.height = '100svh';
     canvas.style.zIndex = '99999';
     canvas.style.pointerEvents = 'none';
     canvas.style.background = 'transparent';
@@ -134,21 +194,21 @@ export function WasmPortraitCanvas({
     bridge.resize(w, h);
     bridge.setFullscreenMode(true, getCardRect);
     bridge.start();
-    bridge.triggerEntrance(2.4);
+    bridge.triggerEntrance(effIntroDuration);
 
+    const flightWait = Math.round(effIntroDuration * 1000 + 100);
     introTimerRef.current = setTimeout(() => {
       switchToCard();
-    }, 2500);
-  }, [getCardRect, switchToCard]);
+    }, flightWait);
+  }, [getCardRect, switchToCard, effIntroDuration]);
 
-  // 1. Ingest image into WASM engine whenever image loads or source changes
   const handleImageLoad = useCallback(() => {
     if (bridgeRef.current && imgRef.current) {
       bridgeRef.current.ingestImageElement(imgRef.current);
     }
   }, []);
 
-  // 2. High-precision Viewport Scroll Observer
+  // Viewport scroll observer
   useEffect(() => {
     const el = containerRef.current;
     if (!el || typeof IntersectionObserver === 'undefined') {
@@ -160,7 +220,7 @@ export function WasmPortraitCanvas({
       (entries) => {
         const entry = entries[0];
         if (entry) {
-          const isFullyVisible = entry.isIntersecting && entry.intersectionRatio >= 0.90;
+          const isFullyVisible = entry.isIntersecting && entry.intersectionRatio >= 0.9;
           setIsInView(isFullyVisible);
           if (isFullyVisible) {
             bridgeRef.current?.start();
@@ -169,14 +229,14 @@ export function WasmPortraitCanvas({
           }
         }
       },
-      { rootMargin: '0px', threshold: [0, 0.25, 0.5, 0.75, 0.90, 0.98, 1.0] }
+      { rootMargin: '0px', threshold: [0, 0.25, 0.5, 0.75, 0.9, 0.98, 1.0] }
     );
 
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
 
-  // 3. Initialize Single Canvas & WASM Bridge
+  // Initialize Canvas & Bridge
   useEffect(() => {
     const mount = canvasMountRef.current;
     if (!mount) return;
@@ -203,7 +263,11 @@ export function WasmPortraitCanvas({
     canvas.width = size;
     canvas.height = size;
 
-    const effectiveSimRes = simulationResolution || detectAdaptiveResolution();
+    const parsedSimRes =
+      typeof simulationResolution === 'string'
+        ? parseInt(simulationResolution, 10)
+        : simulationResolution;
+    const effectiveSimRes = parsedSimRes || detectAdaptiveResolution();
 
     const bridge = new WasmPortraitBridge({
       canvas,
@@ -218,12 +282,24 @@ export function WasmPortraitCanvas({
       flightSpeed: rawSpeed,
       pathSpread,
       showPathGuide,
+      edgeAlgorithm: effAlgorithm,
+      edgeThreshold: effThreshold,
+      pinBottomEdge: effPinBottom,
+      topParticleSize: effTopSize,
+      topParticleQuantity: effTopQty,
+      topParticleSpeed: effTopSpeed,
+      backsideStars: effStars,
+      backsideHalo: effHalo,
+      backsideOrbits: effOrbits,
+      backsideSpecks: effSpecks,
+      clickForce: effClickForce,
+      bounceSpeed: effBounceSpeed,
       onLoaded: () => {
         setIsWasmActive(true);
         if (bridge && !bridge.isWebGLActive()) {
           setHasWebGLError(true);
         }
-        if (!prefersReducedMotion) {
+        if (!prefersReducedMotion && effIntroDuration > 0.05) {
           switchToFullscreen();
         } else {
           switchToCard();
@@ -234,9 +310,6 @@ export function WasmPortraitCanvas({
 
     bridge.start();
     bridgeRef.current = bridge;
-    if (typeof window !== 'undefined') {
-      (window as unknown as { __portraitBridge?: WasmPortraitBridge }).__portraitBridge = bridge;
-    }
 
     if (imgRef.current && imgRef.current.complete && imgRef.current.naturalWidth > 0) {
       bridge.ingestImageElement(imgRef.current);
@@ -253,100 +326,68 @@ export function WasmPortraitCanvas({
       canvasRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [effectiveDarkSrc, effectiveLightSrc]);
+  }, [effectiveDarkSrc, effectiveLightSrc, simulationResolution]);
 
-  // 4. Entrance animation trigger on About page click / navigation
-  useEffect(() => {
-    const prefersReducedMotion =
-      typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    const handleAboutActivate = () => {
-      if (prefersReducedMotion) {
-        switchToCard();
-        bridgeRef.current?.triggerEntrance(0.01);
-      } else {
-        switchToFullscreen();
-      }
-    };
-
-    window.addEventListener('elsesourav:about-activate', handleAboutActivate);
-    return () => window.removeEventListener('elsesourav:about-activate', handleAboutActivate);
-  }, [switchToFullscreen, switchToCard]);
-
-  // 5. Dynamic outside size synchronization
-  useEffect(() => {
-    if (bridgeRef.current && size > 0 && canvasRef.current && canvasRef.current.parentElement !== document.body) {
-      canvasRef.current.width = size;
-      canvasRef.current.height = size;
-      bridgeRef.current.resize(size, size);
-    }
-  }, [size]);
-
-  // 6. Theme & lighting intensity synchronization
+  // Synchronize dynamic settings
   useEffect(() => {
     if (bridgeRef.current) {
       bridgeRef.current.setTheme(isDark);
-      if (lightIntensity !== undefined) {
-        bridgeRef.current.setLightIntensity(lightIntensity);
-      }
-      if (imgRef.current && imgRef.current.complete && imgRef.current.naturalWidth > 0) {
-        bridgeRef.current.ingestImageElement(imgRef.current);
-      }
-    }
-  }, [isDark, activeSrc, lightIntensity]);
-
-  // 6b. Dynamic particle multipliers synchronization
-  useEffect(() => {
-    if (bridgeRef.current) {
+      if (lightIntensity !== undefined) bridgeRef.current.setLightIntensity(lightIntensity);
       bridgeRef.current.setDensity(effectiveDensity);
       bridgeRef.current.setParticleSize(rawSize);
       bridgeRef.current.setGlowBrightness(effectiveGlow);
       bridgeRef.current.setFlightSpeed(rawSpeed);
-    }
-  }, [effectiveDensity, rawSize, effectiveGlow, rawSpeed]);
-
-  // 6c. Show path guide toggle synchronization
-  useEffect(() => {
-    if (bridgeRef.current) {
+      if (pathSpread !== undefined) bridgeRef.current.setPathSpread(pathSpread);
       bridgeRef.current.setShowPathGuide(showPathGuide);
-    }
-  }, [showPathGuide]);
-
-  // 6d. Path spread width synchronization
-  useEffect(() => {
-    if (bridgeRef.current && pathSpread !== undefined) {
-      bridgeRef.current.setPathSpread(pathSpread);
-    }
-  }, [pathSpread]);
-
-  // 7. Tab visibility pause
-  useEffect(() => {
-    const handleVisibility = () => {
-      if (document.hidden) {
-        bridgeRef.current?.pause();
-      } else if (isInView) {
-        bridgeRef.current?.start();
+      bridgeRef.current.setEdgeAlgorithm(effAlgorithm);
+      bridgeRef.current.setEdgeThreshold(effThreshold);
+      bridgeRef.current.setPinBottomEdge(effPinBottom);
+      bridgeRef.current.setTopParticleSize(effTopSize);
+      bridgeRef.current.setTopParticleQuantity(effTopQty);
+      bridgeRef.current.setTopParticleSpeed(effTopSpeed);
+      bridgeRef.current.setBacksideStars(effStars);
+      bridgeRef.current.setBacksideHalo(effHalo);
+      bridgeRef.current.setBacksideOrbits(effOrbits);
+      bridgeRef.current.setBacksideSpecks(effSpecks);
+      bridgeRef.current.setClickForce(effClickForce);
+      bridgeRef.current.setBounceSpeed(effBounceSpeed);
+      if (imgRef.current && imgRef.current.complete && imgRef.current.naturalWidth > 0) {
+        bridgeRef.current.ingestImageElement(imgRef.current);
       }
-    };
+    }
+  }, [
+    isDark,
+    lightIntensity,
+    effectiveDensity,
+    rawSize,
+    effectiveGlow,
+    rawSpeed,
+    pathSpread,
+    showPathGuide,
+    effAlgorithm,
+    effThreshold,
+    effPinBottom,
+    effTopSize,
+    effTopQty,
+    effTopSpeed,
+    effStars,
+    effHalo,
+    effOrbits,
+    effSpecks,
+    effClickForce,
+    effBounceSpeed,
+  ]);
 
-    document.addEventListener('visibilitychange', handleVisibility);
-    return () => document.removeEventListener('visibilitychange', handleVisibility);
-  }, [isInView]);
-
-  // 8. Pointer and touch physics interaction
-  const handlePointerDown = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
-      if (!bridgeRef.current || !containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      if (rect.width === 0 || rect.height === 0) return;
-      const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      const y = 1 - ((e.clientY - rect.top) / rect.height) * 2;
-      bridgeRef.current.setPointer(x, y, true);
-      bridgeRef.current.burst(x, y);
-    },
-    []
-  );
+  // Pointer & Touch interactions
+  const handlePointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (!bridgeRef.current || !containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return;
+    const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    const y = 1 - ((e.clientY - rect.top) / rect.height) * 2;
+    bridgeRef.current.setPointer(x, y, true);
+    bridgeRef.current.burst(x, y);
+  }, []);
 
   const handlePointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     if (!bridgeRef.current || !containerRef.current) return;
@@ -361,31 +402,13 @@ export function WasmPortraitCanvas({
     bridgeRef.current?.setPointer(-999, -999, false);
   }, []);
 
-  const handleClick = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      if (!bridgeRef.current || !containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      if (rect.width === 0 || rect.height === 0) return;
-      const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      const y = 1 - ((e.clientY - rect.top) / rect.height) * 2;
-      bridgeRef.current.burst(x, y);
-    },
-    []
-  );
-
-  const handleTouchMove = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
-    if (!bridgeRef.current || !containerRef.current || e.touches.length === 0) return;
-    const touch = e.touches[0];
-    if (!touch) return;
+  const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!bridgeRef.current || !containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     if (rect.width === 0 || rect.height === 0) return;
-    const x = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
-    const y = 1 - ((touch.clientY - rect.top) / rect.height) * 2;
-    bridgeRef.current.setPointer(x, y, true);
-  }, []);
-
-  const handleTouchEnd = useCallback(() => {
-    bridgeRef.current?.setPointer(-999, -999, false);
+    const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    const y = 1 - ((e.clientY - rect.top) / rect.height) * 2;
+    bridgeRef.current.burst(x, y);
   }, []);
 
   return (
@@ -395,16 +418,12 @@ export function WasmPortraitCanvas({
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
       onPointerUp={handlePointerLeave}
-      onTouchStart={handleTouchMove}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
       onClick={handleClick}
       className={`relative select-none overflow-hidden touch-none cursor-pointer ${className}`}
       style={{ width: '100%', maxWidth: `${size}px`, aspectRatio: '1 / 1' }}
       aria-label={alt}
       role="img"
     >
-      {/* LAYER 1 (z-10): Photographic Portrait Texture Reference */}
       <img
         ref={imgRef}
         src={activeSrc}
@@ -418,7 +437,6 @@ export function WasmPortraitCanvas({
         decoding="async"
       />
 
-      {/* LAYER 1.5 (z-15): High-Tech Loading Screen */}
       {!isWasmActive && !hasWebGLError && (
         <div
           data-testid="portrait-loading-screen"
@@ -429,20 +447,12 @@ export function WasmPortraitCanvas({
             <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-full border-2 border-indigo-500/20 border-t-cyan-400 border-r-indigo-400 animate-spin" />
             <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_10px_#22d3ee] animate-ping" />
           </div>
-
-          <div className="text-xs sm:text-sm font-semibold text-zinc-200 font-mono tracking-wider flex items-center gap-1">
-            <span>Loading Portrait</span>
-            <span className="inline-flex text-cyan-400">
-              <span className="animate-pulse">.</span>
-              <span className="animate-pulse [animation-delay:200ms]">.</span>
-              <span className="animate-pulse [animation-delay:400ms]">.</span>
-            </span>
+          <div className="text-xs sm:text-sm font-semibold text-zinc-200 font-mono tracking-wider">
+            Loading Portrait...
           </div>
-          <span className="text-[10px] text-zinc-500 font-mono mt-1">WebAssembly C++ Engine</span>
         </div>
       )}
 
-      {/* LAYER 2 (z-20): Single WebAssembly C++ & WebGL Canvas Mount Container */}
       <div ref={canvasMountRef} className="absolute inset-0 pointer-events-none z-20" />
     </div>
   );

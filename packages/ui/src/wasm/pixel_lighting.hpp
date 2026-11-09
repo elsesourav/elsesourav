@@ -29,7 +29,7 @@ inline void applyProximityLighting(
     memset(lightMapG, 0, totalCells * sizeof(float));
     memset(lightMapB, 0, totalCells * sizeof(float));
 
-    float lightRadius = 5.5f * glowMultiplier;
+    float lightRadius = 7.5f * glowMultiplier;
     int iRad = (int)ceilf(lightRadius);
     float rSq = lightRadius * lightRadius;
 

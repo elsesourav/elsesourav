@@ -22,6 +22,20 @@ export interface AboutHeroSectionProps {
     portraitGlowBrightness?: string;
     portraitFlightSpeed?: string;
     portraitPathSpread?: string;
+    portraitEdgeAlgorithm?: string;
+    portraitEdgeThreshold?: string;
+    portraitPinBottomEdge?: string;
+    portraitTopParticleSize?: string;
+    portraitTopParticleQuantity?: string;
+    portraitTopParticleSpeed?: string;
+    portraitBacksideStars?: string;
+    portraitBacksideHalo?: string;
+    portraitBacksideOrbits?: string;
+    portraitBacksideSpecks?: string;
+    portraitImageResolution?: string;
+    portraitClickForce?: string;
+    portraitBounceSpeed?: string;
+    portraitIntroAnimation?: string;
   };
 }
 
@@ -60,6 +74,20 @@ export function AboutHeroSection({ creator, site }: AboutHeroSectionProps) {
               glowBrightness={site.portraitGlowBrightness}
               flightSpeed={site.portraitFlightSpeed}
               pathSpread={site.portraitPathSpread}
+              edgeAlgorithm={site.portraitEdgeAlgorithm}
+              edgeThreshold={site.portraitEdgeThreshold}
+              pinBottomEdge={site.portraitPinBottomEdge !== 'false'}
+              topParticleSize={site.portraitTopParticleSize}
+              topParticleQuantity={site.portraitTopParticleQuantity}
+              topParticleSpeed={site.portraitTopParticleSpeed}
+              backsideStars={site.portraitBacksideStars}
+              backsideHalo={site.portraitBacksideHalo}
+              backsideOrbits={site.portraitBacksideOrbits}
+              backsideSpecks={site.portraitBacksideSpecks}
+              imageResolution={site.portraitImageResolution}
+              clickForce={site.portraitClickForce}
+              bounceSpeed={site.portraitBounceSpeed}
+              introDuration={site.portraitIntroAnimation}
             />
           </div>
 

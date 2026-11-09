@@ -16,6 +16,20 @@ export interface AboutPortraitCardProps {
   flightSpeed?: string;
   pathSpread?: string;
   showPathGuide?: boolean;
+  edgeAlgorithm?: string | number;
+  edgeThreshold?: string | number;
+  pinBottomEdge?: boolean | number;
+  topParticleSize?: string | number;
+  topParticleQuantity?: string | number;
+  topParticleSpeed?: string | number;
+  backsideStars?: string | number;
+  backsideHalo?: string | number;
+  backsideOrbits?: string | number | boolean;
+  backsideSpecks?: string | number;
+  imageResolution?: string | number;
+  clickForce?: string | number;
+  bounceSpeed?: string | number;
+  introDuration?: string | number;
 }
 
 export function AboutPortraitCard({
@@ -30,6 +44,20 @@ export function AboutPortraitCard({
   flightSpeed,
   pathSpread,
   showPathGuide = false,
+  edgeAlgorithm,
+  edgeThreshold,
+  pinBottomEdge,
+  topParticleSize,
+  topParticleQuantity,
+  topParticleSpeed,
+  backsideStars,
+  backsideHalo,
+  backsideOrbits,
+  backsideSpecks,
+  imageResolution,
+  clickForce,
+  bounceSpeed,
+  introDuration,
 }: AboutPortraitCardProps) {
   const { resolvedTheme, effectsLevel } = useTheme();
   const isDark = resolvedTheme === 'dark';
@@ -61,12 +89,26 @@ export function AboutPortraitCard({
           effectsLevel={effectsLevel}
           size={size}
           lightIntensity={lightIntensity}
+          simulationResolution={imageResolution}
           particleDensity={particleDensity}
           particleSize={particleSize}
           glowBrightness={glowBrightness}
           flightSpeed={flightSpeed}
           pathSpread={pathSpread}
           showPathGuide={showPathGuide}
+          edgeAlgorithm={edgeAlgorithm}
+          edgeThreshold={edgeThreshold}
+          pinBottomEdge={pinBottomEdge}
+          topParticleSize={topParticleSize}
+          topParticleQuantity={topParticleQuantity}
+          topParticleSpeed={topParticleSpeed}
+          backsideStars={backsideStars}
+          backsideHalo={backsideHalo}
+          backsideOrbits={backsideOrbits}
+          backsideSpecks={backsideSpecks}
+          clickForce={clickForce}
+          bounceSpeed={bounceSpeed}
+          introDuration={introDuration}
           className="w-full shadow-inner border border-[hsl(var(--border-subtle))] rounded-2xl"
         />
       </div>

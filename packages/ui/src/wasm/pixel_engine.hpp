@@ -53,8 +53,22 @@ private:
     float glowMultiplier;
     float speedMultiplier;
     float densityMultiplier;
-    float pathSpread; // Width of glow particle spread band around silhouette (e.g. 1.0 - 5.5px)
-    int showPathGuide; // 0: hidden (public client default), 1: visible (admin preview toggle)
+    float pathSpread;
+    int showPathGuide;
+
+    // Advanced Customizations
+    int edgeAlgorithm;               // 0: Perimeter, 1: Sobel, 2: Radial
+    int edgeThreshold;               // Alpha / Gradient sensitivity threshold (10..80)
+    int pinBottomEdge;               // 1: Lock to canvas bottom (y = h - 1), 0: Natural bbox
+    float topParticleSizeMult;       // Top glow pixel size multiplier (0.5..2.0)
+    float topParticleQuantityMult;   // Top glow pixel count multiplier (0.5..3.0)
+    float topParticleSpeedMult;      // Top glow travel speed multiplier (0.5..3.0)
+    int backsideStarsCount;          // Diamond star count: 0, 8, 16, 32, 48
+    float backsideHaloMult;          // Halo ring density multiplier: 0.0 (off) .. 2.0
+    int backsideOrbitsEnabled;       // 1: active, 0: off
+    float backsideSpecksMult;        // Ambient specks multiplier: 0.0 .. 2.0
+    float clickForceMult;            // Burst blast force multiplier (0.5..4.0)
+    float bounceSpeedMult;           // Elastic return spring speed multiplier (0.5..3.0)
 
     uint8_t inputImage[MAX_IMAGE_BYTES];
     Pixel particles[MAX_PARTICLES];
@@ -91,6 +105,7 @@ public:
     int isEntranceActive() const {
         return isEntrancing;
     }
+
     void setTheme(int dark);
     void setLightIntensity(float intensity);
     void setParticleSize(float mult);
@@ -102,6 +117,20 @@ public:
     int getShowPathGuide() const {
         return showPathGuide;
     }
+
+    // New Customization Setters
+    void setEdgeAlgorithm(int algo);
+    void setEdgeThreshold(int threshold);
+    void setPinBottomEdge(int pin);
+    void setTopParticleSize(float mult);
+    void setTopParticleQuantity(float mult);
+    void setTopParticleSpeed(float mult);
+    void setBacksideStars(int count);
+    void setBacksideHalo(float mult);
+    void setBacksideOrbits(int enabled);
+    void setBacksideSpecks(float mult);
+    void setClickForce(float mult);
+    void setBounceSpeed(float mult);
 
     float* getVertexBufferPtr() {
         return (float*)vertexBuffer;

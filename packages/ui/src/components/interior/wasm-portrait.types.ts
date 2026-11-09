@@ -11,6 +11,18 @@ export interface WasmPortraitBridgeOptions {
   particleDensity?: number;
   pathSpread?: number | string;
   showPathGuide?: boolean;
+  edgeAlgorithm?: number;
+  edgeThreshold?: number;
+  pinBottomEdge?: number;
+  topParticleSize?: number;
+  topParticleQuantity?: number;
+  topParticleSpeed?: number;
+  backsideStars?: number;
+  backsideHalo?: number;
+  backsideOrbits?: number;
+  backsideSpecks?: number;
+  clickForce?: number;
+  bounceSpeed?: number;
   onLoaded?: () => void;
 }
 
@@ -32,6 +44,18 @@ export interface WasmExports {
   engine_set_density: (engine: number, mult: number) => void;
   engine_set_path_spread: (engine: number, spread: number) => void;
   engine_set_show_path_guide: (engine: number, show: number) => void;
+  engine_set_edge_algorithm: (engine: number, algo: number) => void;
+  engine_set_edge_threshold: (engine: number, threshold: number) => void;
+  engine_set_pin_bottom_edge: (engine: number, pin: number) => void;
+  engine_set_top_particle_size: (engine: number, mult: number) => void;
+  engine_set_top_particle_quantity: (engine: number, mult: number) => void;
+  engine_set_top_particle_speed: (engine: number, mult: number) => void;
+  engine_set_backside_stars: (engine: number, count: number) => void;
+  engine_set_backside_halo: (engine: number, mult: number) => void;
+  engine_set_backside_orbits: (engine: number, enabled: number) => void;
+  engine_set_backside_specks: (engine: number, mult: number) => void;
+  engine_set_click_force: (engine: number, mult: number) => void;
+  engine_set_bounce_speed: (engine: number, mult: number) => void;
   engine_get_vertex_buffer: (engine: number) => number;
   engine_get_vertex_count: (engine: number) => number;
   engine_destroy: (engine: number) => void;

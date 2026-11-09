@@ -10,7 +10,8 @@
 #endif
 
 inline void PixelEngine::addBurst(float x, float y, float force) {
-    float effForce = (force > 0.1f) ? force : 1.8f;
+    float baseF = (force > 0.1f) ? force : 1.8f;
+    float effForce = baseF * clickForceMult;
     float burstRadius = (float)width * 0.32f; // ~70-80px blast radius
 
     // 1. Immediate radial burst impulse to pixels near the click position
@@ -223,21 +224,15 @@ inline void PixelEngine::update(float dt, float mouseX, float mouseY, int isMous
 
                 float ox = cx + nx * totalOffset;
                 float oy = cy + ny * totalOffset;
-                if (ox < 1.0f) ox = 1.0f;
-                if (ox > (float)width - 2.0f) ox = (float)width - 2.0f;
-                if (oy < 1.0f) oy = 1.0f;
-                if (oy > (float)height - 2.0f) oy = (float)height - 2.0f;
+                if (ox < 0.0f) ox = 0.0f;
+                if (ox > (float)width - 1.0f) ox = (float)width - 1.0f;
+                if (oy < 0.0f) oy = 0.0f;
+                if (oy > (float)height - 1.0f) oy = (float)height - 1.0f;
                 p.origX = ox;
                 p.origY = oy;
 
-                // Fade out smoothly at the lower shoulders so particles never touch bottom of shirt
-                if (cy >= (float)height * 0.82f) {
-                    float f = 1.0f - (cy - (float)height * 0.82f) / ((float)height * 0.04f);
-                    if (f < 0.0f) f = 0.0f;
-                    p.a = (uint8_t)(245.0f * f);
-                } else {
-                    p.a = 245;
-                }
+                // Full vibrant luminosity along the entire perimeter, from the very bottom of the canvas to the hair apex
+                p.a = 245;
 
                 float relX = cx / (float)width;
                 if (isDark) {
@@ -348,9 +343,10 @@ inline void PixelEngine::update(float dt, float mouseX, float mouseY, int isMous
         float targetY = p.origY;
         float sdx = targetX - p.x;
         float sdy = targetY - p.y;
+        float springK = 8.2f * bounceSpeedMult;
 
-        p.vx = (p.vx + sdx * 8.2f * dt) * 0.88f;
-        p.vy = (p.vy + sdy * 8.2f * dt) * 0.88f;
+        p.vx = (p.vx + sdx * springK * dt) * 0.88f;
+        p.vy = (p.vy + sdy * springK * dt) * 0.88f;
 
         p.x += p.vx;
         p.y += p.vy;

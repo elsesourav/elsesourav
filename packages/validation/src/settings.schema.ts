@@ -99,6 +99,34 @@ export const SiteSettingsSchema = z.object({
   portrait_path_spread: z.string().max(20).optional().or(z.literal('')),
   /** Admin-only silhouette contour path guide line toggle switch: 'true' | 'false' */
   portrait_show_path_guide: z.string().max(10).optional().or(z.literal('')),
+  /** Edge detection algorithm: 'perimeter' | 'sobel' | 'radial' */
+  portrait_edge_algorithm: z.string().max(30).optional().or(z.literal('')),
+  /** Edge alpha & gradient detection sensitivity threshold: 5 to 100 */
+  portrait_edge_threshold: z.string().max(10).optional().or(z.literal('')),
+  /** Pin contour endpoints flush to canvas bottom: 'true' | 'false' */
+  portrait_pin_bottom_edge: z.string().max(10).optional().or(z.literal('')),
+  /** Top glow crystalline particle size multiplier: 0.6x, 0.85x, 1.0x, 1.3x, 1.6x */
+  portrait_top_particle_size: z.string().max(20).optional().or(z.literal('')),
+  /** Top glow particle count quantity multiplier: 0.5x, 1.0x, 1.5x, 2.0x, 3.0x */
+  portrait_top_particle_quantity: z.string().max(20).optional().or(z.literal('')),
+  /** Top glow particle travel speed multiplier: 0.5x, 1.0x, 1.5x, 2.0x, 3.0x */
+  portrait_top_particle_speed: z.string().max(20).optional().or(z.literal('')),
+  /** Backside retro diamond stars quantity: 'off', '8', '16', '32', '48' */
+  portrait_backside_stars: z.string().max(20).optional().or(z.literal('')),
+  /** Backside animated halo ring density multiplier: 'off', 0.5x, 1.0x, 1.5x, 2.0x */
+  portrait_backside_halo: z.string().max(20).optional().or(z.literal('')),
+  /** Backside celestial orbit loops: 'enabled' | 'disabled' */
+  portrait_backside_orbits: z.string().max(20).optional().or(z.literal('')),
+  /** Backside ambient cosmic specks multiplier: 'off', 0.5x, 1.0x, 2.0x */
+  portrait_backside_specks: z.string().max(20).optional().or(z.literal('')),
+  /** Photographic pixel simulation grid quality / resolution: '256', '224', '192', '144', '112' */
+  portrait_image_resolution: z.string().max(20).optional().or(z.literal('')),
+  /** Click & touch impulse blast force multiplier: 0.8x, 1.8x, 2.8x, 4.0x */
+  portrait_click_force: z.string().max(20).optional().or(z.literal('')),
+  /** Elastic return bounce / spring speed multiplier: 3.5, 8.2, 14.0, 22.0 */
+  portrait_bounce_speed: z.string().max(20).optional().or(z.literal('')),
+  /** Initial arrival flight intro animation style: 'none', 'fast', 'standard', 'slow' */
+  portrait_intro_animation: z.string().max(20).optional().or(z.literal('')),
 
   // ── Footer Customization ───────────────────────────────────────────────────
   footer_text: z.string().max(500).optional().or(z.literal('')),

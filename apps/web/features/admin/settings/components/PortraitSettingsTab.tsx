@@ -3,65 +3,165 @@
 import * as React from 'react';
 import { Card, Badge, Button } from '@elsesourav/ui';
 import { ImageInputWithLibrary } from '@/features/admin/media/components/ImageInputWithLibrary';
-import { AboutPortraitParticleSettingsSection } from './AboutPortraitParticleSettingsSection';
-import { Sparkles, Moon, Sun, User, Info, Check, RefreshCw } from 'lucide-react';
+import { Moon, Sun, User, Info, RefreshCw } from 'lucide-react';
+import type { PortraitDraftSettings } from './portrait/portrait.types';
+import { PortraitStudioToolbar } from './portrait/PortraitStudioToolbar';
+import { PortraitLivePreviewCard } from './portrait/PortraitLivePreviewCard';
+import { EdgeDetectionControls } from './portrait/EdgeDetectionControls';
+import { TopParticleControls } from './portrait/TopParticleControls';
+import { BacksideObjectControls } from './portrait/BacksideObjectControls';
+import { ImagePixelQualityControls } from './portrait/ImagePixelQualityControls';
+import { PhysicsInteractionControls } from './portrait/PhysicsInteractionControls';
 
 export interface PortraitSettingsTabProps {
   settings: Record<string, string>;
   onChange: (key: string, value: string) => void;
+  onSave?: () => Promise<void>;
 }
 
-export function PortraitSettingsTab({ settings, onChange }: PortraitSettingsTabProps) {
-  const darkUrl = settings['portrait_image_dark_url'] || '';
-  const lightUrl = settings['portrait_image_light_url'] || '';
-  const avatarUrl = settings['creator_avatar_url'] || '';
+export function PortraitSettingsTab({ settings, onChange, onSave }: PortraitSettingsTabProps) {
+  // Extract initial published state
+  const getInitialDraft = React.useCallback(
+    (): PortraitDraftSettings => ({
+      portrait_image_dark_url: settings['portrait_image_dark_url'] || '/about/souravbarui-dark.png',
+      portrait_image_light_url: settings['portrait_image_light_url'] || '/about/souravbarui-light.png',
+      portrait_particle_density: settings['portrait_particle_density'] || '1.0x',
+      portrait_particle_size: settings['portrait_particle_size'] || '1.0x',
+      portrait_glow_brightness: settings['portrait_glow_brightness'] || '1.0x',
+      portrait_flight_speed: settings['portrait_flight_speed'] || '1.0x',
+      portrait_path_spread: settings['portrait_path_spread'] || '2.6px',
+      portrait_light_intensity: settings['portrait_light_intensity'] || '0.38',
+      portrait_show_path_guide: settings['portrait_show_path_guide'] || 'false',
+      portrait_edge_algorithm: settings['portrait_edge_algorithm'] || 'perimeter',
+      portrait_edge_threshold: settings['portrait_edge_threshold'] || '28',
+      portrait_pin_bottom_edge: settings['portrait_pin_bottom_edge'] || 'true',
+      portrait_top_particle_size: settings['portrait_top_particle_size'] || '1.0x',
+      portrait_top_particle_quantity: settings['portrait_top_particle_quantity'] || '1.0x',
+      portrait_top_particle_speed: settings['portrait_top_particle_speed'] || '1.0x',
+      portrait_backside_stars: settings['portrait_backside_stars'] || '32',
+      portrait_backside_halo: settings['portrait_backside_halo'] || '1.0x',
+      portrait_backside_orbits: settings['portrait_backside_orbits'] || 'enabled',
+      portrait_backside_specks: settings['portrait_backside_specks'] || '1.0x',
+      portrait_image_resolution: settings['portrait_image_resolution'] || '224',
+      portrait_click_force: settings['portrait_click_force'] || '1.8x',
+      portrait_bounce_speed: settings['portrait_bounce_speed'] || '8.2',
+      portrait_intro_animation: settings['portrait_intro_animation'] || 'standard',
+    }),
+    [settings]
+  );
 
-  const handleSyncDarkToAvatar = () => {
-    if (darkUrl) {
-      onChange('creator_avatar_url', darkUrl);
-    } else {
-      onChange('creator_avatar_url', '/about/souravbarui-dark.png');
+  const [draftSettings, setDraftSettings] = React.useState<PortraitDraftSettings>(getInitialDraft);
+  const [isApplying, setIsApplying] = React.useState(false);
+
+  // Sync draft if external settings change outside
+  React.useEffect(() => {
+    setDraftSettings(getInitialDraft());
+  }, [getInitialDraft]);
+
+  // Check if draft has unapplied changes compared to parent settings
+  const hasUnappliedChanges = React.useMemo(() => {
+    const keys = Object.keys(draftSettings) as (keyof PortraitDraftSettings)[];
+    return keys.some((k) => (settings[k] || '') !== (draftSettings[k] || ''));
+  }, [draftSettings, settings]);
+
+  const handleDraftChange = (key: string, value: string) => {
+    setDraftSettings((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+
+  const handleApply = async () => {
+    setIsApplying(true);
+    try {
+      // Propagate all draft settings to parent form
+      Object.entries(draftSettings).forEach(([k, v]) => {
+        onChange(k, v);
+      });
+      if (onSave) {
+        await onSave();
+      }
+    } finally {
+      setIsApplying(false);
     }
   };
 
+  const handleRevert = () => {
+    setDraftSettings(getInitialDraft());
+  };
+
+  const darkUrl = draftSettings.portrait_image_dark_url;
+  const lightUrl = draftSettings.portrait_image_light_url;
+  const avatarUrl = settings['creator_avatar_url'] || '';
+
+  const handleSyncDarkToAvatar = () => {
+    onChange('creator_avatar_url', darkUrl || '/about/souravbarui-dark.png');
+  };
+
   const handleSyncLightToAvatar = () => {
-    if (lightUrl) {
-      onChange('creator_avatar_url', lightUrl);
-    } else {
-      onChange('creator_avatar_url', '/about/souravbarui-light.png');
-    }
+    onChange('creator_avatar_url', lightUrl || '/about/souravbarui-light.png');
   };
 
   return (
     <div className="space-y-6">
-      {/* 1. Header Banner */}
-      <Card className="p-5 sm:p-6 rounded-3xl border-zinc-800 bg-zinc-900/40 space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-cyan-400" />
-              <h2 className="text-base sm:text-lg font-bold text-white tracking-tight">
-                Interactive Portrait Studio & Avatars
-              </h2>
-            </div>
-            <p className="text-xs text-zinc-400 max-w-2xl leading-relaxed">
-              Upload and manage your transparent Light Mode and Dark Mode portrait photographs.
-              Calibrate WebGL WebAssembly particle physics, path spread, and preview real-time
-              silhouette edge contour tracing in one unified studio.
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2 shrink-0">
-            <Badge variant="primary" className="text-[10px] font-mono">
-              C++ WASM Engine
-            </Badge>
-            <Badge variant="outline" className="text-[10px] font-mono border-zinc-700 text-zinc-300">
-              Moore-Neighbor Tracing
-            </Badge>
-          </div>
-        </div>
-      </Card>
+      {/* 1. Sticky Action Toolbar with Status and Apply Button */}
+      <PortraitStudioToolbar
+        hasUnappliedChanges={hasUnappliedChanges}
+        isApplying={isApplying}
+        onApply={handleApply}
+        onRevert={handleRevert}
+      />
 
-      {/* 2. Dual-Theme Portrait Images Upload Cards */}
+      {/* 2. Real-Time Simulation Sandbox Live Preview */}
+      <PortraitLivePreviewCard
+        settings={draftSettings}
+        onToggleGuide={(enabled) =>
+          handleDraftChange('portrait_show_path_guide', enabled ? 'true' : 'false')
+        }
+      />
+
+      {/* 3. Section: Silhouette Contour & Edge Detection */}
+      <EdgeDetectionControls
+        algorithm={draftSettings.portrait_edge_algorithm}
+        threshold={draftSettings.portrait_edge_threshold}
+        pinBottom={draftSettings.portrait_pin_bottom_edge}
+        onChange={handleDraftChange}
+      />
+
+      {/* 4. Section: Top Globe & Edge Flow Particles */}
+      <TopParticleControls
+        topSize={draftSettings.portrait_top_particle_size}
+        topQuantity={draftSettings.portrait_top_particle_quantity}
+        topSpeed={draftSettings.portrait_top_particle_speed}
+        pathSpread={draftSettings.portrait_path_spread}
+        lightIntensity={draftSettings.portrait_light_intensity}
+        onChange={handleDraftChange}
+      />
+
+      {/* 5. Section: Backside Space, Halo & Retro Stars */}
+      <BacksideObjectControls
+        halo={draftSettings.portrait_backside_halo}
+        stars={draftSettings.portrait_backside_stars}
+        orbits={draftSettings.portrait_backside_orbits}
+        specks={draftSettings.portrait_backside_specks}
+        onChange={handleDraftChange}
+      />
+
+      {/* 6. Section: Photographic Image Quality & Simulation Grid */}
+      <ImagePixelQualityControls
+        resolution={draftSettings.portrait_image_resolution}
+        onChange={handleDraftChange}
+      />
+
+      {/* 7. Section: Touch Dynamics, Click Blast & Flight Arrival */}
+      <PhysicsInteractionControls
+        clickForce={draftSettings.portrait_click_force}
+        bounceSpeed={draftSettings.portrait_bounce_speed}
+        introAnimation={draftSettings.portrait_intro_animation}
+        onChange={handleDraftChange}
+      />
+
+      {/* 8. Dual-Theme Portrait Images Upload Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Dark Theme Portrait Card */}
         <Card className="p-5 rounded-3xl border-zinc-800 bg-zinc-900/40 space-y-4 flex flex-col justify-between">
@@ -84,7 +184,7 @@ export function PortraitSettingsTab({ settings, onChange }: PortraitSettingsTabP
             <ImageInputWithLibrary
               label="Portrait Image (Transparent PNG / WebP)"
               value={darkUrl}
-              onChange={(val) => onChange('portrait_image_dark_url', val)}
+              onChange={(val) => handleDraftChange('portrait_image_dark_url', val)}
               folder="users"
               defaultCategory="users"
               previewShape="square"
@@ -94,12 +194,11 @@ export function PortraitSettingsTab({ settings, onChange }: PortraitSettingsTabP
             <div className="p-3 rounded-2xl bg-zinc-950/70 border border-zinc-800/80 space-y-1.5 text-[11px] text-zinc-400">
               <div className="flex items-center gap-1.5 font-semibold text-zinc-300">
                 <Info className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                <span>Image Requirements & Edge Detection</span>
+                <span>Image Requirements</span>
               </div>
               <p className="leading-relaxed">
-                Use a <strong>1:1 square image</strong> (e.g. 512×512) with a completely{' '}
-                <strong>transparent background (alpha = 0)</strong>. The C++ Moore-Neighbor tracer uses the
-                transparent perimeter to calculate the smooth silhouette contour ribbon.
+                Use a <strong>1:1 square image</strong> with a completely{' '}
+                <strong>transparent background (alpha = 0)</strong>.
               </p>
             </div>
           </div>
@@ -112,7 +211,7 @@ export function PortraitSettingsTab({ settings, onChange }: PortraitSettingsTabP
               type="button"
               variant="outline"
               size="xs"
-              onClick={() => onChange('portrait_image_dark_url', '/about/souravbarui-dark.png')}
+              onClick={() => handleDraftChange('portrait_image_dark_url', '/about/souravbarui-dark.png')}
               className="text-[11px] border-zinc-800 hover:bg-zinc-800 text-zinc-300 gap-1 rounded-xl h-7 px-2.5"
             >
               <RefreshCw className="w-3 h-3 text-cyan-400" />
@@ -142,7 +241,7 @@ export function PortraitSettingsTab({ settings, onChange }: PortraitSettingsTabP
             <ImageInputWithLibrary
               label="Portrait Image (Transparent PNG / WebP)"
               value={lightUrl}
-              onChange={(val) => onChange('portrait_image_light_url', val)}
+              onChange={(val) => handleDraftChange('portrait_image_light_url', val)}
               folder="users"
               defaultCategory="users"
               previewShape="square"
@@ -152,12 +251,11 @@ export function PortraitSettingsTab({ settings, onChange }: PortraitSettingsTabP
             <div className="p-3 rounded-2xl bg-zinc-950/70 border border-zinc-800/80 space-y-1.5 text-[11px] text-zinc-400">
               <div className="flex items-center gap-1.5 font-semibold text-zinc-300">
                 <Info className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                <span>Image Requirements & Edge Detection</span>
+                <span>Image Requirements</span>
               </div>
               <p className="leading-relaxed">
-                Use a <strong>1:1 square image</strong> (e.g. 512×512) with a completely{' '}
-                <strong>transparent background (alpha = 0)</strong>. Higher contrast against white
-                delivers crisp celestial particle highlights and proximity lighting.
+                Use a <strong>1:1 square image</strong> with a completely{' '}
+                <strong>transparent background (alpha = 0)</strong>.
               </p>
             </div>
           </div>
@@ -170,7 +268,7 @@ export function PortraitSettingsTab({ settings, onChange }: PortraitSettingsTabP
               type="button"
               variant="outline"
               size="xs"
-              onClick={() => onChange('portrait_image_light_url', '/about/souravbarui-light.png')}
+              onClick={() => handleDraftChange('portrait_image_light_url', '/about/souravbarui-light.png')}
               className="text-[11px] border-zinc-800 hover:bg-zinc-800 text-zinc-300 gap-1 rounded-xl h-7 px-2.5"
             >
               <RefreshCw className="w-3 h-3 text-amber-400" />
@@ -180,7 +278,7 @@ export function PortraitSettingsTab({ settings, onChange }: PortraitSettingsTabP
         </Card>
       </div>
 
-      {/* 3. Global Creator Avatar Fallback Card */}
+      {/* 9. Global Creator Avatar Fallback Card */}
       <Card className="p-4 sm:p-5 rounded-3xl border-zinc-800 bg-zinc-900/40 space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-800/80 pb-3">
           <div className="flex items-center gap-2">
@@ -227,22 +325,6 @@ export function PortraitSettingsTab({ settings, onChange }: PortraitSettingsTabP
           defaultCategory="users"
           previewShape="circle"
           placeholder="Avatar photo URL or select from media"
-        />
-      </Card>
-
-      {/* 4. Live Inspector & Simulation Controls Section */}
-      <Card className="p-5 sm:p-6 rounded-3xl border-zinc-800 bg-zinc-900/40 space-y-6">
-        <AboutPortraitParticleSettingsSection
-          particleDensity={settings['portrait_particle_density'] || '1.0x'}
-          particleSize={settings['portrait_particle_size'] || '1.0x'}
-          glowBrightness={settings['portrait_glow_brightness'] || '1.0x'}
-          flightSpeed={settings['portrait_flight_speed'] || '1.0x'}
-          pathSpread={settings['portrait_path_spread'] || '2.6px'}
-          lightIntensity={settings['portrait_light_intensity'] || '0.38'}
-          showPathGuide={settings['portrait_show_path_guide'] === 'true'}
-          imageDarkSrc={darkUrl || '/about/souravbarui-dark.png'}
-          imageLightSrc={lightUrl || '/about/souravbarui-light.png'}
-          onChange={onChange}
         />
       </Card>
     </div>

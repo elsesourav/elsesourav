@@ -290,7 +290,7 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
       )}
 
       {activeTab === 'portrait' && (
-        <PortraitSettingsTab settings={settings} onChange={handleChange} />
+        <PortraitSettingsTab settings={settings} onChange={handleChange} onSave={handleSave} />
       )}
 
       {activeTab === 'footer' && (

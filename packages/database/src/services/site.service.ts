@@ -50,6 +50,20 @@ export class SiteService {
     const portraitGlowBrightness = dbSettings['portrait_glow_brightness'] || '1.0x';
     const portraitFlightSpeed = dbSettings['portrait_flight_speed'] || '1.0x';
     const portraitPathSpread = dbSettings['portrait_path_spread'] || '2.4px';
+    const portraitEdgeAlgorithm = dbSettings['portrait_edge_algorithm'] || 'perimeter';
+    const portraitEdgeThreshold = dbSettings['portrait_edge_threshold'] || '28';
+    const portraitPinBottomEdge = dbSettings['portrait_pin_bottom_edge'] || 'true';
+    const portraitTopParticleSize = dbSettings['portrait_top_particle_size'] || '1.0x';
+    const portraitTopParticleQuantity = dbSettings['portrait_top_particle_quantity'] || '1.0x';
+    const portraitTopParticleSpeed = dbSettings['portrait_top_particle_speed'] || '1.0x';
+    const portraitBacksideStars = dbSettings['portrait_backside_stars'] || '32';
+    const portraitBacksideHalo = dbSettings['portrait_backside_halo'] || '1.0x';
+    const portraitBacksideOrbits = dbSettings['portrait_backside_orbits'] || 'enabled';
+    const portraitBacksideSpecks = dbSettings['portrait_backside_specks'] || '1.0x';
+    const portraitImageResolution = dbSettings['portrait_image_resolution'] || '224';
+    const portraitClickForce = dbSettings['portrait_click_force'] || '1.0x';
+    const portraitBounceSpeed = dbSettings['portrait_bounce_speed'] || '1.0x';
+    const portraitIntroAnimation = dbSettings['portrait_intro_animation'] || 'standard';
 
     const footerCopyright =
       dbSettings['footer_copyright'] ||
@@ -147,6 +161,20 @@ export class SiteService {
         portraitGlowBrightness,
         portraitFlightSpeed,
         portraitPathSpread,
+        portraitEdgeAlgorithm,
+        portraitEdgeThreshold,
+        portraitPinBottomEdge,
+        portraitTopParticleSize,
+        portraitTopParticleQuantity,
+        portraitTopParticleSpeed,
+        portraitBacksideStars,
+        portraitBacksideHalo,
+        portraitBacksideOrbits,
+        portraitBacksideSpecks,
+        portraitImageResolution,
+        portraitClickForce,
+        portraitBounceSpeed,
+        portraitIntroAnimation,
       },
       footer: {
         copyright: footerCopyright,
