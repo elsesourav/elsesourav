@@ -72,7 +72,6 @@ export function PortraitSettingsTab({ settings, onChange, onSave }: PortraitSett
   const handleApply = async () => {
     setIsApplying(true);
     try {
-      // Propagate all draft settings to parent form
       Object.entries(draftSettings).forEach(([k, v]) => {
         onChange(k, v);
       });
@@ -97,72 +96,70 @@ export function PortraitSettingsTab({ settings, onChange, onSave }: PortraitSett
   };
 
   return (
-    <div className="space-y-6">
-      {/* 1. Sticky Action Toolbar with Status and Apply Button */}
-      <PortraitStudioToolbar
-        hasUnappliedChanges={hasUnappliedChanges}
-        isApplying={isApplying}
-        onApply={handleApply}
-        onRevert={handleRevert}
-      />
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+      {/* Left Column: All Interactive Controls (7 cols on desktop) */}
+      <div className="lg:col-span-7 space-y-4 order-2 lg:order-1 min-w-0">
+        <PortraitImageUploadControls
+          darkUrl={darkUrl}
+          lightUrl={lightUrl}
+          avatarUrl={avatarUrl}
+          onChange={handleDraftChange}
+          onSyncToAvatar={handleSyncToAvatar}
+        />
 
-      {/* 2. Real-Time Simulation Sandbox Live Preview */}
-      <PortraitLivePreviewCard
-        settings={draftSettings}
-        onToggleGuide={(enabled) =>
-          handleDraftChange('portrait_show_path_guide', enabled ? 'true' : 'false')
-        }
-      />
+        <EdgeDetectionControls
+          algorithm={draftSettings.portrait_edge_algorithm}
+          threshold={draftSettings.portrait_edge_threshold}
+          pinBottom={draftSettings.portrait_pin_bottom_edge}
+          onChange={handleDraftChange}
+        />
 
-      {/* 3. Section: Dual-Theme Portrait Assets & 1:1 Square Crop */}
-      <PortraitImageUploadControls
-        darkUrl={darkUrl}
-        lightUrl={lightUrl}
-        avatarUrl={avatarUrl}
-        onChange={handleDraftChange}
-        onSyncToAvatar={handleSyncToAvatar}
-      />
+        <TopParticleControls
+          topSize={draftSettings.portrait_top_particle_size}
+          topQuantity={draftSettings.portrait_top_particle_quantity}
+          topSpeed={draftSettings.portrait_top_particle_speed}
+          pathSpread={draftSettings.portrait_path_spread}
+          lightIntensity={draftSettings.portrait_light_intensity}
+          onChange={handleDraftChange}
+        />
 
-      {/* 4. Section: Silhouette Contour & Edge Detection */}
-      <EdgeDetectionControls
-        algorithm={draftSettings.portrait_edge_algorithm}
-        threshold={draftSettings.portrait_edge_threshold}
-        pinBottom={draftSettings.portrait_pin_bottom_edge}
-        onChange={handleDraftChange}
-      />
+        <BacksideObjectControls
+          halo={draftSettings.portrait_backside_halo}
+          stars={draftSettings.portrait_backside_stars}
+          orbits={draftSettings.portrait_backside_orbits}
+          specks={draftSettings.portrait_backside_specks}
+          onChange={handleDraftChange}
+        />
 
-      {/* 5. Section: Top Globe & Edge Flow Particles */}
-      <TopParticleControls
-        topSize={draftSettings.portrait_top_particle_size}
-        topQuantity={draftSettings.portrait_top_particle_quantity}
-        topSpeed={draftSettings.portrait_top_particle_speed}
-        pathSpread={draftSettings.portrait_path_spread}
-        lightIntensity={draftSettings.portrait_light_intensity}
-        onChange={handleDraftChange}
-      />
+        <ImagePixelQualityControls
+          resolution={draftSettings.portrait_image_resolution}
+          onChange={handleDraftChange}
+        />
 
-      {/* 6. Section: Backside Space, Halo & Retro Stars */}
-      <BacksideObjectControls
-        halo={draftSettings.portrait_backside_halo}
-        stars={draftSettings.portrait_backside_stars}
-        orbits={draftSettings.portrait_backside_orbits}
-        specks={draftSettings.portrait_backside_specks}
-        onChange={handleDraftChange}
-      />
+        <PhysicsInteractionControls
+          clickForce={draftSettings.portrait_click_force}
+          bounceSpeed={draftSettings.portrait_bounce_speed}
+          introAnimation={draftSettings.portrait_intro_animation}
+          onChange={handleDraftChange}
+        />
+      </div>
 
-      {/* 7. Section: Photographic Image Quality & Simulation Grid */}
-      <ImagePixelQualityControls
-        resolution={draftSettings.portrait_image_resolution}
-        onChange={handleDraftChange}
-      />
+      {/* Right Column: Sticky Live Preview Sandbox & Actions (5 cols on desktop) */}
+      <div className="lg:col-span-5 lg:sticky lg:top-6 space-y-3 order-1 lg:order-2">
+        <PortraitStudioToolbar
+          hasUnappliedChanges={hasUnappliedChanges}
+          isApplying={isApplying}
+          onApply={handleApply}
+          onRevert={handleRevert}
+        />
 
-      {/* 8. Section: Touch Dynamics, Click Blast & Flight Arrival */}
-      <PhysicsInteractionControls
-        clickForce={draftSettings.portrait_click_force}
-        bounceSpeed={draftSettings.portrait_bounce_speed}
-        introAnimation={draftSettings.portrait_intro_animation}
-        onChange={handleDraftChange}
-      />
+        <PortraitLivePreviewCard
+          settings={draftSettings}
+          onToggleGuide={(enabled) =>
+            handleDraftChange('portrait_show_path_guide', enabled ? 'true' : 'false')
+          }
+        />
+      </div>
     </div>
   );
 }
