@@ -212,14 +212,16 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
           size="sm"
           onClick={handleSave}
           disabled={isSaving}
-          className="gap-2 text-xs h-9 px-4 rounded-xl shadow-lg shadow-indigo-600/20 w-full sm:w-auto justify-center shrink-0"
+          leftIcon={
+            isSaving ? (
+              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <Save className="w-3.5 h-3.5" />
+            )
+          }
+          className="text-xs h-9 px-4 rounded-xl shadow-lg shadow-indigo-600/20 w-full sm:w-auto justify-center shrink-0"
         >
-          {isSaving ? (
-            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-          ) : (
-            <Save className="w-3.5 h-3.5" />
-          )}
-          <span>{isSaving ? 'Saving Changes...' : 'Save Settings'}</span>
+          {isSaving ? 'Saving Changes...' : 'Save Settings'}
         </Button>
       </div>
 

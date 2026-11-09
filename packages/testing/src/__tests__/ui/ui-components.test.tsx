@@ -89,6 +89,21 @@ describe('Button & Foundation Primitives', () => {
     expect(button.getAttribute('disabled')).toBeDefined();
   });
 
+  it('renders inline icon and text children directly without intermediate blocking wrapper', () => {
+    const { container } = render(
+      <Button>
+        <Plus className="w-4 h-4 test-icon" />
+        <span>Add App</span>
+      </Button>
+    );
+    const button = container.querySelector('button');
+    expect(button).not.toBeNull();
+    // Direct children should be the SVG and the text span (no rogue un-styled intermediate span)
+    expect(button?.children.length).toBe(2);
+    expect(button?.querySelector('svg.test-icon')).not.toBeNull();
+    expect(button?.querySelector('span')?.textContent).toBe('Add App');
+  });
+
   it('renders Badge and Avatar with fallback text', () => {
     render(
       <div>
