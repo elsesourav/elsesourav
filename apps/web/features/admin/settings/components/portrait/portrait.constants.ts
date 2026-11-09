@@ -102,14 +102,14 @@ export const AMBIENT_SPECKS_ITEMS: readonly DropdownItem[] = [
 ];
 
 export const IMAGE_RESOLUTION_ITEMS: readonly DropdownItem[] = [
-  { value: '512', label: '512×512 Super Resolution (Max Detail)', hint: '512px' },
-  { value: '384', label: '384×384 Extreme Crystalline', hint: '384px' },
-  { value: '256', label: '256×256 Ultra Fine', hint: '256px' },
+  { value: '256', label: '256×256 Ultra Fine (Recommended)', hint: '256px' },
   { value: '224', label: '224×224 Crisp High (Default)', hint: '224px' },
   { value: '192', label: '192×192 Medium Balanced', hint: '192px' },
   { value: '160', label: '160×160 Fluid Performance', hint: '160px' },
   { value: '144', label: '144×144 Retro Pixel Art', hint: '144px' },
   { value: '112', label: '112×112 Chunky Arcade', hint: '112px' },
+  { value: '384', label: '384×384 Extreme Crystalline', hint: '384px' },
+  { value: '512', label: '512×512 Super Resolution (Max Detail)', hint: '512px' },
 ];
 
 export const CLICK_FORCE_ITEMS: readonly DropdownItem[] = [

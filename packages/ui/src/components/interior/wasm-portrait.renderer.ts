@@ -26,6 +26,10 @@ export function createShader(
   return shader;
 }
 
+interface TrackedWebGLBuffer extends WebGLBuffer {
+  __capacity?: number;
+}
+
 export function createPixelProgram(
   gl: WebGLRenderingContext
 ): { program: WebGLProgram | null; vbo: WebGLBuffer | null } {
@@ -48,9 +52,13 @@ export function createPixelProgram(
     return { program: null, vbo: null };
   }
 
-  const vbo = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
-  gl.bufferData(gl.ARRAY_BUFFER, 65536 * 7 * 4, gl.DYNAMIC_DRAW);
+  const vbo = gl.createBuffer() as TrackedWebGLBuffer | null;
+  if (vbo) {
+    const initialCapacity = 131072 * 7 * 4; // Headroom for up to 131,072 particles
+    gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+    gl.bufferData(gl.ARRAY_BUFFER, initialCapacity, gl.DYNAMIC_DRAW);
+    vbo.__capacity = initialCapacity;
+  }
 
   return { program: prog, vbo };
 }
@@ -105,6 +113,8 @@ export function drawPixelVertices(
   canvasWidth: number,
   cardRect: DOMRect | null
 ): void {
+  if (gl.isContextLost()) return;
+
   gl.clearColor(0, 0, 0, 0);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
@@ -119,6 +129,18 @@ export function drawPixelVertices(
 
   gl.useProgram(program);
   gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+
+  const neededBytes = vertexFloats.byteLength;
+  const trackedVbo = vbo as TrackedWebGLBuffer;
+  const currentCapacity = trackedVbo.__capacity || 0;
+
+  if (neededBytes > currentCapacity) {
+    // Dynamically expand buffer to accommodate high-density particle counts safely
+    const newCapacity = Math.max(neededBytes, (currentCapacity || 65536) * 2);
+    gl.bufferData(gl.ARRAY_BUFFER, newCapacity, gl.DYNAMIC_DRAW);
+    trackedVbo.__capacity = newCapacity;
+  }
+
   gl.bufferSubData(gl.ARRAY_BUFFER, 0, vertexFloats);
 
   const stride = 7 * 4;
