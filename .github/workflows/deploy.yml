@@ -1,14 +1,15 @@
 name: Production Deployment
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
     inputs:
       reason:
         description: 'Reason for manual release dispatch'
         required: false
         default: 'Manual production promotion'
+  # Temporarily disabled automated triggers while deploying directly via Vercel.
+  # push:
+  #   branches: [main]
 
 concurrency:
   group: deploy-production

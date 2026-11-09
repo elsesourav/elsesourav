@@ -1,10 +1,12 @@
 name: CI Quality Gate
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_dispatch:
+  # Temporarily disabled automated triggers while deploying directly via Vercel.
+  # push:
+  #   branches: [main]
+  # pull_request:
+  #   branches: [main]
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}

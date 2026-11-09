@@ -1,9 +1,11 @@
 name: Preview Deployment
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-    branches: [main]
+  workflow_dispatch:
+  # Temporarily disabled automated triggers while deploying directly via Vercel.
+  # pull_request:
+  #   types: [opened, synchronize, reopened]
+  #   branches: [main]
 
 concurrency:
   group: preview-${{ github.workflow }}-${{ github.head_ref || github.ref }}
