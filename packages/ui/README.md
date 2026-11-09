@@ -125,7 +125,7 @@ import { ... } from '@elsesourav/ui';
   - **Integrated Loading State**: Seamless rotating SVG spinner with `loadingText` blur/crossfade and layout stabilization (zero CLS).
   - **Integrated Copy to Clipboard**: Pass `copyValue="text"` to transform any button into a morphing copy trigger with SVG checkmark path draw animation and fallback clipboard writer.
   - **Ripple Bloom**: Optional radial physics ripple on pointer/keyboard press (`ripple?: boolean`).
-  - **Slots & Single-Line Flex**: Direct flex layout with zero layout-shift `leftIcon` and `rightIcon` slots or direct inline SVG + text children (`whitespace-nowrap inline-flex items-center gap-[size] [&>svg]:shrink-0`) preventing vertical stacking or rogue wrapper breaks.
+  - **Slots & Single-Line Flex**: Direct flex layout with zero layout-shift `leftIcon` and `rightIcon` slots or direct inline SVG + text children (`whitespace-nowrap inline-flex items-center gap-[size] [&_svg]:inline-block [&_svg]:shrink-0 [&_svg]:align-middle [&>span]:inline-flex [&>span]:items-center [&>span]:gap-2`) preventing vertical stacking or rogue wrapper breaks.
 - **Props**:
   - `variant`: `'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'destructive' | 'subtle' | 'elevated'` (default: `'primary'`)
   - `size`: `'xs' | 'sm' | 'md' | 'lg' | 'icon' | 'icon-xs' | 'icon-sm' | 'icon-lg'` (default: `'md'`)
