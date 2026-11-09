@@ -15,6 +15,7 @@ inline void applyProximityLighting(
     int h,
     float lightIntensity,
     float glowMultiplier,
+    float glowDistance,
     int isDark,
     float* lightMapR,
     float* lightMapG,
@@ -29,7 +30,7 @@ inline void applyProximityLighting(
     memset(lightMapG, 0, totalCells * sizeof(float));
     memset(lightMapB, 0, totalCells * sizeof(float));
 
-    float lightRadius = 7.5f * glowMultiplier;
+    float lightRadius = 7.5f * glowMultiplier * (glowDistance > 0.05f ? glowDistance : 1.0f);
     int iRad = (int)ceilf(lightRadius);
     float rSq = lightRadius * lightRadius;
 

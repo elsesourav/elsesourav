@@ -47,7 +47,7 @@ export default async function AdminSettingsPage() {
     creator_full_name: dbSettings['creator_full_name'] || 'Sourav Barui',
     creator_title: dbSettings['creator_title'] || CREATOR_CONFIG.identity.title,
     creator_role: dbSettings['creator_role'] || CREATOR_CONFIG.identity.role,
-    creator_location: dbSettings['creator_location'] || CREATOR_CONFIG.identity.location,
+    creator_location: dbSettings['creator_location'] || '',
     creator_positioning: dbSettings['creator_positioning'] || CREATOR_CONFIG.positioning,
     creator_short_bio: dbSettings['creator_short_bio'] || CREATOR_CONFIG.shortBio,
     creator_long_bio: dbSettings['creator_long_bio'] || CREATOR_CONFIG.longBio,
@@ -58,9 +58,15 @@ export default async function AdminSettingsPage() {
     support_url: dbSettings['support_url'] || CREATOR_CONFIG.contact.support,
     // UI & Appearance fidelity
     effects_level: dbSettings['effects_level'] || 'high',
-    // Portrait & Avatar Studio defaults
-    portrait_image_dark_url: dbSettings['portrait_image_dark_url'] || '/about/souravbarui-dark.png',
-    portrait_image_light_url: dbSettings['portrait_image_light_url'] || '/about/souravbarui-light.png',
+    // Portrait & Avatar Studio defaults (empty string indicates using built-in default asset)
+    portrait_image_dark_url:
+      dbSettings['portrait_image_dark_url'] === '/about/souravbarui-dark.png'
+        ? ''
+        : dbSettings['portrait_image_dark_url'] || '',
+    portrait_image_light_url:
+      dbSettings['portrait_image_light_url'] === '/about/souravbarui-light.png'
+        ? ''
+        : dbSettings['portrait_image_light_url'] || '',
     portrait_particle_density: dbSettings['portrait_particle_density'] || '1.0x',
     portrait_particle_size: dbSettings['portrait_particle_size'] || '1.0x',
     portrait_glow_brightness: dbSettings['portrait_glow_brightness'] || '1.0x',
@@ -74,14 +80,19 @@ export default async function AdminSettingsPage() {
     portrait_top_particle_size: dbSettings['portrait_top_particle_size'] || '1.0x',
     portrait_top_particle_quantity: dbSettings['portrait_top_particle_quantity'] || '1.0x',
     portrait_top_particle_speed: dbSettings['portrait_top_particle_speed'] || '1.0x',
+    portrait_glow_distance: dbSettings['portrait_glow_distance'] || '8px',
     portrait_backside_stars: dbSettings['portrait_backside_stars'] || '32',
     portrait_backside_halo: dbSettings['portrait_backside_halo'] || '1.0x',
-    portrait_backside_orbits: dbSettings['portrait_backside_orbits'] || 'enabled',
+    portrait_backside_orbits: dbSettings['portrait_backside_orbits'] || '2',
     portrait_backside_specks: dbSettings['portrait_backside_specks'] || '1.0x',
     portrait_image_resolution: dbSettings['portrait_image_resolution'] || '224',
+    portrait_image_resolution_desktop: dbSettings['portrait_image_resolution_desktop'] || '256',
+    portrait_image_resolution_tablet: dbSettings['portrait_image_resolution_tablet'] || '192',
+    portrait_image_resolution_mobile: dbSettings['portrait_image_resolution_mobile'] || '144',
     portrait_click_force: dbSettings['portrait_click_force'] || '1.0x',
-    portrait_bounce_speed: dbSettings['portrait_bounce_speed'] || '1.0x',
-    portrait_intro_animation: dbSettings['portrait_intro_animation'] || 'standard',
+    portrait_bounce_speed: dbSettings['portrait_bounce_speed'] || '8.2',
+    portrait_click_radius: dbSettings['portrait_click_radius'] || '80px',
+    portrait_intro_animation: dbSettings['portrait_intro_animation'] || '1.0s',
     // Legal content defaults
     legal_privacy_md: dbSettings['legal_privacy_md'] || '',
     legal_terms_md: dbSettings['legal_terms_md'] || '',

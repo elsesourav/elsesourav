@@ -3,11 +3,24 @@
 import * as React from 'react';
 import { Badge, Button, Switch } from '@elsesourav/ui';
 import { WasmPortraitCanvas } from '@elsesourav/ui/interior';
-import { Sparkles, Undo2, Send, Route, Moon, Sun, Zap, MousePointerClick } from 'lucide-react';
-import type { PortraitDraftSettings } from './portrait.types';
+import {
+  Sparkles,
+  Undo2,
+  Send,
+  Route,
+  Moon,
+  Sun,
+  Zap,
+  MousePointerClick,
+  Monitor,
+  Tablet,
+  Smartphone,
+} from 'lucide-react';
+import type { PortraitDraftSettings, PortraitDeviceTarget } from './portrait.types';
 
 export interface PortraitLivePreviewCardProps {
   settings: PortraitDraftSettings;
+  activeDevice?: PortraitDeviceTarget;
   hasUnappliedChanges?: boolean;
   isApplying?: boolean;
   onApply?: () => void;
@@ -17,6 +30,7 @@ export interface PortraitLivePreviewCardProps {
 
 export function PortraitLivePreviewCard({
   settings,
+  activeDevice = 'desktop',
   hasUnappliedChanges = false,
   isApplying = false,
   onApply,
@@ -36,6 +50,27 @@ export function PortraitLivePreviewCard({
       setBurstKey((k) => k + 1);
     }
   };
+
+  // Determine resolution based on device target
+  const activeResolution =
+    activeDevice === 'mobile'
+      ? settings.portrait_image_resolution_mobile || '144'
+      : activeDevice === 'tablet'
+        ? settings.portrait_image_resolution_tablet || '192'
+        : settings.portrait_image_resolution_desktop || settings.portrait_image_resolution || '256';
+
+  // Desktop canvas is generously sized (~340px) to maximize detail visibility
+  const { canvasSize, maxWClass } = React.useMemo(() => {
+    if (activeDevice === 'mobile') {
+      return { canvasSize: 220, maxWClass: 'max-w-[220px]' };
+    }
+    if (activeDevice === 'tablet') {
+      return { canvasSize: 270, maxWClass: 'max-w-[270px]' };
+    }
+    return { canvasSize: 340, maxWClass: 'max-w-[340px]' };
+  }, [activeDevice]);
+
+  const DeviceIcon = activeDevice === 'mobile' ? Smartphone : activeDevice === 'tablet' ? Tablet : Monitor;
 
   return (
     <div className="p-3.5 rounded-2xl border border-zinc-800 bg-zinc-950/90 shadow-2xl space-y-3">
@@ -108,8 +143,12 @@ export function PortraitLivePreviewCard({
       {/* Simulation Controls: Resolution, Quick Burst & Theme Mode Switch */}
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-1.5 min-w-0">
-          <Badge variant="outline" className="text-[9px] font-mono border-zinc-700 text-zinc-400 shrink-0">
-            {settings.portrait_image_resolution || '224'}px
+          <Badge
+            variant="outline"
+            className="text-[9px] font-mono border-zinc-700 text-zinc-400 shrink-0 flex items-center gap-1"
+          >
+            <DeviceIcon className="w-2.5 h-2.5 text-cyan-400" />
+            <span>{activeResolution}px</span>
           </Badge>
           <Button
             type="button"
@@ -162,21 +201,21 @@ export function PortraitLivePreviewCard({
         <span className="text-[10px] font-mono text-zinc-500">Preview only</span>
       </div>
 
-      {/* Canvas Sandbox: Compact 230px Fit */}
-      <div className="flex justify-center py-0.5">
+      {/* Canvas Sandbox: Dynamically Sized for Active Target (340px on Desktop) */}
+      <div className="flex justify-center py-1">
         <div
-          key={burstKey}
-          className={`relative p-2 rounded-2xl border transition-colors max-w-[240px] w-full ${
+          key={`${burstKey}-${activeDevice}`}
+          className={`relative p-2.5 rounded-2xl border transition-all ${maxWClass} w-full ${
             previewTheme === 'dark'
-              ? 'bg-zinc-950 border-zinc-800 shadow-[0_0_24px_rgba(6,182,212,0.12)]'
-              : 'bg-zinc-100 border-zinc-300 shadow-[0_0_24px_rgba(0,0,0,0.06)]'
+              ? 'bg-zinc-950 border-zinc-800 shadow-[0_0_32px_rgba(6,182,212,0.14)]'
+              : 'bg-zinc-100 border-zinc-300 shadow-[0_0_32px_rgba(0,0,0,0.08)]'
           }`}
         >
           <WasmPortraitCanvas
             imageDarkSrc={settings.portrait_image_dark_url || '/about/souravbarui-dark.png'}
             imageLightSrc={settings.portrait_image_light_url || '/about/souravbarui-light.png'}
             isDark={previewTheme === 'dark'}
-            size={230}
+            size={canvasSize}
             particleDensity={settings.portrait_particle_density}
             particleSize={settings.portrait_particle_size}
             glowBrightness={settings.portrait_glow_brightness}
@@ -190,13 +229,15 @@ export function PortraitLivePreviewCard({
             topParticleSize={settings.portrait_top_particle_size}
             topParticleQuantity={settings.portrait_top_particle_quantity}
             topParticleSpeed={settings.portrait_top_particle_speed}
+            glowDistance={settings.portrait_glow_distance}
             backsideStars={settings.portrait_backside_stars}
             backsideHalo={settings.portrait_backside_halo}
             backsideOrbits={settings.portrait_backside_orbits}
             backsideSpecks={settings.portrait_backside_specks}
-            simulationResolution={settings.portrait_image_resolution}
+            simulationResolution={activeResolution}
             clickForce={settings.portrait_click_force}
             bounceSpeed={settings.portrait_bounce_speed}
+            clickRadius={settings.portrait_click_radius}
             introDuration={settings.portrait_intro_animation}
             className="rounded-xl w-full"
           />
@@ -206,7 +247,7 @@ export function PortraitLivePreviewCard({
       {/* Interactive Micro-hint */}
       <div className="flex items-center justify-center gap-1.5 pt-0.5 text-[10px] text-zinc-500 font-mono">
         <MousePointerClick className="w-3 h-3 text-cyan-400/70" />
-        <span>Click canvas to test interactive impulse</span>
+        <span>Click canvas to test localized impulse &amp; return physics</span>
       </div>
     </div>
   );

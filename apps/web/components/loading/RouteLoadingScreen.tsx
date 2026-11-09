@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { CanvasLogoLoader } from './CanvasLogoLoader';
 import { AnimatedLoadingText } from './AnimatedLoadingText';
-import type { LogoPixelTuple } from './logoPixelData';
+import { LOGO_PIXEL_DATA, toLightweightPixels, type LogoPixelTuple } from './logoPixelData';
 
 export interface RouteLoadingScreenProps {
   /** Optional custom title (default: "ElseSourav") */
@@ -16,7 +16,7 @@ export interface RouteLoadingScreenProps {
   fullScreen?: boolean;
   /** Custom pixel data tuples */
   pixelData?: readonly LogoPixelTuple[];
-  /** Optional custom logo URL */
+  /** Optional custom logo URL (kept for API compatibility) */
   logoUrl?: string;
   /** Optional extra classes */
   className?: string;
@@ -28,12 +28,16 @@ export function RouteLoadingScreen({
   size = 240,
   fullScreen = true,
   pixelData,
-  logoUrl,
   className = '',
 }: RouteLoadingScreenProps) {
   const containerClasses = fullScreen
     ? 'fixed inset-0 top-0 left-0 w-screen h-screen z-[99999] flex flex-col items-center justify-center bg-[hsl(var(--background))]/85 backdrop-blur-md select-none overflow-hidden'
     : 'min-h-[65vh] w-full flex-1 flex flex-col items-center justify-center p-6 relative select-none overflow-hidden';
+
+  const activePixels = React.useMemo(() => {
+    if (pixelData && pixelData.length > 0) return toLightweightPixels(pixelData);
+    return LOGO_PIXEL_DATA;
+  }, [pixelData]);
 
   return (
     <div
@@ -53,10 +57,10 @@ export function RouteLoadingScreen({
 
       <CanvasLogoLoader
         size={size}
-        durationMs={550}
+        durationMs={520}
         fullScreen={fullScreen}
-        pixelData={pixelData}
-        logoUrl={logoUrl}
+        pixelData={activePixels}
+        active={true}
       />
 
       <div

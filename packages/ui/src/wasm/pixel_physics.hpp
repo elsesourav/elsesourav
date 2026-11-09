@@ -12,7 +12,11 @@
 inline void PixelEngine::addBurst(float x, float y, float force) {
     float baseF = (force > 0.1f) ? force : 1.8f;
     float effForce = baseF * clickForceMult;
-    float burstRadius = (float)width * 0.32f; // ~70-80px blast radius
+
+    // Localized burst radius:
+    // clickRadiusMult: 0.3f = pinpoint (~24px), 0.6f = local (~48px), 1.0f = focused (~80px), 1.75f = broad (~140px), >= 5.0f = full canvas
+    float burstRadius = (float)width * 0.32f * (clickRadiusMult > 0.05f ? clickRadiusMult : 1.0f);
+    if (burstRadius > (float)width * 1.5f) burstRadius = (float)width * 1.5f;
 
     // 1. Immediate radial burst impulse to pixels near the click position
     for (int i = 0; i < particleCount; i++) {
@@ -34,15 +38,18 @@ inline void PixelEngine::addBurst(float x, float y, float force) {
     }
 
     // 2. Expanding shockwave ring that sweeps across the rest of the canvas
-    for (int i = 0; i < MAX_SHOCKWAVES; i++) {
-        if (!shockwaves[i].active) {
-            shockwaves[i].x = x;
-            shockwaves[i].y = y;
-            shockwaves[i].radius = burstRadius * 0.35f;
-            shockwaves[i].maxRadius = (float)width * 1.15f;
-            shockwaves[i].force = effForce;
-            shockwaves[i].active = 1;
-            break;
+    if (burstRadius > 0.05f) {
+        for (int i = 0; i < MAX_SHOCKWAVES; i++) {
+            if (!shockwaves[i].active) {
+                shockwaves[i].x = x;
+                shockwaves[i].y = y;
+                shockwaves[i].radius = burstRadius * 0.25f;
+                // If clickRadiusMult >= 5.0f, full canvas shockwave; otherwise confine strictly to burstRadius!
+                shockwaves[i].maxRadius = (clickRadiusMult >= 5.0f) ? ((float)width * 1.15f) : burstRadius;
+                shockwaves[i].force = effForce;
+                shockwaves[i].active = 1;
+                break;
+            }
         }
     }
 }
@@ -67,6 +74,7 @@ inline void PixelEngine::triggerEntrance(float duration) {
             height,
             lightIntensity,
             glowMultiplier,
+            glowDistanceMult,
             isDark,
             lightMapR,
             lightMapG,
@@ -360,6 +368,7 @@ inline void PixelEngine::update(float dt, float mouseX, float mouseY, int isMous
         height,
         lightIntensity,
         glowMultiplier,
+        glowDistanceMult,
         isDark,
         lightMapR,
         lightMapG,

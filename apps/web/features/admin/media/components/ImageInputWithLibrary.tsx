@@ -1,11 +1,11 @@
 'use client';
 
 import * as React from 'react';
-import { Button, Input } from '@elsesourav/ui';
+import { Button, Input, ImageCropperModal } from '@elsesourav/ui';
 import { MediaPickerModal } from './MediaPickerModal';
 import { adminUploadImageFileAction } from '../actions/admin-media-actions';
 import type { MediaDomain, MediaFolder } from '@elsesourav/types';
-import { Image as ImageIcon, Upload, FolderOpen, X, Loader2 } from 'lucide-react';
+import { Image as ImageIcon, Upload, FolderOpen, X, Loader2, Crop } from 'lucide-react';
 
 export interface ImageInputWithLibraryProps {
   value: string;
@@ -17,33 +17,74 @@ export interface ImageInputWithLibraryProps {
   defaultCategory?: MediaDomain;
   previewShape?: 'circle' | 'square' | 'banner' | 'portrait';
   className?: string;
+  fallbackUrl?: string;
 }
 
 export function ImageInputWithLibrary({
   value,
   onChange,
   label,
-  placeholder = 'https://... or select from library',
+  placeholder,
   required = false,
   folder = 'general',
   defaultCategory = 'general',
   previewShape = 'square',
   className = '',
+  fallbackUrl,
 }: ImageInputWithLibraryProps) {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isUploading, setIsUploading] = React.useState(false);
   const [uploadError, setUploadError] = React.useState<string | null>(null);
+
+  // Cropper states
+  const [isCropperOpen, setIsCropperOpen] = React.useState(false);
+  const [cropperSrc, setCropperSrc] = React.useState<string | null>(null);
+  const [cropperFileName, setCropperFileName] = React.useState<string>('image.webp');
+
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const displayImage = value || fallbackUrl;
+  const effectivePlaceholder =
+    placeholder || (fallbackUrl ? 'Default asset active (upload to override)' : 'https://... or select from library');
+
+  // Determine crop parameters based on previewShape
+  const cropConfig = React.useMemo(() => {
+    switch (previewShape) {
+      case 'circle':
+        return { aspectRatio: 1, cropShape: 'round' as const, width: 512, height: 512 };
+      case 'portrait':
+        return { aspectRatio: 1, cropShape: 'rect' as const, width: 512, height: 512 };
+      case 'banner':
+        return { aspectRatio: 16 / 9, cropShape: 'rect' as const, width: 1200, height: 675 };
+      case 'square':
+      default:
+        return { aspectRatio: 1, cropShape: 'rect' as const, width: 512, height: 512 };
+    }
+  }, [previewShape]);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    if (!file.type.startsWith('image/')) {
+      setUploadError('Please choose a valid image file');
+      return;
+    }
+
+    setUploadError(null);
+    setCropperFileName(file.name.replace(/\.[^/.]+$/, '') + '.webp');
+    const objectUrl = URL.createObjectURL(file);
+    setCropperSrc(objectUrl);
+    setIsCropperOpen(true);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleCropComplete = async (croppedFile: File) => {
     setIsUploading(true);
     setUploadError(null);
 
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', croppedFile);
     formData.append('folder', folder);
 
     try {
@@ -54,10 +95,9 @@ export function ImageInputWithLibrary({
         setUploadError(res.error || 'Upload failed');
       }
     } catch {
-      setUploadError('Failed to upload image');
+      setUploadError('Failed to upload image to Cloudinary');
     } finally {
       setIsUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 
@@ -106,9 +146,9 @@ export function ImageInputWithLibrary({
       <div className="flex flex-col sm:flex-row sm:items-center gap-3">
         {/* Preview Thumbnail */}
         <div className={previewClasses}>
-          {value ? (
+          {displayImage ? (
             <img
-              src={value}
+              src={displayImage}
               alt="Preview"
               className="w-full h-full object-cover"
               onError={(e) => {
@@ -126,7 +166,7 @@ export function ImageInputWithLibrary({
             type="url"
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            placeholder={placeholder}
+            placeholder={effectivePlaceholder}
             required={required}
             className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100 min-w-[140px] flex-1"
           />
@@ -139,15 +179,32 @@ export function ImageInputWithLibrary({
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploading}
               className="text-xs rounded-xl border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 gap-1.5 h-9 px-3 shrink-0 justify-center whitespace-nowrap"
-              title="Upload image file"
+              title="Upload image file with automatic crop"
             >
               {isUploading ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin shrink-0" />
               ) : (
                 <Upload className="w-3.5 h-3.5 shrink-0" />
               )}
-              <span className="whitespace-nowrap">Upload</span>
+              <span className="whitespace-nowrap">Upload & Crop</span>
             </Button>
+
+            {displayImage && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setCropperSrc(displayImage);
+                  setIsCropperOpen(true);
+                }}
+                disabled={isUploading}
+                className="text-xs rounded-xl text-zinc-400 hover:text-zinc-100 h-9 px-2.5 shrink-0"
+                title="Crop current image"
+              >
+                <Crop className="w-3.5 h-3.5 shrink-0" />
+              </Button>
+            )}
 
             <Button
               type="button"
@@ -164,7 +221,7 @@ export function ImageInputWithLibrary({
         </div>
       </div>
 
-      {uploadError && <p className="text-[11px] text-rose-400">{uploadError}</p>}
+      {uploadError && <p className="text-[11px] text-rose-400 font-medium">{uploadError}</p>}
 
       {/* Media Picker Modal */}
       <MediaPickerModal
@@ -175,6 +232,28 @@ export function ImageInputWithLibrary({
         defaultCategory={defaultCategory}
         title={`Select ${label || 'Image'}`}
       />
+
+      {/* Reusable Image Crop Modal */}
+      {cropperSrc && (
+        <ImageCropperModal
+          isOpen={isCropperOpen}
+          onClose={() => {
+            setIsCropperOpen(false);
+            if (cropperSrc && cropperSrc.startsWith('blob:')) {
+              URL.revokeObjectURL(cropperSrc);
+            }
+            setCropperSrc(null);
+          }}
+          imageSrc={cropperSrc}
+          fileName={cropperFileName}
+          aspectRatio={cropConfig.aspectRatio}
+          cropShape={cropConfig.cropShape}
+          targetWidth={cropConfig.width}
+          targetHeight={cropConfig.height}
+          title={`Crop ${label || 'Image'}`}
+          onCropComplete={handleCropComplete}
+        />
+      )}
     </div>
   );
 }

@@ -51,6 +51,14 @@ export const PATH_SPREAD_ITEMS: readonly DropdownItem[] = [
   { value: '5.2px', label: 'Expansive Cloud (5.2px)', hint: '5.2px' },
 ];
 
+export const TOP_PARTICLE_GLOW_DISTANCE_ITEMS: readonly DropdownItem[] = [
+  { value: '4px', label: 'Tight Rim (4px)', hint: '4px' },
+  { value: '8px', label: 'Focused Halo (8px - Default)', hint: '8px' },
+  { value: '14px', label: 'Extended Radiance (14px)', hint: '14px' },
+  { value: '22px', label: 'Broad Luminous Wash (22px)', hint: '22px' },
+  { value: '32px', label: 'Expansive Aura (32px)', hint: '32px' },
+];
+
 export const LIGHT_INTENSITY_ITEMS: readonly DropdownItem[] = [
   { value: '0.0', label: 'Off (0.0)', hint: 'Off' },
   { value: '0.25', label: 'Soft Rim Glow (0.25)', hint: 'Soft' },
@@ -77,8 +85,13 @@ export const DIAMOND_STARS_ITEMS: readonly DropdownItem[] = [
 ];
 
 export const ORBIT_LOOPS_ITEMS: readonly DropdownItem[] = [
-  { value: 'enabled', label: 'Enabled (2 Orbit Loops)', hint: 'Active' },
-  { value: 'disabled', label: 'Disabled (Clean Space)', hint: 'Off' },
+  { value: '0', label: 'Disabled (No Orbit Loops)', hint: 'Off' },
+  { value: 'disabled', label: 'Disabled (No Orbit Loops)', hint: 'Off' },
+  { value: '1', label: '1 Outer Celestial Loop', hint: '1 Loop' },
+  { value: '2', label: '2 Symmetrical Orbit Loops (Default)', hint: '2 Loops' },
+  { value: 'enabled', label: '2 Symmetrical Orbit Loops (Default)', hint: '2 Loops' },
+  { value: '3', label: '3 Planetary Orbits', hint: '3 Loops' },
+  { value: '4', label: '4 Complex Gyroscopic Rings', hint: '4 Loops' },
 ];
 
 export const AMBIENT_SPECKS_ITEMS: readonly DropdownItem[] = [
@@ -92,31 +105,46 @@ export const IMAGE_RESOLUTION_ITEMS: readonly DropdownItem[] = [
   { value: '256', label: '256×256 Ultra Fine', hint: 'High Res' },
   { value: '224', label: '224×224 Crisp High (Default)', hint: 'Default' },
   { value: '192', label: '192×192 Medium Balanced', hint: 'Medium' },
+  { value: '160', label: '160×160 Fluid Performance', hint: 'Fluid' },
   { value: '144', label: '144×144 Retro Pixel Art', hint: 'Pixel Art' },
   { value: '112', label: '112×112 Chunky Arcade', hint: 'Arcade' },
 ];
 
 export const CLICK_FORCE_ITEMS: readonly DropdownItem[] = [
-  { value: '0.8x', label: 'Gentle Ripple (0.8x)', hint: '0.8x' },
-  { value: '1.0x', label: 'Standard Blast (1.0x)', hint: '1.0x' },
-  { value: '1.8x', label: 'Forceful Shockwave (1.8x)', hint: '1.8x' },
-  { value: '2.8x', label: 'Powerful Blast (2.8x)', hint: '2.8x' },
-  { value: '4.0x', label: 'Supernova Dispersal (4.0x)', hint: '4.0x' },
+  { value: '0.1x', label: 'Feather Soft (0.1x)', hint: '0.1x' },
+  { value: '0.25x', label: 'Micro Nudge (0.25x)', hint: '0.25x' },
+  { value: '0.5x', label: 'Gentle Ripple (0.5x)', hint: '0.5x' },
+  { value: '0.8x', label: 'Soft Impulse (0.8x)', hint: '0.8x' },
+  { value: '1.0x', label: 'Standard Elastic (1.0x)', hint: '1.0x' },
+  { value: '1.4x', label: 'Crisp Kick (1.4x)', hint: '1.4x' },
+  { value: '1.8x', label: 'Maximum Impact (1.8x)', hint: '1.8x' },
 ];
 
 export const BOUNCE_SPEED_ITEMS: readonly DropdownItem[] = [
+  { value: '1.5', label: 'Ultra Slow Drift (1.5)', hint: 'Slow' },
+  { value: '3.0', label: 'Smooth Float (3.0)', hint: 'Float' },
+  { value: '5.0', label: 'Soft Viscous (5.0)', hint: 'Viscous' },
   { value: '1.0x', label: 'Standard Elastic (1.0x)', hint: '1.0x' },
-  { value: '4.0', label: 'Zen Floater (4.0)', hint: 'Gentle' },
-  { value: '6.0', label: 'Smooth Spring (6.0)', hint: 'Smooth' },
-  { value: '8.2', label: 'Snappy Elastic (8.2)', hint: 'Default' },
-  { value: '12.0', label: 'Snappy Magnet (12.0)', hint: 'Snappy' },
-  { value: '18.0', label: 'Instant Snap (18.0)', hint: 'Instant' },
+  { value: '8.2', label: 'Standard Return (8.2)', hint: 'Default' },
+  { value: '10.0', label: 'Snappy Spring (10.0)', hint: 'Snappy' },
+];
+
+export const CLICK_RADIUS_ITEMS: readonly DropdownItem[] = [
+  { value: '24px', label: 'Pinpoint Touch (24px)', hint: '24px' },
+  { value: '48px', label: 'Local Cluster (48px)', hint: '48px' },
+  { value: '80px', label: 'Focused Area (80px - Default)', hint: '80px' },
+  { value: '140px', label: 'Broad Region (140px)', hint: '140px' },
+  { value: 'full', label: 'Full Canvas Shockwave (Full)', hint: 'Full' },
 ];
 
 export const INTRO_ANIMATION_ITEMS: readonly DropdownItem[] = [
   { value: 'instant', label: 'Instant (0s)', hint: '0s' },
+  { value: '0.1s', label: 'Instant Snap (0.1s)', hint: '0.1s' },
+  { value: '0.3s', label: 'Micro Drift (0.3s)', hint: '0.3s' },
   { value: 'brisk', label: 'Brisk Flight (0.6s)', hint: '0.6s' },
-  { value: 'standard', label: 'Standard Drift (1.2s)', hint: '1.2s' },
-  { value: 'cinematic', label: 'Cinematic Magnetic (2.0s)', hint: '2.0s' },
-  { value: 'slow_motion', label: 'Slow Motion Drift (2.8s)', hint: '2.8s' },
+  { value: '0.6s', label: 'Brisk Flight (0.6s)', hint: '0.6s' },
+  { value: 'standard', label: 'Standard Drift (1.0s)', hint: '1.0s' },
+  { value: '1.0s', label: 'Standard Drift (1.0s)', hint: '1.0s' },
+  { value: 'cinematic', label: 'Cinematic Magnetic (1.6s)', hint: '1.6s' },
+  { value: '1.6s', label: 'Cinematic Magnetic (1.6s)', hint: '1.6s' },
 ];

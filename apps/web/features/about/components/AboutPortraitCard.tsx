@@ -22,6 +22,7 @@ export interface AboutPortraitCardProps {
   topParticleSize?: string | number;
   topParticleQuantity?: string | number;
   topParticleSpeed?: string | number;
+  glowDistance?: string | number;
   backsideStars?: string | number;
   backsideHalo?: string | number;
   backsideOrbits?: string | number | boolean;
@@ -29,6 +30,7 @@ export interface AboutPortraitCardProps {
   imageResolution?: string | number;
   clickForce?: string | number;
   bounceSpeed?: string | number;
+  clickRadius?: string | number;
   introDuration?: string | number;
 }
 
@@ -50,6 +52,7 @@ export function AboutPortraitCard({
   topParticleSize,
   topParticleQuantity,
   topParticleSpeed,
+  glowDistance,
   backsideStars,
   backsideHalo,
   backsideOrbits,
@@ -57,6 +60,7 @@ export function AboutPortraitCard({
   imageResolution,
   clickForce,
   bounceSpeed,
+  clickRadius,
   introDuration,
 }: AboutPortraitCardProps) {
   const { resolvedTheme, effectsLevel } = useTheme();
@@ -102,12 +106,14 @@ export function AboutPortraitCard({
           topParticleSize={topParticleSize}
           topParticleQuantity={topParticleQuantity}
           topParticleSpeed={topParticleSpeed}
+          glowDistance={glowDistance}
           backsideStars={backsideStars}
           backsideHalo={backsideHalo}
           backsideOrbits={backsideOrbits}
           backsideSpecks={backsideSpecks}
           clickForce={clickForce}
           bounceSpeed={bounceSpeed}
+          clickRadius={clickRadius}
           introDuration={introDuration}
           className="w-full shadow-inner border border-[hsl(var(--border-subtle))] rounded-2xl"
         />

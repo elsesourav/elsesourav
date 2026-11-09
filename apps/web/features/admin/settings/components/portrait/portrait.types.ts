@@ -1,3 +1,5 @@
+export type PortraitDeviceTarget = 'desktop' | 'tablet' | 'mobile';
+
 export interface PortraitDraftSettings {
   portrait_image_dark_url: string;
   portrait_image_light_url: string;
@@ -14,13 +16,18 @@ export interface PortraitDraftSettings {
   portrait_top_particle_size: string;
   portrait_top_particle_quantity: string;
   portrait_top_particle_speed: string;
+  portrait_glow_distance: string;
   portrait_backside_stars: string;
   portrait_backside_halo: string;
   portrait_backside_orbits: string;
   portrait_backside_specks: string;
   portrait_image_resolution: string;
+  portrait_image_resolution_desktop: string;
+  portrait_image_resolution_tablet: string;
+  portrait_image_resolution_mobile: string;
   portrait_click_force: string;
   portrait_bounce_speed: string;
+  portrait_click_radius: string;
   portrait_intro_animation: string;
 }
 

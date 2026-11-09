@@ -7,6 +7,7 @@ import { ROUTES } from '@elsesourav/config';
 import { Button } from '@elsesourav/ui';
 import { AdminSidebar } from '@/features/admin/components/AdminSidebar';
 import { AdminMobileNav } from '@/features/admin/components/AdminMobileNav';
+import { AdminTopBar } from '@/features/admin/components/AdminTopBar';
 import { Lock } from 'lucide-react';
 import type { Metadata } from 'next';
 import type { AdminContext } from '@elsesourav/types';
@@ -65,7 +66,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-zinc-950 text-zinc-100 w-full max-w-full selection:bg-indigo-600/30 selection:text-indigo-200">
+    <div className="min-h-screen flex flex-col lg:flex-row bg-background text-foreground w-full max-w-full selection:bg-indigo-600/30 selection:text-indigo-200">
       {/* Mobile & Tablet Navigation Header with Drawer (< 1024px) */}
       <AdminMobileNav context={adminContext} />
 
@@ -74,6 +75,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
       {/* Main Admin Scrollable Area */}
       <div className="flex-1 flex flex-col min-w-0 max-w-full">
+        {/* Desktop Sticky Control Header with Theme Switcher */}
+        <AdminTopBar context={adminContext} />
+
         <main id="main-content" className="flex-1 p-3.5 sm:p-5 lg:p-8 min-w-0 max-w-full">
           {children}
         </main>

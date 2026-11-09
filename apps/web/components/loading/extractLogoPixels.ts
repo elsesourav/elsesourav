@@ -1,5 +1,5 @@
 import type { LogoPixelTuple } from './logoPixelData';
-import { encodePixelsToBase64 } from './logoPixelData';
+import { encodePixelsToBase64, toLightweightPixels } from './logoPixelData';
 
 export interface ExtractedLogoPixelsResult {
   pixels: LogoPixelTuple[];
@@ -10,8 +10,9 @@ export interface ExtractedLogoPixelsResult {
 }
 
 /**
- * Samples an image or SVG (from URL, data URL, or Blob) into a 64x64 high-density RGBA pixel matrix.
- * Executes on an offscreen HTML5 canvas directly in the browser.
+ * Samples an image or SVG (from URL, data URL, or Blob) into a lightweight (~146 particles)
+ * high-performance RGBA pixel matrix.
+ * Executes on an offscreen HTML5 canvas directly in the browser during admin upload/configuration time.
  */
 export async function extractLogoPixelsFromUrl(
   imageUrl: string,
@@ -53,7 +54,7 @@ export async function extractLogoPixelsFromUrl(
 
         const imgData = ctx.getImageData(0, 0, gridSize, gridSize);
         const data = imgData.data;
-        const pixels: LogoPixelTuple[] = [];
+        const rawPixels: LogoPixelTuple[] = [];
 
         for (let y = 0; y < gridSize; y++) {
           for (let x = 0; x < gridSize; x++) {
@@ -65,17 +66,19 @@ export async function extractLogoPixelsFromUrl(
 
             if (alpha > 45) {
               const a = Math.round((alpha / 255) * 100) / 100;
-              pixels.push([x, y, r, g, b, a]);
+              rawPixels.push([x, y, r, g, b, a]);
             }
           }
         }
 
-        const base64 = encodePixelsToBase64(pixels);
+        // Standardize to the uniform lightweight matrix (~146 particles)
+        const lightweight = toLightweightPixels(rawPixels);
+        const base64 = encodePixelsToBase64(lightweight);
 
         resolve({
-          pixels,
+          pixels: lightweight,
           base64,
-          count: pixels.length,
+          count: lightweight.length,
           width: gridSize,
           height: gridSize,
         });

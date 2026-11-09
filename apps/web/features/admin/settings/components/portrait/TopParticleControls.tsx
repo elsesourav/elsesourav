@@ -8,6 +8,7 @@ import {
   TOP_PARTICLE_QUANTITY_ITEMS,
   TOP_PARTICLE_SPEED_ITEMS,
   PATH_SPREAD_ITEMS,
+  TOP_PARTICLE_GLOW_DISTANCE_ITEMS,
   LIGHT_INTENSITY_ITEMS,
 } from './portrait.constants';
 
@@ -16,6 +17,7 @@ export interface TopParticleControlsProps {
   topQuantity: string;
   topSpeed: string;
   pathSpread: string;
+  glowDistance?: string;
   lightIntensity: string;
   onChange: (key: string, value: string) => void;
 }
@@ -25,6 +27,7 @@ export function TopParticleControls({
   topQuantity,
   topSpeed,
   pathSpread,
+  glowDistance,
   lightIntensity,
   onChange,
 }: TopParticleControlsProps) {
@@ -82,6 +85,18 @@ export function TopParticleControls({
             items={[...PATH_SPREAD_ITEMS]}
             value={pathSpread || '2.6px'}
             onChange={(val) => onChange('portrait_path_spread', val)}
+            className="w-full"
+          />
+        </div>
+
+        <div>
+          <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
+            Glow Distance &amp; Reach
+          </label>
+          <Dropdown
+            items={[...TOP_PARTICLE_GLOW_DISTANCE_ITEMS]}
+            value={glowDistance || '8px'}
+            onChange={(val) => onChange('portrait_glow_distance', val)}
             className="w-full"
           />
         </div>

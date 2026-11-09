@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Badge } from '@elsesourav/ui';
 import { ROUTES } from '@elsesourav/config';
+import { ThemePopup } from '@/components/theme/ThemePopup';
 import type { AdminContext } from '@elsesourav/types';
 import {
   Activity,
@@ -96,15 +97,16 @@ export function AdminSidebar({ context }: AdminSidebarProps) {
         </nav>
       </div>
 
-      {/* Return to Main Public Site */}
-      <div className="pt-6 border-t border-zinc-800/80">
+      {/* Return to Main Public Site & Quick Theme Switcher */}
+      <div className="pt-4 border-t border-zinc-800/80 flex items-center justify-between gap-2">
         <Link
           href={ROUTES.HOME}
           className="flex items-center gap-2 text-xs text-zinc-400 hover:text-zinc-200 transition-colors px-1 py-1 rounded-lg"
         >
           <ArrowLeft className="w-3.5 h-3.5 shrink-0" />
-          <span>Return to Public Site</span>
+          <span>Return to Site</span>
         </Link>
+        <ThemePopup />
       </div>
     </aside>
   );

@@ -208,12 +208,6 @@ export function PhilosophySection({
                     <div className="text-[11px] sm:text-xs text-[hsl(var(--muted-foreground))] truncate">
                       {creatorTitle}
                     </div>
-                    {creator.location && (
-                      <div className="text-[10px] sm:text-[11px] text-[hsl(var(--subtle-foreground))] flex items-center gap-1">
-                        <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500/70" />
-                        <span>{creator.location}</span>
-                      </div>
-                    )}
                   </div>
                 </div>
 

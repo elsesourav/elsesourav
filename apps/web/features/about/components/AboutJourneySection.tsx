@@ -22,7 +22,7 @@ const JOURNEY_STAGES: JourneyStage[] = [
     category: 'Core Utilities & DOM',
     title: 'Foundations, Calculators & Web Utilities',
     description:
-      'Early exploration focused on mastering native browser APIs, client-side input validation, asynchronous state machines, and building tools with zero external dependencies.',
+      'Native browser APIs, client-side state machines, and zero-dependency web utilities.',
     themeColor: 'indigo',
     links: [
       { name: 'Typing Test', href: '/apps/typing-test' },
@@ -37,7 +37,7 @@ const JOURNEY_STAGES: JourneyStage[] = [
     category: 'Graphics & Physics',
     title: 'Interactive Systems, Canvas Graphics & Simulations',
     description:
-      'Exploring real-time 60 FPS animation loops, physics constraints, particle dynamics, and cellular automata to understand computer graphics and procedural generation from first principles.',
+      'Real-time 60 FPS animation loops, physics constraints, particle dynamics, and cellular automata.',
     themeColor: 'purple',
     links: [
       { name: 'Breakout Ball', href: '/apps/breakout-ball' },
@@ -53,7 +53,7 @@ const JOURNEY_STAGES: JourneyStage[] = [
     category: 'WASM, ML & Hardware',
     title: 'Systems Programming, WebAssembly & Machine Learning',
     description:
-      'Stepping below high-level frameworks—compiling C++ to WebAssembly with Emscripten, implementing matrix mathematics for on-device neural networks, and writing embedded microcontroller firmware.',
+      'C++ compiled to WebAssembly, on-device neural networks, and embedded microcontroller firmware.',
     themeColor: 'cyan',
     links: [
       { name: 'Neural Network Number Recognition', href: '/apps/nn-number-rec' },
@@ -68,7 +68,7 @@ const JOURNEY_STAGES: JourneyStage[] = [
     category: 'Production Software',
     title: 'Full-Stack Applications, Mobile & Automation Platforms',
     description:
-      'Shipping resilient end-to-end software tools: multi-seller e-commerce batch reconciliation engines, browser extensions, client-side photo editors, and local-first mobile applications.',
+      'Production web tools, browser extensions, offline-first mobile apps, and batch engines.',
     themeColor: 'emerald',
     links: [
       { name: 'ES Automation', href: '/apps/es-automation' },

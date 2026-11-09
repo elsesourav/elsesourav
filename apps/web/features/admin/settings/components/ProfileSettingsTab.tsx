@@ -71,21 +71,12 @@ export function ProfileSettingsTab({ settings, onChange }: ProfileSettingsTabPro
         />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <FloatingLabelInput
-          label="Location / Timezone"
-          value={settings['creator_location'] || ''}
-          onChange={(val) => onChange('creator_location', val)}
-          placeholder="Remote / Worldwide"
-        />
-
-        <FloatingLabelInput
-          label="Studio Positioning Statement"
-          value={settings['creator_positioning'] || ''}
-          onChange={(val) => onChange('creator_positioning', val)}
-          placeholder="Exploring ideas across web architecture, AI, graphics, and systems..."
-        />
-      </div>
+      <FloatingLabelInput
+        label="Studio Positioning Statement"
+        value={settings['creator_positioning'] || ''}
+        onChange={(val) => onChange('creator_positioning', val)}
+        placeholder="Exploring ideas across web architecture, AI, graphics, and systems..."
+      />
 
       <FormField label="Compact Bio (Hero Cards & Footer)">
         <Textarea

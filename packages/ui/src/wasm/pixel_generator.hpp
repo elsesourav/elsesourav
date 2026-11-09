@@ -141,18 +141,22 @@ inline void PixelEngine::generatePixels() {
         }
     }
 
-    // 1C. Side Orbit Loops (Digital celestial orbits on left and right sides)
-    if (backsideOrbitsEnabled) {
-        static const float ORBITS[2][3] = {
+    // 1C. Side Orbit Loops (Digital celestial orbits on left, right, and space perimeter)
+    int numOrbits = backsideOrbitsCount;
+    if (numOrbits > 0 && backsideOrbitsEnabled) {
+        if (numOrbits > 4) numOrbits = 4;
+        static const float ORBITS[4][3] = {
             {0.16f, 0.26f, 13.0f}, // left orbit: x, y, radius
-            {0.84f, 0.24f, 14.0f}  // right orbit
+            {0.84f, 0.24f, 14.0f}, // right orbit
+            {0.50f, 0.12f, 12.0f}, // top halo celestial orbit
+            {0.20f, 0.42f, 10.0f}  // secondary side orbit
         };
 
-        for (int o = 0; o < 2; o++) {
+        for (int o = 0; o < numOrbits; o++) {
             float ocx = ORBITS[o][0] * (float)w;
             float ocy = ORBITS[o][1] * (float)h;
             float orad = ORBITS[o][2];
-            bool isLeft = (o == 0);
+            bool isLeft = (o == 0 || o == 3);
             int dotCount = 18;
 
             uint8_t orr, org, orb;
@@ -378,7 +382,7 @@ inline void PixelEngine::generatePixels() {
                 em.r = (float)gr;
                 em.g = (float)gg;
                 em.b = (float)gb;
-                em.radius = 16.0f * glowMultiplier;
+                em.radius = 16.0f * glowMultiplier * (glowDistanceMult > 0.05f ? glowDistanceMult : 1.0f);
             }
         }
     }
@@ -391,6 +395,7 @@ inline void PixelEngine::generatePixels() {
         h,
         lightIntensity,
         glowMultiplier,
+        glowDistanceMult,
         isDark,
         lightMapR,
         lightMapG,

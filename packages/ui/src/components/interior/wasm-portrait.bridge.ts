@@ -72,6 +72,8 @@ export class WasmPortraitBridge {
   private backsideSpecks: number;
   private clickForce: number;
   private bounceSpeed: number;
+  private glowDistance: number;
+  private clickRadius: number;
 
   constructor(options: WasmPortraitBridgeOptions) {
     this.canvas = options.canvas;
@@ -98,10 +100,12 @@ export class WasmPortraitBridge {
     this.topParticleSpeed = options.topParticleSpeed ?? 1.0;
     this.backsideStars = options.backsideStars ?? 32;
     this.backsideHalo = options.backsideHalo ?? 1.0;
-    this.backsideOrbits = options.backsideOrbits ?? 1;
+    this.backsideOrbits = options.backsideOrbits ?? 2;
     this.backsideSpecks = options.backsideSpecks ?? 1.0;
     this.clickForce = options.clickForce ?? 1.0;
     this.bounceSpeed = options.bounceSpeed ?? 1.0;
+    this.glowDistance = options.glowDistance ?? 1.0;
+    this.clickRadius = options.clickRadius ?? 1.0;
 
     this.offscreenCanvas = document.createElement('canvas');
     this.offscreenCanvas.width = this.simRes;
@@ -175,6 +179,8 @@ export class WasmPortraitBridge {
     e.engine_set_backside_specks(p, this.backsideSpecks);
     e.engine_set_click_force(p, this.clickForce);
     e.engine_set_bounce_speed(p, this.bounceSpeed);
+    e.engine_set_glow_distance(p, this.glowDistance);
+    e.engine_set_click_radius(p, this.clickRadius);
   }
 
   public ingestImageElement(img: HTMLImageElement): void {
@@ -347,6 +353,16 @@ export class WasmPortraitBridge {
   public setBounceSpeed(v: number): void {
     this.bounceSpeed = v;
     this.wasmExports?.engine_set_bounce_speed(this.enginePtr, v);
+  }
+
+  public setGlowDistance(v: number): void {
+    this.glowDistance = v;
+    this.wasmExports?.engine_set_glow_distance(this.enginePtr, v);
+  }
+
+  public setClickRadius(v: number): void {
+    this.clickRadius = v;
+    this.wasmExports?.engine_set_click_radius(this.enginePtr, v);
   }
 
   public setFullscreenMode(fullscreen: boolean, getCardRect?: () => DOMRect | null): void {

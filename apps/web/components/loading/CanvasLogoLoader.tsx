@@ -6,7 +6,6 @@ import {
   toLightweightPixels,
   type LogoPixelTuple,
 } from './logoPixelData';
-import { extractLogoPixelsFromUrl } from './extractLogoPixels';
 import {
   getAdaptiveParticleStep,
   createParticlesFromPixels,
@@ -17,14 +16,16 @@ import {
 export interface CanvasLogoLoaderProps {
   /** Visual diameter of the assembled logo ring in CSS pixels (default: 240) */
   size?: number;
-  /** Duration in milliseconds for the initial flight convergence (default: 550) */
+  /** Duration in milliseconds for the initial flight convergence (default: 520) */
   durationMs?: number;
   /** Custom pre-sampled pixel data tuples [x, y, r, g, b, a] */
   pixelData?: readonly LogoPixelTuple[];
-  /** Optional custom logo image / SVG URL to sample dynamically */
+  /** Optional custom logo image / SVG URL (kept for prop compatibility) */
   logoUrl?: string;
   /** Whether the canvas spans the full screen display (default: false) */
   fullScreen?: boolean;
+  /** Whether the animation is currently active (if false, pause RAF and clear canvas) */
+  active?: boolean;
   /** Callback fired once particles assemble and sequence finishes */
   onComplete?: () => void;
   /** Optional extra CSS classes for the canvas container */
@@ -33,10 +34,10 @@ export interface CanvasLogoLoaderProps {
 
 export function CanvasLogoLoader({
   size = 240,
-  durationMs = 550,
+  durationMs = 520,
   pixelData,
-  logoUrl,
   fullScreen = false,
+  active = true,
   onComplete,
   className = '',
 }: CanvasLogoLoaderProps) {
@@ -44,43 +45,19 @@ export function CanvasLogoLoader({
   const onCompleteRef = React.useRef(onComplete);
   onCompleteRef.current = onComplete;
 
-  const [activePixels, setActivePixels] = React.useState<readonly LogoPixelTuple[]>(
-    () => toLightweightPixels(pixelData || LOGO_PIXEL_DATA)
-  );
+  // Authoritative lightweight pixel points matrix (synchronous, 0ms latency, zero runtime fetch)
+  const activePixels = React.useMemo(() => {
+    if (pixelData && pixelData.length > 0) {
+      return toLightweightPixels(pixelData);
+    }
+    return LOGO_PIXEL_DATA;
+  }, [pixelData]);
 
-  // Persistent refs to guarantee single-shot particle assembly without restart loops
+  // Persistent animation refs
   const particlesRef = React.useRef<LoadingParticle[]>([]);
   const startTimeRef = React.useRef<number>(0);
   const hasCompletedRef = React.useRef<boolean>(false);
   const initializedRef = React.useRef<boolean>(false);
-
-  // Asynchronously sample custom logo if URL provided
-  React.useEffect(() => {
-    if (pixelData && pixelData.length > 0) {
-      setActivePixels(toLightweightPixels(pixelData));
-      return;
-    }
-
-    if (!logoUrl) {
-      setActivePixels(LOGO_PIXEL_DATA);
-      return;
-    }
-
-    let isMounted = true;
-    extractLogoPixelsFromUrl(logoUrl, 64)
-      .then((res) => {
-        if (isMounted && res.pixels.length > 10) {
-          setActivePixels(toLightweightPixels(res.pixels));
-        }
-      })
-      .catch(() => {
-        if (isMounted) setActivePixels(LOGO_PIXEL_DATA);
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [pixelData, logoUrl]);
 
   React.useEffect(() => {
     const canvas = canvasRef.current;
@@ -89,17 +66,23 @@ export function CanvasLogoLoader({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    if (!active) {
+      // Animation paused; clear canvas and reset flight clock
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      startTimeRef.current = 0;
+      hasCompletedRef.current = false;
+      initializedRef.current = false;
+      return;
+    }
+
     const prefersReducedMotion =
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const dpr = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1;
-
-    // Uniform step 1 on all devices with zero lag
     const { step: particleStep } = getAdaptiveParticleStep();
     const benchmark = new FrameBenchmark();
 
-    // Dynamic viewport-aware dimensions
     let viewWidth = fullScreen && typeof window !== 'undefined' ? window.innerWidth : size;
     let viewHeight = fullScreen && typeof window !== 'undefined' ? window.innerHeight : size;
 
@@ -114,29 +97,28 @@ export function CanvasLogoLoader({
     const ringRadius = size * 0.38 * dpr;
     const ringWidth = Math.max(2, 2.2 * dpr);
 
-    // Initial single-shot particle instantiation
-    if (!initializedRef.current || particlesRef.current.length === 0) {
-      particlesRef.current = createParticlesFromPixels(
-        activePixels,
-        cx,
-        cy,
-        pixelUnit,
-        viewWidth * dpr,
-        viewHeight * dpr,
-        dpr,
-        particleStep,
-        durationMs,
-        prefersReducedMotion
-      );
-      initializedRef.current = true;
-    }
+    // Instantiate particles with origins strictly outside the viewport
+    particlesRef.current = createParticlesFromPixels(
+      activePixels,
+      cx,
+      cy,
+      pixelUnit,
+      viewWidth * dpr,
+      viewHeight * dpr,
+      dpr,
+      particleStep,
+      durationMs,
+      prefersReducedMotion
+    );
+    initializedRef.current = true;
+    startTimeRef.current = 0;
+    hasCompletedRef.current = false;
 
-    // Min and max diagonal coordinate for laser beam sweep across logo
+    // Laser beam sweep coordinates
     const minDiag = cx + cy - logoDisplaySize * 0.7;
     const maxDiag = cx + cy + logoDisplaySize * 0.7;
     const diagSpan = Math.max(1, maxDiag - minDiag);
 
-    // Resize listener for fluid full-screen responsive layouts
     const handleResize = () => {
       if (!canvas || !fullScreen) return;
       viewWidth = window.innerWidth;
@@ -150,10 +132,11 @@ export function CanvasLogoLoader({
       cx = newCx;
       cy = newCy;
 
-      // Adjust particle target anchors relative to new center
       for (const p of particlesRef.current) {
         p.targetX += shiftX;
         p.targetY += shiftY;
+        p.startX += shiftX;
+        p.startY += shiftY;
         p.currentX += shiftX;
         p.currentY += shiftY;
         p.diagSum = p.targetX + p.targetY;
@@ -172,13 +155,10 @@ export function CanvasLogoLoader({
       }
 
       const elapsed = currentTime - startTimeRef.current;
-      const progress = Math.min(1, elapsed / durationMs);
-      const isAssembled = progress >= 0.88;
-
-      // Fast benchmark check
+      const isAssembled = elapsed >= durationMs;
       const isDowngraded = benchmark.recordFrame(currentTime);
 
-      // Canvas is strictly transparent; clear entire canvas buffer
+      // Strictly transparent canvas background
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // ─── 1. OUTER ROTATING ENERGY RING ───
@@ -191,7 +171,8 @@ export function CanvasLogoLoader({
       ctx.strokeStyle = 'rgba(99, 102, 241, 0.12)';
       ctx.stroke();
 
-      // Glowing active arc (snaps swiftly into motion)
+      // Glowing active arc
+      const progress = Math.min(1, elapsed / durationMs);
       const arcSweep = isAssembled
         ? Math.PI * (0.8 + 0.3 * Math.sin(elapsed * 0.0035))
         : Math.PI * (0.35 + 1.25 * Math.sin(progress * Math.PI * 0.5));
@@ -237,13 +218,11 @@ export function CanvasLogoLoader({
       ctx.restore();
 
       // ─── 2. REPEATING GLOW & SHIMMER PHASE ───
-      // Crisp 4-pixel grid discrete cell size for ultra-light aesthetic
       const particleBaseSize = pixelUnit * 3.4;
       const postAssemblyElapsed = Math.max(0, elapsed - durationMs);
-      const glowCycleDuration = 2000; // 2.0s fast cycle
+      const glowCycleDuration = 2000;
       const cycleTime = postAssemblyElapsed % glowCycleDuration;
 
-      // Laser sweep active during first 600ms of each glow cycle
       let sweepPos = -999;
       let sweepActive = false;
       const sweepDuration = 600;
@@ -254,7 +233,7 @@ export function CanvasLogoLoader({
         sweepPos = minDiag + sweepFactor * diagSpan;
       }
 
-      // ─── 3. LOGO PARTICLES RENDER & ADVANCEMENT ───
+      // ─── 3. LOGO PARTICLES INTERPOLATION & RENDER ───
       const particles = particlesRef.current;
       const particleCount = particles.length;
 
@@ -262,20 +241,21 @@ export function CanvasLogoLoader({
         const p = particles[i];
         if (!p) continue;
 
-        // Assembly convergence: move rapidly & smoothly towards target
-        if (elapsed > p.delayMs && !isAssembled) {
-          const dx = p.targetX - p.currentX;
-          const dy = p.targetY - p.currentY;
-          p.currentX += dx * p.speed;
-          p.currentY += dy * p.speed;
-
-          const dAlpha = p.targetAlpha - p.currentAlpha;
-          p.currentAlpha += dAlpha * 0.22;
-        } else if (isAssembled) {
-          // Lock to target coordinates
+        if (prefersReducedMotion || isAssembled) {
           p.currentX = p.targetX;
           p.currentY = p.targetY;
           p.currentAlpha = p.targetAlpha;
+        } else if (elapsed <= p.delayMs) {
+          p.currentX = p.startX;
+          p.currentY = p.startY;
+          p.currentAlpha = 0;
+        } else {
+          // Smooth parametric cubic ease-out: pure continuous motion, zero sudden pop
+          const t = Math.min(1, Math.max(0, (elapsed - p.delayMs) / p.flightDurationMs));
+          const ease = 1 - Math.pow(1 - t, 3);
+          p.currentX = p.startX + (p.targetX - p.startX) * ease;
+          p.currentY = p.startY + (p.targetY - p.startY) * ease;
+          p.currentAlpha = p.startAlpha + (p.targetAlpha - p.startAlpha) * ease;
         }
 
         const renderX = p.currentX;
@@ -285,13 +265,11 @@ export function CanvasLogoLoader({
         let b = p.b;
         let pSize = particleBaseSize;
 
-        // Post-assembly harmonic living breathing & repeating glow sweep
+        // Post-assembly breathing float & repeating beam shimmer wave
         if (isAssembled && !prefersReducedMotion) {
-          // Subtle breathing float
-          const breath = Math.sin(elapsed * 0.0035 + p.targetX * 0.04) * (0.5 * dpr);
+          const breath = Math.sin(postAssemblyElapsed * 0.0035 + p.targetX * 0.04) * (0.6 * dpr);
           renderY += breath;
 
-          // Repeating energy shimmer wave
           if (sweepActive) {
             const distToBeam = Math.abs(p.diagSum - sweepPos);
             const beamRadius = 24 * dpr;
@@ -328,8 +306,8 @@ export function CanvasLogoLoader({
         }
       }
 
-      // Fire completion callback once initial flight completes
-      if (elapsed >= durationMs && !hasCompletedRef.current) {
+      // Completion callback
+      if (isAssembled && !hasCompletedRef.current) {
         hasCompletedRef.current = true;
         if (onCompleteRef.current) {
           onCompleteRef.current();
@@ -347,7 +325,7 @@ export function CanvasLogoLoader({
         window.removeEventListener('resize', handleResize);
       }
     };
-  }, [size, durationMs, fullScreen, activePixels]);
+  }, [size, durationMs, fullScreen, active, activePixels]);
 
   return (
     <div

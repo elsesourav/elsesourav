@@ -65,10 +65,13 @@ private:
     float topParticleSpeedMult;      // Top glow travel speed multiplier (0.5..3.0)
     int backsideStarsCount;          // Diamond star count: 0, 8, 16, 32, 48
     float backsideHaloMult;          // Halo ring density multiplier: 0.0 (off) .. 2.0
-    int backsideOrbitsEnabled;       // 1: active, 0: off
+    int backsideOrbitsEnabled;       // Backward compatibility / 0: off, >0: count
+    int backsideOrbitsCount;         // Number of orbit loops: 0, 1, 2, 3, 4
     float backsideSpecksMult;        // Ambient specks multiplier: 0.0 .. 2.0
-    float clickForceMult;            // Burst blast force multiplier (0.5..4.0)
-    float bounceSpeedMult;           // Elastic return spring speed multiplier (0.5..3.0)
+    float clickForceMult;            // Burst blast force multiplier (0.1..1.8)
+    float bounceSpeedMult;           // Elastic return spring speed multiplier (0.2..2.0)
+    float glowDistanceMult;          // Top particle glow distance multiplier (0.4..3.0)
+    float clickRadiusMult;           // Click disturbance radius multiplier (0.2..10.0, >= 5.0 = full)
 
     uint8_t inputImage[MAX_IMAGE_BYTES];
     Pixel particles[MAX_PARTICLES];
@@ -127,10 +130,12 @@ public:
     void setTopParticleSpeed(float mult);
     void setBacksideStars(int count);
     void setBacksideHalo(float mult);
-    void setBacksideOrbits(int enabled);
+    void setBacksideOrbits(int count);
     void setBacksideSpecks(float mult);
     void setClickForce(float mult);
     void setBounceSpeed(float mult);
+    void setGlowDistance(float dist);
+    void setClickRadius(float radius);
 
     float* getVertexBufferPtr() {
         return (float*)vertexBuffer;

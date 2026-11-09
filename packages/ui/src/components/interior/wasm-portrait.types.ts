@@ -23,6 +23,8 @@ export interface WasmPortraitBridgeOptions {
   backsideSpecks?: number;
   clickForce?: number;
   bounceSpeed?: number;
+  glowDistance?: number;
+  clickRadius?: number;
   onLoaded?: () => void;
 }
 
@@ -56,6 +58,8 @@ export interface WasmExports {
   engine_set_backside_specks: (engine: number, mult: number) => void;
   engine_set_click_force: (engine: number, mult: number) => void;
   engine_set_bounce_speed: (engine: number, mult: number) => void;
+  engine_set_glow_distance: (engine: number, dist: number) => void;
+  engine_set_click_radius: (engine: number, radius: number) => void;
   engine_get_vertex_buffer: (engine: number) => number;
   engine_get_vertex_count: (engine: number) => number;
   engine_destroy: (engine: number) => void;

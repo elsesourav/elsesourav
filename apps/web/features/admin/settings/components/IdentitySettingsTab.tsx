@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Card, FormField, Textarea } from '@elsesourav/ui';
 import { FloatingLabelInput } from '@elsesourav/ui/interior';
 import { ImageInputWithLibrary } from '@/features/admin/media/components/ImageInputWithLibrary';
+import { AdminBrandLogoSection } from './AdminBrandLogoSection';
 
 export interface IdentitySettingsTabProps {
   settings: Record<string, string>;
@@ -12,7 +13,7 @@ export interface IdentitySettingsTabProps {
 
 export function IdentitySettingsTab({ settings, onChange }: IdentitySettingsTabProps) {
   return (
-    <Card className="p-4 sm:p-6 space-y-5 rounded-3xl border-zinc-800 bg-zinc-900/40">
+    <Card className="p-4 sm:p-6 space-y-6 rounded-3xl border-zinc-800 bg-zinc-900/40">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FloatingLabelInput
           label="Site Name"
@@ -41,17 +42,10 @@ export function IdentitySettingsTab({ settings, onChange }: IdentitySettingsTabP
         />
       </FormField>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <ImageInputWithLibrary
-          label="Site Brand Logo / Icon"
-          value={settings['site_logo_url'] || ''}
-          onChange={(val) => onChange('site_logo_url', val)}
-          folder="general"
-          defaultCategory="general"
-          previewShape="square"
-          placeholder="Logo URL or upload/select"
-        />
+      {/* Brand Logo, Wordmark SVG, and Pre-computed Lightweight Loading Particles */}
+      <AdminBrandLogoSection settings={settings} handleChange={onChange} />
 
+      <div className="grid grid-cols-1 gap-4 pt-3 border-t border-zinc-800/80">
         <ImageInputWithLibrary
           label="OpenGraph Social Share Banner"
           value={settings['site_og_image_url'] || ''}

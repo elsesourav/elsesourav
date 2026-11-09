@@ -61,7 +61,14 @@ export class MediaRepository {
       this.prisma.siteSetting.findMany({
         where: {
           key: {
-            in: ['creator_avatar_url', 'media_library_items_json'],
+            in: [
+              'creator_avatar_url',
+              'portrait_image_dark_url',
+              'portrait_image_light_url',
+              'site_logo_url',
+              'site_og_image_url',
+              'media_library_items_json',
+            ],
           },
         },
       }),
@@ -167,6 +174,38 @@ export class MediaRepository {
         'users',
         new Date(),
         'Creator Avatar'
+      );
+    }
+
+    const portraitDark = siteSettings.find((s) => s.key === 'portrait_image_dark_url')?.value;
+    if (portraitDark) {
+      addRef(
+        portraitDark,
+        {
+          resourceType: 'SiteSetting',
+          resourceId: 'portrait_image_dark_url',
+          resourceName: 'Creator Portrait (Dark Mode)',
+          fieldName: 'portrait_image_dark_url',
+        },
+        'users',
+        new Date(),
+        'Creator Portrait (Dark)'
+      );
+    }
+
+    const portraitLight = siteSettings.find((s) => s.key === 'portrait_image_light_url')?.value;
+    if (portraitLight) {
+      addRef(
+        portraitLight,
+        {
+          resourceType: 'SiteSetting',
+          resourceId: 'portrait_image_light_url',
+          resourceName: 'Creator Portrait (Light Mode)',
+          fieldName: 'portrait_image_light_url',
+        },
+        'users',
+        new Date(),
+        'Creator Portrait (Light)'
       );
     }
 

@@ -57,3 +57,6 @@ export * from './components/admin-markdown-editor';
 
 // Motion & Reveal
 export * from './components/reveal';
+
+// Image Upload & Crop System
+export * from './components/image-crop-upload';

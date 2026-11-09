@@ -38,6 +38,8 @@ echo "Compiling pixel_engine.cpp to WebAssembly..."
   -Wl,--export=engine_set_backside_specks \
   -Wl,--export=engine_set_click_force \
   -Wl,--export=engine_set_bounce_speed \
+  -Wl,--export=engine_set_glow_distance \
+  -Wl,--export=engine_set_click_radius \
   -Wl,--export=engine_get_vertex_buffer \
   -Wl,--export=engine_get_vertex_count \
   -Wl,--export=engine_destroy \

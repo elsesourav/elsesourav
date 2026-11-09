@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Badge, Button } from '@elsesourav/ui';
 import { ROUTES } from '@elsesourav/config';
+import { ThemePopup } from '@/components/theme/ThemePopup';
 import type { AdminContext } from '@elsesourav/types';
 import {
   Activity,
@@ -102,18 +103,21 @@ export function AdminMobileNav({ context }: AdminMobileNavProps) {
           </div>
         </Link>
 
-        {/* Accessible Hamburger Button (WCAG >= 44x44px touch target) */}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setIsOpen(true)}
-          className="h-10 w-10 p-0 text-zinc-300 hover:text-white hover:bg-zinc-800/80 rounded-xl flex items-center justify-center"
-          aria-label="Open navigation menu"
-          aria-expanded={isOpen}
-          aria-controls="admin-mobile-drawer"
-        >
-          <Menu className="w-5 h-5" />
-        </Button>
+        {/* Right Controls: Theme Switcher & Accessible Hamburger Button */}
+        <div className="flex items-center gap-2">
+          <ThemePopup />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsOpen(true)}
+            className="h-10 w-10 p-0 text-zinc-300 hover:text-white hover:bg-zinc-800/80 rounded-xl flex items-center justify-center"
+            aria-label="Open navigation menu"
+            aria-expanded={isOpen}
+            aria-controls="admin-mobile-drawer"
+          >
+            <Menu className="w-5 h-5" />
+          </Button>
+        </div>
       </div>
 
       {/* Fullscreen Mobile Drawer with Pinned Header */}

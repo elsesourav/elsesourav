@@ -122,13 +122,18 @@ export interface SiteAndCreatorIdentity {
     readonly portraitTopParticleSize?: string;
     readonly portraitTopParticleQuantity?: string;
     readonly portraitTopParticleSpeed?: string;
+    readonly portraitGlowDistance?: string;
     readonly portraitBacksideStars?: string;
     readonly portraitBacksideHalo?: string;
     readonly portraitBacksideOrbits?: string;
     readonly portraitBacksideSpecks?: string;
     readonly portraitImageResolution?: string;
+    readonly portraitImageResolutionDesktop?: string;
+    readonly portraitImageResolutionTablet?: string;
+    readonly portraitImageResolutionMobile?: string;
     readonly portraitClickForce?: string;
     readonly portraitBounceSpeed?: string;
+    readonly portraitClickRadius?: string;
     readonly portraitIntroAnimation?: string;
   };
   readonly footer: {

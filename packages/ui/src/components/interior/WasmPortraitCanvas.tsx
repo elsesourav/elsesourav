@@ -13,6 +13,8 @@ import {
   parseClickForce,
   parseBounceSpeed,
   parseIntroDuration,
+  parseGlowDistance,
+  parseClickRadius,
   detectDeviceCapability,
   detectAdaptiveResolution,
 } from './wasm-portrait.utils';
@@ -40,12 +42,14 @@ export interface WasmPortraitCanvasProps {
   topParticleSize?: string | number;
   topParticleQuantity?: string | number;
   topParticleSpeed?: string | number;
+  glowDistance?: string | number;
   backsideStars?: string | number;
   backsideHalo?: string | number;
   backsideOrbits?: string | number | boolean;
   backsideSpecks?: string | number;
   clickForce?: string | number;
   bounceSpeed?: string | number;
+  clickRadius?: string | number;
   introDuration?: string | number;
 }
 
@@ -71,13 +75,15 @@ export function WasmPortraitCanvas({
   topParticleSize = '1.0x',
   topParticleQuantity = '1.0x',
   topParticleSpeed = '1.0x',
+  glowDistance = '8px',
   backsideStars = 32,
   backsideHalo = '1.0x',
-  backsideOrbits = 1,
+  backsideOrbits = 2,
   backsideSpecks = '1.0x',
   clickForce = '1.0x',
   bounceSpeed = '1.0x',
-  introDuration = '1.6s',
+  clickRadius = '80px',
+  introDuration = '1.0s',
 }: WasmPortraitCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasMountRef = useRef<HTMLDivElement>(null);
@@ -110,6 +116,8 @@ export function WasmPortraitCanvas({
   const effSpecks = parseSpecksMultiplier(backsideSpecks);
   const effClickForce = parseClickForce(clickForce);
   const effBounceSpeed = parseBounceSpeed(bounceSpeed);
+  const effGlowDistance = parseGlowDistance(glowDistance);
+  const effClickRadius = parseClickRadius(clickRadius);
   const effIntroDuration = parseIntroDuration(introDuration);
 
   const [isInView, setIsInView] = useState(true);
@@ -294,6 +302,8 @@ export function WasmPortraitCanvas({
       backsideSpecks: effSpecks,
       clickForce: effClickForce,
       bounceSpeed: effBounceSpeed,
+      glowDistance: effGlowDistance,
+      clickRadius: effClickRadius,
       onLoaded: () => {
         setIsWasmActive(true);
         if (bridge && !bridge.isWebGLActive()) {
@@ -351,6 +361,8 @@ export function WasmPortraitCanvas({
       bridgeRef.current.setBacksideSpecks(effSpecks);
       bridgeRef.current.setClickForce(effClickForce);
       bridgeRef.current.setBounceSpeed(effBounceSpeed);
+      bridgeRef.current.setGlowDistance(effGlowDistance);
+      bridgeRef.current.setClickRadius(effClickRadius);
       if (imgRef.current && imgRef.current.complete && imgRef.current.naturalWidth > 0) {
         bridgeRef.current.ingestImageElement(imgRef.current);
       }
@@ -376,6 +388,8 @@ export function WasmPortraitCanvas({
     effSpecks,
     effClickForce,
     effBounceSpeed,
+    effGlowDistance,
+    effClickRadius,
   ]);
 
   // Pointer & Touch interactions

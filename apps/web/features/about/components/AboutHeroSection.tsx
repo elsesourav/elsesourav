@@ -28,13 +28,18 @@ export interface AboutHeroSectionProps {
     portraitTopParticleSize?: string;
     portraitTopParticleQuantity?: string;
     portraitTopParticleSpeed?: string;
+    portraitGlowDistance?: string;
     portraitBacksideStars?: string;
     portraitBacksideHalo?: string;
     portraitBacksideOrbits?: string;
     portraitBacksideSpecks?: string;
     portraitImageResolution?: string;
+    portraitImageResolutionDesktop?: string;
+    portraitImageResolutionTablet?: string;
+    portraitImageResolutionMobile?: string;
     portraitClickForce?: string;
     portraitBounceSpeed?: string;
+    portraitClickRadius?: string;
     portraitIntroAnimation?: string;
   };
 }
@@ -80,13 +85,19 @@ export function AboutHeroSection({ creator, site }: AboutHeroSectionProps) {
               topParticleSize={site.portraitTopParticleSize}
               topParticleQuantity={site.portraitTopParticleQuantity}
               topParticleSpeed={site.portraitTopParticleSpeed}
+              glowDistance={site.portraitGlowDistance}
               backsideStars={site.portraitBacksideStars}
               backsideHalo={site.portraitBacksideHalo}
               backsideOrbits={site.portraitBacksideOrbits}
               backsideSpecks={site.portraitBacksideSpecks}
-              imageResolution={site.portraitImageResolution}
+              imageResolution={
+                site.portraitImageResolutionDesktop ||
+                site.portraitImageResolution ||
+                '224'
+              }
               clickForce={site.portraitClickForce}
               bounceSpeed={site.portraitBounceSpeed}
+              clickRadius={site.portraitClickRadius}
               introDuration={site.portraitIntroAnimation}
             />
           </div>

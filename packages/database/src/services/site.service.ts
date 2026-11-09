@@ -56,14 +56,19 @@ export class SiteService {
     const portraitTopParticleSize = dbSettings['portrait_top_particle_size'] || '1.0x';
     const portraitTopParticleQuantity = dbSettings['portrait_top_particle_quantity'] || '1.0x';
     const portraitTopParticleSpeed = dbSettings['portrait_top_particle_speed'] || '1.0x';
+    const portraitGlowDistance = dbSettings['portrait_glow_distance'] || '8px';
     const portraitBacksideStars = dbSettings['portrait_backside_stars'] || '32';
     const portraitBacksideHalo = dbSettings['portrait_backside_halo'] || '1.0x';
-    const portraitBacksideOrbits = dbSettings['portrait_backside_orbits'] || 'enabled';
+    const portraitBacksideOrbits = dbSettings['portrait_backside_orbits'] || '2';
     const portraitBacksideSpecks = dbSettings['portrait_backside_specks'] || '1.0x';
     const portraitImageResolution = dbSettings['portrait_image_resolution'] || '224';
+    const portraitImageResolutionDesktop = dbSettings['portrait_image_resolution_desktop'] || '256';
+    const portraitImageResolutionTablet = dbSettings['portrait_image_resolution_tablet'] || '192';
+    const portraitImageResolutionMobile = dbSettings['portrait_image_resolution_mobile'] || '144';
     const portraitClickForce = dbSettings['portrait_click_force'] || '1.0x';
-    const portraitBounceSpeed = dbSettings['portrait_bounce_speed'] || '1.0x';
-    const portraitIntroAnimation = dbSettings['portrait_intro_animation'] || 'standard';
+    const portraitBounceSpeed = dbSettings['portrait_bounce_speed'] || '8.2';
+    const portraitClickRadius = dbSettings['portrait_click_radius'] || '80px';
+    const portraitIntroAnimation = dbSettings['portrait_intro_animation'] || '1.0s';
 
     const footerCopyright =
       dbSettings['footer_copyright'] ||
@@ -167,13 +172,18 @@ export class SiteService {
         portraitTopParticleSize,
         portraitTopParticleQuantity,
         portraitTopParticleSpeed,
+        portraitGlowDistance,
         portraitBacksideStars,
         portraitBacksideHalo,
         portraitBacksideOrbits,
         portraitBacksideSpecks,
         portraitImageResolution,
+        portraitImageResolutionDesktop,
+        portraitImageResolutionTablet,
+        portraitImageResolutionMobile,
         portraitClickForce,
         portraitBounceSpeed,
+        portraitClickRadius,
         portraitIntroAnimation,
       },
       footer: {

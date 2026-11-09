@@ -1,6 +1,8 @@
 import type { LogoPixelTuple } from './logoPixelData';
 
 export interface LoadingParticle {
+  startX: number;
+  startY: number;
   targetX: number;
   targetY: number;
   currentX: number;
@@ -8,10 +10,12 @@ export interface LoadingParticle {
   r: number;
   g: number;
   b: number;
+  startAlpha: number;
   targetAlpha: number;
   currentAlpha: number;
   delayMs: number;
-  speed: number;
+  flightDurationMs: number;
+  speed?: number;
   diagSum: number;
 }
 
@@ -54,9 +58,9 @@ export function createParticlesFromPixels(
   viewWidth: number,
   viewHeight: number,
   dpr: number,
-  step: number,
-  durationMs: number,
-  prefersReducedMotion: boolean
+  step = 1,
+  durationMs = 520,
+  prefersReducedMotion = false
 ): LoadingParticle[] {
   // Screen perimeter radius guarantee: distance from center to outside screen corners
   const baseScreenRadius = Math.hypot(viewWidth, viewHeight) * 0.53;
@@ -72,6 +76,8 @@ export function createParticlesFromPixels(
 
     if (prefersReducedMotion) {
       particles.push({
+        startX: targetX,
+        startY: targetY,
         targetX,
         targetY,
         currentX: targetX,
@@ -79,9 +85,11 @@ export function createParticlesFromPixels(
         r,
         g,
         b,
+        startAlpha: alpha,
         targetAlpha: alpha,
         currentAlpha: alpha,
         delayMs: 0,
+        flightDurationMs: 0,
         speed: 1,
         diagSum: targetX + targetY,
       });
@@ -93,8 +101,12 @@ export function createParticlesFromPixels(
     const dist = baseScreenRadius + Math.random() * (80 * dpr);
     const startX = cx + Math.cos(angle) * dist;
     const startY = cy + Math.sin(angle) * dist;
+    const delayMs = Math.random() * (durationMs * 0.18);
+    const flightDurationMs = Math.max(1, durationMs - delayMs);
 
     particles.push({
+      startX,
+      startY,
       targetX,
       targetY,
       currentX: startX,
@@ -102,12 +114,12 @@ export function createParticlesFromPixels(
       r,
       g,
       b,
+      startAlpha: 0,
       targetAlpha: alpha,
-      currentAlpha: 0.2 + Math.random() * 0.3,
-      // Rapid convergence delay for fast load
-      delayMs: Math.random() * (durationMs * 0.18),
-      // Fast, snappy flight convergence
-      speed: 0.16 + Math.random() * 0.06,
+      currentAlpha: 0,
+      delayMs,
+      flightDurationMs,
+      speed: 0.18,
       diagSum: targetX + targetY,
     });
   }

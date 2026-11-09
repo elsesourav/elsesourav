@@ -4,7 +4,12 @@ import * as React from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { CanvasLogoLoader } from './CanvasLogoLoader';
 import { AnimatedLoadingText } from './AnimatedLoadingText';
-import { parseLogoPixels, type LogoPixelTuple } from './logoPixelData';
+import {
+  LOGO_PIXEL_DATA,
+  parseLogoPixels,
+  toLightweightPixels,
+  type LogoPixelTuple,
+} from './logoPixelData';
 
 export interface PageTransitionLoaderProps {
   /** Optional custom site / brand name from database */
@@ -39,7 +44,6 @@ export function triggerPageTransition(targetPath: string) {
 
 function PageTransitionLoaderInner({
   siteName = 'ElseSourav',
-  logoUrl,
   logoPixelsJson,
   pixelData: directPixelData,
 }: PageTransitionLoaderProps) {
@@ -53,14 +57,20 @@ function PageTransitionLoaderInner({
   const currentPathRef = React.useRef(pathname);
   const navStartTimeRef = React.useRef(0);
 
+  // Synchronous resolution of the lightweight pixel points (0ms latency, zero runtime network fetch)
   const parsedPixelData = React.useMemo(() => {
-    if (directPixelData && directPixelData.length > 0) return directPixelData;
-    if (!logoPixelsJson) return undefined;
-    try {
-      return parseLogoPixels(logoPixelsJson);
-    } catch {
-      return undefined;
+    if (directPixelData && directPixelData.length > 0) {
+      return toLightweightPixels(directPixelData);
     }
+    if (logoPixelsJson) {
+      try {
+        const parsed = parseLogoPixels(logoPixelsJson);
+        if (parsed && parsed.length > 0) return parsed;
+      } catch {
+        // Fall back to default
+      }
+    }
+    return LOGO_PIXEL_DATA;
   }, [directPixelData, logoPixelsJson]);
 
   // 1. Initial Page Load & Page Reload Handler
@@ -113,15 +123,12 @@ function PageTransitionLoaderInner({
     const startTransition = (destination: string) => {
       navStartTimeRef.current = performance.now();
 
-      // Explicitly navigate via router to guarantee the transition starts
-      router.push(destination);
+      // Immediately activate overlay synchronously before initiating Next.js navigation
+      setIsFadingOut(false);
+      setIsNavigating(true);
 
-      // Render the transition overlay on the next animation frame
-      // so native click dispatch finishes without being aborted by React DOM reconciliation
-      requestAnimationFrame(() => {
-        setIsFadingOut(false);
-        setIsNavigating(true);
-      });
+      // Navigate via Next.js router
+      router.push(destination);
     };
 
     const handleDocumentClick = (e: MouseEvent) => {
@@ -209,7 +216,7 @@ function PageTransitionLoaderInner({
     };
   }, [router]);
 
-  // Safety fallback: auto-dismiss after 6 seconds in case navigation is cancelled or errors
+  // Safety fallback: auto-dismiss after 4 seconds in case navigation is cancelled or errors
   React.useEffect(() => {
     if (!isNavigating) return;
 
@@ -242,15 +249,16 @@ function PageTransitionLoaderInner({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isNavigating]);
 
-  if (!isNavigating) return null;
-
   return (
     <div
       role="status"
       aria-live="polite"
+      aria-hidden={!isNavigating}
       aria-label="Loading requested page"
       className={`fixed inset-0 top-0 left-0 w-screen h-screen z-[99999] flex flex-col items-center justify-center bg-[hsl(var(--background))]/85 backdrop-blur-md transition-opacity duration-200 ease-out select-none overflow-hidden ${
-        isFadingOut ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        isNavigating && !isFadingOut
+          ? 'opacity-100 pointer-events-auto visible'
+          : 'opacity-0 pointer-events-none invisible'
       }`}
     >
       {/* Ambient background bloom */}
@@ -264,8 +272,8 @@ function PageTransitionLoaderInner({
 
       <CanvasLogoLoader
         fullScreen
-        durationMs={550}
-        logoUrl={logoUrl}
+        active={isNavigating}
+        durationMs={520}
         pixelData={parsedPixelData}
       />
 

@@ -8,6 +8,7 @@ import type { MediaFolder, MediaType, MediaDomain, AdminMediaListResult } from '
 import { revalidatePath } from 'next/cache';
 import { writeFile, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
+import crypto from 'node:crypto';
 
 const mediaRepo = new MediaRepository();
 const mediaService = new MediaService(mediaRepo);
@@ -108,7 +109,7 @@ export async function adminUploadImageFileAction(
 
     let secureUrl = '';
 
-    // Check if Cloudinary credentials exist
+    // Authenticated Cloudinary direct server-side upload
     const cloudName =
       process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || process.env.CLOUDINARY_CLOUD_NAME;
     const apiKey = process.env.CLOUDINARY_API_KEY;
@@ -116,16 +117,28 @@ export async function adminUploadImageFileAction(
 
     if (cloudName && apiKey && apiSecret && !cloudName.includes('placeholder')) {
       try {
-        const cloudinaryFormData = new FormData();
         const base64Data = `data:${file.type};base64,${buffer.toString('base64')}`;
+        const timestamp = Math.floor(Date.now() / 1000);
+        const targetFolder = `elsesourav/${folder}`;
+        const publicIdName = `${Date.now()}-${cleanFilename.replace(/\.[^/.]+$/, '')}`;
+
+        const paramsToSign: Record<string, string | number> = {
+          folder: targetFolder,
+          public_id: publicIdName,
+          timestamp,
+        };
+
+        const sortedKeys = Object.keys(paramsToSign).sort();
+        const serialized = sortedKeys.map((k) => `${k}=${paramsToSign[k]}`).join('&');
+        const signature = crypto.createHash('sha1').update(`${serialized}${apiSecret}`).digest('hex');
+
+        const cloudinaryFormData = new FormData();
         cloudinaryFormData.append('file', base64Data);
-        cloudinaryFormData.append('folder', folder);
-        cloudinaryFormData.append(
-          'public_id',
-          `${timestamp}-${cleanFilename.replace(/\.[^/.]+$/, '')}`
-        );
+        cloudinaryFormData.append('folder', targetFolder);
+        cloudinaryFormData.append('public_id', publicIdName);
+        cloudinaryFormData.append('timestamp', String(timestamp));
         cloudinaryFormData.append('api_key', apiKey);
-        cloudinaryFormData.append('timestamp', String(Math.floor(Date.now() / 1000)));
+        cloudinaryFormData.append('signature', signature);
 
         const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
           method: 'POST',
@@ -135,13 +148,16 @@ export async function adminUploadImageFileAction(
         if (response.ok) {
           const cData = await response.json();
           secureUrl = cData.secure_url;
+        } else {
+          const errText = await response.text();
+          console.warn('Cloudinary upload error response:', response.status, errText);
         }
       } catch (err) {
-        console.warn('Direct Cloudinary upload fallback to local storage:', err);
+        console.warn('Direct Cloudinary upload exception:', err);
       }
     }
 
-    // Fallback: save to public/uploads directory or base64 data url
+    // Fallback: save to public/uploads directory or base64 data url if Cloudinary is offline
     if (!secureUrl) {
       try {
         const uploadsDir = join(process.cwd(), 'public', 'uploads', folder);

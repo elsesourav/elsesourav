@@ -1,8 +1,6 @@
 import * as React from 'react';
-import Link from 'next/link';
-import { Reveal, RevealGroup, Button } from '@elsesourav/ui';
+import { Reveal, RevealGroup } from '@elsesourav/ui';
 import { CAPABILITY_GROUPS_CONFIG } from '@elsesourav/config';
-import { ROUTES } from '@elsesourav/config';
 import {
   Gamepad2,
   Palette,
@@ -12,8 +10,6 @@ import {
   Waves,
   Smartphone,
   Layers,
-  ArrowRight,
-  Compass,
 } from 'lucide-react';
 
 function getCapabilityIcon(id: string): React.ReactNode {
@@ -105,27 +101,6 @@ export function CapabilityMap() {
           </div>
         ))}
       </RevealGroup>
-
-      {/* Clean Single Hub CTA pointing to Apps Archive */}
-      <Reveal direction="up" distance={10}>
-        <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-[hsl(var(--border-subtle))] bg-[hsl(var(--surface-subtle))] flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-          <div className="flex items-center gap-2.5">
-            <Compass className="w-4 h-4 text-indigo-500 shrink-0 hidden sm:block" />
-            <p className="text-xs sm:text-sm text-[hsl(var(--foreground))]">
-              Explore working implementations, source code, and live demos in the software catalog.
-            </p>
-          </div>
-          <Link href={ROUTES.APPS} className="shrink-0 w-full sm:w-auto">
-            <Button
-              size="xs"
-              rightIcon={<ArrowRight className="w-3 h-3" />}
-              className="text-xs font-semibold w-full sm:w-auto justify-center"
-            >
-              Browse All Apps
-            </Button>
-          </Link>
-        </div>
-      </Reveal>
     </section>
   );
 }

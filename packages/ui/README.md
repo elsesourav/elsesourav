@@ -408,6 +408,46 @@ import { ... } from '@elsesourav/ui';
 
 ---
 
+### `ImageUploadWithCrop` & `ImageCropperModal`
+
+- **Purpose**: Accessible, reusable client-side interactive image cropping and automatic dimension resizing system.
+- **Key Features**:
+  - Pan and zoom controls with 1x to 3x slider, reset action, and keyboard accessibility.
+  - Automatic target dimension enforcement (e.g. 512x512 for avatars, 1200x675 for banners) with bicubic high-smoothing canvas export.
+  - Circular or rectangular visual crop masks.
+  - Direct integration with Cloudinary signed server actions for zero local storage fallback.
+- **Props**:
+  - `value`: `string`
+  - `onChange`: `(url: string) => void`
+  - `onUploadFile?: (file: File) => Promise<{ success: boolean; url?: string; error?: string }>`
+  - `aspectRatio?: number` (default: `1`)
+  - `cropShape?: 'round' | 'rect'`
+  - `targetWidth?: number` (default: `512`)
+  - `targetHeight?: number` (default: `512`)
+  - `previewShape?: 'circle' | 'square' | 'banner' | 'portrait'`
+- **Usage Example**:
+  ```tsx
+  import { ImageUploadWithCrop } from '@elsesourav/ui';
+
+  <ImageUploadWithCrop
+    label="Creator Avatar"
+    value={avatarUrl}
+    onChange={setAvatarUrl}
+    cropShape="round"
+    aspectRatio={1}
+    targetWidth={512}
+    targetHeight={512}
+    previewShape="circle"
+    onUploadFile={async (file) => {
+      const formData = new FormData();
+      formData.append('file', file);
+      return await uploadAction(formData);
+    }}
+  />;
+  ```
+
+---
+
 ## Category 4: Surfaces & Elevation
 
 ### `Card` Suite
@@ -523,6 +563,7 @@ import { ... } from '@elsesourav/ui';
 - **Loading Architecture Guidelines**:
   - **In-Page Changes (Filters, Queries, Tags, Search, Sorting)**: ALWAYS use in-page content skeletons (`AppsCatalogSkeleton`, `UpdatesCatalogSkeleton`, `SearchLoadingSkeleton`, etc.). Never display full-screen loading screens for inside-page modifications.
   - **Cross-Route Transitions (Page Changes)**: Full-screen canvas logo loader (`PageTransitionLoader`) triggers strictly when navigating between different pathnames (`targetUrl.pathname !== currentPathname`), running a single smooth convergence animation without loops or restarts.
+  - **Zero-Lag Loading Screen Architecture**: Runtime transitions strictly consume in-memory array points (`parseLogoPixels`) with 0ms startup latency and zero runtime image downloading. All logo sampling is performed once during admin upload (`extractLogoPixelsFromUrl`), converted to a lightweight ~146-particle matrix (~876 bytes), and persisted to `site_logo_pixels_json`. Particle convergence uses pure continuous parametric cubic easing (`easeOutCubic = 1 - (1 - t)^3`) to eliminate visual snapping and stutter.
 - **Usage Example**:
   ```tsx
   import { Skeleton, SkeletonBadge, CardSkeleton } from '@elsesourav/ui';
@@ -1155,7 +1196,7 @@ The `@elsesourav/ui/interior` collection contains **54 physics-based animated UI
 | **`IconMorph`**          | `iconA, iconB, active`                                                                    | Smooth SVG path crossfade                                                                   | Play/Pause, Hamburger/Close buttons                      |
 | **`InlineValidation`**   | `status, message`                                                                         | Slide-down error pill with red accent pulse                                                 | Real-time email and username checkers                    |
 | **`InteractivePortrait`**| `imageDarkSrc, imageLightSrc, alt, isDark, effectsLevel, size`                             | WebAssembly C++ physics engine with raw WebGL point sprite pipeline & glowing halo shader  | Creator profile showcases, interactive portrait avatars |
-| **`WasmPortraitCanvas`** | `imageDarkSrc, imageLightSrc, alt, isDark, effectsLevel, size, lightIntensity, simulationResolution, particleDensity, particleSize, glowBrightness, flightSpeed, pathSpread, showPathGuide, edgeAlgorithm, edgeThreshold, pinBottomEdge, topParticleSize, topParticleQuantity, topParticleSpeed, backsideStars, backsideHalo, backsideOrbits, backsideSpecks, clickForce, bounceSpeed, introDuration` | WebAssembly (C++) 4x micro-pixel engine featuring selectable edge detection algorithms (Perimeter Alpha Scan, Sobel Gradient Convolution, Radial Centroid Raycast), configurable edge sensitivity threshold (10..65), bottom canvas perimeter anchoring (flush bottom edge), customizable top glow particle size/quantity/speed, customizable backside space objects (halo ring density, 5-pixel diamond stars count, celestial orbit loops, ambient cosmic specks), adjustable image pixel quality (256×256 Ultra Fine to 112×112 Arcade Chunky), tunable touch/click blast impulse force and Hooke elastic return bounce speed, configurable arrival flight sequences (instant 0s to dramatic 2.8s drift), mobile-safe 100svh viewport stabilization, immediate frame 0 proximity rim glow, and complete compact dropdown Admin Dashboard customization with instant live render and one-click Public Site Publishing | High-performance interactive developer portraits with full-screen particle stream entrance, single-canvas resizing architecture, hardware-adaptive performance scaling & complete Admin Dashboard customization |
+| **`WasmPortraitCanvas`** | `imageDarkSrc, imageLightSrc, alt, isDark, effectsLevel, size, lightIntensity, simulationResolution, particleDensity, particleSize, glowBrightness, flightSpeed, pathSpread, showPathGuide, edgeAlgorithm, edgeThreshold, pinBottomEdge, topParticleSize, topParticleQuantity, topParticleSpeed, glowDistance, backsideStars, backsideHalo, backsideOrbits, backsideSpecks, clickForce, clickRadius, bounceSpeed, introDuration` | WebAssembly (C++) 4x micro-pixel engine featuring selectable edge detection algorithms (Perimeter Alpha Scan, Sobel Gradient Convolution, Radial Centroid Raycast), configurable edge sensitivity threshold (10..65), bottom canvas perimeter anchoring (flush bottom edge), customizable top glow particle size/quantity/speed, adjustable top particle glow distance and reach (4px to 32px), customizable backside space objects (halo ring density, 5-pixel diamond stars count, celestial orbit loops 0–4, ambient cosmic specks), localized touch/click blast impulse force (0.1x to 1.8x), customizable click disturbance radius (24px to full canvas), floaty Hooke elastic return bounce speed (1.5 to 10.0), configurable arrival flight sequences (0.1s to 1.6s), device-specific target resolution controls (Desktop, Tablet, Mobile tabs), mobile-safe 100svh viewport stabilization, immediate frame 0 proximity rim glow, and complete compact dropdown Admin Dashboard customization with enlarged sticky desktop preview and one-click Public Site Publishing | High-performance interactive developer portraits with full-screen particle stream entrance, single-canvas resizing architecture, hardware-adaptive performance scaling & complete Admin Dashboard customization |
 | **`WasmAtmosphereCanvas`** | `isDark, isSceneActive, particleDensityMultiplier, speedMultiplier, meteorFrequencyMultiplier, mobileEffectsMode, className, onLoaded` | High-performance WebGL + WebAssembly (C++) atmospheric particle engine replacing 2D canvas drawing. Renders crisp retro micro-pixel celestial stars (1.5px–2.5px solid square point sprites with zero blur, accompanied by 5-pixel retro diamond cross stars matching the About portrait side stars with sinusoidal opacity twinkle), sleek small & medium shooting stars / asteroids (1.2px–2.6px nucleus with 45px–125px tapered plasma streak and trailing stardust sparks), volumetric morning fog puffs, and sunlit motes in a single GPU draw call. Features active 60 FPS mobile rendering with touch swipe meteors, real-time hardware-adaptive performance scaling, `touchAction: pan-y` mobile scroll passthrough (`pointer-events-none md:pointer-events-auto`), and complete Admin Dashboard customization. | Homepage hero cosmic background, daylight atmospheric clouds, interactive sky canvas with zero JS GC overhead |
 | **`Lightbox`**           | `src, alt, open, onClose, onPrev, onNext, index, total`                                   | Fullscreen zoom from clicked element thumbnail with spring physics & gallery navigation     | Image gallery previews, proof viewing, apps showcase     |
 | **`LikeBurst`**          | `liked, onLike, count`                                                                    | Particle burst explosion with heart scale punch                                             | Social likes, upvoting blog posts                        |

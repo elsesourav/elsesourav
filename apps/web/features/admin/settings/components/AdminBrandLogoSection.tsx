@@ -9,7 +9,7 @@ import { extractLogoPixelsFromUrl } from '@/components/loading/extractLogoPixels
 import { parseLogoPixels, type LogoPixelTuple } from '@/components/loading/logoPixelData';
 import { Sparkles, RefreshCw, CheckCircle2, AlertCircle } from 'lucide-react';
 
-interface AdminBrandLogoSectionProps {
+export interface AdminBrandLogoSectionProps {
   settings: Record<string, string>;
   handleChange: (key: string, value: string) => void;
 }
@@ -32,13 +32,13 @@ export function AdminBrandLogoSection({
   React.useEffect(() => {
     if (currentPixelsJson) {
       const parsed = parseLogoPixels(currentPixelsJson);
-      if (parsed.length > 50) {
+      if (parsed.length > 20) {
         setActivePreviewPixels(parsed);
       }
     }
   }, [currentPixelsJson]);
 
-  // Extract 64x64 high-density pixels from logo (SVG or raster)
+  // Extract lightweight pixel points matrix from logo (SVG or raster)
   const handleExtractPixels = async (urlToSample?: string) => {
     const targetUrl = urlToSample || currentLogoUrl || '/logo.png';
     setIsSampling(true);
@@ -47,13 +47,13 @@ export function AdminBrandLogoSection({
 
     try {
       const result = await extractLogoPixelsFromUrl(targetUrl, 64);
-      if (result.pixels.length < 20) {
+      if (result.pixels.length < 10) {
         throw new Error('Image contains too few non-transparent pixels. Please check the image format.');
       }
 
       handleChange('site_logo_pixels_json', result.base64);
       setActivePreviewPixels(result.pixels);
-      setSampleSuccess(`Extracted ${result.count} high-density 4x pixels successfully!`);
+      setSampleSuccess(`Extracted and stored ${result.count} lightweight particles successfully!`);
     } catch (err) {
       setSampleError(err instanceof Error ? err.message : 'Failed to sample pixels from image');
     } finally {
@@ -61,7 +61,7 @@ export function AdminBrandLogoSection({
     }
   };
 
-  const pixelCount = activePreviewPixels ? activePreviewPixels.length : 2433;
+  const pixelCount = activePreviewPixels ? activePreviewPixels.length : 146;
 
   return (
     <div className="space-y-4 pt-2">
@@ -69,10 +69,10 @@ export function AdminBrandLogoSection({
         <div>
           <h4 className="text-sm font-semibold text-zinc-100 flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-indigo-400" />
-            <span>Brand Assets & 4x Loading Screen System</span>
+            <span>Brand Assets & Lightweight Loading Screen System</span>
           </h4>
           <p className="text-xs text-zinc-400">
-            Configure dynamic logo, SVG vectors, favicon, and 4x canvas loading animation.
+            Configure dynamic brand icon, SVG vectors, and pre-computed lightweight canvas loading particles.
           </p>
         </div>
       </div>
@@ -86,7 +86,7 @@ export function AdminBrandLogoSection({
             onChange={(val) => {
               handleChange('site_logo_url', val);
               if (val) {
-                // Auto-trigger pixel extraction for newly uploaded or selected logo
+                // Auto-trigger lightweight pixel extraction on upload or selection
                 handleExtractPixels(val);
               }
             }}
@@ -116,11 +116,11 @@ export function AdminBrandLogoSection({
               className="border-indigo-500/30 text-indigo-300 hover:bg-indigo-950/40 text-xs flex items-center gap-2"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isSampling ? 'animate-spin' : ''}`} />
-              <span>{isSampling ? 'Sampling 4x Pixels...' : 'Re-generate 4x Pixels from Logo'}</span>
+              <span>{isSampling ? 'Extracting Pixels...' : 'Re-generate Lightweight Pixels'}</span>
             </Button>
 
             <span className="text-[11px] font-mono text-zinc-400">
-              {pixelCount.toLocaleString()} high-density micro-particles
+              {pixelCount.toLocaleString()} uniform particles (~876 bytes)
             </span>
           </div>
 
@@ -145,16 +145,16 @@ export function AdminBrandLogoSection({
             <div className="w-full flex items-center justify-between pb-2 border-b border-zinc-800 text-[11px] font-mono text-zinc-400">
               <span>Loading Screen Preview</span>
               <Badge variant="outline" className="text-[10px] text-indigo-300 border-indigo-500/30">
-                4x Resolution
+                Lightweight 60fps
               </Badge>
             </div>
 
             <div className="py-4 flex flex-col items-center">
               <CanvasLogoLoader
                 size={180}
-                durationMs={600}
+                durationMs={520}
                 pixelData={activePreviewPixels || undefined}
-                logoUrl={!activePreviewPixels ? currentLogoUrl || undefined : undefined}
+                active={true}
               />
               <div className="mt-2 text-center">
                 <span className="text-xs font-semibold tracking-wider uppercase text-zinc-200">
@@ -165,7 +165,7 @@ export function AdminBrandLogoSection({
             </div>
 
             <p className="text-[10px] text-zinc-500 text-center leading-normal pt-1">
-              Live preview shows pixel assembly, laser light sweep, living hover float, and animated dots.
+              Live preview reflects exact zero-lag in-memory particle convergence and energy glow sweep.
             </p>
           </Card>
         </div>

@@ -24,17 +24,8 @@ export function AboutMotivationSection() {
           </h2>
 
           <p className="text-xs sm:text-sm text-[hsl(var(--foreground))] leading-relaxed">
-            Rather than viewing software engineering through a single narrow framework, Sourav
-            approaches programming as a medium for understanding systems from first principles.
-            When exploring computer graphics, he writes canvas renderers and physics loops. When
-            studying AI, he builds browser extensions with local WebAssembly models. When
-            solving data management bottlenecks, he develops batch automation tools.
-          </p>
-
-          <p className="text-xs sm:text-sm text-[hsl(var(--muted-foreground))] leading-relaxed">
-            Every project in this portfolio represents an intentional exploration: exploring new
-            paradigms, testing performance boundaries, and crafting tools that solve concrete
-            real-world problems.
+            Approaching software as a medium to understand systems from first principles—exploring
+            graphics renderers, WebAssembly, on-device ML, and production automation through hands-on builds.
           </p>
         </div>
       </section>

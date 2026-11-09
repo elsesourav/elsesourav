@@ -31,9 +31,12 @@ PixelEngine::PixelEngine() {
     backsideStarsCount = 32;
     backsideHaloMult = 1.0f;
     backsideOrbitsEnabled = 1;
+    backsideOrbitsCount = 2;
     backsideSpecksMult = 1.0f;
     clickForceMult = 1.0f;
     bounceSpeedMult = 1.0f;
+    glowDistanceMult = 1.0f;
+    clickRadiusMult = 1.0f;
 
     particleCount = 0;
     emitterCount = 0;
@@ -173,9 +176,10 @@ void PixelEngine::setBacksideHalo(float mult) {
     }
 }
 
-void PixelEngine::setBacksideOrbits(int enabled) {
-    if (backsideOrbitsEnabled != enabled) {
-        backsideOrbitsEnabled = enabled;
+void PixelEngine::setBacksideOrbits(int count) {
+    if (backsideOrbitsCount != count || backsideOrbitsEnabled != (count > 0 ? 1 : 0)) {
+        backsideOrbitsCount = count;
+        backsideOrbitsEnabled = (count > 0) ? 1 : 0;
         generatePixels();
     }
 }
@@ -193,6 +197,17 @@ void PixelEngine::setClickForce(float mult) {
 
 void PixelEngine::setBounceSpeed(float mult) {
     bounceSpeedMult = mult;
+}
+
+void PixelEngine::setGlowDistance(float dist) {
+    if (fabsf(glowDistanceMult - dist) > 0.01f) {
+        glowDistanceMult = dist;
+        generatePixels();
+    }
+}
+
+void PixelEngine::setClickRadius(float radius) {
+    clickRadiusMult = radius;
 }
 
 void PixelEngine::processImage(int w, int h) {
@@ -341,6 +356,14 @@ void engine_set_click_force(PixelEngine* engine, float mult) {
 
 void engine_set_bounce_speed(PixelEngine* engine, float mult) {
     if (engine) engine->setBounceSpeed(mult);
+}
+
+void engine_set_glow_distance(PixelEngine* engine, float dist) {
+    if (engine) engine->setGlowDistance(dist);
+}
+
+void engine_set_click_radius(PixelEngine* engine, float radius) {
+    if (engine) engine->setClickRadius(radius);
 }
 
 float* engine_get_vertex_buffer(PixelEngine* engine) {
