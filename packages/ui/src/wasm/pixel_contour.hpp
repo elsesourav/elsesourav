@@ -6,7 +6,7 @@
 #include <string.h>
 #include <math.h>
 
-#define MAX_IMAGE_DIM 288
+#define MAX_IMAGE_DIM 512
 #define MAX_CONTOUR 2048
 
 #ifndef M_PI

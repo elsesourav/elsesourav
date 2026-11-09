@@ -90,11 +90,10 @@ export function AboutHeroSection({ creator, site }: AboutHeroSectionProps) {
               backsideHalo={site.portraitBacksideHalo}
               backsideOrbits={site.portraitBacksideOrbits}
               backsideSpecks={site.portraitBacksideSpecks}
-              imageResolution={
-                site.portraitImageResolutionDesktop ||
-                site.portraitImageResolution ||
-                '224'
-              }
+              imageResolution={site.portraitImageResolution}
+              imageResolutionDesktop={site.portraitImageResolutionDesktop}
+              imageResolutionTablet={site.portraitImageResolutionTablet}
+              imageResolutionMobile={site.portraitImageResolutionMobile}
               clickForce={site.portraitClickForce}
               bounceSpeed={site.portraitBounceSpeed}
               clickRadius={site.portraitClickRadius}

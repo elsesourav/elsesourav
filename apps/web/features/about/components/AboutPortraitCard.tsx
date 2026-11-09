@@ -28,6 +28,9 @@ export interface AboutPortraitCardProps {
   backsideOrbits?: string | number | boolean;
   backsideSpecks?: string | number;
   imageResolution?: string | number;
+  imageResolutionDesktop?: string | number;
+  imageResolutionTablet?: string | number;
+  imageResolutionMobile?: string | number;
   clickForce?: string | number;
   bounceSpeed?: string | number;
   clickRadius?: string | number;
@@ -58,6 +61,9 @@ export function AboutPortraitCard({
   backsideOrbits,
   backsideSpecks,
   imageResolution,
+  imageResolutionDesktop,
+  imageResolutionTablet,
+  imageResolutionMobile,
   clickForce,
   bounceSpeed,
   clickRadius,
@@ -65,6 +71,26 @@ export function AboutPortraitCard({
 }: AboutPortraitCardProps) {
   const { resolvedTheme, effectsLevel } = useTheme();
   const isDark = resolvedTheme === 'dark';
+
+  const [responsiveRes, setResponsiveRes] = React.useState<string | number | undefined>(() => {
+    return imageResolutionDesktop || imageResolution || '224';
+  });
+
+  React.useEffect(() => {
+    const updateRes = () => {
+      const width = window.innerWidth;
+      if (width < 640) {
+        setResponsiveRes(imageResolutionMobile || imageResolution || '144');
+      } else if (width < 1024) {
+        setResponsiveRes(imageResolutionTablet || imageResolution || '192');
+      } else {
+        setResponsiveRes(imageResolutionDesktop || imageResolution || '256');
+      }
+    };
+    updateRes();
+    window.addEventListener('resize', updateRes);
+    return () => window.removeEventListener('resize', updateRes);
+  }, [imageResolution, imageResolutionDesktop, imageResolutionTablet, imageResolutionMobile]);
 
   return (
     <div
@@ -93,7 +119,7 @@ export function AboutPortraitCard({
           effectsLevel={effectsLevel}
           size={size}
           lightIntensity={lightIntensity}
-          simulationResolution={imageResolution}
+          simulationResolution={responsiveRes}
           particleDensity={particleDensity}
           particleSize={particleSize}
           glowBrightness={glowBrightness}

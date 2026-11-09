@@ -111,21 +111,31 @@ export const SiteSettingsSchema = z.object({
   portrait_top_particle_quantity: z.string().max(20).optional().or(z.literal('')),
   /** Top glow particle travel speed multiplier: 0.5x, 1.0x, 1.5x, 2.0x, 3.0x */
   portrait_top_particle_speed: z.string().max(20).optional().or(z.literal('')),
+  /** Top glow crystalline particle reach and halo distance: 4px, 8px, 14px, 22px, 32px */
+  portrait_glow_distance: z.string().max(20).optional().or(z.literal('')),
   /** Backside retro diamond stars quantity: 'off', '8', '16', '32', '48' */
   portrait_backside_stars: z.string().max(20).optional().or(z.literal('')),
   /** Backside animated halo ring density multiplier: 'off', 0.5x, 1.0x, 1.5x, 2.0x */
   portrait_backside_halo: z.string().max(20).optional().or(z.literal('')),
-  /** Backside celestial orbit loops: 'enabled' | 'disabled' */
+  /** Backside celestial orbit loops: '0', '1', '2', '3', '4' */
   portrait_backside_orbits: z.string().max(20).optional().or(z.literal('')),
   /** Backside ambient cosmic specks multiplier: 'off', 0.5x, 1.0x, 2.0x */
   portrait_backside_specks: z.string().max(20).optional().or(z.literal('')),
-  /** Photographic pixel simulation grid quality / resolution: '256', '224', '192', '144', '112' */
+  /** Photographic pixel simulation grid quality / resolution: '512', '384', '256', '224', '192', '144', '112' */
   portrait_image_resolution: z.string().max(20).optional().or(z.literal('')),
-  /** Click & touch impulse blast force multiplier: 0.8x, 1.8x, 2.8x, 4.0x */
+  /** Desktop grid resolution: '512', '384', '256', '224', '192', '144' */
+  portrait_image_resolution_desktop: z.string().max(20).optional().or(z.literal('')),
+  /** Tablet grid resolution: '384', '256', '224', '192', '144', '112' */
+  portrait_image_resolution_tablet: z.string().max(20).optional().or(z.literal('')),
+  /** Mobile grid resolution: '224', '192', '160', '144', '112' */
+  portrait_image_resolution_mobile: z.string().max(20).optional().or(z.literal('')),
+  /** Click & touch impulse blast force multiplier: 0.1x to 1.8x */
   portrait_click_force: z.string().max(20).optional().or(z.literal('')),
-  /** Elastic return bounce / spring speed multiplier: 3.5, 8.2, 14.0, 22.0 */
+  /** Elastic return bounce / spring speed multiplier: 1.5 to 10.0 */
   portrait_bounce_speed: z.string().max(20).optional().or(z.literal('')),
-  /** Initial arrival flight intro animation style: 'none', 'fast', 'standard', 'slow' */
+  /** Localized click disturbance radius: 24px, 48px, 80px, 140px, full */
+  portrait_click_radius: z.string().max(20).optional().or(z.literal('')),
+  /** Initial arrival flight intro animation style: 'instant', '0.1s', '0.3s', '0.6s', '1.0s', '1.6s' */
   portrait_intro_animation: z.string().max(20).optional().or(z.literal('')),
 
   // ── Footer Customization ───────────────────────────────────────────────────

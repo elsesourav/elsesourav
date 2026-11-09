@@ -12,7 +12,7 @@ export interface ImageCropperModalProps {
   onClose: () => void;
   imageSrc: string;
   onCropComplete: (croppedFile: File) => void | Promise<void>;
-  aspectRatio?: number;
+  aspectRatio?: number | null;
   cropShape?: CropShape;
   targetWidth?: number;
   targetHeight?: number;
@@ -30,7 +30,7 @@ export interface ImageUploadWithCropProps {
   helperText?: string;
   placeholder?: string;
   required?: boolean;
-  aspectRatio?: number;
+  aspectRatio?: number | null;
   cropShape?: CropShape;
   targetWidth?: number;
   targetHeight?: number;
@@ -39,4 +39,5 @@ export interface ImageUploadWithCropProps {
   previewShape?: 'circle' | 'square' | 'banner' | 'portrait';
   className?: string;
   disabled?: boolean;
+  fallbackUrl?: string;
 }

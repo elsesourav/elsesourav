@@ -51,17 +51,41 @@ export function ImageInputWithLibrary({
   const cropConfig = React.useMemo(() => {
     switch (previewShape) {
       case 'circle':
-        return { aspectRatio: 1, cropShape: 'round' as const, width: 512, height: 512 };
+        return { aspectRatio: 1.0, cropShape: 'round' as const, width: 512, height: 512 };
       case 'portrait':
-        return { aspectRatio: 1, cropShape: 'rect' as const, width: 512, height: 512 };
+        return { aspectRatio: 1.0, cropShape: 'rect' as const, width: 512, height: 512 };
       case 'banner':
         return { aspectRatio: 16 / 9, cropShape: 'rect' as const, width: 1200, height: 675 };
       case 'square':
       default:
-        return { aspectRatio: 1, cropShape: 'rect' as const, width: 512, height: 512 };
+        return { aspectRatio: 1.0, cropShape: 'rect' as const, width: 512, height: 512 };
     }
   }, [previewShape]);
 
+  // Direct upload handler when image matches required ratio or user confirms crop
+  const directUpload = async (fileToUpload: File) => {
+    setIsUploading(true);
+    setUploadError(null);
+
+    const formData = new FormData();
+    formData.append('file', fileToUpload);
+    formData.append('folder', folder);
+
+    try {
+      const res = await adminUploadImageFileAction(formData);
+      if (res.success && res.url) {
+        onChange(res.url);
+      } else {
+        setUploadError(res.error || 'Upload failed');
+      }
+    } catch {
+      setUploadError('Failed to upload image');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  // Handle file picker selection with smart aspect ratio detection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -74,31 +98,35 @@ export function ImageInputWithLibrary({
     setUploadError(null);
     setCropperFileName(file.name.replace(/\.[^/.]+$/, '') + '.webp');
     const objectUrl = URL.createObjectURL(file);
-    setCropperSrc(objectUrl);
-    setIsCropperOpen(true);
+
+    // Inspect image dimensions: if it doesn't match required ratio, automatically open cropper
+    const img = new Image();
+    img.src = objectUrl;
+    img.onload = () => {
+      const imgRatio = img.naturalWidth / img.naturalHeight;
+      const targetRatio = cropConfig.aspectRatio;
+
+      // Check if ratio matches within 5% tolerance
+      const isRatioMatched = Math.abs(imgRatio - targetRatio) <= 0.05;
+
+      if (!isRatioMatched) {
+        // Automatically open the crop modal so the user can easily frame and crop it
+        setCropperSrc(objectUrl);
+        setIsCropperOpen(true);
+      } else {
+        // Image already matches target ratio perfectly: directly upload it
+        directUpload(file);
+      }
+    };
+    img.onerror = () => {
+      directUpload(file);
+    };
+
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleCropComplete = async (croppedFile: File) => {
-    setIsUploading(true);
-    setUploadError(null);
-
-    const formData = new FormData();
-    formData.append('file', croppedFile);
-    formData.append('folder', folder);
-
-    try {
-      const res = await adminUploadImageFileAction(formData);
-      if (res.success && res.url) {
-        onChange(res.url);
-      } else {
-        setUploadError(res.error || 'Upload failed');
-      }
-    } catch {
-      setUploadError('Failed to upload image to Cloudinary');
-    } finally {
-      setIsUploading(false);
-    }
+    await directUpload(croppedFile);
   };
 
   const previewClasses = {
@@ -114,11 +142,31 @@ export function ImageInputWithLibrary({
 
   return (
     <div className={`space-y-1.5 ${className}`}>
-      {label && (
-        <div className="flex items-center justify-between">
+      {/* Header with Label and Optional Actions */}
+      <div className="flex items-center justify-between">
+        {label && (
           <label className="block text-xs font-semibold text-zinc-300">
             {label} {required && <span className="text-rose-400">*</span>}
           </label>
+        )}
+        <div className="flex items-center gap-1.5 ml-auto">
+          {displayImage && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="xs"
+              onClick={() => {
+                setCropperSrc(displayImage);
+                setCropperFileName('cropped.webp');
+                setIsCropperOpen(true);
+              }}
+              className="text-[11px] text-zinc-400 hover:text-cyan-400 flex items-center gap-1 transition-colors h-6 px-1.5 rounded-lg"
+              title="Crop image"
+            >
+              <Crop className="w-3 h-3 text-cyan-400" />
+              <span>Crop</span>
+            </Button>
+          )}
           {value && (
             <Button
               type="button"
@@ -131,7 +179,7 @@ export function ImageInputWithLibrary({
             </Button>
           )}
         </div>
-      )}
+      </div>
 
       {/* Hidden file input */}
       <input
@@ -144,17 +192,32 @@ export function ImageInputWithLibrary({
       />
 
       <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-        {/* Preview Thumbnail */}
-        <div className={previewClasses}>
+        {/* Preview Thumbnail with Click to Crop */}
+        <div
+          className={`${previewClasses} relative group ${displayImage ? 'cursor-pointer' : ''}`}
+          onClick={() => {
+            if (displayImage) {
+              setCropperSrc(displayImage);
+              setCropperFileName('cropped.webp');
+              setIsCropperOpen(true);
+            }
+          }}
+          title={displayImage ? 'Click to crop image' : undefined}
+        >
           {displayImage ? (
-            <img
-              src={displayImage}
-              alt="Preview"
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                (e.target as HTMLElement).style.display = 'none';
-              }}
-            />
+            <>
+              <img
+                src={displayImage}
+                alt="Preview"
+                className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                onError={(e) => {
+                  (e.target as HTMLElement).style.display = 'none';
+                }}
+              />
+              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                <Crop className="w-3.5 h-3.5 text-cyan-300" />
+              </div>
+            </>
           ) : (
             <ImageIcon className="w-5 h-5 text-zinc-600" />
           )}
@@ -172,6 +235,7 @@ export function ImageInputWithLibrary({
           />
 
           <div className="flex items-center gap-1.5 shrink-0 justify-end flex-wrap sm:flex-nowrap">
+            {/* Standard Normal Upload Button */}
             <Button
               type="button"
               variant="outline"
@@ -179,33 +243,17 @@ export function ImageInputWithLibrary({
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploading}
               className="text-xs rounded-xl border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 gap-1.5 h-9 px-3 shrink-0 justify-center whitespace-nowrap"
-              title="Upload image file with automatic crop"
+              title="Upload image file"
             >
               {isUploading ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin shrink-0" />
               ) : (
                 <Upload className="w-3.5 h-3.5 shrink-0" />
               )}
-              <span className="whitespace-nowrap">Upload & Crop</span>
+              <span className="whitespace-nowrap">Upload</span>
             </Button>
 
-            {displayImage && (
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  setCropperSrc(displayImage);
-                  setIsCropperOpen(true);
-                }}
-                disabled={isUploading}
-                className="text-xs rounded-xl text-zinc-400 hover:text-zinc-100 h-9 px-2.5 shrink-0"
-                title="Crop current image"
-              >
-                <Crop className="w-3.5 h-3.5 shrink-0" />
-              </Button>
-            )}
-
+            {/* Media Library Button */}
             <Button
               type="button"
               variant="outline"
@@ -233,7 +281,7 @@ export function ImageInputWithLibrary({
         title={`Select ${label || 'Image'}`}
       />
 
-      {/* Reusable Image Crop Modal */}
+      {/* Interactive Resizable Image Crop Modal */}
       {cropperSrc && (
         <ImageCropperModal
           isOpen={isCropperOpen}

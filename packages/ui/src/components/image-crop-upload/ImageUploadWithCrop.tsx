@@ -13,17 +13,18 @@ export function ImageUploadWithCrop({
   onUploadFile,
   label,
   helperText,
-  placeholder = 'Image URL or upload/crop',
+  placeholder = 'Image URL or upload file',
   required = false,
   aspectRatio = 1,
-  cropShape = 'round',
+  cropShape = 'rect',
   targetWidth = 512,
   targetHeight = 512,
   mimeType = 'image/webp',
   quality = 0.92,
-  previewShape = 'circle',
+  previewShape = 'square',
   className = '',
   disabled = false,
+  fallbackUrl,
 }: ImageUploadWithCropProps) {
   const [cropperOpen, setCropperOpen] = React.useState(false);
   const [selectedImageSrc, setSelectedImageSrc] = React.useState<string | null>(null);
@@ -33,31 +34,14 @@ export function ImageUploadWithCrop({
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-  const handleFileSelect = (file: File) => {
-    if (!file.type.startsWith('image/')) {
-      setErrorMessage('Please select a valid image file');
-      return;
-    }
-    setErrorMessage(null);
-    setSelectedFileName(file.name.replace(/\.[^/.]+$/, '') + '.webp');
+  const displayImage = value || fallbackUrl;
 
-    const objectUrl = URL.createObjectURL(file);
-    setSelectedImageSrc(objectUrl);
-    setCropperOpen(true);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) handleFileSelect(file);
-    if (fileInputRef.current) fileInputRef.current.value = '';
-  };
-
-  const handleCropComplete = async (croppedFile: File) => {
+  const directUpload = async (fileToUpload: File) => {
     if (onUploadFile) {
       try {
         setIsUploading(true);
         setErrorMessage(null);
-        const res = await onUploadFile(croppedFile);
+        const res = await onUploadFile(fileToUpload);
         if (res.success && res.url) {
           onChange(res.url);
         } else {
@@ -69,10 +53,50 @@ export function ImageUploadWithCrop({
         setIsUploading(false);
       }
     } else {
-      // In-memory fallback if no upload handler provided
-      const dataUrl = URL.createObjectURL(croppedFile);
+      const dataUrl = URL.createObjectURL(fileToUpload);
       onChange(dataUrl);
     }
+  };
+
+  const handleFileSelect = (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      setErrorMessage('Please select a valid image file');
+      return;
+    }
+    setErrorMessage(null);
+    setSelectedFileName(file.name.replace(/\.[^/.]+$/, '') + '.webp');
+
+    const objectUrl = URL.createObjectURL(file);
+
+    // If an aspect ratio is required, inspect dimensions
+    const img = new Image();
+    img.src = objectUrl;
+    img.onload = () => {
+      const imgRatio = img.naturalWidth / img.naturalHeight;
+      const isRatioMatched = aspectRatio !== null && aspectRatio !== undefined
+        ? Math.abs(imgRatio - aspectRatio) <= 0.05
+        : true;
+
+      if (!isRatioMatched) {
+        setSelectedImageSrc(objectUrl);
+        setCropperOpen(true);
+      } else {
+        directUpload(file);
+      }
+    };
+    img.onerror = () => {
+      directUpload(file);
+    };
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) handleFileSelect(file);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleCropComplete = async (croppedFile: File) => {
+    await directUpload(croppedFile);
   };
 
   const previewClasses = {
@@ -99,36 +123,64 @@ export function ImageUploadWithCrop({
       />
 
       {/* Label & Header */}
-      {label && (
-        <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
+        {label && (
           <label className="block text-xs font-semibold text-zinc-300">
             {label} {required && <span className="text-rose-400">*</span>}
           </label>
+        )}
+        <div className="flex items-center gap-1.5 ml-auto">
+          {displayImage && (
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedImageSrc(displayImage);
+                setCropperOpen(true);
+              }}
+              className="text-[11px] text-zinc-400 hover:text-cyan-400 flex items-center gap-1 transition-colors px-1 py-0.5 rounded"
+            >
+              <Crop className="w-3 h-3 text-cyan-400" /> Crop
+            </button>
+          )}
           {value && (
             <button
               type="button"
               onClick={() => onChange('')}
-              className="text-[11px] text-zinc-500 hover:text-rose-400 flex items-center gap-1 transition-colors"
+              className="text-[11px] text-zinc-500 hover:text-rose-400 flex items-center gap-1 transition-colors px-1 py-0.5 rounded"
             >
               <X className="w-3 h-3" /> Clear
             </button>
           )}
         </div>
-      )}
+      </div>
 
       {/* Main Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-        {/* Preview Thumbnail */}
-        <div className={previewClasses}>
-          {value ? (
-            <img
-              src={value}
-              alt="Preview"
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                (e.target as HTMLElement).style.display = 'none';
-              }}
-            />
+        {/* Preview Thumbnail with Click to Crop */}
+        <div
+          className={`${previewClasses} relative group ${displayImage ? 'cursor-pointer' : ''}`}
+          onClick={() => {
+            if (displayImage) {
+              setSelectedImageSrc(displayImage);
+              setCropperOpen(true);
+            }
+          }}
+          title={displayImage ? 'Click to crop image' : undefined}
+        >
+          {displayImage ? (
+            <>
+              <img
+                src={displayImage}
+                alt="Preview"
+                className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                onError={(e) => {
+                  (e.target as HTMLElement).style.display = 'none';
+                }}
+              />
+              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                <Crop className="w-3.5 h-3.5 text-cyan-300" />
+              </div>
+            </>
           ) : (
             <ImageIcon className="w-5 h-5 text-zinc-600" />
           )}
@@ -161,26 +213,8 @@ export function ImageUploadWithCrop({
               }
               className="rounded-xl border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 h-9 px-3"
             >
-              {isUploading ? 'Uploading...' : 'Upload & Crop'}
+              {isUploading ? 'Uploading...' : 'Upload'}
             </Button>
-
-            {value && (
-              <Button
-                type="button"
-                variant="ghost"
-                size="xs"
-                onClick={() => {
-                  setSelectedImageSrc(value);
-                  setCropperOpen(true);
-                }}
-                disabled={disabled || isUploading}
-                leftIcon={<Crop className="w-3.5 h-3.5" />}
-                className="rounded-xl text-zinc-400 hover:text-zinc-100 h-9 px-2.5"
-                title="Re-crop image"
-              >
-                Crop
-              </Button>
-            )}
           </div>
         </div>
       </div>

@@ -14,7 +14,7 @@ import { PhysicsInteractionControls } from './portrait/PhysicsInteractionControl
 export interface PortraitSettingsTabProps {
   settings: Record<string, string>;
   onChange: (key: string, value: string) => void;
-  onSave?: () => Promise<void>;
+  onSave?: (overrides?: Record<string, string>) => Promise<void>;
 }
 
 export function PortraitSettingsTab({ settings, onChange, onSave }: PortraitSettingsTabProps) {
@@ -89,7 +89,7 @@ export function PortraitSettingsTab({ settings, onChange, onSave }: PortraitSett
         onChange(k, v);
       });
       if (onSave) {
-        await onSave();
+        await onSave(draftSettings as unknown as Record<string, string>);
       }
     } finally {
       setIsApplying(false);

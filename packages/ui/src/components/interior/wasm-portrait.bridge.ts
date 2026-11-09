@@ -136,7 +136,12 @@ export class WasmPortraitBridge {
   private async initWasm(): Promise<void> {
     try {
       const wasmBytes = getPixelEngineWasmBinary();
-      const res = (await WebAssembly.instantiate(wasmBytes, {})) as
+      const importObject = {
+        env: {
+          emscripten_notify_memory_growth: () => {},
+        },
+      };
+      const res = (await WebAssembly.instantiate(wasmBytes, importObject)) as
         | WebAssembly.WebAssemblyInstantiatedSource
         | WebAssembly.Instance;
       const instance: WebAssembly.Instance = 'instance' in res ? res.instance : res;

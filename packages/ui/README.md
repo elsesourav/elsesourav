@@ -408,19 +408,21 @@ import { ... } from '@elsesourav/ui';
 
 ---
 
-### `ImageUploadWithCrop` & `ImageCropperModal`
+### `ImageUploadWithCrop` & `ImageCropperModal` (`useCropInteraction`)
 
-- **Purpose**: Accessible, reusable client-side interactive image cropping and automatic dimension resizing system.
+- **Purpose**: Accessible, high-precision client-side interactive image cropping, corner-drag resizing, and dimension optimization system powered by the modular `useCropInteraction` hook.
 - **Key Features**:
-  - Pan and zoom controls with 1x to 3x slider, reset action, and keyboard accessibility.
-  - Automatic target dimension enforcement (e.g. 512x512 for avatars, 1200x675 for banners) with bicubic high-smoothing canvas export.
-  - Circular or rectangular visual crop masks.
-  - Direct integration with Cloudinary signed server actions for zero local storage fallback.
+  - **Interactive Resizable Crop Selection**: 4 tactile corner handles (`nw`, `ne`, `se`, `sw`) and 4 edge midpoint handles (`n`, `s`, `w`, `e`) for smooth dragging and resizing directly on the image.
+  - **Smart Ratio Detection & Upload**: Direct upload when the selected image matches the target aspect ratio; automatically opens the crop modal if the aspect ratio deviates, with on-demand manual crop buttons.
+  - **Preset Aspect Ratios & Freeform**: Instant preset pills for `Free` (unconstrained rectangle drag), `1:1 Square`, `16:9 Hero`, `4:3 Standard`, `3:4 Portrait`, `1:6 Carousel/Slider`, and `6:1 Banner`, complete with a Lock/Unlock aspect ratio toggle.
+  - **Unrestricted Viewport Zoom**: Zoom out to `0.4x` so full image width and height boundaries are visible, with zoom in up to `2.5x`, reset, and rule-of-thirds 3×3 composition grid lines.
+  - Automatic target dimension enforcement with bicubic high-smoothing HTML5 Canvas export to WebP/PNG.
+  - Direct integration with Cloudinary signed server actions.
 - **Props**:
   - `value`: `string`
   - `onChange`: `(url: string) => void`
   - `onUploadFile?: (file: File) => Promise<{ success: boolean; url?: string; error?: string }>`
-  - `aspectRatio?: number` (default: `1`)
+  - `aspectRatio?: number | null` (default: `1`)
   - `cropShape?: 'round' | 'rect'`
   - `targetWidth?: number` (default: `512`)
   - `targetHeight?: number` (default: `512`)

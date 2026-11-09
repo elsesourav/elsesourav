@@ -165,13 +165,22 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
     }));
   };
 
-  const handleSave = async () => {
+  const handleSave = async (explicitOverrides?: Record<string, string>) => {
     setIsSaving(true);
     setMessage(null);
 
+    const mergedSettings = {
+      ...settings,
+      ...(explicitOverrides || {}),
+    };
+
+    if (explicitOverrides) {
+      setSettings(mergedSettings);
+    }
+
     try {
       const payload: Record<string, string> = {
-        ...settings,
+        ...mergedSettings,
         social_links_json: JSON.stringify(links),
         contact_methods_json: JSON.stringify(contacts),
         footer_links_json: JSON.stringify(footerLinks),
@@ -214,7 +223,7 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
           type="button"
           variant="primary"
           size="sm"
-          onClick={handleSave}
+          onClick={() => handleSave()}
           disabled={isSaving}
           leftIcon={
             isSaving ? (

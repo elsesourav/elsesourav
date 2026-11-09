@@ -7,7 +7,7 @@
 #include <stdint.h>
 
 #define MAX_IMAGE_BYTES (MAX_IMAGE_DIM * MAX_IMAGE_DIM * 4)
-#define MAX_PARTICLES 65536
+#define MAX_PARTICLES 200000
 #define MAX_EMITTERS 480
 #define MAX_SHOCKWAVES 8
 
