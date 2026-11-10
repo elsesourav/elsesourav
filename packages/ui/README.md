@@ -810,11 +810,12 @@ import { ... } from '@elsesourav/ui';
 
 ### `MarkdownRenderer` & `AdminMarkdownEditor`
 
-- **Purpose**: Secure, GFM-compliant markdown parser with syntax-highlighted code blocks, copy actions, responsive tables, and full write/preview editing suite.
+- **Purpose**: Secure, GFM-compliant markdown parser with LaTeX math (KaTeX) support, syntax-highlighted code blocks, copy actions, responsive tables, and full write/split/preview editing suite.
 - **Key Features**:
   - Dual light/dark theme design matching the public site aesthetic (`bg-white dark:bg-zinc-950`).
-  - Interactive formatting quick-bar (Headings, Bold, Italic, Code, Blockquote, Bullet list, Links, Tables, Code Blocks).
-  - Built-in collapsible syntax reference guide cheatsheet.
+  - Interactive formatting quick-bar (Headings, Bold, Italic, Strikethrough, Code, Blockquote, Bullet/Ordered/Task lists, Links, Images, Tables, Math, Code Blocks).
+  - Built-in collapsible syntax reference guide cheatsheet with KaTeX LaTeX math assistance.
+  - Three viewing modes: Write, Side-by-Side Split, and Full Preview with fullscreen toggle.
   - Live Word and character count tracking.
 - **When & Where to Use**: Technical blog articles, documentation pages, admin CMS editor.
 
