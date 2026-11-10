@@ -57,6 +57,10 @@ export function AdminUpdateForm({ post, categories }: AdminUpdateFormProps) {
   );
   const [seoTitle, setSeoTitle] = React.useState(post?.seoTitle || '');
   const [seoDescription, setSeoDescription] = React.useState(post?.seoDescription || '');
+  const [authorName, setAuthorName] = React.useState(post?.authorName || '');
+  const [authorImageUrl, setAuthorImageUrl] = React.useState(post?.authorImageUrl || '');
+  const [authorUrl, setAuthorUrl] = React.useState(post?.authorUrl || '');
+  const [authorRole, setAuthorRole] = React.useState(post?.authorRole || '');
 
   // Status & Feedback
   const [isSaving, setIsSaving] = React.useState(false);
@@ -92,6 +96,10 @@ export function AdminUpdateForm({ post, categories }: AdminUpdateFormProps) {
       status,
       seoTitle: seoTitle.trim() || undefined,
       seoDescription: seoDescription.trim() || undefined,
+      authorName: authorName.trim() || undefined,
+      authorImageUrl: authorImageUrl.trim() || undefined,
+      authorUrl: authorUrl.trim() || undefined,
+      authorRole: authorRole.trim() || undefined,
     };
 
     try {
@@ -332,6 +340,53 @@ export function AdminUpdateForm({ post, categories }: AdminUpdateFormProps) {
                 value={seoDescription}
                 onChange={(val) => setSeoDescription(val)}
                 placeholder="Meta description snippet for search engines"
+                maxLength={200}
+              />
+            </div>
+          </div>
+
+          {/* Guest / Contributor Attribution (Optional) */}
+          <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800/60 space-y-3">
+            <div>
+              <div className="text-xs font-semibold text-zinc-800 dark:text-zinc-300">
+                Author & Attribution (Optional)
+              </div>
+              <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5">
+                Leave blank to omit author badge and default to site creator. If set, this specific contributor will be highlighted.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+              <FloatingLabelInput
+                label="Contributor Name"
+                type="text"
+                value={authorName}
+                onChange={(val) => setAuthorName(val)}
+                placeholder="e.g. Jane Doe"
+                maxLength={100}
+              />
+              <FloatingLabelInput
+                label="Contributor Role / Title"
+                type="text"
+                value={authorRole}
+                onChange={(val) => setAuthorRole(val)}
+                placeholder="e.g. Guest Contributor, Co-Author"
+                maxLength={100}
+              />
+              <ImageInputWithLibrary
+                label="Contributor Avatar Image"
+                value={authorImageUrl}
+                onChange={setAuthorImageUrl}
+                folder="users"
+                defaultCategory="users"
+                previewShape="square"
+                placeholder="Avatar URL or select from library"
+              />
+              <FloatingLabelInput
+                label="Contributor Profile / Web URL"
+                type="url"
+                value={authorUrl}
+                onChange={(val) => setAuthorUrl(val)}
+                placeholder="https://github.com/username"
                 maxLength={200}
               />
             </div>

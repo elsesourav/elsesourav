@@ -127,17 +127,9 @@ export class WasmPortraitBridge {
   }
 
   private initRenderer(): void {
-    const contextAttrs: WebGLContextAttributes = {
-      alpha: true,
-      premultipliedAlpha: false,
-      antialias: true,
-      preserveDrawingBuffer: false,
-      powerPreference: 'high-performance',
-    };
-
     const gl =
-      (this.canvas.getContext('webgl2', contextAttrs) as WebGL2RenderingContext | null) ||
-      (this.canvas.getContext('webgl', contextAttrs) as WebGLRenderingContext | null);
+      (this.canvas.getContext('webgl2', { alpha: true }) as WebGL2RenderingContext | null) ||
+      (this.canvas.getContext('webgl', { alpha: true }) as WebGLRenderingContext | null);
 
     if (gl) {
       this.gl = gl;

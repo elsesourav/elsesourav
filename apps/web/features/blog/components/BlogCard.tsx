@@ -112,16 +112,32 @@ export function BlogCard({ post, isFeatured = false }: BlogCardProps) {
           </p>
         </div>
 
-        {/* Footer: Author & Read Action */}
+        {/* Footer: Author or Date & Read Action */}
         <div className="pt-2 sm:pt-2.5 md:pt-3 border-t border-[hsl(var(--border-subtle))] flex items-center justify-between gap-2 sm:gap-3 text-xs">
-          <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-            <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] flex items-center justify-center text-[9px] sm:text-[10px] font-bold text-[hsl(var(--foreground))] shrink-0">
-              {post.author.displayName.slice(0, 1).toUpperCase()}
+          {post.authorName && post.authorName.trim() ? (
+            <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+              {post.authorImageUrl ? (
+                <img
+                  src={post.authorImageUrl}
+                  alt={post.authorName}
+                  className="w-5 h-5 sm:w-6 sm:h-6 rounded-full object-cover border border-[hsl(var(--border))] shrink-0"
+                />
+              ) : (
+                <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] flex items-center justify-center text-[9px] sm:text-[10px] font-bold text-[hsl(var(--foreground))] shrink-0">
+                  {post.authorName.slice(0, 1).toUpperCase()}
+                </div>
+              )}
+              <span className="text-[11px] sm:text-xs text-[hsl(var(--foreground))] truncate font-medium">
+                {post.authorName}
+              </span>
             </div>
-            <span className="text-[11px] sm:text-xs text-[hsl(var(--foreground))] truncate font-medium">
-              {post.author.displayName}
-            </span>
-          </div>
+          ) : (
+            <div className="flex items-center gap-2 text-[11px] sm:text-xs text-[hsl(var(--muted-foreground))] font-medium truncate">
+              <span className="truncate">{publishedDate}</span>
+              <span className="select-none">•</span>
+              <span>{post.readingTime} min read</span>
+            </div>
+          )}
 
           <Link
             href={`/updates/${post.slug}`}

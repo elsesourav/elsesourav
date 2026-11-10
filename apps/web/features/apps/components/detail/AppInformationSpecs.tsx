@@ -95,11 +95,37 @@ export function AppInformationSpecs({ app }: AppInformationSpecsProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 text-sm divide-y md:divide-y-0 divide-[hsl(var(--border-subtle))]">
         {/* Left Column */}
         <div className="space-y-4">
-          {/* Provider */}
-          <div className="flex items-center justify-between py-2 border-b border-[hsl(var(--border-subtle))]">
-            <span className="text-[hsl(var(--muted-foreground))] font-medium">Provider</span>
-            <span className="text-[hsl(var(--foreground))] font-semibold">Sourav Barui</span>
-          </div>
+          {/* Contributor / Author (Only displayed when explicitly configured) */}
+          {app.authorName && app.authorName.trim() ? (
+            <div className="flex items-center justify-between py-2 border-b border-[hsl(var(--border-subtle))]">
+              <span className="text-[hsl(var(--muted-foreground))] font-medium">
+                {app.authorRole || 'Contributor'}
+              </span>
+              <div className="flex items-center gap-2">
+                {app.authorImageUrl && (
+                  <img
+                    src={app.authorImageUrl}
+                    alt={app.authorName}
+                    className="w-4 h-4 rounded-full object-cover"
+                  />
+                )}
+                {app.authorUrl ? (
+                  <a
+                    href={app.authorUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-indigo-600 dark:text-indigo-400 hover:underline font-semibold"
+                  >
+                    {app.authorName}
+                  </a>
+                ) : (
+                  <span className="text-[hsl(var(--foreground))] font-semibold">
+                    {app.authorName}
+                  </span>
+                )}
+              </div>
+            </div>
+          ) : null}
 
           {/* Size */}
           <div className="flex items-center justify-between py-2 border-b border-[hsl(var(--border-subtle))]">

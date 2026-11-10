@@ -66,40 +66,79 @@ export function BlogArticleHeader({ post, postUrl }: BlogArticleHeaderProps) {
 
       {/* Author and Metadata Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 pb-4 border-y border-[hsl(var(--border-subtle))]">
-        <div className="flex items-center gap-3">
-          <UserAvatar
-            src={post.author.photoUrl}
-            name={post.author.displayName}
-            identifier={post.author.username || post.author.displayName}
-            alt={post.author.displayName}
-            size="md"
-          />
-          <div>
-            <div className="font-semibold text-xs text-[hsl(var(--foreground))]">
-              {post.author.displayName}
-            </div>
-            <div className="flex items-center gap-2 text-[11px] text-[hsl(var(--muted-foreground))]">
-              <span className="flex items-center gap-1">
-                <Calendar className="w-3 h-3 text-[hsl(var(--subtle-foreground))]" />
-                <span>{publishedDate}</span>
-              </span>
-              <span>•</span>
-              <span className="flex items-center gap-1">
-                <Clock className="w-3 h-3 text-[hsl(var(--subtle-foreground))]" />
-                <span>{post.readingTime} min read</span>
-              </span>
-              {post.viewsCount > 0 && (
-                <>
-                  <span>•</span>
-                  <span className="flex items-center gap-1">
-                    <Eye className="w-3 h-3 text-[hsl(var(--subtle-foreground))]" />
-                    <span>{post.viewsCount} views</span>
+        {post.authorName && post.authorName.trim() ? (
+          <div className="flex items-center gap-3">
+            <UserAvatar
+              src={post.authorImageUrl}
+              name={post.authorName}
+              identifier={post.authorName}
+              alt={post.authorName}
+              size="md"
+            />
+            <div>
+              <div className="font-semibold text-xs text-[hsl(var(--foreground))] flex items-center gap-1.5">
+                {post.authorUrl ? (
+                  <a
+                    href={post.authorUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline hover:text-indigo-600 transition-colors"
+                  >
+                    {post.authorName}
+                  </a>
+                ) : (
+                  <span>{post.authorName}</span>
+                )}
+                {post.authorRole && (
+                  <span className="text-[10px] font-normal px-1.5 py-0.5 rounded bg-[hsl(var(--surface-subtle))] text-[hsl(var(--muted-foreground))] border border-[hsl(var(--border-subtle))]">
+                    {post.authorRole}
                   </span>
-                </>
-              )}
+                )}
+              </div>
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-[hsl(var(--muted-foreground))] mt-0.5">
+                <span className="flex items-center gap-1 whitespace-nowrap">
+                  <Calendar className="w-3 h-3 text-[hsl(var(--subtle-foreground))]" />
+                  <span>{publishedDate}</span>
+                </span>
+                <span className="select-none">•</span>
+                <span className="flex items-center gap-1 whitespace-nowrap">
+                  <Clock className="w-3 h-3 text-[hsl(var(--subtle-foreground))]" />
+                  <span>{post.readingTime} min read</span>
+                </span>
+                {post.viewsCount > 0 && (
+                  <>
+                    <span className="select-none">•</span>
+                    <span className="flex items-center gap-1 whitespace-nowrap">
+                      <Eye className="w-3 h-3 text-[hsl(var(--subtle-foreground))]" />
+                      <span>{post.viewsCount} views</span>
+                    </span>
+                  </>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-[hsl(var(--muted-foreground))]">
+            <span className="inline-flex items-center gap-1.5 whitespace-nowrap font-medium text-[hsl(var(--foreground))]">
+              <Calendar className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+              <span>{publishedDate}</span>
+            </span>
+            <span className="text-[hsl(var(--subtle-foreground))] select-none">•</span>
+            <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+              <Clock className="w-3.5 h-3.5 text-[hsl(var(--subtle-foreground))] shrink-0" />
+              <span>{post.readingTime} min read</span>
+            </span>
+            {post.viewsCount > 0 && (
+              <>
+                <span className="text-[hsl(var(--subtle-foreground))] select-none">•</span>
+                <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                  <Eye className="w-3.5 h-3.5 text-[hsl(var(--subtle-foreground))] shrink-0" />
+                  <span>{post.viewsCount} views</span>
+                </span>
+              </>
+            )}
+          </div>
+        )}
 
         {/* Content-Aware Share Action */}
         <BlogShareButtons title={post.title} url={postUrl} excerpt={post.excerpt} />

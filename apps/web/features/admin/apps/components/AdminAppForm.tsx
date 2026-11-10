@@ -27,6 +27,7 @@ import {
   updateAppAction,
 } from '../actions/admin-app-actions';
 import { AdminAppVisibilitySettings } from './AdminAppVisibilitySettings';
+import { AdminAppAttributionSection } from './AdminAppAttributionSection';
 import { PublishReleaseModal } from './PublishReleaseModal';
 
 interface AdminAppFormProps {
@@ -89,6 +90,10 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
   const [seoDescription, setSeoDescription] = React.useState(app?.seoDescription || '');
   const [bundleSize, setBundleSize] = React.useState(app?.bundleSize || '');
   const [primaryLanguage, setPrimaryLanguage] = React.useState(app?.primaryLanguage || 'en');
+  const [authorName, setAuthorName] = React.useState(app?.authorName || '');
+  const [authorRole, setAuthorRole] = React.useState(app?.authorRole || '');
+  const [authorImageUrl, setAuthorImageUrl] = React.useState(app?.authorImageUrl || '');
+  const [authorUrl, setAuthorUrl] = React.useState(app?.authorUrl || '');
 
   // Publish Dialog State
   const [isPublishModalOpen, setIsPublishModalOpen] = React.useState(false);
@@ -137,6 +142,10 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
       sortOrder: Number(sortOrder),
       bundleSize: bundleSize.trim() || undefined,
       primaryLanguage: primaryLanguage.trim() || undefined,
+      authorName: authorName.trim() || undefined,
+      authorRole: authorRole.trim() || undefined,
+      authorImageUrl: authorImageUrl.trim() || undefined,
+      authorUrl: authorUrl.trim() || undefined,
       seoTitle: seoTitle.trim() || undefined,
       seoDescription: seoDescription.trim() || undefined,
     };
@@ -387,6 +396,18 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
           setDemoUrl={setDemoUrl}
           videoUrl={videoUrl}
           setVideoUrl={setVideoUrl}
+        />
+
+        {/* Optional Contributor / Author Attribution */}
+        <AdminAppAttributionSection
+          authorName={authorName}
+          setAuthorName={setAuthorName}
+          authorRole={authorRole}
+          setAuthorRole={setAuthorRole}
+          authorImageUrl={authorImageUrl}
+          setAuthorImageUrl={setAuthorImageUrl}
+          authorUrl={authorUrl}
+          setAuthorUrl={setAuthorUrl}
         />
 
         {/* Taxonomy & Configuration Settings */}

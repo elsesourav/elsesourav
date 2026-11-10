@@ -44,6 +44,10 @@ export async function createAppAction(data: AdminSaveAppSchemaInput) {
       sortOrder: parsed.data.sortOrder,
       bundleSize: parsed.data.bundleSize || undefined,
       primaryLanguage: parsed.data.primaryLanguage || undefined,
+      authorName: parsed.data.authorName || undefined,
+      authorImageUrl: parsed.data.authorImageUrl || undefined,
+      authorUrl: parsed.data.authorUrl || undefined,
+      authorRole: parsed.data.authorRole || undefined,
       seoTitle: parsed.data.seoTitle || undefined,
       seoDescription: parsed.data.seoDescription || undefined,
     });
@@ -113,6 +117,10 @@ export async function updateAppAction(appId: string, data: AdminSaveAppSchemaInp
       sortOrder: parsed.data.sortOrder,
       bundleSize: parsed.data.bundleSize || undefined,
       primaryLanguage: parsed.data.primaryLanguage || undefined,
+      authorName: parsed.data.authorName || undefined,
+      authorImageUrl: parsed.data.authorImageUrl || undefined,
+      authorUrl: parsed.data.authorUrl || undefined,
+      authorRole: parsed.data.authorRole || undefined,
       seoTitle: parsed.data.seoTitle || undefined,
       seoDescription: parsed.data.seoDescription || undefined,
     });

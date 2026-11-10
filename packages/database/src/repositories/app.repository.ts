@@ -438,6 +438,10 @@ export class AppRepository {
           sortOrder: data.sortOrder ?? 0,
           bundleSize: data.bundleSize?.trim() || null,
           primaryLanguage: data.primaryLanguage?.trim() || 'en',
+          authorName: data.authorName?.trim() || null,
+          authorImageUrl: data.authorImageUrl?.trim() || null,
+          authorUrl: data.authorUrl?.trim() || null,
+          authorRole: data.authorRole?.trim() || null,
           seoTitle: data.seoTitle,
           seoDescription: data.seoDescription,
           stats: {
@@ -485,6 +489,14 @@ export class AppRepository {
           bundleSize: data.bundleSize !== undefined ? data.bundleSize.trim() || null : undefined,
           primaryLanguage:
             data.primaryLanguage !== undefined ? data.primaryLanguage.trim() || 'en' : undefined,
+          authorName:
+            data.authorName !== undefined ? data.authorName.trim() || null : undefined,
+          authorImageUrl:
+            data.authorImageUrl !== undefined ? data.authorImageUrl.trim() || null : undefined,
+          authorUrl:
+            data.authorUrl !== undefined ? data.authorUrl.trim() || null : undefined,
+          authorRole:
+            data.authorRole !== undefined ? data.authorRole.trim() || null : undefined,
           seoTitle: data.seoTitle,
           seoDescription: data.seoDescription,
         },

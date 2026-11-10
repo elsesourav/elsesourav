@@ -112,6 +112,10 @@ export function mapPrismaAppToDomain(prismaApp: PrismaAppWithRelations): DomainA
     bundleSize: (prismaApp as unknown as { bundleSize?: string }).bundleSize ?? undefined,
     primaryLanguage:
       (prismaApp as unknown as { primaryLanguage?: string }).primaryLanguage ?? undefined,
+    authorName: prismaApp.authorName ?? undefined,
+    authorImageUrl: prismaApp.authorImageUrl ?? undefined,
+    authorUrl: prismaApp.authorUrl ?? undefined,
+    authorRole: prismaApp.authorRole ?? undefined,
     languages: (prismaApp as unknown as { languages?: string[] }).languages ?? undefined,
     publishedAt: prismaApp.publishedAt ? prismaApp.publishedAt.getTime() : undefined,
     createdAt: prismaApp.createdAt.getTime(),
@@ -140,6 +144,10 @@ export function mapPrismaAppToListItem(prismaApp: PrismaAppWithRelations): AppLi
     orientation:
       ((prismaApp as unknown as { orientation?: string }).orientation as AppOrientation) ||
       undefined,
+    authorName: prismaApp.authorName ?? undefined,
+    authorImageUrl: prismaApp.authorImageUrl ?? undefined,
+    authorUrl: prismaApp.authorUrl ?? undefined,
+    authorRole: prismaApp.authorRole ?? undefined,
     currentVersion: prismaApp.currentVersion ?? undefined,
     sortOrder: prismaApp.sortOrder,
     publishedAt: prismaApp.publishedAt ? prismaApp.publishedAt.getTime() : undefined,
@@ -175,6 +183,10 @@ export function mapPrismaAppToPublicDetail(prismaApp: PrismaAppWithRelations): P
     isPinned: domain.isPinned,
     requiresAuth: domain.requiresAuth,
     orientation: domain.orientation,
+    authorName: domain.authorName,
+    authorImageUrl: domain.authorImageUrl,
+    authorUrl: domain.authorUrl,
+    authorRole: domain.authorRole,
     seoTitle: domain.seoTitle,
     seoDescription: domain.seoDescription,
     socialImageUrl: domain.socialImageUrl,

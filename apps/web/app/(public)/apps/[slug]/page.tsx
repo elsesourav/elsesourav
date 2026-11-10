@@ -133,8 +133,8 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
         },
         author: {
           '@type': 'Person',
-          name: 'Sourav Barui',
-          url: `${SITE_CONFIG.url}/about`,
+          name: app.authorName || 'Sourav Barui',
+          url: app.authorUrl || `${SITE_CONFIG.url}/about`,
         },
       },
       {

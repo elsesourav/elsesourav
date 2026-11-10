@@ -85,6 +85,10 @@ model App {
   currentVersion   String?
   bundleSize       String?
   primaryLanguage  String?          @default("en")
+  authorName       String?
+  authorImageUrl   String?
+  authorUrl        String?
+  authorRole       String?
   seoTitle         String?
   seoDescription   String?
   publishedAt      DateTime?
@@ -168,6 +172,10 @@ model BlogPost {
   excerpt       String
   content       String
   coverImageUrl String?
+  authorName    String?
+  authorImageUrl String?
+  authorUrl     String?
+  authorRole    String?
   status        PublishStatus @default(DRAFT)
   readingTime   Int           @default(1)
   viewsCount    Int           @default(0)

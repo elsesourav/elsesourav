@@ -34,7 +34,7 @@ export function createPixelProgram(
   gl: WebGLRenderingContext
 ): { program: WebGLProgram | null; vbo: WebGLBuffer | null } {
   gl.enable(gl.BLEND);
-  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
   const vs = createShader(gl, gl.VERTEX_SHADER, PIXEL_VS);
   const fs = createShader(gl, gl.FRAGMENT_SHADER, PIXEL_FS);

@@ -253,7 +253,8 @@ inline void PixelEngine::generatePixels() {
     }
 
     // =========================================================================
-    // LAYER 2: MIDDLE IMAGE PIXELS (Authentic photograph with shadow recovery & color fidelity)
+    // LAYER 2: MIDDLE IMAGE PIXELS (100% Authentic photograph color & fidelity)
+    // Preserves exact natural skin tones, hair textures, and clothing contrast.
     // =========================================================================
     for (int y = 0; y < h; y++) {
         for (int x = 0; x < w; x++) {
@@ -265,51 +266,8 @@ inline void PixelEngine::generatePixels() {
             uint8_t pa = inputImage[idx + 3];
 
             if (pa > 16) {
-                // Adaptive Photographic Color & Shadow Recovery
-                // Deep blacks (RGB 0..25) in jackets/hoodies vanish against dark backgrounds (#09090b).
-                // Lift shadows smoothly so fabric folds, seams, and silhouettes remain clearly visible,
-                // while skin tones and vibrant features are perfectly preserved without color loss.
-                float rF = (float)pr;
-                float gF = (float)pg;
-                float bF = (float)pb;
-                float lum = 0.299f * rF + 0.587f * gF + 0.114f * bF;
-
-                if (isDark) {
-                    if (lum < 65.0f) {
-                        float norm = 1.0f - lum / 65.0f;
-                        float lift = norm * norm * 28.0f;
-                        rF = fminf(255.0f, rF + lift);
-                        gF = fminf(255.0f, gF + lift);
-                        bF = fminf(255.0f, bF + lift * 1.15f);
-                    }
-                } else {
-                    if (lum > 220.0f) {
-                        float norm = (lum - 220.0f) / 35.0f;
-                        float compress = norm * 12.0f;
-                        rF = fmaxf(0.0f, rF - compress);
-                        gF = fmaxf(0.0f, gF - compress);
-                        bF = fmaxf(0.0f, bF - compress);
-                    }
-                }
-
-                // Color vibrance preservation (counteracts multi-step downsample desaturation)
-                if (lum >= 35.0f && lum <= 215.0f) {
-                    float meanRGB = (rF + gF + bF) * 0.333333f;
-                    float satBoost = 1.08f;
-                    rF = fminf(255.0f, fmaxf(0.0f, meanRGB + (rF - meanRGB) * satBoost));
-                    gF = fminf(255.0f, fmaxf(0.0f, meanRGB + (gF - meanRGB) * satBoost));
-                    bF = fminf(255.0f, fmaxf(0.0f, meanRGB + (bF - meanRGB) * satBoost));
-                }
-
-                uint8_t finalR = (uint8_t)roundf(rF);
-                uint8_t finalG = (uint8_t)roundf(gF);
-                uint8_t finalB = (uint8_t)roundf(bF);
-
-                // Preserve edge silhouette opacity so borders don't fade into haze
-                uint8_t finalA = (pa > 160) ? 255 : (uint8_t)(170 + (int)pa * 0.45f);
-
                 Pixel& p = particles[particleCount++];
-                p.init((float)x, (float)y, finalR, finalG, finalB, finalA, basePixelSize, FLAG_IMAGE_PIXEL);
+                p.init((float)x, (float)y, pr, pg, pb, pa, basePixelSize, FLAG_IMAGE_PIXEL);
             }
         }
     }

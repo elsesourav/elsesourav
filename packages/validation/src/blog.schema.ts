@@ -21,6 +21,10 @@ export const CreateBlogPostSchema = z.object({
     .max(300, 'Excerpt cannot exceed 300 characters'),
   content: z.string().min(50, 'Content must contain at least 50 characters'),
   coverImageUrl: z.string().url('Cover image must be a valid URL').optional().or(z.literal('')),
+  authorName: z.string().max(100).optional().or(z.literal('')),
+  authorImageUrl: z.string().url('Author image must be a valid URL').optional().or(z.literal('')),
+  authorUrl: z.string().url('Author URL must be a valid URL').optional().or(z.literal('')),
+  authorRole: z.string().max(100).optional().or(z.literal('')),
   categoryId: z.string().min(1, 'Category ID is required').optional(),
   tagIds: z.array(z.string()).optional().default([]),
   seoTitle: z.string().max(70, 'SEO title should not exceed 70 characters').optional(),
@@ -42,6 +46,10 @@ export const AdminSaveBlogSchema = z.object({
   excerpt: z.string().min(10, 'Excerpt must be at least 10 characters').max(300),
   content: z.string().min(50, 'Content must contain at least 50 characters'),
   coverImageUrl: z.string().url('Cover image must be a valid URL').optional().or(z.literal('')),
+  authorName: z.string().max(100).optional().or(z.literal('')),
+  authorImageUrl: z.string().url('Author image must be a valid URL').optional().or(z.literal('')),
+  authorUrl: z.string().url('Author URL must be a valid URL').optional().or(z.literal('')),
+  authorRole: z.string().max(100).optional().or(z.literal('')),
   categoryId: z.string().min(1, 'Category is required'),
   status: z
     .enum(['draft', 'published', 'archived', 'DRAFT', 'PUBLISHED', 'ARCHIVED'])

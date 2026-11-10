@@ -57,6 +57,10 @@ export const CreateAppSchema = z.object({
   requiresAuth: z.boolean().default(false),
   orientation: AppOrientationSchema.optional(),
   sortOrder: z.number().int().default(0),
+  authorName: z.string().max(100).optional().or(z.literal('')),
+  authorImageUrl: z.string().url('Author image must be a valid URL').optional().or(z.literal('')),
+  authorUrl: z.string().url('Author URL must be a valid URL').optional().or(z.literal('')),
+  authorRole: z.string().max(100).optional().or(z.literal('')),
   seoTitle: z.string().max(100).optional(),
   seoDescription: z.string().max(300).optional(),
 });
@@ -95,6 +99,10 @@ export const AdminSaveAppSchema = z.object({
   sortOrder: z.coerce.number().int().default(0),
   bundleSize: z.string().max(50).optional().or(z.literal('')),
   primaryLanguage: z.string().max(50).optional().or(z.literal('')),
+  authorName: z.string().max(100).optional().or(z.literal('')),
+  authorImageUrl: z.string().url('Author image must be a valid URL').optional().or(z.literal('')),
+  authorUrl: z.string().url('Author URL must be a valid URL').optional().or(z.literal('')),
+  authorRole: z.string().max(100).optional().or(z.literal('')),
   seoTitle: z.string().max(100).optional().or(z.literal('')),
   seoDescription: z.string().max(300).optional().or(z.literal('')),
 });

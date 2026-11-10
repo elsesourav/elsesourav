@@ -26,7 +26,6 @@ export function ProfileAvatarStudio({
 }: ProfileAvatarStudioProps) {
   const [draftPhotoUrl, setDraftPhotoUrl] = React.useState(photoUrl);
   const [isSavingPhoto, setIsSavingPhoto] = React.useState(false);
-  const [photoSaveSuccess, setPhotoSaveSuccess] = React.useState(false);
   const [photoSaveError, setPhotoSaveError] = React.useState<string | null>(null);
 
   const [isCropperOpen, setIsCropperOpen] = React.useState(false);
@@ -42,21 +41,17 @@ export function ProfileAvatarStudio({
 
   const handleSelectPresetOrDraft = (newUrl: string) => {
     setDraftPhotoUrl(newUrl);
-    setPhotoSaveSuccess(false);
     setPhotoSaveError(null);
   };
 
   const handleSavePhoto = async () => {
     setIsSavingPhoto(true);
     setPhotoSaveError(null);
-    setPhotoSaveSuccess(false);
 
     try {
       const res = await updateProfileFormAction({ photoUrl: draftPhotoUrl });
       if (res.success) {
         onPhotoSaved(draftPhotoUrl);
-        setPhotoSaveSuccess(true);
-        setTimeout(() => setPhotoSaveSuccess(false), 3000);
       } else {
         setPhotoSaveError(res.error || 'Failed to update profile image');
         throw new Error(res.error || 'Failed to update profile image');
@@ -139,11 +134,6 @@ export function ProfileAvatarStudio({
         </div>
 
         <div className="flex items-center gap-1.5 sm:gap-2">
-          {photoSaveSuccess && (
-            <span className="text-[10px] sm:text-[11px] text-emerald-400 flex items-center gap-1 font-medium animate-in fade-in">
-              <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> Saved
-            </span>
-          )}
           {photoSaveError && (
             <span className="text-[10px] sm:text-[11px] text-rose-400 flex items-center gap-1 font-medium animate-in fade-in">
               <AlertCircle className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> {photoSaveError}
@@ -319,7 +309,6 @@ export function ProfileAvatarStudio({
           setIsCropperOpen(false);
           setDroppedImageUrl(undefined);
           setPhotoSaveError(null);
-          setPhotoSaveSuccess(false);
           if (fileInputRef.current) fileInputRef.current.value = '';
         }}
       />

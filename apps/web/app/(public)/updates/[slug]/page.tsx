@@ -65,8 +65,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         dateModified: new Date(post.updatedAt).toISOString(),
         author: {
           '@type': 'Person',
-          name: post.author.displayName,
-          url: post.author.username ? `${SITE_CONFIG.url}/u/${post.author.username}` : undefined,
+          name: post.authorName || post.author?.displayName || SITE_CONFIG.creator.fullName,
+          url: post.authorUrl || (post.author?.username ? `${SITE_CONFIG.url}/u/${post.author.username}` : undefined),
         },
         publisher: {
           '@type': 'Organization',

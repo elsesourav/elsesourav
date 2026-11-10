@@ -87,6 +87,10 @@ export interface App {
   readonly sortOrder: number;
   readonly bundleSize?: string;
   readonly primaryLanguage?: string;
+  readonly authorName?: string;
+  readonly authorImageUrl?: string;
+  readonly authorUrl?: string;
+  readonly authorRole?: string;
   readonly languages?: readonly string[];
   readonly publishedAt?: Timestamp;
   readonly createdAt: Timestamp;
@@ -115,6 +119,10 @@ export interface AppListItem {
   readonly currentVersion?: string;
   readonly sortOrder: number;
   readonly orientation?: AppOrientation;
+  readonly authorName?: string;
+  readonly authorImageUrl?: string;
+  readonly authorUrl?: string;
+  readonly authorRole?: string;
   readonly publishedAt?: Timestamp;
   readonly ratingAverage?: number;
   readonly ratingCount?: number;
@@ -148,6 +156,10 @@ export interface PublicApp {
   readonly isPinned: boolean;
   readonly requiresAuth?: boolean;
   readonly orientation?: AppOrientation;
+  readonly authorName?: string;
+  readonly authorImageUrl?: string;
+  readonly authorUrl?: string;
+  readonly authorRole?: string;
   readonly seoTitle?: string;
   readonly seoDescription?: string;
   readonly socialImageUrl?: string;
@@ -196,6 +208,10 @@ export interface CreateAppInput {
   readonly sortOrder?: number;
   readonly bundleSize?: string;
   readonly primaryLanguage?: string;
+  readonly authorName?: string;
+  readonly authorImageUrl?: string;
+  readonly authorUrl?: string;
+  readonly authorRole?: string;
   readonly seoTitle?: string;
   readonly seoDescription?: string;
 }
@@ -220,6 +236,10 @@ export interface UpdateAppInput {
   readonly sortOrder?: number;
   readonly bundleSize?: string;
   readonly primaryLanguage?: string;
+  readonly authorName?: string;
+  readonly authorImageUrl?: string;
+  readonly authorUrl?: string;
+  readonly authorRole?: string;
   readonly seoTitle?: string;
   readonly seoDescription?: string;
 }
