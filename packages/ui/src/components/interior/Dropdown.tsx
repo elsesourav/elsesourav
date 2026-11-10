@@ -1,21 +1,18 @@
 'use client';
 
 import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { useDropdownPosition } from './useDropdownPosition';
 
 const EASE = [0.23, 1, 0.32, 1] as const;
-
 const EXIT = [0.4, 0, 1, 1] as const;
 const CELL = { type: 'spring', stiffness: 520, damping: 34, mass: 0.45 } as const;
-
 const NUDGE = { type: 'spring', stiffness: 700, damping: 46, mass: 0.5 } as const;
 const NONE = { duration: 0 } as const;
-
 const SLIDE = { type: 'spring', stiffness: 700, damping: 46, mass: 0.5 } as const;
-
-const ROW_H = 32;
-
 const OPEN = { type: 'spring', stiffness: 620, damping: 38, mass: 0.6 } as const;
+const ROW_H = 32;
 
 export type DropdownItem = {
   value: string;
@@ -54,6 +51,7 @@ export function useDropdown({
 
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
   const viaKey = useRef(false);
@@ -145,7 +143,10 @@ export function useDropdown({
   useEffect(() => {
     if (!open) return;
     const onDown = (e: PointerEvent) => {
-      if (!rootRef.current?.contains(e.target as Node)) close(false);
+      const target = e.target as Node;
+      if (!rootRef.current?.contains(target) && !menuRef.current?.contains(target)) {
+        close(false);
+      }
     };
     const onWindowBlur = () => close(false);
     document.addEventListener('pointerdown', onDown, true);
@@ -249,6 +250,8 @@ export function useDropdown({
     selectedItem: selectedIndex >= 0 ? items[selectedIndex] : null,
     itemId,
     rootRef,
+    triggerRef,
+    menuRef,
     triggerProps,
     listProps,
     getItemProps,
@@ -287,19 +290,35 @@ export function Dropdown({
   icon,
 }: DropdownProps) {
   const reduced = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const {
     open,
+    close,
     activeIndex,
     selectedIndex,
     selectedItem,
     rootRef,
+    triggerRef,
+    menuRef,
     triggerProps,
     listProps,
     getItemProps,
   } = useDropdown({ items, value, defaultValue, onChange, disabled });
 
-  const cell = reduced ? NONE : CELL;
   const isFullWidth = className.includes('w-full');
+  const position = useDropdownPosition({
+    triggerRef,
+    isOpen: open,
+    isFullWidth,
+    onScrollOffscreen: () => close(false),
+  });
+
+  const cell = reduced ? NONE : CELL;
   const displayLabel = selectedItem
     ? selectedItem.label
     : placeholder || label || 'Select an option';
@@ -309,7 +328,7 @@ export function Dropdown({
       data-interior="dropdown"
       ref={rootRef}
       id={id}
-      className={`relative inline-block text-left ${isFullWidth ? 'w-full' : ''} ${className}`}
+      className={`relative inline-block text-left ${isFullWidth ? 'w-full' : ''} ${open ? 'z-40' : ''} ${className}`}
     >
       <button
         {...triggerProps}
@@ -348,95 +367,117 @@ export function Dropdown({
           {error}
         </p>
       )}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: -6 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{
-              opacity: 0,
-              scale: 0.97,
-              y: -4,
-              transition: reduced ? NONE : { duration: 0.12, ease: EXIT },
-            }}
-            transition={reduced ? NONE : { ...OPEN, opacity: { duration: 0.12, ease: EASE } }}
-            style={{ transformOrigin: 'top left' }}
-            className={`absolute left-0 top-[calc(100%+6px)] z-50 min-w-[200px] ${
-              isFullWidth ? 'w-full' : ''
-            } rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--surface-elevated))] p-1.5 shadow-xl backdrop-blur-xl`}
-          >
-            <ul
-              {...listProps}
-              aria-label={label || placeholder}
-              className="relative max-h-[220px] overflow-y-auto outline-none [scrollbar-gutter:stable]"
-            >
-              <motion.span
-                aria-hidden
-                className="pointer-events-none absolute inset-x-0 top-0 h-8 rounded-[7px] bg-[hsl(var(--surface-hover,var(--accent)))] dark:bg-white/10"
-                initial={false}
-                animate={{
-                  y: activeIndex < 0 ? 0 : activeIndex * ROW_H,
-                  opacity: activeIndex < 0 ? 0 : 1,
+      {mounted &&
+        typeof document !== 'undefined' &&
+        createPortal(
+          <AnimatePresence>
+            {open && position && (
+              <motion.div
+                ref={menuRef}
+                initial={
+                  reduced
+                    ? { opacity: 0 }
+                    : {
+                        opacity: 0,
+                        scale: 0.96,
+                        y: position.placement === 'top' ? 6 : -6,
+                      }
+                }
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{
+                  opacity: 0,
+                  scale: 0.97,
+                  y: position.placement === 'top' ? 4 : -4,
+                  transition: reduced ? NONE : { duration: 0.12, ease: EXIT },
                 }}
-                transition={reduced ? NONE : { ...SLIDE, opacity: { duration: 0.1, ease: EASE } }}
-              />
-              {items.map((item, i) => {
-                const active = i === activeIndex && !item.disabled;
-                const picked = i === selectedIndex;
-                return (
-                  <li
-                    key={item.value}
-                    {...getItemProps(i)}
-                    className={`relative flex h-8 cursor-default select-none items-center rounded-[7px] px-2.5 text-[13px] ${
-                      item.disabled
-                        ? 'text-stone-500/70 dark:text-stone-400/70'
-                        : active
-                          ? 'text-[var(--interior-fg)] dark:text-[var(--interior-fg)]'
-                          : 'text-[var(--interior-fg)]'
-                    }`}
-                  >
-                    <span className="relative flex min-w-0 flex-1 items-center gap-3">
-                      <span className="truncate">{item.label}</span>
-                      {item.hint ? (
-                        <span className="ml-auto shrink-0 font-[family-name:var(--interior-font-mono)] text-[10.5px] text-[var(--interior-fg-muted)]">
-                          {item.hint}
-                        </span>
-                      ) : null}
-                    </span>
-                    <motion.span
-                      aria-hidden
-                      initial={false}
-                      animate={{ opacity: picked ? 1 : 0, scale: picked ? 1 : 0.7 }}
-                      transition={cell}
-                      className="relative ml-2 flex size-[14px] shrink-0 items-center justify-center"
-                    >
-                      <svg viewBox="0 0 14 14" className="size-[14px]">
-                        <path
-                          d="M3 7.4 5.8 10.2 11 4.4"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </motion.span>
-                  </li>
-                );
-              })}
-
-              {items.length === 0 && (
-                <li
-                  role="presentation"
-                  className="flex h-8 items-center px-2.5 text-[13px] text-[var(--interior-fg-muted)]"
+                transition={reduced ? NONE : { ...OPEN, opacity: { duration: 0.12, ease: EASE } }}
+                style={{
+                  position: 'fixed',
+                  left: position.left,
+                  ...(position.top !== undefined ? { top: position.top } : {}),
+                  ...(position.bottom !== undefined ? { bottom: position.bottom } : {}),
+                  width: position.width,
+                  maxHeight: position.maxHeight,
+                  transformOrigin: position.transformOrigin,
+                  zIndex: 9999,
+                }}
+                className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--surface-elevated))] p-1.5 shadow-2xl backdrop-blur-xl"
+              >
+                <ul
+                  {...listProps}
+                  aria-label={label || placeholder}
+                  style={{ maxHeight: Math.max(100, position.maxHeight - 12) }}
+                  className="relative overflow-y-auto outline-none [scrollbar-gutter:stable]"
                 >
-                  {emptyLabel}
-                </li>
-              )}
-            </ul>
-          </motion.div>
+                  <motion.span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-x-0 top-0 h-8 rounded-[7px] bg-[hsl(var(--surface-hover,var(--accent)))] dark:bg-white/10"
+                    initial={false}
+                    animate={{
+                      y: activeIndex < 0 ? 0 : activeIndex * ROW_H,
+                      opacity: activeIndex < 0 ? 0 : 1,
+                    }}
+                    transition={reduced ? NONE : { ...SLIDE, opacity: { duration: 0.1, ease: EASE } }}
+                  />
+                  {items.map((item, i) => {
+                    const active = i === activeIndex && !item.disabled;
+                    const picked = i === selectedIndex;
+                    return (
+                      <li
+                        key={item.value}
+                        {...getItemProps(i)}
+                        className={`relative flex h-8 cursor-default select-none items-center rounded-[7px] px-2.5 text-[13px] ${
+                          item.disabled
+                            ? 'text-stone-500/70 dark:text-stone-400/70'
+                            : active
+                              ? 'text-[var(--interior-fg)] dark:text-[var(--interior-fg)]'
+                              : 'text-[var(--interior-fg)]'
+                        }`}
+                      >
+                        <span className="relative flex min-w-0 flex-1 items-center gap-3">
+                          <span className="truncate">{item.label}</span>
+                          {item.hint ? (
+                            <span className="ml-auto shrink-0 font-[family-name:var(--interior-font-mono)] text-[10.5px] text-[var(--interior-fg-muted)]">
+                              {item.hint}
+                            </span>
+                          ) : null}
+                        </span>
+                        <motion.span
+                          aria-hidden
+                          initial={false}
+                          animate={{ opacity: picked ? 1 : 0, scale: picked ? 1 : 0.7 }}
+                          transition={cell}
+                          className="relative ml-2 flex size-[14px] shrink-0 items-center justify-center"
+                        >
+                          <svg viewBox="0 0 14 14" className="size-[14px]">
+                            <path
+                              d="M3 7.4 5.8 10.2 11 4.4"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </motion.span>
+                      </li>
+                    );
+                  })}
+
+                  {items.length === 0 && (
+                    <li
+                      role="presentation"
+                      className="flex h-8 items-center px-2.5 text-[13px] text-[var(--interior-fg-muted)]"
+                    >
+                      {emptyLabel}
+                    </li>
+                  )}
+                </ul>
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
     </div>
   );
 }

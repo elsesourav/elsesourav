@@ -5,6 +5,7 @@ import { SNIPPETS, drawEditor } from './laptopCanvasRenderer';
 
 export interface LaptopLiveCanvasProps {
   isSceneActive?: boolean;
+  isMobile?: boolean;
 }
 
 function generateShuffledDeck(count: number, avoidFirst?: number): number[] {
@@ -26,10 +27,15 @@ function generateShuffledDeck(count: number, avoidFirst?: number): number[] {
   return deck;
 }
 
-export function LaptopLiveCanvas({ isSceneActive = true }: LaptopLiveCanvasProps) {
+export function LaptopLiveCanvas({
+  isSceneActive = true,
+  isMobile = false,
+}: LaptopLiveCanvasProps) {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const isSceneActiveRef = React.useRef(isSceneActive);
   isSceneActiveRef.current = isSceneActive;
+  const isMobileRef = React.useRef(isMobile);
+  isMobileRef.current = isMobile;
 
   // Deck of non-repeating randomized snippet indices
   const deckRef = React.useRef<number[]>([]);
@@ -78,9 +84,9 @@ export function LaptopLiveCanvas({ isSceneActive = true }: LaptopLiveCanvasProps
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Retina internal resolution (420x260 matches the 1.615 aspect ratio of MacBook screen)
-    const W = 420;
-    const H = 260;
+    // Internal resolution (320x198 on mobile for CPU efficiency, 420x260 on desktop for retina)
+    const W = isMobileRef.current ? 320 : 420;
+    const H = isMobileRef.current ? 198 : 260;
     canvas.width = W;
     canvas.height = H;
 
@@ -101,10 +107,13 @@ export function LaptopLiveCanvas({ isSceneActive = true }: LaptopLiveCanvasProps
       const s = stateRef.current;
       const current = SNIPPETS[s.snippetIdx]!;
       const currentFullText = current.lines.join('\n');
+      const mobile = isMobileRef.current;
 
       if (!s.isHolding && !s.isErasing) {
         // Typing phase: natural randomized bursts (1-3 chars per tick)
-        const burst = Math.random() < 0.25 ? 3 : Math.floor(Math.random() * 2) + 1;
+        const burst = mobile
+          ? Math.random() < 0.35 ? 3 : 2
+          : Math.random() < 0.25 ? 3 : Math.floor(Math.random() * 2) + 1;
         s.charIdx += burst;
         if (s.charIdx >= currentFullText.length) {
           s.charIdx = currentFullText.length;
@@ -131,8 +140,10 @@ export function LaptopLiveCanvas({ isSceneActive = true }: LaptopLiveCanvasProps
         }
 
         paint();
-        // Variable typing speed rhythm (45-65ms per stroke)
-        const typeSpeed = 48 + Math.floor(Math.random() * 18);
+        // Variable typing speed rhythm (65-85ms on mobile, 45-65ms on desktop)
+        const typeSpeed = mobile
+          ? 68 + Math.floor(Math.random() * 20)
+          : 48 + Math.floor(Math.random() * 18);
         timerRef.current = setTimeout(tick, typeSpeed);
       } else if (s.isErasing) {
         // Pick next random snippet from shuffled deck (guaranteed non-repeating back-to-back)

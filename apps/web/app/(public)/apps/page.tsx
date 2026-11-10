@@ -174,10 +174,10 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
         )}
 
         {/* 3. Filter System at the bottom of the carousel / slider (like updates section) */}
-        <Reveal direction="up" distance={8}>
+        <Reveal direction="up" distance={8} className="relative z-20">
           <div
             id="apps-discovery-bar"
-            className="rounded-xl sm:rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-2.5 sm:p-4 md:p-5 shadow-sm backdrop-blur-md"
+            className="rounded-xl sm:rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-2.5 sm:p-4 md:p-5 shadow-sm backdrop-blur-md relative z-20"
           >
             <AppDiscoveryBar categories={categories} tags={tags} />
           </div>

@@ -310,3 +310,13 @@ export const ROCKS: readonly RockConfig[] = [
     rot: 1.2,
   },
 ];
+
+// 6 strategically curated rocks for mobile compact island (zero clutter, ultra-high performance)
+export const MOBILE_ROCKS: readonly RockConfig[] = [
+  ROCKS[0]!, // Rock 1: bottom-right primary anchor (12.89% width)
+  ROCKS[1]!, // Rock 2: mid-left primary anchor (11.13% width)
+  ROCKS[2]!, // Rock 3: top-left crown anchor (11.81% width)
+  ROCKS[3]!, // Rock 4: upper-left counter-balance (9.96% width)
+  ROCKS[4]!, // Rock 5: bottom-left ground anchor (8.79% width)
+  ROCKS[7]!, // Rock 8: mid-right balance anchor (5.27% width)
+];

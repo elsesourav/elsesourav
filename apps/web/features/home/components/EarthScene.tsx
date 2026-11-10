@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { ROCKS } from './earth-scene.constants';
+import { MOBILE_ROCKS, ROCKS } from './earth-scene.constants';
 import { LaptopLiveCanvas } from './LaptopLiveCanvas';
 import { useProgressiveImage } from './useProgressiveImage';
 
@@ -60,49 +60,63 @@ export function EarthScene({
             : 'max-w-[420px] sm:max-w-[480px] lg:max-w-[500px] xl:max-w-[540px]'
         }`}
       >
-        {/* ── Realistic Cloud Mist & Fog Layer 1 (Drifting sunset mist) ── */}
-        <div
-          aria-hidden="true"
-          className="hero-island-fog-1 absolute pointer-events-none rounded-full blur-2xl z-[1]"
-          style={{
-            left: '20%',
-            top: '62%',
-            width: '64%',
-            height: '24%',
-            background:
-              'linear-gradient(90deg, rgba(236,72,153,0.14) 0%, rgba(251,146,60,0.20) 45%, rgba(167,139,250,0.14) 85%, transparent 100%)',
-          }}
-        />
-
-        {/* ── Realistic Cloud Mist & Fog Layer 2 (Warm ambient wisp hugging crags) ── */}
-        <div
-          aria-hidden="true"
-          className="hero-island-fog-2 absolute pointer-events-none rounded-full blur-xl z-[2]"
-          style={{
-            left: '28%',
-            top: '70%',
-            width: '48%',
-            height: '20%',
-            background:
-              'radial-gradient(ellipse at center, rgba(255,255,255,0.18) 0%, rgba(244,114,182,0.12) 50%, transparent 80%)',
-          }}
-        />
-
-        {/* ── Realistic Deep Altitude Cast Shadow beneath island crag ── */}
-        <div
-          aria-hidden="true"
-          className="hero-island-shadow absolute pointer-events-none rounded-[50%] z-[1]"
-          style={{
-            left: '30%',
-            top: '78%',
-            width: '50%',
-            height: '18%',
-            background:
-              'radial-gradient(ellipse at center, rgba(12, 8, 24, 0.72) 0%, rgba(20, 14, 38, 0.42) 45%, transparent 75%)',
-            filter: 'blur(14px)',
-            transform: 'rotate(-4deg)',
-          }}
-        />
+        {/* ── Realistic Cloud Mist & Fog Layer (Drifting mist on desktop, static ambient on mobile) ── */}
+        {!isMobileCompact ? (
+          <>
+            <div
+              aria-hidden="true"
+              className="hero-island-fog-1 absolute pointer-events-none rounded-full blur-2xl z-[1]"
+              style={{
+                left: '20%',
+                top: '62%',
+                width: '64%',
+                height: '24%',
+                background:
+                  'linear-gradient(90deg, rgba(236,72,153,0.14) 0%, rgba(251,146,60,0.20) 45%, rgba(167,139,250,0.14) 85%, transparent 100%)',
+              }}
+            />
+            <div
+              aria-hidden="true"
+              className="hero-island-fog-2 absolute pointer-events-none rounded-full blur-xl z-[2]"
+              style={{
+                left: '28%',
+                top: '70%',
+                width: '48%',
+                height: '20%',
+                background:
+                  'radial-gradient(ellipse at center, rgba(255,255,255,0.18) 0%, rgba(244,114,182,0.12) 50%, transparent 80%)',
+              }}
+            />
+            <div
+              aria-hidden="true"
+              className="hero-island-shadow absolute pointer-events-none rounded-[50%] z-[1]"
+              style={{
+                left: '30%',
+                top: '78%',
+                width: '50%',
+                height: '18%',
+                background:
+                  'radial-gradient(ellipse at center, rgba(12, 8, 24, 0.72) 0%, rgba(20, 14, 38, 0.42) 45%, transparent 75%)',
+                filter: 'blur(14px)',
+                transform: 'rotate(-4deg)',
+              }}
+            />
+          </>
+        ) : (
+          <div
+            aria-hidden="true"
+            className="absolute pointer-events-none rounded-[50%] z-[1]"
+            style={{
+              left: '30%',
+              top: '78%',
+              width: '50%',
+              height: '18%',
+              background:
+                'radial-gradient(ellipse at center, rgba(12, 8, 24, 0.52) 0%, transparent 75%)',
+              transform: 'rotate(-4deg)',
+            }}
+          />
+        )}
 
         {/* ── Main Floating Island with Progressive Low-to-High Image Loading ── */}
         <div
@@ -111,8 +125,9 @@ export function EarthScene({
             left: '13.48%',
             top: '1.91%',
             width: '82.62%',
-            filter:
-              'drop-shadow(0 20px 35px rgba(0, 0, 0, 0.45)) drop-shadow(0 8px 20px rgba(244, 114, 182, 0.15))',
+            filter: isMobileCompact
+              ? 'drop-shadow(0 12px 20px rgba(0, 0, 0, 0.35))'
+              : 'drop-shadow(0 20px 35px rgba(0, 0, 0, 0.45)) drop-shadow(0 8px 20px rgba(244, 114, 182, 0.15))',
           }}
         >
           {/* Low-Quality Lightweight Placeholder (3.6 KB) - On mobile, this is the only image used with blur */}
@@ -160,13 +175,13 @@ export function EarthScene({
                 boxShadow: 'inset 0 0 3px rgba(0, 0, 0, 0.9), 0 0 10px rgba(99, 102, 241, 0.12)',
               }}
             >
-              <LaptopLiveCanvas isSceneActive={isSceneActive} />
+              <LaptopLiveCanvas isSceneActive={isSceneActive} isMobile={isMobileCompact} />
             </div>
           )}
         </div>
 
-        {/* ── 27 Floating Rocks with Individualized Float Timings & Amplitudes (WebP: ~37KB total) ── */}
-        {ROCKS.map((rock, idx) => (
+        {/* ── Floating Rocks (6 strategic rocks on mobile, full 27 constellation on desktop) ── */}
+        {(isMobileCompact ? MOBILE_ROCKS : ROCKS).map((rock, idx) => (
           <div
             key={rock.id}
             className={`hero-rock hero-rock-${idx % 2 === 0 ? 'a' : 'b'} absolute z-[4]`}
@@ -179,7 +194,7 @@ export function EarthScene({
                 animationDelay: `${rock.delay}s`,
                 '--rock-dist': `${rock.dist}px`,
                 '--rock-rot': `${rock.rot}deg`,
-                filter: 'drop-shadow(0 8px 14px rgba(0, 0, 0, 0.4))',
+                filter: isMobileCompact ? undefined : 'drop-shadow(0 8px 14px rgba(0, 0, 0, 0.4))',
               } as React.CSSProperties
             }
           >
@@ -193,7 +208,7 @@ export function EarthScene({
                     ? 'blur-0 opacity-100 scale-100'
                     : 'blur-[6px] opacity-75 scale-95'
               }`}
-              loading={isMobileBackdrop ? 'lazy' : 'eager'}
+              loading={isMobileBackdrop || isMobileCompact ? 'lazy' : 'eager'}
               draggable={false}
             />
           </div>

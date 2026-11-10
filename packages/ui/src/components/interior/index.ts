@@ -12,6 +12,7 @@ export * from './ContextMenu';
 export * from './CopyButton';
 export * from './Drawer';
 export * from './Dropdown';
+export * from './useDropdownPosition';
 export * from './ExpandingSearch';
 export * from './FilterGrid';
 export * from './FloatingLabel';

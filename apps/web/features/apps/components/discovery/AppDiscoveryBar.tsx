@@ -211,7 +211,7 @@ export function AppDiscoveryBar({
         )}
 
         {/* Dropdowns Row: Platform and Sort */}
-        <div className="flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto shrink-0 relative z-20">
           <div className="flex-1 sm:flex-initial sm:w-40 min-w-0">
             <Dropdown
               items={PLATFORM_ITEMS}

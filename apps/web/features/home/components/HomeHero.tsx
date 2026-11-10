@@ -1,12 +1,14 @@
 'use client';
 
 import { useTheme } from '@/components/theme/ThemeProvider';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { ROUTES } from '@elsesourav/config';
 import { Container, Reveal, Section } from '@elsesourav/ui';
 import { TextReveal, WasmAtmosphereCanvas } from '@elsesourav/ui/interior';
-import { ArrowRight, Code, Layers, Star, Users } from 'lucide-react';
+import { ArrowRight, Layers } from 'lucide-react';
 import Link from 'next/link';
 import { EarthScene } from './EarthScene';
+import { HeroTrustMetrics } from './HeroTrustMetrics';
 import { useProgressiveImage } from './useProgressiveImage';
 import { useScenePerformance } from './useScenePerformance';
 
@@ -24,9 +26,22 @@ interface HomeHeroProps {
   mobileEffects?: string;
 }
 
-function renderHighlightedHeadline(headline: string, isLight: boolean) {
+function renderHighlightedHeadline(headline: string, isLight: boolean, isMobile: boolean) {
   const words = headline.trim().split(/\s+/);
   if (words.length <= 4) {
+    if (isMobile) {
+      return (
+        <span
+          className={
+            isLight
+              ? 'text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-indigo-700 to-violet-800 font-extrabold'
+              : 'text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-indigo-200 to-purple-300 font-extrabold drop-shadow-[0_2px_14px_rgba(129,140,248,0.25)]'
+          }
+        >
+          {headline}
+        </span>
+      );
+    }
     return (
       <TextReveal
         text={headline}
@@ -49,8 +64,29 @@ function renderHighlightedHeadline(headline: string, isLight: boolean) {
   const highlightWords = words.slice(splitIndex);
   const leadPart = leadWords.join(' ');
   const highlightPart = highlightWords.join(' ');
-  const leadDuration = leadWords.length * 0.05;
 
+  // On mobile: render instantly with standard Reveal container (0 GPU blur-filter thrashing)
+  if (isMobile) {
+    return (
+      <>
+        <span className={isLight ? 'text-slate-950 font-extrabold' : 'text-white font-extrabold'}>
+          {leadPart}
+        </span>{' '}
+        <span
+          className={
+            isLight
+              ? 'text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-indigo-700 to-violet-800 font-extrabold'
+              : 'text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-indigo-200 to-purple-300 font-extrabold drop-shadow-[0_2px_14px_rgba(129,140,248,0.25)]'
+          }
+        >
+          {highlightPart}
+        </span>
+      </>
+    );
+  }
+
+  // Desktop: cinematic staggered word-by-word reveal
+  const leadDuration = leadWords.length * 0.05;
   return (
     <>
       <TextReveal
@@ -90,12 +126,32 @@ export function HomeHero({
 }: HomeHeroProps) {
   const { resolvedTheme } = useTheme();
   const isLight = resolvedTheme === 'light';
+  const { isMobile, isMounted } = useIsMobile();
 
   const displayCount = totalAppsCount > 0 ? `${totalAppsCount}+` : '10+';
-  const [isDarkBgLoaded, markDarkBgLoaded] = useProgressiveImage('/hero/sky-bg.webp');
-  const [isLightBgLoaded, markLightBgLoaded] = useProgressiveImage('/hero/sky-light-bg.webp');
+  const [isDarkBgLoaded, markDarkBgLoaded] = useProgressiveImage(
+    isMounted && !isMobile ? '/hero/sky-bg.webp' : ''
+  );
+  const [isLightBgLoaded, markLightBgLoaded] = useProgressiveImage(
+    isMounted && !isMobile ? '/hero/sky-light-bg.webp' : ''
+  );
 
   const { isSceneActive } = useScenePerformance({ elementId: 'hero' });
+
+  const badgeText =
+    heroBadge && heroBadge !== 'SOURAV / ELSESOURAV'
+      ? heroBadge
+      : 'Personal Software Studio';
+
+  const headlineText =
+    heroHeadline ||
+    'Building software, tools, games, and experiments that solve real problems and spark new ideas.';
+
+  const subtitleText = heroSubtitle
+    ? heroSubtitle.replace(/ElseSourav/gi, '').includes(creatorName || 'Sourav')
+      ? heroSubtitle
+      : `Crafted by ${creatorName || 'Sourav'}. ${heroSubtitle}`
+    : `Crafted by ${creatorName || 'Sourav'}. ElseSourav is my personal space for the applications I build, the ideas I explore, and the things I learn along the way.`;
 
   return (
     <Section
@@ -110,71 +166,73 @@ export function HomeHero({
         style={{ touchAction: 'pan-y' }}
       >
         {/* Desktop Background Layers (Full-cover landscape window on iPad & Desktop) */}
-        <div className="hidden md:block absolute inset-0 w-full h-full pointer-events-none">
-          {/* Dark Theme Background Layers (Cosmic Night Sky) */}
-          <div
-            className={`absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-700 ease-in-out ${
-              isLight ? 'opacity-0' : 'opacity-100'
-            }`}
-            style={{ touchAction: 'pan-y' }}
-          >
-            <img
-              src="/hero/sky-bg-thumb.webp"
-              alt=""
-              className={`w-full h-full object-cover object-center scale-[1.03] transition-all duration-700 ease-out pointer-events-none ${
-                isDarkBgLoaded ? 'opacity-0' : 'opacity-100'
+        {isMounted && !isMobile && (
+          <div className="hidden md:block absolute inset-0 w-full h-full pointer-events-none">
+            {/* Dark Theme Background Layers (Cosmic Night Sky) */}
+            <div
+              className={`absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-700 ease-in-out ${
+                isLight ? 'opacity-0' : 'opacity-100'
               }`}
-              draggable={false}
-            />
-            <img
-              src="/hero/sky-bg.webp"
-              alt=""
-              className={`absolute inset-0 w-full h-full object-cover object-center scale-[1.02] transition-opacity duration-700 ease-out pointer-events-none ${
-                isDarkBgLoaded ? 'opacity-100' : 'opacity-0'
+              style={{ touchAction: 'pan-y' }}
+            >
+              <img
+                src="/hero/sky-bg-thumb.webp"
+                alt=""
+                className={`w-full h-full object-cover object-center scale-[1.03] transition-all duration-700 ease-out pointer-events-none ${
+                  isDarkBgLoaded ? 'opacity-0' : 'opacity-100'
+                }`}
+                draggable={false}
+              />
+              <img
+                src="/hero/sky-bg.webp"
+                alt=""
+                className={`absolute inset-0 w-full h-full object-cover object-center scale-[1.02] transition-opacity duration-700 ease-out pointer-events-none ${
+                  isDarkBgLoaded ? 'opacity-100' : 'opacity-0'
+                }`}
+                loading="eager"
+                onLoad={markDarkBgLoaded}
+                draggable={false}
+              />
+            </div>
+
+            {/* Light Theme Background Layers (Daylight Cloudscape) */}
+            <div
+              className={`absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-700 ease-in-out ${
+                isLight ? 'opacity-100' : 'opacity-0'
               }`}
-              loading="eager"
-              onLoad={markDarkBgLoaded}
-              draggable={false}
+              style={{ touchAction: 'pan-y' }}
+            >
+              <img
+                src="/hero/sky-light-bg-thumb.webp"
+                alt=""
+                className={`w-full h-full object-cover object-center scale-[1.03] transition-all duration-700 ease-out pointer-events-none ${
+                  isLightBgLoaded ? 'opacity-0' : 'opacity-100'
+                }`}
+                draggable={false}
+              />
+              <img
+                src="/hero/sky-light-bg.webp"
+                alt=""
+                className={`absolute inset-0 w-full h-full object-cover object-center scale-[1.02] transition-opacity duration-700 ease-out pointer-events-none ${
+                  isLightBgLoaded ? 'opacity-100' : 'opacity-0'
+                }`}
+                loading="eager"
+                onLoad={markLightBgLoaded}
+                draggable={false}
+              />
+            </div>
+
+            {/* Ambient Contrast Gradient: Left-weighted on desktop for text readability */}
+            <div
+              className="absolute inset-0 pointer-events-none transition-all duration-700"
+              style={{
+                background: isLight
+                  ? 'linear-gradient(90deg, rgba(255,255,255,0.94) 0%, rgba(255,255,255,0.80) 38%, rgba(255,255,255,0.22) 68%, transparent 100%)'
+                  : 'linear-gradient(90deg, rgba(9,9,11,0.92) 0%, rgba(9,9,11,0.72) 38%, rgba(9,9,11,0.2) 68%, transparent 100%)',
+              }}
             />
           </div>
-
-          {/* Light Theme Background Layers (Daylight Cloudscape) */}
-          <div
-            className={`absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-700 ease-in-out ${
-              isLight ? 'opacity-100' : 'opacity-0'
-            }`}
-            style={{ touchAction: 'pan-y' }}
-          >
-            <img
-              src="/hero/sky-light-bg-thumb.webp"
-              alt=""
-              className={`w-full h-full object-cover object-center scale-[1.03] transition-all duration-700 ease-out pointer-events-none ${
-                isLightBgLoaded ? 'opacity-0' : 'opacity-100'
-              }`}
-              draggable={false}
-            />
-            <img
-              src="/hero/sky-light-bg.webp"
-              alt=""
-              className={`absolute inset-0 w-full h-full object-cover object-center scale-[1.02] transition-opacity duration-700 ease-out pointer-events-none ${
-                isLightBgLoaded ? 'opacity-100' : 'opacity-0'
-              }`}
-              loading="eager"
-              onLoad={markLightBgLoaded}
-              draggable={false}
-            />
-          </div>
-
-          {/* Ambient Contrast Gradient: Left-weighted on desktop for text readability */}
-          <div
-            className="absolute inset-0 pointer-events-none transition-all duration-700"
-            style={{
-              background: isLight
-                ? 'linear-gradient(90deg, rgba(255,255,255,0.94) 0%, rgba(255,255,255,0.80) 38%, rgba(255,255,255,0.22) 68%, transparent 100%)'
-                : 'linear-gradient(90deg, rgba(9,9,11,0.92) 0%, rgba(9,9,11,0.72) 38%, rgba(9,9,11,0.2) 68%, transparent 100%)',
-            }}
-          />
-        </div>
+        )}
 
         {/* Mobile Background Layers (ONLY set on the backside of the floating island at top center) */}
         <div
@@ -213,29 +271,27 @@ export function HomeHero({
           </div>
         </div>
 
-        {/* ── 2. Atmospheric Layer: Cosmic Stars / Volumetric Fog (WebGL + WebAssembly C++ Engine) ── */}
-        <WasmAtmosphereCanvas
-          isDark={!isLight}
-          isSceneActive={isSceneActive}
-          particleDensityMultiplier={
-            atmosphereDensity ? parseFloat(atmosphereDensity) || 1.0 : 1.0
-          }
-          speedMultiplier={starsSpeed ? parseFloat(starsSpeed) || 1.0 : 1.0}
-          meteorFrequencyMultiplier={
-            meteorFrequency === 'off'
-              ? 0.0
-              : meteorFrequency === 'rare'
-              ? 0.4
-              : meteorFrequency === 'frequent'
-              ? 1.8
-              : 1.0
-          }
-          mobileEffectsMode={
-            mobileEffects === 'battery_saver' || mobileEffects === 'enhanced'
-              ? mobileEffects
-              : 'standard'
-          }
-        />
+        {/* ── 2. Atmospheric Layer: Cosmic Stars / Volumetric Fog (Desktop Only) ── */}
+        {isMounted && !isMobile && (
+          <WasmAtmosphereCanvas
+            isDark={!isLight}
+            isSceneActive={isSceneActive}
+            particleDensityMultiplier={
+              atmosphereDensity ? parseFloat(atmosphereDensity) || 1.0 : 1.0
+            }
+            speedMultiplier={starsSpeed ? parseFloat(starsSpeed) || 1.0 : 1.0}
+            meteorFrequencyMultiplier={
+              meteorFrequency === 'off'
+                ? 0.0
+                : meteorFrequency === 'rare'
+                ? 0.4
+                : meteorFrequency === 'frequent'
+                ? 1.8
+                : 1.0
+            }
+            mobileEffectsMode="standard"
+          />
+        )}
 
 
         {/* Subtle top edge fade that lets the sky show through the transparent navbar */}
@@ -269,7 +325,9 @@ export function HomeHero({
           <div className="md:hidden flex justify-center items-center w-full pt-0 pb-1">
             <Reveal direction="down" distance={12} delay={0}>
               <div className="w-[195px] xs:w-[225px] sm:w-[260px]">
-                <EarthScene isSceneActive={isSceneActive} isMobileCompact />
+                {(!isMounted || isMobile) && (
+                  <EarthScene isSceneActive={isSceneActive} isMobileCompact />
+                )}
               </div>
             </Reveal>
           </div>
@@ -291,17 +349,17 @@ export function HomeHero({
                   }`}
                 />
                 <span>
-                  <TextReveal
-                    text={
-                      heroBadge && heroBadge !== 'SOURAV / ELSESOURAV'
-                        ? heroBadge
-                        : 'Personal Software Studio'
-                    }
-                    by="word"
-                    delay={0.02}
-                    stagger={0.04}
-                    className={isLight ? 'text-indigo-700' : 'text-indigo-400'}
-                  />
+                  {isMobile ? (
+                    <span>{badgeText}</span>
+                  ) : (
+                    <TextReveal
+                      text={badgeText}
+                      by="word"
+                      delay={0.02}
+                      stagger={0.04}
+                      className={isLight ? 'text-indigo-700' : 'text-indigo-400'}
+                    />
+                  )}
                 </span>
               </div>
             </Reveal>
@@ -309,11 +367,7 @@ export function HomeHero({
             {/* Main Highlight: Showcases application ecosystem & why this studio is helpful */}
             <Reveal direction="up" distance={16} delay={100}>
               <h1 className="text-[1.65rem] sm:text-3xl md:text-4xl lg:text-[3.15rem] xl:text-[3.6rem] font-extrabold tracking-tight leading-[1.18] sm:leading-[1.16] lg:leading-[1.14] break-words">
-                {renderHighlightedHeadline(
-                  heroHeadline ||
-                    'Building software, tools, games, and experiments that solve real problems and spark new ideas.',
-                  isLight
-                )}
+                {renderHighlightedHeadline(headlineText, isLight, isMobile)}
               </h1>
             </Reveal>
 
@@ -324,19 +378,19 @@ export function HomeHero({
                   isLight ? 'text-slate-800' : 'text-zinc-300/90'
                 }`}
               >
-                <TextReveal
-                  text={
-                    heroSubtitle
-                      ? heroSubtitle.replace(/ElseSourav/gi, '').includes(creatorName || 'Sourav')
-                        ? heroSubtitle
-                        : `Crafted by ${creatorName || 'Sourav'}. ${heroSubtitle}`
-                      : `Crafted by ${creatorName || 'Sourav'}. ElseSourav is my personal space for the applications I build, the ideas I explore, and the things I learn along the way.`
-                  }
-                  by="word"
-                  delay={0.35}
-                  stagger={0.025}
-                  className={isLight ? 'text-slate-800 font-medium' : 'text-zinc-300/90'}
-                />
+                {isMobile ? (
+                  <span className={isLight ? 'text-slate-800 font-medium' : 'text-zinc-300/90'}>
+                    {subtitleText}
+                  </span>
+                ) : (
+                  <TextReveal
+                    text={subtitleText}
+                    by="word"
+                    delay={0.35}
+                    stagger={0.025}
+                    className={isLight ? 'text-slate-800 font-medium' : 'text-zinc-300/90'}
+                  />
+                )}
               </p>
             </Reveal>
 
@@ -366,105 +420,14 @@ export function HomeHero({
             </Reveal>
 
             {/* Trust Metrics */}
-            <Reveal direction="up" distance={10} delay={250}>
-              <div
-                className={`pt-4 sm:pt-6 grid grid-cols-3 gap-1.5 sm:gap-3 md:gap-4 max-w-lg border-t ${
-                  isLight ? 'border-slate-300/70' : 'border-white/10'
-                }`}
-              >
-                {/* Metric 1: Projects */}
-                <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
-                  <div
-                    className={`w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 border ${
-                      isLight
-                        ? 'bg-purple-100 border-purple-300 text-purple-700'
-                        : 'bg-purple-500/10 border-purple-500/25 text-purple-400'
-                    }`}
-                  >
-                    <Code className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <div
-                      className={`text-xs sm:text-sm font-extrabold truncate ${
-                        isLight ? 'text-slate-950' : 'text-white'
-                      }`}
-                    >
-                      {displayCount}
-                    </div>
-                    <div
-                      className={`text-[9px] sm:text-[10px] md:text-[11px] leading-tight truncate font-semibold ${
-                        isLight ? 'text-slate-700' : 'text-[hsl(var(--muted-foreground))]'
-                      }`}
-                    >
-                      Projects
-                    </div>
-                  </div>
-                </div>
-
-                {/* Metric 2: Passion */}
-                <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
-                  <div
-                    className={`w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 border ${
-                      isLight
-                        ? 'bg-blue-100 border-blue-300 text-blue-700'
-                        : 'bg-blue-500/10 border-blue-500/25 text-blue-400'
-                    }`}
-                  >
-                    <Users className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <div
-                      className={`text-xs sm:text-sm font-extrabold truncate ${
-                        isLight ? 'text-slate-950' : 'text-white'
-                      }`}
-                    >
-                      100%
-                    </div>
-                    <div
-                      className={`text-[9px] sm:text-[10px] md:text-[11px] leading-tight font-semibold ${
-                        isLight ? 'text-slate-700' : 'text-[hsl(var(--muted-foreground))]'
-                      }`}
-                    >
-                      Passion
-                    </div>
-                  </div>
-                </div>
-
-                {/* Metric 3: Opportunities */}
-                <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
-                  <div
-                    className={`w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 border ${
-                      isLight
-                        ? 'bg-indigo-100 border-indigo-300 text-indigo-700'
-                        : 'bg-indigo-500/10 border-indigo-500/25 text-indigo-400'
-                    }`}
-                  >
-                    <Star className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <div
-                      className={`text-xs sm:text-sm font-extrabold truncate ${
-                        isLight ? 'text-slate-950' : 'text-white'
-                      }`}
-                    >
-                      Open
-                    </div>
-                    <div
-                      className={`text-[9px] sm:text-[10px] md:text-[11px] leading-tight truncate font-semibold ${
-                        isLight ? 'text-slate-700' : 'text-[hsl(var(--muted-foreground))]'
-                      }`}
-                    >
-                      Opportunities
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Reveal>
+            <HeroTrustMetrics displayCount={displayCount} isLight={isLight} />
           </div>
 
           {/* Right Column: Floating Rock & Island Scene (iPad & Desktop, hidden on phones) */}
           <div className="hidden md:flex md:col-span-5 xl:col-span-5 justify-center md:justify-end relative w-full h-[440px] md:h-[460px] lg:h-[520px] xl:h-[560px]">
-            <EarthScene isSceneActive={isSceneActive} />
+            {isMounted && !isMobile && (
+              <EarthScene isSceneActive={isSceneActive} />
+            )}
           </div>
         </div>
       </Container>

@@ -13,6 +13,8 @@ export default defineConfig({
       '@elsesourav/database': path.resolve(__dirname, '../database/src'),
       '@elsesourav/media': path.resolve(__dirname, '../media/src'),
       '@elsesourav/types': path.resolve(__dirname, '../types/src'),
+      '@elsesourav/ui/interior': path.resolve(__dirname, '../ui/src/components/interior'),
+      '@elsesourav/ui/micro': path.resolve(__dirname, '../ui/src/components/micro'),
       '@elsesourav/ui': path.resolve(__dirname, '../ui/src'),
       '@elsesourav/utils': path.resolve(__dirname, '../utils/src'),
       '@elsesourav/validation': path.resolve(__dirname, '../validation/src'),
