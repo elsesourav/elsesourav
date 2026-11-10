@@ -26,17 +26,17 @@ export function PhysicsInteractionControls({
   onChange,
 }: PhysicsInteractionControlsProps) {
   return (
-    <div className="space-y-3 p-4 rounded-2xl bg-zinc-900/40 border border-zinc-800">
-      <div className="flex items-center gap-2 border-b border-zinc-800/80 pb-2">
-        <Zap className="w-4 h-4 text-amber-400" />
-        <h4 className="text-xs font-bold text-zinc-100 uppercase tracking-wider">
+    <div className="space-y-3 p-4 rounded-2xl bg-white dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800 shadow-sm dark:shadow-none">
+      <div className="flex items-center gap-2 border-b border-zinc-200 dark:border-zinc-800/80 pb-2">
+        <Zap className="w-4 h-4 text-amber-500 dark:text-amber-400" />
+        <h4 className="text-xs font-bold text-zinc-900 dark:text-zinc-100 uppercase tracking-wider">
           Touch Dynamics &amp; Animation
         </h4>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <div>
-          <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
+          <label className="text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 block mb-1">
             Click Impulse Force
           </label>
           <Dropdown
@@ -48,7 +48,7 @@ export function PhysicsInteractionControls({
         </div>
 
         <div>
-          <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
+          <label className="text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 block mb-1">
             Bounce Return Speed
           </label>
           <Dropdown
@@ -60,7 +60,7 @@ export function PhysicsInteractionControls({
         </div>
 
         <div>
-          <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
+          <label className="text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 block mb-1">
             Click Effect Radius
           </label>
           <Dropdown
@@ -72,7 +72,7 @@ export function PhysicsInteractionControls({
         </div>
 
         <div>
-          <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
+          <label className="text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 block mb-1">
             Initial Flight Arrival
           </label>
           <Dropdown

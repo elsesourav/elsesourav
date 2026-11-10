@@ -54,22 +54,22 @@ export function AdminSidebar({ context }: AdminSidebarProps) {
   return (
     <aside
       aria-label="Admin Navigation Sidebar"
-      className="hidden lg:flex w-64 border-r border-zinc-800/80 bg-zinc-950 p-6 pb-12 flex-col justify-between shrink-0 sticky top-0 h-screen overflow-y-auto"
+      className="hidden lg:flex w-64 border-r border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-950 p-6 pb-12 flex-col justify-between shrink-0 sticky top-0 h-screen overflow-y-auto"
     >
       <div className="space-y-6">
         {/* Portal Branding & Identity Header */}
         <div className="flex items-center gap-3 px-1">
-          <div className="w-10 h-10 rounded-xl bg-indigo-950/80 border border-indigo-500/40 flex items-center justify-center text-indigo-400 shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-500/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
             <Shield className="w-5 h-5" />
           </div>
           <div className="min-w-0">
-            <div className="font-bold text-sm text-zinc-100 flex items-center gap-1.5">
+            <div className="font-bold text-sm text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
               <span>Admin Portal</span>
               <Badge variant="warning" className="text-[10px] px-1.5 py-0.5 font-mono uppercase">
                 {context.role}
               </Badge>
             </div>
-            <div className="text-[11px] text-zinc-400 truncate max-w-[140px]" title={context.email}>
+            <div className="text-[11px] text-zinc-500 dark:text-zinc-400 truncate max-w-[140px]" title={context.email}>
               {context.email}
             </div>
           </div>
@@ -85,11 +85,11 @@ export function AdminSidebar({ context }: AdminSidebarProps) {
                 href={href}
                 className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
                   active
-                    ? 'bg-indigo-950/70 border border-indigo-500/40 text-indigo-200 shadow-sm font-semibold'
-                    : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900/60'
+                    ? 'bg-indigo-50 dark:bg-indigo-950/70 border border-indigo-200 dark:border-indigo-500/40 text-indigo-700 dark:text-indigo-200 shadow-sm font-semibold'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900/60'
                 }`}
               >
-                <Icon className={`w-4 h-4 shrink-0 ${active ? 'text-indigo-400' : 'text-zinc-400'}`} />
+                <Icon className={`w-4 h-4 shrink-0 ${active ? 'text-indigo-600 dark:text-indigo-400' : 'text-zinc-500 dark:text-zinc-400'}`} />
                 <span>{label}</span>
               </Link>
             );
@@ -98,10 +98,10 @@ export function AdminSidebar({ context }: AdminSidebarProps) {
       </div>
 
       {/* Return to Main Public Site & Quick Theme Switcher */}
-      <div className="pt-4 border-t border-zinc-800/80 flex items-center justify-between gap-2">
+      <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800/80 flex items-center justify-between gap-2">
         <Link
           href={ROUTES.HOME}
-          className="flex items-center gap-2 text-xs text-zinc-400 hover:text-zinc-200 transition-colors px-1 py-1 rounded-lg"
+          className="flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors px-1 py-1 rounded-lg"
         >
           <ArrowLeft className="w-3.5 h-3.5 shrink-0" />
           <span>Return to Site</span>

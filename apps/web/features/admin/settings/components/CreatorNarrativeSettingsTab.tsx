@@ -46,14 +46,14 @@ export function CreatorNarrativeSettingsTab({
   };
 
   return (
-    <Card className="p-4 sm:p-6 space-y-5 rounded-3xl border-zinc-800 bg-zinc-900/40">
+    <Card className="p-4 sm:p-6 space-y-5 rounded-3xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 shadow-sm dark:shadow-none">
       <FormField label="About Page Introduction">
         <Textarea
           rows={2}
           value={settings['about_intro'] || ''}
           onChange={(e) => onChange('about_intro', e.target.value)}
           placeholder="Introduction paragraph displayed at the top of the About page..."
-          className="text-xs bg-zinc-950/60 border-zinc-800 text-zinc-100 placeholder:text-zinc-500 rounded-xl"
+          className="text-xs bg-zinc-50/50 dark:bg-zinc-950/60 border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 rounded-xl"
         />
       </FormField>
 
@@ -68,14 +68,14 @@ export function CreatorNarrativeSettingsTab({
       />
 
       {/* Guiding Principles Manager */}
-      <div className="pt-3 border-t border-zinc-800/80 space-y-3">
+      <div className="pt-3 border-t border-zinc-200 dark:border-zinc-800/80 space-y-3">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+            <h3 className="text-xs font-bold text-zinc-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
               <span>Guiding Principles</span>
             </h3>
-            <p className="text-[11px] text-zinc-400">
+            <p className="text-[11px] text-zinc-600 dark:text-zinc-400">
               Core engineering values displayed on the About page.
             </p>
           </div>
@@ -92,7 +92,7 @@ export function CreatorNarrativeSettingsTab({
               }
             }}
             placeholder="e.g. Accessibility by default"
-            className="text-xs h-9 bg-zinc-950/60 border-zinc-800 text-zinc-100 rounded-xl"
+            className="text-xs h-9 bg-zinc-50/50 dark:bg-zinc-950/60 border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 rounded-xl"
           />
           <Button
             type="button"
@@ -109,14 +109,14 @@ export function CreatorNarrativeSettingsTab({
           {principles.map((principle, idx) => (
             <span
               key={idx}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-zinc-800 bg-zinc-950 text-xs text-zinc-300 shadow-sm"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-950 text-xs text-zinc-800 dark:text-zinc-300 shadow-sm"
             >
               <span>{principle}</span>
               <button
                 type="button"
                 onClick={() => handleRemovePrinciple(idx)}
                 aria-label={`Remove ${principle}`}
-                className="text-zinc-500 hover:text-rose-400 transition-colors p-0.5 rounded"
+                className="text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors p-0.5 rounded cursor-pointer"
               >
                 <X className="w-3 h-3" />
               </button>
@@ -126,14 +126,14 @@ export function CreatorNarrativeSettingsTab({
       </div>
 
       {/* Focus Areas Manager */}
-      <div className="pt-3 border-t border-zinc-800/80 space-y-3">
+      <div className="pt-3 border-t border-zinc-200 dark:border-zinc-800/80 space-y-3">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-              <Tag className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Focus Areas & Specializations</span>
+            <h3 className="text-xs font-bold text-zinc-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
+              <Tag className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+              <span>Focus Areas &amp; Specializations</span>
             </h3>
-            <p className="text-[11px] text-zinc-400">
+            <p className="text-[11px] text-zinc-600 dark:text-zinc-400">
               Skill badges and focus tags displayed on the About page.
             </p>
           </div>
@@ -150,7 +150,7 @@ export function CreatorNarrativeSettingsTab({
               }
             }}
             placeholder="e.g. Systems Design"
-            className="text-xs h-9 bg-zinc-950/60 border-zinc-800 text-zinc-100 rounded-xl"
+            className="text-xs h-9 bg-zinc-50/50 dark:bg-zinc-950/60 border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 rounded-xl"
           />
           <Button
             type="button"
@@ -167,14 +167,14 @@ export function CreatorNarrativeSettingsTab({
           {focusAreas.map((focus, idx) => (
             <span
               key={idx}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-indigo-500/30 bg-indigo-950/30 text-xs text-indigo-300 shadow-sm"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-indigo-200 dark:border-indigo-500/30 bg-indigo-50 dark:bg-indigo-950/30 text-xs text-indigo-700 dark:text-indigo-300 shadow-sm"
             >
               <span>{focus}</span>
               <button
                 type="button"
                 onClick={() => handleRemoveFocus(idx)}
                 aria-label={`Remove ${focus}`}
-                className="text-indigo-400/60 hover:text-rose-400 transition-colors p-0.5 rounded"
+                className="text-indigo-500/80 hover:text-rose-600 dark:hover:text-rose-400 transition-colors p-0.5 rounded cursor-pointer"
               >
                 <X className="w-3 h-3" />
               </button>

@@ -30,21 +30,21 @@ export function LegalSettingsTab({
   return (
     <div className="space-y-6">
       {/* Info Banner */}
-      <Card className="p-4 rounded-2xl border-zinc-800 bg-zinc-900/40">
+      <Card className="p-4 rounded-2xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 shadow-sm dark:shadow-none">
         <div className="flex items-start gap-3">
-          <Info className="w-5 h-5 text-indigo-400 mt-0.5 shrink-0" />
+          <Info className="w-5 h-5 text-indigo-600 dark:text-indigo-400 mt-0.5 shrink-0" />
           <div className="space-y-1">
-            <p className="text-sm font-medium text-zinc-200">
+            <p className="text-sm font-medium text-zinc-900 dark:text-zinc-200">
               Legal Content Management
             </p>
-            <p className="text-xs text-zinc-400 leading-relaxed">
+            <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
               Edit the Privacy Policy and Terms of Service content below using
               Markdown. Changes will appear on the public{' '}
               <a
                 href="/privacy"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-indigo-400 hover:underline inline-flex items-center gap-0.5"
+                className="text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-0.5"
               >
                 /privacy <ExternalLink className="w-3 h-3" />
               </a>{' '}
@@ -53,7 +53,7 @@ export function LegalSettingsTab({
                 href="/terms"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-indigo-400 hover:underline inline-flex items-center gap-0.5"
+                className="text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-0.5"
               >
                 /terms <ExternalLink className="w-3 h-3" />
               </a>{' '}
@@ -64,18 +64,18 @@ export function LegalSettingsTab({
       </Card>
 
       {/* Privacy Policy Editor */}
-      <Card className="p-5 sm:p-6 space-y-4 rounded-3xl border-zinc-800 bg-zinc-900/40">
+      <Card className="p-5 sm:p-6 space-y-4 rounded-3xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 shadow-sm dark:shadow-none">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Shield className="w-5 h-5 text-emerald-400" />
-            <h3 className="text-sm font-bold text-zinc-100">Privacy Policy</h3>
+            <Shield className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+            <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">Privacy Policy</h3>
           </div>
           <div className="flex items-center gap-2">
             <Button
               type="button"
               variant="ghost"
               size="sm"
-              className="text-xs text-zinc-400 hover:text-zinc-200"
+              className="text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200"
               onClick={() => {
                 if (
                   window.confirm(
@@ -92,7 +92,7 @@ export function LegalSettingsTab({
             <button
               type="button"
               onClick={() => setShowPrivacyEditor((v) => !v)}
-              className="text-[10px] px-2 py-0.5 rounded-md border border-zinc-700 text-zinc-400 hover:text-zinc-200 inline-flex items-center cursor-pointer"
+              className="text-[10px] px-2 py-0.5 rounded-md border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 inline-flex items-center cursor-pointer"
             >
               {showPrivacyEditor ? 'Collapse' : 'Expand'}
             </button>
@@ -110,11 +110,11 @@ export function LegalSettingsTab({
       </Card>
 
       {/* Terms of Service Editor */}
-      <Card className="p-5 sm:p-6 space-y-4 rounded-3xl border-zinc-800 bg-zinc-900/40">
+      <Card className="p-5 sm:p-6 space-y-4 rounded-3xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 shadow-sm dark:shadow-none">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <FileText className="w-5 h-5 text-indigo-400" />
-            <h3 className="text-sm font-bold text-zinc-100">
+            <FileText className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+            <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
               Terms of Service
             </h3>
           </div>
@@ -123,7 +123,7 @@ export function LegalSettingsTab({
               type="button"
               variant="ghost"
               size="sm"
-              className="text-xs text-zinc-400 hover:text-zinc-200"
+              className="text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200"
               onClick={() => {
                 if (
                   window.confirm(

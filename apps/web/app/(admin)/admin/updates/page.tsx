@@ -20,7 +20,7 @@ export default async function AdminUpdatesPage() {
   return (
     <div className="w-full max-w-7xl mx-auto space-y-6 sm:space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-800/80 pb-5 sm:pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 dark:border-zinc-800/80 pb-5 sm:pb-6">
         <PageHeader
           eyebrow="Editorial CMS"
           badge={

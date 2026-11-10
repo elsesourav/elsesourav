@@ -214,8 +214,8 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
   return (
     <div className="space-y-6 max-w-5xl xl:max-w-7xl">
       {/* Action / Toolbar Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-zinc-800/80">
-        <div className="text-xs text-zinc-400">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-zinc-200 dark:border-zinc-800/80">
+        <div className="text-xs text-zinc-600 dark:text-zinc-400">
           Configure dynamic identity, profiles, links, and pages without code redeployment.
         </div>
 
@@ -244,7 +244,7 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
 
       {/* Responsive Navigation: Mobile Dropdown vs Desktop Tabs */}
       <div className="sm:hidden space-y-1.5">
-        <label className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider block">
+        <label className="text-[11px] font-semibold text-zinc-600 dark:text-zinc-400 uppercase tracking-wider block">
           Settings Section
         </label>
         <Dropdown
@@ -258,7 +258,7 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
       <div
         role="tablist"
         aria-label="Configuration Sections"
-        className="hidden sm:flex flex-wrap items-center gap-1.5 p-1.5 rounded-2xl bg-zinc-950/70 border border-zinc-800/80 shadow-inner"
+        className="hidden sm:flex flex-wrap items-center gap-1.5 p-1.5 rounded-2xl bg-zinc-100 dark:bg-zinc-950/70 border border-zinc-200 dark:border-zinc-800/80 shadow-inner"
       >
         {TAB_CONFIG.map(({ id, label, icon: Icon }) => {
           const isActive = activeTab === id;
@@ -278,17 +278,17 @@ export function AdminSettingsForm({ initialSettings }: AdminSettingsFormProps) {
               onClick={() => setActiveTab(id)}
               className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                 isActive
-                  ? 'bg-zinc-800 text-white border border-zinc-700 shadow-sm'
-                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60 border border-transparent'
+                  ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 shadow-sm'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-200/60 dark:hover:bg-zinc-900/60 border border-transparent'
               }`}
             >
               <Icon
                 className={`w-3.5 h-3.5 shrink-0 ${
                   isActive
                     ? id === 'portrait'
-                      ? 'text-cyan-400'
-                      : 'text-indigo-400'
-                    : 'text-zinc-500'
+                      ? 'text-cyan-600 dark:text-cyan-400'
+                      : 'text-indigo-600 dark:text-indigo-400'
+                    : 'text-zinc-400 dark:text-zinc-500'
                 }`}
               />
               <span>{displayLabel}</span>

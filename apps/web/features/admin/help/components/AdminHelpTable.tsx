@@ -80,13 +80,13 @@ export function AdminHelpTable({ initialArticles, categories }: AdminHelpTablePr
         <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3 flex-1 min-w-0">
           {/* Search Input */}
           <div className="relative flex-1 min-w-[180px] max-w-full sm:max-w-sm">
-            <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-zinc-400 dark:text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
             <Input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search help articles by title or slug..."
-              className="bg-zinc-900/60 border-zinc-800 text-xs pl-9 rounded-xl text-zinc-100 placeholder:text-zinc-500 w-full"
+              className="bg-white dark:bg-zinc-900/60 border-zinc-200 dark:border-zinc-800 text-xs pl-9 rounded-xl text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 w-full shadow-sm"
             />
           </div>
 
@@ -101,11 +101,11 @@ export function AdminHelpTable({ initialArticles, categories }: AdminHelpTablePr
       </div>
 
       {/* Table Card */}
-      <Card className="rounded-2xl sm:rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl overflow-hidden w-full">
+      <Card className="rounded-2xl sm:rounded-3xl border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40 backdrop-blur-xl overflow-hidden w-full shadow-sm">
         {filteredArticles.length === 0 ? (
           <div className="py-12 sm:py-16 px-4 text-center space-y-3">
-            <HelpCircle className="w-10 h-10 text-zinc-600 mx-auto" />
-            <h4 className="text-sm font-semibold text-zinc-300">No help articles found</h4>
+            <HelpCircle className="w-10 h-10 text-zinc-400 dark:text-zinc-600 mx-auto" />
+            <h4 className="text-sm font-semibold text-zinc-800 dark:text-zinc-300">No help articles found</h4>
             <p className="text-xs text-zinc-500 max-w-xs mx-auto leading-relaxed">
               No knowledge base articles match your selected filters. Create documentation articles
               to assist users.
@@ -113,9 +113,9 @@ export function AdminHelpTable({ initialArticles, categories }: AdminHelpTablePr
           </div>
         ) : (
           <div className="overflow-x-auto w-full">
-            <table className="w-full text-left text-xs text-zinc-300 border-collapse table-fixed">
+            <table className="w-full text-left text-xs text-zinc-700 dark:text-zinc-300 border-collapse table-fixed">
               <thead>
-                <tr className="border-b border-zinc-800/80 bg-zinc-950/40 text-zinc-400 font-medium">
+                <tr className="border-b border-zinc-200 dark:border-zinc-800/80 bg-zinc-50/80 dark:bg-zinc-950/40 text-zinc-600 dark:text-zinc-400 font-medium">
                   <th className="py-3 px-3.5 sm:px-4 font-semibold">Article</th>
                   <th className="py-3 px-3.5 sm:px-4 font-semibold hidden md:table-cell w-48 sm:w-52 whitespace-nowrap">Category</th>
                   <th className="py-3 px-3.5 sm:px-4 font-semibold hidden sm:table-cell w-16 whitespace-nowrap">Order</th>
@@ -124,7 +124,7 @@ export function AdminHelpTable({ initialArticles, categories }: AdminHelpTablePr
                   <th className="py-3 px-3.5 sm:px-4 font-semibold text-right w-28 sm:w-32 whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-800/50">
+              <tbody className="divide-y divide-zinc-200/80 dark:divide-zinc-800/50">
                 {filteredArticles.map((article) => {
                   const category = categories.find((c) => c.id === article.categoryId);
                   const categoryName = category?.name || 'General';
@@ -133,11 +133,11 @@ export function AdminHelpTable({ initialArticles, categories }: AdminHelpTablePr
                     : `/help/${article.slug}`;
 
                   return (
-                    <tr key={article.id} className="hover:bg-zinc-800/30 transition-colors group">
+                    <tr key={article.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition-colors group">
                       {/* Title & Slug & Mobile Status Badge */}
                       <td className="py-3 px-3.5 sm:px-4">
                         <div className="min-w-0">
-                          <div className="font-semibold text-zinc-100 truncate group-hover:text-indigo-300 transition-colors text-xs sm:text-sm">
+                          <div className="font-semibold text-zinc-900 dark:text-zinc-100 truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors text-xs sm:text-sm">
                             {article.title}
                           </div>
                           <div className="flex items-center gap-2 mt-0.5">
@@ -166,13 +166,13 @@ export function AdminHelpTable({ initialArticles, categories }: AdminHelpTablePr
 
                       {/* Category */}
                       <td className="py-3 px-3.5 sm:px-4 hidden md:table-cell whitespace-nowrap">
-                        <span className="px-2 py-0.5 rounded-lg bg-zinc-800/60 border border-zinc-700/40 text-zinc-300 text-[11px] truncate max-w-[180px] inline-block align-middle">
+                        <span className="px-2 py-0.5 rounded-lg bg-zinc-100 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/40 text-zinc-700 dark:text-zinc-300 text-[11px] truncate max-w-[180px] inline-block align-middle">
                           {categoryName}
                         </span>
                       </td>
 
                       {/* Order Index */}
-                      <td className="py-3 px-3.5 sm:px-4 hidden sm:table-cell font-mono text-[11px] text-zinc-400 whitespace-nowrap">
+                      <td className="py-3 px-3.5 sm:px-4 hidden sm:table-cell font-mono text-[11px] text-zinc-600 dark:text-zinc-400 whitespace-nowrap">
                         #{article.orderIndex ?? 0}
                       </td>
 
@@ -194,9 +194,9 @@ export function AdminHelpTable({ initialArticles, categories }: AdminHelpTablePr
                       </td>
 
                       {/* Helpfulness */}
-                      <td className="py-3 px-3.5 sm:px-4 hidden lg:table-cell text-zinc-400 font-mono text-[11px] whitespace-nowrap">
-                        <span className="text-emerald-400">+{article.helpfulCount ?? 0}</span> /{' '}
-                        <span className="text-rose-400">-{article.unhelpfulCount ?? 0}</span>
+                      <td className="py-3 px-3.5 sm:px-4 hidden lg:table-cell text-zinc-600 dark:text-zinc-400 font-mono text-[11px] whitespace-nowrap">
+                        <span className="text-emerald-600 dark:text-emerald-400">+{article.helpfulCount ?? 0}</span> /{' '}
+                        <span className="text-rose-600 dark:text-rose-400">-{article.unhelpfulCount ?? 0}</span>
                       </td>
 
                       {/* Actions */}
@@ -206,7 +206,7 @@ export function AdminHelpTable({ initialArticles, categories }: AdminHelpTablePr
                             <Link
                               href={publicUrl}
                               target="_blank"
-                              className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 transition-colors inline-flex items-center justify-center shrink-0"
+                              className="p-1.5 rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors inline-flex items-center justify-center shrink-0"
                               title="View Public Guide"
                             >
                               <ExternalLink className="w-3.5 h-3.5" />
@@ -214,7 +214,7 @@ export function AdminHelpTable({ initialArticles, categories }: AdminHelpTablePr
                           )}
                           <Link
                             href={`/admin/help/${article.id}`}
-                            className="p-1.5 rounded-lg text-zinc-400 hover:text-indigo-300 hover:bg-zinc-800 transition-colors inline-flex items-center justify-center shrink-0"
+                            className="p-1.5 rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-indigo-600 dark:hover:text-indigo-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors inline-flex items-center justify-center shrink-0"
                             title="Edit Article"
                           >
                             <Edit className="w-3.5 h-3.5" />
@@ -228,7 +228,7 @@ export function AdminHelpTable({ initialArticles, categories }: AdminHelpTablePr
                               aria-label="Archive Article"
                               title="Archive Article"
                               icon={<Archive className="w-3.5 h-3.5" />}
-                              className="rounded-lg text-zinc-400 hover:text-amber-300 shrink-0"
+                              className="rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-amber-600 dark:hover:text-amber-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 shrink-0"
                             />
                           )}
                           <IconButton
@@ -241,7 +241,7 @@ export function AdminHelpTable({ initialArticles, categories }: AdminHelpTablePr
                             aria-label="Delete Article"
                             title="Delete Article"
                             icon={<Trash2 className="w-3.5 h-3.5" />}
-                            className="rounded-lg text-zinc-400 hover:text-rose-400 shrink-0"
+                            className="rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 shrink-0"
                           />
                         </div>
                       </td>

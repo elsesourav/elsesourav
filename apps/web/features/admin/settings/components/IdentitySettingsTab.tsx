@@ -13,7 +13,7 @@ export interface IdentitySettingsTabProps {
 
 export function IdentitySettingsTab({ settings, onChange }: IdentitySettingsTabProps) {
   return (
-    <Card className="p-4 sm:p-6 space-y-6 rounded-3xl border-zinc-800 bg-zinc-900/40">
+    <Card className="p-4 sm:p-6 space-y-6 rounded-3xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 shadow-sm dark:shadow-none">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FloatingLabelInput
           label="Site Name"
@@ -38,14 +38,14 @@ export function IdentitySettingsTab({ settings, onChange }: IdentitySettingsTabP
           value={settings['site_description'] || ''}
           onChange={(e) => onChange('site_description', e.target.value)}
           placeholder="Portfolio, applications, and technical deep-dives..."
-          className="text-xs bg-zinc-950/60 border-zinc-800 text-zinc-100 placeholder:text-zinc-500 rounded-xl"
+          className="text-xs bg-zinc-50/50 dark:bg-zinc-950/60 border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 rounded-xl"
         />
       </FormField>
 
       {/* Brand Logo, Wordmark SVG, and Pre-computed Lightweight Loading Particles */}
       <AdminBrandLogoSection settings={settings} handleChange={onChange} />
 
-      <div className="grid grid-cols-1 gap-4 pt-3 border-t border-zinc-800/80">
+      <div className="grid grid-cols-1 gap-4 pt-3 border-t border-zinc-200 dark:border-zinc-800/80">
         <ImageInputWithLibrary
           label="OpenGraph Social Share Banner"
           value={settings['site_og_image_url'] || ''}
@@ -57,7 +57,7 @@ export function IdentitySettingsTab({ settings, onChange }: IdentitySettingsTabP
         />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t border-zinc-800/80">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t border-zinc-200 dark:border-zinc-800/80">
         <FloatingLabelInput
           label="SEO Keywords (Comma-Separated)"
           value={settings['site_keywords'] || ''}

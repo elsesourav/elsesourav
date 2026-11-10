@@ -26,17 +26,17 @@ export function BacksideObjectControls({
   onChange,
 }: BacksideObjectControlsProps) {
   return (
-    <div className="space-y-3 p-4 rounded-2xl bg-zinc-900/40 border border-zinc-800">
-      <div className="flex items-center gap-2 border-b border-zinc-800/80 pb-2">
-        <Orbit className="w-4 h-4 text-purple-400" />
-        <h4 className="text-xs font-bold text-zinc-100 uppercase tracking-wider">
+    <div className="space-y-3 p-4 rounded-2xl bg-white dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800 shadow-sm dark:shadow-none">
+      <div className="flex items-center gap-2 border-b border-zinc-200 dark:border-zinc-800/80 pb-2">
+        <Orbit className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+        <h4 className="text-xs font-bold text-zinc-900 dark:text-zinc-100 uppercase tracking-wider">
           Backside &amp; Celestial Space
         </h4>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
+          <label className="text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 block mb-1">
             Halo Ring Density
           </label>
           <Dropdown
@@ -48,7 +48,7 @@ export function BacksideObjectControls({
         </div>
 
         <div>
-          <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
+          <label className="text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 block mb-1">
             Retro Diamond Stars
           </label>
           <Dropdown
@@ -60,7 +60,7 @@ export function BacksideObjectControls({
         </div>
 
         <div>
-          <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
+          <label className="text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 block mb-1">
             Orbit Loops
           </label>
           <Dropdown
@@ -72,7 +72,7 @@ export function BacksideObjectControls({
         </div>
 
         <div>
-          <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
+          <label className="text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 block mb-1">
             Cosmic Ambient Specks
           </label>
           <Dropdown

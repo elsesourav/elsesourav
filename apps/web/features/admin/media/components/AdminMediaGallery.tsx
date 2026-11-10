@@ -122,42 +122,42 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
     <div className="space-y-6">
       {/* Overview Metric Cards: Responsive Mobile Grid vs Desktop Cards */}
       <div className="hidden sm:grid sm:grid-cols-3 gap-4">
-        <Card className="p-4 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl">
+        <Card className="p-4 rounded-3xl border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40 backdrop-blur-xl shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-indigo-950/60 border border-indigo-500/30 text-indigo-400 shrink-0">
+            <div className="p-2.5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-500/30 text-indigo-600 dark:text-indigo-400 shrink-0">
               <ImageIcon className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-xs text-zinc-400 block font-medium">Total Media Assets</span>
-              <span className="text-xl font-bold font-mono text-zinc-100">{items.length}</span>
+              <span className="text-xs text-zinc-500 dark:text-zinc-400 block font-medium">Total Media Assets</span>
+              <span className="text-xl font-bold font-mono text-zinc-900 dark:text-zinc-100">{items.length}</span>
             </div>
           </div>
         </Card>
 
-        <Card className="p-4 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl">
+        <Card className="p-4 rounded-3xl border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40 backdrop-blur-xl shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 shrink-0">
+            <div className="p-2.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-500/30 text-emerald-600 dark:text-emerald-400 shrink-0">
               <CheckCircle2 className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-xs text-zinc-400 block font-medium">Actively Referenced</span>
-              <span className="text-xl font-bold font-mono text-emerald-300">
+              <span className="text-xs text-zinc-500 dark:text-zinc-400 block font-medium">Actively Referenced</span>
+              <span className="text-xl font-bold font-mono text-emerald-600 dark:text-emerald-300">
                 {initialData.totalReferenced}
               </span>
             </div>
           </div>
         </Card>
 
-        <Card className="p-4 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl">
+        <Card className="p-4 rounded-3xl border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40 backdrop-blur-xl shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-amber-950/60 border border-amber-500/30 text-amber-400 shrink-0">
+            <div className="p-2.5 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-500/30 text-amber-600 dark:text-amber-400 shrink-0">
               <AlertTriangle className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-xs text-zinc-400 block font-medium">
+              <span className="text-xs text-zinc-500 dark:text-zinc-400 block font-medium">
                 Unreferenced / Orphans
               </span>
-              <span className="text-xl font-bold font-mono text-amber-300">
+              <span className="text-xl font-bold font-mono text-amber-600 dark:text-amber-300">
                 {initialData.totalOrphans}
               </span>
             </div>
@@ -167,22 +167,22 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
 
       {/* Compact Mobile Metric Pill: 65px instead of 300px */}
       <div className="grid grid-cols-3 sm:hidden gap-2">
-        <div className="p-2.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 text-center">
-          <span className="text-base font-bold font-mono text-zinc-100 block">{items.length}</span>
+        <div className="p-2.5 rounded-2xl bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800/80 text-center shadow-sm">
+          <span className="text-base font-bold font-mono text-zinc-900 dark:text-zinc-100 block">{items.length}</span>
           <span className="text-[10px] text-zinc-500 font-medium uppercase tracking-wider block">Total</span>
         </div>
-        <div className="p-2.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 text-center">
-          <span className="text-base font-bold font-mono text-emerald-300 block">{initialData.totalReferenced}</span>
-          <span className="text-[10px] text-emerald-500/80 font-medium uppercase tracking-wider block">In Use</span>
+        <div className="p-2.5 rounded-2xl bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800/80 text-center shadow-sm">
+          <span className="text-base font-bold font-mono text-emerald-600 dark:text-emerald-300 block">{initialData.totalReferenced}</span>
+          <span className="text-[10px] text-emerald-600/80 dark:text-emerald-500/80 font-medium uppercase tracking-wider block">In Use</span>
         </div>
-        <div className="p-2.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 text-center">
-          <span className="text-base font-bold font-mono text-amber-300 block">{initialData.totalOrphans}</span>
-          <span className="text-[10px] text-amber-500/80 font-medium uppercase tracking-wider block">Orphans</span>
+        <div className="p-2.5 rounded-2xl bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800/80 text-center shadow-sm">
+          <span className="text-base font-bold font-mono text-amber-600 dark:text-amber-300 block">{initialData.totalOrphans}</span>
+          <span className="text-[10px] text-amber-600/80 dark:text-amber-500/80 font-medium uppercase tracking-wider block">Orphans</span>
         </div>
       </div>
 
       {actionSuccess && (
-        <div className="p-3 sm:p-4 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 flex items-center gap-2.5 text-xs text-emerald-300 animate-in fade-in">
+        <div className="p-3 sm:p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-500/30 flex items-center gap-2.5 text-xs text-emerald-700 dark:text-emerald-300 animate-in fade-in">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
           <span>{actionSuccess}</span>
         </div>
@@ -193,13 +193,13 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
         <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-center">
           {/* Search Input */}
           <div className="relative sm:col-span-6 lg:col-span-5">
-            <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Search className="w-4 h-4 text-zinc-400 dark:text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <Input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by public ID, URL, or resource..."
-              className="bg-zinc-900/60 border-zinc-800 text-xs pl-9 rounded-xl text-zinc-100 placeholder:text-zinc-500 h-9"
+              className="bg-white dark:bg-zinc-900/60 border-zinc-200 dark:border-zinc-800 text-xs pl-9 rounded-xl text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 h-9 shadow-sm"
             />
           </div>
 
@@ -243,10 +243,10 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
         </div>
 
         {/* Results Count Line */}
-        <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400 px-1">
+        <div className="flex items-center justify-between text-[11px] font-mono text-zinc-500 dark:text-zinc-400 px-1">
           <span>
-            Showing <strong className="text-zinc-200">{filteredItems.length}</strong> of{' '}
-            <strong className="text-zinc-200">{items.length}</strong> assets
+            Showing <strong className="text-zinc-900 dark:text-zinc-200">{filteredItems.length}</strong> of{' '}
+            <strong className="text-zinc-900 dark:text-zinc-200">{items.length}</strong> assets
           </span>
           {(selectedDomain !== 'all' || selectedStatus !== 'all' || search.trim()) && (
             <Button
@@ -258,7 +258,7 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
                 setSelectedDomain('all');
                 setSelectedStatus('all');
               }}
-              className="text-indigo-400 hover:text-indigo-300 hover:bg-indigo-950/30 text-[11px] h-6 px-2 rounded-lg"
+              className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 text-[11px] h-6 px-2 rounded-lg"
             >
               Clear filters
             </Button>
@@ -268,9 +268,9 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
 
       {/* Media Grid */}
       {filteredItems.length === 0 ? (
-        <Card className="p-12 sm:p-16 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl text-center space-y-3">
-          <ImageIcon className="w-10 h-10 text-zinc-600 mx-auto" />
-          <h4 className="text-sm font-semibold text-zinc-300">No media assets found</h4>
+        <Card className="p-12 sm:p-16 rounded-3xl border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40 backdrop-blur-xl text-center space-y-3 shadow-sm">
+          <ImageIcon className="w-10 h-10 text-zinc-400 dark:text-zinc-600 mx-auto" />
+          <h4 className="text-sm font-semibold text-zinc-800 dark:text-zinc-300">No media assets found</h4>
           <p className="text-xs text-zinc-500 max-w-xs mx-auto">
             No media assets match your search and filter criteria.
           </p>

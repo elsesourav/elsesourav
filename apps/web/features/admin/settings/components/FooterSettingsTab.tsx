@@ -61,7 +61,7 @@ export function FooterSettingsTab({
   };
 
   return (
-    <Card className="p-4 sm:p-6 space-y-5 rounded-3xl border-zinc-800 bg-zinc-900/40">
+    <Card className="p-4 sm:p-6 space-y-5 rounded-3xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 shadow-sm dark:shadow-none">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FloatingLabelInput
           label="Footer Copyright Notice"
@@ -78,7 +78,7 @@ export function FooterSettingsTab({
         />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-zinc-800/80">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-zinc-200 dark:border-zinc-800/80">
         <FloatingLabelInput
           label="Operational Status Text"
           value={settings['footer_status_text'] || ''}
@@ -87,7 +87,7 @@ export function FooterSettingsTab({
         />
 
         <div>
-          <label className="text-[11px] font-semibold text-zinc-300 block mb-1.5">
+          <label className="text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 block mb-1.5">
             Show Socials in Footer
           </label>
           <Dropdown
@@ -99,7 +99,7 @@ export function FooterSettingsTab({
         </div>
 
         <div>
-          <label className="text-[11px] font-semibold text-zinc-300 block mb-1.5">
+          <label className="text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 block mb-1.5">
             Back to Top Button
           </label>
           <Dropdown
@@ -112,13 +112,13 @@ export function FooterSettingsTab({
       </div>
 
       {/* Custom Footer Links Management */}
-      <div className="pt-4 border-t border-zinc-800/80 space-y-3">
+      <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800/80 space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h3 className="text-xs font-bold text-white uppercase tracking-wider">
+            <h3 className="text-xs font-bold text-zinc-900 dark:text-white uppercase tracking-wider">
               Custom Footer Navigation
             </h3>
-            <p className="text-[11px] text-zinc-400">
+            <p className="text-[11px] text-zinc-600 dark:text-zinc-400">
               Add custom navigation or external links to the footer bottom bar.
             </p>
           </div>
@@ -127,14 +127,14 @@ export function FooterSettingsTab({
             variant="outline"
             size="sm"
             onClick={() => setIsAddingFooterLink(true)}
-            className="gap-1 text-xs h-7 px-2.5 rounded-lg shrink-0 w-fit"
+            className="gap-1 text-xs h-7 px-2.5 rounded-lg shrink-0 w-fit border-zinc-200 dark:border-zinc-800"
           >
             <Plus className="w-3 h-3" /> Add Link
           </Button>
         </div>
 
         {isAddingFooterLink && (
-          <div className="p-3.5 rounded-2xl border border-indigo-500/40 bg-indigo-950/20 space-y-2.5">
+          <div className="p-3.5 rounded-2xl border border-indigo-200 dark:border-indigo-500/40 bg-indigo-50/50 dark:bg-indigo-950/20 space-y-2.5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               <FloatingLabelInput
                 label="Link Label"
@@ -183,10 +183,10 @@ export function FooterSettingsTab({
             footerLinks.map((fl) => (
               <div
                 key={fl.id}
-                className="p-2.5 rounded-xl border border-zinc-800/80 bg-zinc-950/40 flex items-center justify-between gap-3 text-xs"
+                className="p-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800/80 bg-zinc-50/60 dark:bg-zinc-950/40 flex items-center justify-between gap-3 text-xs"
               >
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className="font-semibold text-zinc-200">{fl.label}</span>
+                  <span className="font-semibold text-zinc-900 dark:text-zinc-200">{fl.label}</span>
                   <span className="text-zinc-500 font-mono text-[11px] truncate">{fl.url}</span>
                 </div>
                 <IconButton
@@ -195,8 +195,8 @@ export function FooterSettingsTab({
                   size="icon-xs"
                   onClick={() => handleRemoveFooterLink(fl.id)}
                   aria-label={`Remove ${fl.label} footer link`}
-                  icon={<Trash2 className="w-3.5 h-3.5 text-zinc-500 hover:text-rose-400" />}
-                  className="rounded-lg hover:bg-rose-950/40 shrink-0"
+                  icon={<Trash2 className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400" />}
+                  className="rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/40 shrink-0"
                 />
               </div>
             ))

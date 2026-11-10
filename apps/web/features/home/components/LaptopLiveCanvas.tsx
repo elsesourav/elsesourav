@@ -73,7 +73,6 @@ export function LaptopLiveCanvas({ isSceneActive = true }: LaptopLiveCanvasProps
   }, [isSceneActive]);
 
   React.useEffect(() => {
-    if (window.innerWidth < 768) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');

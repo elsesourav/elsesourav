@@ -44,11 +44,11 @@ export function PortraitDeviceTargetTabs({
   ];
 
   return (
-    <div className="p-3 rounded-2xl bg-zinc-950/80 border border-zinc-800 space-y-2">
+    <div className="p-3 rounded-2xl bg-zinc-50 dark:bg-zinc-950/80 border border-zinc-200 dark:border-zinc-800 space-y-2">
       <div className="flex items-center justify-between gap-2 px-1">
         <div className="flex items-center gap-1.5">
-          <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-          <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-300">
+          <Sparkles className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+          <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-700 dark:text-zinc-300">
             Device Optimization Target &amp; Pixel Ratios
           </span>
         </div>
@@ -64,17 +64,17 @@ export function PortraitDeviceTargetTabs({
               key={d.id}
               type="button"
               onClick={() => onSelectDevice(d.id)}
-              className={`flex items-center gap-2 p-2.5 rounded-xl border text-left transition-all ${
+              className={`flex items-center gap-2 p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
                 isActive
-                  ? 'bg-cyan-950/40 border-cyan-500/60 text-white shadow-[0_0_16px_rgba(6,182,212,0.15)] ring-1 ring-cyan-500/40'
-                  : 'bg-zinc-900/40 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/60'
+                  ? 'bg-cyan-50 dark:bg-cyan-950/40 border-cyan-400 dark:border-cyan-500/60 text-cyan-950 dark:text-white shadow-[0_0_16px_rgba(6,182,212,0.15)] ring-1 ring-cyan-500/40'
+                  : 'bg-white dark:bg-zinc-900/40 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800/60'
               }`}
             >
               <div
                 className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
                   isActive
-                    ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
-                    : 'bg-zinc-800/80 text-zinc-400'
+                    ? 'bg-cyan-500/20 text-cyan-700 dark:text-cyan-400 border border-cyan-400/40 dark:border-cyan-500/30'
+                    : 'bg-zinc-100 dark:bg-zinc-800/80 text-zinc-500 dark:text-zinc-400'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -84,7 +84,7 @@ export function PortraitDeviceTargetTabs({
                   <span className="text-xs font-bold truncate">{d.label}</span>
                   <span
                     className={`text-[9px] font-mono px-1 rounded ${
-                      isActive ? 'bg-cyan-500/30 text-cyan-300' : 'bg-zinc-800 text-zinc-500'
+                      isActive ? 'bg-cyan-500/30 text-cyan-800 dark:text-cyan-300' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-500'
                     }`}
                   >
                     {d.resolution}

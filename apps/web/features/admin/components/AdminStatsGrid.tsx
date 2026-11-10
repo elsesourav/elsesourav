@@ -30,9 +30,9 @@ export function AdminStatsGrid({ stats }: AdminStatsGridProps) {
       subtitle: `${stats.publishedApps} published • ${stats.draftApps} drafts`,
       icon: Package,
       href: '/admin/apps',
-      accentColor: 'text-indigo-400',
-      bgColor: 'bg-indigo-950/40',
-      borderColor: 'border-indigo-500/30',
+      accentColor: 'text-indigo-600 dark:text-indigo-400',
+      bgColor: 'bg-indigo-50 dark:bg-indigo-950/40',
+      borderColor: 'border-indigo-200 dark:border-indigo-500/30',
     },
     {
       title: 'Updates CMS',
@@ -40,9 +40,9 @@ export function AdminStatsGrid({ stats }: AdminStatsGridProps) {
       subtitle: `${stats.publishedBlogPosts} published updates`,
       icon: FileText,
       href: '/admin/updates',
-      accentColor: 'text-cyan-400',
-      bgColor: 'bg-cyan-950/40',
-      borderColor: 'border-cyan-500/30',
+      accentColor: 'text-cyan-600 dark:text-cyan-400',
+      bgColor: 'bg-cyan-50 dark:bg-cyan-950/40',
+      borderColor: 'border-cyan-200 dark:border-cyan-500/30',
     },
     {
       title: 'Help Articles',
@@ -50,9 +50,9 @@ export function AdminStatsGrid({ stats }: AdminStatsGridProps) {
       subtitle: 'Knowledge base documentation',
       icon: BookOpen,
       href: '/admin/help',
-      accentColor: 'text-purple-400',
-      bgColor: 'bg-purple-950/40',
-      borderColor: 'border-purple-500/30',
+      accentColor: 'text-purple-600 dark:text-purple-400',
+      bgColor: 'bg-purple-50 dark:bg-purple-950/40',
+      borderColor: 'border-purple-200 dark:border-purple-500/30',
     },
     {
       title: 'Support Queue',
@@ -60,9 +60,9 @@ export function AdminStatsGrid({ stats }: AdminStatsGridProps) {
       subtitle: `${stats.totalTickets} total tickets triage`,
       icon: LifeBuoy,
       href: '/admin/support',
-      accentColor: stats.openTickets > 0 ? 'text-amber-400' : 'text-emerald-400',
-      bgColor: stats.openTickets > 0 ? 'bg-amber-950/40' : 'bg-emerald-950/40',
-      borderColor: stats.openTickets > 0 ? 'border-amber-500/30' : 'border-emerald-500/30',
+      accentColor: stats.openTickets > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400',
+      bgColor: stats.openTickets > 0 ? 'bg-amber-50 dark:bg-amber-950/40' : 'bg-emerald-50 dark:bg-emerald-950/40',
+      borderColor: stats.openTickets > 0 ? 'border-amber-200 dark:border-amber-500/30' : 'border-emerald-200 dark:border-emerald-500/30',
       alert: stats.openTickets > 0 ? 'Needs Attention' : 'Queue Clean',
     },
     {
@@ -71,41 +71,41 @@ export function AdminStatsGrid({ stats }: AdminStatsGridProps) {
       subtitle: 'Active community accounts',
       icon: Users,
       href: '/admin/users',
-      accentColor: 'text-emerald-400',
-      bgColor: 'bg-emerald-950/40',
-      borderColor: 'border-emerald-500/30',
+      accentColor: 'text-emerald-600 dark:text-emerald-400',
+      bgColor: 'bg-emerald-50 dark:bg-emerald-950/40',
+      borderColor: 'border-emerald-200 dark:border-emerald-500/30',
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 min-[480px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3.5 sm:gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3.5 sm:gap-4">
       {cards.map((card) => {
         const Icon = card.icon;
         return (
           <Link key={card.title} href={card.href} className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-2xl">
-            <Card className="p-3.5 sm:p-4 rounded-2xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl group-hover:border-zinc-700 transition-colors space-y-3 h-full flex flex-col justify-between">
+            <Card className="p-3.5 sm:p-4 rounded-2xl border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40 backdrop-blur-xl group-hover:border-zinc-300 dark:group-hover:border-zinc-700 transition-colors space-y-3 h-full flex flex-col justify-between shadow-sm">
               <div className="flex items-start justify-between gap-2">
                 <div
                   className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl ${card.bgColor} border ${card.borderColor} flex items-center justify-center ${card.accentColor} shrink-0`}
                 >
                   <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-zinc-300 transition-colors shrink-0" />
+                <ArrowUpRight className="w-4 h-4 text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors shrink-0" />
               </div>
 
               <div>
                 <div className="flex items-baseline justify-between gap-2 flex-wrap">
-                  <div className="text-xl sm:text-2xl font-extrabold text-zinc-100 tracking-tight font-mono">
+                  <div className="text-xl sm:text-2xl font-extrabold text-zinc-900 dark:text-zinc-100 tracking-tight font-mono">
                     {card.value}
                   </div>
                   {card.alert && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded-full font-medium font-mono bg-amber-950/60 border border-amber-500/30 text-amber-300">
+                    <span className="text-[10px] px-1.5 py-0.5 rounded-full font-medium font-mono bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-500/30 text-amber-700 dark:text-amber-300">
                       {card.alert}
                     </span>
                   )}
                 </div>
-                <h3 className="text-xs font-semibold text-zinc-200 mt-1">{card.title}</h3>
-                <p className="text-[11px] text-zinc-400 mt-0.5 leading-snug">{card.subtitle}</p>
+                <h3 className="text-xs font-semibold text-zinc-900 dark:text-zinc-200 mt-1">{card.title}</h3>
+                <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 leading-snug">{card.subtitle}</p>
               </div>
             </Card>
           </Link>

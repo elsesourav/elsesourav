@@ -69,7 +69,7 @@ export function AdminUsersTable({ initialUsers, total, totalPages }: AdminUsersT
         return (
           <Badge
             variant="outline"
-            className="text-[10px] uppercase font-mono border-purple-500/50 text-purple-300 bg-purple-950/20"
+            className="text-[10px] uppercase font-mono border-purple-300 dark:border-purple-500/50 text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/20"
           >
             Admin
           </Badge>
@@ -78,7 +78,7 @@ export function AdminUsersTable({ initialUsers, total, totalPages }: AdminUsersT
         return (
           <Badge
             variant="outline"
-            className="text-[10px] uppercase font-mono border-indigo-500/50 text-indigo-300 bg-indigo-950/20"
+            className="text-[10px] uppercase font-mono border-indigo-300 dark:border-indigo-500/50 text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/20"
           >
             Staff
           </Badge>
@@ -87,7 +87,7 @@ export function AdminUsersTable({ initialUsers, total, totalPages }: AdminUsersT
         return (
           <Badge
             variant="outline"
-            className="text-[10px] uppercase font-mono border-zinc-700 text-zinc-400"
+            className="text-[10px] uppercase font-mono border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400"
           >
             User
           </Badge>
@@ -102,13 +102,13 @@ export function AdminUsersTable({ initialUsers, total, totalPages }: AdminUsersT
         <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-center">
           {/* Search Input */}
           <div className="relative sm:col-span-6 lg:col-span-7">
-            <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Search className="w-4 h-4 text-zinc-400 dark:text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <Input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by name, email, or @username..."
-              className="bg-zinc-900/60 border-zinc-800 text-xs pl-9 rounded-xl text-zinc-100 placeholder:text-zinc-500 h-9"
+              className="bg-white dark:bg-zinc-900/60 border-zinc-200 dark:border-zinc-800 text-xs pl-9 rounded-xl text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 h-9 shadow-sm"
             />
           </div>
 
@@ -130,10 +130,10 @@ export function AdminUsersTable({ initialUsers, total, totalPages }: AdminUsersT
         </div>
 
         {/* Total Users Count */}
-        <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400 px-1">
+        <div className="flex items-center justify-between text-[11px] font-mono text-zinc-500 dark:text-zinc-400 px-1">
           <span>
-            Showing <strong className="text-zinc-200">{filteredUsers.length}</strong> of{' '}
-            <strong className="text-zinc-200">{total}</strong> total users
+            Showing <strong className="text-zinc-900 dark:text-zinc-200">{filteredUsers.length}</strong> of{' '}
+            <strong className="text-zinc-900 dark:text-zinc-200">{total}</strong> total users
           </span>
           <span>
             {totalPages} {totalPages === 1 ? 'page' : 'pages'}
@@ -142,47 +142,47 @@ export function AdminUsersTable({ initialUsers, total, totalPages }: AdminUsersT
       </div>
 
       {/* Users Table Card */}
-      <Card className="rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl overflow-hidden">
+      <Card className="rounded-3xl border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40 backdrop-blur-xl overflow-hidden shadow-sm">
         {filteredUsers.length === 0 ? (
           <div className="py-16 px-4 text-center space-y-3">
-            <Users className="w-10 h-10 text-zinc-600 mx-auto" />
-            <h4 className="text-sm font-semibold text-zinc-300">No users found</h4>
+            <Users className="w-10 h-10 text-zinc-400 dark:text-zinc-600 mx-auto" />
+            <h4 className="text-sm font-semibold text-zinc-800 dark:text-zinc-300">No users found</h4>
             <p className="text-xs text-zinc-500 max-w-xs mx-auto">
               No registered user accounts match your current filter parameters.
             </p>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="table-fixed w-full text-left text-xs text-zinc-300 border-collapse">
+            <table className="table-fixed w-full text-left text-xs text-zinc-700 dark:text-zinc-300 border-collapse">
               <thead>
-                <tr className="border-b border-zinc-800/80 bg-zinc-950/40 text-zinc-400 font-medium">
-                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-300 w-auto min-w-[180px]">
+                <tr className="border-b border-zinc-200 dark:border-zinc-800/80 bg-zinc-50/80 dark:bg-zinc-950/40 text-zinc-600 dark:text-zinc-400 font-medium">
+                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-700 dark:text-zinc-300 w-auto min-w-[180px]">
                     User
                   </th>
-                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-300 hidden md:table-cell w-44 lg:w-48">
+                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-700 dark:text-zinc-300 hidden md:table-cell w-44 lg:w-48">
                     Email Address
                   </th>
-                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-300 hidden sm:table-cell w-20">
+                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-700 dark:text-zinc-300 hidden sm:table-cell w-20">
                     Role
                   </th>
-                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-300 hidden sm:table-cell w-20">
+                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-700 dark:text-zinc-300 hidden sm:table-cell w-20">
                     Status
                   </th>
-                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-300 hidden lg:table-cell w-16">
+                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-700 dark:text-zinc-300 hidden lg:table-cell w-16">
                     Library
                   </th>
-                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-300 hidden lg:table-cell w-16">
+                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-700 dark:text-zinc-300 hidden lg:table-cell w-16">
                     Support
                   </th>
-                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-300 hidden md:table-cell w-24">
+                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-700 dark:text-zinc-300 hidden md:table-cell w-24">
                     Joined
                   </th>
-                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-300 text-right w-20 sm:w-24">
+                  <th className="py-3 px-3 sm:px-4 font-semibold text-zinc-700 dark:text-zinc-300 text-right w-20 sm:w-24">
                     Action
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-800/50">
+              <tbody className="divide-y divide-zinc-200/80 dark:divide-zinc-800/50">
                 {filteredUsers.map((user) => {
                   const joinedDate = new Date(user.createdAt).toLocaleDateString('en-US', {
                     month: 'short',
@@ -191,7 +191,7 @@ export function AdminUsersTable({ initialUsers, total, totalPages }: AdminUsersT
                   });
 
                   return (
-                    <tr key={user.id} className="hover:bg-zinc-800/30 transition-colors group">
+                    <tr key={user.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition-colors group">
                       {/* User Avatar & Name */}
                       <td className="py-3 px-3 sm:px-4 min-w-0">
                         <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
@@ -203,7 +203,7 @@ export function AdminUsersTable({ initialUsers, total, totalPages }: AdminUsersT
                             size="sm"
                           />
                           <div className="min-w-0 flex-1">
-                            <div className="font-semibold text-zinc-100 truncate group-hover:text-indigo-300 transition-colors">
+                            <div className="font-semibold text-zinc-900 dark:text-zinc-100 truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors">
                               {user.displayName}
                             </div>
                             <div className="text-[11px] text-zinc-500 font-mono truncate flex items-center gap-1.5 flex-wrap">
@@ -211,7 +211,7 @@ export function AdminUsersTable({ initialUsers, total, totalPages }: AdminUsersT
                                 {user.username ? `@${user.username}` : user.id.slice(0, 8)}
                               </span>
                               {/* Mobile inline badges for complete visibility without side-scrolling */}
-                              <span className="sm:hidden text-zinc-700">•</span>
+                              <span className="sm:hidden text-zinc-400 dark:text-zinc-700">•</span>
                               <span className="sm:hidden">{getRoleBadge(user.role)}</span>
                               <span className="sm:hidden">
                                 {user.status === 'active' ? (
@@ -236,7 +236,7 @@ export function AdminUsersTable({ initialUsers, total, totalPages }: AdminUsersT
                       </td>
 
                       {/* Email */}
-                      <td className="py-3 px-3 sm:px-4 hidden md:table-cell font-mono text-[11px] text-zinc-300 truncate">
+                      <td className="py-3 px-3 sm:px-4 hidden md:table-cell font-mono text-[11px] text-zinc-600 dark:text-zinc-300 truncate">
                         {user.email}
                       </td>
 
@@ -262,17 +262,17 @@ export function AdminUsersTable({ initialUsers, total, totalPages }: AdminUsersT
                       </td>
 
                       {/* Library count */}
-                      <td className="py-3 px-3 sm:px-4 hidden lg:table-cell text-zinc-400 font-mono text-[11px] truncate">
+                      <td className="py-3 px-3 sm:px-4 hidden lg:table-cell text-zinc-600 dark:text-zinc-400 font-mono text-[11px] truncate">
                         <div className="flex items-center gap-1.5">
-                          <BookMarked className="w-3 h-3 text-zinc-500 shrink-0" />
+                          <BookMarked className="w-3 h-3 text-zinc-400 dark:text-zinc-500 shrink-0" />
                           <span>{user.libraryCount}</span>
                         </div>
                       </td>
 
                       {/* Support ticket count */}
-                      <td className="py-3 px-3 sm:px-4 hidden lg:table-cell text-zinc-400 font-mono text-[11px] truncate">
+                      <td className="py-3 px-3 sm:px-4 hidden lg:table-cell text-zinc-600 dark:text-zinc-400 font-mono text-[11px] truncate">
                         <div className="flex items-center gap-1.5">
-                          <LifeBuoy className="w-3 h-3 text-zinc-500 shrink-0" />
+                          <LifeBuoy className="w-3 h-3 text-zinc-400 dark:text-zinc-500 shrink-0" />
                           <span>{user.supportTicketCount}</span>
                         </div>
                       </td>
@@ -287,7 +287,7 @@ export function AdminUsersTable({ initialUsers, total, totalPages }: AdminUsersT
                         <Link
                           href={`/admin/users/${user.id}`}
                           aria-label={`Manage user ${user.displayName}`}
-                          className="inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-lg bg-zinc-800/80 hover:bg-indigo-600 hover:text-white text-zinc-300 transition-colors text-[11px] font-medium shrink-0"
+                          className="inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 text-zinc-700 dark:text-zinc-300 transition-colors text-[11px] font-medium shrink-0"
                         >
                           <span>Manage</span>
                           <ExternalLink className="w-3 h-3 shrink-0" />

@@ -76,13 +76,13 @@ export function AdminSupportTable({ initialTickets }: AdminSupportTableProps) {
         <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3 flex-1 min-w-0">
           {/* Search Input */}
           <div className="relative flex-1 min-w-[180px] max-w-full sm:max-w-sm">
-            <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-zinc-400 dark:text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
             <Input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by ticket #, subject, or email..."
-              className="bg-zinc-900/60 border-zinc-800 text-xs pl-9 rounded-xl text-zinc-100 placeholder:text-zinc-500 w-full"
+              className="bg-white dark:bg-zinc-900/60 border-zinc-200 dark:border-zinc-800 text-xs pl-9 rounded-xl text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 w-full shadow-sm"
             />
           </div>
 
@@ -106,20 +106,20 @@ export function AdminSupportTable({ initialTickets }: AdminSupportTableProps) {
       </div>
 
       {/* Tickets Table Card */}
-      <Card className="rounded-2xl sm:rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl overflow-hidden w-full">
+      <Card className="rounded-2xl sm:rounded-3xl border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40 backdrop-blur-xl overflow-hidden w-full shadow-sm">
         {filteredTickets.length === 0 ? (
           <div className="py-12 sm:py-16 px-4 text-center space-y-3">
-            <LifeBuoy className="w-10 h-10 text-zinc-600 mx-auto" />
-            <h4 className="text-sm font-semibold text-zinc-300">No tickets found</h4>
+            <LifeBuoy className="w-10 h-10 text-zinc-400 dark:text-zinc-600 mx-auto" />
+            <h4 className="text-sm font-semibold text-zinc-800 dark:text-zinc-300">No tickets found</h4>
             <p className="text-xs text-zinc-500 max-w-xs mx-auto leading-relaxed">
               No support inquiries match your current filter parameters.
             </p>
           </div>
         ) : (
           <div className="overflow-x-auto w-full">
-            <table className="w-full text-left text-xs text-zinc-300 border-collapse table-fixed">
+            <table className="w-full text-left text-xs text-zinc-700 dark:text-zinc-300 border-collapse table-fixed">
               <thead>
-                <tr className="border-b border-zinc-800/80 bg-zinc-950/40 text-zinc-400 font-medium">
+                <tr className="border-b border-zinc-200 dark:border-zinc-800/80 bg-zinc-50/80 dark:bg-zinc-950/40 text-zinc-600 dark:text-zinc-400 font-medium">
                   <th className="py-3 px-3.5 sm:px-4 font-semibold hidden sm:table-cell w-24 sm:w-28 whitespace-nowrap">Reference</th>
                   <th className="py-3 px-3.5 sm:px-4 font-semibold">Subject</th>
                   <th className="py-3 px-3.5 sm:px-4 font-semibold hidden md:table-cell w-40 whitespace-nowrap">User</th>
@@ -130,7 +130,7 @@ export function AdminSupportTable({ initialTickets }: AdminSupportTableProps) {
                   <th className="py-3 px-3.5 sm:px-4 font-semibold text-right w-20 sm:w-24 whitespace-nowrap">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-800/50">
+              <tbody className="divide-y divide-zinc-200/80 dark:divide-zinc-800/50">
                 {filteredTickets.map((ticket) => {
                   const lastActive = new Date(ticket.lastMessageAt).toLocaleDateString('en-US', {
                     month: 'short',
@@ -140,9 +140,9 @@ export function AdminSupportTable({ initialTickets }: AdminSupportTableProps) {
                   });
 
                   return (
-                    <tr key={ticket.id} className="hover:bg-zinc-800/30 transition-colors group">
+                    <tr key={ticket.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition-colors group">
                       {/* Ticket Number (desktop/tablet) */}
-                      <td className="py-3 px-3.5 sm:px-4 font-mono font-bold text-indigo-400 hidden sm:table-cell whitespace-nowrap">
+                      <td className="py-3 px-3.5 sm:px-4 font-mono font-bold text-indigo-600 dark:text-indigo-400 hidden sm:table-cell whitespace-nowrap">
                         #{ticket.ticketNumber}
                       </td>
 
@@ -151,16 +151,16 @@ export function AdminSupportTable({ initialTickets }: AdminSupportTableProps) {
                         <div className="min-w-0">
                           <Link
                             href={`/admin/support/${ticket.id}`}
-                            className="font-semibold text-zinc-100 hover:text-indigo-300 transition-colors truncate block text-xs sm:text-sm"
+                            className="font-semibold text-zinc-900 dark:text-zinc-100 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors truncate block text-xs sm:text-sm"
                           >
                             {ticket.subject}
                           </Link>
                           <div className="text-[11px] text-zinc-500 flex items-center gap-1.5 pt-0.5">
                             {/* Mobile ticket reference */}
-                            <span className="sm:hidden font-mono font-semibold text-indigo-400">
+                            <span className="sm:hidden font-mono font-semibold text-indigo-600 dark:text-indigo-400">
                               #{ticket.ticketNumber}
                             </span>
-                            <span className="sm:hidden text-zinc-600">•</span>
+                            <span className="sm:hidden text-zinc-400 dark:text-zinc-600">•</span>
                             <MessageSquare className="w-3 h-3 shrink-0" />
                             <span>{ticket.messageCount ?? 1} msg</span>
                             {/* Mobile-only inline status */}
@@ -174,7 +174,7 @@ export function AdminSupportTable({ initialTickets }: AdminSupportTableProps) {
                                   In Prog
                                 </Badge>
                               ) : ticket.status === 'waiting_for_user' ? (
-                                <Badge variant="outline" className="text-[9px] uppercase font-mono border-amber-500/40 text-amber-300 px-1 py-0 leading-tight">
+                                <Badge variant="outline" className="text-[9px] uppercase font-mono border-amber-500/40 text-amber-600 dark:text-amber-300 px-1 py-0 leading-tight">
                                   Waiting
                                 </Badge>
                               ) : ticket.status === 'resolved' ? (
@@ -192,15 +192,15 @@ export function AdminSupportTable({ initialTickets }: AdminSupportTableProps) {
                       </td>
 
                       {/* User */}
-                      <td className="py-3 px-3.5 sm:px-4 hidden md:table-cell text-zinc-300 whitespace-nowrap">
+                      <td className="py-3 px-3.5 sm:px-4 hidden md:table-cell text-zinc-700 dark:text-zinc-300 whitespace-nowrap">
                         <div className="truncate max-w-[150px]">
                           {ticket.userName || ticket.userEmail || 'Anonymous'}
                         </div>
                       </td>
 
                       {/* Category */}
-                      <td className="py-3 px-3.5 sm:px-4 hidden sm:table-cell text-zinc-400 capitalize whitespace-nowrap">
-                        <span className="px-2 py-0.5 rounded-lg bg-zinc-800/60 border border-zinc-700/40 text-zinc-300 text-[11px]">
+                      <td className="py-3 px-3.5 sm:px-4 hidden sm:table-cell capitalize whitespace-nowrap">
+                        <span className="px-2 py-0.5 rounded-lg bg-zinc-100 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/40 text-zinc-700 dark:text-zinc-300 text-[11px]">
                           {ticket.category}
                         </span>
                       </td>
@@ -218,7 +218,7 @@ export function AdminSupportTable({ initialTickets }: AdminSupportTableProps) {
                         ) : ticket.status === 'waiting_for_user' ? (
                           <Badge
                             variant="outline"
-                            className="text-[10px] uppercase font-mono border-amber-500/40 text-amber-300 px-1.5 py-0.5"
+                            className="text-[10px] uppercase font-mono border-amber-500/40 text-amber-600 dark:text-amber-300 px-1.5 py-0.5"
                           >
                             Waiting
                           </Badge>
@@ -238,8 +238,8 @@ export function AdminSupportTable({ initialTickets }: AdminSupportTableProps) {
                         <span
                           className={
                             ticket.priority === 'urgent' || ticket.priority === 'high'
-                              ? 'text-rose-400 font-bold'
-                              : 'text-zinc-400'
+                              ? 'text-rose-600 dark:text-rose-400 font-bold'
+                              : 'text-zinc-500 dark:text-zinc-400'
                           }
                         >
                           {ticket.priority}
@@ -255,7 +255,7 @@ export function AdminSupportTable({ initialTickets }: AdminSupportTableProps) {
                       <td className="py-3 px-3.5 sm:px-4 text-right whitespace-nowrap">
                         <Link
                           href={`/admin/support/${ticket.id}`}
-                          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-zinc-800/80 hover:bg-indigo-600 hover:text-white text-zinc-300 transition-colors text-[11px] font-medium"
+                          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 text-zinc-700 dark:text-zinc-300 transition-colors text-[11px] font-medium"
                         >
                           <span>Manage</span>
                           <ExternalLink className="w-3 h-3" />

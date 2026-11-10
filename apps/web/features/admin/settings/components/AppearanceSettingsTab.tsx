@@ -95,15 +95,15 @@ export function AppearanceSettingsTab({
   };
 
   return (
-    <Card className="p-5 sm:p-6 space-y-6 rounded-3xl border-zinc-800 bg-zinc-900/40">
+    <Card className="p-5 sm:p-6 space-y-6 rounded-3xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 shadow-sm dark:shadow-none">
       <div className="space-y-1.5">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-indigo-400" />
-          <h3 className="text-sm font-bold text-white tracking-wide uppercase">
+          <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+          <h3 className="text-sm font-bold text-zinc-900 dark:text-white tracking-wide uppercase">
             Visual Effects &amp; Scroll Performance Fidelity
           </h3>
         </div>
-        <p className="text-xs text-zinc-400 leading-relaxed max-w-2xl">
+        <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-2xl">
           Configure platform-wide visual rendering fidelity. This canonical backend setting controls
           backdrop blur filters, box-shadow convolutions, and ambient gradient glow orbs across all
           public and authenticated pages to optimize scrolling performance.
@@ -134,8 +134,8 @@ export function AppearanceSettingsTab({
               }}
               className={`group relative p-5 rounded-2xl border transition-all duration-200 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                 isSelected
-                  ? 'border-indigo-500/80 bg-indigo-950/20 shadow-md shadow-indigo-500/5'
-                  : 'border-zinc-800/80 bg-zinc-900/30 hover:border-zinc-700 hover:bg-zinc-900/60'
+                  ? 'border-indigo-500/80 bg-indigo-50/50 dark:bg-indigo-950/20 shadow-md shadow-indigo-500/5'
+                  : 'border-zinc-200 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-zinc-900/30 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-100/50 dark:hover:bg-zinc-900/60'
               }`}
             >
               <div className="flex items-start justify-between gap-4">
@@ -143,20 +143,24 @@ export function AppearanceSettingsTab({
                   <div
                     className={`mt-0.5 p-2 rounded-xl transition-colors ${
                       isSelected
-                        ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30'
-                        : 'bg-zinc-800/60 text-zinc-400 group-hover:text-zinc-200'
+                        ? 'bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30'
+                        : 'bg-zinc-100 dark:bg-zinc-800/60 text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-700 dark:group-hover:text-zinc-200'
                     }`}
                   >
                     <Icon className="w-5 h-5" />
                   </div>
                   <div className="space-y-1">
                     <div className="flex items-center gap-2.5 flex-wrap">
-                      <span className="text-sm font-semibold text-white">{option.title}</span>
+                      <span className="text-sm font-semibold text-zinc-900 dark:text-white">
+                        {option.title}
+                      </span>
                       <Badge variant={option.badgeVariant} size="sm">
                         {option.badge}
                       </Badge>
                     </div>
-                    <p className="text-xs text-zinc-400 leading-relaxed">{option.description}</p>
+                    <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                      {option.description}
+                    </p>
                   </div>
                 </div>
 
@@ -165,7 +169,7 @@ export function AppearanceSettingsTab({
                     className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${
                       isSelected
                         ? 'border-indigo-500 bg-indigo-600 text-white shadow-sm shadow-indigo-500/50'
-                        : 'border-zinc-700 bg-zinc-800/50 group-hover:border-zinc-600'
+                        : 'border-zinc-300 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800/50 group-hover:border-zinc-400 dark:group-hover:border-zinc-600'
                     }`}
                   >
                     {isSelected && <CheckCircle2 className="w-3.5 h-3.5" />}
@@ -174,28 +178,28 @@ export function AppearanceSettingsTab({
               </div>
 
               {/* Technical Specifications Grid */}
-              <div className="mt-4 pt-3.5 border-t border-zinc-800/60 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-[11px]">
+              <div className="mt-4 pt-3.5 border-t border-zinc-200 dark:border-zinc-800/60 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-[11px]">
                 <div>
-                  <span className="block text-zinc-500 font-medium">Backdrop Blur:</span>
-                  <span className="text-zinc-300 font-mono">{option.specs.backdropBlur}</span>
+                  <span className="block text-zinc-500 dark:text-zinc-400 font-medium">Backdrop Blur:</span>
+                  <span className="text-zinc-700 dark:text-zinc-300 font-mono">{option.specs.backdropBlur}</span>
                 </div>
                 <div>
-                  <span className="block text-zinc-500 font-medium">Shadow Convolutions:</span>
-                  <span className="text-zinc-300 font-mono">{option.specs.shadows}</span>
+                  <span className="block text-zinc-500 dark:text-zinc-400 font-medium">Shadow Convolutions:</span>
+                  <span className="text-zinc-700 dark:text-zinc-300 font-mono">{option.specs.shadows}</span>
                 </div>
                 <div>
-                  <span className="block text-zinc-500 font-medium">Ambient Atmosphere:</span>
-                  <span className="text-zinc-300 font-mono">{option.specs.ambientGlow}</span>
+                  <span className="block text-zinc-500 dark:text-zinc-400 font-medium">Ambient Atmosphere:</span>
+                  <span className="text-zinc-700 dark:text-zinc-300 font-mono">{option.specs.ambientGlow}</span>
                 </div>
                 <div>
-                  <span className="block text-zinc-500 font-medium">Scroll Speed:</span>
+                  <span className="block text-zinc-500 dark:text-zinc-400 font-medium">Scroll Speed:</span>
                   <span
                     className={
                       option.value === 'low'
-                        ? 'text-emerald-400 font-medium'
+                        ? 'text-emerald-600 dark:text-emerald-400 font-medium'
                         : option.value === 'medium'
-                          ? 'text-sky-400 font-medium'
-                          : 'text-amber-400 font-medium'
+                          ? 'text-sky-600 dark:text-sky-400 font-medium'
+                          : 'text-amber-600 dark:text-amber-400 font-medium'
                     }
                   >
                     {option.specs.scrollImpact}
@@ -208,17 +212,17 @@ export function AppearanceSettingsTab({
       </div>
 
       {/* Architecture & SSR Explanation Callout */}
-      <div className="p-4 rounded-2xl bg-zinc-950/60 border border-zinc-800 flex items-start gap-3">
-        <Info className="w-4 h-4 text-indigo-400 mt-0.5 shrink-0" />
-        <div className="text-xs text-zinc-400 space-y-1">
-          <p className="font-medium text-zinc-300">How This Setting Works</p>
+      <div className="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-200 dark:border-zinc-800 flex items-start gap-3">
+        <Info className="w-4 h-4 text-indigo-600 dark:text-indigo-400 mt-0.5 shrink-0" />
+        <div className="text-xs text-zinc-600 dark:text-zinc-400 space-y-1">
+          <p className="font-medium text-zinc-900 dark:text-zinc-300">How This Setting Works</p>
           <p>
             When saved, this updates the database{' '}
-            <code className="text-indigo-300 bg-indigo-950/40 px-1 py-0.5 rounded font-mono">
+            <code className="text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 px-1 py-0.5 rounded font-mono">
               SiteSetting[effects_level]
             </code>
             . The server injects the chosen mode directly into the root{' '}
-            <code className="text-indigo-300 bg-indigo-950/40 px-1 py-0.5 rounded font-mono">
+            <code className="text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 px-1 py-0.5 rounded font-mono">
               &lt;html data-effects=&quot;{currentLevel}&quot;&gt;
             </code>{' '}
             attribute on initial page load. All backdrop filters, box-shadows, and background atmosphere

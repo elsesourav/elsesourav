@@ -32,17 +32,17 @@ export function TopParticleControls({
   onChange,
 }: TopParticleControlsProps) {
   return (
-    <div className="space-y-3 p-4 rounded-2xl bg-zinc-900/40 border border-zinc-800">
-      <div className="flex items-center gap-2 border-b border-zinc-800/80 pb-2">
-        <Sparkles className="w-4 h-4 text-cyan-400" />
-        <h4 className="text-xs font-bold text-zinc-100 uppercase tracking-wider">
+    <div className="space-y-3 p-4 rounded-2xl bg-white dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800 shadow-sm dark:shadow-none">
+      <div className="flex items-center gap-2 border-b border-zinc-200 dark:border-zinc-800/80 pb-2">
+        <Sparkles className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+        <h4 className="text-xs font-bold text-zinc-900 dark:text-zinc-100 uppercase tracking-wider">
           Top Particles &amp; Rim Glow
         </h4>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         <div>
-          <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
+          <label className="text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 block mb-1">
             Particle Size
           </label>
           <Dropdown
@@ -54,7 +54,7 @@ export function TopParticleControls({
         </div>
 
         <div>
-          <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
+          <label className="text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 block mb-1">
             Particle Quantity
           </label>
           <Dropdown
@@ -66,7 +66,7 @@ export function TopParticleControls({
         </div>
 
         <div>
-          <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
+          <label className="text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 block mb-1">
             Movement Speed
           </label>
           <Dropdown
@@ -78,7 +78,7 @@ export function TopParticleControls({
         </div>
 
         <div>
-          <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
+          <label className="text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 block mb-1">
             Ribbon Path Spread
           </label>
           <Dropdown
@@ -90,7 +90,7 @@ export function TopParticleControls({
         </div>
 
         <div>
-          <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
+          <label className="text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 block mb-1">
             Glow Distance &amp; Reach
           </label>
           <Dropdown
@@ -102,7 +102,7 @@ export function TopParticleControls({
         </div>
 
         <div>
-          <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
+          <label className="text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 block mb-1">
             Photograph Rim Lighting
           </label>
           <Dropdown

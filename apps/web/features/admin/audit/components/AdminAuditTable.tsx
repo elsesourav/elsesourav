@@ -132,64 +132,64 @@ export function AdminAuditTable({ initialLogs, summary }: AdminAuditTableProps) 
     <div className="space-y-6">
       {/* Metric Tiles: 2x2 grid on mobile, 4-col on tablet and desktop */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4">
-        <Card className="p-3 sm:p-4 rounded-2xl sm:rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl">
+        <Card className="p-3 sm:p-4 rounded-2xl sm:rounded-3xl border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40 shadow-sm dark:shadow-none backdrop-blur-xl">
           <div className="flex items-center gap-2.5 sm:gap-3">
-            <div className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-indigo-950/60 border border-indigo-500/30 text-indigo-400 shrink-0">
+            <div className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-500/30 text-indigo-600 dark:text-indigo-400 shrink-0">
               <History className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div className="min-w-0">
-              <span className="text-[11px] sm:text-xs text-zinc-400 block font-medium truncate">
+              <span className="text-[11px] sm:text-xs text-zinc-600 dark:text-zinc-400 block font-medium truncate">
                 Total Logs
               </span>
-              <span className="text-lg sm:text-xl font-bold font-mono text-zinc-100">
+              <span className="text-lg sm:text-xl font-bold font-mono text-zinc-900 dark:text-zinc-100">
                 {summary.totalLogs}
               </span>
             </div>
           </div>
         </Card>
 
-        <Card className="p-3 sm:p-4 rounded-2xl sm:rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl">
+        <Card className="p-3 sm:p-4 rounded-2xl sm:rounded-3xl border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40 shadow-sm dark:shadow-none backdrop-blur-xl">
           <div className="flex items-center gap-2.5 sm:gap-3">
-            <div className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-cyan-950/60 border border-cyan-500/30 text-cyan-400 shrink-0">
+            <div className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-cyan-50 dark:bg-cyan-950/60 border border-cyan-200 dark:border-cyan-500/30 text-cyan-600 dark:text-cyan-400 shrink-0">
               <Activity className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div className="min-w-0">
-              <span className="text-[11px] sm:text-xs text-zinc-400 block font-medium truncate">
+              <span className="text-[11px] sm:text-xs text-zinc-600 dark:text-zinc-400 block font-medium truncate">
                 Last 24h
               </span>
-              <span className="text-lg sm:text-xl font-bold font-mono text-cyan-300">
+              <span className="text-lg sm:text-xl font-bold font-mono text-cyan-700 dark:text-cyan-300">
                 {summary.logsLast24Hours}
               </span>
             </div>
           </div>
         </Card>
 
-        <Card className="p-3 sm:p-4 rounded-2xl sm:rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl">
+        <Card className="p-3 sm:p-4 rounded-2xl sm:rounded-3xl border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40 shadow-sm dark:shadow-none backdrop-blur-xl">
           <div className="flex items-center gap-2.5 sm:gap-3">
-            <div className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-rose-950/60 border border-rose-500/30 text-rose-400 shrink-0">
+            <div className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-500/30 text-rose-600 dark:text-rose-400 shrink-0">
               <ShieldAlert className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div className="min-w-0">
-              <span className="text-[11px] sm:text-xs text-zinc-400 block font-medium truncate">
+              <span className="text-[11px] sm:text-xs text-zinc-600 dark:text-zinc-400 block font-medium truncate">
                 Alerts
               </span>
-              <span className="text-lg sm:text-xl font-bold font-mono text-rose-300">
+              <span className="text-lg sm:text-xl font-bold font-mono text-rose-700 dark:text-rose-300">
                 {summary.securityAlertsCount}
               </span>
             </div>
           </div>
         </Card>
 
-        <Card className="p-3 sm:p-4 rounded-2xl sm:rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl">
+        <Card className="p-3 sm:p-4 rounded-2xl sm:rounded-3xl border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40 shadow-sm dark:shadow-none backdrop-blur-xl">
           <div className="flex items-center gap-2.5 sm:gap-3">
-            <div className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-amber-950/60 border border-amber-500/30 text-amber-400 shrink-0">
+            <div className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-500/30 text-amber-600 dark:text-amber-400 shrink-0">
               <UserCheck className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div className="min-w-0">
-              <span className="text-[11px] sm:text-xs text-zinc-400 block font-medium truncate">
+              <span className="text-[11px] sm:text-xs text-zinc-600 dark:text-zinc-400 block font-medium truncate">
                 Unique Actors
               </span>
-              <span className="text-lg sm:text-xl font-bold font-mono text-amber-300">
+              <span className="text-lg sm:text-xl font-bold font-mono text-amber-700 dark:text-amber-300">
                 {summary.uniqueActorsCount}
               </span>
             </div>
@@ -201,13 +201,13 @@ export function AdminAuditTable({ initialLogs, summary }: AdminAuditTableProps) 
       <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-center">
         {/* Search Input */}
         <div className="relative sm:col-span-6 lg:col-span-6">
-          <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Search className="w-4 h-4 text-zinc-400 dark:text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <Input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by action, resource ID, or actor..."
-            className="bg-zinc-900/60 border-zinc-800 text-xs pl-9 rounded-xl text-zinc-100 placeholder:text-zinc-500 h-9"
+            className="bg-white dark:bg-zinc-900/60 border-zinc-200 dark:border-zinc-800 text-xs pl-9 rounded-xl text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 h-9"
           />
         </div>
 
@@ -230,10 +230,10 @@ export function AdminAuditTable({ initialLogs, summary }: AdminAuditTableProps) 
       </div>
 
       {/* Audit Log Table */}
-      <Card className="rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl overflow-hidden">
+      <Card className="rounded-3xl border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40 shadow-sm dark:shadow-none backdrop-blur-xl overflow-hidden">
         <div className="overflow-x-auto scrollbar-thin">
-          <table className="w-full text-left text-xs text-zinc-300 min-w-[640px] table-fixed">
-            <thead className="border-b border-zinc-800 bg-zinc-950/60 text-zinc-400 font-mono uppercase text-[10px]">
+          <table className="w-full text-left text-xs text-zinc-700 dark:text-zinc-300 min-w-[640px] table-fixed">
+            <thead className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50/80 dark:bg-zinc-950/60 text-zinc-600 dark:text-zinc-400 font-mono uppercase text-[10px]">
               <tr>
                 <th className="py-3 px-3.5 w-32">Timestamp</th>
                 <th className="py-3 px-3.5 w-36">Actor</th>
@@ -243,7 +243,7 @@ export function AdminAuditTable({ initialLogs, summary }: AdminAuditTableProps) 
                 <th className="py-3 px-3.5 w-20 text-right">Details</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-800/60 font-sans">
+            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800/60 font-sans">
               {filteredLogs.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="py-12 text-center text-zinc-500">
@@ -257,24 +257,24 @@ export function AdminAuditTable({ initialLogs, summary }: AdminAuditTableProps) 
                   const formattedTime = dateObj.toLocaleTimeString();
 
                   return (
-                    <tr key={log.id} className="hover:bg-zinc-800/30 transition-colors">
+                    <tr key={log.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition-colors">
                       {/* Timestamp */}
-                      <td className="py-3 px-3.5 whitespace-nowrap font-mono text-[11px] text-zinc-400">
+                      <td className="py-3 px-3.5 whitespace-nowrap font-mono text-[11px] text-zinc-600 dark:text-zinc-400">
                         <div className="flex items-center gap-1.5">
-                          <Calendar className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
+                          <Calendar className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
                           <span>{formattedDate}</span>
-                          <span className="text-zinc-600">{formattedTime}</span>
+                          <span className="text-zinc-400 dark:text-zinc-600">{formattedTime}</span>
                         </div>
                       </td>
 
                       {/* Actor */}
                       <td className="py-3 px-3.5 whitespace-nowrap">
                         <div className="flex items-center gap-2 min-w-0">
-                          <div className="w-6 h-6 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-[10px] font-bold text-zinc-200 uppercase shrink-0">
+                          <div className="w-6 h-6 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center text-[10px] font-bold text-zinc-800 dark:text-zinc-200 uppercase shrink-0">
                             {log.actor?.displayName ? log.actor.displayName[0] : 'U'}
                           </div>
                           <div className="min-w-0">
-                            <div className="font-semibold text-zinc-200 truncate">
+                            <div className="font-semibold text-zinc-900 dark:text-zinc-200 truncate">
                               {log.actor?.displayName || 'System'}
                             </div>
                             <div className="text-[10px] text-zinc-500 font-mono truncate">
@@ -291,19 +291,19 @@ export function AdminAuditTable({ initialLogs, summary }: AdminAuditTableProps) 
 
                       {/* Resource */}
                       <td className="py-3 px-3.5 whitespace-nowrap">
-                        <span className="font-mono text-[11px] text-zinc-300 bg-zinc-950/60 px-2 py-0.5 rounded border border-zinc-800 inline-block truncate max-w-full">
+                        <span className="font-mono text-[11px] text-zinc-800 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-950/60 px-2 py-0.5 rounded border border-zinc-200 dark:border-zinc-800 inline-block truncate max-w-full">
                           {log.entityType}
                         </span>
                       </td>
 
                       {/* Entity ID */}
-                      <td className="py-3 px-3.5 whitespace-nowrap font-mono text-[11px] text-zinc-400">
+                      <td className="py-3 px-3.5 whitespace-nowrap font-mono text-[11px] text-zinc-600 dark:text-zinc-400">
                         {log.entityId ? (
                           <span className="truncate block max-w-[120px]" title={log.entityId}>
                             {log.entityId}
                           </span>
                         ) : (
-                          <span className="text-zinc-600">—</span>
+                          <span className="text-zinc-400 dark:text-zinc-600">—</span>
                         )}
                       </td>
 
@@ -314,8 +314,8 @@ export function AdminAuditTable({ initialLogs, summary }: AdminAuditTableProps) 
                           variant="ghost"
                           size="xs"
                           onClick={() => setInspectingLog(log)}
-                          leftIcon={<Code2 className="w-3 h-3 text-indigo-400" />}
-                          className="font-mono text-[11px] bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 rounded-lg px-2.5 py-1"
+                          leftIcon={<Code2 className="w-3 h-3 text-indigo-600 dark:text-indigo-400" />}
+                          className="font-mono text-[11px] bg-zinc-100 dark:bg-zinc-800/80 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg px-2.5 py-1"
                         >
                           Inspect
                         </Button>
@@ -329,10 +329,10 @@ export function AdminAuditTable({ initialLogs, summary }: AdminAuditTableProps) 
         </div>
 
         {/* Footer Pagination */}
-        <div className="p-3.5 sm:p-4 border-t border-zinc-800/80 bg-zinc-950/40 flex items-center justify-between text-xs text-zinc-500">
+        <div className="p-3.5 sm:p-4 border-t border-zinc-200 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-zinc-950/40 flex items-center justify-between text-xs text-zinc-500">
           <span>
-            Showing <strong className="text-zinc-300">{filteredLogs.length}</strong> of{' '}
-            <strong className="text-zinc-300">{initialLogs.total}</strong> records
+            Showing <strong className="text-zinc-900 dark:text-zinc-300">{filteredLogs.length}</strong> of{' '}
+            <strong className="text-zinc-900 dark:text-zinc-300">{initialLogs.total}</strong> records
           </span>
           <div className="flex items-center gap-2">
             <IconButton
@@ -341,10 +341,10 @@ export function AdminAuditTable({ initialLogs, summary }: AdminAuditTableProps) 
               size="icon-xs"
               disabled={initialLogs.page <= 1}
               aria-label="Previous page"
-              icon={<ChevronLeft className="w-4 h-4 text-zinc-400" />}
-              className="rounded-lg border-zinc-800"
+              icon={<ChevronLeft className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />}
+              className="rounded-lg border-zinc-200 dark:border-zinc-800"
             />
-            <span className="font-mono text-zinc-400 text-[11px]">
+            <span className="font-mono text-zinc-600 dark:text-zinc-400 text-[11px]">
               Page {initialLogs.page} of {initialLogs.totalPages}
             </span>
             <IconButton
@@ -353,8 +353,8 @@ export function AdminAuditTable({ initialLogs, summary }: AdminAuditTableProps) 
               size="icon-xs"
               disabled={initialLogs.page >= initialLogs.totalPages}
               aria-label="Next page"
-              icon={<ChevronRight className="w-4 h-4 text-zinc-400" />}
-              className="rounded-lg border-zinc-800"
+              icon={<ChevronRight className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />}
+              className="rounded-lg border-zinc-200 dark:border-zinc-800"
             />
           </div>
         </div>
@@ -362,12 +362,12 @@ export function AdminAuditTable({ initialLogs, summary }: AdminAuditTableProps) 
 
       {/* Inspect Metadata Modal */}
       {inspectingLog && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-          <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800 rounded-3xl p-5 sm:p-6 space-y-4 animate-in fade-in zoom-in-95 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+        <div className="fixed inset-0 z-50 bg-black/60 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+          <Card className="w-full max-w-lg bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-3xl p-5 sm:p-6 space-y-4 shadow-2xl animate-in fade-in zoom-in-95 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-3">
               <div className="flex items-center gap-2">
-                <Lock className="w-4 h-4 text-indigo-400" />
-                <h3 className="text-sm font-bold text-zinc-100">Audit Log Details</h3>
+                <Lock className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">Audit Log Details</h3>
               </div>
               <IconButton
                 type="button"
@@ -375,32 +375,32 @@ export function AdminAuditTable({ initialLogs, summary }: AdminAuditTableProps) 
                 size="icon-xs"
                 onClick={() => setInspectingLog(null)}
                 aria-label="Close details"
-                icon={<X className="w-4 h-4 text-zinc-400 hover:text-zinc-200" />}
+                icon={<X className="w-4 h-4 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200" />}
                 className="rounded-lg"
               />
             </div>
 
             <div className="space-y-3 text-xs">
               <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
-                <div className="p-2 rounded-xl bg-zinc-950 border border-zinc-800/80">
+                <div className="p-2 rounded-xl bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800/80">
                   <span className="text-zinc-500 block">Action</span>
-                  <span className="text-zinc-200 font-semibold truncate block">
+                  <span className="text-zinc-900 dark:text-zinc-200 font-semibold truncate block">
                     {inspectingLog.action}
                   </span>
                 </div>
-                <div className="p-2 rounded-xl bg-zinc-950 border border-zinc-800/80">
+                <div className="p-2 rounded-xl bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800/80">
                   <span className="text-zinc-500 block">Resource</span>
-                  <span className="text-zinc-200 font-semibold truncate block">
+                  <span className="text-zinc-900 dark:text-zinc-200 font-semibold truncate block">
                     {inspectingLog.entityType}
                   </span>
                 </div>
               </div>
 
               <div className="space-y-1">
-                <span className="text-zinc-400 block font-medium">
+                <span className="text-zinc-600 dark:text-zinc-400 block font-medium">
                   Sanitized Audit Payload (JSON)
                 </span>
-                <pre className="p-3.5 rounded-xl bg-zinc-950 border border-zinc-800 font-mono text-[11px] text-zinc-300 overflow-x-auto max-h-64">
+                <pre className="p-3.5 rounded-xl bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 font-mono text-[11px] text-zinc-800 dark:text-zinc-300 overflow-x-auto max-h-64">
                   {JSON.stringify(inspectingLog.details || {}, null, 2)}
                 </pre>
               </div>

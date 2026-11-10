@@ -35,7 +35,7 @@ function renderHighlightedHeadline(headline: string, isLight: boolean) {
         stagger={0.06}
         className={
           isLight
-            ? 'text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-700 font-bold'
+            ? 'text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-indigo-700 to-violet-800 font-bold'
             : 'text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-indigo-200 to-purple-300 font-bold drop-shadow-[0_2px_14px_rgba(129,140,248,0.25)]'
         }
       />
@@ -58,7 +58,7 @@ function renderHighlightedHeadline(headline: string, isLight: boolean) {
         by="word"
         delay={0.08}
         stagger={0.05}
-        className={isLight ? 'text-slate-900 font-bold' : 'text-white font-bold'}
+        className={isLight ? 'text-slate-950 font-bold' : 'text-white font-bold'}
       />{' '}
       <TextReveal
         text={highlightPart}
@@ -67,7 +67,7 @@ function renderHighlightedHeadline(headline: string, isLight: boolean) {
         stagger={0.05}
         className={
           isLight
-            ? 'text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-700 font-bold'
+            ? 'text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-indigo-700 to-violet-800 font-bold'
             : 'text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-indigo-200 to-purple-300 font-bold drop-shadow-[0_2px_14px_rgba(129,140,248,0.25)]'
         }
       />
@@ -101,7 +101,7 @@ export function HomeHero({
     <Section
       id="hero"
       spacing="none"
-      className="relative isolate overflow-hidden min-h-[calc(100dvh-3.5rem)] sm:min-h-[720px] lg:min-h-[800px] xl:min-h-[860px] flex items-center justify-center pt-16 sm:pt-24 lg:pt-32 pb-6 sm:pb-12 lg:pb-16"
+      className="relative isolate overflow-hidden min-h-[calc(100dvh-3.5rem)] sm:min-h-[720px] lg:min-h-[800px] xl:min-h-[860px] flex items-center justify-center pt-14 sm:pt-24 lg:pt-32 pb-8 sm:pb-12 lg:pb-16"
     >
       {/* ── 1. Full-Cover Window Background (Starts at y=0 from top of viewport) ── */}
       <div
@@ -109,9 +109,9 @@ export function HomeHero({
         className="absolute inset-0 z-0 w-full h-full pointer-events-none select-none overflow-hidden"
         style={{ touchAction: 'pan-y' }}
       >
-        {/* Dark Theme Background Layers (Cosmic Night Sky - High blur on mobile for soft atmospheric depth) */}
+        {/* Dark Theme Background Layers (Cosmic Night Sky) */}
         <div
-          className={`absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-700 ease-in-out blur-[4px] sm:blur-[5px] md:blur-0 scale-110 md:scale-100 ${
+          className={`absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-700 ease-in-out blur-[3px] sm:blur-[4px] md:blur-0 scale-105 md:scale-100 ${
             isLight ? 'opacity-0' : 'opacity-100'
           }`}
           style={{ touchAction: 'pan-y' }}
@@ -120,7 +120,7 @@ export function HomeHero({
           <img
             src="/hero/sky-bg-thumb.webp"
             alt=""
-            className={`w-full h-full object-cover object-[82%_center] md:object-center scale-[1.03] transition-all duration-700 ease-out pointer-events-none ${
+            className={`w-full h-full object-cover object-[35%_center] md:object-center scale-[1.03] transition-all duration-700 ease-out pointer-events-none ${
               isDarkBgLoaded ? 'opacity-0' : 'opacity-100'
             }`}
             draggable={false}
@@ -129,7 +129,7 @@ export function HomeHero({
           <img
             src="/hero/sky-bg.webp"
             alt=""
-            className={`absolute inset-0 w-full h-full object-cover object-[82%_center] md:object-center scale-[1.02] transition-opacity duration-700 ease-out pointer-events-none ${
+            className={`absolute inset-0 w-full h-full object-cover object-[35%_center] md:object-center scale-[1.02] transition-opacity duration-700 ease-out pointer-events-none ${
               isDarkBgLoaded ? 'opacity-100' : 'opacity-0'
             }`}
             loading="eager"
@@ -138,9 +138,9 @@ export function HomeHero({
           />
         </div>
 
-        {/* Light Theme Background Layers (Daylight Cloudscape - High blur on mobile for soft atmospheric depth) */}
+        {/* Light Theme Background Layers (Daylight Cloudscape - Luminous, soft atmospheric depth) */}
         <div
-          className={`absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-700 ease-in-out blur-[4px] sm:blur-[5px] md:blur-0 scale-110 md:scale-100 ${
+          className={`absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-700 ease-in-out blur-[2px] sm:blur-[3px] md:blur-0 scale-105 md:scale-100 ${
             isLight ? 'opacity-100' : 'opacity-0'
           }`}
           style={{ touchAction: 'pan-y' }}
@@ -149,7 +149,7 @@ export function HomeHero({
           <img
             src="/hero/sky-light-bg-thumb.webp"
             alt=""
-            className={`w-full h-full object-cover object-[82%_center] md:object-center scale-[1.03] transition-all duration-700 ease-out pointer-events-none ${
+            className={`w-full h-full object-cover object-[35%_center] md:object-center scale-[1.03] transition-all duration-700 ease-out pointer-events-none ${
               isLightBgLoaded ? 'opacity-0' : 'opacity-100'
             }`}
             draggable={false}
@@ -158,7 +158,7 @@ export function HomeHero({
           <img
             src="/hero/sky-light-bg.webp"
             alt=""
-            className={`absolute inset-0 w-full h-full object-cover object-[82%_center] md:object-center scale-[1.02] transition-opacity duration-700 ease-out pointer-events-none ${
+            className={`absolute inset-0 w-full h-full object-cover object-[35%_center] md:object-center scale-[1.02] transition-opacity duration-700 ease-out pointer-events-none ${
               isLightBgLoaded ? 'opacity-100' : 'opacity-0'
             }`}
             loading="eager"
@@ -191,21 +191,21 @@ export function HomeHero({
           }
         />
 
-        {/* Ambient Contrast Gradient: Left-weighted on desktop, soft diagonal on mobile to showcase right-side nebula */}
+        {/* Ambient Contrast Gradient: Left-weighted on desktop, luminous readable foundation on mobile */}
         <div
           className="hidden md:block absolute inset-0 pointer-events-none transition-all duration-700"
           style={{
             background: isLight
-              ? 'linear-gradient(90deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.65) 35%, rgba(255,255,255,0.15) 65%, transparent 100%)'
-              : 'linear-gradient(90deg, rgba(9,9,11,0.88) 0%, rgba(9,9,11,0.65) 35%, rgba(9,9,11,0.2) 65%, transparent 100%)',
+              ? 'linear-gradient(90deg, rgba(255,255,255,0.94) 0%, rgba(255,255,255,0.80) 38%, rgba(255,255,255,0.22) 68%, transparent 100%)'
+              : 'linear-gradient(90deg, rgba(9,9,11,0.92) 0%, rgba(9,9,11,0.72) 38%, rgba(9,9,11,0.2) 68%, transparent 100%)',
           }}
         />
         <div
           className="md:hidden absolute inset-0 pointer-events-none transition-all duration-700"
           style={{
             background: isLight
-              ? 'linear-gradient(135deg, rgba(255,255,255,0.82) 0%, rgba(255,255,255,0.45) 50%, rgba(255,255,255,0.05) 85%, transparent 100%)'
-              : 'linear-gradient(135deg, rgba(9,9,11,0.82) 0%, rgba(9,9,11,0.45) 50%, rgba(9,9,11,0.05) 85%, transparent 100%)',
+              ? 'linear-gradient(180deg, rgba(255,255,255,0.70) 0%, rgba(255,255,255,0.85) 30%, rgba(255,255,255,0.95) 60%, rgba(255,255,255,1) 100%)'
+              : 'linear-gradient(180deg, rgba(9,9,11,0.65) 0%, rgba(9,9,11,0.78) 30%, rgba(9,9,11,0.90) 60%, rgba(9,9,11,0.98) 100%)',
           }}
         />
 
@@ -236,30 +236,23 @@ export function HomeHero({
         className="relative z-10 w-full max-w-[1536px] px-3 sm:px-6 lg:px-8 xl:px-12 my-auto"
       >
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-6 items-center relative">
-          {/* Mobile-Only Static Floating Island Image: Single lightweight static image with high blur for soft atmospheric depth & 0% lag */}
-          <div
-            aria-hidden="true"
-            className="md:hidden absolute -right-6 sm:-right-4 -top-2 sm:top-2 w-[280px] sm:w-[360px] pointer-events-none select-none z-0 overflow-visible opacity-85 dark:opacity-90"
-          >
-            <img
-              src="/hero/floating-island-mobile.webp"
-              alt=""
-              width={560}
-              height={485}
-              className="w-full h-auto object-contain blur-[4px] sm:blur-[5px] scale-105 drop-shadow-[0_16px_32px_rgba(0,0,0,0.6)] transition-all"
-              loading="eager"
-              draggable={false}
-            />
+          {/* Mobile-Only Interactive Floating Island (Top Center with live laptop canvas) */}
+          <div className="md:hidden flex justify-center items-center w-full pt-0 pb-1">
+            <Reveal direction="down" distance={12} delay={0}>
+              <div className="w-[195px] xs:w-[225px] sm:w-[260px]">
+                <EarthScene isSceneActive={isSceneActive} isMobileCompact />
+              </div>
+            </Reveal>
           </div>
 
           {/* Left Column: Hero Narrative, CTAs & Metrics (7 columns on iPad & desktop for wider text lines & larger headline) */}
-          <div className="relative z-10 md:col-span-7 xl:col-span-7 space-y-4 sm:space-y-6 text-left max-w-2xl lg:max-w-[44rem] xl:max-w-[48rem]">
+          <div className="relative z-10 md:col-span-7 xl:col-span-7 space-y-3.5 sm:space-y-6 text-left max-w-2xl lg:max-w-[44rem] xl:max-w-[48rem]">
             <Reveal direction="down" distance={12}>
               {/* Studio Pill Badge */}
               <div
-                className={`inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full border text-[11px] sm:text-xs font-medium tracking-wide backdrop-blur-md transition-colors ${
+                className={`inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full border text-[11px] sm:text-xs font-semibold tracking-wide backdrop-blur-md transition-colors ${
                   isLight
-                    ? 'border-indigo-600/25 bg-indigo-50/80 text-indigo-700'
+                    ? 'border-indigo-600/30 bg-white/90 text-indigo-700 shadow-xs'
                     : 'border-indigo-500/25 bg-indigo-500/10 text-indigo-400'
                 }`}
               >
@@ -286,7 +279,7 @@ export function HomeHero({
 
             {/* Main Highlight: Showcases application ecosystem & why this studio is helpful */}
             <Reveal direction="up" distance={16} delay={100}>
-              <h1 className="text-[1.65rem] sm:text-3xl md:text-4xl lg:text-[3.15rem] xl:text-[3.6rem] font-bold tracking-tight leading-[1.18] sm:leading-[1.16] lg:leading-[1.14] break-words">
+              <h1 className="text-[1.65rem] sm:text-3xl md:text-4xl lg:text-[3.15rem] xl:text-[3.6rem] font-extrabold tracking-tight leading-[1.18] sm:leading-[1.16] lg:leading-[1.14] break-words">
                 {renderHighlightedHeadline(
                   heroHeadline ||
                     'Building software, tools, games, and experiments that solve real problems and spark new ideas.',
@@ -299,7 +292,7 @@ export function HomeHero({
             <Reveal direction="up" distance={14} delay={150}>
               <p
                 className={`text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed max-w-xl ${
-                  isLight ? 'text-slate-700' : 'text-zinc-300/90'
+                  isLight ? 'text-slate-800' : 'text-zinc-300/90'
                 }`}
               >
                 <TextReveal
@@ -313,7 +306,7 @@ export function HomeHero({
                   by="word"
                   delay={0.35}
                   stagger={0.025}
-                  className={isLight ? 'text-slate-700' : 'text-zinc-300/90'}
+                  className={isLight ? 'text-slate-800 font-medium' : 'text-zinc-300/90'}
                 />
               </p>
             </Reveal>
@@ -334,7 +327,7 @@ export function HomeHero({
                   href={ROUTES.ABOUT}
                   className={`inline-flex items-center justify-center px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold backdrop-blur-md active:scale-95 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                     isLight
-                      ? 'text-slate-800 bg-black/5 hover:bg-black/10 border border-black/10 hover:border-black/20'
+                      ? 'text-slate-900 bg-white/90 hover:bg-white border border-slate-300/80 hover:border-slate-400 shadow-xs'
                       : 'text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20'
                   }`}
                 >
@@ -347,7 +340,7 @@ export function HomeHero({
             <Reveal direction="up" distance={10} delay={250}>
               <div
                 className={`pt-4 sm:pt-6 grid grid-cols-3 gap-1.5 sm:gap-3 md:gap-4 max-w-lg border-t ${
-                  isLight ? 'border-black/10' : 'border-white/10'
+                  isLight ? 'border-slate-300/70' : 'border-white/10'
                 }`}
               >
                 {/* Metric 1: Projects */}
@@ -355,7 +348,7 @@ export function HomeHero({
                   <div
                     className={`w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 border ${
                       isLight
-                        ? 'bg-purple-500/15 border-purple-500/30 text-purple-600'
+                        ? 'bg-purple-100 border-purple-300 text-purple-700'
                         : 'bg-purple-500/10 border-purple-500/25 text-purple-400'
                     }`}
                   >
@@ -363,15 +356,15 @@ export function HomeHero({
                   </div>
                   <div className="min-w-0">
                     <div
-                      className={`text-xs sm:text-sm font-bold truncate ${
-                        isLight ? 'text-slate-900' : 'text-white'
+                      className={`text-xs sm:text-sm font-extrabold truncate ${
+                        isLight ? 'text-slate-950' : 'text-white'
                       }`}
                     >
                       {displayCount}
                     </div>
                     <div
-                      className={`text-[9px] sm:text-[10px] md:text-[11px] leading-tight truncate ${
-                        isLight ? 'text-slate-600' : 'text-[hsl(var(--muted-foreground))]'
+                      className={`text-[9px] sm:text-[10px] md:text-[11px] leading-tight truncate font-semibold ${
+                        isLight ? 'text-slate-700' : 'text-[hsl(var(--muted-foreground))]'
                       }`}
                     >
                       Projects
@@ -384,7 +377,7 @@ export function HomeHero({
                   <div
                     className={`w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 border ${
                       isLight
-                        ? 'bg-blue-500/15 border-blue-500/30 text-blue-600'
+                        ? 'bg-blue-100 border-blue-300 text-blue-700'
                         : 'bg-blue-500/10 border-blue-500/25 text-blue-400'
                     }`}
                   >
@@ -392,15 +385,15 @@ export function HomeHero({
                   </div>
                   <div className="min-w-0">
                     <div
-                      className={`text-xs sm:text-sm font-bold truncate ${
-                        isLight ? 'text-slate-900' : 'text-white'
+                      className={`text-xs sm:text-sm font-extrabold truncate ${
+                        isLight ? 'text-slate-950' : 'text-white'
                       }`}
                     >
                       100%
                     </div>
                     <div
-                      className={`text-[9px] sm:text-[10px] md:text-[11px] leading-tight ${
-                        isLight ? 'text-slate-600' : 'text-[hsl(var(--muted-foreground))]'
+                      className={`text-[9px] sm:text-[10px] md:text-[11px] leading-tight font-semibold ${
+                        isLight ? 'text-slate-700' : 'text-[hsl(var(--muted-foreground))]'
                       }`}
                     >
                       Passion
@@ -413,7 +406,7 @@ export function HomeHero({
                   <div
                     className={`w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 border ${
                       isLight
-                        ? 'bg-indigo-500/15 border-indigo-500/30 text-indigo-600'
+                        ? 'bg-indigo-100 border-indigo-300 text-indigo-700'
                         : 'bg-indigo-500/10 border-indigo-500/25 text-indigo-400'
                     }`}
                   >
@@ -421,15 +414,15 @@ export function HomeHero({
                   </div>
                   <div className="min-w-0">
                     <div
-                      className={`text-xs sm:text-sm font-bold truncate ${
-                        isLight ? 'text-slate-900' : 'text-white'
+                      className={`text-xs sm:text-sm font-extrabold truncate ${
+                        isLight ? 'text-slate-950' : 'text-white'
                       }`}
                     >
                       Open
                     </div>
                     <div
-                      className={`text-[9px] sm:text-[10px] md:text-[11px] leading-tight truncate ${
-                        isLight ? 'text-slate-600' : 'text-[hsl(var(--muted-foreground))]'
+                      className={`text-[9px] sm:text-[10px] md:text-[11px] leading-tight truncate font-semibold ${
+                        isLight ? 'text-slate-700' : 'text-[hsl(var(--muted-foreground))]'
                       }`}
                     >
                       Opportunities

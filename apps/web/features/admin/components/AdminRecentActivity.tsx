@@ -37,9 +37,9 @@ function getActivityIcon(type: AdminActivityItem['type']) {
 export function AdminRecentActivity({ activities }: AdminRecentActivityProps) {
   if (activities.length === 0) {
     return (
-      <Card className="p-6 sm:p-8 text-center rounded-2xl sm:rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl">
-        <Activity className="w-8 h-8 text-zinc-500 mx-auto mb-2" />
-        <h4 className="text-sm font-semibold text-zinc-200">No recent activity</h4>
+      <Card className="p-6 sm:p-8 text-center rounded-2xl sm:rounded-3xl border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40 backdrop-blur-xl shadow-sm">
+        <Activity className="w-8 h-8 text-zinc-400 dark:text-zinc-500 mx-auto mb-2" />
+        <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-200">No recent activity</h4>
         <p className="text-xs text-zinc-500 mt-1">
           Platform operations and tickets will appear here.
         </p>
@@ -48,20 +48,20 @@ export function AdminRecentActivity({ activities }: AdminRecentActivityProps) {
   }
 
   return (
-    <Card className="rounded-2xl sm:rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl overflow-hidden">
-      <CardHeader className="p-4 sm:p-6 pb-3 sm:pb-4 border-b border-zinc-800/50">
+    <Card className="rounded-2xl sm:rounded-3xl border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40 backdrop-blur-xl overflow-hidden shadow-sm">
+      <CardHeader className="p-4 sm:p-6 pb-3 sm:pb-4 border-b border-zinc-100 dark:border-zinc-800/50">
         <div className="flex items-center gap-2">
-          <Activity className="w-4 h-4 text-indigo-400 shrink-0" />
-          <CardTitle className="text-sm sm:text-base text-zinc-100 font-bold">
+          <Activity className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
+          <CardTitle className="text-sm sm:text-base text-zinc-900 dark:text-zinc-100 font-bold">
             Recent Platform Activity
           </CardTitle>
         </div>
-        <CardDescription className="text-xs text-zinc-400">
+        <CardDescription className="text-xs text-zinc-500 dark:text-zinc-400">
           Live feed of ticket triage, app releases, and engineering devlogs.
         </CardDescription>
       </CardHeader>
 
-      <div className="p-3.5 sm:p-6 divide-y divide-zinc-800/60">
+      <div className="p-3.5 sm:p-6 divide-y divide-zinc-100 dark:divide-zinc-800/60">
         {activities.map((item) => {
           const date = new Date(item.timestamp).toLocaleDateString('en-US', {
             month: 'short',
@@ -74,16 +74,16 @@ export function AdminRecentActivity({ activities }: AdminRecentActivityProps) {
             <Link
               key={item.id}
               href={item.link}
-              className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 py-3 sm:py-3.5 first:pt-1 last:pb-1 hover:bg-zinc-800/40 -mx-1.5 sm:-mx-3 px-2 sm:px-3 rounded-xl transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 py-3 sm:py-3.5 first:pt-1 last:pb-1 hover:bg-zinc-50 dark:hover:bg-zinc-800/40 -mx-1.5 sm:-mx-3 px-2 sm:px-3 rounded-xl transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
             >
               <div className="flex items-start gap-2.5 sm:gap-3 min-w-0 flex-1">
-                <div className="w-8 h-8 rounded-xl bg-zinc-800/80 border border-zinc-700/60 flex items-center justify-center shrink-0 mt-0.5">
+                <div className="w-8 h-8 rounded-xl bg-zinc-100 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700/60 flex items-center justify-center shrink-0 mt-0.5">
                   {getActivityIcon(item.type)}
                 </div>
 
                 <div className="space-y-0.5 min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                    <h5 className="text-xs font-semibold text-zinc-200 truncate group-hover:text-indigo-300 transition-colors">
+                    <h5 className="text-xs font-semibold text-zinc-900 dark:text-zinc-200 truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors">
                       {item.title}
                     </h5>
                     <Badge
@@ -93,15 +93,15 @@ export function AdminRecentActivity({ activities }: AdminRecentActivityProps) {
                       {item.status}
                     </Badge>
                   </div>
-                  <p className="text-[11px] text-zinc-400 truncate">{item.subtitle}</p>
+                  <p className="text-[11px] text-zinc-500 dark:text-zinc-400 truncate">{item.subtitle}</p>
                 </div>
               </div>
 
               {/* Timestamp & Link Icon: Neatly aligned on mobile with pl-10, right-aligned on desktop */}
-              <div className="flex items-center gap-1.5 shrink-0 text-[10px] sm:text-[11px] text-zinc-400 sm:text-zinc-500 pl-10.5 sm:pl-0">
-                <Clock className="w-3 h-3 text-zinc-500 shrink-0" />
+              <div className="flex items-center gap-1.5 shrink-0 text-[10px] sm:text-[11px] text-zinc-500 dark:text-zinc-400 pl-10.5 sm:pl-0">
+                <Clock className="w-3 h-3 text-zinc-400 dark:text-zinc-500 shrink-0" />
                 <span className="font-mono">{date}</span>
-                <ArrowUpRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-zinc-300 transition-colors ml-0.5 shrink-0" />
+                <ArrowUpRight className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-700 dark:group-hover:text-zinc-300 transition-colors ml-0.5 shrink-0" />
               </div>
             </Link>
           );

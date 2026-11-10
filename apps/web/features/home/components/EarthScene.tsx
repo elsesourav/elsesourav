@@ -7,11 +7,15 @@ import { useProgressiveImage } from './useProgressiveImage';
 
 export interface EarthSceneProps {
   isSceneActive?: boolean;
+  isMobileCompact?: boolean;
   isMobileBackdrop?: boolean;
 }
 
-export function EarthScene({ isSceneActive = true, isMobileBackdrop = false }: EarthSceneProps) {
-  // On mobile backdrop, avoid downloading the 172KB high-res image; load only lightweight thumb with blur
+export function EarthScene({
+  isSceneActive = true,
+  isMobileCompact = false,
+  isMobileBackdrop = false,
+}: EarthSceneProps) {
   const [isIslandLoaded, markIslandLoaded] = useProgressiveImage(
     isMobileBackdrop ? '' : '/hero/parts/island-main.webp'
   );
@@ -30,10 +34,12 @@ export function EarthScene({ isSceneActive = true, isMobileBackdrop = false }: E
 
   return (
     <div
-      className={`relative isolate w-full h-full ${
-        isMobileBackdrop
-          ? 'min-h-[280px] flex items-center justify-center select-none overflow-visible'
-          : 'min-h-[380px] sm:min-h-[440px] lg:min-h-[500px] flex items-center justify-center select-none overflow-hidden sm:overflow-visible'
+      className={`relative isolate w-full flex items-center justify-center select-none ${
+        isMobileCompact
+          ? 'h-auto py-1 overflow-visible'
+          : isMobileBackdrop
+          ? 'h-full min-h-[280px] overflow-visible'
+          : 'h-full min-h-[380px] sm:min-h-[440px] lg:min-h-[500px] overflow-hidden sm:overflow-visible'
       } ${!isSceneActive ? 'hero-scene-paused' : ''}`}
     >
       {/* Subtle warm planetary ambient light behind the island */}
@@ -46,8 +52,14 @@ export function EarthScene({ isSceneActive = true, isMobileBackdrop = false }: E
         }}
       />
 
-      {/* Compact Coordinate Stage (Small, elegant proportions) */}
-      <div className="relative w-full max-w-[420px] sm:max-w-[480px] lg:max-w-[500px] xl:max-w-[540px] aspect-[1024/888] pointer-events-none">
+      {/* Coordinate Stage (Proportionally scaled for mobile compact or full desktop) */}
+      <div
+        className={`relative w-full aspect-[1024/888] pointer-events-none ${
+          isMobileCompact
+            ? 'max-w-[230px] xs:max-w-[260px] sm:max-w-[300px]'
+            : 'max-w-[420px] sm:max-w-[480px] lg:max-w-[500px] xl:max-w-[540px]'
+        }`}
+      >
         {/* ── Realistic Cloud Mist & Fog Layer 1 (Drifting sunset mist) ── */}
         <div
           aria-hidden="true"
@@ -130,10 +142,10 @@ export function EarthScene({ isSceneActive = true, isMobileBackdrop = false }: E
             />
           )}
 
-          {/* ── Dynamic Live Laptop Display (Split-View Coding & Real-time Preview on Desktop only) ── */}
+          {/* ── Dynamic Live Laptop Display (Split-View Coding & Real-time Preview on Desktop and Mobile) ── */}
           {!isMobileBackdrop && (
             <div
-              className={`hidden md:block absolute z-[4] pointer-events-none transition-opacity duration-700 ease-out ${
+              className={`block absolute z-[4] pointer-events-none transition-opacity duration-700 ease-out ${
                 isReady ? 'opacity-100' : 'opacity-0'
               }`}
               style={{

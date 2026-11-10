@@ -1436,4 +1436,12 @@ The `@elsesourav/ui/micro` collection contains **34 playful, high-tactility micr
 - **Theme-Adaptive Frosted Version Badges**: The top-right version badge uses theme-reactive styling:
   - **Light Mode**: `bg-white/70 backdrop-blur-md text-zinc-900 border-black/10 shadow-xs`, replacing dark black boxes with an airy, translucent frosted pill that remains legible over any banner art.
   - **Dark Mode**: `dark:bg-black/60 dark:text-white/90 dark:border-white/15`, maintaining sleek cosmic contrast.
+13. **Mobile Floating Island & Hero Light Theme Contrast Architecture (`HomeHero` & `EarthScene`)**:
+- **Top-Center Mobile Floating Island (`md:hidden`)**: On mobile viewports, the old static background island is eliminated. In its place, a compact interactive `<EarthScene isMobileCompact />` is rendered at the very beginning (top center) with subtle floating oscillation and individual rock physics animations.
+- **Active Live Laptop Canvas on Mobile (`LaptopLiveCanvas`)**: The live typing 2D canvas runs actively on both mobile and desktop (`aspect-[1024/888]`), showcasing code snippets, terminal simulations, and syntax-highlighted editor typing inside the floating laptop screen.
+- **WCAG AAA Light Theme Contrast Foundation**:
+  - **Luminous Scrim**: Mobile background uses a progressive `180deg` white foundation (`rgba(255,255,255,0.70)` to `rgba(255,255,255,1)`), allowing the soft pastel sky to breathe behind the top island while guaranteeing 100% solid contrast beneath hero text.
+  - **High-Contrast Headline & Subtitle**: Lead headline uses `text-slate-950 font-extrabold` with deep indigo/violet highlight gradients (`from-blue-700 via-indigo-700 to-violet-800`), and subtitle uses `text-slate-800 font-medium`.
+  - **Polished Action Buttons & Trust Metrics**: Secondary "About Me" CTA button renders with `text-slate-900 bg-white/90 hover:bg-white border-slate-300/80 shadow-xs backdrop-blur-md`. Trust metric numbers use `text-slate-950 font-extrabold`, labels use `text-slate-700 font-semibold`, and icons sit inside high-contrast pastel rounded containers (`bg-purple-100 border-purple-300`, `bg-blue-100`, `bg-indigo-100`).
+
 

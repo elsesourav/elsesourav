@@ -13,7 +13,7 @@ export interface HomepageSettingsTabProps {
 
 export function HomepageSettingsTab({ settings, onChange }: HomepageSettingsTabProps) {
   return (
-    <Card className="p-4 sm:p-6 space-y-4 rounded-3xl border-zinc-800 bg-zinc-900/40">
+    <Card className="p-4 sm:p-6 space-y-4 rounded-3xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 shadow-sm dark:shadow-none">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FloatingLabelInput
           label="Hero Badge"
@@ -49,7 +49,7 @@ export function HomepageSettingsTab({ settings, onChange }: HomepageSettingsTabP
           value={settings['hero_subtitle'] || ''}
           onChange={(e) => onChange('hero_subtitle', e.target.value)}
           placeholder="ElseSourav is my personal space for the applications I build, the ideas I explore, and the things I learn along the way."
-          className="text-xs bg-zinc-950/60 border-zinc-800 text-zinc-100 placeholder:text-zinc-500 rounded-xl"
+          className="text-xs bg-zinc-50/50 dark:bg-zinc-950/60 border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 rounded-xl"
         />
       </FormField>
 
@@ -71,7 +71,7 @@ export function HomepageSettingsTab({ settings, onChange }: HomepageSettingsTabP
         />
       </div>
 
-      <div className="pt-3 border-t border-zinc-800/80 grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="pt-3 border-t border-zinc-200 dark:border-zinc-800/80 grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FloatingLabelInput
           label="Selected Apps Section Title"
           value={settings['homepage_apps_title'] || ''}
@@ -89,7 +89,7 @@ export function HomepageSettingsTab({ settings, onChange }: HomepageSettingsTabP
 
       <PhilosophySettingsSection settings={settings} onChange={onChange} />
 
-      <div className="pt-3 border-t border-zinc-800/80 grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="pt-3 border-t border-zinc-200 dark:border-zinc-800/80 grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FloatingLabelInput
           label="Closing Studio Doorway Title"
           value={settings['closing_cta_title'] || ''}

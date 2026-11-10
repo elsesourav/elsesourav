@@ -64,11 +64,11 @@ export function HomepageAtmosphereSettingsSection({
   onChange,
 }: HomepageAtmosphereSettingsProps) {
   return (
-    <div className="pt-5 border-t border-zinc-800 space-y-6">
+    <div className="pt-5 border-t border-zinc-200 dark:border-zinc-800 space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-indigo-400" />
-          <h4 className="text-sm font-semibold text-zinc-100">
+          <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+          <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
             Homepage Atmospheric Canvas (WebGL + WebAssembly)
           </h4>
         </div>
@@ -77,7 +77,7 @@ export function HomepageAtmosphereSettingsSection({
         </Badge>
       </div>
 
-      <p className="text-xs text-zinc-400 leading-relaxed">
+      <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
         Configure the WebGL particle simulation rendered behind the floating island on the
         homepage hero. Operates with zero JavaScript garbage collection overhead and native 60–120
         FPS GPU acceleration.
@@ -85,9 +85,9 @@ export function HomepageAtmosphereSettingsSection({
 
       {/* 1. Base Particle Density */}
       <div className="space-y-2.5">
-        <label className="text-xs font-semibold text-zinc-200 flex items-center justify-between">
+        <label className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 flex items-center justify-between">
           <span>Base Particle Density</span>
-          <span className="font-mono text-indigo-400 text-[11px]">{atmosphereDensity}x</span>
+          <span className="font-mono text-indigo-600 dark:text-indigo-400 text-[11px]">{atmosphereDensity}x</span>
         </label>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
           {DENSITY_OPTIONS.map((opt) => (
@@ -97,8 +97,8 @@ export function HomepageAtmosphereSettingsSection({
               onClick={() => onChange('homepage_atmosphere_density', opt.value)}
               className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between h-full cursor-pointer ${
                 atmosphereDensity === opt.value
-                  ? 'bg-indigo-950/40 border-indigo-500/80 text-white shadow-[0_0_12px_rgba(99,102,241,0.2)]'
-                  : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
+                  ? 'bg-indigo-50 dark:bg-indigo-950/40 border-indigo-500/80 text-indigo-950 dark:text-white shadow-[0_0_12px_rgba(99,102,241,0.2)]'
+                  : 'bg-zinc-50 dark:bg-zinc-950/60 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:border-zinc-300 dark:hover:border-zinc-700'
               }`}
             >
               <div className="text-xs font-medium">{opt.label}</div>
@@ -110,9 +110,9 @@ export function HomepageAtmosphereSettingsSection({
 
       {/* 2. Meteor (Shooting Star) Rate */}
       <div className="space-y-2.5">
-        <label className="text-xs font-semibold text-zinc-200 flex items-center justify-between">
+        <label className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 flex items-center justify-between">
           <span>Shooting Star / Meteor Frequency</span>
-          <span className="font-mono text-indigo-400 text-[11px] capitalize">
+          <span className="font-mono text-indigo-600 dark:text-indigo-400 text-[11px] capitalize">
             {meteorFrequency}
           </span>
         </label>
@@ -124,8 +124,8 @@ export function HomepageAtmosphereSettingsSection({
               onClick={() => onChange('homepage_meteor_frequency', opt.value)}
               className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between h-full cursor-pointer ${
                 meteorFrequency === opt.value
-                  ? 'bg-indigo-950/40 border-indigo-500/80 text-white shadow-[0_0_12px_rgba(99,102,241,0.2)]'
-                  : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
+                  ? 'bg-indigo-50 dark:bg-indigo-950/40 border-indigo-500/80 text-indigo-950 dark:text-white shadow-[0_0_12px_rgba(99,102,241,0.2)]'
+                  : 'bg-zinc-50 dark:bg-zinc-950/60 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:border-zinc-300 dark:hover:border-zinc-700'
               }`}
             >
               <div className="text-xs font-medium">{opt.label}</div>
@@ -137,9 +137,9 @@ export function HomepageAtmosphereSettingsSection({
 
       {/* 3. Animation Drift & Twinkle Speed */}
       <div className="space-y-2.5">
-        <label className="text-xs font-semibold text-zinc-200 flex items-center justify-between">
+        <label className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 flex items-center justify-between">
           <span>Simulation Speed & Drift Tempo</span>
-          <span className="font-mono text-indigo-400 text-[11px]">{starsSpeed}x</span>
+          <span className="font-mono text-indigo-600 dark:text-indigo-400 text-[11px]">{starsSpeed}x</span>
         </label>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {SPEED_OPTIONS.map((opt) => (
@@ -149,8 +149,8 @@ export function HomepageAtmosphereSettingsSection({
               onClick={() => onChange('homepage_stars_speed', opt.value)}
               className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between h-full cursor-pointer ${
                 starsSpeed === opt.value
-                  ? 'bg-indigo-950/40 border-indigo-500/80 text-white shadow-[0_0_12px_rgba(99,102,241,0.2)]'
-                  : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
+                  ? 'bg-indigo-50 dark:bg-indigo-950/40 border-indigo-500/80 text-indigo-950 dark:text-white shadow-[0_0_12px_rgba(99,102,241,0.2)]'
+                  : 'bg-zinc-50 dark:bg-zinc-950/60 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:border-zinc-300 dark:hover:border-zinc-700'
               }`}
             >
               <div className="text-xs font-medium">{opt.label}</div>
@@ -163,8 +163,8 @@ export function HomepageAtmosphereSettingsSection({
       {/* 4. Mobile Screen Experience & Battery Profile */}
       <div className="space-y-2.5">
         <div className="flex items-center gap-2">
-          <Smartphone className="w-3.5 h-3.5 text-indigo-400" />
-          <label className="text-xs font-semibold text-zinc-200">
+          <Smartphone className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+          <label className="text-xs font-semibold text-zinc-800 dark:text-zinc-200">
             Mobile Screen Animation & Effects Profile
           </label>
         </div>
@@ -179,20 +179,20 @@ export function HomepageAtmosphereSettingsSection({
                 onClick={() => onChange('homepage_mobile_effects', opt.value)}
                 className={`p-3.5 rounded-2xl border text-left transition-all flex flex-col justify-between h-full cursor-pointer space-y-1.5 ${
                   isSelected
-                    ? 'bg-indigo-950/40 border-indigo-500/80 text-white shadow-[0_0_12px_rgba(99,102,241,0.2)]'
-                    : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
+                    ? 'bg-indigo-50 dark:bg-indigo-950/40 border-indigo-500/80 text-indigo-950 dark:text-white shadow-[0_0_12px_rgba(99,102,241,0.2)]'
+                    : 'bg-zinc-50 dark:bg-zinc-950/60 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:border-zinc-300 dark:hover:border-zinc-700'
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Icon className="w-4 h-4 text-indigo-400" />
+                    <Icon className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                     <span className="text-xs font-semibold">{opt.label}</span>
                   </div>
                   {isSelected && (
-                    <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
+                    <span className="w-2 h-2 rounded-full bg-indigo-500 dark:bg-indigo-400 animate-pulse" />
                   )}
                 </div>
-                <p className="text-[11px] text-zinc-400 leading-normal">{opt.desc}</p>
+                <p className="text-[11px] text-zinc-600 dark:text-zinc-400 leading-normal">{opt.desc}</p>
               </button>
             );
           })}
@@ -200,15 +200,15 @@ export function HomepageAtmosphereSettingsSection({
       </div>
 
       {/* 5. Hardware-Adaptive Architecture Info */}
-      <div className="p-4 rounded-2xl bg-zinc-950/80 border border-zinc-800/80 flex items-start gap-3">
-        <Info className="w-4 h-4 text-indigo-400 mt-0.5 shrink-0" />
-        <div className="text-xs text-zinc-400 space-y-1.5">
-          <p className="font-semibold text-zinc-200">
+      <div className="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-950/80 border border-zinc-200 dark:border-zinc-800/80 flex items-start gap-3">
+        <Info className="w-4 h-4 text-indigo-600 dark:text-indigo-400 mt-0.5 shrink-0" />
+        <div className="text-xs text-zinc-600 dark:text-zinc-400 space-y-1.5">
+          <p className="font-semibold text-zinc-900 dark:text-zinc-200">
             Real-Time Hardware-Adaptive Auto Scaling
           </p>
           <p className="leading-relaxed">
             The WebAssembly atmosphere engine dynamically inspects the client device's logical CPU
-            cores (<code className="text-indigo-300 font-mono">hardwareConcurrency</code>), device
+            cores (<code className="text-indigo-700 dark:text-indigo-300 font-mono">hardwareConcurrency</code>), device
             memory, and device pixel ratio. High-end hardware automatically scales up particle count
             (up to 1.35x), while low-spec phones or battery-saving modes scale down to guarantee
             solid 60 FPS scrolling and zero CPU/GPU thermal throttling.

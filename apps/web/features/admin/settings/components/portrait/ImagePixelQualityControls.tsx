@@ -59,17 +59,17 @@ export function ImagePixelQualityControls({
   const { key, value, label, subtext, badgeLabel, Icon } = deviceConfig;
 
   return (
-    <div className="space-y-3 p-4 rounded-2xl bg-zinc-900/40 border border-zinc-800">
+    <div className="space-y-3 p-4 rounded-2xl bg-white dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800 shadow-sm dark:shadow-none">
       {/* Header with active device badge */}
-      <div className="flex items-center justify-between border-b border-zinc-800/80 pb-2">
+      <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800/80 pb-2">
         <div className="flex items-center gap-2">
-          <Grid3X3 className="w-4 h-4 text-emerald-400" />
-          <h4 className="text-xs font-bold text-zinc-100 uppercase tracking-wider">
+          <Grid3X3 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+          <h4 className="text-xs font-bold text-zinc-900 dark:text-zinc-100 uppercase tracking-wider">
             Photographic Pixel Quality
           </h4>
         </div>
         <div className="flex items-center gap-1.5">
-          <Badge variant="outline" className="text-[10px] font-mono border-cyan-500/40 text-cyan-300">
+          <Badge variant="outline" className="text-[10px] font-mono border-cyan-400/50 dark:border-cyan-500/40 text-cyan-700 dark:text-cyan-300">
             {badgeLabel} Target
           </Badge>
           <span className="text-[10px] font-mono text-zinc-500 font-bold">{value}px</span>
@@ -77,19 +77,19 @@ export function ImagePixelQualityControls({
       </div>
 
       {/* Dynamic Single-Device Resolution Tuner */}
-      <div className="p-3.5 rounded-xl border border-cyan-500/30 bg-zinc-950/50 space-y-2.5">
+      <div className="p-3.5 rounded-xl border border-cyan-400/50 dark:border-cyan-500/30 bg-zinc-50/60 dark:bg-zinc-950/50 space-y-2.5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
-            <Icon className="w-3.5 h-3.5 text-cyan-400" />
-            <label className="text-xs font-semibold text-zinc-200">{label}</label>
+            <Icon className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+            <label className="text-xs font-semibold text-zinc-900 dark:text-zinc-200">{label}</label>
           </div>
-          <span className="text-[11px] font-mono text-zinc-400 flex items-center gap-1">
-            <Sparkles className="w-3 h-3 text-amber-400" />
+          <span className="text-[11px] font-mono text-zinc-500 dark:text-zinc-400 flex items-center gap-1">
+            <Sparkles className="w-3 h-3 text-amber-500 dark:text-amber-400" />
             <span>Active Selection</span>
           </span>
         </div>
 
-        <p className="text-[11px] text-zinc-400 leading-normal">{subtext}</p>
+        <p className="text-[11px] text-zinc-600 dark:text-zinc-400 leading-normal">{subtext}</p>
 
         <Dropdown
           items={[...IMAGE_RESOLUTION_ITEMS]}

@@ -91,11 +91,11 @@ export function ContactSettingsTab({
   };
 
   return (
-    <Card className="p-4 sm:p-6 space-y-4 rounded-3xl border-zinc-800 bg-zinc-900/40">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-800/80 pb-3">
+    <Card className="p-4 sm:p-6 space-y-4 rounded-3xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 shadow-sm dark:shadow-none">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-200 dark:border-zinc-800/80 pb-3">
         <div>
-          <h2 className="text-sm font-bold text-white">Direct Contact & Inquiries</h2>
-          <p className="text-[11px] text-zinc-400">
+          <h2 className="text-sm font-bold text-zinc-900 dark:text-white">Direct Contact &amp; Inquiries</h2>
+          <p className="text-[11px] text-zinc-600 dark:text-zinc-400">
             Manage communication methods for clients and collaborators.
           </p>
         </div>
@@ -111,7 +111,7 @@ export function ContactSettingsTab({
       </div>
 
       {/* Quick Fallback Fields */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-3 border-b border-zinc-800/80">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-3 border-b border-zinc-200 dark:border-zinc-800/80">
         <FloatingLabelInput
           label="Primary Contact Email"
           type="email"
@@ -131,10 +131,10 @@ export function ContactSettingsTab({
 
       {/* Add Contact Form */}
       {isAddingContact && (
-        <div className="p-4 rounded-2xl border border-indigo-500/40 bg-indigo-950/20 space-y-3">
+        <div className="p-4 rounded-2xl border border-indigo-200 dark:border-indigo-500/40 bg-indigo-50/50 dark:bg-indigo-950/20 space-y-3">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
+              <label className="text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 block mb-1">
                 Contact Type
               </label>
               <Dropdown
@@ -211,20 +211,20 @@ export function ContactSettingsTab({
             return (
               <div
                 key={contact.id}
-                className="p-3 rounded-2xl border border-zinc-800/80 bg-zinc-950/40 flex items-center justify-between gap-3"
+                className="p-3 rounded-2xl border border-zinc-200 dark:border-zinc-800/80 bg-zinc-50/60 dark:bg-zinc-950/40 flex items-center justify-between gap-3"
               >
                 <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-                  <span className="text-[10px] font-mono text-zinc-500 w-5 text-center shrink-0">
+                  <span className="text-[10px] font-mono text-zinc-400 dark:text-zinc-500 w-5 text-center shrink-0">
                     #{contact.priority}
                   </span>
-                  <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-indigo-400 shrink-0">
+                  <div className="w-7 h-7 rounded-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0 shadow-xs">
                     <IconComp className="w-3.5 h-3.5" />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-xs font-semibold text-zinc-200 block truncate">
+                    <span className="text-xs font-semibold text-zinc-900 dark:text-zinc-200 block truncate">
                       {contact.label}
                     </span>
-                    <span className="text-[11px] text-zinc-400 block truncate font-mono">
+                    <span className="text-[11px] text-zinc-600 dark:text-zinc-400 block truncate font-mono">
                       {contact.value}
                     </span>
                     {contact.description && (
@@ -244,7 +244,7 @@ export function ContactSettingsTab({
                     <Badge
                       variant={contact.isActive ? 'success' : 'outline'}
                       className={`text-[10px] px-2 py-0.5 font-mono ${
-                        contact.isActive ? '' : 'border-zinc-800 text-zinc-500'
+                        contact.isActive ? '' : 'border-zinc-200 dark:border-zinc-800 text-zinc-500'
                       }`}
                     >
                       {contact.isActive ? 'Active' : 'Disabled'}
@@ -256,8 +256,8 @@ export function ContactSettingsTab({
                     size="icon-xs"
                     onClick={() => handleRemoveContact(contact.id)}
                     aria-label={`Remove ${contact.label}`}
-                    icon={<Trash2 className="w-3.5 h-3.5 text-zinc-400 hover:text-rose-400" />}
-                    className="rounded-lg hover:bg-rose-950/40"
+                    icon={<Trash2 className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400" />}
+                    className="rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/40"
                   />
                 </div>
               </div>

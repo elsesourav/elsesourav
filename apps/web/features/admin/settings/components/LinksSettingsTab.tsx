@@ -98,11 +98,11 @@ export function LinksSettingsTab({ links, onLinksChange }: LinksSettingsTabProps
   };
 
   return (
-    <Card className="p-4 sm:p-6 space-y-4 rounded-3xl border-zinc-800 bg-zinc-900/40">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-800/80 pb-3">
+    <Card className="p-4 sm:p-6 space-y-4 rounded-3xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 shadow-sm dark:shadow-none">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-200 dark:border-zinc-800/80 pb-3">
         <div>
-          <h2 className="text-sm font-bold text-white">Platform & Social Channels</h2>
-          <p className="text-[11px] text-zinc-400">
+          <h2 className="text-sm font-bold text-zinc-900 dark:text-white">Platform &amp; Social Channels</h2>
+          <p className="text-[11px] text-zinc-600 dark:text-zinc-400">
             Manage external profile links with priority ordering.
           </p>
         </div>
@@ -119,10 +119,10 @@ export function LinksSettingsTab({ links, onLinksChange }: LinksSettingsTabProps
 
       {/* Add Link Form */}
       {isAddingLink && (
-        <div className="p-4 rounded-2xl border border-indigo-500/40 bg-indigo-950/20 space-y-3">
+        <div className="p-4 rounded-2xl border border-indigo-200 dark:border-indigo-500/40 bg-indigo-50/50 dark:bg-indigo-950/20 space-y-3">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="text-[11px] font-semibold text-zinc-300 block mb-1">
+              <label className="text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 block mb-1">
                 Platform
               </label>
               <Dropdown
@@ -196,7 +196,7 @@ export function LinksSettingsTab({ links, onLinksChange }: LinksSettingsTabProps
               return (
                 <div
                   key={link.id}
-                  className="p-3.5 rounded-2xl border border-indigo-500/40 bg-zinc-900/80 space-y-2"
+                  className="p-3.5 rounded-2xl border border-indigo-200 dark:border-indigo-500/40 bg-zinc-50 dark:bg-zinc-900/80 space-y-2"
                 >
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                     <Input
@@ -205,7 +205,7 @@ export function LinksSettingsTab({ links, onLinksChange }: LinksSettingsTabProps
                         setEditLinkForm((prev) => ({ ...prev, label: e.target.value }))
                       }
                       placeholder="Label"
-                      className="text-xs h-8 bg-zinc-950/60"
+                      className="text-xs h-8 bg-white dark:bg-zinc-950/60 border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100"
                     />
                     <Input
                       value={editLinkForm.url || ''}
@@ -213,7 +213,7 @@ export function LinksSettingsTab({ links, onLinksChange }: LinksSettingsTabProps
                         setEditLinkForm((prev) => ({ ...prev, url: e.target.value }))
                       }
                       placeholder="URL"
-                      className="text-xs h-8 bg-zinc-950/60"
+                      className="text-xs h-8 bg-white dark:bg-zinc-950/60 border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100"
                     />
                     <div className="flex items-center gap-2">
                       <Input
@@ -225,7 +225,7 @@ export function LinksSettingsTab({ links, onLinksChange }: LinksSettingsTabProps
                             priority: parseInt(e.target.value) || 0,
                           }))
                         }
-                        className="w-16 h-8 text-xs bg-zinc-950/60 text-center"
+                        className="w-16 h-8 text-xs bg-white dark:bg-zinc-950/60 border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 text-center"
                       />
                       <Button
                         type="button"
@@ -241,7 +241,7 @@ export function LinksSettingsTab({ links, onLinksChange }: LinksSettingsTabProps
                         size="sm"
                         variant="ghost"
                         onClick={() => setEditingLinkId(null)}
-                        className="text-xs h-8 px-2 text-zinc-400"
+                        className="text-xs h-8 px-2 text-zinc-600 dark:text-zinc-400"
                       >
                         Cancel
                       </Button>
@@ -254,17 +254,17 @@ export function LinksSettingsTab({ links, onLinksChange }: LinksSettingsTabProps
             return (
               <div
                 key={link.id}
-                className="p-3 rounded-2xl border border-zinc-800/80 bg-zinc-950/40 flex items-center justify-between gap-3"
+                className="p-3 rounded-2xl border border-zinc-200 dark:border-zinc-800/80 bg-zinc-50/60 dark:bg-zinc-950/40 flex items-center justify-between gap-3"
               >
                 <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-                  <span className="text-[10px] font-mono text-zinc-500 w-5 text-center shrink-0">
+                  <span className="text-[10px] font-mono text-zinc-400 dark:text-zinc-500 w-5 text-center shrink-0">
                     #{link.priority}
                   </span>
-                  <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-indigo-400 shrink-0">
+                  <div className="w-7 h-7 rounded-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0 shadow-xs">
                     <IconComponent className="w-3.5 h-3.5" />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-xs font-semibold text-zinc-200 block truncate">
+                    <span className="text-xs font-semibold text-zinc-900 dark:text-zinc-200 block truncate">
                       {link.label}
                     </span>
                     <span className="text-[11px] text-zinc-500 block truncate font-mono">
@@ -282,7 +282,7 @@ export function LinksSettingsTab({ links, onLinksChange }: LinksSettingsTabProps
                     <Badge
                       variant={link.isActive ? 'success' : 'outline'}
                       className={`text-[10px] px-2 py-0.5 font-mono ${
-                        link.isActive ? '' : 'border-zinc-800 text-zinc-500'
+                        link.isActive ? '' : 'border-zinc-200 dark:border-zinc-800 text-zinc-500'
                       }`}
                     >
                       {link.isActive ? 'Active' : 'Disabled'}
@@ -297,8 +297,8 @@ export function LinksSettingsTab({ links, onLinksChange }: LinksSettingsTabProps
                       setEditLinkForm({ ...link });
                     }}
                     aria-label={`Edit ${link.label}`}
-                    icon={<Edit2 className="w-3.5 h-3.5 text-zinc-400 hover:text-zinc-200" />}
-                    className="rounded-lg hover:bg-zinc-800"
+                    icon={<Edit2 className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200" />}
+                    className="rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800"
                   />
                   <IconButton
                     type="button"
@@ -306,8 +306,8 @@ export function LinksSettingsTab({ links, onLinksChange }: LinksSettingsTabProps
                     size="icon-xs"
                     onClick={() => handleRemoveLink(link.id)}
                     aria-label={`Remove ${link.label}`}
-                    icon={<Trash2 className="w-3.5 h-3.5 text-zinc-400 hover:text-rose-400" />}
-                    className="rounded-lg hover:bg-rose-950/40"
+                    icon={<Trash2 className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400" />}
+                    className="rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/40"
                   />
                 </div>
               </div>

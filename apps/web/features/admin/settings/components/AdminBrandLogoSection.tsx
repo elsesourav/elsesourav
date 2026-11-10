@@ -67,11 +67,11 @@ export function AdminBrandLogoSection({
     <div className="space-y-4 pt-2">
       <div className="flex items-center justify-between">
         <div>
-          <h4 className="text-sm font-semibold text-zinc-100 flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-indigo-400" />
-            <span>Brand Assets & Lightweight Loading Screen System</span>
+          <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+            <span>Brand Assets &amp; Lightweight Loading Screen System</span>
           </h4>
-          <p className="text-xs text-zinc-400">
+          <p className="text-xs text-zinc-600 dark:text-zinc-400">
             Configure dynamic brand icon, SVG vectors, and pre-computed lightweight canvas loading particles.
           </p>
         </div>
@@ -113,27 +113,27 @@ export function AdminBrandLogoSection({
               size="sm"
               onClick={() => handleExtractPixels()}
               disabled={isSampling}
-              className="border-indigo-500/30 text-indigo-300 hover:bg-indigo-950/40 text-xs flex items-center gap-2"
+              className="border-indigo-200 dark:border-indigo-500/30 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 text-xs flex items-center gap-2"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isSampling ? 'animate-spin' : ''}`} />
               <span>{isSampling ? 'Extracting Pixels...' : 'Re-generate Lightweight Pixels'}</span>
             </Button>
 
-            <span className="text-[11px] font-mono text-zinc-400">
+            <span className="text-[11px] font-mono text-zinc-500 dark:text-zinc-400">
               {pixelCount.toLocaleString()} uniform particles (~876 bytes)
             </span>
           </div>
 
           {sampleSuccess && (
-            <div className="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+            <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-500/30 text-emerald-800 dark:text-emerald-300 text-xs flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
               <span>{sampleSuccess}</span>
             </div>
           )}
 
           {sampleError && (
-            <div className="p-2.5 rounded-xl bg-rose-950/40 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+            <div className="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-500/30 text-rose-800 dark:text-rose-300 text-xs flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 dark:text-rose-400" />
               <span>{sampleError}</span>
             </div>
           )}
@@ -141,10 +141,10 @@ export function AdminBrandLogoSection({
 
         {/* Right Preview Card (5 cols): Live Canvas Interactive Preview */}
         <div className="lg:col-span-5">
-          <Card className="p-4 border-indigo-500/20 bg-zinc-950/80 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden shadow-inner">
-            <div className="w-full flex items-center justify-between pb-2 border-b border-zinc-800 text-[11px] font-mono text-zinc-400">
+          <Card className="p-4 border-indigo-200 dark:border-indigo-500/20 bg-zinc-50 dark:bg-zinc-950/80 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden shadow-inner">
+            <div className="w-full flex items-center justify-between pb-2 border-b border-zinc-200 dark:border-zinc-800 text-[11px] font-mono text-zinc-600 dark:text-zinc-400">
               <span>Loading Screen Preview</span>
-              <Badge variant="outline" className="text-[10px] text-indigo-300 border-indigo-500/30">
+              <Badge variant="outline" className="text-[10px] text-indigo-700 dark:text-indigo-300 border-indigo-300 dark:border-indigo-500/30">
                 Lightweight 60fps
               </Badge>
             </div>
@@ -157,14 +157,14 @@ export function AdminBrandLogoSection({
                 active={true}
               />
               <div className="mt-2 text-center">
-                <span className="text-xs font-semibold tracking-wider uppercase text-zinc-200">
+                <span className="text-xs font-semibold tracking-wider uppercase text-zinc-800 dark:text-zinc-200">
                   {settings['site_name'] || 'ElseSourav'}
                 </span>
                 <AnimatedLoadingText label="Loading Studio" />
               </div>
             </div>
 
-            <p className="text-[10px] text-zinc-500 text-center leading-normal pt-1">
+            <p className="text-[10px] text-zinc-500 dark:text-zinc-400 text-center leading-normal pt-1">
               Live preview reflects exact zero-lag in-memory particle convergence and energy glow sweep.
             </p>
           </Card>
