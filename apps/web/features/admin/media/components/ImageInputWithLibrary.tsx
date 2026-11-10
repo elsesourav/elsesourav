@@ -47,7 +47,7 @@ export function ImageInputWithLibrary({
   const effectivePlaceholder =
     placeholder || (fallbackUrl ? 'Default asset active (upload to override)' : 'https://... or select from library');
 
-  // Determine crop parameters based on previewShape
+  // Determine crop parameters based on previewShape (aspectRatio acts as the default selection)
   const cropConfig = React.useMemo(() => {
     switch (previewShape) {
       case 'circle':
@@ -56,7 +56,6 @@ export function ImageInputWithLibrary({
           cropShape: 'round' as const,
           width: 512,
           height: 512,
-          allowedRatios: [{ id: '1:1', label: '1:1 Square', ratio: 1.0 }],
         };
       case 'portrait':
         return {
@@ -64,10 +63,6 @@ export function ImageInputWithLibrary({
           cropShape: 'rect' as const,
           width: 600,
           height: 800,
-          allowedRatios: [
-            { id: '3:4', label: '3:4 Portrait', ratio: 3 / 4 },
-            { id: '1:1', label: '1:1 Square', ratio: 1.0 },
-          ],
         };
       case 'banner':
         return {
@@ -75,10 +70,6 @@ export function ImageInputWithLibrary({
           cropShape: 'rect' as const,
           width: 1200,
           height: 675,
-          allowedRatios: [
-            { id: '16:9', label: '16:9 Banner', ratio: 16 / 9 },
-            { id: '21:9', label: '21:9 Ultrawide', ratio: 21 / 9 },
-          ],
         };
       case 'square':
       default:
@@ -87,7 +78,6 @@ export function ImageInputWithLibrary({
           cropShape: 'rect' as const,
           width: 512,
           height: 512,
-          allowedRatios: [{ id: '1:1', label: '1:1 Square', ratio: 1.0 }],
         };
     }
   }, [previewShape]);
@@ -325,7 +315,6 @@ export function ImageInputWithLibrary({
           imageSrc={cropperSrc}
           fileName={cropperFileName}
           aspectRatio={cropConfig.aspectRatio}
-          allowedRatios={cropConfig.allowedRatios}
           cropShape={cropConfig.cropShape}
           targetWidth={cropConfig.width}
           targetHeight={cropConfig.height}

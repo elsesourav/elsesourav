@@ -16,9 +16,11 @@ export interface PresetRatioOption {
 export interface ImageCropperModalProps {
   isOpen: boolean;
   onClose: () => void;
-  imageSrc: string;
-  onCropComplete: (croppedFile: File) => void | Promise<void>;
-  aspectRatio?: number | null;
+  imageSrc?: string;
+  initialImageUrl?: string;
+  onCropComplete: (croppedFile: File, dataUrl?: string) => void | Promise<void>;
+  aspectRatio?: number | null | string;
+  lockRatio?: boolean;
   allowedRatios?: PresetRatioOption[];
   cropShape?: CropShape;
   targetWidth?: number;
@@ -37,7 +39,7 @@ export interface ImageUploadWithCropProps {
   helperText?: string;
   placeholder?: string;
   required?: boolean;
-  aspectRatio?: number | null;
+  aspectRatio?: number | null | string;
   allowedRatios?: PresetRatioOption[];
   cropShape?: CropShape;
   targetWidth?: number;

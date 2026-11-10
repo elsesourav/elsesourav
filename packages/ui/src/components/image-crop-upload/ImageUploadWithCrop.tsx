@@ -74,9 +74,22 @@ export function ImageUploadWithCrop({
     img.src = objectUrl;
     img.onload = () => {
       const imgRatio = img.naturalWidth / img.naturalHeight;
-      const isRatioMatched = aspectRatio !== null && aspectRatio !== undefined
-        ? Math.abs(imgRatio - aspectRatio) <= 0.05
-        : true;
+      let numericRatio: number | null = null;
+      if (typeof aspectRatio === 'number') {
+        numericRatio = aspectRatio;
+      } else if (typeof aspectRatio === 'string') {
+        if (aspectRatio === '1:1') numericRatio = 1.0;
+        else if (aspectRatio === '16:9') numericRatio = 16 / 9;
+        else if (aspectRatio === '4:3') numericRatio = 4 / 3;
+        else if (aspectRatio === '3:4') numericRatio = 3 / 4;
+        else if (aspectRatio === '1:6') numericRatio = 1 / 6;
+        else if (aspectRatio === '6:1') numericRatio = 6.0;
+        else if (aspectRatio === '21:9') numericRatio = 21 / 9;
+        else numericRatio = parseFloat(aspectRatio) || null;
+      }
+
+      const isRatioMatched =
+        numericRatio !== null ? Math.abs(imgRatio - numericRatio) <= 0.05 : true;
 
       if (!isRatioMatched) {
         setSelectedImageSrc(objectUrl);

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Button } from '../button';
 import { getCroppedCanvas, canvasToFile } from './crop-utils';
 import type { ImageCropperModalProps } from './types';
-import { useCropInteraction, PRESET_RATIOS } from './useCropInteraction';
+import { useCropInteraction } from './useCropInteraction';
 import {
   ZoomIn,
   ZoomOut,
@@ -15,12 +15,14 @@ import {
   Lock,
   Unlock,
   Maximize2,
+  Crosshair,
 } from 'lucide-react';
 
 export function ImageCropperModal({
   isOpen,
   onClose,
   imageSrc,
+  initialImageUrl,
   onCropComplete,
   aspectRatio = 1,
   allowedRatios,
@@ -38,6 +40,8 @@ export function ImageCropperModal({
   const containerRef = React.useRef<HTMLDivElement>(null);
   const imgElementRef = React.useRef<HTMLImageElement>(null);
 
+  const effectiveSrc = imageSrc || initialImageUrl || '';
+
   const {
     image,
     crop,
@@ -47,13 +51,13 @@ export function ImageCropperModal({
     hasRestrictedRatios,
     handleSelectPreset,
     toggleRatioLock,
+    fitFullImage,
+    centerCrop,
     handlePointerDown,
-    handlePointerMove,
-    handlePointerUp,
     getRenderedBoxStyle,
   } = useCropInteraction({
     isOpen,
-    imageSrc,
+    imageSrc: effectiveSrc,
     aspectRatio,
     allowedRatios,
     imgElementRef,
@@ -76,7 +80,8 @@ export function ImageCropperModal({
       const outH = targetHeight || crop.height;
       const canvas = getCroppedCanvas(image, crop, outW, outH);
       const file = await canvasToFile(canvas, fileName, mimeType, quality);
-      await onCropComplete(file);
+      const dataUrl = canvas.toDataURL(mimeType, quality);
+      await onCropComplete(file, dataUrl);
       onClose();
     } catch (err) {
       console.error('Error applying crop:', err);
@@ -106,7 +111,7 @@ export function ImageCropperModal({
               <span>{title}</span>
             </h3>
             <p className="text-[11px] sm:text-xs text-zinc-500 dark:text-zinc-400">
-              Drag corners to resize selection · Target: {targetWidth || crop.width} ×{' '}
+              Drag corners to resize · Drag box to reposition · Output: {targetWidth || crop.width} ×{' '}
               {targetHeight || crop.height} px
             </p>
           </div>
@@ -119,7 +124,7 @@ export function ImageCropperModal({
           </button>
         </div>
 
-        {/* Preset Ratio Toolbar */}
+        {/* Preset Ratio & Quick Frame Toolbar */}
         <div className="flex items-center justify-between gap-2 flex-wrap pb-1">
           <div className="flex items-center gap-1.5 flex-wrap">
             <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-400 dark:text-zinc-500 mr-1">
@@ -144,33 +149,55 @@ export function ImageCropperModal({
             })}
           </div>
 
-          {/* Only show free ratio lock/unlock toggle if ratios are not restricted */}
-          {!hasRestrictedRatios && (
+          {/* Quick Framing & Lock Actions */}
+          <div className="flex items-center gap-1.5 ml-auto">
             <button
               type="button"
-              onClick={toggleRatioLock}
-              className={`text-[11px] px-2.5 py-1 rounded-lg border font-medium flex items-center gap-1.5 transition-colors ${
-                isLocked
-                  ? 'border-indigo-500/40 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-300'
-                  : 'border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900/60 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
-              }`}
-              title={
-                isLocked
-                  ? 'Aspect Ratio Locked (drag corners to scale)'
-                  : 'Aspect Ratio Unlocked (free drag)'
-              }
+              onClick={fitFullImage}
+              className="text-[11px] px-2 py-1 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900/60 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 flex items-center gap-1 transition-colors"
+              title="Expand crop frame to fit full image"
             >
-              {isLocked ? (
-                <Lock className="w-3 h-3 text-indigo-500 dark:text-indigo-400" />
-              ) : (
-                <Unlock className="w-3 h-3 text-amber-500 dark:text-amber-400" />
-              )}
-              <span>{isLocked ? 'Ratio Locked' : 'Ratio Free'}</span>
+              <Maximize2 className="w-3 h-3 text-cyan-500" />
+              <span>Fit Full</span>
             </button>
-          )}
+
+            <button
+              type="button"
+              onClick={centerCrop}
+              className="text-[11px] px-2 py-1 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900/60 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 flex items-center gap-1 transition-colors"
+              title="Center crop frame"
+            >
+              <Crosshair className="w-3 h-3 text-cyan-500" />
+              <span>Center</span>
+            </button>
+
+            {!hasRestrictedRatios && (
+              <button
+                type="button"
+                onClick={toggleRatioLock}
+                className={`text-[11px] px-2.5 py-1 rounded-lg border font-medium flex items-center gap-1.5 transition-colors ${
+                  isLocked
+                    ? 'border-indigo-500/40 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-300'
+                    : 'border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900/60 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
+                }`}
+                title={
+                  isLocked
+                    ? 'Aspect Ratio Locked (proportional scale)'
+                    : 'Aspect Ratio Unlocked (free rectangle)'
+                }
+              >
+                {isLocked ? (
+                  <Lock className="w-3 h-3 text-indigo-500 dark:text-indigo-400" />
+                ) : (
+                  <Unlock className="w-3 h-3 text-amber-500 dark:text-amber-400" />
+                )}
+                <span>{isLocked ? 'Locked' : 'Free'}</span>
+              </button>
+            )}
+          </div>
         </div>
 
-        {/* Viewport Canvas: Generous viewport without zoom restriction */}
+        {/* Viewport Canvas: Generous viewport with zoom support */}
         <div
           ref={containerRef}
           className="relative w-full h-[320px] sm:h-[400px] rounded-xl sm:rounded-2xl bg-zinc-100 dark:bg-zinc-900/90 overflow-hidden select-none flex items-center justify-center touch-none border border-zinc-200 dark:border-zinc-800/80"
@@ -195,14 +222,12 @@ export function ImageCropperModal({
               {/* Dynamic Resizable Crop Box */}
               <div
                 onPointerDown={(e) => handlePointerDown(e, 'move')}
-                onPointerMove={handlePointerMove}
-                onPointerUp={handlePointerUp}
                 className={`absolute border-2 border-indigo-400 cursor-move box-border select-none ${
                   cropShape === 'round' ? 'rounded-full' : 'rounded-lg'
                 }`}
                 style={{
                   ...getRenderedBoxStyle(),
-                  boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.68)',
+                  boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.72)',
                 }}
               >
                 {/* Rule of Thirds 3x3 Grid */}
@@ -220,46 +245,42 @@ export function ImageCropperModal({
                 {/* 4 Corner Resize Handles */}
                 <div
                   onPointerDown={(e) => handlePointerDown(e, 'nw')}
-                  className="absolute -top-1.5 -left-1.5 w-3.5 h-3.5 bg-white border-2 border-indigo-600 rounded-sm cursor-nwse-resize shadow-md hover:scale-125 transition-transform z-20"
+                  className="absolute -top-2 -left-2 w-4 h-4 bg-white border-2 border-indigo-600 rounded-sm cursor-nwse-resize shadow-md hover:scale-125 transition-transform z-20 flex items-center justify-center"
                 />
                 <div
                   onPointerDown={(e) => handlePointerDown(e, 'ne')}
-                  className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 bg-white border-2 border-indigo-600 rounded-sm cursor-nesw-resize shadow-md hover:scale-125 transition-transform z-20"
+                  className="absolute -top-2 -right-2 w-4 h-4 bg-white border-2 border-indigo-600 rounded-sm cursor-nesw-resize shadow-md hover:scale-125 transition-transform z-20 flex items-center justify-center"
                 />
                 <div
                   onPointerDown={(e) => handlePointerDown(e, 'se')}
-                  className="absolute -bottom-1.5 -right-1.5 w-3.5 h-3.5 bg-white border-2 border-indigo-600 rounded-sm cursor-nwse-resize shadow-md hover:scale-125 transition-transform z-20"
+                  className="absolute -bottom-2 -right-2 w-4 h-4 bg-white border-2 border-indigo-600 rounded-sm cursor-nwse-resize shadow-md hover:scale-125 transition-transform z-20 flex items-center justify-center"
                 />
                 <div
                   onPointerDown={(e) => handlePointerDown(e, 'sw')}
-                  className="absolute -bottom-1.5 -left-1.5 w-3.5 h-3.5 bg-white border-2 border-indigo-600 rounded-sm cursor-nesw-resize shadow-md hover:scale-125 transition-transform z-20"
+                  className="absolute -bottom-2 -left-2 w-4 h-4 bg-white border-2 border-indigo-600 rounded-sm cursor-nesw-resize shadow-md hover:scale-125 transition-transform z-20 flex items-center justify-center"
                 />
 
-                {/* 4 Edge Midpoint Handles (Only active in Unlocked Free mode) */}
-                {!isLocked && (
-                  <>
-                    <div
-                      onPointerDown={(e) => handlePointerDown(e, 'n')}
-                      className="absolute -top-1 left-1/2 -translate-x-1/2 w-4 h-2 bg-white/90 border border-indigo-600 rounded-xs cursor-ns-resize shadow-sm hover:scale-125 transition-transform z-20"
-                    />
-                    <div
-                      onPointerDown={(e) => handlePointerDown(e, 's')}
-                      className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-2 bg-white/90 border border-indigo-600 rounded-xs cursor-ns-resize shadow-sm hover:scale-125 transition-transform z-20"
-                    />
-                    <div
-                      onPointerDown={(e) => handlePointerDown(e, 'w')}
-                      className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-4 bg-white/90 border border-indigo-600 rounded-xs cursor-ew-resize shadow-sm hover:scale-125 transition-transform z-20"
-                    />
-                    <div
-                      onPointerDown={(e) => handlePointerDown(e, 'e')}
-                      className="absolute top-1/2 -right-1 -translate-y-1/2 w-2 h-4 bg-white/90 border border-indigo-600 rounded-xs cursor-ew-resize shadow-sm hover:scale-125 transition-transform z-20"
-                    />
-                  </>
-                )}
+                {/* 4 Edge Midpoint Handles */}
+                <div
+                  onPointerDown={(e) => handlePointerDown(e, 'n')}
+                  className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-5 h-2 bg-white/95 border border-indigo-600 rounded-xs cursor-ns-resize shadow-sm hover:scale-125 transition-transform z-20"
+                />
+                <div
+                  onPointerDown={(e) => handlePointerDown(e, 's')}
+                  className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 h-2 bg-white/95 border border-indigo-600 rounded-xs cursor-ns-resize shadow-sm hover:scale-125 transition-transform z-20"
+                />
+                <div
+                  onPointerDown={(e) => handlePointerDown(e, 'w')}
+                  className="absolute top-1/2 -left-1.5 -translate-y-1/2 w-2 h-5 bg-white/95 border border-indigo-600 rounded-xs cursor-ew-resize shadow-sm hover:scale-125 transition-transform z-20"
+                />
+                <div
+                  onPointerDown={(e) => handlePointerDown(e, 'e')}
+                  className="absolute top-1/2 -right-1.5 -translate-y-1/2 w-2 h-5 bg-white/95 border border-indigo-600 rounded-xs cursor-ew-resize shadow-sm hover:scale-125 transition-transform z-20"
+                />
 
                 {/* Dimension Badge */}
-                <div className="absolute bottom-2 right-2 bg-black/75 px-1.5 py-0.5 rounded text-[10px] font-mono text-white/90 pointer-events-none backdrop-blur-xs">
-                  {crop.width} × {crop.height}
+                <div className="absolute bottom-2 right-2 bg-black/80 px-2 py-0.5 rounded text-[10px] font-mono text-white/90 pointer-events-none backdrop-blur-xs border border-white/10">
+                  {crop.width} × {crop.height} px
                 </div>
               </div>
             </div>
@@ -273,11 +294,11 @@ export function ImageCropperModal({
 
         {/* Bottom Zoom & Action Controls */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
-          {/* Zoom Slider (0.4x - 2.5x enables full boundary view) */}
+          {/* Zoom Slider (0.25x - 3.0x enables full boundary viewing and precise framing) */}
           <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={() => setZoom((z) => Math.max(0.4, Number((z - 0.1).toFixed(2))))}
+              onClick={() => setZoom((z) => Math.max(0.25, Number((z - 0.1).toFixed(2))))}
               className="p-1.5 rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
               title="Zoom Out (view full bounds)"
             >
@@ -285,29 +306,30 @@ export function ImageCropperModal({
             </button>
             <input
               type="range"
-              min={0.4}
-              max={2.5}
+              min={0.25}
+              max={3.0}
               step={0.05}
               value={zoom}
               onChange={(e) => setZoom(parseFloat(e.target.value))}
               className="w-28 sm:w-36 h-1.5 bg-zinc-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+              aria-label="Zoom level"
             />
             <button
               type="button"
-              onClick={() => setZoom((z) => Math.min(2.5, Number((z + 0.1).toFixed(2))))}
+              onClick={() => setZoom((z) => Math.min(3.0, Number((z + 0.1).toFixed(2))))}
               className="p-1.5 rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
               title="Zoom In"
             >
               <ZoomIn className="w-4 h-4" />
             </button>
-            <span className="text-[11px] font-mono text-zinc-600 dark:text-zinc-400 w-9 text-right">
+            <span className="text-[11px] font-mono text-zinc-600 dark:text-zinc-400 w-11 text-right">
               {Math.round(zoom * 100)}%
             </span>
             <button
               type="button"
               onClick={() => setZoom(1.0)}
               className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors ml-1"
-              title="Reset Zoom"
+              title="Reset Zoom to 100%"
             >
               <RotateCcw className="w-3.5 h-3.5" />
             </button>

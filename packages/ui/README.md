@@ -413,11 +413,12 @@ import { ... } from '@elsesourav/ui';
 - **Purpose**: Accessible, high-precision client-side interactive image cropping, corner-drag resizing, and dimension optimization system powered by the modular `useCropInteraction` hook.
 - **Key Features**:
   - **Pinned Viewport Overlay**: Modal renders with `fixed inset-0 z-[100]` with backdrop blur, guaranteed above sticky navigation headers and floating bars. Full dual-theme styling (`bg-white dark:bg-zinc-950`).
-  - **Interactive Resizable Crop Selection**: 4 tactile corner handles (`nw`, `ne`, `se`, `sw`) and 4 edge midpoint handles (`n`, `s`, `w`, `e`) for smooth dragging and resizing directly on the image.
+  - **Interactive Resizable Crop Selection**: 4 tactile corner handles (`nw`, `ne`, `se`, `sw`) and 4 edge midpoint handles (`n`, `s`, `w`, `e`) with fixed opposing-corner anchors, continuous window-level pointer tracking, and smooth dragging and resizing directly on the image.
+  - **Quick Framing Actions**: One-click **Fit Full** (`fitFullImage`) button to maximize the crop frame across the full width and height of the image, and **Center** (`centerCrop`) button to re-center the crop frame.
   - **Smart Ratio Detection & Upload**: Direct upload when the selected image matches the target aspect ratio; automatically opens the crop modal if the aspect ratio deviates, with on-demand manual crop buttons.
-  - **Preset Aspect Ratios & Freeform**: Instant preset pills for `Free` (unconstrained rectangle drag), `1:1 Square`, `16:9 Hero`, `21:9 Ultrawide`, `4:3 Standard`, `3:4 Portrait`, `1:6 Carousel/Slider`, and `6:1 Banner`.
-  - **Restricted Ratio Mode (`allowedRatios`)**: When specific ratio options are provided (e.g., avatar requires `1:1`, or banner requires `16:9` / `21:9`), the ratio bar only displays those allowed ratios, automatically locks to the selected ratio, and hides the redundant free-form lock button to prevent invalid aspect ratios.
-  - **Unrestricted Viewport Zoom**: Zoom out to `0.4x` so full image width and height boundaries are visible, with zoom in up to `2.5x`, reset, and rule-of-thirds 3×3 composition grid lines.
+  - **Preset Aspect Ratios & Freeform**: Instant preset pills for `1:1 Square`, `4:3 Standard`, `3:4 Portrait`, `16:9 Hero`, `21:9 Ultrawide`, `1:6 Carousel/Slider`, `6:1 Banner`, and `Free` (unconstrained rectangle drag).
+  - **Aspect Ratio Locking**: Toggle between `Locked` (strict proportional scaling from corners) and `Free` (independent 8-handle resizing) at any time.
+  - **Unrestricted Viewport Zoom**: Zoom out to `0.25x` (25%) so the full image width and height boundaries are clearly visible with generous margins, with zoom in up to `3.0x` (300%), percentage readout, 100% reset button, and rule-of-thirds 3×3 composition grid lines.
   - Automatic target dimension enforcement with bicubic high-smoothing HTML5 Canvas export to WebP/PNG.
   - Direct integration with Cloudinary signed server actions.
 - **Props**:
