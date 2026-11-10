@@ -3,7 +3,6 @@ import type { DropdownItem } from '@elsesourav/ui/interior';
 export const EDGE_ALGORITHM_ITEMS: readonly DropdownItem[] = [
   { value: 'perimeter', label: 'Perimeter Alpha Scan', hint: 'Scan' },
   { value: 'sobel', label: 'Sobel Edge Gradient', hint: 'Sobel' },
-  { value: 'radial', label: 'Radial Centroid Raycast', hint: 'Raycast' },
 ];
 
 export const EDGE_THRESHOLD_ITEMS: readonly DropdownItem[] = [
@@ -85,13 +84,11 @@ export const DIAMOND_STARS_ITEMS: readonly DropdownItem[] = [
 ];
 
 export const ORBIT_LOOPS_ITEMS: readonly DropdownItem[] = [
-  { value: '0', label: 'Disabled (No Orbit Loops)', hint: 'Off' },
-  { value: 'disabled', label: 'Disabled (No Orbit Loops)', hint: 'Off' },
-  { value: '1', label: '1 Outer Celestial Loop', hint: '1 Loop' },
-  { value: '2', label: '2 Symmetrical Orbit Loops (Default)', hint: '2 Loops' },
-  { value: 'enabled', label: '2 Symmetrical Orbit Loops (Default)', hint: '2 Loops' },
-  { value: '3', label: '3 Planetary Orbits', hint: '3 Loops' },
-  { value: '4', label: '4 Complex Gyroscopic Rings', hint: '4 Loops' },
+  { value: '0', label: '0 — Disabled (No Orbit Loops)', hint: 'Off' },
+  { value: '1', label: '1 — Outer Celestial Loop', hint: '1 Loop' },
+  { value: '2', label: '2 — Symmetrical Orbit Loops (Default)', hint: '2 Loops' },
+  { value: '3', label: '3 — Planetary Orbits', hint: '3 Loops' },
+  { value: '4', label: '4 — Complex Gyroscopic Rings', hint: '4 Loops' },
 ];
 
 export const AMBIENT_SPECKS_ITEMS: readonly DropdownItem[] = [
@@ -126,8 +123,7 @@ export const BOUNCE_SPEED_ITEMS: readonly DropdownItem[] = [
   { value: '1.5', label: 'Ultra Slow Drift (1.5)', hint: 'Slow' },
   { value: '3.0', label: 'Smooth Float (3.0)', hint: 'Float' },
   { value: '5.0', label: 'Soft Viscous (5.0)', hint: 'Viscous' },
-  { value: '1.0x', label: 'Standard Elastic (1.0x)', hint: '1.0x' },
-  { value: '8.2', label: 'Standard Return (8.2)', hint: 'Default' },
+  { value: '8.2', label: 'Standard Return (8.2 - Default)', hint: 'Default' },
   { value: '10.0', label: 'Snappy Spring (10.0)', hint: 'Snappy' },
 ];
 
@@ -175,10 +171,6 @@ export const INTRO_ANIMATION_ITEMS: readonly DropdownItem[] = [
   { value: '2.0s', label: '2.0s (Slow Cosmic Warp)', hint: '2.0s' },
   { value: '2.5s', label: '2.5s (Deep Space Float)', hint: '2.5s' },
   { value: '3.0s', label: '3.0s (Ultra Ethereal)', hint: '3.0s' },
-  { value: 'instant', label: 'Instant (0s)', hint: '0s' },
-  { value: 'brisk', label: 'Brisk Flight (0.6s)', hint: '0.6s' },
-  { value: 'standard', label: 'Standard Drift (1.0s)', hint: '1.0s' },
-  { value: 'cinematic', label: 'Cinematic Magnetic (1.6s)', hint: '1.6s' },
 ];
 
 export const INTRO_SPREAD_ITEMS: readonly DropdownItem[] = [

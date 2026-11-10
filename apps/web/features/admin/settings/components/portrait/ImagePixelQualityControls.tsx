@@ -9,19 +9,13 @@ import type { PortraitDeviceTarget } from './portrait.types';
 
 export interface ImagePixelQualityControlsProps {
   activeDevice: PortraitDeviceTarget;
-  onSelectDevice?: (device: PortraitDeviceTarget) => void;
-  desktopResolution: string;
-  tabletResolution: string;
-  mobileResolution: string;
+  resolution: string;
   onChange: (key: string, value: string) => void;
 }
 
 export function ImagePixelQualityControls({
   activeDevice,
-  onSelectDevice,
-  desktopResolution,
-  tabletResolution,
-  mobileResolution,
+  resolution,
   onChange,
 }: ImagePixelQualityControlsProps) {
   // Map active device to current resolution and setting key
@@ -29,8 +23,6 @@ export function ImagePixelQualityControls({
     switch (activeDevice) {
       case 'tablet':
         return {
-          key: 'portrait_image_resolution_tablet',
-          value: tabletResolution || '192',
           label: 'Tablet Grid Resolution',
           subtext: 'Optimal pixel density for iPads and touch tablets (768px – 1023px)',
           badgeLabel: 'Tablet',
@@ -38,8 +30,6 @@ export function ImagePixelQualityControls({
         };
       case 'mobile':
         return {
-          key: 'portrait_image_resolution_mobile',
-          value: mobileResolution || '144',
           label: 'Mobile Grid Resolution',
           subtext: 'High-speed fluid simulation for phones and small viewports (< 768px)',
           badgeLabel: 'Mobile',
@@ -48,23 +38,16 @@ export function ImagePixelQualityControls({
       case 'desktop':
       default:
         return {
-          key: 'portrait_image_resolution_desktop',
-          value: desktopResolution || '256',
           label: 'Desktop Grid Resolution',
           subtext: 'Ultra-high crystalline fidelity for laptops and desktop displays (>= 1024px)',
           badgeLabel: 'Desktop',
           Icon: Monitor,
         };
     }
-  }, [activeDevice, desktopResolution, tabletResolution, mobileResolution]);
+  }, [activeDevice]);
 
-  const { key, value, label, subtext, badgeLabel, Icon } = deviceConfig;
-
-  const devices = [
-    { id: 'desktop' as const, label: 'Desktop', res: `${desktopResolution || '256'}px`, Icon: Monitor },
-    { id: 'tablet' as const, label: 'Tablet', res: `${tabletResolution || '192'}px`, Icon: Tablet },
-    { id: 'mobile' as const, label: 'Mobile', res: `${mobileResolution || '144'}px`, Icon: Smartphone },
-  ];
+  const { label, subtext, badgeLabel, Icon } = deviceConfig;
+  const currentRes = resolution || (activeDevice === 'mobile' ? '144' : activeDevice === 'tablet' ? '192' : '256');
 
   return (
     <div className="space-y-3 p-4 rounded-2xl bg-white dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800 shadow-sm dark:shadow-none">
@@ -80,37 +63,11 @@ export function ImagePixelQualityControls({
           <Badge variant="outline" className="text-[10px] font-mono border-cyan-400/50 dark:border-cyan-500/40 text-cyan-700 dark:text-cyan-300">
             {badgeLabel} Target
           </Badge>
-          <span className="text-[10px] font-mono text-zinc-500 font-bold">{value}px</span>
+          <span className="text-[10px] font-mono text-zinc-500 font-bold">{currentRes}px</span>
         </div>
       </div>
 
-      {/* Mini Device Target Selector */}
-      {onSelectDevice && (
-        <div className="grid grid-cols-3 gap-1.5 p-1 rounded-xl bg-zinc-100/80 dark:bg-zinc-950/60 border border-zinc-200 dark:border-zinc-800/80">
-          {devices.map((d) => {
-            const isCurr = activeDevice === d.id;
-            const DIcon = d.Icon;
-            return (
-              <button
-                key={d.id}
-                type="button"
-                onClick={() => onSelectDevice(d.id)}
-                className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-[11px] font-semibold transition-all cursor-pointer ${
-                  isCurr
-                    ? 'bg-white dark:bg-zinc-800 text-cyan-700 dark:text-cyan-300 shadow-xs border border-cyan-400/40'
-                    : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
-                }`}
-              >
-                <DIcon className="w-3 h-3" />
-                <span>{d.label}</span>
-                <span className="text-[9px] font-mono opacity-70">({d.res})</span>
-              </button>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Dynamic Single-Device Resolution Tuner */}
+      {/* Dynamic Resolution Tuner for Currently Active Device Tab */}
       <div className="p-3.5 rounded-xl border border-cyan-400/50 dark:border-cyan-500/30 bg-zinc-50/60 dark:bg-zinc-950/50 space-y-2.5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
@@ -127,11 +84,15 @@ export function ImagePixelQualityControls({
 
         <Dropdown
           items={[...IMAGE_RESOLUTION_ITEMS]}
-          value={value}
+          value={currentRes}
           onChange={(val) => {
-            onChange(key, val);
+            onChange('portrait_image_resolution', val);
             if (activeDevice === 'desktop') {
-              onChange('portrait_image_resolution', val);
+              onChange('portrait_image_resolution_desktop', val);
+            } else if (activeDevice === 'tablet') {
+              onChange('portrait_image_resolution_tablet', val);
+            } else if (activeDevice === 'mobile') {
+              onChange('portrait_image_resolution_mobile', val);
             }
           }}
           className="w-full"

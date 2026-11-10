@@ -201,78 +201,8 @@ inline void traceSobelGradient(
     }
 }
 
-// =============================================================================
-// ALGORITHM 2: Radial Centroid Raycast
-// Finds subject centroid and casts radial rays outward across 180-240 degrees
-// spanning shoulders, neck, face, and hair apex.
-// =============================================================================
-inline void traceRadialRaycast(
-    uint8_t* inputImage,
-    int w,
-    int h,
-    int threshold,
-    int pinBottom,
-    float* rawX,
-    float* rawY,
-    int& rawCount
-) {
-    float sumX = 0.0f;
-    float sumY = 0.0f;
-    int count = 0;
-
-    for (int y = 0; y < h; y += 2) {
-        for (int x = 0; x < w; x += 2) {
-            if (inputImage[(y * w + x) * 4 + 3] > (uint8_t)threshold) {
-                sumX += (float)x;
-                sumY += (float)y;
-                count++;
-            }
-        }
-    }
-    if (count < 20) return;
-
-    float cx = sumX / (float)count;
-    float cy = sumY / (float)count;
-    float maxR = (float)w * 0.72f;
-
-    // Sweep from bottom-left angle (approx 140 deg = 0.78 * PI) over top (-PI/2) to bottom-right (approx 40 deg = 0.22 * PI)
-    const int STEPS = 220;
-    for (int i = 0; i < STEPS; i++) {
-        if (rawCount >= MAX_CONTOUR - 16) break;
-        // Map i from +PI*0.85 around top to +PI*0.15
-        float t = (float)i / (float)(STEPS - 1);
-        float angle = (float)M_PI * (0.88f - t * 0.76f);
-
-        float dirX = -cosf(angle);
-        float dirY = -sinf(angle);
-
-        float lastHitX = cx;
-        float lastHitY = cy;
-        bool found = false;
-
-        for (float r = 4.0f; r < maxR; r += 1.0f) {
-            int px = (int)roundf(cx + dirX * r);
-            int py = (int)roundf(cy + dirY * r);
-            if (px < 0 || px >= w || py < 0 || py >= h) break;
-
-            if (inputImage[(py * w + px) * 4 + 3] > (uint8_t)threshold) {
-                lastHitX = (float)px;
-                lastHitY = (float)py;
-                found = true;
-            } else if (found) {
-                break;
-            }
-        }
-
-        if (found) {
-            rawX[rawCount] = lastHitX;
-            rawY[rawCount] = lastHitY;
-            rawCount++;
-        }
-    }
-}
-
 // Master Silhouette Contour Extraction with configurable algorithm & sensitivity
+// Equidistant arc-length resampling guarantees constant travel speed across the entire path.
 inline void extractSilhouetteContour(
     uint8_t* inputImage,
     int w,
@@ -293,10 +223,9 @@ inline void extractSilhouetteContour(
     static float rawY[MAX_CONTOUR];
     int rawCount = 0;
 
+    // Algorithm 1: Sobel Edge Gradient. Default / Algorithm 0: Perimeter Alpha Scan.
     if (algorithm == 1) {
         traceSobelGradient(inputImage, w, h, threshold, pinBottom, rawX, rawY, rawCount);
-    } else if (algorithm == 2) {
-        traceRadialRaycast(inputImage, w, h, threshold, pinBottom, rawX, rawY, rawCount);
     } else {
         tracePerimeterAlpha(inputImage, w, h, threshold, pinBottom, rawX, rawY, rawCount);
     }
@@ -309,17 +238,16 @@ inline void extractSilhouetteContour(
 
     if (rawCount < 8) return;
 
-    // Moving average smoothing window (win = 7)
-    const int WIN = 7;
+    // 1. Moving average smoothing on raw points to eliminate pixel discretization noise
+    static float smoothX[MAX_CONTOUR];
+    static float smoothY[MAX_CONTOUR];
+    const int WIN = 5;
     const int HALF = WIN / 2;
 
     for (int i = 0; i < rawCount; i++) {
-        if (contourCount >= MAX_CONTOUR - 2) break;
-
         float sumX = 0.0f;
         float sumY = 0.0f;
         int count = 0;
-
         for (int j = -HALF; j <= HALF; j++) {
             int idx = i + j;
             if (idx >= 0 && idx < rawCount) {
@@ -328,18 +256,55 @@ inline void extractSilhouetteContour(
                 count++;
             }
         }
-
-        contour[contourCount].x = sumX / (float)count;
-        contour[contourCount].y = sumY / (float)count;
-        contourCount++;
+        smoothX[i] = sumX / (float)count;
+        smoothY[i] = sumY / (float)count;
     }
 
-    if (contourCount > 2 && pinBottom) {
+    // 2. Compute cumulative arc-length distances along the smoothed path
+    static float arcLen[MAX_CONTOUR];
+    arcLen[0] = 0.0f;
+    for (int i = 1; i < rawCount; i++) {
+        float dx = smoothX[i] - smoothX[i - 1];
+        float dy = smoothY[i] - smoothY[i - 1];
+        arcLen[i] = arcLen[i - 1] + sqrtf(dx * dx + dy * dy);
+    }
+    float totalLen = arcLen[rawCount - 1];
+    if (totalLen < 2.0f) return;
+
+    // 3. Equidistant arc-length resampling:
+    // Every consecutive point is placed at the exact same distance (actualStep pixels)
+    // guaranteeing perfectly constant particle traversal speed across all parts of the silhouette!
+    float targetStep = 1.6f;
+    int numSamples = (int)(totalLen / targetStep);
+    if (numSamples < 24) numSamples = 24;
+    if (numSamples > MAX_CONTOUR - 8) numSamples = MAX_CONTOUR - 8;
+
+    float actualStep = totalLen / (float)(numSamples - 1);
+    int currSeg = 0;
+
+    for (int s = 0; s < numSamples; s++) {
+        float targetDist = (float)s * actualStep;
+        while (currSeg < rawCount - 2 && arcLen[currSeg + 1] < targetDist) {
+            currSeg++;
+        }
+        float segStart = arcLen[currSeg];
+        float segEnd = arcLen[currSeg + 1];
+        float segDist = segEnd - segStart;
+        float t = (segDist > 0.0001f) ? ((targetDist - segStart) / segDist) : 0.0f;
+        if (t < 0.0f) t = 0.0f;
+        if (t > 1.0f) t = 1.0f;
+
+        contour[s].x = smoothX[currSeg] + t * (smoothX[currSeg + 1] - smoothX[currSeg]);
+        contour[s].y = smoothY[currSeg] + t * (smoothY[currSeg + 1] - smoothY[currSeg]);
+    }
+    contourCount = numSamples;
+
+    if (pinBottom && contourCount > 2) {
         contour[0].y = (float)(h - 1);
         contour[contourCount - 1].y = (float)(h - 1);
     }
 
-    // True outward normal vectors
+    // 4. Compute true outward normal vectors
     for (int i = 0; i < contourCount; i++) {
         int prevIdx = (i > 0) ? (i - 1) : 0;
         int nextIdx = (i < contourCount - 1) ? (i + 1) : (contourCount - 1);

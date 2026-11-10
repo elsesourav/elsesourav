@@ -140,6 +140,9 @@ export interface SiteAndCreatorIdentity {
     readonly portraitIntroAnimation?: string;
     readonly portraitIntroSpread?: string;
     readonly portraitIntroPattern?: string;
+    readonly portraitConfigDesktop?: string;
+    readonly portraitConfigTablet?: string;
+    readonly portraitConfigMobile?: string;
   };
   readonly footer: {
     readonly copyright: string;

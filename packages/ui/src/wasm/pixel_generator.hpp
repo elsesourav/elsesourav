@@ -68,6 +68,10 @@ inline void PixelEngine::generatePixels() {
         }
     }
 
+    // Resolution scaling factor relative to baseline 224px grid
+    float resScale = (float)w / 224.0f;
+    if (resScale < 0.65f) resScale = 0.65f;
+
     // 1B. Side Star-type Points (Delicate retro diamond stars on image sides)
     if (backsideStarsCount > 0) {
         static const float STAR_SEEDS[48][2] = {
@@ -87,6 +91,10 @@ inline void PixelEngine::generatePixels() {
 
         int starLimit = backsideStarsCount;
         if (starLimit > 48) starLimit = 48;
+
+        float starCenterSize = fmaxf(2.2f, basePixelSize * 1.15f);
+        float armDist = fmaxf(2.4f, 2.5f * resScale);
+        float armSize = fmaxf(1.6f, basePixelSize * 0.80f);
 
         for (int s = 0; s < starLimit; s++) {
             if (particleCount >= MAX_PARTICLES - 8) break;
@@ -123,14 +131,12 @@ inline void PixelEngine::generatePixels() {
                 sb = isLeft ? 235 : 225;
             }
 
-            // Center star pixel (delicate diamond point)
+            // Center star pixel (delicate diamond point, invariant across resolutions)
             Pixel& sp = particles[particleCount++];
-            sp.init(sx, sy, sr, sg, sb, 240, basePixelSize * 1.05f, FLAG_STAR_PIXEL | FLAG_BACK_PIXEL);
+            sp.init(sx, sy, sr, sg, sb, 240, starCenterSize, FLAG_STAR_PIXEL | FLAG_BACK_PIXEL);
             sp.pathPhase = (float)s * 1.618f;
 
             // 4 Cross arms forming classic 5-pixel diamond cross star
-            float armDist = basePixelSize * 0.72f;
-            float armSize = basePixelSize * 0.58f;
             static const float ARMS[4][2] = {{-1.0f, 0.0f}, {1.0f, 0.0f}, {0.0f, -1.0f}, {0.0f, 1.0f}};
             for (int a = 0; a < 4; a++) {
                 if (particleCount >= MAX_PARTICLES - 4) break;
@@ -152,12 +158,16 @@ inline void PixelEngine::generatePixels() {
             {0.20f, 0.42f, 10.0f}  // secondary side orbit
         };
 
+        float orbitDotSize = fmaxf(1.8f, basePixelSize * 0.90f);
+        int dotCount = (int)(18.0f * (0.85f + 0.25f * resScale));
+        if (dotCount < 16) dotCount = 16;
+        if (dotCount > 28) dotCount = 28;
+
         for (int o = 0; o < numOrbits; o++) {
             float ocx = ORBITS[o][0] * (float)w;
             float ocy = ORBITS[o][1] * (float)h;
-            float orad = ORBITS[o][2];
+            float orad = ORBITS[o][2] * resScale;
             bool isLeft = (o == 0 || o == 3);
-            int dotCount = 18;
 
             uint8_t orr, org, orb;
             if (isDark) {
@@ -183,7 +193,7 @@ inline void PixelEngine::generatePixels() {
                 }
 
                 Pixel& op = particles[particleCount++];
-                op.init(opx, opy, orr, org, orb, 185, basePixelSize * 0.85f, FLAG_ORBIT_PIXEL | FLAG_BACK_PIXEL);
+                op.init(opx, opy, orr, org, orb, 185, orbitDotSize, FLAG_ORBIT_PIXEL | FLAG_BACK_PIXEL);
                 op.pathPhase = oang;
                 op.pathSpeed = isLeft ? 0.9f : -0.75f;
                 op.normalOffset = orad;
@@ -243,7 +253,7 @@ inline void PixelEngine::generatePixels() {
     }
 
     // =========================================================================
-    // LAYER 2: MIDDLE IMAGE PIXELS (Authentic photograph, clean, normal face)
+    // LAYER 2: MIDDLE IMAGE PIXELS (Authentic photograph with shadow recovery & color fidelity)
     // =========================================================================
     for (int y = 0; y < h; y++) {
         for (int x = 0; x < w; x++) {
@@ -255,8 +265,51 @@ inline void PixelEngine::generatePixels() {
             uint8_t pa = inputImage[idx + 3];
 
             if (pa > 16) {
+                // Adaptive Photographic Color & Shadow Recovery
+                // Deep blacks (RGB 0..25) in jackets/hoodies vanish against dark backgrounds (#09090b).
+                // Lift shadows smoothly so fabric folds, seams, and silhouettes remain clearly visible,
+                // while skin tones and vibrant features are perfectly preserved without color loss.
+                float rF = (float)pr;
+                float gF = (float)pg;
+                float bF = (float)pb;
+                float lum = 0.299f * rF + 0.587f * gF + 0.114f * bF;
+
+                if (isDark) {
+                    if (lum < 65.0f) {
+                        float norm = 1.0f - lum / 65.0f;
+                        float lift = norm * norm * 28.0f;
+                        rF = fminf(255.0f, rF + lift);
+                        gF = fminf(255.0f, gF + lift);
+                        bF = fminf(255.0f, bF + lift * 1.15f);
+                    }
+                } else {
+                    if (lum > 220.0f) {
+                        float norm = (lum - 220.0f) / 35.0f;
+                        float compress = norm * 12.0f;
+                        rF = fmaxf(0.0f, rF - compress);
+                        gF = fmaxf(0.0f, gF - compress);
+                        bF = fmaxf(0.0f, bF - compress);
+                    }
+                }
+
+                // Color vibrance preservation (counteracts multi-step downsample desaturation)
+                if (lum >= 35.0f && lum <= 215.0f) {
+                    float meanRGB = (rF + gF + bF) * 0.333333f;
+                    float satBoost = 1.08f;
+                    rF = fminf(255.0f, fmaxf(0.0f, meanRGB + (rF - meanRGB) * satBoost));
+                    gF = fminf(255.0f, fmaxf(0.0f, meanRGB + (gF - meanRGB) * satBoost));
+                    bF = fminf(255.0f, fmaxf(0.0f, meanRGB + (bF - meanRGB) * satBoost));
+                }
+
+                uint8_t finalR = (uint8_t)roundf(rF);
+                uint8_t finalG = (uint8_t)roundf(gF);
+                uint8_t finalB = (uint8_t)roundf(bF);
+
+                // Preserve edge silhouette opacity so borders don't fade into haze
+                uint8_t finalA = (pa > 160) ? 255 : (uint8_t)(170 + (int)pa * 0.45f);
+
                 Pixel& p = particles[particleCount++];
-                p.init((float)x, (float)y, pr, pg, pb, pa, basePixelSize, FLAG_IMAGE_PIXEL);
+                p.init((float)x, (float)y, finalR, finalG, finalB, finalA, basePixelSize, FLAG_IMAGE_PIXEL);
             }
         }
     }

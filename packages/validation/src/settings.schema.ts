@@ -129,6 +129,12 @@ export const SiteSettingsSchema = z.object({
   portrait_image_resolution_tablet: z.string().max(20).optional().or(z.literal('')),
   /** Mobile grid resolution: '224', '192', '160', '144', '112' */
   portrait_image_resolution_mobile: z.string().max(20).optional().or(z.literal('')),
+  /** Full per-device settings JSON string for Desktop target */
+  portrait_config_desktop: z.string().optional().or(z.literal('')),
+  /** Full per-device settings JSON string for Tablet target */
+  portrait_config_tablet: z.string().optional().or(z.literal('')),
+  /** Full per-device settings JSON string for Mobile target */
+  portrait_config_mobile: z.string().optional().or(z.literal('')),
   /** Click & touch impulse blast force multiplier: 0.1x to 1.8x */
   portrait_click_force: z.string().max(20).optional().or(z.literal('')),
   /** Elastic return bounce / spring speed multiplier: 1.5 to 10.0 */

@@ -98,6 +98,9 @@ export default async function AdminSettingsPage() {
     portrait_intro_animation: dbSettings['portrait_intro_animation'] || '1.0s',
     portrait_intro_spread: dbSettings['portrait_intro_spread'] || '1.0x',
     portrait_intro_pattern: dbSettings['portrait_intro_pattern'] || 'vortex',
+    portrait_config_desktop: dbSettings['portrait_config_desktop'] || '',
+    portrait_config_tablet: dbSettings['portrait_config_tablet'] || '',
+    portrait_config_mobile: dbSettings['portrait_config_mobile'] || '',
     // Legal content defaults
     legal_privacy_md: dbSettings['legal_privacy_md'] || '',
     legal_terms_md: dbSettings['legal_terms_md'] || '',

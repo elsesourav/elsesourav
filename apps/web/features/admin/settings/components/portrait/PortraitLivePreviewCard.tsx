@@ -15,6 +15,7 @@ import {
   Monitor,
   Tablet,
   Smartphone,
+  RotateCcw,
 } from 'lucide-react';
 import type { PortraitDraftSettings, PortraitDeviceTarget } from './portrait.types';
 
@@ -51,24 +52,32 @@ export function PortraitLivePreviewCard({
     }
   };
 
+  const triggerReplayIntro = () => {
+    const win =
+      typeof window !== 'undefined'
+        ? (window as unknown as {
+            __portraitBridge?: { triggerEntrance: (duration?: number) => void };
+          })
+        : null;
+    if (win?.__portraitBridge?.triggerEntrance) {
+      win.__portraitBridge.triggerEntrance();
+    } else {
+      setBurstKey((k) => k + 1);
+    }
+  };
+
   // Determine resolution based on device target
   const activeResolution =
-    activeDevice === 'mobile'
+    settings.portrait_image_resolution ||
+    (activeDevice === 'mobile'
       ? settings.portrait_image_resolution_mobile || '144'
       : activeDevice === 'tablet'
         ? settings.portrait_image_resolution_tablet || '192'
-        : settings.portrait_image_resolution_desktop || settings.portrait_image_resolution || '256';
+        : settings.portrait_image_resolution_desktop || '256');
 
-  // Desktop canvas is generously sized (~340px) to maximize detail visibility
-  const { canvasSize, maxWClass } = React.useMemo(() => {
-    if (activeDevice === 'mobile') {
-      return { canvasSize: 220, maxWClass: 'max-w-[220px]' };
-    }
-    if (activeDevice === 'tablet') {
-      return { canvasSize: 270, maxWClass: 'max-w-[270px]' };
-    }
-    return { canvasSize: 340, maxWClass: 'max-w-[340px]' };
-  }, [activeDevice]);
+  // Preview canvas size remains constant (~340px) across all device targets to maintain a stable studio layout
+  const canvasSize = 340;
+  const maxWClass = 'max-w-[340px]';
 
   const DeviceIcon = activeDevice === 'mobile' ? Smartphone : activeDevice === 'tablet' ? Tablet : Monitor;
 
@@ -158,7 +167,17 @@ export function PortraitLivePreviewCard({
             className="text-[10px] h-6 px-2 rounded-lg border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 whitespace-nowrap"
           >
             <Zap className="w-2.5 h-2.5 text-amber-500 dark:text-amber-400 mr-1" />
-            <span>Click Burst</span>
+            <span>Burst</span>
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="xs"
+            onClick={triggerReplayIntro}
+            className="text-[10px] h-6 px-2 rounded-lg border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 whitespace-nowrap"
+          >
+            <RotateCcw className="w-2.5 h-2.5 text-cyan-600 dark:text-cyan-400 mr-1" />
+            <span>Intro</span>
           </Button>
         </div>
 
@@ -244,6 +263,7 @@ export function PortraitLivePreviewCard({
             introDuration={settings.portrait_intro_animation}
             introSpread={settings.portrait_intro_spread}
             introPattern={settings.portrait_intro_pattern}
+            disableFullscreenIntro={true}
             className="rounded-xl w-full"
           />
         </div>

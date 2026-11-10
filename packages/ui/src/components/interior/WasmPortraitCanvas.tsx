@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { WasmPortraitBridge } from './wasm-portrait.bridge';
+import { usePortraitInteractions } from './wasm-portrait.interactions';
 import {
   parseMultiplier,
   parsePortraitCustomValues,
@@ -46,6 +47,7 @@ export interface WasmPortraitCanvasProps {
   introDuration?: string | number;
   introSpread?: string | number;
   introPattern?: string | number;
+  disableFullscreenIntro?: boolean;
 }
 
 export function WasmPortraitCanvas({
@@ -84,6 +86,7 @@ export function WasmPortraitCanvas({
   introDuration = '1.0s',
   introSpread = '1.0x',
   introPattern = 'vortex',
+  disableFullscreenIntro = false,
 }: WasmPortraitCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasMountRef = useRef<HTMLDivElement>(null);
@@ -93,9 +96,6 @@ export function WasmPortraitCanvas({
   const introTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sizeRef = useRef(size);
   sizeRef.current = size;
-  const isTouchingRef = useRef(false);
-  const lastTouchPosRef = useRef({ x: 0, y: 0 });
-  const lastTouchEndTimeRef = useRef(0);
 
   const rawDensity = parseMultiplier(particleDensity);
   const rawSize = parseMultiplier(particleSize);
@@ -154,7 +154,6 @@ export function WasmPortraitCanvas({
 
     bridge.setFullscreenMode(false);
     bridge.resize(currentSize, currentSize);
-    bridge.triggerEntrance(0.01);
   }, []);
 
   const switchToFullscreen = useCallback(() => {
@@ -302,11 +301,15 @@ export function WasmPortraitCanvas({
       onLoaded: () => {
         setIsWasmActive(true);
         if (bridge && !bridge.isWebGLActive()) setHasWebGLError(true);
-        if (!prefersReducedMotion && eff.effIntroDuration > 0.05) {
+        if (!disableFullscreenIntro && !prefersReducedMotion && eff.effIntroDuration > 0.05) {
           switchToFullscreen();
         } else {
           switchToCard();
-          bridge.triggerEntrance(0.01);
+          if (!prefersReducedMotion && eff.effIntroDuration > 0.05) {
+            bridge.triggerEntrance(eff.effIntroDuration);
+          } else {
+            bridge.triggerEntrance(0.01);
+          }
         }
       },
     });
@@ -354,71 +357,54 @@ export function WasmPortraitCanvas({
     showPathGuide, eff,
   ]);
 
-  // Pointer & Touch interactions
-  const getCoords = useCallback((clientX: number, clientY: number) => {
-    if (!containerRef.current) return null;
-    const rect = containerRef.current.getBoundingClientRect();
-    if (rect.width === 0 || rect.height === 0) return null;
-    return {
-      x: ((clientX - rect.left) / rect.width) * 2 - 1,
-      y: 1 - ((clientY - rect.top) / rect.height) * 2,
-    };
-  }, []);
+  // Re-trigger entrance when intro duration, spread, or pattern is changed in settings
+  const prevIntroRef = useRef({
+    duration: eff.effIntroDuration,
+    spread: eff.effIntroSpread,
+    pattern: eff.effIntroPattern,
+  });
 
-  const handlePointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    if (!bridgeRef.current) return;
-    const coords = getCoords(e.clientX, e.clientY);
-    if (!coords) return;
-    if (e.pointerType === 'touch') {
-      isTouchingRef.current = true;
-      lastTouchPosRef.current = coords;
-      bridgeRef.current.setPointer(coords.x, coords.y, true);
-    } else {
-      bridgeRef.current.setPointer(coords.x, coords.y, true);
+  useEffect(() => {
+    if (!bridgeRef.current || !isWasmActive) return;
+    const prev = prevIntroRef.current;
+    if (
+      prev.duration !== eff.effIntroDuration ||
+      prev.spread !== eff.effIntroSpread ||
+      prev.pattern !== eff.effIntroPattern
+    ) {
+      prevIntroRef.current = {
+        duration: eff.effIntroDuration,
+        spread: eff.effIntroSpread,
+        pattern: eff.effIntroPattern,
+      };
+      bridgeRef.current.triggerEntrance(eff.effIntroDuration);
     }
-  }, [getCoords]);
+  }, [eff.effIntroDuration, eff.effIntroSpread, eff.effIntroPattern, isWasmActive]);
 
-  const handlePointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    if (!bridgeRef.current) return;
-    const coords = getCoords(e.clientX, e.clientY);
-    if (!coords) return;
-    if (e.pointerType === 'touch') {
-      if (isTouchingRef.current) {
-        lastTouchPosRef.current = coords;
-        bridgeRef.current.setPointer(coords.x, coords.y, true);
-      }
-    } else {
-      bridgeRef.current.setPointer(coords.x, coords.y, false);
+  // Expose global test bridge for Admin Studio simulation controls
+  useEffect(() => {
+    if (typeof window !== 'undefined' && bridgeRef.current) {
+      (window as unknown as {
+        __portraitBridge?: {
+          burst: (x?: number, y?: number) => void;
+          triggerEntrance: (duration?: number) => void;
+        };
+      }).__portraitBridge = {
+        burst: (x = 0, y = 0) => bridgeRef.current?.burst(x, y),
+        triggerEntrance: (d?: number) =>
+          bridgeRef.current?.triggerEntrance(d ?? eff.effIntroDuration),
+      };
     }
-  }, [getCoords]);
+  }, [eff.effIntroDuration]);
 
-  const handlePointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    if (!bridgeRef.current) return;
-    const coords = getCoords(e.clientX, e.clientY) || lastTouchPosRef.current;
-    if (e.pointerType === 'touch' || isTouchingRef.current) {
-      isTouchingRef.current = false;
-      lastTouchEndTimeRef.current = performance.now();
-      bridgeRef.current.burst(coords.x, coords.y);
-    }
-    bridgeRef.current.setPointer(-999, -999, false);
-  }, [getCoords]);
-
-  const handlePointerLeave = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    if (!bridgeRef.current) return;
-    if (isTouchingRef.current) {
-      isTouchingRef.current = false;
-      lastTouchEndTimeRef.current = performance.now();
-      const { x, y } = lastTouchPosRef.current;
-      bridgeRef.current.burst(x, y);
-    }
-    bridgeRef.current.setPointer(-999, -999, false);
-  }, []);
-
-  const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!bridgeRef.current || performance.now() - lastTouchEndTimeRef.current < 450) return;
-    const coords = getCoords(e.clientX, e.clientY);
-    if (coords) bridgeRef.current.burst(coords.x, coords.y);
-  }, [getCoords]);
+  // Pointer & Touch interactions hook
+  const {
+    handlePointerDown,
+    handlePointerMove,
+    handlePointerLeave,
+    handlePointerUp,
+    handleClick,
+  } = usePortraitInteractions({ containerRef, bridgeRef });
 
   return (
     <div

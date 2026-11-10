@@ -127,9 +127,17 @@ export class WasmPortraitBridge {
   }
 
   private initRenderer(): void {
+    const contextAttrs: WebGLContextAttributes = {
+      alpha: true,
+      premultipliedAlpha: false,
+      antialias: true,
+      preserveDrawingBuffer: false,
+      powerPreference: 'high-performance',
+    };
+
     const gl =
-      (this.canvas.getContext('webgl2', { alpha: true }) as WebGL2RenderingContext | null) ||
-      (this.canvas.getContext('webgl', { alpha: true }) as WebGLRenderingContext | null);
+      (this.canvas.getContext('webgl2', contextAttrs) as WebGL2RenderingContext | null) ||
+      (this.canvas.getContext('webgl', contextAttrs) as WebGLRenderingContext | null);
 
     if (gl) {
       this.gl = gl;
@@ -213,6 +221,12 @@ export class WasmPortraitBridge {
     }
 
     try {
+      if (this.offscreenCanvas.width !== this.simRes || this.offscreenCanvas.height !== this.simRes) {
+        this.offscreenCanvas.width = this.simRes;
+        this.offscreenCanvas.height = this.simRes;
+      }
+      this.offscreenCtx.imageSmoothingEnabled = true;
+      this.offscreenCtx.imageSmoothingQuality = 'high';
       this.offscreenCtx.clearRect(0, 0, this.simRes, this.simRes);
       const nw = img.naturalWidth || 1;
       const nh = img.naturalHeight || 1;

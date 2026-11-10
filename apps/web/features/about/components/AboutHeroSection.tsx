@@ -46,6 +46,9 @@ export interface AboutHeroSectionProps {
     portraitIntroAnimation?: string;
     portraitIntroSpread?: string;
     portraitIntroPattern?: string;
+    portraitConfigDesktop?: string;
+    portraitConfigTablet?: string;
+    portraitConfigMobile?: string;
   };
 }
 
@@ -108,6 +111,9 @@ export function AboutHeroSection({ creator, site }: AboutHeroSectionProps) {
               introDuration={site.portraitIntroAnimation}
               introSpread={site.portraitIntroSpread}
               introPattern={site.portraitIntroPattern}
+              configDesktop={site.portraitConfigDesktop}
+              configTablet={site.portraitConfigTablet}
+              configMobile={site.portraitConfigMobile}
             />
           </div>
 

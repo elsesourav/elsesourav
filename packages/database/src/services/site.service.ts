@@ -65,6 +65,9 @@ export class SiteService {
     const portraitImageResolutionDesktop = dbSettings['portrait_image_resolution_desktop'] || '256';
     const portraitImageResolutionTablet = dbSettings['portrait_image_resolution_tablet'] || '192';
     const portraitImageResolutionMobile = dbSettings['portrait_image_resolution_mobile'] || '144';
+    const portraitConfigDesktop = dbSettings['portrait_config_desktop'] || '';
+    const portraitConfigTablet = dbSettings['portrait_config_tablet'] || '';
+    const portraitConfigMobile = dbSettings['portrait_config_mobile'] || '';
     const portraitClickForce = dbSettings['portrait_click_force'] || '1.0x';
     const portraitBounceSpeed = dbSettings['portrait_bounce_speed'] || '8.2';
     const portraitClickRadius = dbSettings['portrait_click_radius'] || '80px';
@@ -186,6 +189,9 @@ export class SiteService {
         portraitImageResolutionDesktop,
         portraitImageResolutionTablet,
         portraitImageResolutionMobile,
+        portraitConfigDesktop,
+        portraitConfigTablet,
+        portraitConfigMobile,
         portraitClickForce,
         portraitBounceSpeed,
         portraitClickRadius,
