@@ -109,62 +109,108 @@ export function HomeHero({
         className="absolute inset-0 z-0 w-full h-full pointer-events-none select-none overflow-hidden"
         style={{ touchAction: 'pan-y' }}
       >
-        {/* Dark Theme Background Layers (Cosmic Night Sky) */}
-        <div
-          className={`absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-700 ease-in-out blur-[3px] sm:blur-[4px] md:blur-0 scale-105 md:scale-100 ${
-            isLight ? 'opacity-0' : 'opacity-100'
-          }`}
-          style={{ touchAction: 'pan-y' }}
-        >
-          {/* Low-Quality Placeholder with blur effect (726 bytes) */}
-          <img
-            src="/hero/sky-bg-thumb.webp"
-            alt=""
-            className={`w-full h-full object-cover object-[35%_center] md:object-center scale-[1.03] transition-all duration-700 ease-out pointer-events-none ${
-              isDarkBgLoaded ? 'opacity-0' : 'opacity-100'
+        {/* Desktop Background Layers (Full-cover landscape window on iPad & Desktop) */}
+        <div className="hidden md:block absolute inset-0 w-full h-full pointer-events-none">
+          {/* Dark Theme Background Layers (Cosmic Night Sky) */}
+          <div
+            className={`absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-700 ease-in-out ${
+              isLight ? 'opacity-0' : 'opacity-100'
             }`}
-            draggable={false}
-          />
-          {/* High-Quality Progressive WebP Background (72 KB) */}
-          <img
-            src="/hero/sky-bg.webp"
-            alt=""
-            className={`absolute inset-0 w-full h-full object-cover object-[35%_center] md:object-center scale-[1.02] transition-opacity duration-700 ease-out pointer-events-none ${
-              isDarkBgLoaded ? 'opacity-100' : 'opacity-0'
+            style={{ touchAction: 'pan-y' }}
+          >
+            <img
+              src="/hero/sky-bg-thumb.webp"
+              alt=""
+              className={`w-full h-full object-cover object-center scale-[1.03] transition-all duration-700 ease-out pointer-events-none ${
+                isDarkBgLoaded ? 'opacity-0' : 'opacity-100'
+              }`}
+              draggable={false}
+            />
+            <img
+              src="/hero/sky-bg.webp"
+              alt=""
+              className={`absolute inset-0 w-full h-full object-cover object-center scale-[1.02] transition-opacity duration-700 ease-out pointer-events-none ${
+                isDarkBgLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
+              loading="eager"
+              onLoad={markDarkBgLoaded}
+              draggable={false}
+            />
+          </div>
+
+          {/* Light Theme Background Layers (Daylight Cloudscape) */}
+          <div
+            className={`absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-700 ease-in-out ${
+              isLight ? 'opacity-100' : 'opacity-0'
             }`}
-            loading="eager"
-            onLoad={markDarkBgLoaded}
-            draggable={false}
+            style={{ touchAction: 'pan-y' }}
+          >
+            <img
+              src="/hero/sky-light-bg-thumb.webp"
+              alt=""
+              className={`w-full h-full object-cover object-center scale-[1.03] transition-all duration-700 ease-out pointer-events-none ${
+                isLightBgLoaded ? 'opacity-0' : 'opacity-100'
+              }`}
+              draggable={false}
+            />
+            <img
+              src="/hero/sky-light-bg.webp"
+              alt=""
+              className={`absolute inset-0 w-full h-full object-cover object-center scale-[1.02] transition-opacity duration-700 ease-out pointer-events-none ${
+                isLightBgLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
+              loading="eager"
+              onLoad={markLightBgLoaded}
+              draggable={false}
+            />
+          </div>
+
+          {/* Ambient Contrast Gradient: Left-weighted on desktop for text readability */}
+          <div
+            className="absolute inset-0 pointer-events-none transition-all duration-700"
+            style={{
+              background: isLight
+                ? 'linear-gradient(90deg, rgba(255,255,255,0.94) 0%, rgba(255,255,255,0.80) 38%, rgba(255,255,255,0.22) 68%, transparent 100%)'
+                : 'linear-gradient(90deg, rgba(9,9,11,0.92) 0%, rgba(9,9,11,0.72) 38%, rgba(9,9,11,0.2) 68%, transparent 100%)',
+            }}
           />
         </div>
 
-        {/* Light Theme Background Layers (Daylight Cloudscape - Luminous, soft atmospheric depth) */}
+        {/* Mobile Background Layers (ONLY set on the backside of the floating island at top center) */}
         <div
-          className={`absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-700 ease-in-out blur-[2px] sm:blur-[3px] md:blur-0 scale-105 md:scale-100 ${
-            isLight ? 'opacity-100' : 'opacity-0'
-          }`}
-          style={{ touchAction: 'pan-y' }}
+          className="md:hidden absolute top-0 left-0 right-0 h-[290px] xs:h-[320px] sm:h-[350px] pointer-events-none select-none overflow-hidden"
+          style={{
+            maskImage: 'linear-gradient(to bottom, black 0%, black 65%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 65%, transparent 100%)',
+          }}
         >
-          {/* Low-Quality Placeholder with blur effect (282 bytes) */}
-          <img
-            src="/hero/sky-light-bg-thumb.webp"
-            alt=""
-            className={`w-full h-full object-cover object-[35%_center] md:object-center scale-[1.03] transition-all duration-700 ease-out pointer-events-none ${
-              isLightBgLoaded ? 'opacity-0' : 'opacity-100'
+          {/* Mobile Dark Theme: Night Sky with glowing celestial planet directly behind the island */}
+          <div
+            className={`absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out ${
+              isLight ? 'opacity-0' : 'opacity-100'
             }`}
-            draggable={false}
-          />
-          {/* High-Quality Progressive WebP Daylight Clouds (64 KB) */}
-          <img
-            src="/hero/sky-light-bg.webp"
-            alt=""
-            className={`absolute inset-0 w-full h-full object-cover object-[35%_center] md:object-center scale-[1.02] transition-opacity duration-700 ease-out pointer-events-none ${
-              isLightBgLoaded ? 'opacity-100' : 'opacity-0'
+          >
+            <img
+              src="/hero/sky-bg.webp"
+              alt=""
+              className="w-full h-full object-cover object-[78%_center] scale-100 pointer-events-none"
+              draggable={false}
+            />
+          </div>
+
+          {/* Mobile Light Theme: Sunset Cloudscape with glowing planet & clouds directly behind the island */}
+          <div
+            className={`absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out ${
+              isLight ? 'opacity-100' : 'opacity-0'
             }`}
-            loading="eager"
-            onLoad={markLightBgLoaded}
-            draggable={false}
-          />
+          >
+            <img
+              src="/hero/sky-light-bg.webp"
+              alt=""
+              className="w-full h-full object-cover object-[78%_center] scale-100 pointer-events-none"
+              draggable={false}
+            />
+          </div>
         </div>
 
         {/* ── 2. Atmospheric Layer: Cosmic Stars / Volumetric Fog (WebGL + WebAssembly C++ Engine) ── */}
@@ -191,23 +237,6 @@ export function HomeHero({
           }
         />
 
-        {/* Ambient Contrast Gradient: Left-weighted on desktop, luminous readable foundation on mobile */}
-        <div
-          className="hidden md:block absolute inset-0 pointer-events-none transition-all duration-700"
-          style={{
-            background: isLight
-              ? 'linear-gradient(90deg, rgba(255,255,255,0.94) 0%, rgba(255,255,255,0.80) 38%, rgba(255,255,255,0.22) 68%, transparent 100%)'
-              : 'linear-gradient(90deg, rgba(9,9,11,0.92) 0%, rgba(9,9,11,0.72) 38%, rgba(9,9,11,0.2) 68%, transparent 100%)',
-          }}
-        />
-        <div
-          className="md:hidden absolute inset-0 pointer-events-none transition-all duration-700"
-          style={{
-            background: isLight
-              ? 'linear-gradient(180deg, rgba(255,255,255,0.70) 0%, rgba(255,255,255,0.85) 30%, rgba(255,255,255,0.95) 60%, rgba(255,255,255,1) 100%)'
-              : 'linear-gradient(180deg, rgba(9,9,11,0.65) 0%, rgba(9,9,11,0.78) 30%, rgba(9,9,11,0.90) 60%, rgba(9,9,11,0.98) 100%)',
-          }}
-        />
 
         {/* Subtle top edge fade that lets the sky show through the transparent navbar */}
         <div
