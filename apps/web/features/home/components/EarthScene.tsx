@@ -3,7 +3,6 @@
 import * as React from 'react';
 import { MOBILE_ROCKS, ROCKS } from './earth-scene.constants';
 import { LaptopLiveCanvas } from './LaptopLiveCanvas';
-import { useProgressiveImage } from './useProgressiveImage';
 
 export interface EarthSceneProps {
   isSceneActive?: boolean;
@@ -16,22 +15,6 @@ export function EarthScene({
   isMobileCompact = false,
   isMobileBackdrop = false,
 }: EarthSceneProps) {
-  const [isIslandLoaded, markIslandLoaded] = useProgressiveImage(
-    isMobileBackdrop ? '' : '/hero/parts/island-main.webp'
-  );
-  const [isReady, setIsReady] = React.useState(false);
-
-  React.useEffect(() => {
-    if (isMobileBackdrop) {
-      setIsReady(true);
-      return;
-    }
-    if (isIslandLoaded) {
-      const timer = setTimeout(() => setIsReady(true), 60);
-      return () => clearTimeout(timer);
-    }
-  }, [isIslandLoaded, isMobileBackdrop]);
-
   return (
     <div
       className={`relative isolate w-full flex items-center justify-center select-none ${
@@ -54,11 +37,12 @@ export function EarthScene({
 
       {/* Coordinate Stage (Proportionally scaled for mobile compact or full desktop) */}
       <div
-        className={`relative w-full aspect-[1024/888] pointer-events-none ${
+        className={`relative w-full pointer-events-none ${
           isMobileCompact
-            ? 'max-w-[230px] xs:max-w-[260px] sm:max-w-[300px]'
+            ? 'max-w-[210px] xs:max-w-[240px] sm:max-w-[270px]'
             : 'max-w-[420px] sm:max-w-[480px] lg:max-w-[500px] xl:max-w-[540px]'
         }`}
+        style={{ aspectRatio: '1024 / 888' }}
       >
         {/* ── Realistic Cloud Mist & Fog Layer (Drifting mist on desktop, static ambient on mobile) ── */}
         {!isMobileCompact ? (
@@ -118,7 +102,7 @@ export function EarthScene({
           />
         )}
 
-        {/* ── Main Floating Island with Progressive Low-to-High Image Loading ── */}
+        {/* ── Main Floating Island ── */}
         <div
           className="hero-main-island absolute z-[3]"
           style={{
@@ -130,39 +114,18 @@ export function EarthScene({
               : 'drop-shadow(0 20px 35px rgba(0, 0, 0, 0.45)) drop-shadow(0 8px 20px rgba(244, 114, 182, 0.15))',
           }}
         >
-          {/* Low-Quality Lightweight Placeholder (3.6 KB) - On mobile, this is the only image used with blur */}
           <img
-            src="/hero/parts/island-main-thumb.webp"
-            alt=""
-            aria-hidden="true"
-            className={`w-full h-auto object-contain ${
-              isMobileBackdrop
-                ? 'opacity-100'
-                : `transition-all duration-700 ease-out ${isReady ? 'opacity-0 blur-0' : 'opacity-100 blur-[6px]'}`
-            }`}
+            src="/hero/parts/island-main.webp"
+            alt="Floating digital sanctuary island"
+            className="w-full h-auto object-contain select-none pointer-events-none"
+            loading="eager"
             draggable={false}
           />
-
-          {/* High-Quality Progressive WebP Image (172 KB) - Only loaded & rendered on iPad & Desktop */}
-          {!isMobileBackdrop && (
-            <img
-              src="/hero/parts/island-main.webp"
-              alt="Floating digital sanctuary island"
-              className={`absolute inset-0 w-full h-auto object-contain transition-opacity duration-700 ease-out ${
-                isReady ? 'opacity-100' : 'opacity-0'
-              }`}
-              loading="eager"
-              onLoad={markIslandLoaded}
-              draggable={false}
-            />
-          )}
 
           {/* ── Dynamic Live Laptop Display (Split-View Coding & Real-time Preview on Desktop and Mobile) ── */}
           {!isMobileBackdrop && (
             <div
-              className={`block absolute z-[4] pointer-events-none transition-opacity duration-700 ease-out ${
-                isReady ? 'opacity-100' : 'opacity-0'
-              }`}
+              className="block absolute z-[4] pointer-events-none"
               style={{
                 left: '40.6%',
                 top: '28%',
@@ -201,13 +164,7 @@ export function EarthScene({
             <img
               src={rock.src}
               alt=""
-              className={`w-full h-auto object-contain transition-all duration-700 ease-out ${
-                isMobileBackdrop
-                  ? 'opacity-85'
-                  : isReady
-                    ? 'blur-0 opacity-100 scale-100'
-                    : 'blur-[6px] opacity-75 scale-95'
-              }`}
+              className="w-full h-auto object-contain pointer-events-none select-none"
               loading={isMobileBackdrop || isMobileCompact ? 'lazy' : 'eager'}
               draggable={false}
             />

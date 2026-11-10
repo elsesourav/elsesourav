@@ -56,7 +56,12 @@ export function PortraitSettingsTab({ settings, onChange, onSave }: PortraitSett
       portrait_click_force: settings['portrait_click_force'] || '1.0x',
       portrait_bounce_speed: settings['portrait_bounce_speed'] || '8.2',
       portrait_click_radius: settings['portrait_click_radius'] || '80px',
+      portrait_hover_speed: settings['portrait_hover_speed'] || '1.0x',
+      portrait_hover_threshold: settings['portrait_hover_threshold'] || '55px',
+      portrait_click_speed: settings['portrait_click_speed'] || '1.0x',
       portrait_intro_animation: settings['portrait_intro_animation'] || '1.0s',
+      portrait_intro_spread: settings['portrait_intro_spread'] || '1.0x',
+      portrait_intro_pattern: settings['portrait_intro_pattern'] || 'vortex',
     }),
     [settings]
   );
@@ -162,7 +167,12 @@ export function PortraitSettingsTab({ settings, onChange, onSave }: PortraitSett
             clickForce={draftSettings.portrait_click_force}
             bounceSpeed={draftSettings.portrait_bounce_speed}
             clickRadius={draftSettings.portrait_click_radius}
+            hoverSpeed={draftSettings.portrait_hover_speed}
+            hoverThreshold={draftSettings.portrait_hover_threshold}
+            clickSpeed={draftSettings.portrait_click_speed}
             introAnimation={draftSettings.portrait_intro_animation}
+            introSpread={draftSettings.portrait_intro_spread}
+            introPattern={draftSettings.portrait_intro_pattern}
             onChange={handleDraftChange}
           />
         </div>

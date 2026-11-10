@@ -25,6 +25,11 @@ export interface WasmPortraitBridgeOptions {
   bounceSpeed?: number;
   glowDistance?: number;
   clickRadius?: number;
+  hoverSpeed?: number;
+  hoverRadius?: number;
+  clickSpeed?: number;
+  introSpread?: number;
+  introPattern?: number;
   onLoaded?: () => void;
 }
 
@@ -60,6 +65,11 @@ export interface WasmExports {
   engine_set_bounce_speed: (engine: number, mult: number) => void;
   engine_set_glow_distance: (engine: number, dist: number) => void;
   engine_set_click_radius: (engine: number, radius: number) => void;
+  engine_set_hover_speed: (engine: number, mult: number) => void;
+  engine_set_hover_radius: (engine: number, mult: number) => void;
+  engine_set_click_speed: (engine: number, mult: number) => void;
+  engine_set_intro_spread: (engine: number, mult: number) => void;
+  engine_set_intro_pattern: (engine: number, pattern: number) => void;
   engine_get_vertex_buffer: (engine: number) => number;
   engine_get_vertex_count: (engine: number) => number;
   engine_destroy: (engine: number) => void;

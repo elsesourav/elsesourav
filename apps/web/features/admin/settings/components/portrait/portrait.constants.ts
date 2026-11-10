@@ -139,14 +139,60 @@ export const CLICK_RADIUS_ITEMS: readonly DropdownItem[] = [
   { value: 'full', label: 'Full Canvas Shockwave (Full)', hint: 'Full' },
 ];
 
+export const HOVER_SPEED_ITEMS: readonly DropdownItem[] = [
+  { value: '0.3x', label: 'Ultra Slow Drift (0.3x)', hint: '0.3x' },
+  { value: '0.6x', label: 'Gentle Glide (0.6x)', hint: '0.6x' },
+  { value: '1.0x', label: 'Standard Velocity (1.0x - Default)', hint: '1.0x' },
+  { value: '1.5x', label: 'Brisk Flow (1.5x)', hint: '1.5x' },
+  { value: '2.2x', label: 'High Velocity (2.2x)', hint: '2.2x' },
+];
+
+export const HOVER_THRESHOLD_ITEMS: readonly DropdownItem[] = [
+  { value: '30px', label: 'Tight Touch (30px)', hint: '30px' },
+  { value: '55px', label: 'Focused Proximity (55px - Default)', hint: '55px' },
+  { value: '85px', label: 'Natural Radius (85px)', hint: '85px' },
+  { value: '120px', label: 'Broad Influence (120px)', hint: '120px' },
+  { value: '160px', label: 'Wide Ambient Halo (160px)', hint: '160px' },
+];
+
+export const CLICK_SPEED_ITEMS: readonly DropdownItem[] = [
+  { value: '0.3x', label: 'Slow-Mo Ripple (0.3x)', hint: '0.3x' },
+  { value: '0.6x', label: 'Cinematic Wave (0.6x)', hint: '0.6x' },
+  { value: '1.0x', label: 'Standard Blast (1.0x - Default)', hint: '1.0x' },
+  { value: '1.6x', label: 'Rapid Surge (1.6x)', hint: '1.6x' },
+  { value: '2.4x', label: 'Instant Impulse (2.4x)', hint: '2.4x' },
+];
+
 export const INTRO_ANIMATION_ITEMS: readonly DropdownItem[] = [
+  { value: '0.1s', label: '0.1s (Ultra Fast Snap)', hint: '0.1s' },
+  { value: '0.3s', label: '0.3s (Rapid Snap)', hint: '0.3s' },
+  { value: '0.5s', label: '0.5s (Brisk Flight)', hint: '0.5s' },
+  { value: '0.8s', label: '0.8s (Smooth Swift)', hint: '0.8s' },
+  { value: '1.0s', label: '1.0s (Standard - Default)', hint: '1.0s' },
+  { value: '1.3s', label: '1.3s (Graceful Drift)', hint: '1.3s' },
+  { value: '1.5s', label: '1.5s (Cinematic Inflow)', hint: '1.5s' },
+  { value: '1.8s', label: '1.8s (Deliberate Glide)', hint: '1.8s' },
+  { value: '2.0s', label: '2.0s (Slow Cosmic Warp)', hint: '2.0s' },
+  { value: '2.5s', label: '2.5s (Deep Space Float)', hint: '2.5s' },
+  { value: '3.0s', label: '3.0s (Ultra Ethereal)', hint: '3.0s' },
   { value: 'instant', label: 'Instant (0s)', hint: '0s' },
-  { value: '0.1s', label: 'Instant Snap (0.1s)', hint: '0.1s' },
-  { value: '0.3s', label: 'Micro Drift (0.3s)', hint: '0.3s' },
   { value: 'brisk', label: 'Brisk Flight (0.6s)', hint: '0.6s' },
-  { value: '0.6s', label: 'Brisk Flight (0.6s)', hint: '0.6s' },
   { value: 'standard', label: 'Standard Drift (1.0s)', hint: '1.0s' },
-  { value: '1.0s', label: 'Standard Drift (1.0s)', hint: '1.0s' },
   { value: 'cinematic', label: 'Cinematic Magnetic (1.6s)', hint: '1.6s' },
-  { value: '1.6s', label: 'Cinematic Magnetic (1.6s)', hint: '1.6s' },
+];
+
+export const INTRO_SPREAD_ITEMS: readonly DropdownItem[] = [
+  { value: '0.5x', label: 'Compact Orbit (0.5x)', hint: '0.5x' },
+  { value: '0.8x', label: 'Focused Spread (0.8x)', hint: '0.8x' },
+  { value: '1.0x', label: 'Standard Spread (1.0x - Default)', hint: '1.0x' },
+  { value: '1.5x', label: 'Wide Cosmic Aura (1.5x)', hint: '1.5x' },
+  { value: '2.2x', label: 'Deep Space Expansion (2.2x)', hint: '2.2x' },
+  { value: '3.0x', label: 'Infinite Galaxy (3.0x)', hint: '3.0x' },
+];
+
+export const INTRO_PATTERN_ITEMS: readonly DropdownItem[] = [
+  { value: 'vortex', label: 'Cosmic Spiral Vortex (Default)', hint: 'Vortex' },
+  { value: 'stagger', label: 'Random Constellation Clusters', hint: 'Clusters' },
+  { value: 'wave', label: 'Ascending Wave Surge', hint: 'Wave' },
+  { value: 'warp', label: 'Direct Magnetic Warp', hint: 'Warp' },
 ];

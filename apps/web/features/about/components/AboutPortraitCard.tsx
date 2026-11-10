@@ -34,7 +34,12 @@ export interface AboutPortraitCardProps {
   clickForce?: string | number;
   bounceSpeed?: string | number;
   clickRadius?: string | number;
+  hoverSpeed?: string | number;
+  hoverRadius?: string | number;
+  clickSpeed?: string | number;
   introDuration?: string | number;
+  introSpread?: string | number;
+  introPattern?: string | number;
 }
 
 export function AboutPortraitCard({
@@ -67,7 +72,12 @@ export function AboutPortraitCard({
   clickForce,
   bounceSpeed,
   clickRadius,
+  hoverSpeed,
+  hoverRadius,
+  clickSpeed,
   introDuration,
+  introSpread,
+  introPattern,
 }: AboutPortraitCardProps) {
   const { resolvedTheme, effectsLevel } = useTheme();
   const isDark = resolvedTheme === 'dark';
@@ -140,7 +150,12 @@ export function AboutPortraitCard({
           clickForce={clickForce}
           bounceSpeed={bounceSpeed}
           clickRadius={clickRadius}
+          hoverSpeed={hoverSpeed}
+          hoverRadius={hoverRadius}
+          clickSpeed={clickSpeed}
           introDuration={introDuration}
+          introSpread={introSpread}
+          introPattern={introPattern}
           className="w-full shadow-inner border border-[hsl(var(--border-subtle))] rounded-2xl"
         />
       </div>

@@ -40,7 +40,12 @@ export interface AboutHeroSectionProps {
     portraitClickForce?: string;
     portraitBounceSpeed?: string;
     portraitClickRadius?: string;
+    portraitHoverSpeed?: string;
+    portraitHoverThreshold?: string;
+    portraitClickSpeed?: string;
     portraitIntroAnimation?: string;
+    portraitIntroSpread?: string;
+    portraitIntroPattern?: string;
   };
 }
 
@@ -97,7 +102,12 @@ export function AboutHeroSection({ creator, site }: AboutHeroSectionProps) {
               clickForce={site.portraitClickForce}
               bounceSpeed={site.portraitBounceSpeed}
               clickRadius={site.portraitClickRadius}
+              hoverSpeed={site.portraitHoverSpeed}
+              hoverRadius={site.portraitHoverThreshold}
+              clickSpeed={site.portraitClickSpeed}
               introDuration={site.portraitIntroAnimation}
+              introSpread={site.portraitIntroSpread}
+              introPattern={site.portraitIntroPattern}
             />
           </div>
 

@@ -134,7 +134,12 @@ export interface SiteAndCreatorIdentity {
     readonly portraitClickForce?: string;
     readonly portraitBounceSpeed?: string;
     readonly portraitClickRadius?: string;
+    readonly portraitHoverSpeed?: string;
+    readonly portraitHoverThreshold?: string;
+    readonly portraitClickSpeed?: string;
     readonly portraitIntroAnimation?: string;
+    readonly portraitIntroSpread?: string;
+    readonly portraitIntroPattern?: string;
   };
   readonly footer: {
     readonly copyright: string;

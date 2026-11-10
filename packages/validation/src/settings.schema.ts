@@ -135,8 +135,18 @@ export const SiteSettingsSchema = z.object({
   portrait_bounce_speed: z.string().max(20).optional().or(z.literal('')),
   /** Localized click disturbance radius: 24px, 48px, 80px, 140px, full */
   portrait_click_radius: z.string().max(20).optional().or(z.literal('')),
-  /** Initial arrival flight intro animation style: 'instant', '0.1s', '0.3s', '0.6s', '1.0s', '1.6s' */
+  /** Touch & cursor hover pixel displacement push speed multiplier: 0.3x, 0.6x, 1.0x, 1.5x, 2.2x */
+  portrait_hover_speed: z.string().max(20).optional().or(z.literal('')),
+  /** Touch & cursor hover detection proximity radius: 30px, 55px, 85px, 120px, 160px */
+  portrait_hover_threshold: z.string().max(20).optional().or(z.literal('')),
+  /** Click shockwave blast ripple expansion speed multiplier: 0.3x, 0.6x, 1.0x, 1.6x, 2.4x */
+  portrait_click_speed: z.string().max(20).optional().or(z.literal('')),
+  /** Initial arrival flight intro animation duration: '0.1s', '0.3s', '0.5s', '0.8s', '1.0s', '1.3s', '1.5s', '1.8s', '2.0s', '2.5s', '3.0s' */
   portrait_intro_animation: z.string().max(20).optional().or(z.literal('')),
+  /** Initial arrival intro pixel dispersion spreadness: 0.5x, 0.8x, 1.0x, 1.5x, 2.2x, 3.0x */
+  portrait_intro_spread: z.string().max(20).optional().or(z.literal('')),
+  /** Initial arrival intro pixel pattern: 'vortex', 'stagger', 'wave', 'warp' */
+  portrait_intro_pattern: z.string().max(30).optional().or(z.literal('')),
 
   // ── Footer Customization ───────────────────────────────────────────────────
   footer_text: z.string().max(500).optional().or(z.literal('')),

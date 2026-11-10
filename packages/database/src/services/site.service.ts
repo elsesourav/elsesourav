@@ -68,7 +68,12 @@ export class SiteService {
     const portraitClickForce = dbSettings['portrait_click_force'] || '1.0x';
     const portraitBounceSpeed = dbSettings['portrait_bounce_speed'] || '8.2';
     const portraitClickRadius = dbSettings['portrait_click_radius'] || '80px';
+    const portraitHoverSpeed = dbSettings['portrait_hover_speed'] || '1.0x';
+    const portraitHoverThreshold = dbSettings['portrait_hover_threshold'] || '55px';
+    const portraitClickSpeed = dbSettings['portrait_click_speed'] || '1.0x';
     const portraitIntroAnimation = dbSettings['portrait_intro_animation'] || '1.0s';
+    const portraitIntroSpread = dbSettings['portrait_intro_spread'] || '1.0x';
+    const portraitIntroPattern = dbSettings['portrait_intro_pattern'] || 'vortex';
 
     const footerCopyright =
       dbSettings['footer_copyright'] ||
@@ -184,7 +189,12 @@ export class SiteService {
         portraitClickForce,
         portraitBounceSpeed,
         portraitClickRadius,
+        portraitHoverSpeed,
+        portraitHoverThreshold,
+        portraitClickSpeed,
         portraitIntroAnimation,
+        portraitIntroSpread,
+        portraitIntroPattern,
       },
       footer: {
         copyright: footerCopyright,

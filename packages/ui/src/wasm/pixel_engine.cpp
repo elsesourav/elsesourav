@@ -37,6 +37,11 @@ PixelEngine::PixelEngine() {
     bounceSpeedMult = 1.0f;
     glowDistanceMult = 1.0f;
     clickRadiusMult = 1.0f;
+    hoverSpeedMult = 1.0f;
+    hoverRadiusMult = 1.0f;
+    clickSpeedMult = 1.0f;
+    introSpreadMult = 1.0f;
+    introPattern = 0;
 
     particleCount = 0;
     emitterCount = 0;
@@ -210,6 +215,26 @@ void PixelEngine::setClickRadius(float radius) {
     clickRadiusMult = radius;
 }
 
+void PixelEngine::setHoverSpeed(float mult) {
+    hoverSpeedMult = mult;
+}
+
+void PixelEngine::setHoverRadius(float mult) {
+    hoverRadiusMult = mult;
+}
+
+void PixelEngine::setClickSpeed(float mult) {
+    clickSpeedMult = mult;
+}
+
+void PixelEngine::setIntroSpread(float mult) {
+    introSpreadMult = mult;
+}
+
+void PixelEngine::setIntroPattern(int pattern) {
+    introPattern = pattern;
+}
+
 void PixelEngine::processImage(int w, int h) {
     init(w, h, isDark);
     generatePixels();
@@ -364,6 +389,26 @@ void engine_set_glow_distance(PixelEngine* engine, float dist) {
 
 void engine_set_click_radius(PixelEngine* engine, float radius) {
     if (engine) engine->setClickRadius(radius);
+}
+
+void engine_set_hover_speed(PixelEngine* engine, float mult) {
+    if (engine) engine->setHoverSpeed(mult);
+}
+
+void engine_set_hover_radius(PixelEngine* engine, float mult) {
+    if (engine) engine->setHoverRadius(mult);
+}
+
+void engine_set_click_speed(PixelEngine* engine, float mult) {
+    if (engine) engine->setClickSpeed(mult);
+}
+
+void engine_set_intro_spread(PixelEngine* engine, float mult) {
+    if (engine) engine->setIntroSpread(mult);
+}
+
+void engine_set_intro_pattern(PixelEngine* engine, int pattern) {
+    if (engine) engine->setIntroPattern(pattern);
 }
 
 float* engine_get_vertex_buffer(PixelEngine* engine) {

@@ -72,6 +72,11 @@ private:
     float bounceSpeedMult;           // Elastic return spring speed multiplier (0.2..2.0)
     float glowDistanceMult;          // Top particle glow distance multiplier (0.4..3.0)
     float clickRadiusMult;           // Click disturbance radius multiplier (0.2..10.0, >= 5.0 = full)
+    float hoverSpeedMult;            // Touch / hover displacement push speed (0.3..2.5, default 1.0)
+    float hoverRadiusMult;           // Touch / hover detection proximity radius (0.4..2.5, default 1.0)
+    float clickSpeedMult;            // Click shockwave expansion speed (0.3..3.0, default 1.0)
+    float introSpreadMult;           // Initial flight intro dispersion spread (0.5..3.0, default 1.0)
+    int introPattern;                // 0: Spiral Vortex, 1: Random Constellation, 2: Wave Surge, 3: Direct Warp
 
     uint8_t inputImage[MAX_IMAGE_BYTES];
     Pixel particles[MAX_PARTICLES];
@@ -136,6 +141,11 @@ public:
     void setBounceSpeed(float mult);
     void setGlowDistance(float dist);
     void setClickRadius(float radius);
+    void setHoverSpeed(float mult);
+    void setHoverRadius(float mult);
+    void setClickSpeed(float mult);
+    void setIntroSpread(float mult);
+    void setIntroPattern(int pattern);
 
     float* getVertexBufferPtr() {
         return (float*)vertexBuffer;

@@ -93,6 +93,7 @@ inline void PixelEngine::triggerEntrance(float duration) {
     float cy = (float)height * 0.5f;
     float maxDim = (float)((width > height) ? width : height);
     float effDuration = (duration > 0.01f) ? duration : 1.6f;
+    float effSpread = (introSpreadMult > 0.05f) ? introSpreadMult : 1.0f;
 
     for (int i = 0; i < particleCount; i++) {
         Pixel& p = particles[i];
@@ -101,20 +102,37 @@ inline void PixelEngine::triggerEntrance(float duration) {
         float seed = (float)i * 0.6180339887f;
         float randAngle = pseudoRand(seed * 7.13f + 1.23f) * 6.2831853f;
 
-        float outDist = maxDim * (2.8f + pseudoRand(seed * 11.37f + 5.67f) * 2.8f);
+        float outDist = maxDim * (2.8f + pseudoRand(seed * 11.37f + 5.67f) * 2.8f) * effSpread;
 
         p.startX = cx + cosf(randAngle) * outDist;
         p.startY = cy + sinf(randAngle) * outDist;
-        p.curveSeed = (pseudoRand(seed * 4.31f) - 0.5f) * ((float)width * 0.28f);
 
         float baseStagger = 0.0f;
-        if (p.flags & FLAG_BACK_PIXEL) {
-            baseStagger = 0.0f;
-        } else if (p.flags & FLAG_IMAGE_PIXEL) {
-            baseStagger = 0.04f + pseudoRand(seed * 3.19f) * 0.20f;
-        } else if (p.flags & (FLAG_TOP_PARTICLE | FLAG_PATH_LINE)) {
-            baseStagger = 0.14f + pseudoRand(seed * 5.41f) * 0.22f;
+        if (introPattern == 1) {
+            // Random constellation arrival: rich asynchronous staggering & organic dispersal
+            baseStagger = pseudoRand(seed * 9.17f + 0.33f) * 0.55f;
+            p.curveSeed = (pseudoRand(seed * 4.31f) - 0.5f) * ((float)width * 0.45f) * effSpread;
+        } else if (introPattern == 2) {
+            // Wave surge: bottom to top arrival wavefront
+            float normY = p.origY / (float)height;
+            baseStagger = (1.0f - normY) * 0.45f + pseudoRand(seed * 2.11f) * 0.10f;
+            p.curveSeed = (pseudoRand(seed * 3.31f) - 0.5f) * ((float)width * 0.15f);
+        } else if (introPattern == 3) {
+            // Direct magnetic warp: linear inward docking flight
+            baseStagger = pseudoRand(seed * 3.19f) * 0.15f;
+            p.curveSeed = 0.0f;
+        } else {
+            // Spiral vortex (default 0)
+            if (p.flags & FLAG_BACK_PIXEL) {
+                baseStagger = 0.0f;
+            } else if (p.flags & FLAG_IMAGE_PIXEL) {
+                baseStagger = 0.04f + pseudoRand(seed * 3.19f) * 0.20f;
+            } else if (p.flags & (FLAG_TOP_PARTICLE | FLAG_PATH_LINE)) {
+                baseStagger = 0.14f + pseudoRand(seed * 5.41f) * 0.22f;
+            }
+            p.curveSeed = (pseudoRand(seed * 4.31f) - 0.5f) * ((float)width * 0.28f) * effSpread;
         }
+
         p.startDelay = baseStagger * effDuration;
 
         float speedVariation = 0.65f + pseudoRand(seed * 8.91f + 0.42f) * 0.70f;
@@ -185,18 +203,22 @@ inline void PixelEngine::update(float dt, float mouseX, float mouseY, int isMous
         }
     }
 
-    // Fast, energetic 260px/s shockwave expansion (sweeps across canvas in ~0.55s)
+    // Fast, energetic shockwave expansion (speed controlled by clickSpeedMult)
+    float effWaveSpeed = 260.0f * (clickSpeedMult > 0.05f ? clickSpeedMult : 1.0f);
     for (int i = 0; i < MAX_SHOCKWAVES; i++) {
         if (shockwaves[i].active) {
-            shockwaves[i].radius += dt * 260.0f;
+            shockwaves[i].radius += dt * effWaveSpeed;
             if (shockwaves[i].radius >= shockwaves[i].maxRadius) {
                 shockwaves[i].active = 0;
             }
         }
     }
 
-    float interactRadius = (float)width * 0.22f;
-    float maxPush = isMouseDown ? 4.8f : 2.4f;
+    float effHoverRadius = (hoverRadiusMult > 0.05f) ? hoverRadiusMult : 1.0f;
+    float effHoverSpeed = (hoverSpeedMult > 0.05f) ? hoverSpeedMult : 1.0f;
+
+    float interactRadius = (float)width * 0.22f * effHoverRadius;
+    float maxPush = (isMouseDown ? 4.8f : 2.4f) * effHoverSpeed;
 
     int currentEmitter = 0;
 

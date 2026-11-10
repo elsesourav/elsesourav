@@ -93,6 +93,37 @@ export function parseClickRadius(val: string | number | undefined, defaultVal = 
   return Math.max(0.2, Math.min(10.0, parsed / 80.0));
 }
 
+export function parseHoverSpeed(val: string | number | undefined, defaultVal = 1.0): number {
+  if (typeof val === 'number') return val;
+  return parseMultiplier(val, defaultVal);
+}
+
+export function parseHoverRadius(val: string | number | undefined, defaultVal = 1.0): number {
+  if (typeof val === 'number') return val;
+  if (!val) return defaultVal;
+  const parsed = parseFloat(String(val).replace('px', ''));
+  if (isNaN(parsed)) return defaultVal;
+  return Math.max(0.3, Math.min(3.5, parsed / 55.0));
+}
+
+export function parseClickSpeed(val: string | number | undefined, defaultVal = 1.0): number {
+  if (typeof val === 'number') return val;
+  return parseMultiplier(val, defaultVal);
+}
+
+export function parseIntroSpread(val: string | number | undefined, defaultVal = 1.0): number {
+  if (typeof val === 'number') return val;
+  return parseMultiplier(val, defaultVal);
+}
+
+export function parseIntroPattern(val: string | number | undefined, defaultVal = 0): number {
+  if (typeof val === 'number') return Math.max(0, Math.min(3, val));
+  if (val === 'stagger' || val === 'random') return 1;
+  if (val === 'wave') return 2;
+  if (val === 'warp' || val === 'direct') return 3;
+  return 0; // default: vortex
+}
+
 export function resolveDeviceResolution(
   settings: Record<string, string>,
   defaultVal = 224

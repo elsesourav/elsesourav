@@ -74,6 +74,11 @@ export class WasmPortraitBridge {
   private bounceSpeed: number;
   private glowDistance: number;
   private clickRadius: number;
+  private hoverSpeed: number;
+  private hoverRadius: number;
+  private clickSpeed: number;
+  private introSpread: number;
+  private introPattern: number;
 
   constructor(options: WasmPortraitBridgeOptions) {
     this.canvas = options.canvas;
@@ -106,6 +111,11 @@ export class WasmPortraitBridge {
     this.bounceSpeed = options.bounceSpeed ?? 1.0;
     this.glowDistance = options.glowDistance ?? 1.0;
     this.clickRadius = options.clickRadius ?? 1.0;
+    this.hoverSpeed = options.hoverSpeed ?? 1.0;
+    this.hoverRadius = options.hoverRadius ?? 1.0;
+    this.clickSpeed = options.clickSpeed ?? 1.0;
+    this.introSpread = options.introSpread ?? 1.0;
+    this.introPattern = options.introPattern ?? 0;
 
     this.offscreenCanvas = document.createElement('canvas');
     this.offscreenCanvas.width = this.simRes;
@@ -186,6 +196,11 @@ export class WasmPortraitBridge {
     e.engine_set_bounce_speed(p, this.bounceSpeed);
     e.engine_set_glow_distance(p, this.glowDistance);
     e.engine_set_click_radius(p, this.clickRadius);
+    e.engine_set_hover_speed(p, this.hoverSpeed);
+    e.engine_set_hover_radius(p, this.hoverRadius);
+    e.engine_set_click_speed(p, this.clickSpeed);
+    e.engine_set_intro_spread(p, this.introSpread);
+    e.engine_set_intro_pattern(p, this.introPattern);
   }
 
   public ingestImageElement(img: HTMLImageElement): void {
@@ -266,25 +281,10 @@ export class WasmPortraitBridge {
     this.wasmExports?.engine_set_light_intensity(this.enginePtr, val);
   }
 
-  public setParticleSize(mult: number): void {
-    this.particleSize = mult;
-    this.wasmExports?.engine_set_particle_size(this.enginePtr, mult);
-  }
-
-  public setGlowBrightness(mult: number): void {
-    this.glowBrightness = mult;
-    this.wasmExports?.engine_set_glow_brightness(this.enginePtr, mult);
-  }
-
-  public setFlightSpeed(mult: number): void {
-    this.flightSpeed = mult;
-    this.wasmExports?.engine_set_speed(this.enginePtr, mult);
-  }
-
-  public setDensity(mult: number): void {
-    this.particleDensity = mult;
-    this.wasmExports?.engine_set_density(this.enginePtr, mult);
-  }
+  public setParticleSize(mult: number): void { this.particleSize = mult; this.wasmExports?.engine_set_particle_size(this.enginePtr, mult); }
+  public setGlowBrightness(mult: number): void { this.glowBrightness = mult; this.wasmExports?.engine_set_glow_brightness(this.enginePtr, mult); }
+  public setFlightSpeed(mult: number): void { this.flightSpeed = mult; this.wasmExports?.engine_set_speed(this.enginePtr, mult); }
+  public setDensity(mult: number): void { this.particleDensity = mult; this.wasmExports?.engine_set_density(this.enginePtr, mult); }
 
   public setPathSpread(spread: number | string): void {
     const parsed = typeof spread === 'string' ? parseFloat(spread) : spread;
@@ -295,80 +295,26 @@ export class WasmPortraitBridge {
     }
   }
 
-  public setShowPathGuide(show: boolean): void {
-    this.showPathGuide = show;
-    this.wasmExports?.engine_set_show_path_guide(this.enginePtr, show ? 1 : 0);
-  }
-
-  public setEdgeAlgorithm(v: number): void {
-    this.edgeAlgorithm = v;
-    this.wasmExports?.engine_set_edge_algorithm(this.enginePtr, v);
-  }
-
-  public setEdgeThreshold(v: number): void {
-    this.edgeThreshold = v;
-    this.wasmExports?.engine_set_edge_threshold(this.enginePtr, v);
-  }
-
-  public setPinBottomEdge(v: number): void {
-    this.pinBottomEdge = v;
-    this.wasmExports?.engine_set_pin_bottom_edge(this.enginePtr, v);
-  }
-
-  public setTopParticleSize(v: number): void {
-    this.topParticleSize = v;
-    this.wasmExports?.engine_set_top_particle_size(this.enginePtr, v);
-  }
-
-  public setTopParticleQuantity(v: number): void {
-    this.topParticleQuantity = v;
-    this.wasmExports?.engine_set_top_particle_quantity(this.enginePtr, v);
-  }
-
-  public setTopParticleSpeed(v: number): void {
-    this.topParticleSpeed = v;
-    this.wasmExports?.engine_set_top_particle_speed(this.enginePtr, v);
-  }
-
-  public setBacksideStars(v: number): void {
-    this.backsideStars = v;
-    this.wasmExports?.engine_set_backside_stars(this.enginePtr, v);
-  }
-
-  public setBacksideHalo(v: number): void {
-    this.backsideHalo = v;
-    this.wasmExports?.engine_set_backside_halo(this.enginePtr, v);
-  }
-
-  public setBacksideOrbits(v: number): void {
-    this.backsideOrbits = v;
-    this.wasmExports?.engine_set_backside_orbits(this.enginePtr, v);
-  }
-
-  public setBacksideSpecks(v: number): void {
-    this.backsideSpecks = v;
-    this.wasmExports?.engine_set_backside_specks(this.enginePtr, v);
-  }
-
-  public setClickForce(v: number): void {
-    this.clickForce = v;
-    this.wasmExports?.engine_set_click_force(this.enginePtr, v);
-  }
-
-  public setBounceSpeed(v: number): void {
-    this.bounceSpeed = v;
-    this.wasmExports?.engine_set_bounce_speed(this.enginePtr, v);
-  }
-
-  public setGlowDistance(v: number): void {
-    this.glowDistance = v;
-    this.wasmExports?.engine_set_glow_distance(this.enginePtr, v);
-  }
-
-  public setClickRadius(v: number): void {
-    this.clickRadius = v;
-    this.wasmExports?.engine_set_click_radius(this.enginePtr, v);
-  }
+  public setShowPathGuide(show: boolean): void { this.showPathGuide = show; this.wasmExports?.engine_set_show_path_guide(this.enginePtr, show ? 1 : 0); }
+  public setEdgeAlgorithm(v: number): void { this.edgeAlgorithm = v; this.wasmExports?.engine_set_edge_algorithm(this.enginePtr, v); }
+  public setEdgeThreshold(v: number): void { this.edgeThreshold = v; this.wasmExports?.engine_set_edge_threshold(this.enginePtr, v); }
+  public setPinBottomEdge(v: number): void { this.pinBottomEdge = v; this.wasmExports?.engine_set_pin_bottom_edge(this.enginePtr, v); }
+  public setTopParticleSize(v: number): void { this.topParticleSize = v; this.wasmExports?.engine_set_top_particle_size(this.enginePtr, v); }
+  public setTopParticleQuantity(v: number): void { this.topParticleQuantity = v; this.wasmExports?.engine_set_top_particle_quantity(this.enginePtr, v); }
+  public setTopParticleSpeed(v: number): void { this.topParticleSpeed = v; this.wasmExports?.engine_set_top_particle_speed(this.enginePtr, v); }
+  public setBacksideStars(v: number): void { this.backsideStars = v; this.wasmExports?.engine_set_backside_stars(this.enginePtr, v); }
+  public setBacksideHalo(v: number): void { this.backsideHalo = v; this.wasmExports?.engine_set_backside_halo(this.enginePtr, v); }
+  public setBacksideOrbits(v: number): void { this.backsideOrbits = v; this.wasmExports?.engine_set_backside_orbits(this.enginePtr, v); }
+  public setBacksideSpecks(v: number): void { this.backsideSpecks = v; this.wasmExports?.engine_set_backside_specks(this.enginePtr, v); }
+  public setClickForce(v: number): void { this.clickForce = v; this.wasmExports?.engine_set_click_force(this.enginePtr, v); }
+  public setBounceSpeed(v: number): void { this.bounceSpeed = v; this.wasmExports?.engine_set_bounce_speed(this.enginePtr, v); }
+  public setGlowDistance(v: number): void { this.glowDistance = v; this.wasmExports?.engine_set_glow_distance(this.enginePtr, v); }
+  public setClickRadius(v: number): void { this.clickRadius = v; this.wasmExports?.engine_set_click_radius(this.enginePtr, v); }
+  public setHoverSpeed(v: number): void { this.hoverSpeed = v; this.wasmExports?.engine_set_hover_speed(this.enginePtr, v); }
+  public setHoverRadius(v: number): void { this.hoverRadius = v; this.wasmExports?.engine_set_hover_radius(this.enginePtr, v); }
+  public setClickSpeed(v: number): void { this.clickSpeed = v; this.wasmExports?.engine_set_click_speed(this.enginePtr, v); }
+  public setIntroSpread(v: number): void { this.introSpread = v; this.wasmExports?.engine_set_intro_spread(this.enginePtr, v); }
+  public setIntroPattern(v: number): void { this.introPattern = v; this.wasmExports?.engine_set_intro_pattern(this.enginePtr, v); }
 
   public setFullscreenMode(fullscreen: boolean, getCardRect?: () => DOMRect | null): void {
     this.transform.isFullscreen = fullscreen;

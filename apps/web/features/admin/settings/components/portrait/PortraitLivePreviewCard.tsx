@@ -238,7 +238,12 @@ export function PortraitLivePreviewCard({
             clickForce={settings.portrait_click_force}
             bounceSpeed={settings.portrait_bounce_speed}
             clickRadius={settings.portrait_click_radius}
+            hoverSpeed={settings.portrait_hover_speed}
+            hoverRadius={settings.portrait_hover_threshold}
+            clickSpeed={settings.portrait_click_speed}
             introDuration={settings.portrait_intro_animation}
+            introSpread={settings.portrait_intro_spread}
+            introPattern={settings.portrait_intro_pattern}
             className="rounded-xl w-full"
           />
         </div>

@@ -28,7 +28,12 @@ export interface PortraitDraftSettings {
   portrait_click_force: string;
   portrait_bounce_speed: string;
   portrait_click_radius: string;
+  portrait_hover_speed: string;
+  portrait_hover_threshold: string;
+  portrait_click_speed: string;
   portrait_intro_animation: string;
+  portrait_intro_spread: string;
+  portrait_intro_pattern: string;
 }
 
 export interface DropdownOption {

@@ -53,7 +53,6 @@ function PageTransitionLoaderInner({
   // Initially active so cold load & page reload display the canvas animation
   const [isNavigating, setIsNavigating] = React.useState(true);
   const [isFadingOut, setIsFadingOut] = React.useState(false);
-  const isInitialMountRef = React.useRef(true);
   const currentPathRef = React.useRef(pathname);
   const navStartTimeRef = React.useRef(0);
 
@@ -75,23 +74,23 @@ function PageTransitionLoaderInner({
 
   // 1. Initial Page Load & Page Reload Handler
   React.useEffect(() => {
-    if (isInitialMountRef.current) {
-      isInitialMountRef.current = false;
-      navStartTimeRef.current = performance.now();
+    navStartTimeRef.current = performance.now();
 
-      // Snappy initial particle convergence (~520ms) for fast initial load & reload
-      const minInitialDisplayMs = 520;
-      const timer = setTimeout(() => {
-        setIsFadingOut(true);
-        const finishTimer = setTimeout(() => {
-          setIsNavigating(false);
-          setIsFadingOut(false);
-        }, 180);
-        return () => clearTimeout(finishTimer);
-      }, minInitialDisplayMs);
+    // Snappy initial particle convergence (~520ms) for fast initial load & reload
+    let finishTimer: ReturnType<typeof setTimeout> | undefined;
+    const minInitialDisplayMs = 520;
+    const timer = setTimeout(() => {
+      setIsFadingOut(true);
+      finishTimer = setTimeout(() => {
+        setIsNavigating(false);
+        setIsFadingOut(false);
+      }, 180);
+    }, minInitialDisplayMs);
 
-      return () => clearTimeout(timer);
-    }
+    return () => {
+      clearTimeout(timer);
+      if (finishTimer) clearTimeout(finishTimer);
+    };
   }, []);
 
   // 2. Cross-Route Page Navigation Handler
@@ -104,16 +103,19 @@ function PageTransitionLoaderInner({
         const minVisibleMs = 260;
         const delay = Math.max(0, minVisibleMs - elapsed);
 
+        let finishTimer: ReturnType<typeof setTimeout> | undefined;
         const timer = setTimeout(() => {
           setIsFadingOut(true);
-          const finishTimer = setTimeout(() => {
+          finishTimer = setTimeout(() => {
             setIsNavigating(false);
             setIsFadingOut(false);
           }, 180);
-          return () => clearTimeout(finishTimer);
         }, delay);
 
-        return () => clearTimeout(timer);
+        return () => {
+          clearTimeout(timer);
+          if (finishTimer) clearTimeout(finishTimer);
+        };
       }
     }
   }, [pathname, isNavigating]);
