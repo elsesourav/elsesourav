@@ -88,12 +88,12 @@ export function AdminMediaUploadModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200">
-      <Card className="w-full max-w-md bg-zinc-900 border-zinc-800 rounded-3xl p-5 sm:p-6 space-y-5 animate-in fade-in zoom-in-95">
-        <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+    <div className="fixed inset-0 z-50 bg-black/60 dark:bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200">
+      <Card className="w-full max-w-md bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-3xl p-5 sm:p-6 space-y-5 animate-in fade-in zoom-in-95 shadow-2xl">
+        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-3">
           <div className="flex items-center gap-2">
-            <Upload className="w-4 h-4 text-indigo-400" />
-            <h3 className="text-sm font-bold text-zinc-100">Upload to Media Library</h3>
+            <Upload className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+            <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">Upload to Media Library</h3>
           </div>
           <IconButton
             type="button"
@@ -101,13 +101,13 @@ export function AdminMediaUploadModal({
             size="icon-xs"
             onClick={onClose}
             aria-label="Close Upload Dialog"
-            icon={<X className="w-4 h-4 text-zinc-400" />}
-            className="rounded-lg hover:bg-zinc-800"
+            icon={<X className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />}
+            className="rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800"
           />
         </div>
 
         {uploadError && (
-          <div className="p-3 rounded-xl bg-rose-950/40 border border-rose-500/30 text-xs text-rose-300 flex items-center gap-2">
+          <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-500/30 text-xs text-rose-800 dark:text-rose-300 flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{uploadError}</span>
           </div>
@@ -115,7 +115,7 @@ export function AdminMediaUploadModal({
 
         <div className="space-y-4 text-xs">
           <div className="space-y-1.5">
-            <label className="text-zinc-300 block font-medium">Target Storage Folder</label>
+            <label className="text-zinc-700 dark:text-zinc-300 block font-medium">Target Storage Folder</label>
             <Dropdown
               items={FOLDER_ITEMS}
               value={uploadFolder}
@@ -125,7 +125,7 @@ export function AdminMediaUploadModal({
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-zinc-300 block font-medium">Media Purpose</label>
+            <label className="text-zinc-700 dark:text-zinc-300 block font-medium">Media Purpose</label>
             <Dropdown
               items={PURPOSE_ITEMS}
               value={uploadType}
@@ -135,23 +135,23 @@ export function AdminMediaUploadModal({
           </div>
 
           <div className="space-y-2 pt-2">
-            <label className="text-zinc-300 block font-medium">Select Image File</label>
+            <label className="text-zinc-700 dark:text-zinc-300 block font-medium">Select Image File</label>
             <input
               type="file"
               accept="image/png,image/jpeg,image/webp,image/svg+xml,image/gif"
               disabled={isUploading}
               onChange={handleDirectUpload}
-              className="w-full text-xs text-zinc-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer"
+              className="w-full text-xs text-zinc-600 dark:text-zinc-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer"
             />
           </div>
 
           {isUploading && (
             <div className="space-y-2 pt-2">
-              <div className="flex justify-between text-[11px] text-zinc-400">
+              <div className="flex justify-between text-[11px] text-zinc-600 dark:text-zinc-400">
                 <span>Uploading to Media Library...</span>
                 <span>{uploadProgress}%</span>
               </div>
-              <div className="h-1.5 w-full bg-zinc-800 rounded-full overflow-hidden">
+              <div className="h-1.5 w-full bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-indigo-500 transition-all duration-300"
                   style={{ width: `${uploadProgress}%` }}

@@ -32,18 +32,18 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   // Strict Server-Side Role Gate
   if (session.user.role !== 'ADMIN' && session.user.role !== 'STAFF') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-950 text-white px-4">
-        <div className="max-w-md w-full text-center space-y-4 p-8 rounded-3xl border border-rose-900/40 bg-zinc-900/60 backdrop-blur-xl shadow-2xl">
-          <div className="w-12 h-12 rounded-2xl bg-rose-950/60 border border-rose-500/30 flex items-center justify-center mx-auto text-rose-400">
+      <div className="min-h-screen flex items-center justify-center bg-background text-foreground px-4">
+        <div className="max-w-md w-full text-center space-y-4 p-8 rounded-3xl border border-rose-200 dark:border-rose-900/40 bg-white/90 dark:bg-zinc-900/60 backdrop-blur-xl shadow-2xl">
+          <div className="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-500/30 flex items-center justify-center mx-auto text-rose-600 dark:text-rose-400">
             <Lock className="w-6 h-6" />
           </div>
-          <h1 className="text-xl font-bold text-zinc-100">403 — Access Denied</h1>
-          <p className="text-xs text-zinc-400 leading-relaxed">
+          <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">403 — Access Denied</h1>
+          <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
             You do not have administrative privileges to access the ElseSourav Control Portal.
           </p>
           <div className="pt-3 flex justify-center gap-3">
             <Link href={ROUTES.HOME}>
-              <Button variant="outline" size="sm" className="border-zinc-800 text-zinc-300 text-xs">
+              <Button variant="outline" size="sm" className="border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 text-xs">
                 Return Home
               </Button>
             </Link>

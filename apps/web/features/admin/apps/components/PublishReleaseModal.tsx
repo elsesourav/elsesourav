@@ -38,15 +38,15 @@ export function PublishReleaseModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-3xl border border-indigo-500/40 bg-zinc-900 p-6 space-y-5 shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
+      <div className="w-full max-w-md rounded-3xl border border-indigo-200 dark:border-indigo-500/40 bg-white dark:bg-zinc-900 p-6 space-y-5 shadow-2xl">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-indigo-950/80 border border-indigo-500/40 flex items-center justify-center text-indigo-400 shrink-0">
+          <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-500/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
             <Send className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-zinc-100">Publish Application Release</h3>
-            <p className="text-xs text-zinc-400">Creates an immutable version release entry.</p>
+            <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100">Publish Application Release</h3>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">Creates an immutable version release entry.</p>
           </div>
         </div>
 
@@ -61,7 +61,7 @@ export function PublishReleaseModal({
           />
 
           <div className="space-y-1.5">
-            <label className="block font-semibold text-zinc-300">
+            <label className="block font-semibold text-zinc-700 dark:text-zinc-300">
               Changelog Summary <span className="text-rose-400">*</span>
             </label>
             <textarea
@@ -70,7 +70,7 @@ export function PublishReleaseModal({
               placeholder="What is new in this release version..."
               required
               rows={4}
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs text-zinc-100 focus:border-indigo-500 focus:outline-none"
+              className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl p-3 text-xs text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:border-indigo-500 focus:outline-none"
             />
           </div>
 
@@ -82,14 +82,14 @@ export function PublishReleaseModal({
             placeholder="https://github.com/.../release.zip"
           />
 
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-zinc-800">
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-zinc-200 dark:border-zinc-800">
             <Button
               type="button"
               variant="ghost"
               size="sm"
               disabled={isPublishing}
               onClick={onClose}
-              className="text-xs text-zinc-400"
+              className="text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200"
             >
               Cancel
             </Button>

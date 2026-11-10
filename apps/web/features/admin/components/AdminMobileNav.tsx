@@ -4,12 +4,10 @@ import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Badge, Button } from '@elsesourav/ui';
-import { ROUTES } from '@elsesourav/config';
 import { ThemePopup } from '@/components/theme/ThemePopup';
 import type { AdminContext } from '@elsesourav/types';
 import {
   Activity,
-  ArrowLeft,
   BookOpen,
   FileText,
   Image,
@@ -19,8 +17,8 @@ import {
   Shield,
   Sliders,
   Users,
-  X,
   UserCheck,
+  X,
 } from 'lucide-react';
 
 interface AdminMobileNavProps {
@@ -87,17 +85,17 @@ export function AdminMobileNav({ context }: AdminMobileNavProps) {
       {/* Top Header Bar */}
       <div className="px-3.5 sm:px-5 py-3 flex items-center justify-between">
         <Link href="/admin" className="flex items-center gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-500/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
-            <Shield className="w-4 h-4" />
+          <div className="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-500/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold text-xs uppercase shrink-0">
+            {context.displayName ? context.displayName.charAt(0) : 'A'}
           </div>
           <div className="min-w-0">
             <div className="font-bold text-xs sm:text-sm text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5 truncate">
-              <span>Admin Portal</span>
+              <span>{context.displayName}</span>
               <Badge variant="warning" className="text-[9px] px-1.5 py-0 font-mono uppercase shrink-0">
                 {context.role}
               </Badge>
             </div>
-            <p className="text-[10px] text-zinc-500 dark:text-zinc-400 truncate max-w-[180px] sm:max-w-xs">
+            <p className="text-[10px] text-zinc-500 dark:text-zinc-400 truncate max-w-[170px] sm:max-w-xs">
               {context.email}
             </p>
           </div>
@@ -129,20 +127,20 @@ export function AdminMobileNav({ context }: AdminMobileNavProps) {
           aria-label="Admin Navigation Menu"
           className="fixed inset-0 z-50 bg-white dark:bg-zinc-950 flex flex-col justify-between overflow-y-auto animate-in fade-in duration-150"
         >
-          {/* Drawer Pinned Header */}
+          {/* Drawer Pinned Header: Name & Gmail on left, Admin on right */}
           <div className="sticky top-0 z-10 px-3.5 sm:px-5 py-3 border-b border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-950 flex items-center justify-between">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-500/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
-                <Shield className="w-4 h-4" />
+              <div className="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-500/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold text-xs uppercase shrink-0">
+                {context.displayName ? context.displayName.charAt(0) : 'A'}
               </div>
               <div className="min-w-0">
                 <div className="font-bold text-xs sm:text-sm text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5 truncate">
-                  <span>Admin Portal</span>
+                  <span>{context.displayName}</span>
                   <Badge variant="warning" className="text-[9px] px-1.5 py-0 font-mono uppercase shrink-0">
                     {context.role}
                   </Badge>
                 </div>
-                <p className="text-[10px] text-zinc-500 dark:text-zinc-400 truncate max-w-[180px] sm:max-w-xs">
+                <p className="text-[10px] text-zinc-500 dark:text-zinc-400 truncate max-w-[170px] sm:max-w-xs">
                   {context.email}
                 </p>
               </div>
@@ -200,18 +198,6 @@ export function AdminMobileNav({ context }: AdminMobileNavProps) {
                 );
               })}
             </nav>
-          </div>
-
-          {/* Footer Return Link */}
-          <div className="p-4 sm:p-6 pt-3 border-t border-zinc-200 dark:border-zinc-800/80 pb-10">
-            <Link
-              href={ROUTES.HOME}
-              onClick={() => setIsOpen(false)}
-              className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-zinc-200 dark:border-zinc-800 text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4 shrink-0" />
-              <span>Return to Public Site</span>
-            </Link>
           </div>
         </div>
       )}

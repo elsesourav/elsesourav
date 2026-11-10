@@ -16,6 +16,7 @@ export function ImageUploadWithCrop({
   placeholder = 'Image URL or upload file',
   required = false,
   aspectRatio = 1,
+  allowedRatios,
   cropShape = 'rect',
   targetWidth = 512,
   targetHeight = 512,
@@ -236,6 +237,7 @@ export function ImageUploadWithCrop({
           imageSrc={selectedImageSrc}
           fileName={selectedFileName}
           aspectRatio={aspectRatio}
+          allowedRatios={allowedRatios}
           cropShape={cropShape}
           targetWidth={targetWidth}
           targetHeight={targetHeight}

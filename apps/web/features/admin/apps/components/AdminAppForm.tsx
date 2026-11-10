@@ -4,7 +4,7 @@ import { AdminMarkdownEditor } from '@/features/admin/components/AdminMarkdownEd
 import { AdminAppMediaSection } from './AdminAppMediaSection';
 import type { App, CategorySummary, TagSummary } from '@elsesourav/types';
 import { Button, Card } from '@elsesourav/ui';
-import { FloatingLabelInput } from '@elsesourav/ui/interior';
+import { FloatingLabelInput, Dropdown } from '@elsesourav/ui/interior';
 import {
   AlertCircle,
   Archive,
@@ -34,6 +34,17 @@ interface AdminAppFormProps {
   categories: readonly CategorySummary[];
   tags?: readonly TagSummary[];
 }
+
+const LANGUAGE_OPTIONS = [
+  { value: 'en', label: 'English (en)' },
+  { value: 'bn', label: 'Bengali / বাংলা (bn)' },
+  { value: 'hi', label: 'Hindi / हिन्दी (hi)' },
+  { value: 'es', label: 'Spanish / Español (es)' },
+  { value: 'fr', label: 'French / Français (fr)' },
+  { value: 'de', label: 'German / Deutsch (de)' },
+  { value: 'ja', label: 'Japanese / 日本語 (ja)' },
+  { value: 'zh', label: 'Chinese / 中文 (zh)' },
+];
 
 export function AdminAppForm({ app, categories }: AdminAppFormProps) {
   const router = useRouter();
@@ -213,21 +224,21 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
       {/* Top Header Bar */}
-      <div className="flex items-center justify-between gap-4 border-b border-zinc-800/80 pb-4">
+      <div className="flex items-center justify-between gap-4 border-b border-zinc-200 dark:border-zinc-800/80 pb-4">
         <div className="flex items-center gap-3">
           <Link
             href="/admin/apps"
-            className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-zinc-100 transition-colors"
+            className="p-2 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-zinc-100 tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">
               {isEditing ? `Edit: ${app?.name}` : 'New Application'}
             </h1>
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">
               {isEditing
                 ? `ID: ${app?.id} • Current status: ${status.toUpperCase()}`
                 : 'Add a new software product to the ElseSourav platform.'}
@@ -242,7 +253,7 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
               variant="outline"
               size="sm"
               onClick={() => setIsPublishModalOpen(true)}
-              className="text-xs border-indigo-500/40 text-indigo-300 hover:bg-indigo-950/40 gap-1.5"
+              className="text-xs border-indigo-200 dark:border-indigo-500/40 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 gap-1.5"
             >
               <Send className="w-3.5 h-3.5" />
               <span>Publish Release</span>
@@ -252,14 +263,14 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
       </div>
 
       {success && (
-        <div className="p-4 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 flex items-center gap-2.5 text-xs text-emerald-300">
+        <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-500/30 flex items-center gap-2.5 text-xs text-emerald-700 dark:text-emerald-300">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
           <span>{success}</span>
         </div>
       )}
 
       {error && (
-        <div className="p-4 rounded-2xl bg-rose-950/40 border border-rose-500/30 flex items-center gap-2.5 text-xs text-rose-300">
+        <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-500/30 flex items-center gap-2.5 text-xs text-rose-700 dark:text-rose-300">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>
@@ -268,9 +279,9 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
       {/* Main App Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Core Metadata Card */}
-        <Card className="p-6 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl space-y-5">
-          <div className="flex items-center gap-2 text-xs font-bold text-zinc-300 uppercase tracking-wider">
-            <Package className="w-4 h-4 text-indigo-400" />
+        <Card className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40 backdrop-blur-xl space-y-4 sm:space-y-5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-bold text-zinc-800 dark:text-zinc-300 uppercase tracking-wider">
+            <Package className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
             <span>General Information</span>
           </div>
 
@@ -320,20 +331,23 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
               maxLength={50}
             />
 
-            {/* Primary Language */}
-            <FloatingLabelInput
-              label="Content Locale / Language"
-              type="text"
-              value={primaryLanguage}
-              onChange={(val) => setPrimaryLanguage(val)}
-              placeholder="e.g. en (default)"
-              maxLength={50}
-            />
+            {/* Primary Language Dropdown */}
+            <div className="space-y-1.5 pt-[2px]">
+              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+                Primary Content Language
+              </label>
+              <Dropdown
+                items={LANGUAGE_OPTIONS}
+                value={primaryLanguage}
+                onChange={(val) => setPrimaryLanguage(val)}
+                className="w-full"
+              />
+            </div>
           </div>
 
           {/* Marketing Overview Description */}
           <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-zinc-300">
+            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
               Overview & Marketing Description <span className="text-rose-400">*</span>
             </label>
             <textarea
@@ -343,7 +357,7 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
               required
               minLength={20}
               placeholder="Detailed overview of what this application does, key capabilities, and value proposition..."
-              className="w-full rounded-xl bg-zinc-950/60 border border-zinc-800 p-3 text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full rounded-xl bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-200 dark:border-zinc-800 p-3 text-xs text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
             <p className="text-[11px] text-zinc-500">
               Minimum 20 characters. Plain text overview for cards and product summaries.
@@ -398,7 +412,7 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
         />
 
         {/* Submit Actions */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-6 border-t border-zinc-800/80">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-6 border-t border-zinc-200 dark:border-zinc-800/80">
           <Button
             type="submit"
             disabled={isSaving}
@@ -425,7 +439,7 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
                 variant="outline"
                 size="sm"
                 onClick={handleArchive}
-                className="text-xs border-zinc-800 text-zinc-400 hover:text-amber-300 flex-1 sm:flex-none justify-center"
+                className="text-xs border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-amber-600 dark:hover:text-amber-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 flex-1 sm:flex-none justify-center"
               >
                 <Archive className="w-3.5 h-3.5 mr-1" /> Archive
               </Button>
@@ -434,7 +448,7 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
                 variant="outline"
                 size="sm"
                 onClick={handleDelete}
-                className="text-xs border-zinc-800 text-zinc-400 hover:text-rose-400 flex-1 sm:flex-none justify-center"
+                className="text-xs border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-zinc-100 dark:hover:bg-zinc-900 flex-1 sm:flex-none justify-center"
               >
                 <Trash2 className="w-3.5 h-3.5 mr-1" /> Delete
               </Button>

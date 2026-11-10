@@ -71,8 +71,8 @@ export function AdminMarkdownEditor({
     <div className="space-y-2">
       {/* Header & Tabs */}
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <label className="block text-xs font-semibold text-zinc-300">
-          {label} {required && <span className="text-rose-400">*</span>}
+        <label className="block text-xs font-semibold text-zinc-900 dark:text-zinc-300">
+          {label} {required && <span className="text-rose-500 dark:text-rose-400">*</span>}
         </label>
 
         <div className="flex items-center gap-1.5">
@@ -80,17 +80,17 @@ export function AdminMarkdownEditor({
           <button
             type="button"
             onClick={() => setShowCheatsheet((prev) => !prev)}
-            className="flex items-center gap-1 px-2 py-1 text-[11px] font-medium text-zinc-400 hover:text-zinc-200 transition-colors rounded-lg hover:bg-zinc-800/60"
+            className="flex items-center gap-1 px-2 py-1 text-[11px] font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800/60"
             title="Markdown syntax reference"
           >
-            <HelpCircle className="w-3 h-3 text-indigo-400" />
+            <HelpCircle className="w-3 h-3 text-indigo-500 dark:text-indigo-400" />
             <span>Guide</span>
           </button>
 
           {/* Mode Switcher Tabs */}
           <div
             role="tablist"
-            className="flex items-center p-0.5 rounded-lg bg-zinc-950 border border-zinc-800"
+            className="flex items-center p-0.5 rounded-lg bg-zinc-100 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800"
           >
             <button
               type="button"
@@ -99,8 +99,8 @@ export function AdminMarkdownEditor({
               onClick={() => setMode('edit')}
               className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md transition-all ${
                 mode === 'edit'
-                  ? 'bg-zinc-800 text-white shadow-sm'
-                  : 'text-zinc-400 hover:text-zinc-200'
+                  ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-sm'
+                  : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
               }`}
             >
               <Edit3 className="w-3.5 h-3.5" />
@@ -113,8 +113,8 @@ export function AdminMarkdownEditor({
               onClick={() => setMode('preview')}
               className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md transition-all ${
                 mode === 'preview'
-                  ? 'bg-zinc-800 text-white shadow-sm'
-                  : 'text-zinc-400 hover:text-zinc-200'
+                  ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-sm'
+                  : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
               }`}
             >
               <Eye className="w-3.5 h-3.5" />
@@ -126,34 +126,34 @@ export function AdminMarkdownEditor({
 
       {/* Optional Markdown Cheatsheet */}
       {showCheatsheet && (
-        <div className="p-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-xs text-zinc-400 space-y-2 animate-in fade-in">
-          <div className="font-semibold text-zinc-200 text-[11px] uppercase tracking-wider">
+        <div className="p-3.5 rounded-xl bg-zinc-50 dark:bg-zinc-950/80 border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-600 dark:text-zinc-400 space-y-2 animate-in fade-in">
+          <div className="font-semibold text-zinc-900 dark:text-zinc-200 text-[11px] uppercase tracking-wider">
             Markdown Syntax Reference
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
             <div>
-              <code className="text-indigo-300">## Heading 2</code>
+              <code className="text-indigo-600 dark:text-indigo-300">## Heading 2</code>
             </div>
             <div>
-              <code className="text-indigo-300">**Bold Text**</code>
+              <code className="text-indigo-600 dark:text-indigo-300">**Bold Text**</code>
             </div>
             <div>
-              <code className="text-indigo-300">*Italic Text*</code>
+              <code className="text-indigo-600 dark:text-indigo-300">*Italic Text*</code>
             </div>
             <div>
-              <code className="text-indigo-300">[Link](https://...)</code>
+              <code className="text-indigo-600 dark:text-indigo-300">[Link](https://...)</code>
             </div>
             <div>
-              <code className="text-indigo-300">- List item</code>
+              <code className="text-indigo-600 dark:text-indigo-300">- List item</code>
             </div>
             <div>
-              <code className="text-indigo-300">- [x] Checklist</code>
+              <code className="text-indigo-600 dark:text-indigo-300">- [x] Checklist</code>
             </div>
             <div>
-              <code className="text-indigo-300">&gt; Blockquote</code>
+              <code className="text-indigo-600 dark:text-indigo-300">&gt; Blockquote</code>
             </div>
             <div>
-              <code className="text-indigo-300">```lang ... ```</code>
+              <code className="text-indigo-600 dark:text-indigo-300">```lang ... ```</code>
             </div>
           </div>
         </div>
@@ -163,11 +163,11 @@ export function AdminMarkdownEditor({
       {mode === 'edit' ? (
         <div className="space-y-2">
           {/* Quick Action Toolbar */}
-          <div className="flex flex-wrap items-center gap-1 p-1 bg-zinc-950/40 border border-zinc-800/80 rounded-t-xl text-zinc-400">
+          <div className="flex flex-wrap items-center gap-1 p-1 bg-zinc-50 dark:bg-zinc-950/40 border border-zinc-200 dark:border-zinc-800/80 rounded-t-xl text-zinc-600 dark:text-zinc-400">
             <button
               type="button"
               onClick={() => insertSnippet('## ', '')}
-              className="p-1.5 hover:bg-zinc-800 hover:text-white rounded transition-colors"
+              className="p-1.5 hover:bg-zinc-200 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white rounded transition-colors"
               title="Heading 2"
               aria-label="Add Heading 2"
             >
@@ -176,17 +176,17 @@ export function AdminMarkdownEditor({
             <button
               type="button"
               onClick={() => insertSnippet('### ', '')}
-              className="p-1.5 hover:bg-zinc-800 hover:text-white rounded transition-colors"
+              className="p-1.5 hover:bg-zinc-200 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white rounded transition-colors"
               title="Heading 3"
               aria-label="Add Heading 3"
             >
               <Heading3 className="w-3.5 h-3.5" />
             </button>
-            <span className="w-px h-3.5 bg-zinc-800 mx-1" />
+            <span className="w-px h-3.5 bg-zinc-200 dark:bg-zinc-800 mx-1" />
             <button
               type="button"
               onClick={() => insertSnippet('**', '**')}
-              className="p-1.5 hover:bg-zinc-800 hover:text-white rounded transition-colors"
+              className="p-1.5 hover:bg-zinc-200 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white rounded transition-colors"
               title="Bold"
               aria-label="Add Bold Text"
             >
@@ -195,7 +195,7 @@ export function AdminMarkdownEditor({
             <button
               type="button"
               onClick={() => insertSnippet('*', '*')}
-              className="p-1.5 hover:bg-zinc-800 hover:text-white rounded transition-colors"
+              className="p-1.5 hover:bg-zinc-200 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white rounded transition-colors"
               title="Italic"
               aria-label="Add Italic Text"
             >
@@ -204,17 +204,17 @@ export function AdminMarkdownEditor({
             <button
               type="button"
               onClick={() => insertSnippet('`', '`')}
-              className="p-1.5 hover:bg-zinc-800 hover:text-white rounded transition-colors"
+              className="p-1.5 hover:bg-zinc-200 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white rounded transition-colors"
               title="Inline Code"
               aria-label="Add Inline Code"
             >
               <Code className="w-3.5 h-3.5" />
             </button>
-            <span className="w-px h-3.5 bg-zinc-800 mx-1" />
+            <span className="w-px h-3.5 bg-zinc-200 dark:bg-zinc-800 mx-1" />
             <button
               type="button"
               onClick={() => insertSnippet('> ', '')}
-              className="p-1.5 hover:bg-zinc-800 hover:text-white rounded transition-colors"
+              className="p-1.5 hover:bg-zinc-200 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white rounded transition-colors"
               title="Blockquote"
               aria-label="Add Blockquote"
             >
@@ -223,7 +223,7 @@ export function AdminMarkdownEditor({
             <button
               type="button"
               onClick={() => insertSnippet('- ', '')}
-              className="p-1.5 hover:bg-zinc-800 hover:text-white rounded transition-colors"
+              className="p-1.5 hover:bg-zinc-200 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white rounded transition-colors"
               title="Bullet List"
               aria-label="Add Bullet List"
             >
@@ -232,7 +232,7 @@ export function AdminMarkdownEditor({
             <button
               type="button"
               onClick={() => insertSnippet('[', '](https://)')}
-              className="p-1.5 hover:bg-zinc-800 hover:text-white rounded transition-colors"
+              className="p-1.5 hover:bg-zinc-200 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white rounded transition-colors"
               title="Link"
               aria-label="Add Link"
             >
@@ -243,7 +243,7 @@ export function AdminMarkdownEditor({
               onClick={() =>
                 insertSnippet('| Column 1 | Column 2 |\n| :--- | :--- |\n| Value 1 | Value 2 |\n')
               }
-              className="p-1.5 hover:bg-zinc-800 hover:text-white rounded transition-colors"
+              className="p-1.5 hover:bg-zinc-200 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white rounded transition-colors"
               title="Table"
               aria-label="Add Table"
             >
@@ -252,7 +252,7 @@ export function AdminMarkdownEditor({
             <button
               type="button"
               onClick={() => insertSnippet('```typescript\n', '\n```')}
-              className="px-2 py-1 text-[11px] font-mono hover:bg-zinc-800 hover:text-white rounded transition-colors"
+              className="px-2 py-1 text-[11px] font-mono hover:bg-zinc-200 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white rounded transition-colors"
               title="Code Block"
               aria-label="Add Code Block"
             >
@@ -268,16 +268,16 @@ export function AdminMarkdownEditor({
             placeholder={placeholder}
             required={required}
             rows={rows}
-            className="w-full bg-zinc-950/60 border border-zinc-800 rounded-b-xl -mt-2 p-3.5 text-xs text-zinc-100 focus:border-indigo-500 focus:outline-none font-mono leading-relaxed resize-y selection:bg-indigo-500/30"
+            className="w-full bg-white dark:bg-zinc-950/60 border border-zinc-200 dark:border-zinc-800 rounded-b-xl -mt-2 p-3.5 text-xs text-zinc-900 dark:text-zinc-100 focus:border-indigo-500 focus:outline-none font-mono leading-relaxed resize-y selection:bg-indigo-500/30"
           />
         </div>
       ) : (
         /* Live Preview Container */
-        <div className="min-h-[300px] p-5 rounded-xl border border-zinc-800 bg-zinc-950/90 overflow-y-auto">
+        <div className="min-h-[300px] p-5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950/90 overflow-y-auto">
           {value.trim() ? (
             <MarkdownRenderer content={value} />
           ) : (
-            <div className="flex flex-col items-center justify-center py-16 text-zinc-500 text-xs italic">
+            <div className="flex flex-col items-center justify-center py-16 text-zinc-400 dark:text-zinc-500 text-xs italic">
               <Eye className="w-8 h-8 mb-2 opacity-40" />
               <span>Nothing to preview yet. Switch to &ldquo;Write&rdquo; to draft content.</span>
             </div>
@@ -286,7 +286,7 @@ export function AdminMarkdownEditor({
       )}
 
       {/* Footer Info */}
-      <div className="flex items-center justify-between text-[11px] text-zinc-500 px-1">
+      <div className="flex items-center justify-between text-[11px] text-zinc-500 dark:text-zinc-400 px-1">
         <span>{helperText || 'Supports GitHub-Flavored Markdown (GFM)'}</span>
         <div className="flex items-center gap-3">
           <span>{wordCount} words</span>

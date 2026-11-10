@@ -23,6 +23,7 @@ export function ImageCropperModal({
   imageSrc,
   onCropComplete,
   aspectRatio = 1,
+  allowedRatios,
   cropShape = 'rect',
   targetWidth = 512,
   targetHeight = 512,
@@ -42,6 +43,8 @@ export function ImageCropperModal({
     crop,
     activeRatio,
     isLocked,
+    effectiveRatios,
+    hasRestrictedRatios,
     handleSelectPreset,
     toggleRatioLock,
     handlePointerDown,
@@ -52,6 +55,7 @@ export function ImageCropperModal({
     isOpen,
     imageSrc,
     aspectRatio,
+    allowedRatios,
     imgElementRef,
   });
 
@@ -88,20 +92,20 @@ export function ImageCropperModal({
       role="dialog"
       aria-modal="true"
       aria-labelledby="cropper-dialog-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md animate-in fade-in duration-150"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-5 bg-black/80 backdrop-blur-md animate-in fade-in duration-150"
     >
-      <div className="relative w-full max-w-2xl rounded-2xl sm:rounded-3xl border border-zinc-800 bg-zinc-950 p-4 sm:p-6 shadow-2xl flex flex-col space-y-3.5 max-h-[92vh] overflow-y-auto">
+      <div className="relative w-full max-w-2xl rounded-2xl sm:rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-4 sm:p-6 shadow-2xl flex flex-col space-y-3.5 max-h-[92vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between pb-2.5 border-b border-zinc-800/80">
+        <div className="flex items-center justify-between pb-2.5 border-b border-zinc-200 dark:border-zinc-800/80">
           <div>
             <h3
               id="cropper-dialog-title"
-              className="text-sm sm:text-base font-bold text-zinc-100 flex items-center gap-2"
+              className="text-sm sm:text-base font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2"
             >
-              <Maximize2 className="w-4 h-4 text-indigo-400" />
+              <Maximize2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
               <span>{title}</span>
             </h3>
-            <p className="text-[11px] sm:text-xs text-zinc-400">
+            <p className="text-[11px] sm:text-xs text-zinc-500 dark:text-zinc-400">
               Drag corners to resize selection · Target: {targetWidth || crop.width} ×{' '}
               {targetHeight || crop.height} px
             </p>
@@ -109,7 +113,7 @@ export function ImageCropperModal({
           <button
             onClick={onClose}
             aria-label="Close dialog"
-            className="p-1 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900 transition-colors"
+            className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -118,10 +122,10 @@ export function ImageCropperModal({
         {/* Preset Ratio Toolbar */}
         <div className="flex items-center justify-between gap-2 flex-wrap pb-1">
           <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-500 mr-1">
+            <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-400 dark:text-zinc-500 mr-1">
               Ratios:
             </span>
-            {PRESET_RATIOS.map((preset) => {
+            {effectiveRatios.map((preset) => {
               const isSelected = activeRatio === preset.ratio;
               return (
                 <button
@@ -131,7 +135,7 @@ export function ImageCropperModal({
                   className={`text-[11px] px-2.5 py-1 rounded-lg font-medium transition-all ${
                     isSelected
                       ? 'bg-indigo-600 text-white shadow-sm font-semibold'
-                      : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800'
+                      : 'bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-800'
                   }`}
                 >
                   {preset.label}
@@ -140,34 +144,36 @@ export function ImageCropperModal({
             })}
           </div>
 
-          {/* Ratio Lock / Unlock Toggle Button */}
-          <button
-            type="button"
-            onClick={toggleRatioLock}
-            className={`text-[11px] px-2.5 py-1 rounded-lg border font-medium flex items-center gap-1.5 transition-colors ${
-              isLocked
-                ? 'border-indigo-500/40 bg-indigo-950/40 text-indigo-300'
-                : 'border-zinc-800 bg-zinc-900/60 text-zinc-400 hover:text-zinc-200'
-            }`}
-            title={
-              isLocked
-                ? 'Aspect Ratio Locked (drag corners to scale)'
-                : 'Aspect Ratio Unlocked (free drag)'
-            }
-          >
-            {isLocked ? (
-              <Lock className="w-3 h-3 text-indigo-400" />
-            ) : (
-              <Unlock className="w-3 h-3 text-amber-400" />
-            )}
-            <span>{isLocked ? 'Ratio Locked' : 'Ratio Free'}</span>
-          </button>
+          {/* Only show free ratio lock/unlock toggle if ratios are not restricted */}
+          {!hasRestrictedRatios && (
+            <button
+              type="button"
+              onClick={toggleRatioLock}
+              className={`text-[11px] px-2.5 py-1 rounded-lg border font-medium flex items-center gap-1.5 transition-colors ${
+                isLocked
+                  ? 'border-indigo-500/40 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-300'
+                  : 'border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900/60 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
+              }`}
+              title={
+                isLocked
+                  ? 'Aspect Ratio Locked (drag corners to scale)'
+                  : 'Aspect Ratio Unlocked (free drag)'
+              }
+            >
+              {isLocked ? (
+                <Lock className="w-3 h-3 text-indigo-500 dark:text-indigo-400" />
+              ) : (
+                <Unlock className="w-3 h-3 text-amber-500 dark:text-amber-400" />
+              )}
+              <span>{isLocked ? 'Ratio Locked' : 'Ratio Free'}</span>
+            </button>
+          )}
         </div>
 
         {/* Viewport Canvas: Generous viewport without zoom restriction */}
         <div
           ref={containerRef}
-          className="relative w-full h-[320px] sm:h-[400px] rounded-xl sm:rounded-2xl bg-zinc-900/90 overflow-hidden select-none flex items-center justify-center touch-none border border-zinc-800/80"
+          className="relative w-full h-[320px] sm:h-[400px] rounded-xl sm:rounded-2xl bg-zinc-100 dark:bg-zinc-900/90 overflow-hidden select-none flex items-center justify-center touch-none border border-zinc-200 dark:border-zinc-800/80"
         >
           {image ? (
             <div
@@ -272,7 +278,7 @@ export function ImageCropperModal({
             <button
               type="button"
               onClick={() => setZoom((z) => Math.max(0.4, Number((z - 0.1).toFixed(2))))}
-              className="p-1 rounded text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 transition-colors"
+              className="p-1.5 rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
               title="Zoom Out (view full bounds)"
             >
               <ZoomOut className="w-4 h-4" />
@@ -284,23 +290,23 @@ export function ImageCropperModal({
               step={0.05}
               value={zoom}
               onChange={(e) => setZoom(parseFloat(e.target.value))}
-              className="w-28 sm:w-36 h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+              className="w-28 sm:w-36 h-1.5 bg-zinc-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-indigo-600"
             />
             <button
               type="button"
               onClick={() => setZoom((z) => Math.min(2.5, Number((z + 0.1).toFixed(2))))}
-              className="p-1 rounded text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 transition-colors"
+              className="p-1.5 rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
               title="Zoom In"
             >
               <ZoomIn className="w-4 h-4" />
             </button>
-            <span className="text-[11px] font-mono text-zinc-400 w-9 text-right">
+            <span className="text-[11px] font-mono text-zinc-600 dark:text-zinc-400 w-9 text-right">
               {Math.round(zoom * 100)}%
             </span>
             <button
               type="button"
               onClick={() => setZoom(1.0)}
-              className="p-1 rounded text-zinc-500 hover:text-zinc-300 transition-colors ml-1"
+              className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors ml-1"
               title="Reset Zoom"
             >
               <RotateCcw className="w-3.5 h-3.5" />
@@ -315,7 +321,7 @@ export function ImageCropperModal({
               size="sm"
               onClick={onClose}
               disabled={isProcessing}
-              className="text-xs text-zinc-300"
+              className="text-xs border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900"
             >
               Cancel
             </Button>

@@ -14,6 +14,7 @@ export const PRESET_RATIOS: PresetRatio[] = [
   { id: 'free', label: 'Free', ratio: null },
   { id: '1:1', label: '1:1 Square', ratio: 1.0 },
   { id: '16:9', label: '16:9 Hero', ratio: 16 / 9 },
+  { id: '21:9', label: '21:9 Banner', ratio: 21 / 9 },
   { id: '4:3', label: '4:3 Standard', ratio: 4 / 3 },
   { id: '3:4', label: '3:4 Portrait', ratio: 3 / 4 },
   { id: '1:6', label: '1:6 Carousel', ratio: 1 / 6 },
@@ -24,6 +25,7 @@ export interface UseCropInteractionOptions {
   isOpen: boolean;
   imageSrc: string;
   aspectRatio?: number | null;
+  allowedRatios?: PresetRatio[];
   imgElementRef: React.RefObject<HTMLImageElement | null>;
 }
 
@@ -31,15 +33,28 @@ export function useCropInteraction({
   isOpen,
   imageSrc,
   aspectRatio,
+  allowedRatios,
   imgElementRef,
 }: UseCropInteractionOptions) {
   const [image, setImage] = React.useState<HTMLImageElement | null>(null);
-  const [activeRatio, setActiveRatio] = React.useState<number | null>(
-    aspectRatio !== undefined ? aspectRatio : 1.0
-  );
-  const [isLocked, setIsLocked] = React.useState<boolean>(
-    aspectRatio !== null && aspectRatio !== undefined
-  );
+
+  const effectiveRatios = React.useMemo(() => {
+    return allowedRatios && allowedRatios.length > 0 ? allowedRatios : PRESET_RATIOS;
+  }, [allowedRatios]);
+
+  const hasRestrictedRatios = Boolean(allowedRatios && allowedRatios.length > 0);
+
+  const getInitialRatio = React.useCallback((): number | null => {
+    if (aspectRatio !== undefined) return aspectRatio;
+    if (allowedRatios && allowedRatios.length > 0 && allowedRatios[0]) return allowedRatios[0].ratio;
+    return 1.0;
+  }, [aspectRatio, allowedRatios]);
+
+  const [activeRatio, setActiveRatio] = React.useState<number | null>(getInitialRatio);
+  const [isLocked, setIsLocked] = React.useState<boolean>(() => {
+    const init = getInitialRatio();
+    return init !== null;
+  });
 
   // Crop area in natural image coordinates (pixels)
   const [crop, setCrop] = React.useState<CropArea>({ x: 0, y: 0, width: 100, height: 100 });
@@ -88,7 +103,7 @@ export function useCropInteraction({
     if (!isOpen || !imageSrc) return;
     let cancelled = false;
 
-    const initialRatio = aspectRatio !== undefined ? aspectRatio : 1.0;
+    const initialRatio = getInitialRatio();
     setActiveRatio(initialRatio);
     setIsLocked(initialRatio !== null);
 
@@ -106,7 +121,7 @@ export function useCropInteraction({
     return () => {
       cancelled = true;
     };
-  }, [isOpen, imageSrc, aspectRatio, initializeCrop]);
+  }, [isOpen, imageSrc, getInitialRatio, initializeCrop]);
 
   // Handle Preset Ratio Selection
   const handleSelectPreset = (ratio: number | null) => {
@@ -293,6 +308,8 @@ export function useCropInteraction({
     crop,
     activeRatio,
     isLocked,
+    effectiveRatios,
+    hasRestrictedRatios,
     handleSelectPreset,
     toggleRatioLock,
     handlePointerDown,

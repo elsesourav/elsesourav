@@ -168,20 +168,20 @@ export function AdminUpdateForm({ post, categories }: AdminUpdateFormProps) {
   return (
     <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8 w-full">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-zinc-800/80 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-zinc-200 dark:border-zinc-800/80 pb-4">
         <div className="flex items-center gap-3 min-w-0">
           <Link
             href="/admin/updates"
-            className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-zinc-100 transition-colors shrink-0"
+            className="p-2 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors shrink-0"
             aria-label="Back to Updates List"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div className="min-w-0">
-            <h1 className="text-lg sm:text-2xl font-bold text-zinc-100 tracking-tight truncate">
+            <h1 className="text-lg sm:text-2xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight truncate">
               {isEditing ? `Edit: ${post?.title}` : 'Write New Update'}
             </h1>
-            <p className="text-xs text-zinc-400 truncate">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">
               {isEditing
                 ? `ID: ${post?.id} • Current status: ${status.toUpperCase()}`
                 : 'Create and publish developer updates, deep dives, and product changelogs.'}
@@ -197,7 +197,7 @@ export function AdminUpdateForm({ post, categories }: AdminUpdateFormProps) {
               size="sm"
               disabled={isPublishing}
               onClick={handlePublish}
-              className="text-xs border-indigo-500/40 text-indigo-300 hover:bg-indigo-950/40 gap-1.5"
+              className="text-xs border-indigo-200 dark:border-indigo-500/40 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 gap-1.5"
             >
               {isPublishing ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -211,14 +211,14 @@ export function AdminUpdateForm({ post, categories }: AdminUpdateFormProps) {
       </div>
 
       {success && (
-        <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 flex items-center gap-2.5 text-xs text-emerald-300">
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-500/30 flex items-center gap-2.5 text-xs text-emerald-700 dark:text-emerald-300">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
           <span>{success}</span>
         </div>
       )}
 
       {error && (
-        <div className="p-3.5 sm:p-4 rounded-2xl bg-rose-950/40 border border-rose-500/30 flex items-center gap-2.5 text-xs text-rose-300">
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-500/30 flex items-center gap-2.5 text-xs text-rose-700 dark:text-rose-300">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>
@@ -226,9 +226,9 @@ export function AdminUpdateForm({ post, categories }: AdminUpdateFormProps) {
 
       {/* Main Form */}
       <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
-        <Card className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl space-y-4 sm:space-y-5">
-          <div className="flex items-center gap-2 text-xs font-bold text-zinc-300 uppercase tracking-wider">
-            <FileText className="w-4 h-4 text-indigo-400 shrink-0" />
+        <Card className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40 backdrop-blur-xl space-y-4 sm:space-y-5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-bold text-zinc-800 dark:text-zinc-300 uppercase tracking-wider">
+            <FileText className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
             <span>Update Content</span>
           </div>
 
@@ -280,9 +280,9 @@ export function AdminUpdateForm({ post, categories }: AdminUpdateFormProps) {
         </Card>
 
         {/* Media & Category Card */}
-        <Card className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl space-y-4 sm:space-y-5">
-          <div className="flex items-center gap-2 text-xs font-bold text-zinc-300 uppercase tracking-wider">
-            <Upload className="w-4 h-4 text-purple-400 shrink-0" />
+        <Card className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40 backdrop-blur-xl space-y-4 sm:space-y-5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-bold text-zinc-800 dark:text-zinc-300 uppercase tracking-wider">
+            <Upload className="w-4 h-4 text-purple-600 dark:text-purple-400 shrink-0" />
             <span>Media & Taxonomy</span>
           </div>
 
@@ -300,7 +300,7 @@ export function AdminUpdateForm({ post, categories }: AdminUpdateFormProps) {
 
             {/* Category Dropdown */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-zinc-300">
+              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                 Primary Category <span className="text-rose-400">*</span>
               </label>
               <Dropdown
@@ -313,8 +313,8 @@ export function AdminUpdateForm({ post, categories }: AdminUpdateFormProps) {
           </div>
 
           {/* SEO Metadata */}
-          <div className="pt-4 border-t border-zinc-800/60 space-y-3">
-            <div className="text-xs font-semibold text-zinc-300">
+          <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800/60 space-y-3">
+            <div className="text-xs font-semibold text-zinc-800 dark:text-zinc-300">
               SEO & Meta Information (Optional)
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
@@ -366,7 +366,7 @@ export function AdminUpdateForm({ post, categories }: AdminUpdateFormProps) {
                 variant="outline"
                 size="sm"
                 onClick={handleArchive}
-                className="text-xs border-zinc-800 text-zinc-400 hover:text-amber-300 flex-1 sm:flex-none justify-center"
+                className="text-xs border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-amber-600 dark:hover:text-amber-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 flex-1 sm:flex-none justify-center"
               >
                 <Archive className="w-3.5 h-3.5 mr-1" /> Archive
               </Button>
@@ -375,7 +375,7 @@ export function AdminUpdateForm({ post, categories }: AdminUpdateFormProps) {
                 variant="outline"
                 size="sm"
                 onClick={handleDelete}
-                className="text-xs border-zinc-800 text-zinc-400 hover:text-rose-400 flex-1 sm:flex-none justify-center"
+                className="text-xs border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-zinc-100 dark:hover:bg-zinc-900 flex-1 sm:flex-none justify-center"
               >
                 <Trash2 className="w-3.5 h-3.5 mr-1" /> Delete
               </Button>

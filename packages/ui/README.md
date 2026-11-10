@@ -412,9 +412,11 @@ import { ... } from '@elsesourav/ui';
 
 - **Purpose**: Accessible, high-precision client-side interactive image cropping, corner-drag resizing, and dimension optimization system powered by the modular `useCropInteraction` hook.
 - **Key Features**:
+  - **Pinned Viewport Overlay**: Modal renders with `fixed inset-0 z-[100]` with backdrop blur, guaranteed above sticky navigation headers and floating bars. Full dual-theme styling (`bg-white dark:bg-zinc-950`).
   - **Interactive Resizable Crop Selection**: 4 tactile corner handles (`nw`, `ne`, `se`, `sw`) and 4 edge midpoint handles (`n`, `s`, `w`, `e`) for smooth dragging and resizing directly on the image.
   - **Smart Ratio Detection & Upload**: Direct upload when the selected image matches the target aspect ratio; automatically opens the crop modal if the aspect ratio deviates, with on-demand manual crop buttons.
-  - **Preset Aspect Ratios & Freeform**: Instant preset pills for `Free` (unconstrained rectangle drag), `1:1 Square`, `16:9 Hero`, `4:3 Standard`, `3:4 Portrait`, `1:6 Carousel/Slider`, and `6:1 Banner`, complete with a Lock/Unlock aspect ratio toggle.
+  - **Preset Aspect Ratios & Freeform**: Instant preset pills for `Free` (unconstrained rectangle drag), `1:1 Square`, `16:9 Hero`, `21:9 Ultrawide`, `4:3 Standard`, `3:4 Portrait`, `1:6 Carousel/Slider`, and `6:1 Banner`.
+  - **Restricted Ratio Mode (`allowedRatios`)**: When specific ratio options are provided (e.g., avatar requires `1:1`, or banner requires `16:9` / `21:9`), the ratio bar only displays those allowed ratios, automatically locks to the selected ratio, and hides the redundant free-form lock button to prevent invalid aspect ratios.
   - **Unrestricted Viewport Zoom**: Zoom out to `0.4x` so full image width and height boundaries are visible, with zoom in up to `2.5x`, reset, and rule-of-thirds 3×3 composition grid lines.
   - Automatic target dimension enforcement with bicubic high-smoothing HTML5 Canvas export to WebP/PNG.
   - Direct integration with Cloudinary signed server actions.
@@ -423,6 +425,7 @@ import { ... } from '@elsesourav/ui';
   - `onChange`: `(url: string) => void`
   - `onUploadFile?: (file: File) => Promise<{ success: boolean; url?: string; error?: string }>`
   - `aspectRatio?: number | null` (default: `1`)
+  - `allowedRatios?: PresetRatioOption[]` (Optional list of allowable ratio options to constrain cropping)
   - `cropShape?: 'round' | 'rect'`
   - `targetWidth?: number` (default: `512`)
   - `targetHeight?: number` (default: `512`)
@@ -808,6 +811,11 @@ import { ... } from '@elsesourav/ui';
 ### `MarkdownRenderer` & `AdminMarkdownEditor`
 
 - **Purpose**: Secure, GFM-compliant markdown parser with syntax-highlighted code blocks, copy actions, responsive tables, and full write/preview editing suite.
+- **Key Features**:
+  - Dual light/dark theme design matching the public site aesthetic (`bg-white dark:bg-zinc-950`).
+  - Interactive formatting quick-bar (Headings, Bold, Italic, Code, Blockquote, Bullet list, Links, Tables, Code Blocks).
+  - Built-in collapsible syntax reference guide cheatsheet.
+  - Live Word and character count tracking.
 - **When & Where to Use**: Technical blog articles, documentation pages, admin CMS editor.
 
 ---
@@ -1443,5 +1451,10 @@ The `@elsesourav/ui/micro` collection contains **34 playful, high-tactility micr
   - **Luminous Scrim**: Mobile background uses a progressive `180deg` white foundation (`rgba(255,255,255,0.70)` to `rgba(255,255,255,1)`), allowing the soft pastel sky to breathe behind the top island while guaranteeing 100% solid contrast beneath hero text.
   - **High-Contrast Headline & Subtitle**: Lead headline uses `text-slate-950 font-extrabold` with deep indigo/violet highlight gradients (`from-blue-700 via-indigo-700 to-violet-800`), and subtitle uses `text-slate-800 font-medium`.
   - **Polished Action Buttons & Trust Metrics**: Secondary "About Me" CTA button renders with `text-slate-900 bg-white/90 hover:bg-white border-slate-300/80 shadow-xs backdrop-blur-md`. Trust metric numbers use `text-slate-950 font-extrabold`, labels use `text-slate-700 font-semibold`, and icons sit inside high-contrast pastel rounded containers (`bg-purple-100 border-purple-300`, `bg-blue-100`, `bg-indigo-100`).
+14. **Clean Editorial Catalog Card Architecture (`AppEditorialCard`)**:
+- **Unobstructed Featured Artwork**: Overlay eyebrow tags (e.g. `ARCADE SHOWCASE`, `AI BREAKTHROUGH`) and secondary editorial headlines are eliminated from the card face. This ensures full visual priority for the custom cover illustration without redundant text overlays.
+- **Dedicated Bottom Frosted Capsule**: Card information is consolidated strictly into the bottom frosted glass capsule (`backdrop-blur-md`), containing the rounded app icon, bold app title, category label, and the hover-reactive `View ↗` button.
+- **Focused Bottom Gradient Scrim**: Shading is confined strictly to the bottom ~30% of the card (`transparent 68%` to `rgba(0,0,0,0.28) 100%`) for capsule contrast, preserving 70%+ of the artwork completely unshaded.
+
 
 

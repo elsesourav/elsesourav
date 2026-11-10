@@ -17,13 +17,13 @@ export default function AdminError({
 
   return (
     <div className="max-w-xl mx-auto px-4 py-16">
-      <Card className="border-red-900/60 bg-zinc-950/90 text-center">
+      <Card className="border-red-200 dark:border-red-900/60 bg-white/90 dark:bg-zinc-950/90 text-center shadow-xl">
         <CardHeader>
-          <div className="w-12 h-12 rounded-full bg-red-950/80 border border-red-800 flex items-center justify-center mx-auto mb-3">
-            <ShieldAlert className="w-6 h-6 text-red-400" />
+          <div className="w-12 h-12 rounded-full bg-red-50 dark:bg-red-950/80 border border-red-200 dark:border-red-800 flex items-center justify-center mx-auto mb-3">
+            <ShieldAlert className="w-6 h-6 text-red-600 dark:text-red-400" />
           </div>
-          <CardTitle className="text-xl">Admin Console Exception</CardTitle>
-          <CardDescription className="mt-1">
+          <CardTitle className="text-xl text-zinc-900 dark:text-zinc-100">Admin Console Exception</CardTitle>
+          <CardDescription className="mt-1 text-zinc-600 dark:text-zinc-400">
             An internal error occurred while executing administrative operations.
           </CardDescription>
         </CardHeader>

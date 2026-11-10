@@ -169,19 +169,19 @@ export function AdminHelpForm({ article, categories }: AdminHelpFormProps) {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-800/80 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 dark:border-zinc-800/80 pb-4">
         <div className="flex items-center gap-3">
           <Link
             href="/admin/help"
-            className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-zinc-100 transition-colors shrink-0"
+            className="p-2 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors shrink-0"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div className="min-w-0">
-            <h1 className="text-xl sm:text-2xl font-bold text-zinc-100 tracking-tight truncate">
+            <h1 className="text-xl sm:text-2xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight truncate">
               {isEditing ? `Edit: ${article?.title}` : 'Create Help Article'}
             </h1>
-            <p className="text-xs text-zinc-400 truncate">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">
               {isEditing
                 ? `ID: ${article?.id} • Current status: ${status.toUpperCase()}`
                 : 'Add guides, tutorials, and documentation to the ElseSourav Help Center.'}
@@ -195,7 +195,7 @@ export function AdminHelpForm({ article, categories }: AdminHelpFormProps) {
               <Link
                 href={publicUrl}
                 target="_blank"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-800/80 text-xs transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800/80 text-xs transition-colors"
                 title="View Live Guide"
               >
                 <ExternalLink className="w-3.5 h-3.5" />
@@ -208,7 +208,7 @@ export function AdminHelpForm({ article, categories }: AdminHelpFormProps) {
               size="sm"
               disabled={isPublishing}
               onClick={handlePublish}
-              className="text-xs border-indigo-500/40 text-indigo-300 hover:bg-indigo-950/40 gap-1.5"
+              className="text-xs border-indigo-200 dark:border-indigo-500/40 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 gap-1.5"
             >
               {isPublishing ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -222,14 +222,14 @@ export function AdminHelpForm({ article, categories }: AdminHelpFormProps) {
       </div>
 
       {success && (
-        <div className="p-4 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 flex items-center gap-2.5 text-xs text-emerald-300">
+        <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-500/30 flex items-center gap-2.5 text-xs text-emerald-700 dark:text-emerald-300">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
           <span>{success}</span>
         </div>
       )}
 
       {error && (
-        <div className="p-4 rounded-2xl bg-rose-950/40 border border-rose-500/30 flex items-center gap-2.5 text-xs text-rose-300">
+        <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-500/30 flex items-center gap-2.5 text-xs text-rose-700 dark:text-rose-300">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>
@@ -237,9 +237,9 @@ export function AdminHelpForm({ article, categories }: AdminHelpFormProps) {
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
-        <Card className="p-6 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl space-y-5">
-          <div className="flex items-center gap-2 text-xs font-bold text-zinc-300 uppercase tracking-wider">
-            <HelpCircle className="w-4 h-4 text-indigo-400" />
+        <Card className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40 backdrop-blur-xl space-y-4 sm:space-y-5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-bold text-zinc-800 dark:text-zinc-300 uppercase tracking-wider">
+            <HelpCircle className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
             <span>Article Information</span>
           </div>
 
@@ -270,7 +270,7 @@ export function AdminHelpForm({ article, categories }: AdminHelpFormProps) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Category Dropdown */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-zinc-300">
+              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                 Knowledge Base Category <span className="text-rose-400">*</span>
               </label>
               <Dropdown
@@ -314,8 +314,8 @@ export function AdminHelpForm({ article, categories }: AdminHelpFormProps) {
           />
 
           {/* SEO Metadata */}
-          <div className="pt-4 border-t border-zinc-800/60 space-y-3">
-            <div className="text-xs font-semibold text-zinc-300">
+          <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800/60 space-y-3">
+            <div className="text-xs font-semibold text-zinc-800 dark:text-zinc-300">
               SEO & Meta Information (Optional)
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -340,7 +340,7 @@ export function AdminHelpForm({ article, categories }: AdminHelpFormProps) {
         </Card>
 
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-6 border-t border-zinc-800/80">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-6 border-t border-zinc-200 dark:border-zinc-800/80">
           <Button
             type="submit"
             disabled={isSaving}
@@ -367,7 +367,7 @@ export function AdminHelpForm({ article, categories }: AdminHelpFormProps) {
                 variant="outline"
                 size="sm"
                 onClick={handleArchive}
-                className="text-xs border-zinc-800 text-zinc-400 hover:text-amber-300 flex-1 sm:flex-none justify-center"
+                className="text-xs border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-amber-600 dark:hover:text-amber-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 flex-1 sm:flex-none justify-center"
               >
                 <Archive className="w-3.5 h-3.5 mr-1" /> Archive
               </Button>
@@ -376,7 +376,7 @@ export function AdminHelpForm({ article, categories }: AdminHelpFormProps) {
                 variant="outline"
                 size="sm"
                 onClick={handleDelete}
-                className="text-xs border-zinc-800 text-zinc-400 hover:text-rose-400 flex-1 sm:flex-none justify-center"
+                className="text-xs border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-zinc-100 dark:hover:bg-zinc-900 flex-1 sm:flex-none justify-center"
               >
                 <Trash2 className="w-3.5 h-3.5 mr-1" /> Delete
               </Button>

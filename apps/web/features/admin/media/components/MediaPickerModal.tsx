@@ -109,16 +109,16 @@ export function MediaPickerModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200">
-      <Card className="w-full max-w-4xl bg-zinc-950 border-zinc-800 rounded-3xl p-5 sm:p-6 space-y-4 max-h-[90vh] flex flex-col shadow-2xl">
+      <Card className="w-full max-w-4xl bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 rounded-3xl p-5 sm:p-6 space-y-4 max-h-[90vh] flex flex-col shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-zinc-800 pb-3.5 shrink-0">
+        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-3.5 shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-indigo-950/80 border border-indigo-500/40 flex items-center justify-center text-indigo-400">
+            <div className="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-500/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
               <ImageIcon className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-zinc-100">{title}</h3>
-              <p className="text-[11px] text-zinc-400">
+              <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">{title}</h3>
+              <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
                 Browse library assets or upload a new image directly.
               </p>
             </div>
@@ -149,7 +149,7 @@ export function MediaPickerModal({
             <button
               type="button"
               onClick={onClose}
-              className="p-1.5 rounded-xl hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200"
+              className="p-1.5 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -167,8 +167,8 @@ export function MediaPickerModal({
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-colors ${
                   selectedCategory === cat.id
-                    ? 'bg-zinc-800 text-white border border-zinc-700'
-                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
+                    ? 'bg-zinc-900 dark:bg-zinc-800 text-white border border-zinc-900 dark:border-zinc-700 shadow-sm'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900'
                 }`}
               >
                 {cat.label}
@@ -178,19 +178,19 @@ export function MediaPickerModal({
 
           {/* Search Box */}
           <div className="relative min-w-[200px]">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500 pointer-events-none" />
             <Input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search assets..."
-              className="bg-zinc-900 border-zinc-800 pl-8 text-xs rounded-xl h-8 text-zinc-200"
+              className="bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 pl-8 text-xs rounded-xl h-8 text-zinc-900 dark:text-zinc-200 placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
             />
           </div>
         </div>
 
         {error && (
-          <div className="p-2.5 rounded-xl bg-rose-950/40 border border-rose-500/30 text-xs text-rose-300">
+          <div className="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-500/30 text-xs text-rose-600 dark:text-rose-300">
             {error}
           </div>
         )}
@@ -198,15 +198,15 @@ export function MediaPickerModal({
         {/* Gallery Grid */}
         <div className="flex-1 overflow-y-auto min-h-[300px] max-h-[55vh] pr-1">
           {loading ? (
-            <div className="h-64 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs">
-              <Loader2 className="w-6 h-6 animate-spin text-indigo-400" />
+            <div className="h-64 flex flex-col items-center justify-center gap-2 text-zinc-500 dark:text-zinc-400 text-xs">
+              <Loader2 className="w-6 h-6 animate-spin text-indigo-500 dark:text-indigo-400" />
               <span>Loading media assets...</span>
             </div>
           ) : items.length === 0 ? (
-            <div className="h-64 flex flex-col items-center justify-center gap-3 text-center p-6 border border-dashed border-zinc-800 rounded-2xl bg-zinc-900/30">
-              <ImageIcon className="w-8 h-8 text-zinc-600" />
+            <div className="h-64 flex flex-col items-center justify-center gap-3 text-center p-6 border border-dashed border-zinc-200 dark:border-zinc-800 rounded-2xl bg-zinc-50/50 dark:bg-zinc-900/30">
+              <ImageIcon className="w-8 h-8 text-zinc-400 dark:text-zinc-600" />
               <div className="space-y-1">
-                <p className="text-xs font-semibold text-zinc-300">No media assets found</p>
+                <p className="text-xs font-semibold text-zinc-800 dark:text-zinc-300">No media assets found</p>
                 <p className="text-[11px] text-zinc-500">
                   Upload an image file directly to start your library.
                 </p>
@@ -216,7 +216,7 @@ export function MediaPickerModal({
                 size="sm"
                 variant="outline"
                 onClick={() => fileInputRef.current?.click()}
-                className="text-xs rounded-xl border-zinc-700"
+                className="text-xs rounded-xl border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300"
               >
                 Upload Image
               </Button>
@@ -232,13 +232,13 @@ export function MediaPickerModal({
                       onSelect(item.secureUrl);
                       onClose();
                     }}
-                    className={`group relative rounded-2xl border overflow-hidden cursor-pointer transition-all bg-zinc-900/80 ${
+                    className={`group relative rounded-2xl border overflow-hidden cursor-pointer transition-all bg-white dark:bg-zinc-900/80 ${
                       isSelected
                         ? 'border-indigo-500 ring-2 ring-indigo-500/40'
-                        : 'border-zinc-800 hover:border-zinc-700 hover:shadow-lg'
+                        : 'border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:shadow-lg'
                     }`}
                   >
-                    <div className="aspect-square bg-zinc-950 flex items-center justify-center overflow-hidden">
+                    <div className="aspect-square bg-zinc-100 dark:bg-zinc-950 flex items-center justify-center overflow-hidden">
                       <img
                         src={item.secureUrl}
                         alt={item.publicId}
@@ -247,13 +247,13 @@ export function MediaPickerModal({
                       />
                     </div>
 
-                    <div className="p-2 bg-zinc-900 border-t border-zinc-800/80 flex items-center justify-between gap-1.5">
-                      <span className="text-[11px] text-zinc-300 truncate font-mono">
+                    <div className="p-2 bg-zinc-50 dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800/80 flex items-center justify-between gap-1.5">
+                      <span className="text-[11px] text-zinc-700 dark:text-zinc-300 truncate font-mono">
                         {item.publicId.split('/').pop()}
                       </span>
                       <Badge
                         variant="outline"
-                        className="text-[9px] px-1 py-0 border-zinc-700 text-zinc-400 capitalize shrink-0"
+                        className="text-[9px] px-1 py-0 border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 capitalize shrink-0"
                       >
                         {item.domain}
                       </Badge>

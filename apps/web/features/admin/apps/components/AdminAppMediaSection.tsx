@@ -32,9 +32,9 @@ export function AdminAppMediaSection({
   setVideoUrl,
 }: AdminAppMediaSectionProps) {
   return (
-    <Card className="p-6 rounded-3xl border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl space-y-5">
-      <div className="flex items-center gap-2 text-xs font-bold text-zinc-300 uppercase tracking-wider">
-        <Upload className="w-4 h-4 text-purple-400" />
+    <Card className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40 backdrop-blur-xl space-y-4 sm:space-y-5 shadow-sm">
+      <div className="flex items-center gap-2 text-xs font-bold text-zinc-800 dark:text-zinc-300 uppercase tracking-wider">
+        <Upload className="w-4 h-4 text-purple-600 dark:text-purple-400" />
         <span>Media Assets & Banners</span>
       </div>
 

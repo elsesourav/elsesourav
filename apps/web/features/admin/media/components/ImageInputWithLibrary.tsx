@@ -51,14 +51,44 @@ export function ImageInputWithLibrary({
   const cropConfig = React.useMemo(() => {
     switch (previewShape) {
       case 'circle':
-        return { aspectRatio: 1.0, cropShape: 'round' as const, width: 512, height: 512 };
+        return {
+          aspectRatio: 1.0,
+          cropShape: 'round' as const,
+          width: 512,
+          height: 512,
+          allowedRatios: [{ id: '1:1', label: '1:1 Square', ratio: 1.0 }],
+        };
       case 'portrait':
-        return { aspectRatio: 1.0, cropShape: 'rect' as const, width: 512, height: 512 };
+        return {
+          aspectRatio: 3 / 4,
+          cropShape: 'rect' as const,
+          width: 600,
+          height: 800,
+          allowedRatios: [
+            { id: '3:4', label: '3:4 Portrait', ratio: 3 / 4 },
+            { id: '1:1', label: '1:1 Square', ratio: 1.0 },
+          ],
+        };
       case 'banner':
-        return { aspectRatio: 16 / 9, cropShape: 'rect' as const, width: 1200, height: 675 };
+        return {
+          aspectRatio: 16 / 9,
+          cropShape: 'rect' as const,
+          width: 1200,
+          height: 675,
+          allowedRatios: [
+            { id: '16:9', label: '16:9 Banner', ratio: 16 / 9 },
+            { id: '21:9', label: '21:9 Ultrawide', ratio: 21 / 9 },
+          ],
+        };
       case 'square':
       default:
-        return { aspectRatio: 1.0, cropShape: 'rect' as const, width: 512, height: 512 };
+        return {
+          aspectRatio: 1.0,
+          cropShape: 'rect' as const,
+          width: 512,
+          height: 512,
+          allowedRatios: [{ id: '1:1', label: '1:1 Square', ratio: 1.0 }],
+        };
     }
   }, [previewShape]);
 
@@ -131,13 +161,13 @@ export function ImageInputWithLibrary({
 
   const previewClasses = {
     circle:
-      'w-12 h-12 rounded-full overflow-hidden shrink-0 border border-zinc-800 bg-zinc-950 flex items-center justify-center',
+      'w-12 h-12 rounded-full overflow-hidden shrink-0 border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-950 flex items-center justify-center',
     square:
-      'w-12 h-12 rounded-xl overflow-hidden shrink-0 border border-zinc-800 bg-zinc-950 flex items-center justify-center',
+      'w-12 h-12 rounded-xl overflow-hidden shrink-0 border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-950 flex items-center justify-center',
     banner:
-      'w-20 h-12 rounded-xl overflow-hidden shrink-0 border border-zinc-800 bg-zinc-950 flex items-center justify-center',
+      'w-20 h-12 rounded-xl overflow-hidden shrink-0 border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-950 flex items-center justify-center',
     portrait:
-      'w-10 h-13 rounded-xl overflow-hidden shrink-0 border border-zinc-800 bg-zinc-950 flex items-center justify-center',
+      'w-10 h-13 rounded-xl overflow-hidden shrink-0 border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-950 flex items-center justify-center',
   }[previewShape];
 
   return (
@@ -145,7 +175,7 @@ export function ImageInputWithLibrary({
       {/* Header with Label and Optional Actions */}
       <div className="flex items-center justify-between">
         {label && (
-          <label className="block text-xs font-semibold text-zinc-300">
+          <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
             {label} {required && <span className="text-rose-400">*</span>}
           </label>
         )}
@@ -160,10 +190,10 @@ export function ImageInputWithLibrary({
                 setCropperFileName('cropped.webp');
                 setIsCropperOpen(true);
               }}
-              className="text-[11px] text-zinc-400 hover:text-cyan-400 flex items-center gap-1 transition-colors h-6 px-1.5 rounded-lg"
+              className="text-[11px] text-zinc-500 dark:text-zinc-400 hover:text-cyan-600 dark:hover:text-cyan-400 flex items-center gap-1 transition-colors h-6 px-1.5 rounded-lg"
               title="Crop image"
             >
-              <Crop className="w-3 h-3 text-cyan-400" />
+              <Crop className="w-3 h-3 text-cyan-500 dark:text-cyan-400" />
               <span>Crop</span>
             </Button>
           )}
@@ -173,7 +203,7 @@ export function ImageInputWithLibrary({
               variant="ghost"
               size="xs"
               onClick={() => onChange('')}
-              className="text-[11px] text-zinc-500 hover:text-rose-400 flex items-center gap-1 transition-colors h-6 px-1.5 rounded-lg"
+              className="text-[11px] text-zinc-500 hover:text-rose-600 dark:hover:text-rose-400 flex items-center gap-1 transition-colors h-6 px-1.5 rounded-lg"
             >
               <X className="w-3 h-3" /> Clear
             </Button>
@@ -219,7 +249,7 @@ export function ImageInputWithLibrary({
               </div>
             </>
           ) : (
-            <ImageIcon className="w-5 h-5 text-zinc-600" />
+            <ImageIcon className="w-5 h-5 text-zinc-400 dark:text-zinc-600" />
           )}
         </div>
 
@@ -231,7 +261,7 @@ export function ImageInputWithLibrary({
             onChange={(e) => onChange(e.target.value)}
             placeholder={effectivePlaceholder}
             required={required}
-            className="bg-zinc-950/60 border-zinc-800 text-xs rounded-xl text-zinc-100 min-w-[140px] flex-1"
+            className="bg-white dark:bg-zinc-950/60 border-zinc-200 dark:border-zinc-800 text-xs rounded-xl text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 min-w-[140px] flex-1"
           />
 
           <div className="flex items-center gap-1.5 shrink-0 justify-end flex-wrap sm:flex-nowrap">
@@ -242,7 +272,7 @@ export function ImageInputWithLibrary({
               size="sm"
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploading}
-              className="text-xs rounded-xl border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 gap-1.5 h-9 px-3 shrink-0 justify-center whitespace-nowrap"
+              className="text-xs rounded-xl border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 gap-1.5 h-9 px-3 shrink-0 justify-center whitespace-nowrap transition-colors"
               title="Upload image file"
             >
               {isUploading ? (
@@ -259,10 +289,10 @@ export function ImageInputWithLibrary({
               variant="outline"
               size="sm"
               onClick={() => setIsModalOpen(true)}
-              className="text-xs rounded-xl border-indigo-500/30 bg-indigo-950/30 hover:bg-indigo-900/40 text-indigo-300 gap-1.5 h-9 px-3 shrink-0 justify-center whitespace-nowrap"
+              className="text-xs rounded-xl border-indigo-200 dark:border-indigo-500/30 bg-indigo-50 dark:bg-indigo-950/30 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 gap-1.5 h-9 px-3 shrink-0 justify-center whitespace-nowrap transition-colors"
               title="Select from Media Library"
             >
-              <FolderOpen className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+              <FolderOpen className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 shrink-0" />
               <span className="whitespace-nowrap">Media Library</span>
             </Button>
           </div>
@@ -295,6 +325,7 @@ export function ImageInputWithLibrary({
           imageSrc={cropperSrc}
           fileName={cropperFileName}
           aspectRatio={cropConfig.aspectRatio}
+          allowedRatios={cropConfig.allowedRatios}
           cropShape={cropConfig.cropShape}
           targetWidth={cropConfig.width}
           targetHeight={cropConfig.height}
