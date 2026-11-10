@@ -92,7 +92,12 @@ export default async function AdminSettingsPage() {
     portrait_click_force: dbSettings['portrait_click_force'] || '1.0x',
     portrait_bounce_speed: dbSettings['portrait_bounce_speed'] || '8.2',
     portrait_click_radius: dbSettings['portrait_click_radius'] || '80px',
+    portrait_hover_speed: dbSettings['portrait_hover_speed'] || '1.0x',
+    portrait_hover_threshold: dbSettings['portrait_hover_threshold'] || '55px',
+    portrait_click_speed: dbSettings['portrait_click_speed'] || '1.0x',
     portrait_intro_animation: dbSettings['portrait_intro_animation'] || '1.0s',
+    portrait_intro_spread: dbSettings['portrait_intro_spread'] || '1.0x',
+    portrait_intro_pattern: dbSettings['portrait_intro_pattern'] || 'vortex',
     // Legal content defaults
     legal_privacy_md: dbSettings['legal_privacy_md'] || '',
     legal_terms_md: dbSettings['legal_terms_md'] || '',

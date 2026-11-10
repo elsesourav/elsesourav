@@ -82,25 +82,44 @@ export function AboutPortraitCard({
   const { resolvedTheme, effectsLevel } = useTheme();
   const isDark = resolvedTheme === 'dark';
 
+  const resolveTargetResolution = React.useCallback((): string | number => {
+    if (typeof window === 'undefined') {
+      return imageResolutionDesktop || imageResolution || '256';
+    }
+    const width = window.innerWidth;
+    const isCoarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+    const minDim = Math.min(window.innerWidth, window.innerHeight);
+
+    // Mobile: phones (< 768px)
+    if (width < 768) {
+      return imageResolutionMobile || '144';
+    }
+
+    // Tablet: 768px <= width < 1024px, OR touch tablet in landscape (e.g. iPad with min dimension < 950)
+    const isTabletTouch = isCoarse && minDim >= 600 && minDim < 950 && width <= 1366;
+    if ((width >= 768 && width < 1024) || isTabletTouch) {
+      return imageResolutionTablet || '192';
+    }
+
+    // Desktop: laptops and monitors (>= 1024px)
+    return imageResolutionDesktop || imageResolution || '256';
+  }, [imageResolution, imageResolutionDesktop, imageResolutionTablet, imageResolutionMobile]);
+
   const [responsiveRes, setResponsiveRes] = React.useState<string | number | undefined>(() => {
-    return imageResolutionDesktop || imageResolution || '224';
+    if (typeof window !== 'undefined') {
+      return resolveTargetResolution();
+    }
+    return imageResolutionDesktop || imageResolution || '256';
   });
 
   React.useEffect(() => {
     const updateRes = () => {
-      const width = window.innerWidth;
-      if (width < 640) {
-        setResponsiveRes(imageResolutionMobile || imageResolution || '144');
-      } else if (width < 1024) {
-        setResponsiveRes(imageResolutionTablet || imageResolution || '192');
-      } else {
-        setResponsiveRes(imageResolutionDesktop || imageResolution || '256');
-      }
+      setResponsiveRes(resolveTargetResolution());
     };
     updateRes();
     window.addEventListener('resize', updateRes);
     return () => window.removeEventListener('resize', updateRes);
-  }, [imageResolution, imageResolutionDesktop, imageResolutionTablet, imageResolutionMobile]);
+  }, [resolveTargetResolution]);
 
   return (
     <div

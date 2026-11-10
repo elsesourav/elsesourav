@@ -157,6 +157,7 @@ export function PortraitSettingsTab({ settings, onChange, onSave }: PortraitSett
 
           <ImagePixelQualityControls
             activeDevice={activeDevice}
+            onSelectDevice={setActiveDevice}
             desktopResolution={draftSettings.portrait_image_resolution_desktop}
             tabletResolution={draftSettings.portrait_image_resolution_tablet}
             mobileResolution={draftSettings.portrait_image_resolution_mobile}

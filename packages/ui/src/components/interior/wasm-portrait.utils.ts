@@ -124,24 +124,71 @@ export function parseIntroPattern(val: string | number | undefined, defaultVal =
   return 0; // default: vortex
 }
 
+export function parsePortraitCustomValues(props: {
+  edgeAlgorithm?: string | number;
+  edgeThreshold?: string | number;
+  pinBottomEdge?: boolean | number;
+  topParticleSize?: string | number;
+  topParticleQuantity?: string | number;
+  topParticleSpeed?: string | number;
+  glowDistance?: string | number;
+  backsideStars?: string | number;
+  backsideHalo?: string | number;
+  backsideOrbits?: string | number | boolean;
+  backsideSpecks?: string | number;
+  clickForce?: string | number;
+  bounceSpeed?: string | number;
+  clickRadius?: string | number;
+  hoverSpeed?: string | number;
+  hoverRadius?: string | number;
+  clickSpeed?: string | number;
+  introDuration?: string | number;
+  introSpread?: string | number;
+  introPattern?: string | number;
+}) {
+  return {
+    effAlgorithm: parseEdgeAlgorithm(props.edgeAlgorithm),
+    effThreshold: parseEdgeThreshold(props.edgeThreshold),
+    effPinBottom: props.pinBottomEdge === false || props.pinBottomEdge === 0 ? 0 : 1,
+    effTopSize: parseMultiplier(props.topParticleSize),
+    effTopQty: parseMultiplier(props.topParticleQuantity),
+    effTopSpeed: parseMultiplier(props.topParticleSpeed),
+    effStars: parseStarsCount(props.backsideStars),
+    effHalo: parseHaloMultiplier(props.backsideHalo),
+    effOrbits: parseOrbitsEnabled(props.backsideOrbits),
+    effSpecks: parseSpecksMultiplier(props.backsideSpecks),
+    effClickForce: parseClickForce(props.clickForce),
+    effBounceSpeed: parseBounceSpeed(props.bounceSpeed),
+    effGlowDistance: parseGlowDistance(props.glowDistance),
+    effClickRadius: parseClickRadius(props.clickRadius),
+    effHoverSpeed: parseHoverSpeed(props.hoverSpeed),
+    effHoverRadius: parseHoverRadius(props.hoverRadius),
+    effClickSpeed: parseClickSpeed(props.clickSpeed),
+    effIntroDuration: parseIntroDuration(props.introDuration),
+    effIntroSpread: parseIntroSpread(props.introSpread),
+    effIntroPattern: parseIntroPattern(props.introPattern),
+  };
+}
 export function resolveDeviceResolution(
   settings: Record<string, string>,
   defaultVal = 224
 ): number {
   if (typeof window === 'undefined') return defaultVal;
   const w = window.innerWidth;
-  if (w < 640) {
+  const isCoarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+  const minDim = Math.min(window.innerWidth, window.innerHeight);
+
+  if (w < 768) {
     const mobile = settings['portrait_image_resolution_mobile'];
-    if (mobile) return parseInt(mobile, 10) || 144;
-  } else if (w < 1024) {
-    const tablet = settings['portrait_image_resolution_tablet'];
-    if (tablet) return parseInt(tablet, 10) || 192;
-  } else {
-    const desktop = settings['portrait_image_resolution_desktop'];
-    if (desktop) return parseInt(desktop, 10) || 256;
+    return mobile ? parseInt(mobile, 10) || 144 : 144;
   }
-  const global = settings['portrait_image_resolution'];
-  return global ? parseInt(global, 10) || defaultVal : defaultVal;
+  const isTabletTouch = isCoarse && minDim >= 600 && minDim < 950 && w <= 1366;
+  if ((w >= 768 && w < 1024) || isTabletTouch) {
+    const tablet = settings['portrait_image_resolution_tablet'];
+    return tablet ? parseInt(tablet, 10) || 192 : 192;
+  }
+  const desktop = settings['portrait_image_resolution_desktop'] || settings['portrait_image_resolution'];
+  return desktop ? parseInt(desktop, 10) || 256 : defaultVal;
 }
 
 export function detectDeviceCapability(): { densityScale: number; glowScale: number } {
@@ -149,7 +196,7 @@ export function detectDeviceCapability(): { densityScale: number; glowScale: num
   const cores = navigator.hardwareConcurrency || 4;
   const memory = (navigator as unknown as { deviceMemory?: number }).deviceMemory || 4;
   const screenWidth = window.innerWidth;
-  if (screenWidth < 640) {
+  if (screenWidth < 768) {
     return cores >= 8
       ? { densityScale: 0.85, glowScale: 0.9 }
       : { densityScale: 0.75, glowScale: 0.8 };
@@ -166,8 +213,11 @@ export function detectAdaptiveResolution(): number {
   const cores = navigator.hardwareConcurrency || 4;
   const memory = (navigator as unknown as { deviceMemory?: number }).deviceMemory || 4;
   const screenWidth = window.innerWidth;
-  const isMobile = screenWidth < 640;
-  const isTablet = screenWidth >= 640 && screenWidth < 1024;
+  const isCoarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+  const minDim = Math.min(window.innerWidth, window.innerHeight);
+
+  const isMobile = screenWidth < 768;
+  const isTablet = (screenWidth >= 768 && screenWidth < 1024) || (isCoarse && minDim >= 600 && minDim < 950 && screenWidth <= 1366);
 
   if (isMobile) {
     if (cores >= 8 && dpr >= 2.5) return 192;

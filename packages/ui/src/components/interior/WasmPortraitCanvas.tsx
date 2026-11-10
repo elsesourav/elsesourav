@@ -4,22 +4,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { WasmPortraitBridge } from './wasm-portrait.bridge';
 import {
   parseMultiplier,
-  parseEdgeAlgorithm,
-  parseEdgeThreshold,
-  parseStarsCount,
-  parseHaloMultiplier,
-  parseOrbitsEnabled,
-  parseSpecksMultiplier,
-  parseClickForce,
-  parseBounceSpeed,
-  parseIntroDuration,
-  parseGlowDistance,
-  parseClickRadius,
-  parseHoverSpeed,
-  parseHoverRadius,
-  parseClickSpeed,
-  parseIntroSpread,
-  parseIntroPattern,
+  parsePortraitCustomValues,
   detectDeviceCapability,
   detectAdaptiveResolution,
 } from './wasm-portrait.utils';
@@ -108,6 +93,9 @@ export function WasmPortraitCanvas({
   const introTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sizeRef = useRef(size);
   sizeRef.current = size;
+  const isTouchingRef = useRef(false);
+  const lastTouchPosRef = useRef({ x: 0, y: 0 });
+  const lastTouchEndTimeRef = useRef(0);
 
   const rawDensity = parseMultiplier(particleDensity);
   const rawSize = parseMultiplier(particleSize);
@@ -118,27 +106,12 @@ export function WasmPortraitCanvas({
   const effectiveDensity = rawDensity * densityScale;
   const effectiveGlow = rawGlow * glowScale;
 
-  // Parsed custom values
-  const effAlgorithm = parseEdgeAlgorithm(edgeAlgorithm);
-  const effThreshold = parseEdgeThreshold(edgeThreshold);
-  const effPinBottom = pinBottomEdge === false || pinBottomEdge === 0 ? 0 : 1;
-  const effTopSize = parseMultiplier(topParticleSize);
-  const effTopQty = parseMultiplier(topParticleQuantity);
-  const effTopSpeed = parseMultiplier(topParticleSpeed);
-  const effStars = parseStarsCount(backsideStars);
-  const effHalo = parseHaloMultiplier(backsideHalo);
-  const effOrbits = parseOrbitsEnabled(backsideOrbits);
-  const effSpecks = parseSpecksMultiplier(backsideSpecks);
-  const effClickForce = parseClickForce(clickForce);
-  const effBounceSpeed = parseBounceSpeed(bounceSpeed);
-  const effGlowDistance = parseGlowDistance(glowDistance);
-  const effClickRadius = parseClickRadius(clickRadius);
-  const effHoverSpeed = parseHoverSpeed(hoverSpeed);
-  const effHoverRadius = parseHoverRadius(hoverRadius);
-  const effClickSpeed = parseClickSpeed(clickSpeed);
-  const effIntroDuration = parseIntroDuration(introDuration);
-  const effIntroSpread = parseIntroSpread(introSpread);
-  const effIntroPattern = parseIntroPattern(introPattern);
+  const eff = parsePortraitCustomValues({
+    edgeAlgorithm, edgeThreshold, pinBottomEdge, topParticleSize, topParticleQuantity,
+    topParticleSpeed, backsideStars, backsideHalo, backsideOrbits, backsideSpecks,
+    clickForce, bounceSpeed, glowDistance, clickRadius, hoverSpeed, hoverRadius,
+    clickSpeed, introDuration, introSpread, introPattern,
+  });
 
   const [isWasmActive, setIsWasmActive] = useState(false);
   const [hasWebGLError, setHasWebGLError] = useState(false);
@@ -189,12 +162,12 @@ export function WasmPortraitCanvas({
     const bridge = bridgeRef.current;
     if (!canvas || !bridge || typeof window === 'undefined') return;
 
-    // Mobile Height / SVH fix: skip fullscreen reparenting on mobile devices
+    // Mobile Height / SVH fix: skip fullscreen reparenting on phones (< 768px)
     // to prevent mobile address bar shift and canvas resize jumping
-    const isMobile = window.innerWidth < 650 || 'ontouchstart' in window;
+    const isMobile = window.innerWidth < 768;
     if (isMobile) {
       switchToCard();
-      bridge.triggerEntrance(effIntroDuration);
+      bridge.triggerEntrance(eff.effIntroDuration);
       return;
     }
 
@@ -221,13 +194,13 @@ export function WasmPortraitCanvas({
     bridge.resize(w, h);
     bridge.setFullscreenMode(true, getCardRect);
     bridge.start();
-    bridge.triggerEntrance(effIntroDuration);
+    bridge.triggerEntrance(eff.effIntroDuration);
 
-    const flightWait = Math.round(effIntroDuration * 1000 + 100);
+    const flightWait = Math.round(eff.effIntroDuration * 1000 + 100);
     introTimerRef.current = setTimeout(() => {
       switchToCard();
     }, flightWait);
-  }, [getCardRect, switchToCard, effIntroDuration]);
+  }, [getCardRect, switchToCard, eff.effIntroDuration]);
 
   const handleImageLoad = useCallback(() => {
     if (bridgeRef.current && imgRef.current) {
@@ -307,31 +280,29 @@ export function WasmPortraitCanvas({
       flightSpeed: rawSpeed,
       pathSpread,
       showPathGuide,
-      edgeAlgorithm: effAlgorithm,
-      edgeThreshold: effThreshold,
-      pinBottomEdge: effPinBottom,
-      topParticleSize: effTopSize,
-      topParticleQuantity: effTopQty,
-      topParticleSpeed: effTopSpeed,
-      backsideStars: effStars,
-      backsideHalo: effHalo,
-      backsideOrbits: effOrbits,
-      backsideSpecks: effSpecks,
-      clickForce: effClickForce,
-      bounceSpeed: effBounceSpeed,
-      glowDistance: effGlowDistance,
-      clickRadius: effClickRadius,
-      hoverSpeed: effHoverSpeed,
-      hoverRadius: effHoverRadius,
-      clickSpeed: effClickSpeed,
-      introSpread: effIntroSpread,
-      introPattern: effIntroPattern,
+      edgeAlgorithm: eff.effAlgorithm,
+      edgeThreshold: eff.effThreshold,
+      pinBottomEdge: eff.effPinBottom,
+      topParticleSize: eff.effTopSize,
+      topParticleQuantity: eff.effTopQty,
+      topParticleSpeed: eff.effTopSpeed,
+      backsideStars: eff.effStars,
+      backsideHalo: eff.effHalo,
+      backsideOrbits: eff.effOrbits,
+      backsideSpecks: eff.effSpecks,
+      clickForce: eff.effClickForce,
+      bounceSpeed: eff.effBounceSpeed,
+      glowDistance: eff.effGlowDistance,
+      clickRadius: eff.effClickRadius,
+      hoverSpeed: eff.effHoverSpeed,
+      hoverRadius: eff.effHoverRadius,
+      clickSpeed: eff.effClickSpeed,
+      introSpread: eff.effIntroSpread,
+      introPattern: eff.effIntroPattern,
       onLoaded: () => {
         setIsWasmActive(true);
-        if (bridge && !bridge.isWebGLActive()) {
-          setHasWebGLError(true);
-        }
-        if (!prefersReducedMotion && effIntroDuration > 0.05) {
+        if (bridge && !bridge.isWebGLActive()) setHasWebGLError(true);
+        if (!prefersReducedMotion && eff.effIntroDuration > 0.05) {
           switchToFullscreen();
         } else {
           switchToCard();
@@ -363,76 +334,91 @@ export function WasmPortraitCanvas({
   // Synchronize dynamic settings
   useEffect(() => {
     if (bridgeRef.current) {
-      bridgeRef.current.setTheme(isDark);
-      if (lightIntensity !== undefined) bridgeRef.current.setLightIntensity(lightIntensity);
-      bridgeRef.current.setDensity(effectiveDensity);
-      bridgeRef.current.setParticleSize(rawSize);
-      bridgeRef.current.setGlowBrightness(effectiveGlow);
-      bridgeRef.current.setFlightSpeed(rawSpeed);
-      if (pathSpread !== undefined) bridgeRef.current.setPathSpread(pathSpread);
-      bridgeRef.current.setShowPathGuide(showPathGuide);
-      bridgeRef.current.setEdgeAlgorithm(effAlgorithm);
-      bridgeRef.current.setEdgeThreshold(effThreshold);
-      bridgeRef.current.setPinBottomEdge(effPinBottom);
-      bridgeRef.current.setTopParticleSize(effTopSize);
-      bridgeRef.current.setTopParticleQuantity(effTopQty);
-      bridgeRef.current.setTopParticleSpeed(effTopSpeed);
-      bridgeRef.current.setBacksideStars(effStars);
-      bridgeRef.current.setBacksideHalo(effHalo);
-      bridgeRef.current.setBacksideOrbits(effOrbits);
-      bridgeRef.current.setBacksideSpecks(effSpecks);
-      bridgeRef.current.setClickForce(effClickForce);
-      bridgeRef.current.setBounceSpeed(effBounceSpeed);
-      bridgeRef.current.setGlowDistance(effGlowDistance);
-      bridgeRef.current.setClickRadius(effClickRadius);
-      bridgeRef.current.setHoverSpeed(effHoverSpeed);
-      bridgeRef.current.setHoverRadius(effHoverRadius);
-      bridgeRef.current.setClickSpeed(effClickSpeed);
-      bridgeRef.current.setIntroSpread(effIntroSpread);
-      bridgeRef.current.setIntroPattern(effIntroPattern);
+      bridgeRef.current.updateConfig({
+        isDark, lightIntensity, particleDensity: effectiveDensity, particleSize: rawSize,
+        glowBrightness: effectiveGlow, flightSpeed: rawSpeed, pathSpread, showPathGuide,
+        edgeAlgorithm: eff.effAlgorithm, edgeThreshold: eff.effThreshold, pinBottomEdge: eff.effPinBottom,
+        topParticleSize: eff.effTopSize, topParticleQuantity: eff.effTopQty, topParticleSpeed: eff.effTopSpeed,
+        backsideStars: eff.effStars, backsideHalo: eff.effHalo, backsideOrbits: eff.effOrbits,
+        backsideSpecks: eff.effSpecks, clickForce: eff.effClickForce, bounceSpeed: eff.effBounceSpeed,
+        glowDistance: eff.effGlowDistance, clickRadius: eff.effClickRadius, hoverSpeed: eff.effHoverSpeed,
+        hoverRadius: eff.effHoverRadius, clickSpeed: eff.effClickSpeed, introSpread: eff.effIntroSpread,
+        introPattern: eff.effIntroPattern,
+      });
       if (imgRef.current && imgRef.current.complete && imgRef.current.naturalWidth > 0) {
         bridgeRef.current.ingestImageElement(imgRef.current);
       }
     }
   }, [
     isDark, lightIntensity, effectiveDensity, rawSize, effectiveGlow, rawSpeed, pathSpread,
-    showPathGuide, effAlgorithm, effThreshold, effPinBottom, effTopSize, effTopQty, effTopSpeed,
-    effStars, effHalo, effOrbits, effSpecks, effClickForce, effBounceSpeed, effGlowDistance,
-    effClickRadius, effHoverSpeed, effHoverRadius, effClickSpeed, effIntroSpread, effIntroPattern,
+    showPathGuide, eff,
   ]);
 
   // Pointer & Touch interactions
-  const handlePointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    if (!bridgeRef.current || !containerRef.current) return;
+  const getCoords = useCallback((clientX: number, clientY: number) => {
+    if (!containerRef.current) return null;
     const rect = containerRef.current.getBoundingClientRect();
-    if (rect.width === 0 || rect.height === 0) return;
-    const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    const y = 1 - ((e.clientY - rect.top) / rect.height) * 2;
-    bridgeRef.current.setPointer(x, y, true);
-    bridgeRef.current.burst(x, y);
+    if (rect.width === 0 || rect.height === 0) return null;
+    return {
+      x: ((clientX - rect.left) / rect.width) * 2 - 1,
+      y: 1 - ((clientY - rect.top) / rect.height) * 2,
+    };
   }, []);
+
+  const handlePointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (!bridgeRef.current) return;
+    const coords = getCoords(e.clientX, e.clientY);
+    if (!coords) return;
+    if (e.pointerType === 'touch') {
+      isTouchingRef.current = true;
+      lastTouchPosRef.current = coords;
+      bridgeRef.current.setPointer(coords.x, coords.y, true);
+    } else {
+      bridgeRef.current.setPointer(coords.x, coords.y, true);
+    }
+  }, [getCoords]);
 
   const handlePointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    if (!bridgeRef.current || !containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    if (rect.width === 0 || rect.height === 0) return;
-    const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    const y = 1 - ((e.clientY - rect.top) / rect.height) * 2;
-    bridgeRef.current.setPointer(x, y, false);
-  }, []);
+    if (!bridgeRef.current) return;
+    const coords = getCoords(e.clientX, e.clientY);
+    if (!coords) return;
+    if (e.pointerType === 'touch') {
+      if (isTouchingRef.current) {
+        lastTouchPosRef.current = coords;
+        bridgeRef.current.setPointer(coords.x, coords.y, true);
+      }
+    } else {
+      bridgeRef.current.setPointer(coords.x, coords.y, false);
+    }
+  }, [getCoords]);
 
-  const handlePointerLeave = useCallback(() => {
-    bridgeRef.current?.setPointer(-999, -999, false);
+  const handlePointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (!bridgeRef.current) return;
+    const coords = getCoords(e.clientX, e.clientY) || lastTouchPosRef.current;
+    if (e.pointerType === 'touch' || isTouchingRef.current) {
+      isTouchingRef.current = false;
+      lastTouchEndTimeRef.current = performance.now();
+      bridgeRef.current.burst(coords.x, coords.y);
+    }
+    bridgeRef.current.setPointer(-999, -999, false);
+  }, [getCoords]);
+
+  const handlePointerLeave = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (!bridgeRef.current) return;
+    if (isTouchingRef.current) {
+      isTouchingRef.current = false;
+      lastTouchEndTimeRef.current = performance.now();
+      const { x, y } = lastTouchPosRef.current;
+      bridgeRef.current.burst(x, y);
+    }
+    bridgeRef.current.setPointer(-999, -999, false);
   }, []);
 
   const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!bridgeRef.current || !containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    if (rect.width === 0 || rect.height === 0) return;
-    const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    const y = 1 - ((e.clientY - rect.top) / rect.height) * 2;
-    bridgeRef.current.burst(x, y);
-  }, []);
+    if (!bridgeRef.current || performance.now() - lastTouchEndTimeRef.current < 450) return;
+    const coords = getCoords(e.clientX, e.clientY);
+    if (coords) bridgeRef.current.burst(coords.x, coords.y);
+  }, [getCoords]);
 
   return (
     <div
@@ -440,7 +426,8 @@ export function WasmPortraitCanvas({
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
-      onPointerUp={handlePointerLeave}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerLeave}
       onClick={handleClick}
       className={`relative select-none overflow-hidden touch-none cursor-pointer ${className}`}
       style={{ width: '100%', maxWidth: `${size}px`, aspectRatio: '1 / 1' }}

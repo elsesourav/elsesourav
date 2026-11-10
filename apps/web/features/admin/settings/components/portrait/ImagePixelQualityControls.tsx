@@ -9,6 +9,7 @@ import type { PortraitDeviceTarget } from './portrait.types';
 
 export interface ImagePixelQualityControlsProps {
   activeDevice: PortraitDeviceTarget;
+  onSelectDevice?: (device: PortraitDeviceTarget) => void;
   desktopResolution: string;
   tabletResolution: string;
   mobileResolution: string;
@@ -17,6 +18,7 @@ export interface ImagePixelQualityControlsProps {
 
 export function ImagePixelQualityControls({
   activeDevice,
+  onSelectDevice,
   desktopResolution,
   tabletResolution,
   mobileResolution,
@@ -58,6 +60,12 @@ export function ImagePixelQualityControls({
 
   const { key, value, label, subtext, badgeLabel, Icon } = deviceConfig;
 
+  const devices = [
+    { id: 'desktop' as const, label: 'Desktop', res: `${desktopResolution || '256'}px`, Icon: Monitor },
+    { id: 'tablet' as const, label: 'Tablet', res: `${tabletResolution || '192'}px`, Icon: Tablet },
+    { id: 'mobile' as const, label: 'Mobile', res: `${mobileResolution || '144'}px`, Icon: Smartphone },
+  ];
+
   return (
     <div className="space-y-3 p-4 rounded-2xl bg-white dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800 shadow-sm dark:shadow-none">
       {/* Header with active device badge */}
@@ -75,6 +83,32 @@ export function ImagePixelQualityControls({
           <span className="text-[10px] font-mono text-zinc-500 font-bold">{value}px</span>
         </div>
       </div>
+
+      {/* Mini Device Target Selector */}
+      {onSelectDevice && (
+        <div className="grid grid-cols-3 gap-1.5 p-1 rounded-xl bg-zinc-100/80 dark:bg-zinc-950/60 border border-zinc-200 dark:border-zinc-800/80">
+          {devices.map((d) => {
+            const isCurr = activeDevice === d.id;
+            const DIcon = d.Icon;
+            return (
+              <button
+                key={d.id}
+                type="button"
+                onClick={() => onSelectDevice(d.id)}
+                className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-[11px] font-semibold transition-all cursor-pointer ${
+                  isCurr
+                    ? 'bg-white dark:bg-zinc-800 text-cyan-700 dark:text-cyan-300 shadow-xs border border-cyan-400/40'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
+                }`}
+              >
+                <DIcon className="w-3 h-3" />
+                <span>{d.label}</span>
+                <span className="text-[9px] font-mono opacity-70">({d.res})</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {/* Dynamic Single-Device Resolution Tuner */}
       <div className="p-3.5 rounded-xl border border-cyan-400/50 dark:border-cyan-500/30 bg-zinc-50/60 dark:bg-zinc-950/50 space-y-2.5">

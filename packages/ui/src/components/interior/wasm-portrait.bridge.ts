@@ -244,6 +244,40 @@ export class WasmPortraitBridge {
     }
   }
 
+  public updateConfig(options: Partial<WasmPortraitBridgeOptions>): void {
+    if (options.isDark !== undefined) this.isDark = options.isDark;
+    if (options.lightIntensity !== undefined) this.lightIntensity = options.lightIntensity;
+    if (options.particleDensity !== undefined) this.particleDensity = options.particleDensity;
+    if (options.particleSize !== undefined) this.particleSize = options.particleSize;
+    if (options.glowBrightness !== undefined) this.glowBrightness = options.glowBrightness;
+    if (options.flightSpeed !== undefined) this.flightSpeed = options.flightSpeed;
+    if (options.pathSpread !== undefined) {
+      const parsed = typeof options.pathSpread === 'string' ? parseFloat(options.pathSpread) : options.pathSpread;
+      this.pathSpread = isNaN(parsed) ? 2.4 : Math.max(0.2, Math.min(8.0, parsed));
+    }
+    if (options.showPathGuide !== undefined) this.showPathGuide = options.showPathGuide;
+    if (options.edgeAlgorithm !== undefined) this.edgeAlgorithm = options.edgeAlgorithm;
+    if (options.edgeThreshold !== undefined) this.edgeThreshold = options.edgeThreshold;
+    if (options.pinBottomEdge !== undefined) this.pinBottomEdge = options.pinBottomEdge;
+    if (options.topParticleSize !== undefined) this.topParticleSize = options.topParticleSize;
+    if (options.topParticleQuantity !== undefined) this.topParticleQuantity = options.topParticleQuantity;
+    if (options.topParticleSpeed !== undefined) this.topParticleSpeed = options.topParticleSpeed;
+    if (options.backsideStars !== undefined) this.backsideStars = options.backsideStars;
+    if (options.backsideHalo !== undefined) this.backsideHalo = options.backsideHalo;
+    if (options.backsideOrbits !== undefined) this.backsideOrbits = options.backsideOrbits;
+    if (options.backsideSpecks !== undefined) this.backsideSpecks = options.backsideSpecks;
+    if (options.clickForce !== undefined) this.clickForce = options.clickForce;
+    if (options.bounceSpeed !== undefined) this.bounceSpeed = options.bounceSpeed;
+    if (options.glowDistance !== undefined) this.glowDistance = options.glowDistance;
+    if (options.clickRadius !== undefined) this.clickRadius = options.clickRadius;
+    if (options.hoverSpeed !== undefined) this.hoverSpeed = options.hoverSpeed;
+    if (options.hoverRadius !== undefined) this.hoverRadius = options.hoverRadius;
+    if (options.clickSpeed !== undefined) this.clickSpeed = options.clickSpeed;
+    if (options.introSpread !== undefined) this.introSpread = options.introSpread;
+    if (options.introPattern !== undefined) this.introPattern = options.introPattern;
+    this.applyAllWasmConfig();
+  }
+
   public setPointer(normalizedX: number, normalizedY: number, isDown: boolean): void {
     this.targetMouseX =
       normalizedX < -900 || normalizedY < -900 ? -1 : (normalizedX + 1.0) * 0.5 * this.simRes;
