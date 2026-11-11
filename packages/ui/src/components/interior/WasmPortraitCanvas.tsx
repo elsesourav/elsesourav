@@ -163,26 +163,18 @@ export function WasmPortraitCanvas({
     const bridge = bridgeRef.current;
     if (!canvas || !bridge || typeof window === 'undefined') return;
 
-    // Mobile Height / SVH fix: skip fullscreen reparenting on phones (< 768px)
-    // to prevent mobile address bar shift and canvas resize jumping
-    const isMobile = window.innerWidth < 768;
-    if (isMobile) {
-      switchToCard();
-      bridge.triggerEntrance(eff.effIntroDuration);
-      return;
-    }
-
     if (introTimerRef.current) clearTimeout(introTimerRef.current);
 
     if (canvas.parentElement !== document.body) {
       document.body.appendChild(canvas);
     }
 
+    // Universal full-viewport overlay entrance for desktop, tablet, and mobile
     canvas.style.position = 'fixed';
     canvas.style.top = '0';
     canvas.style.left = '0';
     canvas.style.width = '100vw';
-    canvas.style.height = '100svh';
+    canvas.style.height = '100%';
     canvas.style.zIndex = '99999';
     canvas.style.pointerEvents = 'none';
     canvas.style.background = 'transparent';

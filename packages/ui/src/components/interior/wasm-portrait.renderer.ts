@@ -92,8 +92,11 @@ export function computeFullscreenTransform(
   const rem = 1.0 - p;
   const ease = 1.0 - rem * rem * rem * rem;
 
-  const startScaleX = Math.min(1.0, 520 / vw);
-  const startScaleY = Math.min(1.0, 520 / vh);
+  // Universal device-proportional start scale: maintains perfect 1:1 square aspect ratio
+  // on both desktop/laptops and mobile viewport widths without vertical stretching
+  const startSize = Math.min(520, Math.min(vw, vh) * 0.95);
+  const startScaleX = startSize / vw;
+  const startScaleY = startSize / vh;
 
   return {
     scaleX: startScaleX + (targetScaleX - startScaleX) * ease,
