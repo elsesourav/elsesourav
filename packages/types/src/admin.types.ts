@@ -131,6 +131,10 @@ export interface SiteAndCreatorIdentity {
     readonly portraitImageResolutionDesktop?: string;
     readonly portraitImageResolutionTablet?: string;
     readonly portraitImageResolutionMobile?: string;
+    readonly portraitImageAlgorithm?: string;
+    readonly portraitImageAlgorithmDesktop?: string;
+    readonly portraitImageAlgorithmTablet?: string;
+    readonly portraitImageAlgorithmMobile?: string;
     readonly portraitClickForce?: string;
     readonly portraitBounceSpeed?: string;
     readonly portraitClickRadius?: string;

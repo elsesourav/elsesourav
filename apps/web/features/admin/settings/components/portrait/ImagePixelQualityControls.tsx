@@ -1,21 +1,23 @@
 'use client';
 
 import * as React from 'react';
-import { Grid3X3, Monitor, Tablet, Smartphone, Sparkles } from 'lucide-react';
+import { Grid3X3, Monitor, Tablet, Smartphone, Sparkles, SlidersHorizontal } from 'lucide-react';
 import { Dropdown } from '@elsesourav/ui/interior';
 import { Badge } from '@elsesourav/ui';
-import { IMAGE_RESOLUTION_ITEMS } from './portrait.constants';
+import { IMAGE_RESOLUTION_ITEMS, IMAGE_PIXEL_ALGORITHM_ITEMS } from './portrait.constants';
 import type { PortraitDeviceTarget } from './portrait.types';
 
 export interface ImagePixelQualityControlsProps {
   activeDevice: PortraitDeviceTarget;
   resolution: string;
+  algorithm?: string;
   onChange: (key: string, value: string) => void;
 }
 
 export function ImagePixelQualityControls({
   activeDevice,
   resolution,
+  algorithm = 'stepped',
   onChange,
 }: ImagePixelQualityControlsProps) {
   // Map active device to current resolution and setting key
@@ -48,15 +50,16 @@ export function ImagePixelQualityControls({
 
   const { label, subtext, badgeLabel, Icon } = deviceConfig;
   const currentRes = resolution || (activeDevice === 'mobile' ? '144' : activeDevice === 'tablet' ? '192' : '256');
+  const currentAlgo = algorithm || 'stepped';
 
   return (
-    <div className="space-y-3 p-4 rounded-2xl bg-white dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800 shadow-sm dark:shadow-none">
+    <div className="space-y-3.5 p-4 rounded-2xl bg-white dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800 shadow-sm dark:shadow-none">
       {/* Header with active device badge */}
       <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800/80 pb-2">
         <div className="flex items-center gap-2">
           <Grid3X3 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
           <h4 className="text-xs font-bold text-zinc-900 dark:text-zinc-100 uppercase tracking-wider">
-            Photographic Pixel Quality
+            Photographic Pixel Quality &amp; Downsampling
           </h4>
         </div>
         <div className="flex items-center gap-1.5">
@@ -93,6 +96,39 @@ export function ImagePixelQualityControls({
               onChange('portrait_image_resolution_tablet', val);
             } else if (activeDevice === 'mobile') {
               onChange('portrait_image_resolution_mobile', val);
+            }
+          }}
+          className="w-full"
+        />
+      </div>
+
+      {/* Downsampling & Conversion Algorithm Selector for Active Device */}
+      <div className="p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/40 dark:bg-zinc-950/30 space-y-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <SlidersHorizontal className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <label className="text-xs font-semibold text-zinc-900 dark:text-zinc-200">
+              Downsampling &amp; Color Algorithm
+            </label>
+          </div>
+          <span className="text-[10px] font-mono text-zinc-500 dark:text-zinc-400">Per-device</span>
+        </div>
+
+        <p className="text-[11px] text-zinc-600 dark:text-zinc-400 leading-normal">
+          Select how high-resolution images are scaled and quantized down to the simulation matrix.
+        </p>
+
+        <Dropdown
+          items={[...IMAGE_PIXEL_ALGORITHM_ITEMS]}
+          value={currentAlgo}
+          onChange={(val) => {
+            onChange('portrait_image_algorithm', val);
+            if (activeDevice === 'desktop') {
+              onChange('portrait_image_algorithm_desktop', val);
+            } else if (activeDevice === 'tablet') {
+              onChange('portrait_image_algorithm_tablet', val);
+            } else if (activeDevice === 'mobile') {
+              onChange('portrait_image_algorithm_mobile', val);
             }
           }}
           className="w-full"

@@ -254,6 +254,7 @@ export function PortraitLivePreviewCard({
             backsideOrbits={settings.portrait_backside_orbits}
             backsideSpecks={settings.portrait_backside_specks}
             simulationResolution={activeResolution}
+            imageAlgorithm={settings.portrait_image_algorithm || 'stepped'}
             clickForce={settings.portrait_click_force}
             bounceSpeed={settings.portrait_bounce_speed}
             clickRadius={settings.portrait_click_radius}

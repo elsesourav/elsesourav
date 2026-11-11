@@ -57,13 +57,16 @@ inline void PixelEngine::generatePixels() {
                 rg = (uint8_t)((1.0f - t) * 230.0f + t * 90.0f);
                 rb = (uint8_t)((1.0f - t) * 255.0f + t * 252.0f);
             } else {
-                rr = (uint8_t)((1.0f - t) * 14.0f  + t * 140.0f);
-                rg = (uint8_t)((1.0f - t) * 165.0f + t * 70.0f);
-                rb = (uint8_t)((1.0f - t) * 233.0f + t * 245.0f);
+                // Light mode: High-contrast saturated celestial azure to deep amethyst
+                rr = (uint8_t)((1.0f - t) * 2.0f   + t * 135.0f);
+                rg = (uint8_t)((1.0f - t) * 115.0f + t * 35.0f);
+                rb = (uint8_t)((1.0f - t) * 215.0f + t * 205.0f);
             }
 
             Pixel& rp = particles[particleCount++];
-            rp.init(px, py, rr, rg, rb, 210, delicateRingPixelSize, FLAG_RING_PIXEL | FLAG_BACK_PIXEL);
+            uint8_t ringAlpha = isDark ? 210 : 245;
+            float ringSize = isDark ? delicateRingPixelSize : delicateRingPixelSize * 1.15f;
+            rp.init(px, py, rr, rg, rb, ringAlpha, ringSize, FLAG_RING_PIXEL | FLAG_BACK_PIXEL);
             rp.pathPhase = angle;
         }
     }
@@ -126,22 +129,27 @@ inline void PixelEngine::generatePixels() {
                 sg = isLeft ? 235 : 95;
                 sb = 255;
             } else {
-                sr = isLeft ? 0 : 145;
-                sg = isLeft ? 150 : 55;
-                sb = isLeft ? 235 : 225;
+                // Light mode: Deep sapphire azure on left, rich vivid purple on right
+                sr = isLeft ? 0 : 140;
+                sg = isLeft ? 110 : 40;
+                sb = isLeft ? 215 : 205;
             }
 
             // Center star pixel (delicate diamond point, invariant across resolutions)
+            uint8_t starCenterAlpha = isDark ? 240 : 255;
+            float finalStarCenterSize = isDark ? starCenterSize : starCenterSize * 1.18f;
             Pixel& sp = particles[particleCount++];
-            sp.init(sx, sy, sr, sg, sb, 240, starCenterSize, FLAG_STAR_PIXEL | FLAG_BACK_PIXEL);
+            sp.init(sx, sy, sr, sg, sb, starCenterAlpha, finalStarCenterSize, FLAG_STAR_PIXEL | FLAG_BACK_PIXEL);
             sp.pathPhase = (float)s * 1.618f;
 
             // 4 Cross arms forming classic 5-pixel diamond cross star
+            uint8_t starArmAlpha = isDark ? 195 : 230;
+            float finalArmSize = isDark ? armSize : armSize * 1.15f;
             static const float ARMS[4][2] = {{-1.0f, 0.0f}, {1.0f, 0.0f}, {0.0f, -1.0f}, {0.0f, 1.0f}};
             for (int a = 0; a < 4; a++) {
                 if (particleCount >= MAX_PARTICLES - 4) break;
                 Pixel& ap = particles[particleCount++];
-                ap.init(sx + ARMS[a][0] * armDist, sy + ARMS[a][1] * armDist, sr, sg, sb, 195, armSize, FLAG_STAR_PIXEL | FLAG_BACK_PIXEL);
+                ap.init(sx + ARMS[a][0] * armDist, sy + ARMS[a][1] * armDist, sr, sg, sb, starArmAlpha, finalArmSize, FLAG_STAR_PIXEL | FLAG_BACK_PIXEL);
                 ap.pathPhase = sp.pathPhase;
             }
         }
@@ -175,10 +183,14 @@ inline void PixelEngine::generatePixels() {
                 org = isLeft ? 230 : 95;
                 orb = 255;
             } else {
-                orr = isLeft ? 0 : 145;
-                org = isLeft ? 150 : 55;
-                orb = isLeft ? 235 : 225;
+                // Light mode: Crisp saturated azure & purple dots
+                orr = isLeft ? 0 : 135;
+                org = isLeft ? 115 : 40;
+                orb = isLeft ? 215 : 200;
             }
+
+            uint8_t orbitAlpha = isDark ? 185 : 240;
+            float finalOrbitDotSize = isDark ? orbitDotSize : orbitDotSize * 1.15f;
 
             for (int d = 0; d < dotCount; d++) {
                 if (particleCount >= MAX_PARTICLES - 4) break;
@@ -193,7 +205,7 @@ inline void PixelEngine::generatePixels() {
                 }
 
                 Pixel& op = particles[particleCount++];
-                op.init(opx, opy, orr, org, orb, 185, orbitDotSize, FLAG_ORBIT_PIXEL | FLAG_BACK_PIXEL);
+                op.init(opx, opy, orr, org, orb, orbitAlpha, finalOrbitDotSize, FLAG_ORBIT_PIXEL | FLAG_BACK_PIXEL);
                 op.pathPhase = oang;
                 op.pathSpeed = isLeft ? 0.9f : -0.75f;
                 op.normalOffset = orad;
@@ -239,13 +251,16 @@ inline void PixelEngine::generatePixels() {
                             ag = isLeft ? 225 : 90;
                             ab = 255;
                         } else {
-                            ar = isLeft ? 0 : 145;
-                            ag = isLeft ? 150 : 55;
-                            ab = isLeft ? 235 : 225;
+                            // Light mode: High-contrast saturated celestial azure & violet specks
+                            ar = isLeft ? 0 : 130;
+                            ag = isLeft ? 115 : 40;
+                            ab = isLeft ? 215 : 200;
                         }
 
+                        uint8_t speckAlpha = isDark ? 140 : 210;
+                        float speckSize = isDark ? basePixelSize * 0.60f : basePixelSize * 0.72f;
                         Pixel& ap = particles[particleCount++];
-                        ap.init((float)x, (float)y, ar, ag, ab, 140, basePixelSize * 0.60f, FLAG_BACK_PIXEL);
+                        ap.init((float)x, (float)y, ar, ag, ab, speckAlpha, speckSize, FLAG_BACK_PIXEL);
                     }
                 }
             }
@@ -266,8 +281,25 @@ inline void PixelEngine::generatePixels() {
             uint8_t pa = inputImage[idx + 3];
 
             if (pa > 16) {
+                uint8_t finalR = pr;
+                uint8_t finalG = pg;
+                uint8_t finalB = pb;
+                uint8_t finalA = pa;
+
+                // In light mode: ensure boundary pixels of white/light clothing
+                // have clean silhouette separation against white backgrounds
+                if (!isDark && pa < 240 && y > (int)((float)h * 0.60f)) {
+                    float lum = 0.299f * (float)pr + 0.587f * (float)pg + 0.114f * (float)pb;
+                    if (lum > 215.0f) {
+                        float edgeDepth = (240.0f - (float)pa) / 240.0f * 24.0f;
+                        finalR = (uint8_t)fmaxf(0.0f, (float)pr - edgeDepth);
+                        finalG = (uint8_t)fmaxf(0.0f, (float)pg - edgeDepth);
+                        finalB = (uint8_t)fmaxf(0.0f, (float)pb - edgeDepth * 0.8f);
+                    }
+                }
+
                 Pixel& p = particles[particleCount++];
-                p.init((float)x, (float)y, pr, pg, pb, pa, basePixelSize, FLAG_IMAGE_PIXEL);
+                p.init((float)x, (float)y, finalR, finalG, finalB, finalA, basePixelSize, FLAG_IMAGE_PIXEL);
             }
         }
     }
@@ -295,20 +327,21 @@ inline void PixelEngine::generatePixels() {
                     lb = 255;
                 }
             } else {
+                // Light mode: High contrast azure to royal purple path line
                 if (relX < 0.46f) {
-                    lr = 0; lg = 190; lb = 245;
+                    lr = 0; lg = 120; lb = 220;
                 } else if (relX > 0.54f) {
-                    lr = 160; lg = 65; lb = 245;
+                    lr = 150; lg = 30; lb = 215;
                 } else {
                     float b = (relX - 0.46f) / 0.08f;
-                    lr = (uint8_t)(b * 160.0f);
-                    lg = (uint8_t)((1.0f - b) * 190.0f + b * 65.0f);
-                    lb = 245;
+                    lr = (uint8_t)(b * 150.0f);
+                    lg = (uint8_t)((1.0f - b) * 120.0f + b * 30.0f);
+                    lb = (uint8_t)((1.0f - b) * 220.0f + b * 215.0f);
                 }
             }
 
             Pixel& lp = particles[particleCount++];
-            lp.init(cx, cy, lr, lg, lb, 245, basePixelSize * 1.30f, FLAG_PATH_LINE);
+            lp.init(cx, cy, lr, lg, lb, 255, basePixelSize * 1.30f, FLAG_PATH_LINE);
             lp.pathPhase = (float)k * 0.05f;
         }
     }
@@ -361,23 +394,24 @@ inline void PixelEngine::generatePixels() {
                     gb = 255;
                 }
             } else {
+                // Light mode: Highly visible electric azure-cobalt to deep royal magenta
                 if (relX < 0.46f) {
-                    gr = 0; gg = 190; gb = 245;
+                    gr = 0; gg = 120; gb = 220;
                 } else if (relX > 0.54f) {
-                    gr = 160; gg = 65; gb = 245;
+                    gr = 150; gg = 30; gb = 215;
                 } else {
                     float b = (relX - 0.46f) / 0.08f;
-                    gr = (uint8_t)(b * 160.0f);
-                    gg = (uint8_t)((1.0f - b) * 190.0f + b * 65.0f);
-                    gb = 245;
+                    gr = (uint8_t)(b * 150.0f);
+                    gg = (uint8_t)((1.0f - b) * 120.0f + b * 30.0f);
+                    gb = (uint8_t)((1.0f - b) * 220.0f + b * 215.0f);
                 }
             }
 
             // Top glow pixels: configurable luminous, crystalline starlight pixels
-            float topGlowSize = basePixelSize * 0.85f * topParticleSizeMult;
+            float topGlowSize = (isDark ? basePixelSize * 0.85f : basePixelSize * 0.98f) * topParticleSizeMult;
 
             Pixel& ep = particles[particleCount++];
-            ep.init(spawnX, spawnY, gr, gg, gb, 245, topGlowSize, FLAG_TOP_PARTICLE | FLAG_EDGE_FLOW);
+            ep.init(spawnX, spawnY, gr, gg, gb, 255, topGlowSize, FLAG_TOP_PARTICLE | FLAG_EDGE_FLOW);
             ep.pathPos = initProgress;
             ep.pathDir = dir;
             ep.pathSpeed = speed;

@@ -47,6 +47,7 @@ export interface WasmPortraitCanvasProps {
   introDuration?: string | number;
   introSpread?: string | number;
   introPattern?: string | number;
+  imageAlgorithm?: string;
   disableFullscreenIntro?: boolean;
 }
 
@@ -86,6 +87,7 @@ export function WasmPortraitCanvas({
   introDuration = '1.0s',
   introSpread = '1.0x',
   introPattern = 'vortex',
+  imageAlgorithm = 'stepped',
   disableFullscreenIntro = false,
 }: WasmPortraitCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -298,6 +300,7 @@ export function WasmPortraitCanvas({
       clickSpeed: eff.effClickSpeed,
       introSpread: eff.effIntroSpread,
       introPattern: eff.effIntroPattern,
+      imageAlgorithm,
       onLoaded: () => {
         setIsWasmActive(true);
         if (bridge && !bridge.isWebGLActive()) setHasWebGLError(true);
@@ -346,7 +349,7 @@ export function WasmPortraitCanvas({
         backsideSpecks: eff.effSpecks, clickForce: eff.effClickForce, bounceSpeed: eff.effBounceSpeed,
         glowDistance: eff.effGlowDistance, clickRadius: eff.effClickRadius, hoverSpeed: eff.effHoverSpeed,
         hoverRadius: eff.effHoverRadius, clickSpeed: eff.effClickSpeed, introSpread: eff.effIntroSpread,
-        introPattern: eff.effIntroPattern,
+        introPattern: eff.effIntroPattern, imageAlgorithm,
       });
       if (imgRef.current && imgRef.current.complete && imgRef.current.naturalWidth > 0) {
         bridgeRef.current.ingestImageElement(imgRef.current);
@@ -354,7 +357,7 @@ export function WasmPortraitCanvas({
     }
   }, [
     isDark, lightIntensity, effectiveDensity, rawSize, effectiveGlow, rawSpeed, pathSpread,
-    showPathGuide, eff,
+    showPathGuide, imageAlgorithm, eff,
   ]);
 
   // Re-trigger entrance when intro duration, spread, or pattern is changed in settings

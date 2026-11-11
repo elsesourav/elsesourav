@@ -115,14 +115,14 @@ inline void applyProximityLighting(
                     p.g = (uint8_t)(litG > 255.0f ? 255.0f : litG);
                     p.b = (uint8_t)(litB > 255.0f ? 255.0f : litB);
                 } else {
-                    // Light mode: Vibrant atmospheric tint lighting
-                    float tintR = avgR * intensity * 0.65f;
-                    float tintG = avgG * intensity * 0.65f;
-                    float tintB = avgB * intensity * 0.65f;
+                    // Light mode: Vibrant atmospheric tint lighting with rich edge illumination
+                    float tintR = avgR * intensity * 0.85f;
+                    float tintG = avgG * intensity * 0.85f;
+                    float tintB = avgB * intensity * 0.85f;
 
-                    float litR = (float)p.baseR * (1.0f - intensity * 0.20f) + tintR;
-                    float litG = (float)p.baseG * (1.0f - intensity * 0.20f) + tintG;
-                    float litB = (float)p.baseB * (1.0f - intensity * 0.20f) + tintB;
+                    float litR = (float)p.baseR * (1.0f - intensity * 0.28f) + tintR;
+                    float litG = (float)p.baseG * (1.0f - intensity * 0.28f) + tintG;
+                    float litB = (float)p.baseB * (1.0f - intensity * 0.28f) + tintB;
 
                     p.r = (uint8_t)(litR > 255.0f ? 255.0f : litR);
                     p.g = (uint8_t)(litG > 255.0f ? 255.0f : litG);

@@ -30,6 +30,7 @@ export interface WasmPortraitBridgeOptions {
   clickSpeed?: number;
   introSpread?: number;
   introPattern?: number;
+  imageAlgorithm?: string;
   onLoaded?: () => void;
 }
 

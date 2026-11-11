@@ -6,6 +6,7 @@ import {
   computeFullscreenTransform,
   type WebGLTransformState,
 } from './wasm-portrait.renderer';
+import { downsamplePortraitImage } from './wasm-portrait.downsample';
 
 export type { WasmPortraitBridgeOptions, WasmExports };
 
@@ -79,6 +80,7 @@ export class WasmPortraitBridge {
   private clickSpeed: number;
   private introSpread: number;
   private introPattern: number;
+  private imageAlgorithm: string;
 
   constructor(options: WasmPortraitBridgeOptions) {
     this.canvas = options.canvas;
@@ -86,6 +88,7 @@ export class WasmPortraitBridge {
     this.lightIntensity = options.lightIntensity ?? 0.38;
     this.simRes = options.simulationResolution || 224;
     this.onLoaded = options.onLoaded;
+    this.imageAlgorithm = options.imageAlgorithm || 'stepped';
     this.particleSize = options.particleSize ?? 1.0;
     this.glowBrightness = options.glowBrightness ?? 1.0;
     this.flightSpeed = options.flightSpeed ?? 1.0;
@@ -180,7 +183,7 @@ export class WasmPortraitBridge {
     if (this.flightSpeed !== 1.0) e.engine_set_speed(p, this.flightSpeed);
     if (this.particleDensity !== 1.0) e.engine_set_density(p, this.particleDensity);
     e.engine_set_path_spread(p, this.pathSpread);
-    if (this.showPathGuide) e.engine_set_show_path_guide(p, 1);
+    e.engine_set_show_path_guide(p, this.showPathGuide ? 1 : 0);
 
     e.engine_set_edge_algorithm(p, this.edgeAlgorithm);
     e.engine_set_edge_threshold(p, this.edgeThreshold);
@@ -213,31 +216,15 @@ export class WasmPortraitBridge {
     }
 
     try {
-      if (this.offscreenCanvas.width !== this.simRes || this.offscreenCanvas.height !== this.simRes) {
-        this.offscreenCanvas.width = this.simRes;
-        this.offscreenCanvas.height = this.simRes;
-      }
-      this.offscreenCtx.imageSmoothingEnabled = true;
-      this.offscreenCtx.imageSmoothingQuality = 'high';
-      this.offscreenCtx.clearRect(0, 0, this.simRes, this.simRes);
-      const nw = img.naturalWidth || 1;
-      const nh = img.naturalHeight || 1;
-      const aspect = nw / nh;
-      let dw = this.simRes;
-      let dh = this.simRes;
-      let dx = 0;
-      let dy = 0;
+      const imgData = downsamplePortraitImage({
+        img,
+        targetCanvas: this.offscreenCanvas,
+        targetCtx: this.offscreenCtx,
+        simRes: this.simRes,
+        algorithm: this.imageAlgorithm,
+        isDark: this.isDark,
+      });
 
-      if (aspect < 1.0) {
-        dw = Math.round(this.simRes * aspect);
-        dx = Math.round((this.simRes - dw) / 2);
-      } else if (aspect > 1.0) {
-        dh = Math.round(this.simRes / aspect);
-        dy = Math.round((this.simRes - dh) / 2);
-      }
-
-      this.offscreenCtx.drawImage(img, dx, dy, dw, dh);
-      const imgData = this.offscreenCtx.getImageData(0, 0, this.simRes, this.simRes);
       const inPtr = this.wasmExports.engine_get_input_buffer(this.enginePtr);
 
       if (inPtr) {
@@ -261,7 +248,10 @@ export class WasmPortraitBridge {
       const parsed = typeof options.pathSpread === 'string' ? parseFloat(options.pathSpread) : options.pathSpread;
       this.pathSpread = isNaN(parsed) ? 2.4 : Math.max(0.2, Math.min(8.0, parsed));
     }
-    if (options.showPathGuide !== undefined) this.showPathGuide = options.showPathGuide;
+    if (options.showPathGuide !== undefined) {
+      this.showPathGuide = !!options.showPathGuide;
+      this.wasmExports?.engine_set_show_path_guide(this.enginePtr, this.showPathGuide ? 1 : 0);
+    }
     if (options.edgeAlgorithm !== undefined) this.edgeAlgorithm = options.edgeAlgorithm;
     if (options.edgeThreshold !== undefined) this.edgeThreshold = options.edgeThreshold;
     if (options.pinBottomEdge !== undefined) this.pinBottomEdge = options.pinBottomEdge;
@@ -281,7 +271,18 @@ export class WasmPortraitBridge {
     if (options.clickSpeed !== undefined) this.clickSpeed = options.clickSpeed;
     if (options.introSpread !== undefined) this.introSpread = options.introSpread;
     if (options.introPattern !== undefined) this.introPattern = options.introPattern;
+
+    const algoChanged =
+      options.imageAlgorithm !== undefined && options.imageAlgorithm !== this.imageAlgorithm;
+    if (algoChanged) {
+      this.imageAlgorithm = options.imageAlgorithm!;
+    }
+
     this.applyAllWasmConfig();
+
+    if (algoChanged && this.pendingImg) {
+      this.ingestImageElement(this.pendingImg);
+    }
   }
 
   public setPointer(normalizedX: number, normalizedY: number, isDown: boolean): void {

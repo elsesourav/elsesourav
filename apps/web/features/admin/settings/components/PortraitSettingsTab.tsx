@@ -24,7 +24,8 @@ export interface PortraitSettingsTabProps {
 function parseDeviceProfile(
   rawJson: string | undefined,
   fallbackSettings: Record<string, string>,
-  defaultRes: string
+  defaultRes: string,
+  defaultAlgo = 'stepped'
 ): PortraitDeviceProfile {
   let parsed: Record<string, string> = {};
   if (rawJson) {
@@ -37,6 +38,8 @@ function parseDeviceProfile(
   return {
     portrait_image_resolution:
       parsed.portrait_image_resolution || defaultRes,
+    portrait_image_algorithm:
+      parsed.portrait_image_algorithm || fallbackSettings['portrait_image_algorithm'] || defaultAlgo,
     portrait_particle_density:
       parsed.portrait_particle_density || fallbackSettings['portrait_particle_density'] || '1.0x',
     portrait_particle_size:
@@ -117,17 +120,20 @@ export function PortraitSettingsTab({ settings, onChange, onSave }: PortraitSett
       desktop: parseDeviceProfile(
         settings['portrait_config_desktop'],
         settings,
-        settings['portrait_image_resolution_desktop'] || settings['portrait_image_resolution'] || '256'
+        settings['portrait_image_resolution_desktop'] || settings['portrait_image_resolution'] || '256',
+        settings['portrait_image_algorithm_desktop'] || settings['portrait_image_algorithm'] || 'stepped'
       ),
       tablet: parseDeviceProfile(
         settings['portrait_config_tablet'],
         settings,
-        settings['portrait_image_resolution_tablet'] || '192'
+        settings['portrait_image_resolution_tablet'] || '192',
+        settings['portrait_image_algorithm_tablet'] || settings['portrait_image_algorithm'] || 'stepped'
       ),
       mobile: parseDeviceProfile(
         settings['portrait_config_mobile'],
         settings,
-        settings['portrait_image_resolution_mobile'] || '144'
+        settings['portrait_image_resolution_mobile'] || '144',
+        settings['portrait_image_algorithm_mobile'] || settings['portrait_image_algorithm'] || 'stepped'
       ),
     }),
     [settings]
@@ -191,6 +197,9 @@ export function PortraitSettingsTab({ settings, onChange, onSave }: PortraitSett
         portrait_image_resolution_desktop: deviceProfiles.desktop.portrait_image_resolution,
         portrait_image_resolution_tablet: deviceProfiles.tablet.portrait_image_resolution,
         portrait_image_resolution_mobile: deviceProfiles.mobile.portrait_image_resolution,
+        portrait_image_algorithm_desktop: deviceProfiles.desktop.portrait_image_algorithm || 'stepped',
+        portrait_image_algorithm_tablet: deviceProfiles.tablet.portrait_image_algorithm || 'stepped',
+        portrait_image_algorithm_mobile: deviceProfiles.mobile.portrait_image_algorithm || 'stepped',
         // Sync desktop profile to flat keys for backward compatibility
         ...deviceProfiles.desktop,
       };
@@ -219,6 +228,9 @@ export function PortraitSettingsTab({ settings, onChange, onSave }: PortraitSett
       portrait_image_resolution_desktop: deviceProfiles.desktop.portrait_image_resolution,
       portrait_image_resolution_tablet: deviceProfiles.tablet.portrait_image_resolution,
       portrait_image_resolution_mobile: deviceProfiles.mobile.portrait_image_resolution,
+      portrait_image_algorithm_desktop: deviceProfiles.desktop.portrait_image_algorithm,
+      portrait_image_algorithm_tablet: deviceProfiles.tablet.portrait_image_algorithm,
+      portrait_image_algorithm_mobile: deviceProfiles.mobile.portrait_image_algorithm,
     }),
     [sharedAssets, currentProfile, deviceProfiles]
   );
@@ -273,6 +285,7 @@ export function PortraitSettingsTab({ settings, onChange, onSave }: PortraitSett
           <ImagePixelQualityControls
             activeDevice={activeDevice}
             resolution={currentProfile.portrait_image_resolution}
+            algorithm={currentProfile.portrait_image_algorithm}
             onChange={handleDraftChange}
           />
 

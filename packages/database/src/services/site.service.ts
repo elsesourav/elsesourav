@@ -65,6 +65,10 @@ export class SiteService {
     const portraitImageResolutionDesktop = dbSettings['portrait_image_resolution_desktop'] || '256';
     const portraitImageResolutionTablet = dbSettings['portrait_image_resolution_tablet'] || '192';
     const portraitImageResolutionMobile = dbSettings['portrait_image_resolution_mobile'] || '144';
+    const portraitImageAlgorithm = dbSettings['portrait_image_algorithm'] || 'stepped';
+    const portraitImageAlgorithmDesktop = dbSettings['portrait_image_algorithm_desktop'] || 'stepped';
+    const portraitImageAlgorithmTablet = dbSettings['portrait_image_algorithm_tablet'] || 'stepped';
+    const portraitImageAlgorithmMobile = dbSettings['portrait_image_algorithm_mobile'] || 'stepped';
     const portraitConfigDesktop = dbSettings['portrait_config_desktop'] || '';
     const portraitConfigTablet = dbSettings['portrait_config_tablet'] || '';
     const portraitConfigMobile = dbSettings['portrait_config_mobile'] || '';
@@ -189,6 +193,10 @@ export class SiteService {
         portraitImageResolutionDesktop,
         portraitImageResolutionTablet,
         portraitImageResolutionMobile,
+        portraitImageAlgorithm,
+        portraitImageAlgorithmDesktop,
+        portraitImageAlgorithmTablet,
+        portraitImageAlgorithmMobile,
         portraitConfigDesktop,
         portraitConfigTablet,
         portraitConfigMobile,

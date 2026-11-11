@@ -37,6 +37,10 @@ export interface AboutHeroSectionProps {
     portraitImageResolutionDesktop?: string;
     portraitImageResolutionTablet?: string;
     portraitImageResolutionMobile?: string;
+    portraitImageAlgorithm?: string;
+    portraitImageAlgorithmDesktop?: string;
+    portraitImageAlgorithmTablet?: string;
+    portraitImageAlgorithmMobile?: string;
     portraitClickForce?: string;
     portraitBounceSpeed?: string;
     portraitClickRadius?: string;
@@ -102,6 +106,10 @@ export function AboutHeroSection({ creator, site }: AboutHeroSectionProps) {
               imageResolutionDesktop={site.portraitImageResolutionDesktop}
               imageResolutionTablet={site.portraitImageResolutionTablet}
               imageResolutionMobile={site.portraitImageResolutionMobile}
+              imageAlgorithm={site.portraitImageAlgorithm}
+              imageAlgorithmDesktop={site.portraitImageAlgorithmDesktop}
+              imageAlgorithmTablet={site.portraitImageAlgorithmTablet}
+              imageAlgorithmMobile={site.portraitImageAlgorithmMobile}
               clickForce={site.portraitClickForce}
               bounceSpeed={site.portraitBounceSpeed}
               clickRadius={site.portraitClickRadius}

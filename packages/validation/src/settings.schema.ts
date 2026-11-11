@@ -129,6 +129,14 @@ export const SiteSettingsSchema = z.object({
   portrait_image_resolution_tablet: z.string().max(20).optional().or(z.literal('')),
   /** Mobile grid resolution: '224', '192', '160', '144', '112' */
   portrait_image_resolution_mobile: z.string().max(20).optional().or(z.literal('')),
+  /** Photographic pixel downsample algorithm: 'stepped', 'perceptual', 'edge_preserve', 'native' */
+  portrait_image_algorithm: z.string().max(40).optional().or(z.literal('')),
+  /** Desktop image downsample algorithm */
+  portrait_image_algorithm_desktop: z.string().max(40).optional().or(z.literal('')),
+  /** Tablet image downsample algorithm */
+  portrait_image_algorithm_tablet: z.string().max(40).optional().or(z.literal('')),
+  /** Mobile image downsample algorithm */
+  portrait_image_algorithm_mobile: z.string().max(40).optional().or(z.literal('')),
   /** Full per-device settings JSON string for Desktop target */
   portrait_config_desktop: z.string().optional().or(z.literal('')),
   /** Full per-device settings JSON string for Tablet target */

@@ -118,6 +118,7 @@ void PixelEngine::setShowPathGuide(int show) {
     if (showPathGuide != show) {
         showPathGuide = show;
         generatePixels();
+        updateBuffers();
     }
 }
 

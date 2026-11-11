@@ -31,6 +31,10 @@ export interface AboutPortraitCardProps {
   imageResolutionDesktop?: string | number;
   imageResolutionTablet?: string | number;
   imageResolutionMobile?: string | number;
+  imageAlgorithm?: string;
+  imageAlgorithmDesktop?: string;
+  imageAlgorithmTablet?: string;
+  imageAlgorithmMobile?: string;
   clickForce?: string | number;
   bounceSpeed?: string | number;
   clickRadius?: string | number;
@@ -72,6 +76,10 @@ export function AboutPortraitCard({
   imageResolutionDesktop,
   imageResolutionTablet,
   imageResolutionMobile,
+  imageAlgorithm,
+  imageAlgorithmDesktop,
+  imageAlgorithmTablet,
+  imageAlgorithmMobile,
   clickForce,
   bounceSpeed,
   clickRadius,
@@ -133,6 +141,14 @@ export function AboutPortraitCard({
         ? imageResolutionTablet || '192'
         : imageResolutionDesktop || imageResolution || '256');
 
+  const effAlgorithm =
+    activeProfile['portrait_image_algorithm'] ||
+    (activeDevice === 'mobile'
+      ? imageAlgorithmMobile || 'stepped'
+      : activeDevice === 'tablet'
+        ? imageAlgorithmTablet || 'stepped'
+        : imageAlgorithmDesktop || imageAlgorithm || 'stepped');
+
   const effParticleDensity = activeProfile['portrait_particle_density'] || particleDensity;
   const effParticleSize = activeProfile['portrait_particle_size'] || particleSize;
   const effGlowBrightness = activeProfile['portrait_glow_brightness'] || glowBrightness;
@@ -193,6 +209,7 @@ export function AboutPortraitCard({
           size={size}
           lightIntensity={effLightIntensity}
           simulationResolution={effResolution}
+          imageAlgorithm={effAlgorithm}
           particleDensity={effParticleDensity}
           particleSize={effParticleSize}
           glowBrightness={effGlowBrightness}

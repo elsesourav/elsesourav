@@ -2,6 +2,7 @@ export type PortraitDeviceTarget = 'desktop' | 'tablet' | 'mobile';
 
 export interface PortraitDeviceProfile {
   portrait_image_resolution: string;
+  portrait_image_algorithm?: string;
   portrait_particle_density: string;
   portrait_particle_size: string;
   portrait_glow_brightness: string;
@@ -37,6 +38,9 @@ export interface PortraitDraftSettings extends PortraitDeviceProfile {
   portrait_image_resolution_desktop: string;
   portrait_image_resolution_tablet: string;
   portrait_image_resolution_mobile: string;
+  portrait_image_algorithm_desktop?: string;
+  portrait_image_algorithm_tablet?: string;
+  portrait_image_algorithm_mobile?: string;
   portrait_config_desktop?: string;
   portrait_config_tablet?: string;
   portrait_config_mobile?: string;

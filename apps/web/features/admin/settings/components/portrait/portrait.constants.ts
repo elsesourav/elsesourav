@@ -109,6 +109,13 @@ export const IMAGE_RESOLUTION_ITEMS: readonly DropdownItem[] = [
   { value: '512', label: '512×512 Super Resolution (Max Detail)', hint: '512px' },
 ];
 
+export const IMAGE_PIXEL_ALGORITHM_ITEMS: readonly DropdownItem[] = [
+  { value: 'stepped', label: 'Stepped Mipmap Multi-Pass (Sharp Silhouette - Default)', hint: 'Stepped' },
+  { value: 'perceptual', label: 'Perceptual Linear-Gamma (Deep Shadow & Fabric Detail)', hint: 'Perceptual' },
+  { value: 'edge_preserve', label: 'Bilateral Edge-Preserving Area Filter', hint: 'Bilateral' },
+  { value: 'native', label: 'Standard Canvas Bicubic (Classic Baseline)', hint: 'Classic' },
+];
+
 export const CLICK_FORCE_ITEMS: readonly DropdownItem[] = [
   { value: '0.1x', label: 'Feather Soft (0.1x)', hint: '0.1x' },
   { value: '0.25x', label: 'Micro Nudge (0.25x)', hint: '0.25x' },
