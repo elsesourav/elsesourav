@@ -185,8 +185,12 @@ export function ShelfCarouselRow({ items }: ShelfCarouselRowProps) {
         {items.map((app) => {
           const iconUrl = app.iconUrl ? getAppIconUrl(app.iconUrl, 96) : null;
           const bannerUrl = app.featuredImageUrl || iconUrl || app.iconUrl;
-          const rating =
-            app.ratingAverage && app.ratingAverage > 0 ? app.ratingAverage.toFixed(1) : '4.8';
+          const hasRating = Boolean(
+            app.ratingAverage &&
+              app.ratingAverage > 0 &&
+              (app.ratingCount === undefined || app.ratingCount > 0)
+          );
+          const rating = hasRating && app.ratingAverage ? app.ratingAverage.toFixed(1) : null;
 
           return (
             <Link
@@ -270,8 +274,14 @@ export function ShelfCarouselRow({ items }: ShelfCarouselRowProps) {
                       {app.primaryCategory}
                     </p>
                     <div className="flex items-center gap-1 sm:gap-1.5 mt-0.5 text-[10px] sm:text-[11px] font-medium text-[hsl(var(--muted-foreground))]">
-                      <span className="text-[hsl(var(--foreground))] font-semibold">{rating}</span>
-                      <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-amber-400 text-amber-400" />
+                      {hasRating ? (
+                        <>
+                          <span className="text-[hsl(var(--foreground))] font-semibold">{rating}</span>
+                          <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-amber-400 text-amber-400" />
+                        </>
+                      ) : (
+                        <span className="text-amber-500/90 dark:text-amber-400/90 font-medium text-[10px]">New</span>
+                      )}
                       {app.platforms.length > 0 && (
                         <>
                           <span className="text-[hsl(var(--border-strong))]">•</span>

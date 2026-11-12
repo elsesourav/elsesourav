@@ -155,7 +155,10 @@ export function AppCard({
   const iconUrl = app.iconUrl ? getAppIconUrl(app.iconUrl, 96) : null;
   const bannerUrl = app.featuredImageUrl || iconUrl || app.iconUrl;
   const isFallbackBanner = !app.featuredImageUrl && !!(iconUrl || app.iconUrl);
-  const hasRating = app.ratingAverage !== undefined && app.ratingAverage > 0;
+  const hasRating =
+    app.ratingAverage !== undefined &&
+    app.ratingAverage > 0 &&
+    (app.ratingCount === undefined || app.ratingCount > 0);
 
   /* ─── 1. Featured (Large / Split) Card ─── */
   if (featured) {

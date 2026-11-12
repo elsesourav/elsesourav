@@ -29,6 +29,8 @@ export interface ImageCropperModalProps {
   quality?: number;
   title?: string;
   fileName?: string;
+  container?: HTMLElement | null;
+  zIndex?: number;
 }
 
 export interface ImageUploadWithCropProps {

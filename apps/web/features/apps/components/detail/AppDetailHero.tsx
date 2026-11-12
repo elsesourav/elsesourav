@@ -259,19 +259,19 @@ export function AppDetailHero({ app, isAuthenticated = false }: AppDetailHeroPro
           {/* 1. RATINGS */}
           <div className="px-1 sm:px-2 py-1 space-y-0.5 flex flex-col items-center justify-center min-w-0">
             <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-wider text-[hsl(var(--muted-foreground))]">
-              {ratingCount > 0 ? `${ratingCount} RATINGS` : 'RATINGS'}
+              {ratingCount > 0 ? `${ratingCount} ${ratingCount === 1 ? 'RATING' : 'RATINGS'}` : 'NO RATINGS'}
             </span>
             <span className="text-base sm:text-xl md:text-2xl font-bold font-display text-[hsl(var(--foreground))]">
-              {ratingAvg > 0 ? ratingAvg.toFixed(1) : '5.0'}
+              {ratingCount > 0 && ratingAvg > 0 ? ratingAvg.toFixed(1) : '—'}
             </span>
             <div className="flex items-center gap-0.5 text-amber-400">
               {Array.from({ length: 5 }).map((_, i) => (
                 <Star
                   key={i}
                   className={`w-2.5 h-2.5 ${
-                    i < Math.round(ratingAvg || 5)
+                    ratingCount > 0 && i < Math.round(ratingAvg)
                       ? 'fill-amber-400 text-amber-400'
-                      : 'text-zinc-600 fill-zinc-700'
+                      : 'text-zinc-300 dark:text-zinc-700 fill-transparent'
                   }`}
                 />
               ))}

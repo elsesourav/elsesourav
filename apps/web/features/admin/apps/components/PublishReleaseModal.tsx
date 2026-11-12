@@ -1,9 +1,10 @@
 'use client';
 
 import * as React from 'react';
+import { createPortal } from 'react-dom';
 import { Button } from '@elsesourav/ui';
 import { FloatingLabelInput } from '@elsesourav/ui/interior';
-import { Send, Loader2 } from 'lucide-react';
+import { Send, Loader2, X } from 'lucide-react';
 
 interface PublishReleaseModalProps {
   isOpen: boolean;
@@ -22,11 +23,27 @@ export function PublishReleaseModal({
   onPublish,
   isPublishing,
 }: PublishReleaseModalProps) {
+  const [mounted, setMounted] = React.useState(false);
   const [releaseVersion, setReleaseVersion] = React.useState('1.0.0');
   const [releaseChangelog, setReleaseChangelog] = React.useState('Initial production release.');
   const [releaseDownloadUrl, setReleaseDownloadUrl] = React.useState('');
 
-  if (!isOpen) return null;
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !isPublishing) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, isPublishing, onClose]);
+
+  if (!isOpen || !mounted) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,17 +54,35 @@ export function PublishReleaseModal({
     });
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
-      <div className="w-full max-w-md rounded-3xl border border-indigo-200 dark:border-indigo-500/40 bg-white dark:bg-zinc-900 p-6 space-y-5 shadow-2xl">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-500/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
-            <Send className="w-5 h-5" />
+  return createPortal(
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="publish-release-title"
+      className="fixed inset-0 z-[99990] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in"
+    >
+      <div className="w-full max-w-md rounded-3xl border border-indigo-200 dark:border-indigo-500/40 bg-white dark:bg-zinc-900 p-6 space-y-5 shadow-2xl relative">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-500/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
+              <Send className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 id="publish-release-title" className="text-base font-bold text-zinc-900 dark:text-zinc-100">
+                Publish Application Release
+              </h3>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">Creates an immutable version release entry.</p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100">Publish Application Release</h3>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">Creates an immutable version release entry.</p>
-          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={isPublishing}
+            className="p-1.5 rounded-xl text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+            aria-label="Close dialog"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
@@ -111,6 +146,7 @@ export function PublishReleaseModal({
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { createPortal } from 'react-dom';
 import { Button } from '../button';
 import { getCroppedCanvas, canvasToFile } from './crop-utils';
 import type { ImageCropperModalProps } from './types';
@@ -33,12 +34,19 @@ export function ImageCropperModal({
   quality = 0.92,
   title = 'Crop & Resize Image',
   fileName = 'cropped-image.webp',
+  container,
+  zIndex = 99999,
 }: ImageCropperModalProps) {
+  const [mounted, setMounted] = React.useState(false);
   const [zoom, setZoom] = React.useState<number>(1.0);
   const [isProcessing, setIsProcessing] = React.useState(false);
 
   const containerRef = React.useRef<HTMLDivElement>(null);
   const imgElementRef = React.useRef<HTMLImageElement>(null);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const effectiveSrc = imageSrc || initialImageUrl || '';
 
@@ -70,6 +78,40 @@ export function ImageCropperModal({
     }
   }, [isOpen]);
 
+  // Lock document scroll while modal is open to avoid background page shifting
+  React.useEffect(() => {
+    if (!isOpen || typeof document === 'undefined') return;
+
+    const originalOverflow = document.body.style.overflow;
+    const originalPaddingRight = document.body.style.paddingRight;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+    document.body.style.overflow = 'hidden';
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.body.style.paddingRight = originalPaddingRight;
+    };
+  }, [isOpen]);
+
+  // Keyboard shortcut: Escape to close modal
+  React.useEffect(() => {
+    if (!isOpen || typeof window === 'undefined') return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !isProcessing) {
+        e.stopPropagation();
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, isProcessing, onClose]);
+
   // Execute Crop and Upload
   const handleConfirm = async () => {
     if (!image) return;
@@ -90,16 +132,28 @@ export function ImageCropperModal({
     }
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
-  return (
+  const targetHost = container ?? (typeof document !== 'undefined' ? document.body : null);
+  if (!targetHost) return null;
+
+  const modalContent = (
     <div
       role="dialog"
       aria-modal="true"
       aria-labelledby="cropper-dialog-title"
-      className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-5 bg-black/80 backdrop-blur-md animate-in fade-in duration-150"
+      style={{ zIndex }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget && !isProcessing) {
+          onClose();
+        }
+      }}
+      className="fixed inset-0 top-0 left-0 right-0 bottom-0 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md animate-in fade-in duration-150 overflow-y-auto"
     >
-      <div className="relative w-full max-w-2xl rounded-2xl sm:rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-4 sm:p-6 shadow-2xl flex flex-col space-y-3.5 max-h-[92vh] overflow-y-auto">
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-2xl rounded-2xl sm:rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-4 sm:p-6 shadow-2xl flex flex-col space-y-3.5 max-h-[92vh] my-auto overflow-y-auto"
+      >
         {/* Header */}
         <div className="flex items-center justify-between pb-2.5 border-b border-zinc-200 dark:border-zinc-800/80">
           <div>
@@ -369,4 +423,6 @@ export function ImageCropperModal({
       </div>
     </div>
   );
+
+  return createPortal(modalContent, targetHost);
 }

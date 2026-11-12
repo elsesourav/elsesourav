@@ -62,6 +62,9 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
   const [featuredImageMobileUrl, setFeaturedImageMobileUrl] = React.useState(
     app?.featuredImageMobileUrl || ''
   );
+  const [screenshots, setScreenshots] = React.useState<string[]>(
+    app?.screenshots ? [...app.screenshots] : []
+  );
   const [demoUrl, setDemoUrl] = React.useState(app?.demoUrl || '');
   const [videoUrl, setVideoUrl] = React.useState(app?.videoUrl || '');
   const [categoryId, setCategoryId] = React.useState(app?.categoryId || categories[0]?.id || '');
@@ -132,6 +135,7 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
       iconUrl: iconUrl.trim(),
       featuredImageUrl: featuredImageUrl.trim() || undefined,
       featuredImageMobileUrl: featuredImageMobileUrl.trim() || undefined,
+      screenshots: screenshots.filter((s) => Boolean(s?.trim())),
       demoUrl: demoUrl.trim() || undefined,
       videoUrl: videoUrl.trim() || undefined,
       categoryId,
@@ -392,6 +396,8 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
           setFeaturedImageUrl={setFeaturedImageUrl}
           featuredImageMobileUrl={featuredImageMobileUrl}
           setFeaturedImageMobileUrl={setFeaturedImageMobileUrl}
+          screenshots={screenshots}
+          setScreenshots={setScreenshots}
           demoUrl={demoUrl}
           setDemoUrl={setDemoUrl}
           videoUrl={videoUrl}

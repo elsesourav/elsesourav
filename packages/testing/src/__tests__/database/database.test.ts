@@ -22,6 +22,7 @@ describe('Prisma Model Mappers', () => {
       iconUrl: 'https://elsesourav.com/icon.png',
       featuredImageUrl: null,
       featuredImageMobileUrl: null,
+      screenshots: [],
       demoUrl: null,
       videoUrl: null,
       status: PublishStatus.PUBLISHED,

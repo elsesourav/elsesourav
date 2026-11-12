@@ -11,6 +11,8 @@ export interface ImageCropperModalProps {
   lockRatio?: boolean;
   title?: string;
   initialImageUrl?: string;
+  container?: HTMLElement | null;
+  zIndex?: number;
 }
 
 export function ImageCropperModal({
@@ -21,6 +23,8 @@ export function ImageCropperModal({
   lockRatio = false,
   title = 'Crop & Adjust Image',
   initialImageUrl,
+  container,
+  zIndex,
 }: ImageCropperModalProps) {
   return (
     <BaseImageCropperModal
@@ -31,6 +35,8 @@ export function ImageCropperModal({
       aspectRatio={aspectRatio}
       lockRatio={lockRatio}
       title={title}
+      container={container}
+      zIndex={zIndex}
       onCropComplete={(_file, dataUrl) => {
         if (dataUrl) {
           onCropComplete(dataUrl);

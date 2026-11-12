@@ -369,6 +369,7 @@ describe('Site Settings & Content Architecture (Prompt 01 + Prompt 02 Extended)'
       iconUrl: 'https://elsesourav.com/icon.png',
       featuredImageUrl: null,
       featuredImageMobileUrl: null,
+      screenshots: [],
       demoUrl: null,
       videoUrl: null,
       status: PublishStatus.PUBLISHED,

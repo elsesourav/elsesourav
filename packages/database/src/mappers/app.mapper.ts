@@ -47,8 +47,8 @@ const CURATED_APP_SCREENSHOTS: Record<string, string[]> = {
 
 export function mapPrismaAppToDomain(prismaApp: PrismaAppWithRelations): DomainApp {
   const screenshots =
-    (prismaApp as unknown as { screenshots?: string[] }).screenshots?.length
-      ? (prismaApp as unknown as { screenshots?: string[] }).screenshots!
+    prismaApp.screenshots && prismaApp.screenshots.length > 0
+      ? prismaApp.screenshots
       : CURATED_APP_SCREENSHOTS[prismaApp.slug] ?? [];
 
   return {

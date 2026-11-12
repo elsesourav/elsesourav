@@ -412,7 +412,7 @@ import { ... } from '@elsesourav/ui';
 
 - **Purpose**: Accessible, high-precision client-side interactive image cropping, corner-drag resizing, and dimension optimization system powered by the modular `useCropInteraction` hook.
 - **Key Features**:
-  - **Pinned Viewport Overlay**: Modal renders with `fixed inset-0 z-[100]` with backdrop blur, guaranteed above sticky navigation headers and floating bars. Full dual-theme styling (`bg-white dark:bg-zinc-950`).
+  - **Top-Level Body Portal & Viewport Overlay**: Modal renders via `createPortal` directly into `document.body` with `fixed inset-0 z-[99999]` and `bg-black/85 backdrop-blur-md`, guaranteeing the crop window breaks out of any parent card stacking contexts, transforms, or overflow boundaries to sit on the absolute top visual layer of the application. Includes automatic document scroll locking, outside backdrop click dismissal, and `Escape` key close. Full dual-theme styling (`bg-white dark:bg-zinc-950`).
   - **Interactive Resizable Crop Selection**: 4 tactile corner handles (`nw`, `ne`, `se`, `sw`) and 4 edge midpoint handles (`n`, `s`, `w`, `e`) with fixed opposing-corner anchors, continuous window-level pointer tracking, and smooth dragging and resizing directly on the image.
   - **Quick Framing Actions**: One-click **Fit Full** (`fitFullImage`) button to maximize the crop frame across the full width and height of the image, and **Center** (`centerCrop`) button to re-center the crop frame.
   - **Smart Ratio Detection & Upload**: Direct upload when the selected image matches the target aspect ratio; automatically opens the crop modal if the aspect ratio deviates, with on-demand manual crop buttons.

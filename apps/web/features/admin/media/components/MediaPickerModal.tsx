@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { createPortal } from 'react-dom';
 import { Card, Button, Input, Badge } from '@elsesourav/ui';
 import type { AdminMediaItem, MediaDomain, MediaFolder } from '@elsesourav/types';
 import {
@@ -40,7 +41,46 @@ export function MediaPickerModal({
   const [search, setSearch] = React.useState('');
   const [selectedCategory, setSelectedCategory] = React.useState<string>(defaultCategory);
   const [isUploading, setIsUploading] = React.useState(false);
+  const [mounted, setMounted] = React.useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Lock document scroll while modal is open
+  React.useEffect(() => {
+    if (!isOpen || typeof document === 'undefined') return;
+
+    const originalOverflow = document.body.style.overflow;
+    const originalPaddingRight = document.body.style.paddingRight;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+    document.body.style.overflow = 'hidden';
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.body.style.paddingRight = originalPaddingRight;
+    };
+  }, [isOpen]);
+
+  // Keyboard shortcut: Escape to close modal
+  React.useEffect(() => {
+    if (!isOpen || typeof window === 'undefined') return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !isUploading) {
+        e.stopPropagation();
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, isUploading, onClose]);
 
   const loadMedia = React.useCallback(async () => {
     setLoading(true);
@@ -105,11 +145,25 @@ export function MediaPickerModal({
     }
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
+  const targetHost = typeof document !== 'undefined' ? document.body : null;
+  if (!targetHost) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200">
-      <Card className="w-full max-w-4xl bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 rounded-3xl p-5 sm:p-6 space-y-4 max-h-[90vh] flex flex-col shadow-2xl">
+  const content = (
+    <div
+      role="dialog"
+      aria-modal="true"
+      onClick={(e) => {
+        if (e.target === e.currentTarget && !isUploading) {
+          onClose();
+        }
+      }}
+      className="fixed inset-0 top-0 left-0 right-0 bottom-0 z-[99990] bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200 overflow-y-auto"
+    >
+      <Card
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-4xl bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 rounded-3xl p-5 sm:p-6 space-y-4 max-h-[90vh] my-auto flex flex-col shadow-2xl"
+      >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-3.5 shrink-0">
           <div className="flex items-center gap-2.5">
@@ -273,4 +327,6 @@ export function MediaPickerModal({
       </Card>
     </div>
   );
+
+  return createPortal(content, targetHost);
 }

@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Card } from '@elsesourav/ui';
 import { FloatingLabelInput } from '@elsesourav/ui/interior';
 import { ImageInputWithLibrary } from '@/features/admin/media/components/ImageInputWithLibrary';
+import { AdminAppScreenshotsManager } from './AdminAppScreenshotsManager';
 import { Upload } from 'lucide-react';
 
 interface AdminAppMediaSectionProps {
@@ -13,6 +14,8 @@ interface AdminAppMediaSectionProps {
   setFeaturedImageUrl: (val: string) => void;
   featuredImageMobileUrl: string;
   setFeaturedImageMobileUrl: (val: string) => void;
+  screenshots?: string[];
+  setScreenshots?: (val: string[]) => void;
   demoUrl: string;
   setDemoUrl: (val: string) => void;
   videoUrl: string;
@@ -26,6 +29,8 @@ export function AdminAppMediaSection({
   setFeaturedImageUrl,
   featuredImageMobileUrl,
   setFeaturedImageMobileUrl,
+  screenshots = [],
+  setScreenshots,
   demoUrl,
   setDemoUrl,
   videoUrl,
@@ -93,6 +98,14 @@ export function AdminAppMediaSection({
           />
         </div>
       </div>
+
+      {/* Multiple Gallery Screenshots & Showcase Images */}
+      {setScreenshots && (
+        <AdminAppScreenshotsManager
+          screenshots={screenshots}
+          onChange={setScreenshots}
+        />
+      )}
     </Card>
   );
 }

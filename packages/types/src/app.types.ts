@@ -197,6 +197,7 @@ export interface CreateAppInput {
   readonly iconUrl: string;
   readonly featuredImageUrl?: string;
   readonly featuredImageMobileUrl?: string;
+  readonly screenshots?: readonly string[];
   readonly categoryId: string;
   readonly tagIds?: readonly string[];
   readonly demoUrl?: string;
@@ -225,6 +226,7 @@ export interface UpdateAppInput {
   readonly iconUrl?: string;
   readonly featuredImageUrl?: string;
   readonly featuredImageMobileUrl?: string;
+  readonly screenshots?: readonly string[];
   readonly categoryId?: string;
   readonly tagIds?: readonly string[];
   readonly demoUrl?: string;

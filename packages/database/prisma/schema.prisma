@@ -74,6 +74,7 @@ model App {
   iconUrl          String
   featuredImageUrl String?
   featuredImageMobileUrl String?
+  screenshots      String[]         @default([])
   demoUrl          String?
   videoUrl         String?
   status           PublishStatus    @default(DRAFT)
