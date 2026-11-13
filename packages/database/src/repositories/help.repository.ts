@@ -210,6 +210,18 @@ export class HelpRepository {
     slug: string,
     authorId?: string
   ): Promise<DomainHelpArticle> {
+    // Resolve valid database User.id if authorId is a Supabase Auth ID or User UUID
+    let resolvedAuthorId: string | null = authorId || null;
+    if (authorId && this.prisma.user?.findFirst) {
+      const user = await this.prisma.user.findFirst({
+        where: {
+          OR: [{ id: authorId }, { supabaseAuthId: authorId }],
+        },
+        select: { id: true },
+      });
+      resolvedAuthorId = user ? user.id : null;
+    }
+
     const article = await this.prisma.helpArticle.create({
       data: {
         categoryId: data.categoryId,
@@ -219,7 +231,7 @@ export class HelpRepository {
         content: data.content,
         status: PublishStatus.DRAFT,
         orderIndex: data.orderIndex ?? 0,
-        authorId,
+        authorId: resolvedAuthorId,
         seoTitle: data.seoTitle,
         seoDescription: data.seoDescription,
       },

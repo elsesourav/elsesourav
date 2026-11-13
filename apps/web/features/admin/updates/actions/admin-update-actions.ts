@@ -56,6 +56,7 @@ export async function createBlogPostAction(data: AdminSaveBlogSchemaInput) {
       slug: post.slug,
     };
   } catch (error) {
+    console.error('createBlogPostAction failed:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to create update post',
@@ -104,6 +105,7 @@ export async function updateBlogPostAction(postId: string, data: AdminSaveBlogSc
       slug: updated.slug,
     };
   } catch (error) {
+    console.error('updateBlogPostAction failed:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to update post',

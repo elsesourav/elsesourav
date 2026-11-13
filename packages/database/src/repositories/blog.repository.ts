@@ -144,6 +144,18 @@ export class BlogRepository {
     slug: string
   ): Promise<DomainBlogPost> {
     try {
+      // Resolve valid database User.id if authorId is a Supabase Auth ID or User UUID
+      let resolvedAuthorId: string | null = authorId;
+      if (authorId && this.prisma.user?.findFirst) {
+        const user = await this.prisma.user.findFirst({
+          where: {
+            OR: [{ id: authorId }, { supabaseAuthId: authorId }],
+          },
+          select: { id: true },
+        });
+        resolvedAuthorId = user ? user.id : null;
+      }
+
       const record = await this.prisma.blogPost.create({
         data: {
           title: data.title,
@@ -155,7 +167,7 @@ export class BlogRepository {
           authorImageUrl: data.authorImageUrl || null,
           authorUrl: data.authorUrl || null,
           authorRole: data.authorRole || null,
-          authorId,
+          authorId: resolvedAuthorId,
           categoryId: data.categoryId || null,
           seoTitle: data.seoTitle || null,
           seoDescription: data.seoDescription || null,
@@ -174,6 +186,7 @@ export class BlogRepository {
 
       return mapPrismaBlogPostToDomain(record as unknown as PrismaBlogWithRelations);
     } catch (error) {
+      console.error('BlogRepository.createPost error:', error);
       throw AppError.database('Failed to create blog post', error);
     }
   }
