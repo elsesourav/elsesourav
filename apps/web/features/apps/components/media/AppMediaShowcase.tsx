@@ -1,15 +1,16 @@
 'use client';
 
 import * as React from 'react';
-import Image from 'next/image';
 import { getAppScreenshotUrl } from '@elsesourav/media';
 import { Lightbox } from '@elsesourav/ui/interior';
 import { cn, Button, IconButton } from '@elsesourav/ui';
 import { AppMediaVideoCard } from './AppMediaVideoCard';
+import { AppMediaPhoneCard } from './AppMediaPhoneCard';
+import { AppMediaLandscapeCard } from './AppMediaLandscapeCard';
+import { inspectUrlDimensions, type ImageDimensionInfo } from '@/features/admin/media/utils/image-dimensions';
 import {
   ChevronLeft,
   ChevronRight,
-  Maximize2,
   Smartphone,
   Laptop,
   Monitor,
@@ -18,21 +19,6 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
-function isVideoMedia(url?: string | null): boolean {
-  if (!url) return false;
-  const parts = url.split('?');
-  const base = parts[0] ? parts[0].toLowerCase() : '';
-  return (
-    base.endsWith('.mp4') ||
-    base.endsWith('.webm') ||
-    base.endsWith('.ogg') ||
-    base.endsWith('.mov') ||
-    base.includes('youtube.com') ||
-    base.includes('youtu.be') ||
-    base.includes('vimeo.com')
-  );
-}
-
 interface AppMediaShowcaseProps {
   appName: string;
   screenshots: readonly string[];
@@ -40,6 +26,8 @@ interface AppMediaShowcaseProps {
   videoUrl?: string | null;
   platforms?: readonly string[];
 }
+
+type DeviceFilter = 'all' | 'desktop' | 'mobile';
 
 export function AppMediaShowcase({
   appName,
@@ -62,6 +50,9 @@ export function AppMediaShowcase({
 
   const [lightboxIndex, setLightboxIndex] = React.useState<number | null>(null);
   const [isExpanded, setIsExpanded] = React.useState(false);
+  const [activeFilter, setActiveFilter] = React.useState<DeviceFilter>('all');
+  const [dimensionsMap, setDimensionsMap] = React.useState<Record<string, ImageDimensionInfo>>({});
+
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = React.useState(false);
   const [canScrollRight, setCanScrollRight] = React.useState(true);
@@ -71,6 +62,50 @@ export function AppMediaShowcase({
   const hasDraggedRef = React.useRef(false);
   const startXRef = React.useRef(0);
   const scrollLeftRef = React.useRef(0);
+
+  // Inspect image dimensions for responsive framing (desktop vs mobile)
+  React.useEffect(() => {
+    let cancelled = false;
+
+    allImages.forEach((src) => {
+      if (dimensionsMap[src]) return;
+      void inspectUrlDimensions(src).then((info) => {
+        if (!cancelled) {
+          setDimensionsMap((prev) => ({ ...prev, [src]: info }));
+        }
+      });
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [allImages, dimensionsMap]);
+
+  // Count desktop vs mobile screenshots
+  const { desktopCount, mobileCount } = React.useMemo(() => {
+    let d = 0;
+    let m = 0;
+    for (const src of allImages) {
+      const dim = dimensionsMap[src];
+      if (dim?.isPortrait) {
+        m++;
+      } else {
+        d++;
+      }
+    }
+    return { desktopCount: d, mobileCount: m };
+  }, [allImages, dimensionsMap]);
+
+  // Filter images based on selected device filter
+  const displayedImages = React.useMemo(() => {
+    if (activeFilter === 'all') return allImages;
+    return allImages.filter((src) => {
+      const dim = dimensionsMap[src];
+      if (activeFilter === 'mobile') return dim?.isPortrait === true;
+      if (activeFilter === 'desktop') return !dim || dim.isPortrait === false;
+      return true;
+    });
+  }, [allImages, activeFilter, dimensionsMap]);
 
   const checkScrollState = React.useCallback(() => {
     const el = scrollContainerRef.current;
@@ -106,12 +141,12 @@ export function AppMediaShowcase({
       clearTimeout(t1);
       clearTimeout(t2);
     };
-  }, [checkScrollState, allImages.length, videoUrl, isExpanded]);
+  }, [checkScrollState, displayedImages.length, videoUrl, isExpanded, activeFilter]);
 
   const scroll = (direction: 'left' | 'right') => {
     const el = scrollContainerRef.current;
     if (!el) return;
-    const scrollAmount = el.clientWidth;
+    const scrollAmount = el.clientWidth * 0.75;
     el.scrollBy({
       left: direction === 'left' ? -scrollAmount : scrollAmount,
       behavior: 'smooth',
@@ -146,7 +181,7 @@ export function AppMediaShowcase({
     checkScrollState();
   };
 
-  const totalItems = (videoUrl ? 1 : 0) + allImages.length;
+  const totalItems = (videoUrl ? 1 : 0) + displayedImages.length;
   if (totalItems === 0) return null;
 
   return (
@@ -163,7 +198,7 @@ export function AppMediaShowcase({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-3 sm:space-y-4 pt-1"
+            className="space-y-4 pt-1"
           >
             {/* Optional Video Card in full-width expanded layout */}
             {videoUrl && (
@@ -177,46 +212,42 @@ export function AppMediaShowcase({
               </div>
             )}
 
-            {/* Screenshots Grid: 1 col for single image, 2 cols for gallery with tight, elegant gap */}
-            <div
-              className={
-                allImages.length === 1
-                  ? 'w-full'
-                  : 'grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-3.5'
-              }
-            >
-              {allImages.map((src, idx) => {
-                const transformed = getAppScreenshotUrl(src, 1600, 1000);
-                const isVideo = isVideoMedia(src);
+            {/* Screenshots Grid: Adapts based on aspect ratios */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4 items-center">
+              {displayedImages.map((src, idx) => {
+                const isPortrait = dimensionsMap[src]?.isPortrait ?? false;
+                const originalIndex = allImages.indexOf(src);
+
+                if (isPortrait) {
+                  return (
+                    <div key={src} className="flex justify-center w-full">
+                      <AppMediaPhoneCard
+                        src={src}
+                        appName={appName}
+                        index={idx}
+                        onExpand={() => setLightboxIndex(originalIndex !== -1 ? originalIndex : idx)}
+                        className="w-full max-w-[280px]"
+                      />
+                    </div>
+                  );
+                }
+
                 return (
                   <div
                     key={src}
-                    onClick={() => setLightboxIndex(idx)}
-                    className="relative w-full aspect-[16/10] sm:aspect-[16/9] rounded-xl overflow-hidden border border-[hsl(var(--border))] dark:border-zinc-800/80 bg-[hsl(var(--card))] dark:bg-zinc-950 shadow-sm transition-colors duration-200 group/card cursor-zoom-in"
+                    className={
+                      displayedImages.length === 1
+                        ? 'md:col-span-2 lg:col-span-3'
+                        : 'w-full'
+                    }
                   >
-                    <Image
-                      src={transformed}
-                      alt={`${appName} preview ${idx + 1}`}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 800px"
-                      className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-500 ease-out"
+                    <AppMediaLandscapeCard
+                      src={src}
+                      appName={appName}
+                      index={idx}
+                      onExpand={() => setLightboxIndex(originalIndex !== -1 ? originalIndex : idx)}
+                      className="w-full aspect-[16/10] sm:aspect-[16/9]"
                     />
-
-                    {/* Bottom Line Controls: Expand icon only in bottom right position, smooth transition on hover, zero effect on image */}
-                    <div className="absolute right-3 bottom-3 z-10 opacity-0 translate-y-1 group-hover/card:opacity-100 group-hover/card:translate-y-0 focus-within:opacity-100 focus-within:translate-y-0 transition-all duration-300 ease-out pointer-events-none">
-                      <IconButton
-                        type="button"
-                        variant="ghost"
-                        size="icon-sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setLightboxIndex(idx);
-                        }}
-                        aria-label={`Expand ${appName} preview ${idx + 1}`}
-                        icon={<Maximize2 className="w-4 h-4 sm:w-4.5 sm:h-4.5" />}
-                        className="rounded-xl bg-black/70 hover:bg-black/90 dark:bg-zinc-950/80 dark:hover:bg-zinc-900 border border-white/20 dark:border-zinc-700/80 text-white backdrop-blur-xl pointer-events-auto"
-                      />
-                    </div>
                   </div>
                 );
               })}
@@ -242,7 +273,7 @@ export function AppMediaShowcase({
               tabIndex={canScrollLeft ? 0 : -1}
               icon={<ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-[hsl(var(--foreground))]" />}
               className={cn(
-                'absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 z-20 rounded-full shadow-xl backdrop-blur-xl transition-all duration-300',
+                'absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 z-30 rounded-full shadow-xl backdrop-blur-xl transition-all duration-300',
                 canScrollLeft
                   ? 'opacity-100 scale-100 pointer-events-auto'
                   : 'opacity-0 scale-90 pointer-events-none'
@@ -259,14 +290,14 @@ export function AppMediaShowcase({
               tabIndex={canScrollRight ? 0 : -1}
               icon={<ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-[hsl(var(--foreground))]" />}
               className={cn(
-                'absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 z-20 rounded-full shadow-xl backdrop-blur-xl transition-all duration-300',
+                'absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 z-30 rounded-full shadow-xl backdrop-blur-xl transition-all duration-300',
                 canScrollRight
                   ? 'opacity-100 scale-100 pointer-events-auto'
                   : 'opacity-0 scale-90 pointer-events-none'
               )}
             />
 
-            {/* Scroll Container with breathing padding (pt-2 pb-6 px-2) preventing shadow clipping */}
+            {/* Scroll Container */}
             <div
               ref={scrollContainerRef}
               onMouseDown={onMouseDown}
@@ -275,7 +306,7 @@ export function AppMediaShowcase({
               onMouseLeave={onMouseUpOrLeave}
               className="flex items-center gap-3 sm:gap-4 overflow-x-auto pt-2 pb-6 px-2 -mx-2 no-scrollbar cursor-grab active:cursor-grabbing select-none scroll-smooth snap-x snap-mandatory"
             >
-              {/* Optional Video Card with identical 2-card fit */}
+              {/* Optional Video Card */}
               {videoUrl && (
                 <AppMediaVideoCard
                   videoUrl={videoUrl}
@@ -285,43 +316,39 @@ export function AppMediaShowcase({
                 />
               )}
 
-              {/* Screenshot Cards: exactly 2 images fit per view on sm+ */}
-              {allImages.map((src, idx) => {
-                const transformed = getAppScreenshotUrl(src, 1600, 1000);
-                return (
-                  <div
-                    key={src}
-                    onClick={() => {
-                      if (!hasDraggedRef.current) {
-                        setLightboxIndex(idx);
-                      }
-                    }}
-                    className="relative w-[86vw] sm:w-[calc(50%-8px)] aspect-[16/10] shrink-0 rounded-xl overflow-hidden border border-[hsl(var(--border))] dark:border-zinc-800/80 bg-[hsl(var(--card))] dark:bg-zinc-950 shadow-sm transition-colors duration-200 group/card cursor-zoom-in snap-start"
-                  >
-                    <Image
-                      src={transformed}
-                      alt={`${appName} preview ${idx + 1}`}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 800px"
-                      className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-500 ease-out"
-                    />
+              {/* Screenshot Cards: Ratio-Aware Desktop 16:9 vs Mobile 9:16 */}
+              {displayedImages.map((src, idx) => {
+                const isPortrait = dimensionsMap[src]?.isPortrait ?? false;
+                const originalIndex = allImages.indexOf(src);
 
-                    {/* Bottom Line Controls: Expand icon only in bottom right position, smooth transition on hover, zero effect on image */}
-                    <div className="absolute right-3 bottom-3 z-10 opacity-0 translate-y-1 group-hover/card:opacity-100 group-hover/card:translate-y-0 focus-within:opacity-100 focus-within:translate-y-0 transition-all duration-300 ease-out pointer-events-none">
-                      <IconButton
-                        type="button"
-                        variant="ghost"
-                        size="icon-sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setLightboxIndex(idx);
-                        }}
-                        aria-label={`Expand ${appName} preview ${idx + 1}`}
-                        icon={<Maximize2 className="w-4 h-4 sm:w-4.5 sm:h-4.5" />}
-                        className="rounded-xl bg-black/70 hover:bg-black/90 dark:bg-zinc-950/80 dark:hover:bg-zinc-900 border border-white/20 dark:border-zinc-700/80 text-white backdrop-blur-xl pointer-events-auto"
-                      />
-                    </div>
-                  </div>
+                const handleExpand = () => {
+                  if (!hasDraggedRef.current) {
+                    setLightboxIndex(originalIndex !== -1 ? originalIndex : idx);
+                  }
+                };
+
+                if (isPortrait) {
+                  return (
+                    <AppMediaPhoneCard
+                      key={src}
+                      src={src}
+                      appName={appName}
+                      index={idx}
+                      onExpand={handleExpand}
+                      className="w-[210px] sm:w-[250px] shrink-0 snap-start"
+                    />
+                  );
+                }
+
+                return (
+                  <AppMediaLandscapeCard
+                    key={src}
+                    src={src}
+                    appName={appName}
+                    index={idx}
+                    onExpand={handleExpand}
+                    className="w-[86vw] sm:w-[calc(50%-8px)] aspect-[16/10] shrink-0 snap-start"
+                  />
                 );
               })}
             </div>
@@ -329,25 +356,71 @@ export function AppMediaShowcase({
         )}
       </AnimatePresence>
 
-      {/* ── Device & Platform Row with Expand / Collapse Toggle on the Right ── */}
-      <div className="flex items-center justify-between text-xs text-[hsl(var(--muted-foreground))] px-1 pt-1 border-b border-[hsl(var(--border-subtle))] pb-3">
-        {/* Left: Device Icons & Platform Names */}
-        <div className="flex items-center gap-2 font-mono">
-          <Smartphone className="w-3.5 h-3.5 text-[hsl(var(--muted-foreground))]" />
-          <Laptop className="w-3.5 h-3.5 text-[hsl(var(--muted-foreground))]" />
-          <Monitor className="w-3.5 h-3.5 text-[hsl(var(--muted-foreground))]" />
-          <span className="text-[hsl(var(--foreground))] font-medium text-[11px] sm:text-xs">
-            {platforms.join(', ') || 'Web, Desktop & Mobile'}
-          </span>
+      {/* ── Device, Platform & Orientation Row with Expand / Collapse Toggle ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs text-[hsl(var(--muted-foreground))] px-1 pt-1 border-b border-[hsl(var(--border-subtle))] pb-3">
+        {/* Left: Device Icons & Platform or Ratio Filters */}
+        <div className="flex items-center gap-2 flex-wrap">
+          {desktopCount > 0 && mobileCount > 0 ? (
+            /* Multi-Ratio Filter Buttons when both desktop & mobile exist */
+            <div className="flex items-center gap-1 bg-zinc-100 dark:bg-zinc-800/80 p-0.5 rounded-xl">
+              <button
+                type="button"
+                onClick={() => setActiveFilter('all')}
+                className={`px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors ${
+                  activeFilter === 'all'
+                    ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 shadow-xs'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
+                }`}
+              >
+                All ({allImages.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveFilter('desktop')}
+                className={`px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors flex items-center gap-1 ${
+                  activeFilter === 'desktop'
+                    ? 'bg-white dark:bg-zinc-900 text-indigo-600 dark:text-indigo-400 shadow-xs'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
+                }`}
+              >
+                <Monitor className="w-3 h-3" />
+                <span>Desktop ({desktopCount})</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveFilter('mobile')}
+                className={`px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors flex items-center gap-1 ${
+                  activeFilter === 'mobile'
+                    ? 'bg-white dark:bg-zinc-900 text-emerald-600 dark:text-emerald-400 shadow-xs'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
+                }`}
+              >
+                <Smartphone className="w-3 h-3" />
+                <span>Mobile ({mobileCount})</span>
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 font-mono">
+              {mobileCount > 0 ? (
+                <Smartphone className="w-3.5 h-3.5 text-emerald-500" />
+              ) : (
+                <Monitor className="w-3.5 h-3.5 text-indigo-500" />
+              )}
+              <Laptop className="w-3.5 h-3.5 text-[hsl(var(--muted-foreground))]" />
+              <span className="text-[hsl(var(--foreground))] font-medium text-[11px] sm:text-xs">
+                {platforms.join(', ') || 'Web, Desktop & Mobile'}
+              </span>
+            </div>
+          )}
         </div>
 
-        {/* Right: Expand / Collapse Toggle with downward arrow for Expand and upward for Collapse */}
+        {/* Right: Expand / Collapse Toggle */}
         <Button
           type="button"
           variant="secondary"
           size="xs"
           onClick={() => setIsExpanded(!isExpanded)}
-          className="rounded-xl px-3"
+          className="rounded-xl px-3 self-end sm:self-auto"
           aria-expanded={isExpanded}
           title={isExpanded ? 'Collapse to carousel view' : 'Expand all images on one page'}
           leftIcon={
@@ -367,7 +440,7 @@ export function AppMediaShowcase({
         <Lightbox
           open={true}
           onClose={() => setLightboxIndex(null)}
-          src={getAppScreenshotUrl(allImages[lightboxIndex], 1920, 1080)}
+          src={getAppScreenshotUrl(allImages[lightboxIndex], 1920, 1080, 'fit')}
           alt={`${appName} screenshot ${lightboxIndex + 1}`}
           caption={`${appName} — Screenshot ${lightboxIndex + 1} of ${allImages.length}`}
           index={lightboxIndex}

@@ -118,6 +118,12 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
     setTimeout(() => setActionSuccess(null), 4000);
   };
 
+  const handleBatchUploadSuccess = (newItems: AdminMediaItem[]) => {
+    setItems((prev) => [...newItems, ...prev]);
+    setActionSuccess(`Successfully uploaded ${newItems.length} media asset(s)!`);
+    setTimeout(() => setActionSuccess(null), 4000);
+  };
+
   return (
     <div className="space-y-6">
       {/* Overview Metric Cards: Responsive Mobile Grid vs Desktop Cards */}
@@ -305,6 +311,7 @@ export function AdminMediaGallery({ initialData }: AdminMediaGalleryProps) {
         isOpen={isUploadOpen}
         onClose={() => setIsUploadOpen(false)}
         onUploadSuccess={handleUploadSuccess}
+        onBatchUploadSuccess={handleBatchUploadSuccess}
       />
     </div>
   );

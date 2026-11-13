@@ -70,11 +70,16 @@ export function getAppIconUrl(publicIdOrUrl: string, size = 96): string {
   });
 }
 
-export function getAppScreenshotUrl(publicIdOrUrl: string, width = 1280, height = 720): string {
+export function getAppScreenshotUrl(
+  publicIdOrUrl: string,
+  width = 1280,
+  height = 720,
+  crop: 'fill' | 'fit' | 'limit' = 'fill'
+): string {
   return buildCloudinaryUrl(publicIdOrUrl, {
     width,
     height,
-    crop: 'fill',
+    crop,
   });
 }
 

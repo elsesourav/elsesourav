@@ -876,18 +876,21 @@ The `@elsesourav/ui/interior` collection contains **54 physics-based animated UI
 - **Key Features**:
   - Instant reveal for already cached browser images (zero unnecessary re-fade).
   - Smooth spring exposure transition (`duration: 0.65`, `cubic-bezier(0.23, 1, 0.32, 1)`).
+  - Built-in pulse skeleton shimmer while asset is loading (`status === 'loading'`).
+  - Configurable `objectFit` (`'cover' | 'contain' | 'fill' | 'none' | 'scale-down'`) to prevent CSS specificity collisions.
   - Cross-origin CDN safety with automatic `referrerPolicy="no-referrer"` for Google/GitHub user avatars.
   - Automatic error and retry callbacks.
 - **Props**:
   - `src?: string`
   - `alt: string`
   - `width?: number`, `height?: number` (optional when `fill: true`)
-  - `fill?: boolean` (absolute inset-0 full-bleed cover layout)
+  - `fill?: boolean` (absolute inset-0 full-bleed layout)
+  - `objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down'` (default: `'cover'`)
   - `placeholder?: string` (base64 or thumbnail)
   - `color?: string` (dominant color placeholder)
   - `blur?: number` (default: `14`)
   - `radius?: number` (default: `11`, or `undefined` when `fill: true`)
-  - `imgClassName?: string` (class names for inner image, e.g. object position/fit)
+  - `imgClassName?: string` (class names for inner image)
   - `className?: string` (container class names)
   - `loading?: 'lazy' | 'eager'`
   - `fetchPriority?: 'high' | 'low' | 'auto'`

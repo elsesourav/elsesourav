@@ -8,7 +8,9 @@ import { HardDrive, ClipboardPaste, Upload, X, AlertCircle, Sparkles } from 'luc
 export interface ImageUploadSourceModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelectFile: (file: File) => void;
+  onSelectFile?: (file: File) => void;
+  onSelectFiles?: (files: File[]) => void;
+  multiple?: boolean;
   title?: string;
   description?: string;
 }
@@ -17,6 +19,8 @@ export function ImageUploadSourceModal({
   isOpen,
   onClose,
   onSelectFile,
+  onSelectFiles,
+  multiple = false,
   title = 'Upload Image',
   description = 'Choose how you want to add this image',
 }: ImageUploadSourceModalProps) {
@@ -56,18 +60,27 @@ export function ImageUploadSourceModal({
       const items = e.clipboardData?.items;
       if (!items) return;
 
+      const pastedFiles: File[] = [];
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
         if (item && item.type.startsWith('image/')) {
           const file = item.getAsFile();
           if (file) {
-            e.preventDefault();
-            e.stopPropagation();
-            onSelectFile(file);
-            onClose();
-            return;
+            pastedFiles.push(file);
           }
         }
+      }
+
+      if (pastedFiles.length > 0) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (multiple && onSelectFiles) {
+          onSelectFiles(pastedFiles);
+        } else if (onSelectFile && pastedFiles[0]) {
+          onSelectFile(pastedFiles[0]);
+        }
+        onClose();
+        return;
       }
 
       setClipboardError('Pasted content did not contain an image. Please copy an image first.');
@@ -86,7 +99,7 @@ export function ImageUploadSourceModal({
       window.removeEventListener('paste', handleWindowPaste);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen, onSelectFile, onClose]);
+  }, [isOpen, multiple, onSelectFile, onSelectFiles, onClose]);
 
   if (!isOpen || !mounted) return null;
   const targetHost = typeof document !== 'undefined' ? document.body : null;
@@ -94,15 +107,20 @@ export function ImageUploadSourceModal({
 
   // Handler for file picker
   const handleDeviceFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const fileList = e.target.files;
+    if (!fileList || fileList.length === 0) return;
 
-    if (!file.type.startsWith('image/')) {
+    const files = Array.from(fileList).filter((f) => f.type.startsWith('image/'));
+    if (files.length === 0) {
       setClipboardError('Please select a valid image file');
       return;
     }
 
-    onSelectFile(file);
+    if (multiple && onSelectFiles) {
+      onSelectFiles(files);
+    } else if (onSelectFile && files[0]) {
+      onSelectFile(files[0]);
+    }
     onClose();
   };
 
@@ -114,19 +132,30 @@ export function ImageUploadSourceModal({
     try {
       if (navigator.clipboard && navigator.clipboard.read) {
         const clipboardItems = await navigator.clipboard.read();
+        const files: File[] = [];
+
         for (const item of clipboardItems) {
           const imageType = item.types.find((type) => type.startsWith('image/'));
           if (imageType) {
             const blob = await item.getType(imageType);
             const ext = imageType.split('/')[1] || 'png';
-            const file = new File([blob], `clipboard-${Date.now()}.${ext}`, {
+            const file = new File([blob], `clipboard-${Date.now()}-${files.length}.${ext}`, {
               type: imageType,
             });
-            onSelectFile(file);
-            onClose();
-            return;
+            files.push(file);
           }
         }
+
+        if (files.length > 0) {
+          if (multiple && onSelectFiles) {
+            onSelectFiles(files);
+          } else if (onSelectFile && files[0]) {
+            onSelectFile(files[0]);
+          }
+          onClose();
+          return;
+        }
+
         setClipboardError(
           'No image found in clipboard. Copy an image first, or press ⌘V / Ctrl+V to paste.'
         );
@@ -190,6 +219,7 @@ export function ImageUploadSourceModal({
         <input
           ref={fileInputRef}
           type="file"
+          multiple={multiple}
           accept="image/*"
           className="hidden"
           onChange={handleDeviceFileChange}

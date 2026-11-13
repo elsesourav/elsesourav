@@ -115,6 +115,7 @@ export type BlurUpImageProps = {
   width?: number;
   height?: number;
   fill?: boolean;
+  objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
   placeholder?: string;
   color?: string;
   blur?: number;
@@ -135,6 +136,7 @@ export function BlurUpImage({
   width,
   height,
   fill = false,
+  objectFit = 'cover',
   placeholder,
   color,
   blur = 14,
@@ -160,6 +162,16 @@ export function BlurUpImage({
   const still = reduced === true || instant;
   const transition = still ? INSTANT : DEVELOP;
   const resolvedRadius = radius !== undefined ? radius : fill ? undefined : 11;
+  const fitClass =
+    objectFit === 'contain'
+      ? 'object-contain'
+      : objectFit === 'fill'
+        ? 'object-fill'
+        : objectFit === 'none'
+          ? 'object-none'
+          : objectFit === 'scale-down'
+            ? 'object-scale-down'
+            : 'object-cover';
 
   return (
     <div
@@ -176,6 +188,13 @@ export function BlurUpImage({
           : `relative w-full overflow-hidden bg-[var(--interior-bg-subtle)] dark:bg-white/15 ${className}`
       }
     >
+      {status === 'loading' ? (
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-r from-zinc-200/40 via-zinc-100/70 to-zinc-200/40 dark:from-zinc-800/40 dark:via-zinc-700/50 dark:to-zinc-800/40 animate-pulse pointer-events-none"
+        />
+      ) : null}
+
       {placeholder ? (
         <img
           src={placeholder}
@@ -183,7 +202,7 @@ export function BlurUpImage({
           aria-hidden
           draggable={false}
           referrerPolicy="no-referrer"
-          className={`absolute inset-0 h-full w-full object-cover ${imgClassName}`}
+          className={`absolute inset-0 h-full w-full ${fitClass} ${imgClassName}`}
           style={{ filter: `blur(${blur}px)`, transform: 'scale(1.08)' }}
         />
       ) : null}
@@ -201,7 +220,7 @@ export function BlurUpImage({
         decoding="async"
         draggable={false}
         referrerPolicy="no-referrer"
-        className={`absolute inset-0 h-full w-full object-cover ${imgClassName}`}
+        className={`absolute inset-0 h-full w-full ${fitClass} ${imgClassName}`}
         initial={false}
         animate={
           still

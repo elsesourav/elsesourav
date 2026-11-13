@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { Card, Button, Input, Badge } from '@elsesourav/ui';
 import type { AdminMediaItem, MediaDomain, MediaFolder } from '@elsesourav/types';
 import { adminGetMediaListAction } from '../actions/admin-media-actions';
-import { uploadAdminImageFile } from '../utils/upload-client';
+import { uploadAdminImageFile, uploadMultipleAdminImageFiles } from '../utils/upload-client';
 import { ImageUploadSourceModal } from './ImageUploadSourceModal';
 import { Image as ImageIcon, Search, Upload, X, Check, Loader2 } from 'lucide-react';
 
@@ -110,7 +110,8 @@ export function MediaPickerModal({
     }
   }, [isOpen, loadMedia]);
 
-  const processUploadFile = async (file: File) => {
+  const processUploadFiles = async (files: File[]) => {
+    if (files.length === 0) return;
     setIsUploading(true);
     setError(null);
 
@@ -124,12 +125,12 @@ export function MediaPickerModal({
             : 'general';
 
     try {
-      const res = await uploadAdminImageFile(file, folder);
-      if (res.success && res.url) {
-        onSelect(res.url);
+      const res = await uploadMultipleAdminImageFiles(files, folder);
+      if (res.success && res.urls.length > 0) {
+        onSelect(res.urls[res.urls.length - 1]!);
         onClose();
       } else {
-        setError(res.error || 'Failed to upload image');
+        setError(res.results[0]?.error || 'Failed to upload image(s)');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Upload failed');
@@ -139,10 +140,14 @@ export function MediaPickerModal({
     }
   };
 
+  const processUploadFile = async (file: File) => {
+    await processUploadFiles([file]);
+  };
+
   const handleUploadFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    await processUploadFile(file);
+    const fileList = e.target.files;
+    if (!fileList || fileList.length === 0) return;
+    await processUploadFiles(Array.from(fileList));
   };
 
   if (!isOpen || !mounted) return null;
@@ -181,6 +186,7 @@ export function MediaPickerModal({
             <input
               ref={fileInputRef}
               type="file"
+              multiple
               accept="image/*"
               className="hidden"
               onChange={handleUploadFile}
@@ -329,8 +335,10 @@ export function MediaPickerModal({
           isOpen={isSourceModalOpen}
           onClose={() => setIsSourceModalOpen(false)}
           onSelectFile={processUploadFile}
+          onSelectFiles={processUploadFiles}
+          multiple={true}
           title="Upload to Media Library"
-          description="Select an image file from your device or paste directly from clipboard"
+          description="Select image file(s) from your device or paste directly from clipboard"
         />
       </Card>
     </div>
