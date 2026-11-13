@@ -2,8 +2,18 @@
 
 import { BlogRepository, BlogService } from '@elsesourav/database';
 import { requireAdmin } from '../../guards/require-admin';
-import { AdminSaveBlogSchema, type AdminSaveBlogSchemaInput } from '@elsesourav/validation';
+import { AdminSaveBlogSchema, type AdminSaveBlogSchemaInput, z } from '@elsesourav/validation';
 import { revalidatePath } from 'next/cache';
+
+function formatValidationError(error: z.ZodError): string {
+  const firstIssue = error.issues[0];
+  if (!firstIssue) return 'Invalid update post payload';
+  const field = firstIssue.path.join('.');
+  if (field && !firstIssue.message.toLowerCase().includes(field.toLowerCase())) {
+    return `${field}: ${firstIssue.message}`;
+  }
+  return firstIssue.message;
+}
 
 const blogRepo = new BlogRepository();
 const blogService = new BlogService(blogRepo);
@@ -15,7 +25,7 @@ export async function createBlogPostAction(data: AdminSaveBlogSchemaInput) {
   if (!parsed.success) {
     return {
       success: false,
-      error: parsed.error.issues[0]?.message || 'Invalid update post payload',
+      error: formatValidationError(parsed.error),
     };
   }
 
@@ -60,7 +70,7 @@ export async function updateBlogPostAction(postId: string, data: AdminSaveBlogSc
   if (!parsed.success) {
     return {
       success: false,
-      error: parsed.error.issues[0]?.message || 'Invalid update post payload',
+      error: formatValidationError(parsed.error),
     };
   }
 

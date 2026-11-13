@@ -27,11 +27,16 @@ export const CreateBlogPostSchema = z.object({
   authorRole: z.string().max(100).optional().or(z.literal('')),
   categoryId: z.string().min(1, 'Category ID is required').optional(),
   tagIds: z.array(z.string()).optional().default([]),
-  seoTitle: z.string().max(70, 'SEO title should not exceed 70 characters').optional(),
+  seoTitle: z
+    .string()
+    .max(100, 'SEO title should not exceed 100 characters')
+    .optional()
+    .or(z.literal('')),
   seoDescription: z
     .string()
-    .max(160, 'SEO description should not exceed 160 characters')
-    .optional(),
+    .max(200, 'SEO description should not exceed 200 characters')
+    .optional()
+    .or(z.literal('')),
   readingTime: z.number().int().min(1).optional(),
 });
 
@@ -54,8 +59,16 @@ export const AdminSaveBlogSchema = z.object({
   status: z
     .enum(['draft', 'published', 'archived', 'DRAFT', 'PUBLISHED', 'ARCHIVED'])
     .default('draft'),
-  seoTitle: z.string().max(70).optional().or(z.literal('')),
-  seoDescription: z.string().max(160).optional().or(z.literal('')),
+  seoTitle: z
+    .string()
+    .max(100, 'SEO title cannot exceed 100 characters')
+    .optional()
+    .or(z.literal('')),
+  seoDescription: z
+    .string()
+    .max(200, 'SEO description cannot exceed 200 characters')
+    .optional()
+    .or(z.literal('')),
 });
 
 export const PublishBlogPostSchema = z.object({
