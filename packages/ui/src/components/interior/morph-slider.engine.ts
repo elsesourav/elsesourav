@@ -142,6 +142,19 @@ vec2 coverUV(vec2 uv, vec2 res, vec2 img) {
 
 void main() {
   float p = clamp(uProgress, 0.0, 1.0);
+
+  // Fast path for static/idle state with no drift: bypass procedural FBM & multiple texture passes
+  if (p <= 0.0001 && uDrift < 0.001) {
+    vec2 sC = coverUV(vUv, uResolution, uCurrentSize);
+    gl_FragColor = texture2D(tCurrent, sC);
+    return;
+  }
+  if (p >= 0.9999 && uDrift < 0.001) {
+    vec2 sN = coverUV(vUv, uResolution, uNextSize);
+    gl_FragColor = texture2D(tNext, sN);
+    return;
+  }
+
   float env = sin(p * PI);
 
   vec2 uv = vUv;

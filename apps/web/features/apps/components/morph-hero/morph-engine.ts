@@ -168,7 +168,26 @@ export class MorphEngine {
     this.loadTextures();
 
     this.boundLoop = this.loop.bind(this);
+    this.startLoop();
+  }
+
+  private startLoop(): void {
+    if (this.raf) return;
+    this.boundLoop = this.loop.bind(this);
     this.raf = requestAnimationFrame(this.boundLoop);
+  }
+
+  private stopLoop(): void {
+    if (this.raf) {
+      cancelAnimationFrame(this.raf);
+      this.raf = 0;
+    }
+  }
+
+  private renderSingleFrame(t = performance.now()): void {
+    this.program.uniforms.uTime.value = t * 0.001;
+    this.syncOptions();
+    this.renderer.render({ scene: this.mesh });
   }
 
   private loadTextures(): void {
@@ -183,6 +202,7 @@ export class MorphEngine {
         if (index === this.current) {
           this.program.uniforms.tCurrent.value = texture;
           this.program.uniforms.uCurrentSize.value = this.sizes[index];
+          this.renderSingleFrame();
         }
       };
       img.onload = handleLoad;
@@ -200,6 +220,7 @@ export class MorphEngine {
     const h = Math.max(rect.height, 1);
     this.renderer.setSize(w, h);
     this.program.uniforms.uResolution.value = [this.gl.canvas.width, this.gl.canvas.height];
+    this.renderSingleFrame();
   }
 
   private syncOptions(): void {
@@ -214,8 +235,15 @@ export class MorphEngine {
 
   private loop(t: number): void {
     this.program.uniforms.uTime.value = t * 0.001;
-    if (!this.dragging && !this.animating) this.syncOptions();
     this.renderer.render({ scene: this.mesh });
+
+    const opts = this.getOptions();
+    // Only continue animation loop if we are transitioning, dragging, or drift is active
+    if (!this.animating && !this.dragging && (!opts.drift || opts.drift < 0.001)) {
+      this.stopLoop();
+      return;
+    }
+
     this.raf = requestAnimationFrame(this.boundLoop);
   }
 
@@ -248,6 +276,7 @@ export class MorphEngine {
     const target = this.prepareNext(dir);
     this.animating = true;
     this.announce(target);
+    this.startLoop();
     const duration = this.reducedMotion ? Math.min(opts.duration, 0.4) : opts.duration;
     this.tween = gsap.fromTo(
       this.program.uniforms.uProgress,
@@ -277,6 +306,7 @@ export class MorphEngine {
     this.program.uniforms.uDir.value = dir;
     this.animating = true;
     this.announce(clamped);
+    this.startLoop();
     const opts = this.getOptions();
     const duration = this.reducedMotion ? Math.min(opts.duration, 0.4) : opts.duration;
     this.tween = gsap.fromTo(
@@ -305,6 +335,7 @@ export class MorphEngine {
     this.animating = false;
     this.tween = null;
     this.announce(target);
+    this.renderSingleFrame();
   }
 
   next(): void {
@@ -324,6 +355,7 @@ export class MorphEngine {
     this.dragging = true;
     this.dragDir = 0;
     this.syncOptions();
+    this.startLoop();
     return true;
   }
 
@@ -355,6 +387,7 @@ export class MorphEngine {
     const target = this.wrap(this.current + this.dragDir);
     const duration = this.reducedMotion ? 0.3 : 0.5;
     this.animating = true;
+    this.startLoop();
     if (p > 0.18) {
       this.announce(target);
       this.tween = gsap.to(this.program.uniforms.uProgress, {
@@ -372,6 +405,7 @@ export class MorphEngine {
         onComplete: () => {
           this.animating = false;
           this.tween = null;
+          this.renderSingleFrame();
         },
       });
     }
