@@ -8,21 +8,21 @@ interface BlogCardSkeletonProps {
 export function BlogCardSkeleton({ isFeatured = false }: BlogCardSkeletonProps) {
   return (
     <Card
-      className={`flex flex-col justify-between overflow-hidden rounded-xl sm:rounded-2xl border-[hsl(var(--border))] bg-[hsl(var(--card))] p-0 shadow-sm ${
-        isFeatured ? 'sm:col-span-2 lg:col-span-3 lg:flex-row' : ''
+      className={`flex flex-col justify-between overflow-hidden rounded-xl sm:rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-0 shadow-sm ${
+        isFeatured ? 'sm:col-span-2 lg:col-span-3 md:flex-row' : ''
       }`}
     >
       {/* Cover skeleton */}
       <div
         className={`aspect-[16/9] w-full overflow-hidden bg-[hsl(var(--surface-subtle))] border-b border-[hsl(var(--border-subtle))] ${
-          isFeatured ? 'lg:w-1/2 lg:aspect-auto' : ''
+          isFeatured ? 'md:w-1/2 md:aspect-auto md:min-h-[280px] lg:min-h-[320px] md:border-b-0 md:border-r' : ''
         }`}
       >
         <Skeleton className="w-full h-full rounded-none" />
       </div>
 
       {/* Body */}
-      <div className="p-2.5 sm:p-3.5 md:p-4.5 flex flex-col justify-between flex-1 space-y-2.5 sm:space-y-3.5">
+      <div className="p-3 sm:p-4 md:p-5 lg:p-6 flex flex-col justify-between flex-1 space-y-3 sm:space-y-4">
         <div className="space-y-3">
           {/* Metadata row */}
           <div className="flex items-center justify-between gap-2">

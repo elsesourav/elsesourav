@@ -98,12 +98,17 @@ export function getAppScreenshotUrl(
   });
 }
 
-export function getBlogCoverUrl(publicIdOrUrl: string, width = 1200, height = 630): string {
+export function getBlogCoverUrl(
+  publicIdOrUrl: string,
+  width = 1200,
+  height = 630,
+  crop: 'fill' | 'fit' | 'limit' = 'fill'
+): string {
   return buildCloudinaryUrl(publicIdOrUrl, {
     width,
     height,
-    crop: 'fill',
-    gravity: 'center',
+    crop,
+    gravity: crop === 'fill' ? 'center' : undefined,
   });
 }
 

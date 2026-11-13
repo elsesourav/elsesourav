@@ -18,7 +18,7 @@ interface BlogArticleHeaderProps {
 export function BlogArticleHeader({ post, postUrl }: BlogArticleHeaderProps) {
   const [isLightboxOpen, setIsLightboxOpen] = React.useState(false);
   const coverRef = React.useRef<HTMLDivElement>(null);
-  const coverUrl = post.coverImageUrl ? getBlogCoverUrl(post.coverImageUrl, 1200, 630) : null;
+  const coverUrl = post.coverImageUrl ? getBlogCoverUrl(post.coverImageUrl, 1600, 900, 'limit') : null;
   const publishedDate = post.publishedAt
     ? new Date(post.publishedAt).toLocaleDateString('en-US', {
         month: 'long',
@@ -149,17 +149,31 @@ export function BlogArticleHeader({ post, postUrl }: BlogArticleHeaderProps) {
         <div
           ref={coverRef}
           onClick={() => setIsLightboxOpen(true)}
-          className="relative aspect-[16/9] w-full rounded-3xl overflow-hidden border border-[hsl(var(--border))] bg-[hsl(var(--surface-subtle))] shadow-2xl group cursor-zoom-in"
+          className="relative aspect-[16/9] w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-[hsl(var(--border))] bg-zinc-950/80 dark:bg-black/90 shadow-2xl group cursor-zoom-in flex items-center justify-center p-2 sm:p-3.5"
           title="Click to view cover in Lightbox"
         >
+          {/* Subtle ambient blurred backdrop so letterbox edges blend organically */}
           <Image
             src={coverUrl}
-            alt={post.title}
+            alt=""
+            aria-hidden="true"
             fill
-            priority
-            sizes="(max-width: 1024px) 100vw, 1024px"
-            className="object-cover group-hover:scale-[1.01] transition-transform duration-300"
+            unoptimized
+            className="pointer-events-none object-cover blur-3xl opacity-35 dark:opacity-30 scale-110"
           />
+
+          {/* Foreground Pristine Artwork — 100% contained, zero cropping */}
+          <div className="relative w-full h-full flex items-center justify-center z-[2]">
+            <Image
+              src={coverUrl}
+              alt={post.title}
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 1024px"
+              className="pointer-events-none object-contain rounded-xl drop-shadow-md transition-transform duration-300 group-hover:scale-[1.01]"
+            />
+          </div>
+
           <button
             type="button"
             onClick={(e) => {
@@ -167,7 +181,7 @@ export function BlogArticleHeader({ post, postUrl }: BlogArticleHeaderProps) {
               setIsLightboxOpen(true);
             }}
             aria-label="View cover image in Lightbox"
-            className="absolute top-4 right-4 p-2.5 rounded-xl bg-black/60 hover:bg-black/85 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 focus:opacity-100 hover:scale-105 active:scale-95 shadow-lg flex items-center gap-1.5 text-xs font-mono transition-all cursor-pointer"
+            className="absolute top-4 right-4 z-10 p-2.5 rounded-xl bg-black/60 hover:bg-black/85 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 focus:opacity-100 hover:scale-105 active:scale-95 shadow-lg flex items-center gap-1.5 text-xs font-mono transition-all cursor-pointer"
           >
             <Maximize2 className="w-4 h-4" />
             <span className="hidden sm:inline">Lightbox</span>
