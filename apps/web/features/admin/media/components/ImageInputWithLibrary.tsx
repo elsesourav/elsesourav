@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { Button, Input, ImageCropperModal } from '@elsesourav/ui';
 import { MediaPickerModal } from './MediaPickerModal';
+import { ImageUploadSourceModal } from './ImageUploadSourceModal';
 import { adminUploadImageFileAction } from '../actions/admin-media-actions';
 import type { MediaDomain, MediaFolder } from '@elsesourav/types';
 import { Image as ImageIcon, Upload, FolderOpen, X, Loader2, Crop } from 'lucide-react';
@@ -33,6 +34,7 @@ export function ImageInputWithLibrary({
   fallbackUrl,
 }: ImageInputWithLibraryProps) {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isSourceModalOpen, setIsSourceModalOpen] = React.useState(false);
   const [isUploading, setIsUploading] = React.useState(false);
   const [uploadError, setUploadError] = React.useState<string | null>(null);
 
@@ -105,11 +107,8 @@ export function ImageInputWithLibrary({
     }
   };
 
-  // Handle file picker selection with smart aspect ratio detection
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  // Process selected file (from device picker or clipboard paste) with smart aspect ratio detection
+  const processSelectedFile = (file: File) => {
     if (!file.type.startsWith('image/')) {
       setUploadError('Please choose a valid image file');
       return;
@@ -141,7 +140,13 @@ export function ImageInputWithLibrary({
     img.onerror = () => {
       directUpload(file);
     };
+  };
 
+  // Handle file picker selection with smart aspect ratio detection
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    processSelectedFile(file);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -255,15 +260,15 @@ export function ImageInputWithLibrary({
           />
 
           <div className="flex items-center gap-1.5 shrink-0 justify-end flex-wrap sm:flex-nowrap">
-            {/* Standard Normal Upload Button */}
+            {/* Upload Button: Shows Upload from Device or Paste from Clipboard */}
             <Button
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => fileInputRef.current?.click()}
+              onClick={() => setIsSourceModalOpen(true)}
               disabled={isUploading}
               className="text-xs rounded-xl border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 gap-1.5 h-9 px-3 shrink-0 justify-center whitespace-nowrap transition-colors"
-              title="Upload image file"
+              title="Upload image from device or clipboard"
             >
               {isUploading ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin shrink-0" />
@@ -290,6 +295,15 @@ export function ImageInputWithLibrary({
       </div>
 
       {uploadError && <p className="text-[11px] text-rose-400 font-medium">{uploadError}</p>}
+
+      {/* Upload Source Modal (Device vs Clipboard) */}
+      <ImageUploadSourceModal
+        isOpen={isSourceModalOpen}
+        onClose={() => setIsSourceModalOpen(false)}
+        onSelectFile={processSelectedFile}
+        title={`Upload ${label || 'Image'}`}
+        description="Select from your device or paste directly from clipboard"
+      />
 
       {/* Media Picker Modal */}
       <MediaPickerModal

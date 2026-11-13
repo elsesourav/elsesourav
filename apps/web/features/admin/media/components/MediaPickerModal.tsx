@@ -8,6 +8,7 @@ import {
   adminGetMediaListAction,
   adminUploadImageFileAction,
 } from '../actions/admin-media-actions';
+import { ImageUploadSourceModal } from './ImageUploadSourceModal';
 import { Image as ImageIcon, Search, Upload, X, Check, Loader2 } from 'lucide-react';
 
 interface MediaPickerModalProps {
@@ -41,6 +42,7 @@ export function MediaPickerModal({
   const [search, setSearch] = React.useState('');
   const [selectedCategory, setSelectedCategory] = React.useState<string>(defaultCategory);
   const [isUploading, setIsUploading] = React.useState(false);
+  const [isSourceModalOpen, setIsSourceModalOpen] = React.useState(false);
   const [mounted, setMounted] = React.useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -110,10 +112,7 @@ export function MediaPickerModal({
     }
   }, [isOpen, loadMedia]);
 
-  const handleUploadFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const processUploadFile = async (file: File) => {
     setIsUploading(true);
     setError(null);
 
@@ -143,6 +142,12 @@ export function MediaPickerModal({
       setIsUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
+  };
+
+  const handleUploadFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    await processUploadFile(file);
   };
 
   if (!isOpen || !mounted) return null;
@@ -189,7 +194,7 @@ export function MediaPickerModal({
             <Button
               type="button"
               size="sm"
-              onClick={() => fileInputRef.current?.click()}
+              onClick={() => setIsSourceModalOpen(true)}
               disabled={isUploading}
               className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs rounded-xl gap-1.5 h-8 px-3"
             >
@@ -324,6 +329,14 @@ export function MediaPickerModal({
             </div>
           )}
         </div>
+        {/* Upload Source Modal (Device vs Clipboard) */}
+        <ImageUploadSourceModal
+          isOpen={isSourceModalOpen}
+          onClose={() => setIsSourceModalOpen(false)}
+          onSelectFile={processUploadFile}
+          title="Upload to Media Library"
+          description="Select an image file from your device or paste directly from clipboard"
+        />
       </Card>
     </div>
   );
