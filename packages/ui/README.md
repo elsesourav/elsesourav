@@ -815,12 +815,13 @@ import { ... } from '@elsesourav/ui';
 - **Key Features**:
   - **Modular Architecture (< 500 lines per file)**: Separated into `@elsesourav/ui` primitives:
     - `MarkdownRenderer`: Core block parser (headings, tables, callouts, lists, checklists, paragraphs).
-    - `MarkdownCodeBlock`: Zero-lag syntax highlighting powered by `sugar-high` and CSS custom properties (`--sh-keyword`, `--sh-string`, etc.) with copy button and language badges.
+    - `MarkdownCodeBlock`: Zero-lag syntax highlighting powered by `sugar-high` and CSS custom properties (`--sh-keyword`, `--sh-string`, etc.) with copy button, directory tree / box-drawing character support, and canonical language badges.
     - `MathFormula`: Client-safe KaTeX LaTeX renderer with TeX copy action.
     - `renderInlineMarkdown`: Inline token sanitizer with strict XSS filtering for links, images, bold, italic, and inline code.
   - **Syntax Highlighting & Theme Tokens**: Handcrafted dark/light theme tokens matching ElseSourav's cosmic palette (Indigo keywords `#818cf8`, Emerald strings `#34d399`, Violet types `#c084fc`, Cyan properties `#38bdf8`, Amber literals `#fbbf24`).
-  - **CSS Gutter Line Numbers**: Automatic line numbers for multi-line snippets using CSS counters without polluting copy-to-clipboard or DOM textContent.
-  - **Language Badge & Normalization**: Automatically normalizes language tags (`ts`, `tsx`, `py`, `bash`, `rust`, `c`, `cpp`, `wasm`, `dockerfile`, etc.) and displays a terminal badge.
+  - **Directory Trees & Box-Drawing Characters**: Unbroken vertical trunk and elbow rendering for ASCII/Unicode directory trees (`├──`, `│`, `└──`) through exact block-flow newline formatting and tight monospace line-height metrics (`1.45`).
+  - **CSS Gutter Line Numbers**: Automatic line numbers for multi-line snippets using CSS counters without polluting copy-to-clipboard or DOM textContent, with extended gutter spacing for large files.
+  - **Language Badge & Normalization**: Automatically normalizes language tags (`ts`, `tsx`, `py`, `bash`, `rust`, `c`, `cpp`, `wasm`, `dockerfile`, `tree`, `text`, etc.) and displays a terminal badge.
   - **Interactive Admin Editing**: Live Word and character count tracking, side-by-side split, write, and full preview modes.
 - **When & Where to Use**: Technical blog articles, updates, documentation pages, admin CMS editor.
 

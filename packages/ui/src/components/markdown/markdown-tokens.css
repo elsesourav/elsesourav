@@ -50,15 +50,19 @@
 }
 
 /* Base Code & Line Layout */
+pre,
 .sh-code-theme {
   counter-reset: sh-line-number;
+  tab-size: 2;
+  -moz-tab-size: 2;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace);
 }
 
 .sh-code-theme .sh__line {
   counter-increment: sh-line-number;
   display: block;
-  min-height: 1.4rem;
-  line-height: 1.5;
+  min-height: 1.45em;
+  line-height: 1.45;
 }
 
 /* Optional Line Numbers with zero DOM intrusion and zero copy pollution */
@@ -79,5 +83,13 @@
   pointer-events: none;
   font-variant-numeric: tabular-nums;
   font-size: 0.75rem;
-  line-height: 1.5;
+  line-height: 1.45;
+}
+
+.sh-code-theme.has-large-line-numbers .sh__line {
+  padding-left: 3.5rem;
+}
+
+.sh-code-theme.has-large-line-numbers .sh__line::before {
+  width: 2.5rem;
 }

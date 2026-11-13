@@ -63,7 +63,43 @@ const LANGUAGE_DISPLAY_NAMES: Record<string, string> = {
   rb: 'Ruby',
   lua: 'Lua',
   zig: 'Zig',
+  text: 'Text',
+  txt: 'Text',
+  plain: 'Text',
+  plaintext: 'Text',
+  tree: 'Tree',
+  ascii: 'ASCII',
+  log: 'Log',
+  terminal: 'Terminal',
+  cmd: 'CMD',
+  console: 'Console',
 };
+
+/**
+ * Text and diagram formats that should render with neutral tokenization
+ * rather than guessing code dialects.
+ */
+const TEXT_LANGUAGES = new Set([
+  'text',
+  'txt',
+  'plain',
+  'plaintext',
+  'tree',
+  'ascii',
+  'ansi',
+  'log',
+  'output',
+  'terminal',
+  'cmd',
+  'console',
+  'dir',
+  'directory',
+  'folder',
+  'env',
+  '.env',
+  'none',
+  'raw',
+]);
 
 /**
  * Performant, Accessible Code Block with real-time Syntax Highlighting
@@ -93,14 +129,19 @@ export function MarkdownCodeBlock({
   }, [code]);
 
   const shouldShowLines = showLineNumbers ?? lineCount > 2;
+  const isLargeFile = lineCount >= 1000;
 
   // Generate syntax-highlighted HTML synchronously
   const highlightedHtml = React.useMemo(() => {
     if (!code) return '';
     try {
+      const normalizedCode = code.replace(/\r\n/g, '\n');
+
       // Resolve canonical language supported by sugar-high
       let targetLang: LanguageName | undefined;
-      if (cleanLang) {
+      if (TEXT_LANGUAGES.has(cleanLang)) {
+        targetLang = 'plaintext';
+      } else if (cleanLang) {
         targetLang = lang(cleanLang);
         // Custom alias fallbacks
         if (!targetLang && (cleanLang === 'wasm' || cleanLang === 'wat')) {
@@ -108,9 +149,19 @@ export function MarkdownCodeBlock({
         }
       }
 
-      return highlight(code, {
+      const rawHtml = highlight(normalizedCode, {
         lang: targetLang,
       });
+
+      // Sugar-high outputs `<span class="sh__line">...</span>\n`.
+      // When `.sh__line` is styled with `display: block` inside `<pre>`, a trailing
+      // literal newline `\n` AFTER `</span>` forms an anonymous block box between elements,
+      // introducing an unintended blank row gap that breaks continuous ASCII / Unicode
+      // box-drawing characters (such as ├──, │, └──).
+      // Placing the newline INSIDE the line span (`\n</span>`) ensures seamless block layout,
+      // preserves continuous box-drawing glyphs, maintains exact DOM textContent,
+      // and guarantees clean mouse selection copying.
+      return rawHtml.replace(/<\/span>\n/g, '\n</span>');
     } catch {
       // Safe fallback if highlighting throws on malformed snippets
       return '';
@@ -165,16 +216,16 @@ export function MarkdownCodeBlock({
         </button>
       </div>
 
-      <pre className="p-4 overflow-x-auto max-w-full text-zinc-900 dark:text-zinc-200 leading-relaxed font-mono selection:bg-primary/25">
+      <pre className="p-4 overflow-x-auto max-w-full text-zinc-900 dark:text-zinc-200 leading-[1.45] font-mono selection:bg-primary/25">
         {highlightedHtml ? (
           <code
             className={`sh-code-theme block font-mono ${
               shouldShowLines ? 'has-line-numbers' : ''
-            }`}
+            } ${isLargeFile ? 'has-large-line-numbers' : ''}`}
             dangerouslySetInnerHTML={{ __html: highlightedHtml }}
           />
         ) : (
-          <code className="block font-mono">{code}</code>
+          <code className="block font-mono leading-[1.45]">{code}</code>
         )}
       </pre>
     </div>

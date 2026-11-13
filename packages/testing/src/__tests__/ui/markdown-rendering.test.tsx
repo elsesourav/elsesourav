@@ -160,6 +160,18 @@ describe('Shared Markdown Rendering Architecture (@elsesourav/ui)', () => {
       const codeEl = container.querySelector('code.sh-code-theme');
       expect(codeEl?.classList.contains('has-line-numbers')).toBe(true);
     });
+
+    it('renders directory trees and box-drawing characters with exact formatting and canonical labels', () => {
+      const treeCode = `glorov/\n├── apps/\n│   ├── storefront/\n│   └── backend/\n└── deploy/`;
+      const treeMarkdown = `\`\`\`tree\n${treeCode}\n\`\`\``;
+      const { container } = render(<MarkdownRenderer content={treeMarkdown} />);
+
+      const codeEl = container.querySelector('code.sh-code-theme');
+      expect(codeEl).toBeDefined();
+      expect(codeEl?.textContent).toBe(treeCode);
+      expect(container.textContent).toContain('Tree');
+      expect(container.textContent).toContain('5 lines');
+    });
   });
 
   describe('3. GFM Tables & Overflow Protection', () => {
