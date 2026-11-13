@@ -958,7 +958,8 @@ h6,
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-hero-progress {
+  .animate-hero-progress,
+  [data-carousel-progress] {
     animation: none !important;
     width: 100% !important;
   }

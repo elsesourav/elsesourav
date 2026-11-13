@@ -81,7 +81,7 @@ export function MorphSliderControls({
               aria-selected={i === index}
               aria-label={`Go to slide ${i + 1}`}
               className={`h-2 rounded-full cursor-pointer relative overflow-hidden [transition:width_var(--ms-dot)_cubic-bezier(0.16,1,0.3,1),background-color_var(--ms-dot)_ease] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/80 ${
-                i === index ? 'w-[24px] bg-white/30' : 'w-2 bg-white/35 hover:bg-white/60'
+                i === index ? 'w-[28px] bg-white/20' : 'w-2 bg-white/35 hover:bg-white/60'
               }`}
               onClick={() => onIndicatorClick(i)}
               onPointerDown={(e) => e.stopPropagation()}
@@ -90,7 +90,12 @@ export function MorphSliderControls({
               {i === index && (
                 <span
                   key={`ms-ctrl-progress-${i}`}
-                  className="animate-hero-progress absolute inset-y-0 left-0 bg-white rounded-full shadow-[0_0_6px_rgba(255,255,255,0.9)]"
+                  data-carousel-progress
+                  className="animate-hero-progress absolute inset-y-0 left-0 bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,1)]"
+                  style={{
+                    width: '0%',
+                    animation: 'heroSlideProgress 5s linear forwards',
+                  }}
                 />
               )}
             </button>

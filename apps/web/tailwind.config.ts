@@ -121,6 +121,10 @@ const config: Config = {
         bounce: 'var(--ease-bounce)',
       },
       keyframes: {
+        'hero-slide-progress': {
+          '0%': { width: '0%' },
+          '100%': { width: '100%' },
+        },
         'fade-in': {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
@@ -161,6 +165,7 @@ const config: Config = {
         },
       },
       animation: {
+        'hero-progress': 'hero-slide-progress 5s linear forwards',
         'fade-in': 'fade-in var(--duration-fast) var(--ease-smooth)',
         'slide-up': 'slide-up var(--duration-smooth) var(--ease-smooth)',
         'slide-down': 'slide-down var(--duration-smooth) var(--ease-smooth)',
