@@ -1,5 +1,6 @@
 @import './micro.css';
 @import './interior.css';
+@import '../components/markdown/markdown-tokens.css';
 
 @tailwind base;
 @tailwind components;

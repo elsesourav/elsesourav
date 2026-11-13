@@ -124,6 +124,42 @@ describe('Shared Markdown Rendering Architecture (@elsesourav/ui)', () => {
         expect(writeTextMock).toHaveBeenCalledWith(code);
       }
     });
+
+    it('generates syntax highlighted tokens for keywords, strings, and identifiers', () => {
+      const tsCode = `const greeting: string = "Hello World";\nfunction run() { return 42; }`;
+      const markdown = `\`\`\`typescript\n${tsCode}\n\`\`\``;
+      const { container } = render(<MarkdownRenderer content={markdown} />);
+
+      const keywords = container.querySelectorAll('.sh__token--keyword');
+      const strings = container.querySelectorAll('.sh__token--string');
+      const identifiers = container.querySelectorAll('.sh__token--identifier');
+
+      expect(keywords.length).toBeGreaterThan(0);
+      expect(strings.length).toBeGreaterThan(0);
+      expect(identifiers.length).toBeGreaterThan(0);
+      expect(container.querySelector('.sh-code-theme')).toBeDefined();
+    });
+
+    it('normalizes language aliases and displays canonical badge names', () => {
+      const pyMarkdown = `\`\`\`py\ndef hello():\n    return "hi"\n\`\`\``;
+      const { container: pyContainer } = render(<MarkdownRenderer content={pyMarkdown} />);
+      expect(pyContainer.textContent).toContain('Python');
+
+      const bashMarkdown = `\`\`\`bash\necho "test"\n\`\`\``;
+      const { container: bashContainer } = render(<MarkdownRenderer content={bashMarkdown} />);
+      expect(bashContainer.textContent).toContain('Bash');
+
+      const rustMarkdown = `\`\`\`rs\nfn main() {}\n\`\`\``;
+      const { container: rustContainer } = render(<MarkdownRenderer content={rustMarkdown} />);
+      expect(rustContainer.textContent).toContain('Rust');
+    });
+
+    it('activates line numbers for multiline code blocks', () => {
+      const multiline = `\`\`\`typescript\nline 1\nline 2\nline 3\nline 4\n\`\`\``;
+      const { container } = render(<MarkdownRenderer content={multiline} />);
+      const codeEl = container.querySelector('code.sh-code-theme');
+      expect(codeEl?.classList.contains('has-line-numbers')).toBe(true);
+    });
   });
 
   describe('3. GFM Tables & Overflow Protection', () => {

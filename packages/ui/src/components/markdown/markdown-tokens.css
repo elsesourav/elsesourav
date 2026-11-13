@@ -1,0 +1,83 @@
+/**
+ * ElseSourav Syntax Highlighting Theme Tokens
+ * Dark-first engineering aesthetic with WCAG AAA contrast matching design tokens.
+ */
+
+:root,
+.dark,
+[data-theme='dark'] {
+  --sh-keyword: #818cf8; /* Primary Brand Indigo */
+  --sh-string: #34d399; /* Success Emerald */
+  --sh-class: #c084fc; /* Soft Purple / Types */
+  --sh-identifier: #f1f5f9; /* Slate-100 / Variables & Functions */
+  --sh-property: #38bdf8; /* Info Sky / Object Properties */
+  --sh-entity: #f472b6; /* Soft Pink / HTML & JSX Elements */
+  --sh-jsxliterals: #fbbf24; /* Warning Amber / Literals */
+  --sh-sign: #94a3b8; /* Slate-400 / Operators & Punctuation */
+  --sh-comment: #71717a; /* Zinc-500 / Italic Comments */
+  --sh-space: transparent;
+}
+
+.light,
+[data-theme='light'] {
+  --sh-keyword: #4f46e5; /* Deep Indigo 600 */
+  --sh-string: #059669; /* Deep Emerald 600 */
+  --sh-class: #7c3aed; /* Deep Violet 600 */
+  --sh-identifier: #0f172a; /* Slate 900 */
+  --sh-property: #0284c7; /* Sky 600 */
+  --sh-entity: #db2777; /* Pink 600 */
+  --sh-jsxliterals: #d97706; /* Amber 600 */
+  --sh-sign: #64748b; /* Slate 500 */
+  --sh-comment: #94a3b8; /* Slate 400 */
+  --sh-space: transparent;
+}
+
+/* Syntax Token Typography & Weighting */
+.sh-code-theme .sh__token--comment {
+  font-style: italic;
+}
+
+.sh-code-theme .sh__token--keyword {
+  font-weight: 500;
+}
+
+.sh-code-theme .sh__token--class {
+  font-weight: 500;
+}
+
+.sh-code-theme .sh__token--entity {
+  font-weight: 500;
+}
+
+/* Base Code & Line Layout */
+.sh-code-theme {
+  counter-reset: sh-line-number;
+}
+
+.sh-code-theme .sh__line {
+  counter-increment: sh-line-number;
+  display: block;
+  min-height: 1.4rem;
+  line-height: 1.5;
+}
+
+/* Optional Line Numbers with zero DOM intrusion and zero copy pollution */
+.sh-code-theme.has-line-numbers .sh__line {
+  position: relative;
+  padding-left: 2.75rem;
+}
+
+.sh-code-theme.has-line-numbers .sh__line::before {
+  content: counter(sh-line-number);
+  position: absolute;
+  left: 0;
+  width: 1.75rem;
+  text-align: right;
+  color: var(--sh-comment);
+  opacity: 0.45;
+  user-select: none;
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}

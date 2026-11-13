@@ -942,6 +942,32 @@ Rather than requiring users to maintain paid third-party API subscriptions, Spec
 2. **CORS & Session Token Handling**: Ensuring session authorization cookies are forwarded cleanly without compromising user security.
 3. **DOM Content Extraction**: Parsing arbitrary HTML structures into clean Markdown formatted inputs for prompt assembly.
 
+\`\`\`typescript
+// Manifest V3 Background Service Worker Session Pipeline
+interface EngineConfig {
+  id: string;
+  endpoint: string;
+  timeoutMs: number;
+}
+
+export async function queryMultiEngine(
+  prompt: string, 
+  engines: EngineConfig[]
+): Promise<PromiseSettledResult<string>[]> {
+  const tasks = engines.map(async (engine) => {
+    const session = await getAuthenticatedSession(engine.id);
+    const response = await fetch(engine.endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt, sessionToken: session.token }),
+    });
+    return response.text();
+  });
+
+  return Promise.allSettled(tasks);
+}
+\`\`\`
+
 ## 2. On-Device OCR with WebAssembly
 
 To capture text from non-selectable web graphics or video frames, SpectraLens integrates an offline Tesseract.js WebAssembly build. Text extraction happens 100% locally on the client without uploading screenshots to external servers.

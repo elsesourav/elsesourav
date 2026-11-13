@@ -1,19 +1,19 @@
 'use client';
 
-import { isSafeUrl } from '@elsesourav/utils';
+import * as React from 'react';
 import {
-  Check,
-  Copy,
-  Terminal,
   Info,
   CheckCircle2,
   AlertTriangle,
   Flame,
-  ExternalLink,
 } from 'lucide-react';
-import * as React from 'react';
-import katex from 'katex';
-import 'katex/dist/katex.min.css';
+import {
+  MathFormula,
+  MarkdownCodeBlock,
+  renderInlineMarkdown,
+} from './markdown';
+
+export * from './markdown';
 
 export interface MarkdownRendererProps {
   content?: string | null;
@@ -25,265 +25,8 @@ export interface MarkdownRendererProps {
 }
 
 /**
- * Renders LaTeX math safely using KaTeX.
- */
-export function MathFormula({
-  math,
-  displayMode = false,
-  className = '',
-}: {
-  math: string;
-  displayMode?: boolean;
-  className?: string;
-}) {
-  const [copied, setCopied] = React.useState(false);
-
-  const html = React.useMemo(() => {
-    try {
-      return katex.renderToString(math.trim(), {
-        displayMode,
-        throwOnError: false,
-        output: 'htmlAndMathml',
-      });
-    } catch {
-      return null;
-    }
-  }, [math, displayMode]);
-
-  const handleCopyTeX = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    try {
-      if (typeof navigator !== 'undefined' && navigator.clipboard) {
-        await navigator.clipboard.writeText(math);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      }
-    } catch {
-      // Fallback
-    }
-  };
-
-  if (!html) {
-    return (
-      <code className="text-rose-400 font-mono text-xs bg-rose-500/10 px-1.5 py-0.5 rounded">
-        {math}
-      </code>
-    );
-  }
-
-  if (displayMode) {
-    return (
-      <div
-        className={`group relative my-5 p-4 rounded-2xl bg-zinc-900/50 border border-zinc-800 overflow-x-auto text-center shadow-sm select-text ${className}`}
-      >
-        <button
-          type="button"
-          onClick={handleCopyTeX}
-          aria-label="Copy TeX equation"
-          className="absolute top-2.5 right-2.5 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg bg-zinc-800 border border-zinc-700 text-xs text-zinc-400 hover:text-white shadow-sm flex items-center gap-1 cursor-pointer"
-        >
-          {copied ? (
-            <>
-              <Check className="w-3 h-3 text-emerald-400" />
-              <span className="text-[10px] text-emerald-400 font-medium">Copied</span>
-            </>
-          ) : (
-            <>
-              <Copy className="w-3 h-3" />
-              <span className="text-[10px]">TeX</span>
-            </>
-          )}
-        </button>
-        <div
-          dangerouslySetInnerHTML={{ __html: html }}
-          className="inline-block max-w-full text-zinc-100 py-1 text-[1.05em]"
-        />
-      </div>
-    );
-  }
-
-  return (
-    <span
-      dangerouslySetInnerHTML={{ __html: html }}
-      className={`inline-block px-1 align-baseline text-inherit ${className}`}
-    />
-  );
-}
-
-/**
- * Performant, Accessible Code Block with copy-to-clipboard functionality
- */
-export function MarkdownCodeBlock({ code, language }: { code: string; language?: string }) {
-  const [copied, setCopied] = React.useState(false);
-
-  const handleCopy = async () => {
-    try {
-      if (typeof navigator !== 'undefined' && navigator.clipboard) {
-        await navigator.clipboard.writeText(code);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      }
-    } catch {
-      // Fallback if clipboard API is restricted
-    }
-  };
-
-  return (
-    <div className="my-6 rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-950 text-zinc-100 font-mono text-xs shadow-xl">
-      <div className="flex items-center justify-between px-4 py-2.5 bg-zinc-900/90 border-b border-zinc-800 text-zinc-400 text-[11px]">
-        <span className="uppercase tracking-wider font-semibold text-zinc-300 flex items-center gap-1.5">
-          <Terminal className="w-3.5 h-3.5 text-indigo-400" />
-          <span>{language || 'text'}</span>
-        </span>
-        <button
-          type="button"
-          onClick={handleCopy}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none text-[11px] cursor-pointer"
-          aria-label="Copy code snippet to clipboard"
-        >
-          {copied ? (
-            <>
-              <Check className="w-3.5 h-3.5 text-emerald-400" />
-              <span className="text-emerald-400 font-medium">Copied</span>
-            </>
-          ) : (
-            <>
-              <Copy className="w-3.5 h-3.5" />
-              <span>Copy</span>
-            </>
-          )}
-        </button>
-      </div>
-      <pre className="p-4 overflow-x-auto max-w-full text-zinc-200 leading-relaxed font-mono selection:bg-indigo-500/30">
-        <code>{code}</code>
-      </pre>
-    </div>
-  );
-}
-
-/**
- * Helper to sanitize and format inline Markdown tokens including LaTeX Math.
- */
-export function renderInlineMarkdown(text: string): React.ReactNode {
-  if (!text) return '';
-
-  const inlinePattern =
-    /(\$([^\$\n]+)\$)|(!?\[([^\]]*)\]\(([^)]+)\))|(`([^`]+)`)|(\*\*([^*]+)\*\*)|(\*([^*]+)\*|_([^_]+)_)|(~~([^~]+)~~)/g;
-
-  const nodes: React.ReactNode[] = [];
-  let lastIndex = 0;
-  let match: RegExpExecArray | null;
-  let keyIndex = 0;
-
-  while ((match = inlinePattern.exec(text)) !== null) {
-    if (match.index > lastIndex) {
-      nodes.push(text.substring(lastIndex, match.index));
-    }
-
-    const [, , mathExpr, isLinkOrImg, linkText, linkUrlMatch, , codeText, , boldText, , italicTextStar, italicTextUnder, , strikeText] =
-      match;
-
-    const rawLinkUrl = linkUrlMatch || '';
-    const italicText = italicTextStar || italicTextUnder;
-
-    if (mathExpr) {
-      nodes.push(
-        <MathFormula
-          key={`math-inline-${keyIndex++}`}
-          math={mathExpr}
-          displayMode={false}
-        />
-      );
-    } else if (isLinkOrImg) {
-      if (isLinkOrImg.startsWith('!')) {
-        // Safe Markdown Image
-        if (
-          isSafeUrl(rawLinkUrl) &&
-          (rawLinkUrl.startsWith('https://') ||
-            rawLinkUrl.startsWith('http://') ||
-            rawLinkUrl.startsWith('/'))
-        ) {
-          nodes.push(
-            <span
-              key={`img-${keyIndex++}`}
-              className="block my-6 rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900/60 shadow-md"
-            >
-              <img
-                src={rawLinkUrl}
-                alt={linkText || 'Content visual'}
-                className="w-full h-auto max-h-[550px] object-cover"
-                loading="lazy"
-              />
-              {linkText ? (
-                <span className="block px-4 py-2 text-center text-[11px] text-zinc-400 italic bg-zinc-900 border-t border-zinc-800">
-                  {linkText}
-                </span>
-              ) : null}
-            </span>
-          );
-        }
-      } else {
-        // Safe Markdown Link
-        const isSafe = isSafeUrl(rawLinkUrl);
-        if (isSafe) {
-          const isExternal = rawLinkUrl.startsWith('http://') || rawLinkUrl.startsWith('https://');
-          nodes.push(
-            <a
-              key={`link-${keyIndex++}`}
-              href={rawLinkUrl}
-              target={isExternal ? '_blank' : undefined}
-              rel={isExternal ? 'noopener noreferrer' : undefined}
-              className="text-indigo-400 hover:text-indigo-300 underline underline-offset-4 font-medium transition-colors break-words focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:rounded"
-            >
-              <span>{linkText || rawLinkUrl}</span>
-              {isExternal && <ExternalLink className="w-3 h-3 opacity-60 inline ml-0.5" />}
-            </a>
-          );
-        } else {
-          nodes.push(linkText || rawLinkUrl);
-        }
-      }
-    } else if (codeText) {
-      nodes.push(
-        <code
-          key={`code-${keyIndex++}`}
-          className="px-1.5 py-0.5 rounded-md bg-zinc-800 border border-zinc-700 text-indigo-400 text-xs font-mono break-words"
-        >
-          {codeText}
-        </code>
-      );
-    } else if (boldText) {
-      nodes.push(
-        <strong key={`bold-${keyIndex++}`} className="font-bold text-zinc-100">
-          {boldText}
-        </strong>
-      );
-    } else if (italicText) {
-      nodes.push(
-        <em key={`italic-${keyIndex++}`} className="italic text-zinc-200">
-          {italicText}
-        </em>
-      );
-    } else if (strikeText) {
-      nodes.push(
-        <del key={`strike-${keyIndex++}`} className="line-through text-zinc-400">
-          {strikeText}
-        </del>
-      );
-    }
-
-    lastIndex = inlinePattern.lastIndex;
-  }
-
-  if (lastIndex < text.length) {
-    nodes.push(text.substring(lastIndex));
-  }
-
-  return nodes;
-}
-
-/**
- * Universal, Secure Markdown Content Renderer with KaTeX LaTeX math support.
+ * Universal, Secure Markdown Content Renderer with KaTeX LaTeX math support,
+ * GitHub-style alerts, task lists, GFM tables, and theme-matched syntax highlighting.
  */
 export function MarkdownRenderer({
   content,
@@ -342,7 +85,7 @@ export function MarkdownRenderer({
         continue;
       }
 
-      // 2. Fenced Code Blocks
+      // 2. Fenced Code Blocks: ```lang ... ```
       if (line.startsWith('```')) {
         const language = line.slice(3).trim();
         const codeLines: string[] = [];
@@ -372,12 +115,12 @@ export function MarkdownRenderer({
             startHeadingLevel === 2 ? Math.min(6, level + 1) : level;
 
           const headingStyles = {
-            1: 'text-2xl sm:text-3xl font-extrabold text-zinc-100 mt-10 mb-4 tracking-tight border-b border-zinc-800 pb-2',
-            2: 'text-xl sm:text-2xl font-bold text-zinc-100 mt-8 mb-3 tracking-tight border-b border-zinc-800/60 pb-1.5',
-            3: 'text-lg sm:text-xl font-semibold text-zinc-100 mt-6 mb-2 tracking-tight',
-            4: 'text-base sm:text-lg font-semibold text-zinc-100 mt-5 mb-2',
-            5: 'text-sm sm:text-base font-semibold text-zinc-200 mt-4 mb-1.5',
-            6: 'text-xs sm:text-sm font-semibold text-zinc-400 uppercase tracking-wider mt-4 mb-1',
+            1: 'text-2xl sm:text-3xl font-extrabold text-foreground mt-10 mb-4 tracking-tight border-b border-border/80 pb-2',
+            2: 'text-xl sm:text-2xl font-bold text-foreground mt-8 mb-3 tracking-tight border-b border-border/60 pb-1.5',
+            3: 'text-lg sm:text-xl font-semibold text-foreground mt-6 mb-2 tracking-tight',
+            4: 'text-base sm:text-lg font-semibold text-foreground mt-5 mb-2',
+            5: 'text-sm sm:text-base font-semibold text-muted-foreground mt-4 mb-1.5',
+            6: 'text-xs sm:text-sm font-semibold text-subtle-foreground uppercase tracking-wider mt-4 mb-1',
           }[effectiveLevel as 1 | 2 | 3 | 4 | 5 | 6];
 
           const HeadingTag = `h${effectiveLevel}` as
@@ -467,15 +210,17 @@ export function MarkdownRenderer({
               className={`my-5 p-4 rounded-2xl border flex gap-3.5 ${config.bg} ${config.border}`}
             >
               <div className="shrink-0 mt-0.5">{config.icon}</div>
-              <div className="flex-1 space-y-1 text-xs sm:text-sm text-zinc-200 leading-relaxed">
+              <div className="flex-1 space-y-1 text-xs sm:text-sm text-foreground/90 leading-relaxed">
                 <div className={`font-bold text-xs uppercase tracking-wide ${config.text}`}>
                   {config.label}
                 </div>
-                <div>{alertLines.map((al, idx) => (
-                  <p key={idx} className={idx > 0 ? 'mt-1.5' : ''}>
-                    {renderInlineMarkdown(al)}
-                  </p>
-                ))}</div>
+                <div>
+                  {alertLines.map((al, idx) => (
+                    <p key={idx} className={idx > 0 ? 'mt-1.5' : ''}>
+                      {renderInlineMarkdown(al)}
+                    </p>
+                  ))}
+                </div>
               </div>
             </div>
           );
@@ -493,7 +238,7 @@ export function MarkdownRenderer({
         result.push(
           <blockquote
             key={`quote-${blockIndex++}`}
-            className="my-4 pl-4 border-l-4 border-indigo-500 italic text-zinc-300 bg-zinc-900/40 py-2 pr-3 rounded-r-xl"
+            className="my-4 pl-4 border-l-4 border-primary italic text-foreground/80 bg-zinc-900/40 py-2 pr-3 rounded-r-xl"
           >
             {quoteLines.map((ql, idx) => (
               <p key={idx} className={idx > 0 ? 'mt-1.5' : ''}>
@@ -510,7 +255,7 @@ export function MarkdownRenderer({
         result.push(
           <hr
             key={`hr-${blockIndex++}`}
-            className="my-8 border-t border-zinc-800"
+            className="my-8 border-t border-border"
           />
         );
         i++;
@@ -551,11 +296,11 @@ export function MarkdownRenderer({
           result.push(
             <div
               key={`table-${blockIndex++}`}
-              className="my-6 w-full overflow-x-auto rounded-2xl border border-zinc-800 shadow-sm"
+              className="my-6 w-full overflow-x-auto rounded-2xl border border-border shadow-sm"
             >
               <table className="w-full border-collapse text-xs sm:text-sm text-left">
                 <thead>
-                  <tr className="bg-zinc-900 border-b border-zinc-800 text-zinc-300">
+                  <tr className="bg-zinc-100 dark:bg-zinc-900 border-b border-border text-foreground font-medium">
                     {headerCells.map((header, idx) => (
                       <th
                         key={idx}
@@ -572,11 +317,11 @@ export function MarkdownRenderer({
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-zinc-800/60 bg-zinc-950/70 text-zinc-200">
+                <tbody className="divide-y divide-border/60 bg-surface text-foreground/90">
                   {bodyRows.map((row, rIdx) => (
                     <tr
                       key={rIdx}
-                      className="hover:bg-zinc-900/50 transition-colors"
+                      className="hover:bg-zinc-100/50 dark:hover:bg-zinc-900/50 transition-colors"
                     >
                       {row.map((cell, cIdx) => (
                         <td
@@ -623,9 +368,15 @@ export function MarkdownRenderer({
                   checked={task.checked}
                   disabled={!interactiveChecklists}
                   onChange={(e) => onChecklistToggle?.(task.itemIdx, e.target.checked)}
-                  className="mt-1 rounded accent-indigo-500 cursor-pointer w-4 h-4"
+                  className="mt-1 rounded accent-primary cursor-pointer w-4 h-4"
                 />
-                <span className={`leading-relaxed ${task.checked ? 'line-through text-zinc-500' : 'text-zinc-200'}`}>
+                <span
+                  className={`leading-relaxed ${
+                    task.checked
+                      ? 'line-through text-muted-foreground'
+                      : 'text-foreground'
+                  }`}
+                >
                   {renderInlineMarkdown(task.text)}
                 </span>
               </li>
@@ -646,7 +397,7 @@ export function MarkdownRenderer({
         result.push(
           <ul
             key={`ul-${blockIndex++}`}
-            className="my-3 list-disc list-outside pl-5 space-y-1 text-xs sm:text-sm text-zinc-200 leading-relaxed"
+            className="my-3 list-disc list-outside pl-5 space-y-1 text-xs sm:text-sm text-foreground/90 leading-relaxed"
           >
             {listItems.map((item, idx) => (
               <li key={idx}>{renderInlineMarkdown(item)}</li>
@@ -667,7 +418,7 @@ export function MarkdownRenderer({
         result.push(
           <ol
             key={`ol-${blockIndex++}`}
-            className="my-3 list-decimal list-outside pl-5 space-y-1 text-xs sm:text-sm text-zinc-200 leading-relaxed"
+            className="my-3 list-decimal list-outside pl-5 space-y-1 text-xs sm:text-sm text-foreground/90 leading-relaxed"
           >
             {listItems.map((item, idx) => (
               <li key={idx}>{renderInlineMarkdown(item)}</li>
@@ -705,7 +456,7 @@ export function MarkdownRenderer({
         result.push(
           <p
             key={`p-${blockIndex++}`}
-            className="my-3 text-xs sm:text-sm text-zinc-200 leading-relaxed break-words"
+            className="my-3 text-xs sm:text-sm text-foreground/90 leading-relaxed break-words"
           >
             {renderInlineMarkdown(paragraphLines.join(' '))}
           </p>
@@ -719,7 +470,7 @@ export function MarkdownRenderer({
   if (!blocks || blocks.length === 0) {
     if (fallbackText) {
       return (
-        <div className={`text-xs text-zinc-500 italic py-6 ${className}`}>
+        <div className={`text-xs text-muted-foreground italic py-6 ${className}`}>
           {fallbackText}
         </div>
       );

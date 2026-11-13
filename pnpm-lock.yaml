@@ -396,6 +396,9 @@ importers:
       ogl:
         specifier: ^1.0.11
         version: 1.0.11
+      sugar-high:
+        specifier: ^2.6.4
+        version: 2.6.4
       tailwind-merge:
         specifier: ^3.0.2
         version: 3.6.0
@@ -3268,6 +3271,9 @@ packages:
     engines: {node: '>=16 || 14 >=14.17'}
     hasBin: true
 
+  sugar-high@2.6.4:
+    resolution: {integrity: sha512-GJkKsIyzqPMCJabhM8c4IKBg3aKUtI62DMPGdgFuXDo0Z5LY+q3SIT3PsSjGkOT9IglhCR6dZBDVQYmdIfumsw==}
+
   supports-color@7.2.0:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
     engines: {node: '>=8'}
@@ -6134,6 +6140,8 @@ snapshots:
       pirates: 4.0.7
       tinyglobby: 0.2.17
       ts-interface-checker: 0.1.13
+
+  sugar-high@2.6.4: {}
 
   supports-color@7.2.0:
     dependencies:

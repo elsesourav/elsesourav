@@ -116,7 +116,7 @@ export function parseIntroSpread(val: string | number | undefined, defaultVal = 
   return parseMultiplier(val, defaultVal);
 }
 
-export function parseIntroPattern(val: string | number | undefined, defaultVal = 0): number {
+export function parseIntroPattern(val: string | number | undefined, _defaultVal = 0): number {
   if (typeof val === 'number') return Math.max(0, Math.min(3, val));
   if (val === 'stagger' || val === 'random') return 1;
   if (val === 'wave') return 2;

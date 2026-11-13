@@ -52,6 +52,7 @@
     "matter-js": "^0.20.0",
     "motion": "^13.4.6",
     "ogl": "^1.0.11",
+    "sugar-high": "^2.6.4",
     "tailwind-merge": "^3.0.2",
     "three": "^0.186.1"
   },

@@ -78,7 +78,7 @@ export function usePortraitInteractions({
   );
 
   const handlePointerLeave = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
+    (_e: React.PointerEvent<HTMLDivElement>) => {
       if (!bridgeRef.current) return;
       if (isTouchingRef.current) {
         isTouchingRef.current = false;

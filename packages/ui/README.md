@@ -811,14 +811,18 @@ import { ... } from '@elsesourav/ui';
 
 ### `MarkdownRenderer` & `AdminMarkdownEditor`
 
-- **Purpose**: Secure, GFM-compliant markdown parser with LaTeX math (KaTeX) support, syntax-highlighted code blocks, copy actions, responsive tables, and full write/split/preview editing suite.
+- **Purpose**: Secure, GFM-compliant modular markdown rendering suite with synchronized syntax highlighting (`sugar-high`), LaTeX math (KaTeX) support, theme-matched color tokens, copy actions, responsive tables, and full write/split/preview editing suite.
 - **Key Features**:
-  - Dual light/dark theme design matching the public site aesthetic (`bg-white dark:bg-zinc-950`).
-  - Interactive formatting quick-bar (Headings, Bold, Italic, Strikethrough, Code, Blockquote, Bullet/Ordered/Task lists, Links, Images, Tables, Math, Code Blocks).
-  - Built-in collapsible syntax reference guide cheatsheet with KaTeX LaTeX math assistance.
-  - Three viewing modes: Write, Side-by-Side Split, and Full Preview with fullscreen toggle.
-  - Live Word and character count tracking.
-- **When & Where to Use**: Technical blog articles, documentation pages, admin CMS editor.
+  - **Modular Architecture (< 500 lines per file)**: Separated into `@elsesourav/ui` primitives:
+    - `MarkdownRenderer`: Core block parser (headings, tables, callouts, lists, checklists, paragraphs).
+    - `MarkdownCodeBlock`: Zero-lag syntax highlighting powered by `sugar-high` and CSS custom properties (`--sh-keyword`, `--sh-string`, etc.) with copy button and language badges.
+    - `MathFormula`: Client-safe KaTeX LaTeX renderer with TeX copy action.
+    - `renderInlineMarkdown`: Inline token sanitizer with strict XSS filtering for links, images, bold, italic, and inline code.
+  - **Syntax Highlighting & Theme Tokens**: Handcrafted dark/light theme tokens matching ElseSourav's cosmic palette (Indigo keywords `#818cf8`, Emerald strings `#34d399`, Violet types `#c084fc`, Cyan properties `#38bdf8`, Amber literals `#fbbf24`).
+  - **CSS Gutter Line Numbers**: Automatic line numbers for multi-line snippets using CSS counters without polluting copy-to-clipboard or DOM textContent.
+  - **Language Badge & Normalization**: Automatically normalizes language tags (`ts`, `tsx`, `py`, `bash`, `rust`, `c`, `cpp`, `wasm`, `dockerfile`, etc.) and displays a terminal badge.
+  - **Interactive Admin Editing**: Live Word and character count tracking, side-by-side split, write, and full preview modes.
+- **When & Where to Use**: Technical blog articles, updates, documentation pages, admin CMS editor.
 
 ---
 
