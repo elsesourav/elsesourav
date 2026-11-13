@@ -8,7 +8,7 @@ import {
   AppDetailDescription,
   AppInformationSpecs,
 } from '@/features/apps/components/detail';
-import { AppMediaShowcase } from '@/features/apps/components/media';
+import { AppScreenshotGallery } from '@/features/apps/components/media';
 import { AppFeedbackSection } from '@/features/apps/components/reviews';
 import { ShelfCarouselRow } from '@/features/apps/components/editorial';
 import { PageShell, Reveal } from '@elsesourav/ui';
@@ -176,17 +176,16 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
         {/* 1. App Hero Section (Immediately visible, no initial scroll delay) */}
         <AppDetailHero app={app} isAuthenticated={isAuthenticated} />
 
-        {/* 2. Visual Showcase / Media Carousel (Videos & Screenshots with Drag/Scroll) */}
+        {/* 2. Visual Showcase / Screenshot Gallery */}
         {(app.featuredImageUrl ||
           (app.screenshots && app.screenshots.length > 0) ||
           app.videoUrl) && (
           <Reveal direction="up" distance={16}>
-            <AppMediaShowcase
+            <AppScreenshotGallery
               appName={app.name}
               screenshots={app.screenshots || []}
               featuredImageUrl={app.featuredImageUrl}
               videoUrl={app.videoUrl}
-              platforms={app.platforms}
             />
           </Reveal>
         )}
