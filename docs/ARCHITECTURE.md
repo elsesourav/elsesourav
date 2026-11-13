@@ -127,3 +127,12 @@ For detailed specifications on the unified identity system, OAuth providers (Goo
 
 👉 **[`docs/AUTHENTICATION.md`](./AUTHENTICATION.md)**
 
+---
+
+## 8. WebAssembly & WebGL Interactive Graphics Architecture
+
+For complete end-to-end specifications on the standalone C++ WASM compilation pipeline, zero-copy TypedArray memory bridge, point-sprite GPU shaders, and generalization blueprints for 2D/3D games and particle simulations, see:
+
+👉 **[`docs/WASM_WEBGL_INTERACTIVE_GRAPHICS_AND_GAME_ENGINEERING_GUIDE.md`](./WASM_WEBGL_INTERACTIVE_GRAPHICS_AND_GAME_ENGINEERING_GUIDE.md)**
+
+
