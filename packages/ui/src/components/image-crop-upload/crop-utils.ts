@@ -8,7 +8,19 @@ export function loadImageElement(url: string): Promise<HTMLImageElement> {
     const img = new Image();
     img.crossOrigin = 'anonymous';
     img.onload = () => resolve(img);
-    img.onerror = (err) => reject(err);
+    img.onerror = () => {
+      // If anonymous load failed (e.g., browser cached without CORS header), retry with cache-buster
+      if (url.startsWith('http://') || url.startsWith('https://')) {
+        const retryImg = new Image();
+        retryImg.crossOrigin = 'anonymous';
+        retryImg.onload = () => resolve(retryImg);
+        retryImg.onerror = (err2) => reject(err2);
+        const sep = url.includes('?') ? '&' : '?';
+        retryImg.src = `${url}${sep}_cb=${Date.now()}`;
+      } else {
+        reject(new Error('Failed to load image for cropping'));
+      }
+    };
     img.src = url;
   });
 }

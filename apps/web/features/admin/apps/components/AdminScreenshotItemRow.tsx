@@ -1,19 +1,23 @@
 'use client';
 
 import * as React from 'react';
-import { Button, IconButton } from '@elsesourav/ui';
+import { Button, IconButton, ImageCropperModal } from '@elsesourav/ui';
 import { BlurUpImage } from '@elsesourav/ui/interior';
 import { inspectUrlDimensions, type ImageDimensionInfo } from '@/features/admin/media/utils/image-dimensions';
 import { MediaPickerModal } from '@/features/admin/media/components/MediaPickerModal';
+import { uploadAdminImageFile } from '@/features/admin/media/utils/upload-client';
 import {
   ArrowUp,
   ArrowDown,
   Trash2,
   FolderOpen,
+  Crop,
+  Loader2,
   Smartphone,
   Monitor,
   Square,
   ExternalLink,
+  AlertCircle,
 } from 'lucide-react';
 
 export interface AdminScreenshotItemRowProps {
@@ -37,6 +41,9 @@ export function AdminScreenshotItemRow({
 }: AdminScreenshotItemRowProps) {
   const [dimInfo, setDimInfo] = React.useState<ImageDimensionInfo | null>(null);
   const [isPickerOpen, setIsPickerOpen] = React.useState(false);
+  const [isCropperOpen, setIsCropperOpen] = React.useState(false);
+  const [isCropping, setIsCropping] = React.useState(false);
+  const [cropError, setCropError] = React.useState<string | null>(null);
   const [isEditing, setIsEditing] = React.useState(false);
   const [inputUrl, setInputUrl] = React.useState(url);
 
@@ -183,15 +190,44 @@ export function AdminScreenshotItemRow({
             </a>
           </div>
         )}
+
+        {/* Error Notice */}
+        {cropError && (
+          <div className="flex items-center gap-1.5 text-[11px] text-rose-500 dark:text-rose-400 font-medium">
+            <AlertCircle className="w-3 h-3 shrink-0" />
+            <span>{cropError}</span>
+          </div>
+        )}
       </div>
 
-      {/* Action Buttons: Replace & Remove */}
+      {/* Action Buttons: Crop, Replace & Remove */}
       <div className="flex items-center gap-1.5 shrink-0 justify-end pt-1 sm:pt-0">
         <Button
           type="button"
           variant="outline"
           size="xs"
+          onClick={() => {
+            setCropError(null);
+            setIsCropperOpen(true);
+          }}
+          disabled={isCropping}
+          className="text-xs rounded-xl h-7 px-2.5 gap-1 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          title="Crop and reframe screenshot"
+        >
+          {isCropping ? (
+            <Loader2 className="w-3 h-3 animate-spin text-indigo-500" />
+          ) : (
+            <Crop className="w-3 h-3 text-indigo-500" />
+          )}
+          <span>{isCropping ? 'Cropping...' : 'Crop'}</span>
+        </Button>
+
+        <Button
+          type="button"
+          variant="outline"
+          size="xs"
           onClick={() => setIsPickerOpen(true)}
+          disabled={isCropping}
           className="text-xs rounded-xl h-7 px-2.5 gap-1 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
           title="Replace image with another from library"
         >
@@ -204,6 +240,7 @@ export function AdminScreenshotItemRow({
           variant="ghost"
           size="icon-xs"
           onClick={onRemove}
+          disabled={isCropping}
           className="text-rose-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-lg"
           aria-label="Remove screenshot"
           icon={<Trash2 className="w-3.5 h-3.5" />}
@@ -222,6 +259,43 @@ export function AdminScreenshotItemRow({
         defaultCategory="apps"
         title="Replace Screenshot"
       />
+
+      {/* Interactive Crop Modal */}
+      {isCropperOpen && (
+        <ImageCropperModal
+          isOpen={isCropperOpen}
+          onClose={() => {
+            if (!isCropping) setIsCropperOpen(false);
+          }}
+          imageSrc={url}
+          initialImageUrl={url}
+          title={`Crop Screenshot #${index + 1}`}
+          fileName={`screenshot-${index + 1}-${Date.now()}.webp`}
+          aspectRatio={isPortrait ? '9:16' : '16:9'}
+          lockRatio={false}
+          onCropComplete={async (croppedFile) => {
+            setIsCropping(true);
+            setCropError(null);
+            try {
+              const res = await uploadAdminImageFile(croppedFile, 'apps');
+              if (res.success && res.url) {
+                onUpdate(res.url);
+                setIsCropperOpen(false);
+              } else {
+                const errMsg = res.error || 'Failed to upload cropped screenshot';
+                setCropError(errMsg);
+                throw new Error(errMsg);
+              }
+            } catch (err) {
+              const errMsg = err instanceof Error ? err.message : 'Error uploading cropped image';
+              setCropError(errMsg);
+              throw err;
+            } finally {
+              setIsCropping(false);
+            }
+          }}
+        />
+      )}
     </div>
   );
 }

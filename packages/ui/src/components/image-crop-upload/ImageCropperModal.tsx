@@ -26,10 +26,11 @@ export function ImageCropperModal({
   initialImageUrl,
   onCropComplete,
   aspectRatio = 1,
+  lockRatio,
   allowedRatios,
   cropShape = 'rect',
-  targetWidth = 512,
-  targetHeight = 512,
+  targetWidth,
+  targetHeight,
   mimeType = 'image/webp',
   quality = 0.92,
   title = 'Crop & Resize Image',
@@ -67,6 +68,7 @@ export function ImageCropperModal({
     isOpen,
     imageSrc: effectiveSrc,
     aspectRatio,
+    lockRatio,
     allowedRatios,
     imgElementRef,
   });
@@ -118,8 +120,21 @@ export function ImageCropperModal({
 
     try {
       setIsProcessing(true);
-      const outW = targetWidth || crop.width;
-      const outH = targetHeight || crop.height;
+      let outW = targetWidth;
+      let outH = targetHeight;
+      if (!outW && !outH) {
+        if (cropShape === 'round') {
+          outW = 512;
+          outH = 512;
+        } else {
+          outW = Math.round(crop.width);
+          outH = Math.round(crop.height);
+        }
+      } else if (outW && !outH) {
+        outH = Math.round(outW / (crop.width / crop.height));
+      } else if (!outW && outH) {
+        outW = Math.round(outH * (crop.width / crop.height));
+      }
       const canvas = getCroppedCanvas(image, crop, outW, outH);
       const file = await canvasToFile(canvas, fileName, mimeType, quality);
       const dataUrl = canvas.toDataURL(mimeType, quality);
@@ -165,8 +180,8 @@ export function ImageCropperModal({
               <span>{title}</span>
             </h3>
             <p className="text-[11px] sm:text-xs text-zinc-500 dark:text-zinc-400">
-              Drag corners to resize · Drag box to reposition · Output: {targetWidth || crop.width} ×{' '}
-              {targetHeight || crop.height} px
+              Drag corners to resize · Drag box to reposition · Output: {Math.round(targetWidth || crop.width)} ×{' '}
+              {Math.round(targetHeight || crop.height)} px
             </p>
           </div>
           <button

@@ -416,8 +416,8 @@ import { ... } from '@elsesourav/ui';
   - **Interactive Resizable Crop Selection**: 4 tactile corner handles (`nw`, `ne`, `se`, `sw`) and 4 edge midpoint handles (`n`, `s`, `w`, `e`) with fixed opposing-corner anchors, continuous window-level pointer tracking, and smooth dragging and resizing directly on the image.
   - **Quick Framing Actions**: One-click **Fit Full** (`fitFullImage`) button to maximize the crop frame across the full width and height of the image, and **Center** (`centerCrop`) button to re-center the crop frame.
   - **Smart Ratio Detection & Upload**: Direct upload when the selected image matches the target aspect ratio; automatically opens the crop modal if the aspect ratio deviates, with on-demand manual crop buttons.
-  - **Preset Aspect Ratios & Freeform**: Instant preset pills for `1:1 Square`, `4:3 Standard`, `3:4 Portrait`, `16:9 Hero`, `21:9 Ultrawide`, `1:6 Carousel/Slider`, `6:1 Banner`, and `Free` (unconstrained rectangle drag).
-  - **Aspect Ratio Locking**: Toggle between `Locked` (strict proportional scaling from corners) and `Free` (independent 8-handle resizing) at any time.
+  - **Preset Aspect Ratios & Freeform**: Instant preset pills for `16:9 Desktop`, `9:16 Mobile`, `3:4 Portrait`, `4:3 Standard`, `21:9 Ultrawide`, `1:1 Square`, `1:6 Carousel/Slider`, `6:1 Banner`, and `Free` (unconstrained rectangle drag).
+  - **Aspect Ratio Locking**: Toggle between `Locked` (strict proportional scaling from corners) and `Free` (independent 8-handle resizing) at any time, configurable via `lockRatio={false}` or `lockRatio={true}`.
   - **Unrestricted Viewport Zoom**: Zoom out to `0.25x` (25%) so the full image width and height boundaries are clearly visible with generous margins, with zoom in up to `3.0x` (300%), percentage readout, 100% reset button, and rule-of-thirds 3×3 composition grid lines.
   - Automatic target dimension enforcement with bicubic high-smoothing HTML5 Canvas export to WebP/PNG.
   - Direct integration with Cloudinary signed server actions.
@@ -1506,6 +1506,14 @@ The `@elsesourav/ui/micro` collection contains **34 playful, high-tactility micr
 - **Even Narrow Padding & 16:9 Shelf Cards (`ShelfCarouselRow`)**: Category shelf cards use a true 16:9 aspect ratio matching application landscape assets with zero cropping, and uniform narrow padding (`p-2 sm:p-2.5`) across all cards.
 - **Zero-Crop & Fitted Framing Architecture**: Uses Cloudinary `crop: 'limit'` transforms and CSS `object-contain` with uniform narrow framing padding (`p-2 sm:p-2.5`) and an ambient blurred backdrop layer, ensuring 100% of uploaded artwork (including title badges, release headers, architecture diagrams, and bottom metrics) is fully visible without clipping or letterbox voids.
 - **Separated Bottom Metadata Architecture (Zero Visual Collisions)**: Image artwork is 100% visible with zero overlay capsules or floating text blocking diagrams and metrics. The app logo, title, category, and "View ↗" action pill are docked in a dedicated high-contrast footer bar below the image.
+
+20. **Universal Progressive Image Loading & Theme-Adaptive Shimmer Skeleton Architecture (`AppCard`, `AppEditorialCard`, `ShelfCarouselRow`, `AppScreenshotGallery`, `AppDetailHero`, `BlogCard`, `HeroProjectVisual`)**:
+- **Theme-Adaptive Skeleton Shimmer**: During cold network retrieval and asset compilation, image containers render a pulsing shimmer skeleton layer (`.skeleton-shimmer bg-zinc-200/60 dark:bg-zinc-800/60`) that gracefully transitions to `opacity-0 pointer-events-none` once loaded, preventing empty voids and flash-of-unstyled-content (FOUC).
+- **Progressive Reveal with Zero Persistent Blur**: Upon `onLoad`, images smoothly scale and fade in (`opacity-0 scale-[1.01]` to `opacity-100 scale-100 transition-all duration-400 ease-out`). Per strict design standards, no persistent blur filter lingers once the image finishes loading, ensuring pristine clarity for high-resolution text, code blocks, diagrams, and UI screenshots.
+- **Independent Loading States for Compound Cards**: In compound cards (e.g. `AppCard`, `AppEditorialCard`, `ShelfCarouselRow`), the hero banner/cover image and the 1:1 application icon track independent loading states (`bannerLoaded`, `iconLoaded`), preventing visual pop-in or layout shifts.
+- **Hero Carousel Priority Poster**: The autonomous hero carousel (`AppsMorphHero`) renders a priority poster image backed by a theme-adaptive skeleton layer, ensuring first-time visitors never see a blank dark canvas while WebGL textures initialize.
+- **Modular Architecture (< 500 lines limit)**: Extracted reusable helpers and platform icons into `AppCardHelpers.tsx`, keeping `AppCard.tsx` (455 lines) well below the 500-line threshold while eliminating redundant helper definitions in discovery components.
+
 
 
 

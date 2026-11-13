@@ -11,11 +11,12 @@ export interface PresetRatio {
 }
 
 export const PRESET_RATIOS: PresetRatio[] = [
-  { id: '1:1', label: '1:1 Square', ratio: 1.0 },
-  { id: '4:3', label: '4:3 Standard', ratio: 4 / 3 },
+  { id: '16:9', label: '16:9 Desktop', ratio: 16 / 9 },
+  { id: '9:16', label: '9:16 Mobile', ratio: 9 / 16 },
   { id: '3:4', label: '3:4 Portrait', ratio: 3 / 4 },
-  { id: '16:9', label: '16:9 Hero', ratio: 16 / 9 },
+  { id: '4:3', label: '4:3 Standard', ratio: 4 / 3 },
   { id: '21:9', label: '21:9 Ultrawide', ratio: 21 / 9 },
+  { id: '1:1', label: '1:1 Square', ratio: 1.0 },
   { id: '1:6', label: '1:6 Carousel', ratio: 1 / 6 },
   { id: '6:1', label: '6:1 Banner', ratio: 6.0 },
   { id: 'free', label: 'Free', ratio: null },
@@ -25,6 +26,7 @@ export interface UseCropInteractionOptions {
   isOpen: boolean;
   imageSrc: string;
   aspectRatio?: number | null | string;
+  lockRatio?: boolean;
   allowedRatios?: PresetRatio[];
   imgElementRef: React.RefObject<HTMLImageElement | null>;
 }
@@ -33,6 +35,7 @@ export function useCropInteraction({
   isOpen,
   imageSrc,
   aspectRatio,
+  lockRatio,
   allowedRatios,
   imgElementRef,
 }: UseCropInteractionOptions) {
@@ -43,6 +46,7 @@ export function useCropInteraction({
     if (typeof r === 'number') return r;
     if (r === '1:1') return 1.0;
     if (r === '16:9') return 16 / 9;
+    if (r === '9:16') return 9 / 16;
     if (r === '16:10') return 16 / 10;
     if (r === '4:3') return 4 / 3;
     if (r === '3:4') return 3 / 4;
@@ -50,17 +54,10 @@ export function useCropInteraction({
     if (r === '6:1') return 6.0;
     if (r === '21:9') return 21 / 9;
     if (typeof r === 'string') {
-      if (r.includes('/')) {
-        const parts = r.split('/');
-        const num = parseFloat(parts[0] || '1');
-        const den = parseFloat(parts[1] || '1');
-        return den !== 0 ? num / den : 1.0;
-      }
-      if (r.includes(':')) {
-        const parts = r.split(':');
-        const num = parseFloat(parts[0] || '1');
-        const den = parseFloat(parts[1] || '1');
-        return den !== 0 ? num / den : 1.0;
+      const sep = r.includes('/') ? '/' : r.includes(':') ? ':' : null;
+      if (sep) {
+        const [num, den] = r.split(sep).map((p) => parseFloat(p || '1'));
+        return den && !isNaN(den) && !isNaN(num!) ? num! / den : 1.0;
       }
       const parsed = parseFloat(r);
       if (!isNaN(parsed) && parsed > 0) return parsed;
@@ -73,8 +70,9 @@ export function useCropInteraction({
     if (allowedRatios && allowedRatios.length > 0) {
       return allowedRatios;
     }
-    // If a specific aspect ratio is requested, restrict strictly to that single ratio
-    if (aspectRatio !== undefined && aspectRatio !== null && aspectRatio !== 'free') {
+    // If lockRatio is explicitly true, or lockRatio is omitted (legacy default), restrict strictly to the specified ratio
+    const shouldRestrict = lockRatio === true || (lockRatio === undefined && aspectRatio !== undefined && aspectRatio !== null && aspectRatio !== 'free');
+    if (shouldRestrict && aspectRatio !== undefined && aspectRatio !== null && aspectRatio !== 'free') {
       const numRatio = parseNumericRatio(aspectRatio);
       if (numRatio !== null) {
         const matched = PRESET_RATIOS.find(
@@ -91,7 +89,7 @@ export function useCropInteraction({
       }
     }
     return PRESET_RATIOS;
-  }, [allowedRatios, aspectRatio, parseNumericRatio]);
+  }, [allowedRatios, aspectRatio, lockRatio, parseNumericRatio]);
 
   const hasRestrictedRatios = Boolean(effectiveRatios.length <= 1);
 
@@ -103,6 +101,7 @@ export function useCropInteraction({
 
   const [activeRatio, setActiveRatio] = React.useState<number | null>(getInitialRatio);
   const [isLocked, setIsLocked] = React.useState<boolean>(() => {
+    if (lockRatio !== undefined) return lockRatio;
     const init = getInitialRatio();
     return init !== null;
   });
@@ -166,7 +165,7 @@ export function useCropInteraction({
 
     const initialRatio = getInitialRatio();
     setActiveRatio(initialRatio);
-    setIsLocked(initialRatio !== null);
+    setIsLocked(lockRatio !== undefined ? lockRatio : initialRatio !== null);
 
     loadImageElement(imageSrc)
       .then((img) => {
@@ -182,7 +181,7 @@ export function useCropInteraction({
     return () => {
       cancelled = true;
     };
-  }, [isOpen, imageSrc, getInitialRatio, initializeCrop]);
+  }, [isOpen, imageSrc, getInitialRatio, initializeCrop, lockRatio]);
 
   // Fit Entire Image (expands crop box to maximum image boundary)
   const fitFullImage = React.useCallback(() => {
