@@ -58,15 +58,15 @@ export function AppScreenshotExpandedGrid({
               aspectClass = 'aspect-[16/10] sm:aspect-[16/9] min-h-[260px] sm:min-h-[340px]';
             } else if (cell.colSpan === 4) {
               aspectClass = isPortrait
-                ? 'aspect-[9/16] lg:aspect-auto lg:h-full min-h-[300px] sm:min-h-[340px]'
+                ? 'aspect-[3/4] lg:aspect-auto lg:h-full min-h-[300px] sm:min-h-[340px]'
                 : 'aspect-[16/9] lg:aspect-auto lg:h-full min-h-[240px]';
             } else if (cell.colSpan === 6) {
               aspectClass = isPortrait
-                ? 'aspect-[9/14] sm:aspect-[9/16] min-h-[320px] sm:min-h-[380px]'
+                ? 'aspect-[3/4] min-h-[320px] sm:min-h-[380px]'
                 : 'aspect-[16/10] sm:aspect-[16/9] min-h-[240px] sm:min-h-[300px]';
             } else if (cell.colSpan === 12) {
               aspectClass = isPortrait
-                ? 'aspect-[9/16] max-h-[580px] mx-auto w-full'
+                ? 'aspect-[3/4] max-h-[580px] mx-auto w-full'
                 : 'aspect-[16/9] sm:aspect-[21/9] min-h-[260px] sm:min-h-[360px]';
             }
 
@@ -74,11 +74,11 @@ export function AppScreenshotExpandedGrid({
               <div key={item.id} className={`${colSpanClass} flex flex-col`}>
                 <Card
                   onClick={() => !isVideo && onOpenLightbox(item.url)}
-                  className={`group relative overflow-hidden rounded-xl sm:rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-950/80 p-0 shadow-sm hover:shadow-lg hover:border-indigo-500/50 transition-all duration-300 flex-1 flex flex-col items-center justify-center ${
+                  className={`group relative overflow-hidden rounded-xl sm:rounded-2xl border border-zinc-200/90 dark:border-zinc-800/80 bg-zinc-100/90 dark:bg-zinc-950/80 p-0 shadow-xs hover:shadow-lg hover:border-indigo-500/50 transition-all duration-300 flex-1 flex flex-col items-center justify-center ${
                     isVideo ? '' : 'cursor-zoom-in'
                   } ${aspectClass}`}
                 >
-                  <div className="relative w-full h-full overflow-hidden bg-black/40 flex items-center justify-center">
+                  <div className="relative w-full h-full overflow-hidden bg-zinc-100/60 dark:bg-black/40 flex items-center justify-center">
                     {isVideo ? (
                       <div className="relative w-full h-full overflow-hidden bg-black">
                         <AppMediaVideoCard
@@ -120,7 +120,7 @@ export function AppScreenshotExpandedGrid({
                         />
 
                         {/* Expand Button on Hover */}
-                        <div className="absolute bottom-2 right-2 w-8 h-8 rounded-lg bg-black/75 hover:bg-black/90 text-white backdrop-blur-md border border-white/20 transition-all opacity-0 group-hover:opacity-100 flex items-center justify-center pointer-events-none">
+                        <div className="absolute bottom-2 right-2 w-8 h-8 rounded-lg bg-white/85 dark:bg-black/75 hover:bg-white dark:hover:bg-black/90 text-zinc-800 dark:text-white backdrop-blur-md border border-zinc-200 dark:border-white/20 transition-all opacity-0 group-hover:opacity-100 flex items-center justify-center pointer-events-none shadow-xs">
                           <Maximize2 className="w-3.5 h-3.5" />
                         </div>
                       </>

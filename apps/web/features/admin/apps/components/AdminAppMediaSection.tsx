@@ -85,20 +85,20 @@ export function AdminAppMediaSection({
           />
         )}
 
-        {/* Mandatory Portrait Cover Image (9:16) */}
+        {/* Mandatory Portrait Cover Image (3:4) */}
         {setFeaturedImageMobileUrl && (
           <ImageInputWithLibrary
-            label="Portrait Cover Image (9:16)"
+            label="Portrait Cover Image (3:4)"
             value={featuredImageMobileUrl}
             onChange={setFeaturedImageMobileUrl}
             required
             folder="apps"
             defaultCategory="apps"
             previewShape="portrait"
-            aspectRatio="9:16"
-            targetWidth={900}
+            aspectRatio="3:4"
+            targetWidth={1200}
             targetHeight={1600}
-            placeholder="Portrait 9:16 cover URL or upload/select"
+            placeholder="Portrait 3:4 cover URL or upload/select"
           />
         )}
 

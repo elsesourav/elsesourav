@@ -221,14 +221,14 @@ export function AdminAppScreenshotsManager({
           {mobileCount > 0 && (
             <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300">
               <Smartphone className="w-3 h-3" />
-              <span>{mobileCount} Mobile (9:16)</span>
+              <span>{mobileCount} Mobile (3:4)</span>
             </span>
           )}
         </div>
       </div>
 
       <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-        Upload multiple application screenshots in desktop (16:9 / 21:9), mobile (9:16 / 3:4), or custom dimensions.
+        Upload multiple application screenshots in desktop (16:9 / 21:9), mobile (3:4), or custom dimensions.
         These are automatically categorized and showcased in the public interactive carousel and lightbox.
       </p>
 
@@ -409,7 +409,7 @@ export function AdminAppScreenshotsManager({
         </div>
       ) : (
         <div className="p-6 text-center text-xs text-zinc-500 dark:text-zinc-400 border border-dashed border-zinc-200 dark:border-zinc-800 rounded-2xl bg-zinc-50/20 dark:bg-zinc-900/10">
-          No screenshots added yet. Upload desktop (16:9) or mobile (9:16) screenshots above.
+          No screenshots added yet. Upload desktop (16:9) or mobile (3:4) screenshots above.
         </div>
       )}
 

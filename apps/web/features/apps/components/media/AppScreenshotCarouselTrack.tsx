@@ -137,9 +137,9 @@ export const AppScreenshotCarouselTrack = React.forwardRef<
         onClick={() => handleScrollStep('left')}
         disabled={!canScrollLeft}
         aria-label="Scroll screenshots left"
-        className="hidden sm:flex absolute left-0.5 top-1/2 -translate-y-1/2 z-30 w-8 h-8 md:w-9 md:h-9 rounded-full items-center justify-center bg-zinc-900/90 hover:bg-zinc-800 text-white border border-zinc-700/80 shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer disabled:opacity-20 disabled:pointer-events-none backdrop-blur-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+        className="hidden sm:flex absolute left-0.5 top-1/2 -translate-y-1/2 z-30 w-8 h-8 md:w-9 md:h-9 rounded-full items-center justify-center bg-white/95 hover:bg-white dark:bg-zinc-900/95 dark:hover:bg-zinc-800 text-zinc-800 dark:text-white border border-zinc-200/90 dark:border-zinc-700/80 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer disabled:opacity-20 disabled:pointer-events-none backdrop-blur-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
       >
-        <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 text-white" />
+        <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 text-zinc-800 dark:text-white" />
       </button>
 
       {/* Outer Right Slide Button - Dedicated side gutter, never covers image */}
@@ -148,9 +148,9 @@ export const AppScreenshotCarouselTrack = React.forwardRef<
         onClick={() => handleScrollStep('right')}
         disabled={!canScrollRight}
         aria-label="Scroll screenshots right"
-        className="hidden sm:flex absolute right-0.5 top-1/2 -translate-y-1/2 z-30 w-8 h-8 md:w-9 md:h-9 rounded-full items-center justify-center bg-zinc-900/90 hover:bg-zinc-800 text-white border border-zinc-700/80 shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer disabled:opacity-20 disabled:pointer-events-none backdrop-blur-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+        className="hidden sm:flex absolute right-0.5 top-1/2 -translate-y-1/2 z-30 w-8 h-8 md:w-9 md:h-9 rounded-full items-center justify-center bg-white/95 hover:bg-white dark:bg-zinc-900/95 dark:hover:bg-zinc-800 text-zinc-800 dark:text-white border border-zinc-200/90 dark:border-zinc-700/80 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer disabled:opacity-20 disabled:pointer-events-none backdrop-blur-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
       >
-        <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-white" />
+        <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-zinc-800 dark:text-white" />
       </button>
 
       {/* Horizontal Scroll Track */}
@@ -174,11 +174,11 @@ export const AppScreenshotCarouselTrack = React.forwardRef<
             <div
               key={item.id}
               onClick={() => !isVideo && handleCardClick(item.url)}
-              className={`relative h-full shrink-0 overflow-hidden rounded-xl sm:rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-950/80 shadow-sm hover:shadow-lg hover:border-indigo-500/60 transition-all duration-200 group/card ${
-                isPortrait ? 'aspect-[9/16]' : 'aspect-[16/9]'
+              className={`relative h-full shrink-0 overflow-hidden rounded-xl sm:rounded-2xl border border-zinc-200/90 dark:border-zinc-800/80 bg-zinc-100/90 dark:bg-zinc-950/80 shadow-xs hover:shadow-lg hover:border-indigo-500/60 transition-all duration-200 group/card ${
+                isPortrait ? 'aspect-[3/4]' : 'aspect-[16/9]'
               } ${isVideo ? '' : 'cursor-pointer'}`}
             >
-              <div className="relative w-full h-full overflow-hidden flex items-center justify-center bg-black/40">
+              <div className="relative w-full h-full overflow-hidden flex items-center justify-center bg-zinc-100/60 dark:bg-black/40">
                 {isVideo ? (
                   <div className="relative w-full h-full overflow-hidden bg-black">
                     <AppMediaVideoCard
@@ -214,7 +214,7 @@ export const AppScreenshotCarouselTrack = React.forwardRef<
                     />
 
                     {/* Subtle Expand Indicator on Hover */}
-                    <div className="absolute bottom-2 right-2 w-7 h-7 rounded-lg bg-black/70 hover:bg-black/90 text-white backdrop-blur-md border border-white/15 opacity-0 group-hover/card:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                    <div className="absolute bottom-2 right-2 w-7 h-7 rounded-lg bg-white/85 dark:bg-black/70 hover:bg-white dark:hover:bg-black/90 text-zinc-800 dark:text-white backdrop-blur-md border border-zinc-200 dark:border-white/15 opacity-0 group-hover/card:opacity-100 transition-opacity flex items-center justify-center pointer-events-none shadow-xs">
                       <Maximize2 className="w-3.5 h-3.5" />
                     </div>
                   </>

@@ -130,7 +130,7 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
       return;
     }
     if (!featuredImageMobileUrl.trim()) {
-      setError('Portrait Cover Image (9:16) is required.');
+      setError('Portrait Cover Image (3:4) is required.');
       setIsSaving(false);
       return;
     }

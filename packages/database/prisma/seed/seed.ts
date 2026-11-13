@@ -832,7 +832,7 @@ Prototype interface exploring administrative user table controls and search perf
     const featuredImageMobileUrl =
       (appFields as { featuredImageMobileUrl?: string }).featuredImageMobileUrl ||
       (appFields.featuredImageUrl && appFields.featuredImageUrl.includes('unsplash.com')
-        ? `${appFields.featuredImageUrl.split('?')[0]}?w=900&h=1600&fit=crop&q=80`
+        ? `${appFields.featuredImageUrl.split('?')[0]}?w=1200&h=1600&fit=crop&q=80`
         : appFields.featuredImageUrl);
 
     const createdApp = await prisma.app.upsert({

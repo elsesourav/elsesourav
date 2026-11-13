@@ -4,7 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Star, ChevronRight, ChevronLeft, Lock } from 'lucide-react';
-import { getAppIconUrl } from '@elsesourav/media';
+import { getAppIconUrl, getAppScreenshotUrl } from '@elsesourav/media';
 import type { AppListItem } from '@elsesourav/types';
 import { cn } from '@elsesourav/ui';
 
@@ -206,17 +206,17 @@ export function ShelfCarouselRow({ items }: ShelfCarouselRowProps) {
               className="group/item block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 w-[230px] xs:w-[260px] sm:w-[300px] md:w-[340px] shrink-0 snap-start h-full flex flex-col"
             >
               {/* Unified Card Container */}
-              <div className="relative rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] hover:border-zinc-300 dark:hover:border-zinc-700 shadow-xs hover:shadow-md transition-all duration-300 ease-out group-hover/item:-translate-y-1 overflow-hidden p-2 sm:p-2.5 md:p-3 flex flex-col space-y-2 sm:space-y-2.5 h-full flex-1">
-                {/* 21:9 Desktop / 16:10 Mobile Banner Cover */}
-                <div className="relative aspect-[16/10] sm:aspect-[21/9] w-full rounded-md overflow-hidden bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border-subtle))]">
+              <div className="relative rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] hover:border-zinc-300 dark:hover:border-zinc-700 shadow-xs hover:shadow-md transition-all duration-300 ease-out group-hover/item:-translate-y-1 overflow-hidden p-2 sm:p-2.5 flex flex-col space-y-2 sm:space-y-2.5 h-full flex-1">
+                {/* 16:9 Landscape Cover Image (Perfect fit for 16:9 artwork) */}
+                <div className="relative aspect-[16/9] w-full rounded-lg overflow-hidden bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border-subtle))]">
                   {bannerUrl ? (
                     <Image
-                      src={bannerUrl}
+                      src={getAppScreenshotUrl(bannerUrl, 800, 450, 'limit')}
                       alt={`${app.name} preview`}
                       fill
-                      sizes="(max-width: 640px) 240px, 340px"
+                      sizes="(max-width: 640px) 260px, 340px"
                       unoptimized
-                      className="object-cover object-center pointer-events-none"
+                      className="object-cover object-center pointer-events-none group-hover/item:scale-[1.02] transition-transform duration-300 ease-out"
                     />
                   ) : (
                     <div className="w-full h-full bg-gradient-to-br from-indigo-900/40 via-purple-900/30 to-zinc-900 flex items-center justify-center">
@@ -226,11 +226,8 @@ export function ShelfCarouselRow({ items }: ShelfCarouselRowProps) {
                     </div>
                   )}
 
-                  {/* Dark scrim gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent pointer-events-none" />
-
                   {/* Top-Right Badges: Member Lock + Version */}
-                  <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 flex items-center gap-1 sm:gap-1.5">
+                  <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 flex items-center gap-1 sm:gap-1.5 z-10">
                     {app.requiresAuth && (
                       <span className="rounded-full bg-amber-500/90 backdrop-blur-md px-1.5 py-0.5 text-[8px] sm:text-[9px] font-mono font-semibold text-white border border-amber-300/30 flex items-center gap-1 shadow-xs">
                         <Lock className="w-2.5 h-2.5" />
@@ -238,7 +235,7 @@ export function ShelfCarouselRow({ items }: ShelfCarouselRowProps) {
                       </span>
                     )}
                     {app.currentVersion && (
-                      <span className="rounded-full bg-white/70 dark:bg-black/60 backdrop-blur-md px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-mono font-medium text-zinc-900 dark:text-white/90 border border-black/10 dark:border-white/15 shadow-xs transition-colors">
+                      <span className="rounded-full bg-white/90 dark:bg-black/70 backdrop-blur-md px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-mono font-medium text-zinc-900 dark:text-white/90 border border-zinc-200 dark:border-white/15 shadow-xs transition-colors">
                         v{app.currentVersion}
                       </span>
                     )}

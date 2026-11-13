@@ -50,7 +50,7 @@ export function AppEditorialCard({
   const isPortrait = orientation === 'portrait';
 
   // Automatically select the optimal image ratio:
-  // - In a portrait slot (9:16 vertical space): prioritize 9:16 portrait image
+  // - In a portrait slot (3:4 vertical space): prioritize 3:4 portrait image
   // - In a landscape slot (16:9 wide space): prioritize 16:9 landscape image
   const rawImageUrl = isPortrait
     ? app.featuredImageMobileUrl || app.featuredImageUrl || app.iconUrl
@@ -58,24 +58,24 @@ export function AppEditorialCard({
 
   // Use 'limit' crop mode so Cloudinary NEVER cuts off or crops any pixel of the artwork
   const bannerUrl = rawImageUrl
-    ? getAppScreenshotUrl(rawImageUrl, isPortrait ? 900 : 1600, isPortrait ? 1600 : 900, 'limit')
+    ? getAppScreenshotUrl(rawImageUrl, isPortrait ? 1200 : 1600, isPortrait ? 1600 : 900, 'limit')
     : null;
   const iconUrl = app.iconUrl ? getAppIconUrl(app.iconUrl, 96) : null;
 
   return (
     <Link
       href={`/apps/${app.slug}`}
-      className={`group/editorial flex flex-col h-full w-full min-w-0 rounded-2xl overflow-hidden border border-zinc-200/80 dark:border-zinc-800/80 hover:border-zinc-300 dark:hover:border-zinc-700 bg-[hsl(var(--card))] shadow-xs hover:shadow-xl hover:shadow-black/15 dark:hover:shadow-black/40 transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${className}`}
+      className={`group/editorial flex flex-col h-full w-full min-w-0 rounded-2xl overflow-hidden border border-zinc-200/90 dark:border-zinc-800/80 hover:border-zinc-300 dark:hover:border-zinc-700 bg-white dark:bg-zinc-900 shadow-xs hover:shadow-xl hover:shadow-black/10 dark:hover:shadow-black/40 transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${className}`}
     >
-      {/* 1. Full Image Showcase Area (100% visible, zero crop, fitted with gentle padding) */}
+      {/* 1. Full Image Showcase Area (100% visible, zero crop, fitted with even narrow padding) */}
       <div
-        className={`relative w-full overflow-hidden bg-zinc-950/80 dark:bg-black flex items-center justify-center ${
+        className={`relative w-full overflow-hidden bg-zinc-100/90 dark:bg-zinc-950/90 flex items-center justify-center p-2 sm:p-2.5 ${
           isPortrait
-            ? 'aspect-[4/5] sm:aspect-[3/4] md:aspect-auto md:flex-1 md:min-h-[440px] p-2 sm:p-2.5'
-            : 'aspect-[16/9] p-1.5 sm:p-2'
+            ? 'aspect-[3/4] md:aspect-auto md:flex-1 md:min-h-[380px]'
+            : 'aspect-[16/9]'
         }`}
       >
-        {/* Subtle ambient blurred backdrop so letterbox edges blend organically */}
+        {/* Subtle ambient blurred backdrop so letterbox edges blend organically in light and dark mode */}
         {bannerUrl && (
           <Image
             src={bannerUrl}
@@ -83,7 +83,7 @@ export function AppEditorialCard({
             aria-hidden="true"
             fill
             unoptimized
-            className="pointer-events-none object-cover blur-2xl opacity-35 dark:opacity-30 scale-110"
+            className="pointer-events-none object-cover blur-2xl opacity-20 dark:opacity-30 scale-110"
           />
         )}
 
@@ -97,16 +97,16 @@ export function AppEditorialCard({
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               priority={priority}
               unoptimized
-              className="pointer-events-none object-contain rounded-lg drop-shadow-md transition-transform duration-500 ease-out group-hover/editorial:scale-[1.02]"
+              className="pointer-events-none object-contain rounded-lg drop-shadow-xs transition-transform duration-500 ease-out group-hover/editorial:scale-[1.015]"
             />
           </div>
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-indigo-950 via-zinc-900 to-black" />
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/40 via-zinc-800 to-black" />
         )}
       </div>
 
       {/* 2. Dedicated Bottom Metadata Bar (Below image, pristine text contrast & zero overlay) */}
-      <div className="shrink-0 w-full flex items-center justify-between gap-2.5 sm:gap-3 p-2.5 sm:p-3 md:p-3.5 bg-white/95 dark:bg-zinc-900/95 border-t border-zinc-200/70 dark:border-zinc-800/80 backdrop-blur-sm transition-colors duration-200">
+      <div className="shrink-0 w-full flex items-center justify-between gap-2.5 sm:gap-3 p-2.5 sm:p-3 md:p-3.5 bg-white dark:bg-zinc-900/95 border-t border-zinc-200/80 dark:border-zinc-800/80 transition-colors duration-200">
         {/* App Icon + Title & Category */}
         <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
           <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700/60 shrink-0 shadow-2xs flex items-center justify-center">

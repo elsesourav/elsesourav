@@ -70,12 +70,12 @@ export function AppEditorialGrid({ apps = [], startIndex = 0 }: AppEditorialGrid
         return (
           <div
             key={block.id}
-            className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-5 md:gap-6 items-stretch w-full min-w-0"
+            className="grid grid-cols-1 md:grid-cols-12 gap-3.5 sm:gap-5 md:gap-6 items-stretch w-full min-w-0"
           >
             {block.portraitOnLeft ? (
               <>
-                {/* Left: 1 Portrait Card stretching to match 2 stacked landscape cards + gap */}
-                <div className="w-full h-full min-w-0 flex flex-col">
+                {/* Left: 1 Portrait Card (3:4 ratio, narrower 5-col slot) */}
+                <div className="col-span-12 md:col-span-5 w-full h-full min-w-0 flex flex-col">
                   <AppEditorialCard
                     app={block.portrait}
                     variant="portrait"
@@ -84,8 +84,8 @@ export function AppEditorialGrid({ apps = [], startIndex = 0 }: AppEditorialGrid
                   />
                 </div>
 
-                {/* Right: 2 Stacked 16:9 Landscape Cards with gap */}
-                <div className="flex flex-col gap-3.5 sm:gap-5 md:gap-6 w-full min-w-0">
+                {/* Right: 2 Stacked 16:9 Landscape Cards (wider 7-col slot) */}
+                <div className="col-span-12 md:col-span-7 flex flex-col gap-3.5 sm:gap-5 md:gap-6 w-full min-w-0">
                   <AppEditorialCard
                     app={block.landscapes[0]}
                     variant="landscape"
@@ -100,8 +100,8 @@ export function AppEditorialGrid({ apps = [], startIndex = 0 }: AppEditorialGrid
               </>
             ) : (
               <>
-                {/* Left on desktop: 2 Stacked 16:9 Landscape Cards */}
-                <div className="order-2 md:order-1 flex flex-col gap-3.5 sm:gap-5 md:gap-6 w-full min-w-0">
+                {/* Left on desktop: 2 Stacked 16:9 Landscape Cards (wider 7-col slot) */}
+                <div className="order-2 md:order-1 col-span-12 md:col-span-7 flex flex-col gap-3.5 sm:gap-5 md:gap-6 w-full min-w-0">
                   <AppEditorialCard
                     app={block.landscapes[0]}
                     variant="landscape"
@@ -114,8 +114,8 @@ export function AppEditorialGrid({ apps = [], startIndex = 0 }: AppEditorialGrid
                   />
                 </div>
 
-                {/* Right on desktop: 1 Portrait Card stretching to match 2 stacked landscape cards + gap */}
-                <div className="order-1 md:order-2 w-full h-full min-w-0 flex flex-col">
+                {/* Right on desktop: 1 Portrait Card (3:4 ratio, narrower 5-col slot) */}
+                <div className="order-1 md:order-2 col-span-12 md:col-span-5 w-full h-full min-w-0 flex flex-col">
                   <AppEditorialCard
                     app={block.portrait}
                     variant="portrait"
