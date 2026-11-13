@@ -56,8 +56,9 @@ export function AppEditorialCard({
     ? app.featuredImageMobileUrl || app.featuredImageUrl || app.iconUrl
     : app.featuredImageUrl || app.featuredImageMobileUrl || app.iconUrl;
 
+  // Use 'limit' crop mode so Cloudinary NEVER cuts off or crops any pixel of the artwork
   const bannerUrl = rawImageUrl
-    ? getAppScreenshotUrl(rawImageUrl, isPortrait ? 1000 : 1600, isPortrait ? 1600 : 1000)
+    ? getAppScreenshotUrl(rawImageUrl, isPortrait ? 900 : 1600, isPortrait ? 1600 : 900, 'limit')
     : null;
   const iconUrl = app.iconUrl ? getAppIconUrl(app.iconUrl, 96) : null;
 
@@ -66,26 +67,39 @@ export function AppEditorialCard({
       href={`/apps/${app.slug}`}
       className={`group/editorial flex flex-col h-full w-full min-w-0 rounded-2xl overflow-hidden border border-zinc-200/80 dark:border-zinc-800/80 hover:border-zinc-300 dark:hover:border-zinc-700 bg-[hsl(var(--card))] shadow-xs hover:shadow-xl hover:shadow-black/15 dark:hover:shadow-black/40 transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${className}`}
     >
-      {/* 1. Full Image Showcase Area (100% visible, zero floating text obstruction) */}
+      {/* 1. Full Image Showcase Area (100% visible, zero crop, fitted with gentle padding) */}
       <div
-        className={`relative w-full overflow-hidden bg-zinc-950 ${
+        className={`relative w-full overflow-hidden bg-zinc-950/80 dark:bg-black flex items-center justify-center ${
           isPortrait
-            ? 'aspect-[4/5] sm:aspect-[3/4] md:aspect-auto md:flex-1 md:min-h-[440px]'
-            : 'aspect-[16/9]'
+            ? 'aspect-[4/5] sm:aspect-[3/4] md:aspect-auto md:flex-1 md:min-h-[440px] p-2 sm:p-2.5'
+            : 'aspect-[16/9] p-1.5 sm:p-2'
         }`}
       >
-        {bannerUrl ? (
+        {/* Subtle ambient blurred backdrop so letterbox edges blend organically */}
+        {bannerUrl && (
           <Image
             src={bannerUrl}
-            alt={`${app.name} background visual`}
+            alt=""
+            aria-hidden="true"
             fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            priority={priority}
             unoptimized
-            className={`pointer-events-none object-cover transition-transform duration-500 ease-out group-hover/editorial:scale-103 ${
-              isPortrait ? 'object-center' : 'object-center'
-            }`}
+            className="pointer-events-none object-cover blur-2xl opacity-35 dark:opacity-30 scale-110"
           />
+        )}
+
+        {/* Foreground Pristine Artwork — 100% contained, zero cropping */}
+        {bannerUrl ? (
+          <div className="relative w-full h-full flex items-center justify-center z-[2]">
+            <Image
+              src={bannerUrl}
+              alt={`${app.name} background visual`}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              priority={priority}
+              unoptimized
+              className="pointer-events-none object-contain rounded-lg drop-shadow-md transition-transform duration-500 ease-out group-hover/editorial:scale-[1.02]"
+            />
+          </div>
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-950 via-zinc-900 to-black" />
         )}
@@ -113,7 +127,7 @@ export function AppEditorialCard({
           </div>
 
           <div className="min-w-0 flex-1 pr-1">
-            <span className="font-bold text-xs sm:text-sm text-zinc-950 dark:text-white block truncate font-display group-hover/editorial:text-indigo-600 dark:group-hover/editorial:text-indigo-400 transition-colors">
+            <span className="font-bold text-xs sm:text-sm text-zinc-900 dark:text-zinc-100 block truncate font-display group-hover/editorial:text-indigo-600 dark:group-hover/editorial:text-indigo-400 transition-colors">
               {app.name}
             </span>
             <span className="text-[10px] sm:text-[11px] text-zinc-500 dark:text-zinc-400 block truncate font-sans font-medium">
