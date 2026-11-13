@@ -189,8 +189,8 @@ export function AppsMorphHero({
 
       {/* 
         Aspect Ratio Container:
-        - Mobile: aspect-[16/10] xs:aspect-[16/9] (compact, clean, prevents 500px tall portrait dominating mobile viewport)
-        - Desktop (sm and up): sm:aspect-[21/9]
+        - Mobile: aspect-[3/4] (3:4 portrait ratio for mobile screens)
+        - Tablet & Desktop (sm and up): sm:aspect-[21/9] (21:9 ultrawide ratio)
         Pure Graphic Artwork — NO content or gradients overlaid on top!
       */}
       <div
@@ -202,7 +202,7 @@ export function AppsMorphHero({
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerCancel}
-        className="relative w-full aspect-[16/10] xs:aspect-[16/9] sm:aspect-[21/9] max-h-[420px] sm:max-h-[460px] overflow-hidden rounded-[14px] isolate [transform:translateZ(0)] cursor-pointer"
+        className="relative w-full aspect-[3/4] sm:aspect-[21/9] sm:max-h-none overflow-hidden rounded-[14px] isolate [transform:translateZ(0)] cursor-pointer"
       >
         <MorphSlider
           ref={sliderRef}

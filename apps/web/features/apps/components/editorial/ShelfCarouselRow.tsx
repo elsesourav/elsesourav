@@ -207,8 +207,8 @@ export function ShelfCarouselRow({ items }: ShelfCarouselRowProps) {
             >
               {/* Unified Card Container */}
               <div className="relative rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] hover:border-zinc-300 dark:hover:border-zinc-700 shadow-xs hover:shadow-md transition-all duration-300 ease-out group-hover/item:-translate-y-1 overflow-hidden p-2 sm:p-2.5 md:p-3 flex flex-col space-y-2 sm:space-y-2.5 h-full flex-1">
-                {/* 16:10 Banner Cover */}
-                <div className="relative aspect-[16/10] w-full rounded-md overflow-hidden bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border-subtle))]">
+                {/* 21:9 Desktop / 16:10 Mobile Banner Cover */}
+                <div className="relative aspect-[16/10] sm:aspect-[21/9] w-full rounded-md overflow-hidden bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border-subtle))]">
                   {bannerUrl ? (
                     <Image
                       src={bannerUrl}
