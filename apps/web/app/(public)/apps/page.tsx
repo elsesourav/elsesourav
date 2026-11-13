@@ -5,6 +5,7 @@ import {
 } from '@/features/apps/components/discovery';
 import { AppCuratedShelves, AppEditorialGrid } from '@/features/apps/components/editorial';
 import { AppsMorphHeroLoader } from '@/features/apps/components/morph-hero';
+import { getPublicCarouselSlides } from '@/features/admin/carousel/queries/get-admin-carousel';
 import {
   discoverPublishedApps,
   getActiveCategories,
@@ -67,7 +68,7 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
   const sort = (params.sort as AppSortOption) || 'sortOrder';
 
   // Parallel server fetching
-  const [categories, tags, searchResult, allPublishedApps] = await Promise.all([
+  const [categories, tags, searchResult, allPublishedApps, carouselSlides] = await Promise.all([
     getActiveCategories(),
     getActiveTags(),
     discoverPublishedApps({
@@ -82,6 +83,7 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
       limit: 12,
     }),
     getPublishedApps({ limit: 50 }),
+    getPublicCarouselSlides(),
   ]);
 
   const hasFilters = Boolean(
@@ -89,14 +91,7 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
   );
 
   const isDefaultView = !hasFilters && page === 1;
-
-  // Curated hero slider items for default view (featured + pinned, up to 5)
-  const heroSliderItems = isDefaultView
-    ? searchResult.items.filter((item) => item.isFeatured || item.isPinned).slice(0, 5)
-    : [];
-  const catalogItems = isDefaultView
-    ? searchResult.items.filter((item) => !heroSliderItems.some((s) => s.id === item.id))
-    : searchResult.items;
+  const catalogItems = searchResult.items;
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -167,9 +162,9 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
         </Reveal>
 
         {/* 2. Full-Width Featured Carousel / Slider */}
-        {isDefaultView && heroSliderItems.length > 0 && (
+        {isDefaultView && carouselSlides.length > 0 && (
           <Reveal direction="up" distance={10} className="w-full overflow-visible">
-            <AppsMorphHeroLoader apps={heroSliderItems} autoplayIntervalSeconds={5} />
+            <AppsMorphHeroLoader slides={carouselSlides} autoplayIntervalSeconds={5} />
           </Reveal>
         )}
 
@@ -220,9 +215,7 @@ export default async function AppsPage({ searchParams }: AppsPageProps) {
 
               <AppEditorialGrid
                 apps={catalogItems}
-                startIndex={
-                  (searchResult.page - 1) * 12 + (isDefaultView ? heroSliderItems.length : 0)
-                }
+                startIndex={(searchResult.page - 1) * 12}
               />
             </section>
 

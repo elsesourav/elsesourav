@@ -1,9 +1,10 @@
 'use client';
 
-import type { AppListItem } from '@elsesourav/types';
+import type { AppListItem, CarouselSlide } from '@elsesourav/types';
 import { AppsMorphHero } from './AppsMorphHero';
 
 export interface AppsMorphHeroLoaderProps {
+  slides?: readonly CarouselSlide[];
   apps?: readonly AppListItem[];
   items?: readonly AppListItem[];
   autoplayIntervalSeconds?: number;
@@ -15,16 +16,21 @@ export interface AppsMorphHeroLoaderProps {
  * This avoids bundling ogl/gsap on the server.
  */
 export function AppsMorphHeroLoader({
+  slides,
   apps,
   items,
   autoplayIntervalSeconds = 5,
   pauseOnHover = false,
 }: AppsMorphHeroLoaderProps) {
+  const slideList = slides ?? [];
   const appList = apps ?? items ?? [];
-  if (appList.length === 0) return null;
+
+  if (slideList.length === 0 && appList.length === 0) return null;
+
   return (
     <AppsMorphHero
-      apps={appList}
+      slides={slideList.length > 0 ? slideList : undefined}
+      apps={appList.length > 0 ? appList : undefined}
       autoplayIntervalSeconds={autoplayIntervalSeconds}
       pauseOnHover={pauseOnHover}
     />

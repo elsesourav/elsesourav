@@ -1487,6 +1487,14 @@ The `@elsesourav/ui/micro` collection contains **34 playful, high-tactility micr
 - **Intelligent Desktop Grid Packing & Portrait Promotion (`screenshot-grid-layout`)**: In expanded mode, a deterministic 12-column algorithm pairs landscape and portrait screenshots into visually balanced rows (`col-8` + `col-4` or `col-4` + `col-8`). When two consecutive landscapes appear followed by a portrait (`[L, L, P]`), the portrait is promoted one index to pair seamlessly with the first landscape, while consecutive portraits stack 3 in a line (`col-4` + `col-4` + `col-4`) or 2 in a line (`col-6` + `col-6`).
 - **500-Line Modular Architecture**: Decomposed into composable subcomponents (`AppScreenshotCarouselTrack`, `AppScreenshotExpandedGrid`, `screenshot-grid-layout`), ensuring every file remains well under 250 lines of code.
 - **High-DPI Retina Streaming & 4K Lightbox**: Screenshots stream via direct Cloudinary transforms up to 2560px with zero CSS blur or artificial filtering, and clicking any card opens the immersive 4K Fullscreen Lightbox modal.
+18. **Decoupled Hero Carousel Architecture (`CarouselSlide`, `AdminCarouselTable`, `AdminCarouselForm`, `AdminCarouselPreview`)**:
+- **Independent First-Class Model**: Hero Carousel slides are fully decoupled from the application catalog into an autonomous `CarouselSlide` database entity (`id`, `title`, `subtitle`, `desktopImageUrl`, `mobileImageUrl`, `targetUrl`, `badgeText`, `sortOrder`, `isActive`).
+- **Dedicated Admin CMS (`/admin/carousel`)**: Complete slide lifecycle management with drag / button reordering (`reorderCarouselSlidesAction`), real-time active status toggling (`toggleCarouselSlideActiveAction`), search filtering, and confirmation-gated deletion.
+- **Responsive Management Layout**: Rich multi-column table on desktop and tablet viewports with 21:9 visual previews; shifts to high-density touch cards on mobile devices (`<640px`) with inline rank badges, active indicators, and quick action bars.
+- **Interactive Dual-Device Live Preview (`AdminCarouselPreview`)**: Allows content creators to toggle instantly between desktop ultrawide (`21:9`) and mobile portrait (`3:4`) preview frames before saving changes.
+- **Clean Separation from App Admin**: Removed hero carousel 21:9 and 3:4 banner inputs from `AdminAppMediaSection` so applications manage only genuine application media (App Icon, Demo URL, Video URL, and Screenshots Gallery).
+- **Public Hero Slider Independence**: Public `/apps` hero carousel directly queries active slides via `getPublicCarouselSlides()`, keeping catalog pagination and search results completely unpolluted.
+
 
 
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { getAppBannerDesktopUrl, getAppBannerMobileUrl } from '@elsesourav/media';
-import type { AppListItem } from '@elsesourav/types';
+import type { AppListItem, CarouselSlide } from '@elsesourav/types';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
@@ -25,7 +25,8 @@ const FALLBACK_HERO_MOBILE_IMAGES = [
 ];
 
 export interface AppsMorphHeroProps {
-  apps: readonly AppListItem[];
+  slides?: readonly CarouselSlide[];
+  apps?: readonly AppListItem[];
   /** Autoplay interval in seconds. Defaults to 5. */
   autoplayIntervalSeconds?: number;
   /** Whether to pause autoplay when hovering over the slider. Defaults to false. */
@@ -33,13 +34,14 @@ export interface AppsMorphHeroProps {
 }
 
 /**
- * Featured Projects Showcase using MorphSlider GPU-accelerated transition.
- * - Mobile: 3:4 aspect ratio with mobile banner (featuredImageMobileUrl)
- * - Desktop: 21:9 aspect ratio with desktop banner (featuredImageUrl)
+ * Featured Showcase using MorphSlider GPU-accelerated transition.
+ * - Mobile: 3:4 aspect ratio with mobile banner (mobileImageUrl)
+ * - Desktop: 21:9 aspect ratio with desktop banner (desktopImageUrl)
  * - Pure graphic banner artwork with ZERO overlaid text, badges, or gradient darkness.
- * - Clicking the slide directly opens the application.
+ * - Clicking the slide navigates directly to targetUrl.
  */
 export function AppsMorphHero({
+  slides,
   apps,
   autoplayIntervalSeconds = 5,
   pauseOnHover = false,
@@ -62,6 +64,29 @@ export function AppsMorphHero({
   const pointerStartRef = React.useRef<{ x: number; y: number; time: number } | null>(null);
   const isDraggingGestureRef = React.useRef(false);
 
+  // Normalize inputs to support independent CarouselSlide or legacy AppListItem
+  const normalizedSlides = React.useMemo(() => {
+    if (slides && slides.length > 0) {
+      return slides.map((s) => ({
+        id: s.id,
+        title: s.title,
+        desktopImageUrl: s.desktopImageUrl,
+        mobileImageUrl: s.mobileImageUrl || s.desktopImageUrl,
+        targetUrl: s.targetUrl,
+      }));
+    }
+    if (apps && apps.length > 0) {
+      return apps.map((app) => ({
+        id: app.id,
+        title: app.name,
+        desktopImageUrl: app.featuredImageUrl || '',
+        mobileImageUrl: app.featuredImageMobileUrl || app.featuredImageUrl || '',
+        targetUrl: `/apps/${app.slug}`,
+      }));
+    }
+    return [];
+  }, [slides, apps]);
+
   // Responsive media query listener for mobile vs desktop aspect ratio image source
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -77,27 +102,27 @@ export function AppsMorphHero({
   }, []);
 
   const morphItems = React.useMemo(() => {
-    return apps.map((app, index) => {
+    return normalizedSlides.map((slide, index) => {
       let imageUrl: string;
       if (isMobile) {
-        imageUrl = app.featuredImageMobileUrl
-          ? getAppBannerMobileUrl(app.featuredImageMobileUrl)
-          : app.featuredImageUrl
-            ? getAppBannerMobileUrl(app.featuredImageUrl)
+        imageUrl = slide.mobileImageUrl
+          ? getAppBannerMobileUrl(slide.mobileImageUrl)
+          : slide.desktopImageUrl
+            ? getAppBannerMobileUrl(slide.desktopImageUrl)
             : FALLBACK_HERO_MOBILE_IMAGES[index % FALLBACK_HERO_MOBILE_IMAGES.length]!;
       } else {
-        imageUrl = app.featuredImageUrl
-          ? getAppBannerDesktopUrl(app.featuredImageUrl)
-          : app.featuredImageMobileUrl
-            ? getAppBannerDesktopUrl(app.featuredImageMobileUrl)
+        imageUrl = slide.desktopImageUrl
+          ? getAppBannerDesktopUrl(slide.desktopImageUrl)
+          : slide.mobileImageUrl
+            ? getAppBannerDesktopUrl(slide.mobileImageUrl)
             : FALLBACK_HERO_DESKTOP_IMAGES[index % FALLBACK_HERO_DESKTOP_IMAGES.length]!;
       }
       return {
         image: imageUrl,
-        caption: app.name,
+        caption: slide.title,
       };
     });
-  }, [apps, isMobile]);
+  }, [normalizedSlides, isMobile]);
 
   const handlePrev = React.useCallback((e?: React.MouseEvent | React.PointerEvent) => {
     e?.preventDefault();
@@ -117,14 +142,17 @@ export function AppsMorphHero({
     sliderRef.current?.next();
   }, []);
 
-  const handleGoToIndex = React.useCallback((targetIndex: number, e?: React.MouseEvent | React.PointerEvent) => {
-    e?.preventDefault();
-    e?.stopPropagation();
-    pointerStartRef.current = null;
-    isDraggingGestureRef.current = false;
-    setProgressKey((k) => k + 1);
-    sliderRef.current?.goToIndex(targetIndex);
-  }, []);
+  const handleGoToIndex = React.useCallback(
+    (targetIndex: number, e?: React.MouseEvent | React.PointerEvent) => {
+      e?.preventDefault();
+      e?.stopPropagation();
+      pointerStartRef.current = null;
+      isDraggingGestureRef.current = false;
+      setProgressKey((k) => k + 1);
+      sliderRef.current?.goToIndex(targetIndex);
+    },
+    []
+  );
 
   const isInteractiveTarget = (target: EventTarget | null): boolean => {
     if (!target || !(target instanceof Element)) return false;
@@ -168,10 +196,17 @@ export function AppsMorphHero({
 
     // If pointer barely moved (< 8px) and was quick (< 450ms), treat as click on slide banner
     if (dx < 8 && dy < 8 && dt < 450) {
-      const activeApp = apps[activeIndex];
-      if (activeApp?.slug) {
-        triggerPageTransition(`/apps/${activeApp.slug}`);
-        router.push(`/apps/${activeApp.slug}`);
+      const activeSlide = normalizedSlides[activeIndex];
+      if (activeSlide?.targetUrl) {
+        if (
+          activeSlide.targetUrl.startsWith('http://') ||
+          activeSlide.targetUrl.startsWith('https://')
+        ) {
+          window.open(activeSlide.targetUrl, '_blank', 'noopener,noreferrer');
+        } else {
+          triggerPageTransition(activeSlide.targetUrl);
+          router.push(activeSlide.targetUrl);
+        }
       }
     }
     pointerStartRef.current = null;
@@ -183,8 +218,8 @@ export function AppsMorphHero({
     isDraggingGestureRef.current = false;
   };
 
-  const activeApp = apps[activeIndex] ?? apps[0];
-  if (!activeApp || apps.length === 0) return null;
+  const activeSlide = normalizedSlides[activeIndex] ?? normalizedSlides[0];
+  if (!activeSlide || normalizedSlides.length === 0) return null;
 
   return (
     <section
@@ -226,7 +261,7 @@ export function AppsMorphHero({
           aberration={0.25}
           drift={0}
           duration={0.85}
-          autoplay={apps.length > 1}
+          autoplay={normalizedSlides.length > 1}
           autoplayDelay={autoplayIntervalSeconds}
           pauseOnHover={pauseOnHover}
           loop
@@ -240,7 +275,7 @@ export function AppsMorphHero({
         />
 
         {/* Left & Right Chevrons — Smooth entrance transition on hover */}
-        {apps.length > 1 && (
+        {normalizedSlides.length > 1 && (
           <>
             <button
               type="button"
@@ -290,15 +325,15 @@ export function AppsMorphHero({
               }}
               className="pointer-events-auto absolute bottom-2.5 right-2.5 sm:bottom-4 sm:right-4 z-[20] flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-full bg-black/50 dark:bg-black/60 backdrop-blur-md border border-white/15 shadow-md"
             >
-              {apps.map((app, index) => {
+              {normalizedSlides.map((slide, index) => {
                 const isActive = index === activeIndex;
                 return (
                   <button
-                    key={app.id || index}
+                    key={slide.id || index}
                     type="button"
                     role="tab"
                     aria-selected={isActive}
-                    aria-label={`Go to slide ${index + 1}: ${app.name}`}
+                    aria-label={`Go to slide ${index + 1}: ${slide.title}`}
                     onClick={(e) => handleGoToIndex(index, e)}
                     onPointerDown={(e) => {
                       e.stopPropagation();

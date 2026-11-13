@@ -9,6 +9,7 @@ import {
   Activity,
   BookOpen,
   FileText,
+  GalleryHorizontalEnd,
   Image,
   LifeBuoy,
   Package,
@@ -31,6 +32,7 @@ interface NavItem {
 const NAV_ITEMS: readonly NavItem[] = [
   { href: '/admin', label: 'Dashboard', icon: Activity, exact: true },
   { href: '/admin/apps', label: 'Applications', icon: Package },
+  { href: '/admin/carousel', label: 'Hero Carousel', icon: GalleryHorizontalEnd },
   { href: '/admin/updates', label: 'Updates CMS', icon: FileText },
   { href: '/admin/help', label: 'Help Articles', icon: BookOpen },
   { href: '/admin/support', label: 'Support Queue', icon: LifeBuoy },

@@ -423,3 +423,21 @@ model EmailOtp {
   @@index([expiresAt])
 }
 
+model CarouselSlide {
+  id              String   @id @default(uuid())
+  title           String
+  subtitle        String?
+  desktopImageUrl String
+  mobileImageUrl  String?
+  targetUrl       String
+  badgeText       String?
+  sortOrder       Int      @default(0)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([isActive])
+  @@index([sortOrder])
+}
+
+

@@ -33,3 +33,5 @@ export * from './services/site.service';
 export * from './services/search.service';
 export * from './repositories/feedback.repository';
 export * from './services/feedback.service';
+export * from './repositories/carousel.repository';
+export * from './services/carousel.service';

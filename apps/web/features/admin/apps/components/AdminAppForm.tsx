@@ -394,8 +394,6 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
           setIconUrl={setIconUrl}
           featuredImageUrl={featuredImageUrl}
           setFeaturedImageUrl={setFeaturedImageUrl}
-          featuredImageMobileUrl={featuredImageMobileUrl}
-          setFeaturedImageMobileUrl={setFeaturedImageMobileUrl}
           screenshots={screenshots}
           setScreenshots={setScreenshots}
           demoUrl={demoUrl}
