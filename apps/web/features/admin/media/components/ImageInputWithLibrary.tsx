@@ -6,6 +6,7 @@ import { MediaPickerModal } from './MediaPickerModal';
 import { ImageUploadSourceModal } from './ImageUploadSourceModal';
 import { adminUploadImageFileAction } from '../actions/admin-media-actions';
 import type { MediaDomain, MediaFolder } from '@elsesourav/types';
+import type { PresetRatioOption } from '@elsesourav/ui';
 import { Image as ImageIcon, Upload, FolderOpen, X, Loader2, Crop } from 'lucide-react';
 
 export interface ImageInputWithLibraryProps {
@@ -17,6 +18,10 @@ export interface ImageInputWithLibraryProps {
   folder?: MediaFolder;
   defaultCategory?: MediaDomain;
   previewShape?: 'circle' | 'square' | 'banner' | 'portrait';
+  aspectRatio?: number | string;
+  targetWidth?: number;
+  targetHeight?: number;
+  allowedRatios?: PresetRatioOption[];
   className?: string;
   fallbackUrl?: string;
 }
@@ -30,6 +35,10 @@ export function ImageInputWithLibrary({
   folder = 'general',
   defaultCategory = 'general',
   previewShape = 'square',
+  aspectRatio,
+  targetWidth,
+  targetHeight,
+  allowedRatios,
   className = '',
   fallbackUrl,
 }: ImageInputWithLibraryProps) {
@@ -49,40 +58,73 @@ export function ImageInputWithLibrary({
   const effectivePlaceholder =
     placeholder || (fallbackUrl ? 'Default asset active (upload to override)' : 'https://... or select from library');
 
-  // Determine crop parameters based on previewShape (aspectRatio acts as the default selection)
+  // Determine crop parameters based on explicit aspectRatio prop or previewShape
   const cropConfig = React.useMemo(() => {
+    if (aspectRatio) {
+      let numericRatio = 1.0;
+      if (typeof aspectRatio === 'number') {
+        numericRatio = aspectRatio;
+      } else if (aspectRatio === '21:9') {
+        numericRatio = 21 / 9;
+      } else if (aspectRatio === '16:9') {
+        numericRatio = 16 / 9;
+      } else if (aspectRatio === '3:4') {
+        numericRatio = 3 / 4;
+      } else if (aspectRatio === '4:3') {
+        numericRatio = 4 / 3;
+      } else if (typeof aspectRatio === 'string' && (aspectRatio.includes(':') || aspectRatio.includes('/'))) {
+        const parts = aspectRatio.split(/[:/]/);
+        const num = parseFloat(parts[0] || '1');
+        const den = parseFloat(parts[1] || '1');
+        numericRatio = den !== 0 ? num / den : 1.0;
+      } else {
+        const parsed = parseFloat(String(aspectRatio));
+        if (!isNaN(parsed) && parsed > 0) numericRatio = parsed;
+      }
+
+      const isWideBanner = numericRatio >= 2.0;
+      const isPortrait = numericRatio < 1.0;
+
+      return {
+        aspectRatio: numericRatio,
+        cropShape: previewShape === 'circle' ? ('round' as const) : ('rect' as const),
+        width: targetWidth || (isWideBanner ? 2520 : isPortrait ? 900 : 1200),
+        height: targetHeight || (isWideBanner ? 1080 : isPortrait ? 1200 : Math.round(1200 / numericRatio)),
+      };
+    }
+
     switch (previewShape) {
       case 'circle':
         return {
           aspectRatio: 1.0,
           cropShape: 'round' as const,
-          width: 512,
-          height: 512,
+          width: targetWidth || 512,
+          height: targetHeight || 512,
         };
       case 'portrait':
         return {
           aspectRatio: 3 / 4,
           cropShape: 'rect' as const,
-          width: 600,
-          height: 800,
+          width: targetWidth || 900,
+          height: targetHeight || 1200,
         };
       case 'banner':
         return {
           aspectRatio: 16 / 9,
           cropShape: 'rect' as const,
-          width: 1200,
-          height: 675,
+          width: targetWidth || 1200,
+          height: targetHeight || 675,
         };
       case 'square':
       default:
         return {
           aspectRatio: 1.0,
           cropShape: 'rect' as const,
-          width: 512,
-          height: 512,
+          width: targetWidth || 512,
+          height: targetHeight || 512,
         };
     }
-  }, [previewShape]);
+  }, [previewShape, aspectRatio, targetWidth, targetHeight]);
 
   // Direct upload handler when image matches required ratio or user confirms crop
   const directUpload = async (fileToUpload: File) => {
@@ -332,6 +374,7 @@ export function ImageInputWithLibrary({
           cropShape={cropConfig.cropShape}
           targetWidth={cropConfig.width}
           targetHeight={cropConfig.height}
+          allowedRatios={allowedRatios}
           title={`Crop ${label || 'Image'}`}
           onCropComplete={handleCropComplete}
         />

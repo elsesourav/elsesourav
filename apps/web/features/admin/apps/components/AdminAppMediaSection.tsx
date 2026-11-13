@@ -53,6 +53,9 @@ export function AdminAppMediaSection({
           folder="apps"
           defaultCategory="apps"
           previewShape="square"
+          aspectRatio="1:1"
+          targetWidth={512}
+          targetHeight={512}
           placeholder="Icon URL or upload/select from library"
         />
 
@@ -64,6 +67,9 @@ export function AdminAppMediaSection({
           folder="apps"
           defaultCategory="apps"
           previewShape="banner"
+          aspectRatio="21:9"
+          targetWidth={2520}
+          targetHeight={1080}
           placeholder="Banner 21:9 URL or upload/select from library"
         />
 
@@ -75,6 +81,9 @@ export function AdminAppMediaSection({
           folder="apps"
           defaultCategory="apps"
           previewShape="portrait"
+          aspectRatio="3:4"
+          targetWidth={900}
+          targetHeight={1200}
           placeholder="Banner 3:4 URL or upload/select from library"
         />
 

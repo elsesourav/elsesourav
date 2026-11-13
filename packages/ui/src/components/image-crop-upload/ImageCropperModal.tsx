@@ -198,6 +198,7 @@ export function ImageCropperModal({
                   }`}
                 >
                   {preset.label}
+                  {hasRestrictedRatios && ' (Locked)'}
                 </button>
               );
             })}

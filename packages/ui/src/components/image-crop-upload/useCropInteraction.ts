@@ -38,12 +38,6 @@ export function useCropInteraction({
 }: UseCropInteractionOptions) {
   const [image, setImage] = React.useState<HTMLImageElement | null>(null);
 
-  const effectiveRatios = React.useMemo(() => {
-    return allowedRatios && allowedRatios.length > 0 ? allowedRatios : PRESET_RATIOS;
-  }, [allowedRatios]);
-
-  const hasRestrictedRatios = Boolean(allowedRatios && allowedRatios.length > 0 && allowedRatios.length <= 1);
-
   const parseNumericRatio = React.useCallback((r?: number | null | string): number | null => {
     if (r === null || r === 'free') return null;
     if (typeof r === 'number') return r;
@@ -55,14 +49,51 @@ export function useCropInteraction({
     if (r === '1:6') return 1 / 6;
     if (r === '6:1') return 6.0;
     if (r === '21:9') return 21 / 9;
-    if (typeof r === 'string' && r.includes('/')) {
-      const parts = r.split('/');
-      const num = parseFloat(parts[0] || '1');
-      const den = parseFloat(parts[1] || '1');
-      return den !== 0 ? num / den : 1.0;
+    if (typeof r === 'string') {
+      if (r.includes('/')) {
+        const parts = r.split('/');
+        const num = parseFloat(parts[0] || '1');
+        const den = parseFloat(parts[1] || '1');
+        return den !== 0 ? num / den : 1.0;
+      }
+      if (r.includes(':')) {
+        const parts = r.split(':');
+        const num = parseFloat(parts[0] || '1');
+        const den = parseFloat(parts[1] || '1');
+        return den !== 0 ? num / den : 1.0;
+      }
+      const parsed = parseFloat(r);
+      if (!isNaN(parsed) && parsed > 0) return parsed;
     }
     return 1.0;
   }, []);
+
+  const effectiveRatios = React.useMemo(() => {
+    // If an explicit list of allowed ratios is provided, use it directly
+    if (allowedRatios && allowedRatios.length > 0) {
+      return allowedRatios;
+    }
+    // If a specific aspect ratio is requested, restrict strictly to that single ratio
+    if (aspectRatio !== undefined && aspectRatio !== null && aspectRatio !== 'free') {
+      const numRatio = parseNumericRatio(aspectRatio);
+      if (numRatio !== null) {
+        const matched = PRESET_RATIOS.find(
+          (p) => p.ratio !== null && Math.abs(p.ratio - numRatio) < 0.01
+        );
+        if (matched) {
+          return [matched];
+        }
+        const label =
+          typeof aspectRatio === 'string'
+            ? `${aspectRatio} Ratio`
+            : `${Math.round(numRatio * 100) / 100}:1 Ratio`;
+        return [{ id: String(aspectRatio), label, ratio: numRatio }];
+      }
+    }
+    return PRESET_RATIOS;
+  }, [allowedRatios, aspectRatio, parseNumericRatio]);
+
+  const hasRestrictedRatios = Boolean(effectiveRatios.length <= 1);
 
   const getInitialRatio = React.useCallback((): number | null => {
     if (aspectRatio !== undefined) return parseNumericRatio(aspectRatio);
@@ -91,21 +122,31 @@ export function useCropInteraction({
     cropH: number;
   }>({ clientX: 0, clientY: 0, cropX: 0, cropY: 0, cropW: 0, cropH: 0 });
 
-  // Initialize crop box centered on image
+  // Initialize crop box to 100% full fit on image (zero arbitrary shrinkage)
   const initializeCrop = React.useCallback(
     (img: HTMLImageElement, ratio: number | null) => {
       const nw = img.naturalWidth;
       const nh = img.naturalHeight;
 
-      let w = nw * 0.9;
-      let h = nh * 0.9;
+      // Free crop: select 100% of the entire image
+      if (ratio === null) {
+        setCrop({ x: 0, y: 0, width: nw, height: nh });
+        return;
+      }
 
-      if (ratio !== null) {
-        if (w / h > ratio) {
-          w = h * ratio;
-        } else {
-          h = w / ratio;
-        }
+      // Check if image ratio already matches target ratio within 2% tolerance
+      const imgRatio = nw / nh;
+      if (Math.abs(imgRatio - ratio) <= 0.02) {
+        setCrop({ x: 0, y: 0, width: nw, height: nh });
+        return;
+      }
+
+      // Fit the maximum possible frame touching image borders (Fit Full)
+      let w = nw;
+      let h = w / ratio;
+      if (h > nh) {
+        h = nh;
+        w = h * ratio;
       }
 
       w = Math.round(Math.min(w, nw));
