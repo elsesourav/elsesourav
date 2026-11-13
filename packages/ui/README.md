@@ -1158,10 +1158,10 @@ The `@elsesourav/ui/interior` collection contains **54 physics-based animated UI
 - **Purpose**: WebGL GPU displacement slider morphing between slides with fluid shader transitions (melt, ripple, shear, swirl).
 - **Key Features**:
   - Procedural noise displacement and chromatic aberration peak on transition.
-  - Infinite auto-scroll (default 5s interval) with drag pause and automatic timer refresh.
+  - Infinite auto-scroll (default 5s interval) with animated slide countdown progress pill, drag pause, and automatic timer refresh.
   - Interactive touch/pointer drag with spring commit.
   - Smooth animated captions with blur entry.
-  - Automatic `prefers-reduced-motion` override (fast-fade fallback).
+  - Automatic `prefers-reduced-motion` override (fast-fade fallback and static progress indicator).
 - **Props**:
   - `items?: MorphItem[]` (`{ image: string; caption?: string }[]`)
   - `startIndex?: number` (default: `0`)

@@ -954,12 +954,13 @@ h6,
 
 .animate-hero-progress {
   animation: heroSlideProgress 5s linear forwards;
+  will-change: width;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-hero-progress {
-    animation: none;
-    width: 100%;
+    animation: none !important;
+    width: 100% !important;
   }
 }
 

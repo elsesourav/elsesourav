@@ -46,8 +46,17 @@ export function AppsMorphHero({
 }: AppsMorphHeroProps) {
   const router = useRouter();
   const [activeIndex, setActiveIndex] = React.useState(0);
+  const [progressKey, setProgressKey] = React.useState(0);
+  const [isHovered, setIsHovered] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(false);
   const sliderRef = React.useRef<MorphSliderRef>(null);
+
+  const isPaused = pauseOnHover && isHovered;
+
+  const handleIndexChange = React.useCallback((nextIndex: number) => {
+    setActiveIndex(nextIndex);
+    setProgressKey((k) => k + 1);
+  }, []);
 
   // Track click vs drag to avoid accidental navigation during swipe/drag
   const pointerStartRef = React.useRef<{ x: number; y: number; time: number } | null>(null);
@@ -95,6 +104,7 @@ export function AppsMorphHero({
     e?.stopPropagation();
     pointerStartRef.current = null;
     isDraggingGestureRef.current = false;
+    setProgressKey((k) => k + 1);
     sliderRef.current?.prev();
   }, []);
 
@@ -103,6 +113,7 @@ export function AppsMorphHero({
     e?.stopPropagation();
     pointerStartRef.current = null;
     isDraggingGestureRef.current = false;
+    setProgressKey((k) => k + 1);
     sliderRef.current?.next();
   }, []);
 
@@ -111,6 +122,7 @@ export function AppsMorphHero({
     e?.stopPropagation();
     pointerStartRef.current = null;
     isDraggingGestureRef.current = false;
+    setProgressKey((k) => k + 1);
     sliderRef.current?.goToIndex(targetIndex);
   }, []);
 
@@ -202,6 +214,8 @@ export function AppsMorphHero({
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerCancel}
+        onPointerEnter={() => setIsHovered(true)}
+        onPointerLeave={() => setIsHovered(false)}
         className="relative w-full aspect-[3/4] sm:aspect-[21/9] sm:max-h-none overflow-hidden rounded-[14px] isolate [transform:translateZ(0)] cursor-pointer"
       >
         <MorphSlider
@@ -221,7 +235,7 @@ export function AppsMorphHero({
           showCaptions={false}
           showControls={false}
           showIndicators={false}
-          onIndexChange={setActiveIndex}
+          onIndexChange={handleIndexChange}
           className="absolute inset-0 w-full h-full z-[2]"
         />
 
@@ -262,7 +276,7 @@ export function AppsMorphHero({
               <ChevronRight className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-zinc-900 dark:text-white/90 transition-transform duration-200 group-hover/btn:translate-x-0.5" />
             </button>
 
-            {/* Pagination Dots at Bottom Right */}
+            {/* Pagination Dots at Bottom Right with Auto-Advancing Progress Bar */}
             <div
               role="tablist"
               aria-label="Project slides"
@@ -294,12 +308,23 @@ export function AppsMorphHero({
                       e.stopPropagation();
                       pointerStartRef.current = null;
                     }}
-                    className={`cursor-pointer rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
+                    className={`cursor-pointer rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white relative overflow-hidden ${
                       isActive
-                        ? 'w-4 sm:w-6 h-1 sm:h-1.5 bg-white shadow-xs'
+                        ? 'w-4 sm:w-6 h-1 sm:h-1.5 bg-white/30 dark:bg-white/20 shadow-xs'
                         : 'w-1 sm:w-1.5 h-1 sm:h-1.5 bg-white/40 hover:bg-white/70'
                     }`}
-                  />
+                  >
+                    {isActive && (
+                      <span
+                        key={`hero-progress-${index}-${progressKey}`}
+                        className="animate-hero-progress absolute inset-y-0 left-0 bg-white rounded-full shadow-[0_0_6px_rgba(255,255,255,0.9)]"
+                        style={{
+                          animationDuration: `${autoplayIntervalSeconds}s`,
+                          animationPlayState: isPaused ? 'paused' : 'running',
+                        }}
+                      />
+                    )}
+                  </button>
                 );
               })}
             </div>
