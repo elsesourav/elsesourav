@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import type { CSSProperties } from 'react';
-import { motion } from 'motion/react';
 import {
   MorphEngine,
   DEFAULT_ITEMS,
@@ -316,6 +315,12 @@ export function MorphSlider({
           role="tablist"
           aria-label="Slides"
         >
+          <style>{`
+            @keyframes heroSlideProgress {
+              0% { width: 0%; }
+              100% { width: 100%; }
+            }
+          `}</style>
           {items.map((item, i) => (
             <button
               key={i}
@@ -329,15 +334,15 @@ export function MorphSlider({
               onClick={() => handleSelectIndex(i)}
             >
               {i === index && (
-                <motion.span
+                <span
                   key={`interior-ms-progress-${i}`}
-                  initial={{ width: '0%' }}
-                  animate={{ width: '100%' }}
-                  transition={{
-                    duration: autoplayDelay || 5,
-                    ease: 'linear',
+                  data-carousel-progress
+                  className="absolute inset-y-0 left-0 bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,0.95)] pointer-events-none"
+                  style={{
+                    width: '0%',
+                    animation: `heroSlideProgress ${autoplayDelay || 5}s linear forwards`,
+                    WebkitAnimation: `heroSlideProgress ${autoplayDelay || 5}s linear forwards`,
                   }}
-                  className="absolute inset-y-0 left-0 bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,0.95)]"
                 />
               )}
             </button>

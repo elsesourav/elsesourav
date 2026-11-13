@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { motion } from 'motion/react';
 import type { MorphItem } from './MorphSlider';
 
 interface MorphSliderControlsProps {
@@ -74,6 +73,12 @@ export function MorphSliderControls({
           role="tablist"
           aria-label="Slides"
         >
+          <style>{`
+            @keyframes heroSlideProgress {
+              0% { width: 0%; }
+              100% { width: 100%; }
+            }
+          `}</style>
           {items.map((_, i) => (
             <button
               key={i}
@@ -89,15 +94,15 @@ export function MorphSliderControls({
               onPointerUp={(e) => e.stopPropagation()}
             >
               {i === index && (
-                <motion.span
+                <span
                   key={`ms-ctrl-progress-${i}`}
-                  initial={{ width: '0%' }}
-                  animate={{ width: '100%' }}
-                  transition={{
-                    duration: 5,
-                    ease: 'linear',
+                  data-carousel-progress
+                  className="absolute inset-y-0 left-0 bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,0.95)] pointer-events-none"
+                  style={{
+                    width: '0%',
+                    animation: 'heroSlideProgress 5s linear forwards',
+                    WebkitAnimation: 'heroSlideProgress 5s linear forwards',
                   }}
-                  className="absolute inset-y-0 left-0 bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,0.95)]"
                 />
               )}
             </button>

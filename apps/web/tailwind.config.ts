@@ -129,10 +129,6 @@ const config: Config = {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
         },
-        'hero-slide-progress': {
-          '0%': { width: '0%' },
-          '100%': { width: '100%' },
-        },
         'slide-up': {
           '0%': { opacity: '0', transform: 'translateY(8px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
