@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { motion, useIsomorphicLayoutEffect, useReducedMotion } from 'motion/react';
 
-const DEVELOP = { duration: 0.65, ease: [0.23, 1, 0.32, 1] } as const;
+const DEVELOP = { duration: 0.45, ease: [0.23, 1, 0.32, 1] } as const;
 
 const INSTANT = { duration: 0 } as const;
 
@@ -34,78 +34,80 @@ export function useBlurUpImage({ src, srcSet, onReady, onError }: UseBlurUpImage
   const failed = useRef(onError);
   failed.current = onError;
 
+  const reveal = useCallback(
+    (instant = false) => {
+      if (src) CACHE.add(src);
+      setState({ status: 'ready', instant });
+      ready.current?.();
+    },
+    [src]
+  );
+
+  const fail = useCallback(() => {
+    setState({ status: 'error', instant: false });
+    failed.current?.();
+  }, []);
+
   useIsomorphicLayoutEffect(() => {
     const img = ref.current;
 
-    const set = (status: BlurUpStatus, instant: boolean) =>
-      setState((prev) =>
-        prev.status === status && prev.instant === instant ? prev : { status, instant }
-      );
-
     if (!img || !src) {
-      set('loading', false);
+      setState({ status: 'loading', instant: false });
+      return;
+    }
+
+    if (CACHE.has(src)) {
+      reveal(true);
       return;
     }
 
     let alive = true;
 
-    const cached = (img.complete && img.naturalWidth > 0) || isPreloaded;
-
-    const reveal = () => {
-      if (!alive) return;
-      if (src) CACHE.add(src);
-      set('ready', cached);
-      ready.current?.();
-    };
-
-    const fail = () => {
-      if (!alive) return;
-      set('error', cached);
-      failed.current?.();
-    };
-
+    // Check if image is already loaded/cached in browser memory
     if (img.complete && img.naturalWidth > 0) {
-      reveal();
+      reveal(true);
       return () => {
         alive = false;
       };
     }
 
-    set('loading', false);
+    setState({ status: 'loading', instant: false });
 
-    const onLoad = () => {
+    const handleLoad = () => {
       if (!alive) return;
-      if (typeof img.decode === 'function') {
-        img
-          .decode()
-          .then(reveal)
-          .catch(() => {
-            if (img.naturalWidth > 0) {
-              reveal();
-            } else {
-              fail();
-            }
-          });
-        return;
-      }
-      reveal();
+      reveal(false);
     };
 
-    img.addEventListener('load', onLoad);
-    img.addEventListener('error', fail);
+    const handleError = () => {
+      if (!alive) return;
+      fail();
+    };
+
+    img.addEventListener('load', handleLoad);
+    img.addEventListener('error', handleError);
 
     return () => {
       alive = false;
-      img.removeEventListener('load', onLoad);
-      img.removeEventListener('error', fail);
+      img.removeEventListener('load', handleLoad);
+      img.removeEventListener('error', handleError);
     };
-  }, [src, srcSet, isPreloaded]);
+  }, [src, srcSet, reveal, fail]);
+
+  const handleImgLoad = useCallback(() => {
+    reveal(false);
+  }, [reveal]);
+
+  const handleImgError = useCallback(() => {
+    fail();
+  }, [fail]);
 
   return {
     ref,
     status: state.status,
     instant: state.instant,
     loaded: state.status === 'ready',
+    handleImgLoad,
+    handleImgError,
   };
 }
 
@@ -151,7 +153,7 @@ export function BlurUpImage({
   imgClassName = '',
 }: BlurUpImageProps) {
   const reduced = useReducedMotion();
-  const { ref, status, instant } = useBlurUpImage({
+  const { ref, status, instant, handleImgLoad, handleImgError } = useBlurUpImage({
     src,
     srcSet,
     onReady,
@@ -173,6 +175,13 @@ export function BlurUpImage({
             ? 'object-scale-down'
             : 'object-cover';
 
+  // Explicitly clear any filter CSS when loaded to guarantee crisp rendering
+  useEffect(() => {
+    if (shown && ref.current) {
+      ref.current.style.filter = 'none';
+    }
+  }, [shown]);
+
   return (
     <div
       data-interior="blur-up-image"
@@ -188,18 +197,20 @@ export function BlurUpImage({
           : `relative w-full overflow-hidden bg-[var(--interior-bg-subtle)] dark:bg-white/15 ${className}`
       }
     >
+      {/* Loading Skeleton Shimmer */}
       {status === 'loading' ? (
         <div
-          aria-hidden
-          className="absolute inset-0 bg-gradient-to-r from-zinc-200/40 via-zinc-100/70 to-zinc-200/40 dark:from-zinc-800/40 dark:via-zinc-700/50 dark:to-zinc-800/40 animate-pulse pointer-events-none"
+          aria-hidden="true"
+          className="absolute inset-0 bg-gradient-to-r from-zinc-200/40 via-zinc-100/70 to-zinc-200/40 dark:from-zinc-800/40 dark:via-zinc-700/50 dark:to-zinc-800/40 animate-pulse pointer-events-none z-10"
         />
       ) : null}
 
-      {placeholder ? (
+      {/* Blurred Low-Res Placeholder - Hidden immediately once high-res image is ready */}
+      {placeholder && !shown ? (
         <img
           src={placeholder}
           alt=""
-          aria-hidden
+          aria-hidden="true"
           draggable={false}
           referrerPolicy="no-referrer"
           className={`absolute inset-0 h-full w-full ${fitClass} ${imgClassName}`}
@@ -207,6 +218,7 @@ export function BlurUpImage({
         />
       ) : null}
 
+      {/* Primary Asset with Guaranteed Blur Removal on Load */}
       <motion.img
         ref={ref}
         src={src}
@@ -220,29 +232,34 @@ export function BlurUpImage({
         decoding="async"
         draggable={false}
         referrerPolicy="no-referrer"
+        onLoad={handleImgLoad}
+        onError={handleImgError}
         className={`absolute inset-0 h-full w-full ${fitClass} ${imgClassName}`}
         initial={false}
         animate={
-          still
-            ? { opacity: shown ? 1 : 0 }
-            : shown
-              ? {
-                  opacity: 1,
-                  filter: 'blur(0px) saturate(1)',
-                  scale: 1,
-                }
-              : {
-                  opacity: 0,
-                  filter: 'blur(18px) saturate(0.6)',
-                  scale: 1.06,
-                }
+          shown
+            ? {
+                opacity: 1,
+                filter: 'blur(0px)',
+                scale: 1,
+              }
+            : {
+                opacity: 0,
+                filter: 'blur(16px)',
+                scale: 1.05,
+              }
         }
         transition={transition}
+        onAnimationComplete={() => {
+          if (shown && ref.current) {
+            ref.current.style.filter = 'none';
+          }
+        }}
       />
 
       {status === 'error' ? (
         <motion.div
-          aria-hidden
+          aria-hidden="true"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={transition}

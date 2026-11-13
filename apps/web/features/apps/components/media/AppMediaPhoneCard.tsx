@@ -40,7 +40,8 @@ export function AppMediaPhoneCard({
           alt={`${appName} mobile screenshot ${index + 1}`}
           fill
           objectFit="cover"
-          className="w-full h-full group-hover/phone:scale-105 transition-transform duration-500 ease-out"
+          className="w-full h-full"
+          imgClassName="group-hover/phone:scale-105 transition-transform duration-500 ease-out"
         />
 
         {/* Mobile Device Pill Tag in top-left */}

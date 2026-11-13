@@ -31,7 +31,8 @@ export function AppMediaLandscapeCard({
         alt={`${appName} preview ${index + 1}`}
         fill
         objectFit="cover"
-        className="w-full h-full group-hover/card:scale-105 transition-transform duration-500 ease-out"
+        className="w-full h-full"
+        imgClassName="group-hover/card:scale-105 transition-transform duration-500 ease-out"
       />
 
       {/* Desktop Device Pill Tag in top-left on hover */}

@@ -127,16 +127,11 @@ export function AppScreenshotGallery({
               /* Mobile Portrait Layout: Ambient Blurred Backdrop + Centered Phone Frame */
               <div className="relative w-full h-full flex items-center justify-center">
                 {/* Ambient Blurred Backdrop */}
-                <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-25 dark:opacity-20 scale-110">
-                  <BlurUpImage
-                    src={transformedUrl}
-                    alt=""
-                    fill
-                    blur={28}
-                    objectFit="cover"
-                    className="w-full h-full filter blur-xl"
-                  />
-                </div>
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 overflow-hidden pointer-events-none opacity-20 dark:opacity-15 scale-110 bg-cover bg-center filter blur-2xl"
+                  style={{ backgroundImage: `url(${transformedUrl})` }}
+                />
 
                 {/* Centered Phone Chassis Mockup */}
                 <div className="relative z-10 h-[92%] aspect-[9/16] rounded-[2rem] border-2 border-zinc-300/80 dark:border-zinc-800 bg-zinc-950 p-1.5 shadow-2xl overflow-hidden">
