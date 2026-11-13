@@ -1480,6 +1480,13 @@ The `@elsesourav/ui/micro` collection contains **34 playful, high-tactility micr
 - **Default Studio Attribution Omission**: Because ElseSourav is the creator's personal software studio, redundant creator names ("Sourav") and generic profile avatars are eliminated by default from update articles, update cards, and app specifications.
 - **Explicit Contributor Architecture**: Database schemas (`BlogPost` and `App`) provide first-class optional attribution fields (`authorName`, `authorImageUrl`, `authorUrl`, `authorRole`). Only when an explicit contributor is configured does the UI render their avatar, name, and role.
 - **Non-Wrapping Mobile Publication Metadata**: In `BlogArticleHeader`, publication dates (`Calendar`), reading times (`Clock`), and view counts (`Eye`) render in a streamlined, non-wrapping inline strip (`whitespace-nowrap`) alongside the content-aware Share action, preventing date breakaways across small mobile screens.
+17. **App Screenshot Showcase & Bento Grid Architecture (`AppScreenshotGallery`)**:
+- **Carousel Fatigue Elimination**: Replaced legacy horizontal scrolling carousels with an interactive Bento Grid collage and one-click in-place expansion mode, allowing users to immediately perceive the full breadth of application screens without single-image scrolling fatigue.
+- **Curated Asymmetrical Bento Preview**: In collapsed/preview mode, displays an asymmetrical hero preview card on the left (col-span-8) paired with stacked supporting preview cards on the right (col-span-4). The bottom supporting card features a frosted glass `+X more / View all N` interactive overlay trigger.
+- **Instantaneous Preloaded Expansion**: Clicking "Expand All" or the "+X more" overlay triggers a smooth spring layout expansion revealing all screenshots in a 2-column, high-resolution responsive grid. All image assets are pre-cached in the background via `window.Image()`, ensuring zero loading lag or layout shifts upon expansion.
+- **Aspect-Ratio Agnostic & Zero Distortion**: Screenshots (both 16:9 desktop landscape and 9:16 mobile portrait) are rendered using `object-contain` within their natural proportions, without artificial device covers, fake bezels, or awkward cropping.
+- **High-DPI Retina Streaming**: Screenshots bypass Next.js server-side Sharp double re-compression (`unoptimized={true}`) and leverage direct Cloudinary high-DPI responsive transforms up to 2560px (and 3840px in the Fullscreen Lightbox modal).
+
 
 
 
