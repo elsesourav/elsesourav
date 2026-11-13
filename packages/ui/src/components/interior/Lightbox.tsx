@@ -136,7 +136,6 @@ function Stage({
       y: d.dy,
       scale: d.s,
       opacity: d.o,
-      filter: 'blur(4px)',
       transition: HOME,
     };
   }, [fr, landing, reduced]);
@@ -235,11 +234,11 @@ function Stage({
       >
         <motion.div
           style={{ x: fx, y: fy, scale: fs, opacity: fo }}
-          initial={reduced ? false : { filter: 'blur(6px)' }}
-          animate={{ filter: 'blur(0px)' }}
+          initial={reduced ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
           variants={{ away }}
           exit="away"
-          transition={reduced ? { duration: 0 } : { filter: { duration: 0.35, ease: EASE } }}
+          transition={reduced ? { duration: 0 } : { duration: 0.2, ease: EASE }}
           className="absolute inset-0 flex items-center justify-center p-4 sm:p-14"
         >
           <motion.img

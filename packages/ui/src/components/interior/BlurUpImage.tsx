@@ -240,21 +240,14 @@ export function BlurUpImage({
           shown
             ? {
                 opacity: 1,
-                filter: 'blur(0px)',
                 scale: 1,
               }
             : {
                 opacity: 0,
-                filter: 'blur(16px)',
-                scale: 1.05,
+                scale: 1.02,
               }
         }
         transition={transition}
-        onAnimationComplete={() => {
-          if (shown && ref.current) {
-            ref.current.style.filter = 'none';
-          }
-        }}
       />
 
       {status === 'error' ? (

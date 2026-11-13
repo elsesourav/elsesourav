@@ -876,6 +876,7 @@ The `@elsesourav/ui/interior` collection contains **54 physics-based animated UI
 - **Key Features**:
   - Instant reveal for already cached browser images (zero unnecessary re-fade).
   - Smooth spring exposure transition (`duration: 0.65`, `cubic-bezier(0.23, 1, 0.32, 1)`).
+  - Guaranteed zero lingering blur filter on load: primary asset uses opacity/scale transitions without applying rasterizing CSS blur filters to the primary image.
   - Built-in pulse skeleton shimmer while asset is loading (`status === 'loading'`).
   - Configurable `objectFit` (`'cover' | 'contain' | 'fill' | 'none' | 'scale-down'`) to prevent CSS specificity collisions.
   - Cross-origin CDN safety with automatic `referrerPolicy="no-referrer"` for Google/GitHub user avatars.

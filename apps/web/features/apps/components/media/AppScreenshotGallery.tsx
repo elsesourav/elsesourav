@@ -86,7 +86,7 @@ export function AppScreenshotGallery({
   const isVideo = currentItem?.type === 'video';
   const currentImageUrl = !isVideo && currentItem ? currentItem.url : '';
   const transformedImageUrl = currentImageUrl
-    ? getAppScreenshotUrl(currentImageUrl, 1600, 900, 'fit')
+    ? getAppScreenshotUrl(currentImageUrl, 2560, 1440, 'limit')
     : '';
 
   // Index within the imageList for the Lightbox
@@ -150,12 +150,14 @@ export function AppScreenshotGallery({
             className="relative w-full h-full rounded-2xl overflow-hidden bg-[hsl(var(--surface-subtle))] flex items-center justify-center cursor-zoom-in"
           >
             <Image
+              key={transformedImageUrl}
               src={transformedImageUrl}
               alt={`${appName} interface preview ${selectedIndex + 1}`}
               fill
-              sizes="(max-width: 768px) 100vw, 1200px"
+              unoptimized
+              sizes="100vw"
               className="w-full h-full object-contain rounded-2xl"
-              priority={selectedIndex === 0}
+              priority
             />
 
             {/* Expand Overlay Button: Fullscreen icon on bottom right */}
@@ -238,7 +240,7 @@ export function AppScreenshotGallery({
               );
             }
 
-            const thumbUrl = getAppScreenshotUrl(media.url, 280, 160, 'fit');
+            const thumbUrl = getAppScreenshotUrl(media.url, 400, 240, 'limit');
             return (
               <button
                 key={media.url}
@@ -255,6 +257,7 @@ export function AppScreenshotGallery({
                   src={thumbUrl}
                   alt={`${appName} thumbnail ${idx + 1}`}
                   fill
+                  unoptimized
                   sizes="120px"
                   className="w-full h-full object-cover"
                 />
@@ -269,7 +272,7 @@ export function AppScreenshotGallery({
         <Lightbox
           open={isLightboxOpen}
           onClose={() => setIsLightboxOpen(false)}
-          src={transformedImageUrl}
+          src={currentImageUrl ? getAppScreenshotUrl(currentImageUrl, 3840, 2160, 'limit') : transformedImageUrl}
           alt={`${appName} interface preview ${selectedIndex + 1}`}
           caption={`${appName} — Screenshot ${lightboxIndex + 1} of ${imageList.length}`}
           originRef={mainImageRef}

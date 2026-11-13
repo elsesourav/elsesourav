@@ -15,27 +15,42 @@ export function buildCloudinaryUrl(
     return publicIdOrUrl;
   }
 
-  const cloudName =
-    cloudNameOverride ||
-    process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ||
-    process.env.CLOUDINARY_CLOUD_NAME ||
-    'elsesourav';
+  // Extract cloud name: prioritize override, then URL, then env vars, then fallback
+  let cloudName = cloudNameOverride;
+  if (!cloudName && publicIdOrUrl.includes('res.cloudinary.com')) {
+    const match = publicIdOrUrl.match(/res\.cloudinary\.com\/([^/]+)\//);
+    if (match && match[1]) {
+      cloudName = match[1];
+    }
+  }
+  if (!cloudName) {
+    cloudName =
+      process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ||
+      process.env.CLOUDINARY_CLOUD_NAME ||
+      'diqw2sjl8';
+  }
 
-  // Extract public ID if full cloudinary URL was passed
-  let publicId = publicIdOrUrl;
+  // Extract public ID / asset path if full cloudinary URL was passed
+  let assetPath = publicIdOrUrl;
   if (publicIdOrUrl.includes('res.cloudinary.com')) {
     const uploadIndex = publicIdOrUrl.indexOf('/upload/');
     if (uploadIndex !== -1) {
       const remainder = publicIdOrUrl.substring(uploadIndex + 8);
-      // Strip any existing transformations (e.g. v123/ or w_100/v123/)
       const parts = remainder.split('/');
       const versionIndex = parts.findIndex(
         (part) => part.startsWith('v') && /^\d+$/.test(part.substring(1))
       );
       if (versionIndex !== -1) {
-        publicId = parts.slice(versionIndex + 1).join('/');
+        // Retain the version and path so Cloudinary finds the asset reliably
+        assetPath = parts.slice(versionIndex).join('/');
       } else {
-        publicId = parts[parts.length - 1] || publicIdOrUrl;
+        const firstPart = parts[0] || '';
+        const isTransformSegment = /^(f_|q_|w_|h_|c_|g_|dpr_|b_|e_|,)/.test(firstPart);
+        if (isTransformSegment && parts.length > 1) {
+          assetPath = parts.slice(1).join('/');
+        } else {
+          assetPath = remainder;
+        }
       }
     }
   }
@@ -50,7 +65,7 @@ export function buildCloudinaryUrl(
   if (options.dpr && options.dpr !== 1) transforms.push(`dpr_${options.dpr}`);
 
   const transformString = transforms.join(',');
-  return `https://res.cloudinary.com/${cloudName}/image/upload/${transformString}/${publicId}`;
+  return `https://res.cloudinary.com/${cloudName}/image/upload/${transformString}/${assetPath}`;
 }
 
 export function getAvatarUrl(publicIdOrUrl: string, size = 128): string {
