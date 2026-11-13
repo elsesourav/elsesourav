@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getAppIconUrl, getAppScreenshotUrl } from '@elsesourav/media';
 import type { AppListItem, AppOrientation } from '@elsesourav/types';
+import { cn } from '@elsesourav/ui';
 import { ArrowUpRight } from 'lucide-react';
 
 export interface AppEditorialCardProps {
@@ -48,6 +49,8 @@ export function AppEditorialCard({
 }: AppEditorialCardProps) {
   const orientation = variant || resolveAppOrientation(app);
   const isPortrait = orientation === 'portrait';
+  const [imageLoaded, setImageLoaded] = React.useState(false);
+  const [iconLoaded, setIconLoaded] = React.useState(false);
 
   // Automatically select the optimal image ratio:
   // - In a portrait slot (3:4 vertical space): prioritize 3:4 portrait image
@@ -75,6 +78,17 @@ export function AppEditorialCard({
             : 'aspect-[16/9]'
         }`}
       >
+        {/* Loading Skeleton Shimmer */}
+        {bannerUrl && (
+          <div
+            aria-hidden="true"
+            className={cn(
+              'absolute inset-2 sm:inset-2.5 rounded-lg skeleton-shimmer bg-zinc-200/60 dark:bg-zinc-800/60 z-[1] transition-opacity duration-500 pointer-events-none',
+              imageLoaded ? 'opacity-0' : 'opacity-100'
+            )}
+          />
+        )}
+
         {/* Subtle ambient blurred backdrop so letterbox edges blend organically in light and dark mode */}
         {bannerUrl && (
           <Image
@@ -83,11 +97,14 @@ export function AppEditorialCard({
             aria-hidden="true"
             fill
             unoptimized
-            className="pointer-events-none object-cover blur-2xl opacity-20 dark:opacity-30 scale-110"
+            className={cn(
+              'pointer-events-none object-cover blur-2xl scale-110 transition-opacity duration-700 ease-out',
+              imageLoaded ? 'opacity-20 dark:opacity-30' : 'opacity-0'
+            )}
           />
         )}
 
-        {/* Foreground Pristine Artwork — 100% contained, zero cropping */}
+        {/* Foreground Pristine Artwork — 100% contained, zero cropping, smooth progressive reveal */}
         {bannerUrl ? (
           <div className="relative w-full h-full flex items-center justify-center z-[2]">
             <Image
@@ -97,7 +114,11 @@ export function AppEditorialCard({
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               priority={priority}
               unoptimized
-              className="pointer-events-none object-contain rounded-lg drop-shadow-xs transition-transform duration-500 ease-out group-hover/editorial:scale-[1.015]"
+              onLoad={() => setImageLoaded(true)}
+              className={cn(
+                'pointer-events-none object-contain rounded-lg drop-shadow-xs transition-all duration-500 ease-out group-hover/editorial:scale-[1.015]',
+                imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.01]'
+              )}
             />
           </div>
         ) : (
@@ -109,16 +130,29 @@ export function AppEditorialCard({
       <div className="shrink-0 w-full flex items-center justify-between gap-2.5 sm:gap-3 p-2.5 sm:p-3 md:p-3.5 bg-white dark:bg-zinc-900/95 border-t border-zinc-200/80 dark:border-zinc-800/80 transition-colors duration-200">
         {/* App Icon + Title & Category */}
         <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
-          <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700/60 shrink-0 shadow-2xs flex items-center justify-center">
+          <div className="relative w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700/60 shrink-0 shadow-2xs flex items-center justify-center">
             {iconUrl ? (
-              <Image
-                src={iconUrl}
-                alt={`${app.name} icon`}
-                width={40}
-                height={40}
-                unoptimized
-                className="w-full h-full object-cover pointer-events-none"
-              />
+              <>
+                <div
+                  aria-hidden="true"
+                  className={cn(
+                    'absolute inset-0 skeleton-shimmer bg-zinc-200/60 dark:bg-zinc-700/60 transition-opacity duration-300 pointer-events-none z-[1]',
+                    iconLoaded ? 'opacity-0' : 'opacity-100'
+                  )}
+                />
+                <Image
+                  src={iconUrl}
+                  alt={`${app.name} icon`}
+                  width={40}
+                  height={40}
+                  unoptimized
+                  onLoad={() => setIconLoaded(true)}
+                  className={cn(
+                    'w-full h-full object-cover pointer-events-none transition-opacity duration-300',
+                    iconLoaded ? 'opacity-100' : 'opacity-0'
+                  )}
+                />
+              </>
             ) : (
               <div className="w-full h-full flex items-center justify-center text-white font-mono font-bold text-xs bg-indigo-600">
                 {app.name.slice(0, 2).toUpperCase()}

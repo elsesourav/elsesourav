@@ -1,35 +1,21 @@
+'use client';
+
 import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getAppIconUrl } from '@elsesourav/media';
-import type { AppListItem, AppPlatform } from '@elsesourav/types';
-import { Sparkles, Globe, Compass, Smartphone, Apple, Terminal, ArrowRight } from 'lucide-react';
+import type { AppListItem } from '@elsesourav/types';
+import { cn } from '@elsesourav/ui';
+import { Sparkles, ArrowRight } from 'lucide-react';
+import { PlatformIcon } from './AppCardHelpers';
 
 export interface AppIndexRowProps {
   app: AppListItem;
   index?: number;
 }
 
-function PlatformIcon({ platform }: { platform: AppPlatform }) {
-  switch (platform) {
-    case 'web':
-      return <Globe className="w-3.5 h-3.5" />;
-    case 'chrome':
-      return <Compass className="w-3.5 h-3.5" />;
-    case 'android':
-    case 'ios':
-      return <Smartphone className="w-3.5 h-3.5" />;
-    case 'macos':
-      return <Apple className="w-3.5 h-3.5" />;
-    case 'github':
-    case 'linux':
-    case 'windows':
-    default:
-      return <Terminal className="w-3.5 h-3.5" />;
-  }
-}
-
 export function AppIndexRow({ app, index }: AppIndexRowProps) {
+  const [iconLoaded, setIconLoaded] = React.useState(false);
   const iconUrl = app.iconUrl ? getAppIconUrl(app.iconUrl, 80) : null;
   const formattedIndex = typeof index === 'number' ? String(index + 1).padStart(2, '0') : null;
 
@@ -47,15 +33,28 @@ export function AppIndexRow({ app, index }: AppIndexRowProps) {
             </span>
           )}
 
-          <div className="w-10 h-10 rounded-xl overflow-hidden bg-zinc-800/80 border border-zinc-700/60 shrink-0 flex items-center justify-center">
+          <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-zinc-800/80 border border-zinc-700/60 shrink-0 flex items-center justify-center">
             {iconUrl ? (
-              <Image
-                src={iconUrl}
-                alt={`${app.name} icon`}
-                width={40}
-                height={40}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
-              />
+              <>
+                <div
+                  aria-hidden="true"
+                  className={cn(
+                    'absolute inset-0 skeleton-shimmer bg-zinc-200/60 dark:bg-zinc-700/60 z-[1] transition-opacity duration-300 pointer-events-none',
+                    iconLoaded ? 'opacity-0' : 'opacity-100'
+                  )}
+                />
+                <Image
+                  src={iconUrl}
+                  alt={`${app.name} icon`}
+                  width={40}
+                  height={40}
+                  onLoad={() => setIconLoaded(true)}
+                  className={cn(
+                    'w-full h-full object-cover group-hover:scale-105 transition-all duration-200',
+                    iconLoaded ? 'opacity-100' : 'opacity-0'
+                  )}
+                />
+              </>
             ) : (
               <Sparkles className="w-4 h-4 text-indigo-400" />
             )}

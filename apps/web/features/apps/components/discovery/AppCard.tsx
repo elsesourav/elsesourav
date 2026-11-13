@@ -1,26 +1,21 @@
 'use client';
 
-import { getAppIconUrl } from '@elsesourav/media';
-import type { AppListItem, AppPlatform } from '@elsesourav/types';
-import { Card } from '@elsesourav/ui';
-import {
-  Apple,
-  ArrowRight,
-  Compass,
-  Cpu,
-  Globe,
-  Layers,
-  Palette,
-  Radio,
-  Smartphone,
-  Sparkles,
-  Star,
-  Terminal,
-  Wrench,
-  Lock,
-} from 'lucide-react';
+import * as React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { getAppIconUrl } from '@elsesourav/media';
+import type { AppListItem } from '@elsesourav/types';
+import { Card, cn } from '@elsesourav/ui';
+import { ArrowRight, Lock } from 'lucide-react';
+import {
+  formatCount,
+  getCategoryFallbackIcon,
+  PlatformIcon,
+  platformLabel,
+  StarRating,
+} from './AppCardHelpers';
+
+export { formatCount, getCategoryFallbackIcon, PlatformIcon, platformLabel, StarRating };
 
 export interface AppCardProps {
   app: AppListItem;
@@ -33,115 +28,6 @@ export interface AppCardProps {
   showCategory?: boolean;
 }
 
-/* ─── Category → Fallback Icon ─── */
-function getCategoryFallbackIcon(category?: string) {
-  const norm = (category || '').toLowerCase();
-  if (norm.includes('ai') || norm.includes('ml') || norm.includes('neural'))
-    return <Sparkles className="w-5 h-5 text-indigo-400" />;
-  if (norm.includes('auto') || norm.includes('flow') || norm.includes('e-com'))
-    return <Cpu className="w-5 h-5 text-emerald-400" />;
-  if (norm.includes('hardware') || norm.includes('iot') || norm.includes('embedded'))
-    return <Radio className="w-5 h-5 text-cyan-400" />;
-  if (norm.includes('media') || norm.includes('design') || norm.includes('creative'))
-    return <Palette className="w-5 h-5 text-rose-400" />;
-  if (norm.includes('simul') || norm.includes('algo') || norm.includes('math'))
-    return <Layers className="w-5 h-5 text-violet-400" />;
-  if (norm.includes('util') || norm.includes('tool'))
-    return <Wrench className="w-5 h-5 text-amber-400" />;
-  if (norm.includes('terminal') || norm.includes('cli') || norm.includes('code'))
-    return <Terminal className="w-5 h-5 text-indigo-400" />;
-  return <Globe className="w-5 h-5 text-indigo-400" />;
-}
-
-/* ─── Platform Icon Helper ─── */
-const PLATFORM_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-  web: Globe,
-  chrome: Compass,
-  android: Smartphone,
-  ios: Smartphone,
-  macos: Apple,
-  linux: Terminal,
-  windows: Terminal,
-  github: Terminal,
-};
-function PlatformIcon({ platform }: { platform: AppPlatform }) {
-  const Icon = PLATFORM_ICONS[platform] || Terminal;
-  return <Icon className="w-3 h-3" />;
-}
-
-/* ─── Platform Label Helper ─── */
-const PLATFORM_LABELS: Record<string, string> = {
-  web: 'Web',
-  chrome: 'Chrome',
-  android: 'Android',
-  ios: 'iOS',
-  macos: 'Mac',
-  windows: 'Windows',
-  linux: 'Linux',
-  github: 'GitHub',
-  download: 'Download',
-  other: 'Other',
-};
-function platformLabel(platform: AppPlatform): string {
-  return PLATFORM_LABELS[platform] || platform;
-}
-
-/* ─── Compact Rating Count Formatter ─── */
-function formatCount(n: number): string {
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1).replace(/\.0$/, '')}M`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(1).replace(/\.0$/, '')}k`;
-  return String(n);
-}
-
-/* ─── Star Rating Row ─── */
-function StarRating({
-  value,
-  count,
-  size = 'sm',
-}: {
-  value: number;
-  count?: number;
-  size?: 'xs' | 'sm';
-}) {
-  const max = 5;
-  const starCls = size === 'xs' ? 'h-3 w-3' : 'h-3.5 w-3.5';
-  const textCls = size === 'xs' ? 'text-[11px]' : 'text-xs';
-
-  return (
-    <div
-      className="inline-flex items-center gap-1.5"
-      aria-label={`Rated ${value.toFixed(1)} out of ${max}`}
-    >
-      <div className="flex items-center">
-        {Array.from({ length: max }, (_, i) => {
-          const fill = Math.min(Math.max(value - i, 0), 1);
-          return (
-            <span key={i} className="relative inline-block">
-              <Star
-                className={`${starCls} shrink-0 fill-zinc-200 text-zinc-200 dark:fill-zinc-700 dark:text-zinc-700`}
-              />
-              <span
-                className="absolute inset-y-0 left-0 overflow-hidden"
-                style={{ width: `${fill * 100}%` }}
-              >
-                <Star className={`${starCls} max-w-none shrink-0 fill-amber-400 text-amber-400`} />
-              </span>
-            </span>
-          );
-        })}
-      </div>
-      <span className={`${textCls} font-semibold tabular-nums text-[hsl(var(--foreground))]`}>
-        {value.toFixed(1)}
-      </span>
-      {count !== undefined && count > 0 && (
-        <span className={`${textCls} font-normal text-[hsl(var(--muted-foreground))]`}>
-          ({formatCount(count)})
-        </span>
-      )}
-    </div>
-  );
-}
-
 /* ─── AppCard Component ─── */
 export function AppCard({
   app,
@@ -152,6 +38,9 @@ export function AppCard({
   showDescription = true,
   showCategory = true,
 }: AppCardProps) {
+  const [bannerLoaded, setBannerLoaded] = React.useState(false);
+  const [iconLoaded, setIconLoaded] = React.useState(false);
+
   const iconUrl = app.iconUrl ? getAppIconUrl(app.iconUrl, 96) : null;
   const bannerUrl = app.featuredImageUrl || iconUrl || app.iconUrl;
   const isFallbackBanner = !app.featuredImageUrl && !!(iconUrl || app.iconUrl);
@@ -173,6 +62,14 @@ export function AppCard({
             <div className="md:col-span-6 relative">
               {bannerUrl ? (
                 <div className="relative aspect-[16/8] md:aspect-auto md:h-full w-full overflow-hidden bg-[hsl(var(--surface-subtle))] flex items-center justify-center">
+                  {/* Elegant loading skeleton with theme-aware shimmer */}
+                  <div
+                    aria-hidden="true"
+                    className={cn(
+                      'absolute inset-0 skeleton-shimmer bg-zinc-200/60 dark:bg-zinc-800/60 z-[1] transition-opacity duration-400 pointer-events-none',
+                      bannerLoaded ? 'opacity-0' : 'opacity-100'
+                    )}
+                  />
                   {isFallbackBanner ? (
                     <div className="relative w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-600/40 via-violet-500/50 to-purple-700/60 p-6 sm:p-8">
                       <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-xl border border-white/20">
@@ -181,7 +78,11 @@ export function AppCard({
                           alt={`${app.name} banner icon`}
                           width={64}
                           height={64}
-                          className="w-full h-full object-cover"
+                          onLoad={() => setBannerLoaded(true)}
+                          className={cn(
+                            'w-full h-full object-cover transition-opacity duration-300',
+                            bannerLoaded ? 'opacity-100' : 'opacity-0'
+                          )}
                         />
                       </div>
                       <div className="absolute -right-8 -top-10 h-36 w-36 rounded-full bg-white/20 blur-2xl pointer-events-none" />
@@ -193,12 +94,16 @@ export function AppCard({
                       alt={`${app.name} project cover`}
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"
-                      className="object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
+                      onLoad={() => setBannerLoaded(true)}
+                      className={cn(
+                        'object-cover object-center group-hover:scale-105 transition-all duration-500 ease-out',
+                        bannerLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.01]'
+                      )}
                     />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none z-[2]" />
 
-                  {/* Pinned Top-Left Corner Badge - matching app slider left top */}
+                  {/* Pinned Top-Left Corner Badge */}
                   {(app.isFeatured || app.isPinned || featured) && (
                     <div className="absolute top-0 left-0 z-10 px-2.5 py-0.5 bg-white/95 text-zinc-900 border-b border-r border-zinc-200 dark:bg-black/95 dark:text-white/90 dark:border-white/15 font-semibold text-[10px] uppercase tracking-wider font-mono rounded-tl-none rounded-br-md shadow-sm pointer-events-none select-none">
                       {app.isPinned ? 'Pinned' : 'Featured'}
@@ -243,13 +148,26 @@ export function AppCard({
               <div className="flex items-start gap-2.5 sm:gap-3 pt-0.5">
                 <div className="relative w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-lg sm:rounded-xl overflow-hidden bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] shrink-0 flex items-center justify-center shadow-sm">
                   {iconUrl ? (
-                    <Image
-                      src={iconUrl}
-                      alt={`${app.name} icon`}
-                      width={48}
-                      height={48}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
+                    <>
+                      <div
+                        aria-hidden="true"
+                        className={cn(
+                          'absolute inset-0 skeleton-shimmer bg-zinc-200/60 dark:bg-zinc-800/60 z-[1] transition-opacity duration-300 pointer-events-none',
+                          iconLoaded ? 'opacity-0' : 'opacity-100'
+                        )}
+                      />
+                      <Image
+                        src={iconUrl}
+                        alt={`${app.name} icon`}
+                        width={48}
+                        height={48}
+                        onLoad={() => setIconLoaded(true)}
+                        className={cn(
+                          'w-full h-full object-cover group-hover:scale-105 transition-all duration-300',
+                          iconLoaded ? 'opacity-100' : 'opacity-0'
+                        )}
+                      />
+                    </>
                   ) : (
                     getCategoryFallbackIcon(app.primaryCategory)
                   )}
@@ -308,13 +226,26 @@ export function AppCard({
           {/* Left: Square Thumbnail / Icon */}
           <div className="relative w-16 h-16 sm:w-18 sm:h-18 rounded-xl overflow-hidden bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border-subtle))] shrink-0 flex items-center justify-center shadow-inner">
             {iconUrl ? (
-              <Image
-                src={iconUrl}
-                alt={`${app.name} icon`}
-                width={72}
-                height={72}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              />
+              <>
+                <div
+                  aria-hidden="true"
+                  className={cn(
+                    'absolute inset-0 skeleton-shimmer bg-zinc-200/60 dark:bg-zinc-800/60 z-[1] transition-opacity duration-300 pointer-events-none',
+                    iconLoaded ? 'opacity-0' : 'opacity-100'
+                  )}
+                />
+                <Image
+                  src={iconUrl}
+                  alt={`${app.name} icon`}
+                  width={72}
+                  height={72}
+                  onLoad={() => setIconLoaded(true)}
+                  className={cn(
+                    'w-full h-full object-cover group-hover:scale-105 transition-all duration-300',
+                    iconLoaded ? 'opacity-100' : 'opacity-0'
+                  )}
+                />
+              </>
             ) : (
               getCategoryFallbackIcon(app.primaryCategory)
             )}
@@ -362,33 +293,51 @@ export function AppCard({
         {/* ── Banner Area: Compact Aspect Ratio with Atmospheric Glow ── */}
         <div className="relative aspect-[16/8] sm:aspect-[2.1/1] w-full shrink-0 overflow-hidden bg-[hsl(var(--surface-subtle))]">
           {bannerUrl ? (
-            isFallbackBanner ? (
-              <div className="relative w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-600/35 via-violet-500/40 to-purple-700/50">
-                <div className="absolute -right-8 -top-10 h-36 w-36 rounded-full bg-white/20 blur-2xl pointer-events-none" />
-                <div className="absolute -bottom-12 left-6 h-28 w-28 rounded-full bg-black/15 blur-2xl pointer-events-none" />
-                <div className="w-14 h-14 rounded-2xl overflow-hidden shadow-xl border border-white/20">
-                  <Image
-                    src={bannerUrl}
-                    alt={`${app.name} preview icon`}
-                    width={56}
-                    height={56}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                {/* Subtle decorative watermark icon on the side */}
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 text-white/10 pointer-events-none">
-                  {getCategoryFallbackIcon(app.primaryCategory)}
-                </div>
-              </div>
-            ) : (
-              <Image
-                src={bannerUrl}
-                alt={`${app.name} preview`}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
+            <>
+              {/* Theme-aware shimmer skeleton */}
+              <div
+                aria-hidden="true"
+                className={cn(
+                  'absolute inset-0 skeleton-shimmer bg-zinc-200/60 dark:bg-zinc-800/60 z-[1] transition-opacity duration-400 pointer-events-none',
+                  bannerLoaded ? 'opacity-0' : 'opacity-100'
+                )}
               />
-            )
+              {isFallbackBanner ? (
+                <div className="relative w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-600/35 via-violet-500/40 to-purple-700/50">
+                  <div className="absolute -right-8 -top-10 h-36 w-36 rounded-full bg-white/20 blur-2xl pointer-events-none" />
+                  <div className="absolute -bottom-12 left-6 h-28 w-28 rounded-full bg-black/15 blur-2xl pointer-events-none" />
+                  <div className="w-14 h-14 rounded-2xl overflow-hidden shadow-xl border border-white/20">
+                    <Image
+                      src={bannerUrl}
+                      alt={`${app.name} preview icon`}
+                      width={56}
+                      height={56}
+                      onLoad={() => setBannerLoaded(true)}
+                      className={cn(
+                        'w-full h-full object-cover transition-opacity duration-300',
+                        bannerLoaded ? 'opacity-100' : 'opacity-0'
+                      )}
+                    />
+                  </div>
+                  {/* Subtle decorative watermark icon on the side */}
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 text-white/10 pointer-events-none">
+                    {getCategoryFallbackIcon(app.primaryCategory)}
+                  </div>
+                </div>
+              ) : (
+                <Image
+                  src={bannerUrl}
+                  alt={`${app.name} preview`}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  onLoad={() => setBannerLoaded(true)}
+                  className={cn(
+                    'object-cover object-center group-hover:scale-105 transition-all duration-500 ease-out',
+                    bannerLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.01]'
+                  )}
+                />
+              )}
+            </>
           ) : (
             <div className="relative w-full h-full bg-gradient-to-br from-indigo-600/25 via-violet-500/20 to-purple-700/25 flex items-center justify-center">
               <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-white/80 font-mono font-bold text-base">
@@ -397,9 +346,9 @@ export function AppCard({
               <div className="absolute -right-8 -top-10 h-36 w-36 rounded-full bg-white/10 blur-2xl pointer-events-none" />
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none z-[2]" />
 
-          {/* Pinned Top-Left Corner Badge - matching app slider left top */}
+          {/* Pinned Top-Left Corner Badge */}
           {(app.isFeatured || app.isPinned) && (
             <div className="absolute top-0 left-0 z-10 px-2.5 py-0.5 bg-white/95 text-zinc-900 border-b border-r border-zinc-200 dark:bg-black/95 dark:text-white/90 dark:border-white/15 font-semibold text-[10px] uppercase tracking-wider font-mono rounded-tl-none rounded-br-md shadow-sm pointer-events-none select-none">
               {app.isPinned ? 'Pinned' : 'Featured'}
@@ -418,15 +367,28 @@ export function AppCard({
         {/* ── Body: Floating Squircle Icon + Metadata ── */}
         <div className="relative flex flex-1 flex-col px-2.5 sm:px-3.5 md:px-4 pt-0.5 pb-2 sm:pb-3">
           {/* Overlapping Floating Squircle Icon */}
-          <div className="-mt-5 mb-1 sm:-mt-6 sm:mb-1.5 flex h-9 w-9 sm:h-11 sm:w-11 md:h-12 md:w-12 items-center justify-center rounded-lg sm:rounded-xl bg-[hsl(var(--card))] shadow-md ring-2 sm:ring-3 ring-[hsl(var(--card))] overflow-hidden transition-colors">
+          <div className="-mt-5 mb-1 sm:-mt-6 sm:mb-1.5 flex h-9 w-9 sm:h-11 sm:w-11 md:h-12 md:w-12 items-center justify-center rounded-lg sm:rounded-xl bg-[hsl(var(--card))] shadow-md ring-2 sm:ring-3 ring-[hsl(var(--card))] overflow-hidden transition-colors relative">
             {iconUrl ? (
-              <Image
-                src={iconUrl}
-                alt={`${app.name} icon`}
-                width={48}
-                height={48}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              />
+              <>
+                <div
+                  aria-hidden="true"
+                  className={cn(
+                    'absolute inset-0 skeleton-shimmer bg-zinc-200/60 dark:bg-zinc-800/60 z-[1] transition-opacity duration-300 pointer-events-none',
+                    iconLoaded ? 'opacity-0' : 'opacity-100'
+                  )}
+                />
+                <Image
+                  src={iconUrl}
+                  alt={`${app.name} icon`}
+                  width={48}
+                  height={48}
+                  onLoad={() => setIconLoaded(true)}
+                  className={cn(
+                    'w-full h-full object-cover group-hover:scale-105 transition-all duration-300',
+                    iconLoaded ? 'opacity-100' : 'opacity-0'
+                  )}
+                />
+              </>
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-[hsl(var(--surface-subtle))]">
                 {getCategoryFallbackIcon(app.primaryCategory)}

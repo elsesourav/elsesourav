@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Image from 'next/image';
 import { getAppScreenshotUrl } from '@elsesourav/media';
-import { Card, Button } from '@elsesourav/ui';
+import { Card, Button, cn } from '@elsesourav/ui';
 import { ChevronUp, Maximize2 } from 'lucide-react';
 import { AppMediaVideoCard } from './AppMediaVideoCard';
 import type { GridRow, ScreenshotAspect } from './screenshot-grid-layout';
@@ -27,6 +27,8 @@ export function AppScreenshotExpandedGrid({
   onCollapse,
   onImageLoadAspect,
 }: AppScreenshotExpandedGridProps) {
+  const [loadedMap, setLoadedMap] = React.useState<Record<string, boolean>>({});
+
   return (
     <div className="space-y-3 sm:space-y-4">
       {rows.map((row) => (
@@ -92,6 +94,14 @@ export function AppScreenshotExpandedGrid({
                       </div>
                     ) : (
                       <>
+                        {/* Shimmer skeleton while high-res screenshot loads */}
+                        <div
+                          aria-hidden="true"
+                          className={cn(
+                            'absolute inset-0 skeleton-shimmer bg-zinc-200/60 dark:bg-zinc-800/60 z-[1] transition-opacity duration-400 pointer-events-none rounded-xl sm:rounded-2xl',
+                            loadedMap[item.url] ? 'opacity-0' : 'opacity-100'
+                          )}
+                        />
                         <Image
                           src={getAppScreenshotUrl(item.url, 2560, 1440, 'limit')}
                           alt={`${appName} screenshot ${item.originalIndex}`}
@@ -104,8 +114,12 @@ export function AppScreenshotExpandedGrid({
                               ? '(max-width: 1024px) 100vw, 450px'
                               : '(max-width: 768px) 100vw, 700px'
                           }
-                          className="w-full h-full object-contain rounded-xl sm:rounded-2xl group-hover:scale-[1.01] transition-transform duration-300 ease-out"
+                          className={cn(
+                            'w-full h-full object-contain rounded-xl sm:rounded-2xl group-hover:scale-[1.01] transition-all duration-400 ease-out',
+                            loadedMap[item.url] ? 'opacity-100' : 'opacity-0'
+                          )}
                           onLoad={(e) => {
+                            setLoadedMap((prev) => ({ ...prev, [item.url]: true }));
                             const img = e.currentTarget;
                             if (img.naturalWidth && img.naturalHeight && onImageLoadAspect) {
                               const detectedAspect: ScreenshotAspect =

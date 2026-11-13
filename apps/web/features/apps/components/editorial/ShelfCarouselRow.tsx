@@ -182,117 +182,158 @@ export function ShelfCarouselRow({ items }: ShelfCarouselRowProps) {
           isDragging ? 'cursor-grabbing' : 'cursor-grab'
         )}
       >
-        {items.map((app) => {
-          const iconUrl = app.iconUrl ? getAppIconUrl(app.iconUrl, 96) : null;
-          const bannerUrl = app.featuredImageUrl || iconUrl || app.iconUrl;
-          const hasRating = Boolean(
-            app.ratingAverage &&
-              app.ratingAverage > 0 &&
-              (app.ratingCount === undefined || app.ratingCount > 0)
-          );
-          const rating = hasRating && app.ratingAverage ? app.ratingAverage.toFixed(1) : null;
-
-          return (
-            <Link
-              key={app.id}
-              href={`/apps/${app.slug}`}
-              onClick={(e) => {
-                if (hasDraggedRef.current) {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  hasDraggedRef.current = false;
-                }
-              }}
-              className="group/item block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 w-[230px] xs:w-[260px] sm:w-[300px] md:w-[340px] shrink-0 snap-start h-full flex flex-col"
-            >
-              {/* Unified Card Container */}
-              <div className="relative rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] hover:border-zinc-300 dark:hover:border-zinc-700 shadow-xs hover:shadow-md transition-all duration-300 ease-out group-hover/item:-translate-y-1 overflow-hidden p-2 sm:p-2.5 flex flex-col space-y-2 sm:space-y-2.5 h-full flex-1">
-                {/* 16:9 Landscape Cover Image (Perfect fit for 16:9 artwork) */}
-                <div className="relative aspect-[16/9] w-full rounded-lg overflow-hidden bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border-subtle))]">
-                  {bannerUrl ? (
-                    <Image
-                      src={getAppScreenshotUrl(bannerUrl, 800, 450, 'limit')}
-                      alt={`${app.name} preview`}
-                      fill
-                      sizes="(max-width: 640px) 260px, 340px"
-                      unoptimized
-                      className="object-cover object-center pointer-events-none group-hover/item:scale-[1.02] transition-transform duration-300 ease-out"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-indigo-900/40 via-purple-900/30 to-zinc-900 flex items-center justify-center">
-                      <span className="text-xl font-bold font-mono text-white/50">
-                        {app.name.slice(0, 2).toUpperCase()}
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Top-Right Badges: Member Lock + Version */}
-                  <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 flex items-center gap-1 sm:gap-1.5 z-10">
-                    {app.requiresAuth && (
-                      <span className="rounded-full bg-amber-500/90 backdrop-blur-md px-1.5 py-0.5 text-[8px] sm:text-[9px] font-mono font-semibold text-white border border-amber-300/30 flex items-center gap-1 shadow-xs">
-                        <Lock className="w-2.5 h-2.5" />
-                        <span>Member</span>
-                      </span>
-                    )}
-                    {app.currentVersion && (
-                      <span className="rounded-full bg-white/90 dark:bg-black/70 backdrop-blur-md px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-mono font-medium text-zinc-900 dark:text-white/90 border border-zinc-200 dark:border-white/15 shadow-xs transition-colors">
-                        v{app.currentVersion}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* App Metadata Row: Icon + Title + Rating (Centered vertically for balanced space management) */}
-                <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3 px-0.5 flex-1">
-                  {/* App Icon (y-centered) */}
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-md overflow-hidden bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border-subtle))] shrink-0 shadow-xs flex items-center justify-center">
-                    {iconUrl ? (
-                      <Image
-                        src={iconUrl}
-                        alt={`${app.name} icon`}
-                        width={44}
-                        height={44}
-                        unoptimized
-                        className="w-full h-full object-cover pointer-events-none"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-white font-mono font-bold text-xs bg-indigo-600/30">
-                        {app.name.slice(0, 2).toUpperCase()}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Title & Category Info */}
-                  <div className="min-w-0 flex-1">
-                    <h4 className="font-bold text-xs sm:text-[13px] md:text-sm text-[hsl(var(--foreground))] group-hover/item:text-indigo-600 dark:group-hover/item:text-indigo-400 transition-colors truncate leading-snug font-display">
-                      {app.name}
-                    </h4>
-                    <p className="text-[10px] sm:text-xs text-[hsl(var(--muted-foreground))] truncate leading-tight mt-0.5">
-                      {app.primaryCategory}
-                    </p>
-                    <div className="flex items-center gap-1 sm:gap-1.5 mt-0.5 text-[10px] sm:text-[11px] font-medium text-[hsl(var(--muted-foreground))]">
-                      {hasRating ? (
-                        <>
-                          <span className="text-[hsl(var(--foreground))] font-semibold">{rating}</span>
-                          <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-amber-400 text-amber-400" />
-                        </>
-                      ) : (
-                        <span className="text-amber-500/90 dark:text-amber-400/90 font-medium text-[10px]">New</span>
-                      )}
-                      {app.platforms.length > 0 && (
-                        <>
-                          <span className="text-[hsl(var(--border-strong))]">•</span>
-                          <span className="capitalize truncate">{app.platforms[0]}</span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          );
-        })}
+        {items.map((app) => (
+          <ShelfCardItem
+            key={app.id}
+            app={app}
+            hasDraggedRef={hasDraggedRef}
+          />
+        ))}
       </div>
     </div>
+  );
+}
+
+interface ShelfCardItemProps {
+  app: AppListItem;
+  hasDraggedRef: React.MutableRefObject<boolean>;
+}
+
+function ShelfCardItem({ app, hasDraggedRef }: ShelfCardItemProps) {
+  const [imageLoaded, setImageLoaded] = React.useState(false);
+  const [iconLoaded, setIconLoaded] = React.useState(false);
+  const iconUrl = app.iconUrl ? getAppIconUrl(app.iconUrl, 96) : null;
+  const bannerUrl = app.featuredImageUrl || iconUrl || app.iconUrl;
+  const hasRating = Boolean(
+    app.ratingAverage &&
+      app.ratingAverage > 0 &&
+      (app.ratingCount === undefined || app.ratingCount > 0)
+  );
+  const rating = hasRating && app.ratingAverage ? app.ratingAverage.toFixed(1) : null;
+
+  return (
+    <Link
+      href={`/apps/${app.slug}`}
+      onClick={(e) => {
+        if (hasDraggedRef.current) {
+          e.preventDefault();
+          e.stopPropagation();
+          hasDraggedRef.current = false;
+        }
+      }}
+      className="group/item block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 w-[230px] xs:w-[260px] sm:w-[300px] md:w-[340px] shrink-0 snap-start h-full flex flex-col"
+    >
+      {/* Unified Card Container */}
+      <div className="relative rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] hover:border-zinc-300 dark:hover:border-zinc-700 shadow-xs hover:shadow-md transition-all duration-300 ease-out group-hover/item:-translate-y-1 overflow-hidden p-2 sm:p-2.5 flex flex-col space-y-2 sm:space-y-2.5 h-full flex-1">
+        {/* 16:9 Landscape Cover Image (Perfect fit for 16:9 artwork) */}
+        <div className="relative aspect-[16/9] w-full rounded-lg overflow-hidden bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border-subtle))]">
+          {bannerUrl ? (
+            <>
+              {/* Shimmer skeleton while image loads */}
+              <div
+                aria-hidden="true"
+                className={cn(
+                  'absolute inset-0 skeleton-shimmer bg-zinc-200/60 dark:bg-zinc-800/60 z-[1] transition-opacity duration-400 pointer-events-none',
+                  imageLoaded ? 'opacity-0' : 'opacity-100'
+                )}
+              />
+              <Image
+                src={getAppScreenshotUrl(bannerUrl, 800, 450, 'limit')}
+                alt={`${app.name} preview`}
+                fill
+                sizes="(max-width: 640px) 260px, 340px"
+                unoptimized
+                onLoad={() => setImageLoaded(true)}
+                className={cn(
+                  'object-cover object-center pointer-events-none group-hover/item:scale-[1.02] transition-all duration-400 ease-out',
+                  imageLoaded ? 'opacity-100' : 'opacity-0'
+                )}
+              />
+            </>
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-indigo-900/40 via-purple-900/30 to-zinc-900 flex items-center justify-center">
+              <span className="text-xl font-bold font-mono text-white/50">
+                {app.name.slice(0, 2).toUpperCase()}
+              </span>
+            </div>
+          )}
+
+          {/* Top-Right Badges: Member Lock + Version */}
+          <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 flex items-center gap-1 sm:gap-1.5 z-10">
+            {app.requiresAuth && (
+              <span className="rounded-full bg-amber-500/90 backdrop-blur-md px-1.5 py-0.5 text-[8px] sm:text-[9px] font-mono font-semibold text-white border border-amber-300/30 flex items-center gap-1 shadow-xs">
+                <Lock className="w-2.5 h-2.5" />
+                <span>Member</span>
+              </span>
+            )}
+            {app.currentVersion && (
+              <span className="rounded-full bg-white/90 dark:bg-black/70 backdrop-blur-md px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-mono font-medium text-zinc-900 dark:text-white/90 border border-zinc-200 dark:border-white/15 shadow-xs transition-colors">
+                v{app.currentVersion}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* App Metadata Row: Icon + Title + Rating (Centered vertically for balanced space management) */}
+        <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3 px-0.5 flex-1">
+          {/* App Icon (y-centered) */}
+          <div className="relative w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-md overflow-hidden bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border-subtle))] shrink-0 shadow-xs flex items-center justify-center">
+            {iconUrl ? (
+              <>
+                <div
+                  aria-hidden="true"
+                  className={cn(
+                    'absolute inset-0 skeleton-shimmer bg-zinc-200/60 dark:bg-zinc-700/60 transition-opacity duration-300 pointer-events-none z-[1]',
+                    iconLoaded ? 'opacity-0' : 'opacity-100'
+                  )}
+                />
+                <Image
+                  src={iconUrl}
+                  alt={`${app.name} icon`}
+                  width={44}
+                  height={44}
+                  unoptimized
+                  onLoad={() => setIconLoaded(true)}
+                  className={cn(
+                    'w-full h-full object-cover pointer-events-none transition-opacity duration-300',
+                    iconLoaded ? 'opacity-100' : 'opacity-0'
+                  )}
+                />
+              </>
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-white font-mono font-bold text-xs bg-indigo-600/30">
+                {app.name.slice(0, 2).toUpperCase()}
+              </div>
+            )}
+          </div>
+
+          {/* Title & Category Info */}
+          <div className="min-w-0 flex-1">
+            <h4 className="font-bold text-xs sm:text-[13px] md:text-sm text-[hsl(var(--foreground))] group-hover/item:text-indigo-600 dark:group-hover/item:text-indigo-400 transition-colors truncate leading-snug font-display">
+              {app.name}
+            </h4>
+            <p className="text-[10px] sm:text-xs text-[hsl(var(--muted-foreground))] truncate leading-tight mt-0.5">
+              {app.primaryCategory}
+            </p>
+            <div className="flex items-center gap-1 sm:gap-1.5 mt-0.5 text-[10px] sm:text-[11px] font-medium text-[hsl(var(--muted-foreground))]">
+              {hasRating ? (
+                <>
+                  <span className="text-[hsl(var(--foreground))] font-semibold">{rating}</span>
+                  <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-amber-400 text-amber-400" />
+                </>
+              ) : (
+                <span className="text-amber-500/90 dark:text-amber-400/90 font-medium text-[10px]">New</span>
+              )}
+              {app.platforms.length > 0 && (
+                <>
+                  <span className="text-[hsl(var(--border-strong))]">•</span>
+                  <span className="capitalize truncate">{app.platforms[0]}</span>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </Link>
   );
 }

@@ -3,6 +3,7 @@
 import * as React from 'react';
 import Image from 'next/image';
 import { getAppScreenshotUrl } from '@elsesourav/media';
+import { cn } from '@elsesourav/ui';
 import { ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
 import { AppMediaVideoCard } from './AppMediaVideoCard';
 import type { GalleryMediaItem, ScreenshotAspect } from './screenshot-grid-layout';
@@ -38,6 +39,7 @@ export const AppScreenshotCarouselTrack = React.forwardRef<
   const trackRef = React.useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = React.useState(false);
   const [canScrollRight, setCanScrollRight] = React.useState(false);
+  const [loadedMap, setLoadedMap] = React.useState<Record<string, boolean>>({});
 
   // Mouse drag-to-scroll state
   const isDownRef = React.useRef(false);
@@ -192,14 +194,26 @@ export const AppScreenshotCarouselTrack = React.forwardRef<
                   </div>
                 ) : (
                   <>
+                    {/* Shimmer skeleton while high-res screenshot loads */}
+                    <div
+                      aria-hidden="true"
+                      className={cn(
+                        'absolute inset-0 skeleton-shimmer bg-zinc-200/60 dark:bg-zinc-800/60 z-[1] transition-opacity duration-400 pointer-events-none rounded-xl sm:rounded-2xl',
+                        loadedMap[item.url] ? 'opacity-0' : 'opacity-100'
+                      )}
+                    />
                     <Image
                       src={getAppScreenshotUrl(item.url, 2560, 1440, 'limit')}
                       alt={`${appName} screenshot ${item.originalIndex}`}
                       fill
                       unoptimized
                       sizes="(max-width: 768px) 85vw, 900px"
-                      className="w-full h-full object-contain rounded-xl sm:rounded-2xl group-hover/card:scale-[1.01] transition-transform duration-300 ease-out"
+                      className={cn(
+                        'w-full h-full object-contain rounded-xl sm:rounded-2xl group-hover/card:scale-[1.01] transition-all duration-400 ease-out',
+                        loadedMap[item.url] ? 'opacity-100' : 'opacity-0'
+                      )}
                       onLoad={(e) => {
+                        setLoadedMap((prev) => ({ ...prev, [item.url]: true }));
                         const img = e.currentTarget;
                         if (img.naturalWidth && img.naturalHeight && onImageLoadAspect) {
                           const detectedAspect: ScreenshotAspect =

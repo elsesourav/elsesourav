@@ -1513,9 +1513,3 @@ The `@elsesourav/ui/micro` collection contains **34 playful, high-tactility micr
 - **Independent Loading States for Compound Cards**: In compound cards (e.g. `AppCard`, `AppEditorialCard`, `ShelfCarouselRow`), the hero banner/cover image and the 1:1 application icon track independent loading states (`bannerLoaded`, `iconLoaded`), preventing visual pop-in or layout shifts.
 - **Hero Carousel Priority Poster**: The autonomous hero carousel (`AppsMorphHero`) renders a priority poster image backed by a theme-adaptive skeleton layer, ensuring first-time visitors never see a blank dark canvas while WebGL textures initialize.
 - **Modular Architecture (< 500 lines limit)**: Extracted reusable helpers and platform icons into `AppCardHelpers.tsx`, keeping `AppCard.tsx` (455 lines) well below the 500-line threshold while eliminating redundant helper definitions in discovery components.
-
-
-
-
-
-

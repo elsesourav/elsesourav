@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Card, Badge, Button } from '@elsesourav/ui';
+import { Card, Badge, Button, cn } from '@elsesourav/ui';
 import { getAppIconUrl } from '@elsesourav/media';
 import type { LibraryItem } from '@elsesourav/types';
 import { toggleSaveAppAction } from '../actions/library.actions';
@@ -18,6 +18,7 @@ export function LibraryAppCard({ item, onRemove }: LibraryAppCardProps) {
   const { app } = item;
   const iconUrl = app.iconUrl ? getAppIconUrl(app.iconUrl, 96) : null;
   const [isRemoving, setIsRemoving] = React.useState(false);
+  const [iconLoaded, setIconLoaded] = React.useState(false);
 
   const handleRemove = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -46,15 +47,28 @@ export function LibraryAppCard({ item, onRemove }: LibraryAppCardProps) {
         {/* Top Icon & Info */}
         <div className="flex items-start gap-3.5">
           <Link href={`/apps/${app.slug}`} className="shrink-0">
-            <div className="w-12 h-12 rounded-xl overflow-hidden bg-zinc-800/80 border border-zinc-700/50 flex items-center justify-center">
+            <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-zinc-800/80 border border-zinc-700/50 flex items-center justify-center">
               {iconUrl ? (
-                <Image
-                  src={iconUrl}
-                  alt={`${app.name} icon`}
-                  width={48}
-                  height={48}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                />
+                <>
+                  <div
+                    aria-hidden="true"
+                    className={cn(
+                      'absolute inset-0 skeleton-shimmer bg-zinc-200/60 dark:bg-zinc-700/60 z-[1] transition-opacity duration-300 pointer-events-none',
+                      iconLoaded ? 'opacity-0' : 'opacity-100'
+                    )}
+                  />
+                  <Image
+                    src={iconUrl}
+                    alt={`${app.name} icon`}
+                    width={48}
+                    height={48}
+                    onLoad={() => setIconLoaded(true)}
+                    className={cn(
+                      'w-full h-full object-cover group-hover:scale-105 transition-all duration-300',
+                      iconLoaded ? 'opacity-100' : 'opacity-0'
+                    )}
+                  />
+                </>
               ) : (
                 <Sparkles className="w-6 h-6 text-indigo-400" />
               )}

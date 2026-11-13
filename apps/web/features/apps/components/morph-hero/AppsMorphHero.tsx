@@ -3,6 +3,7 @@
 import { getAppBannerDesktopUrl, getAppBannerMobileUrl } from '@elsesourav/media';
 import type { AppListItem, CarouselSlide } from '@elsesourav/types';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
 import MorphSlider, { type MorphSliderRef } from './MorphSlider';
@@ -253,6 +254,24 @@ export function AppsMorphHero({
         onPointerLeave={() => setIsHovered(false)}
         className="relative w-full aspect-[3/4] sm:aspect-[21/9] sm:max-h-none overflow-hidden rounded-[14px] isolate [transform:translateZ(0)] cursor-pointer"
       >
+        {/* Loading Skeleton Shimmer (Ensures instant visual feedback on initial cold load) */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 skeleton-shimmer bg-zinc-200/50 dark:bg-zinc-800/50 z-[1] pointer-events-none animate-pulse"
+        />
+
+        {/* First slide image pre-render poster for instant zero-flash visual */}
+        {morphItems[0]?.image && (
+          <Image
+            src={morphItems[0].image}
+            alt={morphItems[0].caption || 'Hero banner'}
+            fill
+            priority
+            unoptimized
+            className="absolute inset-0 w-full h-full object-cover z-[1] pointer-events-none transition-opacity duration-500"
+          />
+        )}
+
         <MorphSlider
           ref={sliderRef}
           items={morphItems}

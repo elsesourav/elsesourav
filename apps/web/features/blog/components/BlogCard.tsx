@@ -1,7 +1,9 @@
+'use client';
+
 import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Card, Badge } from '@elsesourav/ui';
+import { Card, Badge, cn } from '@elsesourav/ui';
 import { getBlogCoverUrl } from '@elsesourav/media';
 import type { BlogPostListItem } from '@elsesourav/types';
 import { Clock, Calendar, ArrowUpRight } from 'lucide-react';
@@ -12,6 +14,7 @@ interface BlogCardProps {
 }
 
 export function BlogCard({ post, isFeatured = false }: BlogCardProps) {
+  const [imageLoaded, setImageLoaded] = React.useState(false);
   const coverUrl = post.coverImageUrl ? getBlogCoverUrl(post.coverImageUrl, 800, 450) : null;
   const publishedDate = post.publishedAt
     ? new Date(post.publishedAt).toLocaleDateString('en-US', {
@@ -35,6 +38,13 @@ export function BlogCard({ post, isFeatured = false }: BlogCardProps) {
             isFeatured ? 'lg:w-1/2 aspect-[16/9] lg:aspect-auto' : 'aspect-[16/9] w-full'
           }`}
         >
+          <div
+            aria-hidden="true"
+            className={cn(
+              'absolute inset-0 skeleton-shimmer bg-zinc-200/60 dark:bg-zinc-800/60 z-[1] transition-opacity duration-400 pointer-events-none',
+              imageLoaded ? 'opacity-0' : 'opacity-100'
+            )}
+          />
           <Image
             src={coverUrl}
             alt={post.title}
@@ -44,7 +54,11 @@ export function BlogCard({ post, isFeatured = false }: BlogCardProps) {
                 ? '(max-width: 1024px) 100vw, 50vw'
                 : '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
             }
-            className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+            onLoad={() => setImageLoaded(true)}
+            className={cn(
+              'object-cover group-hover:scale-105 transition-all duration-500 ease-out',
+              imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.01]'
+            )}
           />
 
           {post.category && (

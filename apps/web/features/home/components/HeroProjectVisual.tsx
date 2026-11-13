@@ -3,6 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { cn } from '@elsesourav/ui';
 import { ArrowUpRight, Sparkles, Cpu, Palette, Terminal, Zap } from 'lucide-react';
 import type { AppListItem } from '@elsesourav/types';
 
@@ -11,6 +12,7 @@ interface HeroProjectVisualProps {
 }
 
 export function HeroProjectVisual({ apps }: HeroProjectVisualProps) {
+  const [coverLoaded, setCoverLoaded] = React.useState(false);
   if (!apps || apps.length === 0) return null;
 
   const flagshipApp = apps[0];
@@ -53,15 +55,26 @@ export function HeroProjectVisual({ apps }: HeroProjectVisualProps) {
             {/* Visual Cover / Interface Preview */}
             {flagshipApp.featuredImageUrl || flagshipApp.iconUrl ? (
               <div className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border-subtle))] mb-3.5 shadow-inner">
+                <div
+                  aria-hidden="true"
+                  className={cn(
+                    'absolute inset-0 skeleton-shimmer bg-zinc-200/60 dark:bg-zinc-800/60 z-[1] transition-opacity duration-400 pointer-events-none',
+                    coverLoaded ? 'opacity-0' : 'opacity-100'
+                  )}
+                />
                 <Image
                   src={flagshipApp.featuredImageUrl || flagshipApp.iconUrl}
                   alt={`${flagshipApp.name} interface preview`}
                   fill
                   priority
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover object-top group-hover:scale-105 transition-transform duration-500 ease-out"
+                  onLoad={() => setCoverLoaded(true)}
+                  className={cn(
+                    'object-cover object-top group-hover:scale-105 transition-all duration-500 ease-out',
+                    coverLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.01]'
+                  )}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none z-[2]" />
               </div>
             ) : null}
 

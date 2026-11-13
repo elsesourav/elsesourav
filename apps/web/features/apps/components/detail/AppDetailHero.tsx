@@ -8,7 +8,7 @@ import {
 } from '@/features/apps/utils/app-metrics';
 import { getAppIconUrl } from '@elsesourav/media';
 import type { PublicApp } from '@elsesourav/types';
-import { Button } from '@elsesourav/ui';
+import { Button, cn } from '@elsesourav/ui';
 import { Lightbox } from '@elsesourav/ui/interior';
 import {
   Archive,
@@ -30,6 +30,7 @@ interface AppDetailHeroProps {
 }
 
 export function AppDetailHero({ app, isAuthenticated = false }: AppDetailHeroProps) {
+  const [iconLoaded, setIconLoaded] = React.useState(false);
   const [isIconLightboxOpen, setIsIconLightboxOpen] = React.useState(false);
   const iconRef = React.useRef<HTMLDivElement>(null);
 
@@ -110,15 +111,26 @@ export function AppDetailHero({ app, isAuthenticated = false }: AppDetailHeroPro
           >
             {iconUrl ? (
               <>
+                <div
+                  aria-hidden="true"
+                  className={cn(
+                    'absolute inset-0 skeleton-shimmer bg-zinc-200/60 dark:bg-zinc-800/60 z-[1] transition-opacity duration-300 pointer-events-none',
+                    iconLoaded ? 'opacity-0' : 'opacity-100'
+                  )}
+                />
                 <Image
                   src={iconUrl}
                   alt={`${app.name} icon`}
                   width={112}
                   height={112}
                   priority
-                  className="w-full h-full object-cover group-hover/icon:scale-105 transition-transform duration-300"
+                  onLoad={() => setIconLoaded(true)}
+                  className={cn(
+                    'w-full h-full object-cover group-hover/icon:scale-105 transition-all duration-300',
+                    iconLoaded ? 'opacity-100' : 'opacity-0'
+                  )}
                 />
-                <div className="absolute inset-0 bg-black/45 opacity-0 group-hover/icon:opacity-100 transition-opacity flex items-center justify-center text-white backdrop-blur-[2px]">
+                <div className="absolute inset-0 bg-black/45 opacity-0 group-hover/icon:opacity-100 transition-opacity flex items-center justify-center text-white backdrop-blur-[2px] z-[2]">
                   <Maximize2 className="w-5 h-5 drop-shadow-md" />
                 </div>
               </>
