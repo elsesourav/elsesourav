@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Button, Input, ImageCropperModal } from '@elsesourav/ui';
 import { MediaPickerModal } from './MediaPickerModal';
 import { ImageUploadSourceModal } from './ImageUploadSourceModal';
-import { adminUploadImageFileAction } from '../actions/admin-media-actions';
+import { uploadAdminImageFile } from '../utils/upload-client';
 import type { MediaDomain, MediaFolder } from '@elsesourav/types';
 import type { PresetRatioOption } from '@elsesourav/ui';
 import { Image as ImageIcon, Upload, FolderOpen, X, Loader2, Crop } from 'lucide-react';
@@ -131,22 +131,55 @@ export function ImageInputWithLibrary({
     setIsUploading(true);
     setUploadError(null);
 
-    const formData = new FormData();
-    formData.append('file', fileToUpload);
-    formData.append('folder', folder);
-
     try {
-      const res = await adminUploadImageFileAction(formData);
+      const res = await uploadAdminImageFile(fileToUpload, folder);
       if (res.success && res.url) {
         onChange(res.url);
       } else {
         setUploadError(res.error || 'Upload failed');
       }
-    } catch {
-      setUploadError('Failed to upload image');
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : 'Failed to upload image');
     } finally {
       setIsUploading(false);
     }
+  };
+
+  // Direct clipboard paste listener: intercepts pasted screenshots / images
+  const handlePaste = (e: React.ClipboardEvent) => {
+    const items = e.clipboardData?.items;
+    if (!items || items.length === 0) return;
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (item && item.type.startsWith('image/')) {
+        const file = item.getAsFile();
+        if (file) {
+          e.preventDefault();
+          e.stopPropagation();
+          processSelectedFile(file);
+          return;
+        }
+      }
+    }
+  };
+
+  // Drag and drop listener: allows dropping image files directly
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      if (file && file.type.startsWith('image/')) {
+        processSelectedFile(file);
+      }
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
   };
 
   // Process selected file (from device picker or clipboard paste) with smart aspect ratio detection
@@ -258,7 +291,12 @@ export function ImageInputWithLibrary({
         disabled={isUploading}
       />
 
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+      <div
+        onPaste={handlePaste}
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        className="flex flex-col sm:flex-row sm:items-center gap-3"
+      >
         {/* Preview Thumbnail with Click to Crop */}
         <div
           className={`${previewClasses} relative group ${displayImage ? 'cursor-pointer' : ''}`}
@@ -269,7 +307,7 @@ export function ImageInputWithLibrary({
               setIsCropperOpen(true);
             }
           }}
-          title={displayImage ? 'Click to crop image' : undefined}
+          title={displayImage ? 'Click to crop image' : 'Paste or drop image here'}
         >
           {displayImage ? (
             <>
@@ -296,6 +334,7 @@ export function ImageInputWithLibrary({
             type="url"
             value={value}
             onChange={(e) => onChange(e.target.value)}
+            onPaste={handlePaste}
             placeholder={effectivePlaceholder}
             required={required}
             className="bg-white dark:bg-zinc-950/60 border-zinc-200 dark:border-zinc-800 text-xs rounded-xl text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 min-w-[140px] flex-1"

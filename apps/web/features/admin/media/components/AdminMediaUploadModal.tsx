@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import type { AdminMediaItem, MediaDomain, MediaFolder, MediaType } from '@elsesourav/types';
 import { Card, Button, IconButton } from '@elsesourav/ui';
 import { Dropdown } from '@elsesourav/ui/interior';
-import { adminUploadImageFileAction } from '../actions/admin-media-actions';
+import { uploadAdminImageFile } from '../utils/upload-client';
 import { Upload, X, AlertCircle, ClipboardPaste, HardDrive, Sparkles } from 'lucide-react';
 
 const FOLDER_ITEMS = [
@@ -55,12 +55,8 @@ export function AdminMediaUploadModal({
       setUploadProgress(20);
 
       try {
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('folder', uploadFolder);
-
-        setUploadProgress(50);
-        const res = await adminUploadImageFileAction(formData);
+        setUploadProgress(40);
+        const res = await uploadAdminImageFile(file, uploadFolder);
 
         if (!res.success || !res.url) {
           throw new Error(res.error || 'Upload failed');

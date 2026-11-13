@@ -16,6 +16,18 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   outputFileTracingRoot: path.resolve(__dirname, '../../'),
   poweredByHeader: false,
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '15mb',
+      allowedOrigins: [
+        'admin.elsesourav.com',
+        'elsesourav.com',
+        '*.elsesourav.com',
+        'localhost:3000',
+        'localhost:3001',
+      ],
+    },
+  },
   serverExternalPackages: ['@prisma/client', 'pg', '@prisma/adapter-pg'],
   transpilePackages: [
     '@elsesourav/ui',

@@ -4,10 +4,8 @@ import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { Card, Button, Input, Badge } from '@elsesourav/ui';
 import type { AdminMediaItem, MediaDomain, MediaFolder } from '@elsesourav/types';
-import {
-  adminGetMediaListAction,
-  adminUploadImageFileAction,
-} from '../actions/admin-media-actions';
+import { adminGetMediaListAction } from '../actions/admin-media-actions';
+import { uploadAdminImageFile } from '../utils/upload-client';
 import { ImageUploadSourceModal } from './ImageUploadSourceModal';
 import { Image as ImageIcon, Search, Upload, X, Check, Loader2 } from 'lucide-react';
 
@@ -124,20 +122,17 @@ export function MediaPickerModal({
           : selectedCategory === 'blog'
             ? 'blog'
             : 'general';
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('folder', folder);
 
     try {
-      const res = await adminUploadImageFileAction(formData);
+      const res = await uploadAdminImageFile(file, folder);
       if (res.success && res.url) {
         onSelect(res.url);
         onClose();
       } else {
         setError(res.error || 'Failed to upload image');
       }
-    } catch {
-      setError('Upload failed');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Upload failed');
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
