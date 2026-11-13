@@ -118,3 +118,12 @@ Search across applications, blog articles, and help guides is powered by a high-
 1. **Route-Based Lazy Loading**: All route views (especially the large `/admin` management suite and markdown editors) are dynamically imported via `React.lazy()`.
 2. **Immutable Asset Caching**: Static assets in `dist/assets/` carry unique content hashes and are served with `Cache-Control: max-age=31536000, immutable`.
 3. **Core Bundle Size**: Initial public app shell bundle is lightweight (~136 kB gzipped).
+
+---
+
+## 7. Universal Authentication & Cross-Application SSO
+
+For detailed specifications on the unified identity system, OAuth providers (Google, GitHub), reusable auth UI components, and game engine integrations (Godot, Unity, WebGL), see:
+
+👉 **[`docs/AUTHENTICATION.md`](./AUTHENTICATION.md)**
+

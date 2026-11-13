@@ -47,6 +47,12 @@ const LANGUAGE_OPTIONS = [
   { value: 'zh', label: 'Chinese / 中文 (zh)' },
 ];
 
+const STATUS_ITEMS = [
+  { value: 'draft', label: 'DRAFT' },
+  { value: 'published', label: 'PUBLISHED' },
+  { value: 'archived', label: 'ARCHIVED' },
+];
+
 export function AdminAppForm({ app, categories }: AdminAppFormProps) {
   const router = useRouter();
   const isEditing = Boolean(app?.id);
@@ -76,15 +82,7 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
     () => categories.map((c) => ({ value: c.id, label: c.name })),
     [categories]
   );
-
-  const statusItems = React.useMemo(
-    () => [
-      { value: 'draft', label: 'DRAFT' },
-      { value: 'published', label: 'PUBLISHED' },
-      { value: 'archived', label: 'ARCHIVED' },
-    ],
-    []
-  );
+  const statusItems = STATUS_ITEMS;
   const [isFeatured, setIsFeatured] = React.useState(app?.isFeatured ?? false);
   const [isPinned, setIsPinned] = React.useState(app?.isPinned ?? false);
   const [requiresAuth, setRequiresAuth] = React.useState(app?.requiresAuth ?? false);
@@ -125,6 +123,17 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
     setIsSaving(true);
     setSuccess(null);
     setError(null);
+
+    if (!featuredImageUrl.trim()) {
+      setError('Landscape Cover Image (16:9) is required.');
+      setIsSaving(false);
+      return;
+    }
+    if (!featuredImageMobileUrl.trim()) {
+      setError('Portrait Cover Image (9:16) is required.');
+      setIsSaving(false);
+      return;
+    }
 
     const payload = {
       name: name.trim(),
@@ -394,6 +403,8 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
           setIconUrl={setIconUrl}
           featuredImageUrl={featuredImageUrl}
           setFeaturedImageUrl={setFeaturedImageUrl}
+          featuredImageMobileUrl={featuredImageMobileUrl}
+          setFeaturedImageMobileUrl={setFeaturedImageMobileUrl}
           screenshots={screenshots}
           setScreenshots={setScreenshots}
           demoUrl={demoUrl}
@@ -404,36 +415,22 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
 
         {/* Optional Contributor / Author Attribution */}
         <AdminAppAttributionSection
-          authorName={authorName}
-          setAuthorName={setAuthorName}
-          authorRole={authorRole}
-          setAuthorRole={setAuthorRole}
-          authorImageUrl={authorImageUrl}
-          setAuthorImageUrl={setAuthorImageUrl}
-          authorUrl={authorUrl}
-          setAuthorUrl={setAuthorUrl}
+          authorName={authorName} setAuthorName={setAuthorName}
+          authorRole={authorRole} setAuthorRole={setAuthorRole}
+          authorImageUrl={authorImageUrl} setAuthorImageUrl={setAuthorImageUrl}
+          authorUrl={authorUrl} setAuthorUrl={setAuthorUrl}
         />
 
         {/* Taxonomy & Configuration Settings */}
         <AdminAppVisibilitySettings
-          categoryId={categoryId}
-          setCategoryId={setCategoryId}
-          categoryItems={categoryItems}
-          status={status}
-          setStatus={setStatus}
-          statusItems={statusItems}
-          sortOrder={sortOrder}
-          setSortOrder={setSortOrder}
-          isFeatured={isFeatured}
-          setIsFeatured={setIsFeatured}
-          isPinned={isPinned}
-          setIsPinned={setIsPinned}
-          requiresAuth={requiresAuth}
-          setRequiresAuth={setRequiresAuth}
-          seoTitle={seoTitle}
-          setSeoTitle={setSeoTitle}
-          seoDescription={seoDescription}
-          setSeoDescription={setSeoDescription}
+          categoryId={categoryId} setCategoryId={setCategoryId} categoryItems={categoryItems}
+          status={status} setStatus={setStatus} statusItems={statusItems}
+          sortOrder={sortOrder} setSortOrder={setSortOrder}
+          isFeatured={isFeatured} setIsFeatured={setIsFeatured}
+          isPinned={isPinned} setIsPinned={setIsPinned}
+          requiresAuth={requiresAuth} setRequiresAuth={setRequiresAuth}
+          seoTitle={seoTitle} setSeoTitle={setSeoTitle}
+          seoDescription={seoDescription} setSeoDescription={setSeoDescription}
         />
 
         {/* Submit Actions */}

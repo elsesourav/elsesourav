@@ -829,14 +829,22 @@ Prototype interface exploring administrative user table controls and search perf
     const app = appsData[i]!;
     const { tags, githubUrl, ...appFields } = app;
     const sortOrder = (appFields as { sortOrder?: number }).sortOrder ?? i + 1;
+    const featuredImageMobileUrl =
+      (appFields as { featuredImageMobileUrl?: string }).featuredImageMobileUrl ||
+      (appFields.featuredImageUrl && appFields.featuredImageUrl.includes('unsplash.com')
+        ? `${appFields.featuredImageUrl.split('?')[0]}?w=900&h=1600&fit=crop&q=80`
+        : appFields.featuredImageUrl);
+
     const createdApp = await prisma.app.upsert({
       where: { slug: app.slug },
       update: {
         sortOrder,
+        featuredImageMobileUrl,
         ...appFields,
       },
       create: {
         sortOrder,
+        featuredImageMobileUrl,
         ...appFields,
       },
     });

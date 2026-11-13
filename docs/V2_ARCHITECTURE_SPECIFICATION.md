@@ -165,3 +165,12 @@ elsesourav/
 ```
 
 _Violations of this dependency matrix will be blocked via ESLint `no-restricted-imports` rules._
+
+---
+
+## 7. Universal Authentication & Single Sign-On (SSO)
+
+For full architectural details, component inventories, and cross-application/cross-game integration specifications (Godot, Unity, WebGL, Subdomains), see:
+
+👉 **[`docs/AUTHENTICATION.md`](./AUTHENTICATION.md)**
+

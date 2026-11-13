@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import type { CSSProperties } from 'react';
+import { motion } from 'motion/react';
 import {
   MorphEngine,
   DEFAULT_ITEMS,
@@ -328,14 +329,15 @@ export function MorphSlider({
               onClick={() => handleSelectIndex(i)}
             >
               {i === index && (
-                <span
+                <motion.span
                   key={`interior-ms-progress-${i}`}
-                  data-carousel-progress
-                  className="animate-hero-progress absolute inset-y-0 left-0 bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,1)]"
-                  style={{
-                    width: '0%',
-                    animation: 'heroSlideProgress 5s linear forwards',
+                  initial={{ width: '0%' }}
+                  animate={{ width: '100%' }}
+                  transition={{
+                    duration: autoplayDelay || 5,
+                    ease: 'linear',
                   }}
+                  className="absolute inset-y-0 left-0 bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,0.95)]"
                 />
               )}
             </button>

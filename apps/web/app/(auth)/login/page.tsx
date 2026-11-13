@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { getServerSession } from '@elsesourav/auth';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@elsesourav/ui';
 import { LoginForm } from '@/components/auth/LoginForm';
-import { ShieldCheck, Shield, ArrowLeft } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -64,23 +64,6 @@ export default async function LoginPage() {
             Create an account
           </Link>
         </p>
-
-        <div className="w-full pt-2 border-t border-slate-200/60 dark:border-white/[0.04] flex items-center justify-between text-xs text-slate-500 dark:text-zinc-400">
-          <Link
-            href="/"
-            className="hover:text-slate-900 dark:hover:text-white transition-colors inline-flex items-center gap-1"
-          >
-            <ArrowLeft className="w-3 h-3" />
-            <span>Public Site</span>
-          </Link>
-          <Link
-            href="/admin/login"
-            className="text-slate-500 dark:text-zinc-400 hover:text-amber-600 dark:hover:text-amber-400 inline-flex items-center gap-1 transition-colors"
-          >
-            <Shield className="w-3.5 h-3.5" />
-            <span>Admin Portal →</span>
-          </Link>
-        </div>
       </CardFooter>
     </Card>
   );

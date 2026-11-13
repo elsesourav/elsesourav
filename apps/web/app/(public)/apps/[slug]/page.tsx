@@ -172,86 +172,92 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="space-y-16 max-w-5xl mx-auto">
+      <div className="space-y-8 sm:space-y-10 w-full max-w-full">
         {/* 1. App Hero Section (Immediately visible, no initial scroll delay) */}
-        <AppDetailHero app={app} isAuthenticated={isAuthenticated} />
+        <div className="w-full max-w-5xl mx-auto">
+          <AppDetailHero app={app} isAuthenticated={isAuthenticated} />
+        </div>
 
-        {/* 2. Visual Showcase / Screenshot Gallery */}
+        {/* 2. Visual Showcase / Screenshot Gallery — Wide desktop/tablet stage with compact margins */}
         {((app.screenshots && app.screenshots.length > 0) || app.videoUrl) && (
-          <Reveal direction="up" distance={16}>
-            <AppScreenshotGallery
-              appName={app.name}
-              screenshots={app.screenshots || []}
-              videoUrl={app.videoUrl}
-            />
-          </Reveal>
+          <div className="w-full max-w-7xl mx-auto px-0 sm:px-1">
+            <Reveal direction="up" distance={12}>
+              <AppScreenshotGallery
+                appName={app.name}
+                screenshots={app.screenshots || []}
+                videoUrl={app.videoUrl}
+              />
+            </Reveal>
+          </div>
         )}
 
         {/* 3. Description & Technical Story with App Store style more toggle */}
-        {app.description && (
-          <Reveal direction="up" distance={14}>
-            <AppDetailDescription
-              description={app.description}
-              documentationMd={app.documentationMd}
-            />
-          </Reveal>
-        )}
-
-        {/* 4. Community Feedback, Ratings & Reviews */}
-        <Reveal direction="up" distance={14}>
-          <div id="community-feedback" className="scroll-mt-24">
-            <AppFeedbackSection
-              appSlug={app.slug}
-              appName={app.name}
-              isAuthenticated={isAuthenticated}
-            />
-          </div>
-        </Reveal>
-
-        {/* 5. App Store Information & Technical Specifications */}
-        <Reveal direction="up" distance={14}>
-          <AppInformationSpecs app={app} />
-        </Reveal>
-
-        {/* 8. Suggestions & Related Projects Shelf (Matches Apps page shelf style) */}
-        {fallbackRelated.length > 0 && (
-          <section
-            aria-labelledby="related-projects-heading"
-            className="w-full max-w-full min-w-0 space-y-3 pt-8 border-t border-[hsl(var(--border-subtle))]"
-          >
-            <Reveal direction="up" distance={14}>
-              <div className="flex items-center justify-between gap-3 pb-1 border-b border-[hsl(var(--border-subtle))]">
-                <div className="flex items-center gap-2.5">
-                  <span className="w-7 h-7 rounded-lg bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] flex items-center justify-center shrink-0 shadow-xs">
-                    {categoryMeta.icon}
-                  </span>
-                  <div>
-                    <h2
-                      id="related-projects-heading"
-                      className="text-base sm:text-lg font-bold tracking-tight text-[hsl(var(--foreground))] font-display"
-                    >
-                      More in {app.primaryCategory}
-                    </h2>
-                    <p className="text-xs text-[hsl(var(--muted-foreground))] hidden sm:block">
-                      {categoryMeta.subtitle}
-                    </p>
-                  </div>
-                </div>
-
-                <Link
-                  href={app.categorySlug ? `/apps?category=${app.categorySlug}` : ROUTES.APPS}
-                  className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 transition-colors shrink-0 group/link"
-                >
-                  <span>See all</span>
-                  <ChevronRight className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" />
-                </Link>
-              </div>
+        <div className="w-full max-w-5xl mx-auto space-y-8 sm:space-y-10">
+          {app.description && (
+            <Reveal direction="up" distance={12}>
+              <AppDetailDescription
+                description={app.description}
+                documentationMd={app.documentationMd}
+              />
             </Reveal>
+          )}
 
-            {/* Shelf Horizontal Carousel with Left/Right Buttons & Drag */}
-            <ShelfCarouselRow items={fallbackRelated} />
-          </section>
-        )}
+          {/* 4. Community Feedback, Ratings & Reviews */}
+          <Reveal direction="up" distance={12}>
+            <div id="community-feedback" className="scroll-mt-24">
+              <AppFeedbackSection
+                appSlug={app.slug}
+                appName={app.name}
+                isAuthenticated={isAuthenticated}
+              />
+            </div>
+          </Reveal>
+
+          {/* 5. App Store Information & Technical Specifications */}
+          <Reveal direction="up" distance={12}>
+            <AppInformationSpecs app={app} />
+          </Reveal>
+
+          {/* 6. Suggestions & Related Projects Shelf (Matches Apps page shelf style) */}
+          {fallbackRelated.length > 0 && (
+            <section
+              aria-labelledby="related-projects-heading"
+              className="w-full max-w-full min-w-0 space-y-3 pt-6 border-t border-[hsl(var(--border-subtle))]"
+            >
+              <Reveal direction="up" distance={12}>
+                <div className="flex items-center justify-between gap-3 pb-1 border-b border-[hsl(var(--border-subtle))]">
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-7 h-7 rounded-lg bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] flex items-center justify-center shrink-0 shadow-xs">
+                      {categoryMeta.icon}
+                    </span>
+                    <div>
+                      <h2
+                        id="related-projects-heading"
+                        className="text-base sm:text-lg font-bold tracking-tight text-[hsl(var(--foreground))] font-display"
+                      >
+                        More in {app.primaryCategory}
+                      </h2>
+                      <p className="text-xs text-[hsl(var(--muted-foreground))] hidden sm:block">
+                        {categoryMeta.subtitle}
+                      </p>
+                    </div>
+                  </div>
+
+                  <Link
+                    href={app.categorySlug ? `/apps?category=${app.categorySlug}` : ROUTES.APPS}
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 transition-colors shrink-0 group/link"
+                  >
+                    <span>See all</span>
+                    <ChevronRight className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" />
+                  </Link>
+                </div>
+              </Reveal>
+
+              {/* Shelf Horizontal Carousel with Left/Right Buttons & Drag */}
+              <ShelfCarouselRow items={fallbackRelated} />
+            </section>
+          )}
+        </div>
       </div>
     </PageShell>
   );

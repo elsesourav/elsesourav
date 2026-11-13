@@ -4,7 +4,7 @@ import * as React from 'react';
 import Image from 'next/image';
 import { getAppScreenshotUrl } from '@elsesourav/media';
 import { Card, Button } from '@elsesourav/ui';
-import { ChevronUp, Maximize2, Monitor, Smartphone } from 'lucide-react';
+import { ChevronUp, Maximize2 } from 'lucide-react';
 import { AppMediaVideoCard } from './AppMediaVideoCard';
 import type { GridRow, ScreenshotAspect } from './screenshot-grid-layout';
 
@@ -21,18 +21,18 @@ interface AppScreenshotExpandedGridProps {
 export function AppScreenshotExpandedGrid({
   appName,
   rows,
-  totalItems,
+  totalItems: _totalItems,
   aspectMap,
   onOpenLightbox,
   onCollapse,
   onImageLoadAspect,
 }: AppScreenshotExpandedGridProps) {
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-3 sm:space-y-4">
       {rows.map((row) => (
         <div
           key={row.id}
-          className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-5 items-stretch"
+          className="grid grid-cols-1 lg:grid-cols-12 gap-2 sm:gap-2.5 md:gap-3 items-stretch"
         >
           {row.cells.map((cell) => {
             const item = cell.item;
@@ -74,19 +74,19 @@ export function AppScreenshotExpandedGrid({
               <div key={item.id} className={`${colSpanClass} flex flex-col`}>
                 <Card
                   onClick={() => !isVideo && onOpenLightbox(item.url)}
-                  className={`group relative overflow-hidden rounded-2xl sm:rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-1.5 sm:p-2.5 shadow-md hover:shadow-2xl hover:border-indigo-500/40 transition-all duration-300 flex-1 flex flex-col items-center justify-center ${
+                  className={`group relative overflow-hidden rounded-xl sm:rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-950/80 p-0 shadow-sm hover:shadow-lg hover:border-indigo-500/50 transition-all duration-300 flex-1 flex flex-col items-center justify-center ${
                     isVideo ? '' : 'cursor-zoom-in'
                   } ${aspectClass}`}
                 >
-                  <div className="relative w-full h-full rounded-xl sm:rounded-2xl overflow-hidden bg-[hsl(var(--surface-subtle))] flex items-center justify-center">
+                  <div className="relative w-full h-full overflow-hidden bg-black/40 flex items-center justify-center">
                     {isVideo ? (
-                      <div className="relative w-full h-full rounded-xl sm:rounded-2xl overflow-hidden bg-black">
+                      <div className="relative w-full h-full overflow-hidden bg-black">
                         <AppMediaVideoCard
                           videoUrl={item.url}
                           appName={appName}
                           className="w-full h-full"
                         />
-                        <span className="absolute top-2.5 left-2.5 z-20 px-2 py-0.5 rounded-full text-[10px] font-mono font-medium bg-black/80 text-white border border-white/20">
+                        <span className="absolute top-2 left-2 z-20 px-2 py-0.5 rounded-full text-[9px] font-mono font-medium bg-black/80 text-white border border-white/20">
                           VIDEO
                         </span>
                       </div>
@@ -99,12 +99,12 @@ export function AppScreenshotExpandedGrid({
                           unoptimized
                           sizes={
                             cell.colSpan === 8
-                              ? '(max-width: 1024px) 100vw, 800px'
+                              ? '(max-width: 1024px) 100vw, 850px'
                               : cell.colSpan === 4
-                              ? '(max-width: 1024px) 100vw, 420px'
-                              : '(max-width: 768px) 100vw, 650px'
+                              ? '(max-width: 1024px) 100vw, 450px'
+                              : '(max-width: 768px) 100vw, 700px'
                           }
-                          className="w-full h-full object-contain rounded-xl sm:rounded-2xl group-hover:scale-[1.015] transition-transform duration-500 ease-out"
+                          className="w-full h-full object-contain rounded-xl sm:rounded-2xl group-hover:scale-[1.01] transition-transform duration-300 ease-out"
                           onLoad={(e) => {
                             const img = e.currentTarget;
                             if (img.naturalWidth && img.naturalHeight && onImageLoadAspect) {
@@ -119,38 +119,10 @@ export function AppScreenshotExpandedGrid({
                           }}
                         />
 
-                        {/* Original Index Badge */}
-                        <div className="absolute top-2.5 left-2.5 z-10 px-2.5 py-0.5 rounded-lg text-[10px] font-mono font-medium bg-black/75 dark:bg-zinc-950/80 text-white backdrop-blur-md border border-white/10 pointer-events-none">
-                          #{String(item.originalIndex).padStart(2, '0')} / {String(totalItems).padStart(2, '0')}
+                        {/* Expand Button on Hover */}
+                        <div className="absolute bottom-2 right-2 w-8 h-8 rounded-lg bg-black/75 hover:bg-black/90 text-white backdrop-blur-md border border-white/20 transition-all opacity-0 group-hover:opacity-100 flex items-center justify-center pointer-events-none">
+                          <Maximize2 className="w-3.5 h-3.5" />
                         </div>
-
-                        {/* Aspect Ratio Badge */}
-                        <div className="absolute top-2.5 right-2.5 z-10 hidden sm:flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9px] font-mono text-zinc-300 bg-black/60 backdrop-blur-md border border-white/10 pointer-events-none">
-                          {isPortrait ? (
-                            <>
-                              <Smartphone className="w-2.5 h-2.5 text-indigo-400" />
-                              <span>9:16</span>
-                            </>
-                          ) : (
-                            <>
-                              <Monitor className="w-2.5 h-2.5 text-emerald-400" />
-                              <span>16:9</span>
-                            </>
-                          )}
-                        </div>
-
-                        {/* Expand Button */}
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onOpenLightbox(item.url);
-                          }}
-                          className="absolute bottom-2.5 right-2.5 w-9 h-9 rounded-xl bg-black/75 hover:bg-black/90 dark:bg-zinc-950/80 dark:hover:bg-zinc-900 border border-white/20 text-white backdrop-blur-xl transition-all active:scale-95 shadow-lg opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 focus-visible:opacity-100 focus-visible:translate-y-0 flex items-center justify-center cursor-pointer z-10"
-                          aria-label={`Expand screenshot ${item.originalIndex}`}
-                        >
-                          <Maximize2 className="w-4 h-4" />
-                        </button>
                       </>
                     )}
                   </div>
@@ -162,14 +134,14 @@ export function AppScreenshotExpandedGrid({
       ))}
 
       {/* Bottom Collapse Bar */}
-      <div className="flex justify-center pt-3 pb-1">
+      <div className="flex justify-center pt-2 pb-1">
         <Button
           type="button"
           variant="secondary"
           size="sm"
           onClick={onCollapse}
-          className="rounded-full px-5 py-2 font-mono text-xs shadow-md border-[hsl(var(--border))] hover:border-indigo-500/50"
-          leftIcon={<ChevronUp className="w-4 h-4" />}
+          className="rounded-full px-4 py-1.5 font-mono text-xs shadow-sm border-[hsl(var(--border))] hover:border-indigo-500/50"
+          leftIcon={<ChevronUp className="w-3.5 h-3.5" />}
         >
           Collapse to Horizontal View
         </Button>

@@ -17,55 +17,46 @@ interface EditorialBlock {
 }
 
 export function AppEditorialGrid({ apps = [], startIndex = 0 }: AppEditorialGridProps) {
-  // Organize catalog into organized blocks where 1 portrait card height = (16:9 * 2) + gap
+  // Organize catalog into structured 3-app blocks where:
+  // - 1 Portrait card (9:16 vertical space) matches the exact height of 2 stacked Landscape cards (16:9) + gap.
+  // - Even blocks place Portrait on Left, Landscapes on Right (e.g. Breakout Ball + Glorov & SpectraLens).
+  // - Odd blocks alternate: Landscapes on Left, Portrait on Right.
   const { blocks, remaining } = React.useMemo(() => {
     if (!apps || apps.length === 0) {
       return { blocks: [], remaining: [] };
     }
 
-    const portraits: AppListItem[] = [];
-    const landscapes: AppListItem[] = [];
-
-    apps.forEach((app) => {
-      if (resolveAppOrientation(app) === 'portrait') {
-        portraits.push(app);
-      } else {
-        landscapes.push(app);
-      }
-    });
-
+    const pool = [...apps];
     const resultBlocks: EditorialBlock[] = [];
-    let pIdx = 0;
-    let lIdx = 0;
 
-    // Pair 1 portrait with 2 landscapes so portrait height matches 16:9 * 2 + gap
-    while (pIdx < portraits.length && lIdx + 1 < landscapes.length) {
-      const p = portraits[pIdx++];
-      const l1 = landscapes[lIdx++];
-      const l2 = landscapes[lIdx++];
-      if (!p || !l1 || !l2) break;
+    while (pool.length >= 3) {
+      // Find an app in the lookahead window that prefers portrait orientation
+      // If found, promote it into the portrait slot; otherwise use the first item.
+      const lookaheadWindow = Math.min(pool.length, 6);
+      let portraitIdx = -1;
+      for (let i = 0; i < lookaheadWindow; i++) {
+        const item = pool[i];
+        if (item && resolveAppOrientation(item) === 'portrait') {
+          portraitIdx = i;
+          break;
+        }
+      }
+
+      const portraitApp =
+        portraitIdx >= 0 ? pool.splice(portraitIdx, 1)[0]! : pool.shift()!;
+      const l1 = pool.shift()!;
+      const l2 = pool.shift()!;
 
       const portraitOnLeft = resultBlocks.length % 2 === 0;
       resultBlocks.push({
-        id: `block-${p.id || p.slug}`,
-        portrait: p,
+        id: `block-${portraitApp.id || portraitApp.slug}-${resultBlocks.length}`,
+        portrait: portraitApp,
         landscapes: [l1, l2],
         portraitOnLeft,
       });
     }
 
-    // Remaining items (if any)
-    const leftover: AppListItem[] = [];
-    while (pIdx < portraits.length) {
-      const p = portraits[pIdx++];
-      if (p) leftover.push(p);
-    }
-    while (lIdx < landscapes.length) {
-      const l = landscapes[lIdx++];
-      if (l) leftover.push(l);
-    }
-
-    return { blocks: resultBlocks, remaining: leftover };
+    return { blocks: resultBlocks, remaining: pool };
   }, [apps]);
 
   if (!apps || apps.length === 0) return null;
@@ -83,8 +74,8 @@ export function AppEditorialGrid({ apps = [], startIndex = 0 }: AppEditorialGrid
           >
             {block.portraitOnLeft ? (
               <>
-                {/* Left: 1 Portrait Card stretching to 16:9 * 2 + gap */}
-                <div className="w-full h-full min-w-0">
+                {/* Left: 1 Portrait Card stretching to match 2 stacked landscape cards + gap */}
+                <div className="w-full h-full min-w-0 flex flex-col">
                   <AppEditorialCard
                     app={block.portrait}
                     variant="portrait"
@@ -123,8 +114,8 @@ export function AppEditorialGrid({ apps = [], startIndex = 0 }: AppEditorialGrid
                   />
                 </div>
 
-                {/* Right on desktop: 1 Portrait Card stretching to 16:9 * 2 + gap */}
-                <div className="order-1 md:order-2 w-full h-full min-w-0">
+                {/* Right on desktop: 1 Portrait Card stretching to match 2 stacked landscape cards + gap */}
+                <div className="order-1 md:order-2 w-full h-full min-w-0 flex flex-col">
                   <AppEditorialCard
                     app={block.portrait}
                     variant="portrait"
@@ -138,11 +129,16 @@ export function AppEditorialGrid({ apps = [], startIndex = 0 }: AppEditorialGrid
         );
       })}
 
-      {/* Remaining items rendered in balanced grid if any */}
+      {/* Remaining items rendered in balanced landscape grid if any */}
       {remaining.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-5 md:gap-6 items-start w-full min-w-0">
           {remaining.map((app) => (
-            <AppEditorialCard key={app.id || app.slug} app={app} priority={false} />
+            <AppEditorialCard
+              key={app.id || app.slug}
+              app={app}
+              variant="landscape"
+              priority={false}
+            />
           ))}
         </div>
       )}

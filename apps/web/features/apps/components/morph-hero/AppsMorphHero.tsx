@@ -5,6 +5,7 @@ import type { AppListItem, CarouselSlide } from '@elsesourav/types';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
+import { motion } from 'motion/react';
 import MorphSlider, { type MorphSliderRef } from './MorphSlider';
 import { triggerPageTransition } from '@/components/loading/PageTransitionLoader';
 
@@ -323,7 +324,7 @@ export function AppsMorphHero({
                 e.stopPropagation();
                 pointerStartRef.current = null;
               }}
-              className="pointer-events-auto absolute bottom-2.5 right-2.5 sm:bottom-4 sm:right-4 z-[20] flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-full bg-black/50 dark:bg-black/60 backdrop-blur-md border border-white/15 shadow-md"
+              className="pointer-events-auto absolute bottom-2.5 right-2.5 sm:bottom-4 sm:right-4 z-[20] flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-full bg-black/60 dark:bg-black/70 backdrop-blur-md border border-white/20 shadow-md"
             >
               {normalizedSlides.map((slide, index) => {
                 const isActive = index === activeIndex;
@@ -345,20 +346,20 @@ export function AppsMorphHero({
                     }}
                     className={`cursor-pointer rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white relative overflow-hidden ${
                       isActive
-                        ? 'w-6 sm:w-8 h-1.5 sm:h-2 bg-white/20 dark:bg-white/20 shadow-xs'
-                        : 'w-1.5 sm:w-2 h-1.5 sm:h-2 bg-white/40 hover:bg-white/75'
+                        ? 'w-7 sm:w-9 h-2 sm:h-2.5 bg-white/25 shadow-xs'
+                        : 'w-2 h-2 sm:w-2.5 sm:h-2.5 bg-white/40 hover:bg-white/75'
                     }`}
                   >
                     {isActive && (
-                      <span
+                      <motion.span
                         key={`hero-progress-${index}-${progressKey}`}
-                        data-carousel-progress
-                        className="animate-hero-progress absolute inset-y-0 left-0 bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,1)]"
-                        style={{
-                          width: '0%',
-                          animation: `heroSlideProgress ${autoplayIntervalSeconds}s linear forwards`,
-                          animationPlayState: isPaused ? 'paused' : 'running',
+                        initial={{ width: '0%' }}
+                        animate={{ width: isPaused ? undefined : '100%' }}
+                        transition={{
+                          duration: autoplayIntervalSeconds,
+                          ease: 'linear',
                         }}
+                        className="absolute inset-y-0 left-0 bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,0.95)]"
                       />
                     )}
                   </button>

@@ -1,10 +1,11 @@
 'use client';
 
+import * as React from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { getAppIconUrl, getAppScreenshotUrl } from '@elsesourav/media';
 import type { AppListItem, AppOrientation } from '@elsesourav/types';
 import { ArrowUpRight } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
 
 export interface AppEditorialCardProps {
   app: AppListItem;
@@ -48,24 +49,31 @@ export function AppEditorialCard({
   const orientation = variant || resolveAppOrientation(app);
   const isPortrait = orientation === 'portrait';
 
-  const bannerUrl = app.featuredImageUrl
-    ? getAppScreenshotUrl(app.featuredImageUrl, 1600, 1000)
-    : app.iconUrl;
-  const iconUrl = app.iconUrl ? getAppIconUrl(app.iconUrl, 96) : null;
+  // Automatically select the optimal image ratio:
+  // - In a portrait slot (9:16 vertical space): prioritize 9:16 portrait image
+  // - In a landscape slot (16:9 wide space): prioritize 16:9 landscape image
+  const rawImageUrl = isPortrait
+    ? app.featuredImageMobileUrl || app.featuredImageUrl || app.iconUrl
+    : app.featuredImageUrl || app.featuredImageMobileUrl || app.iconUrl;
 
-  const aspectClasses = isPortrait
-    ? 'aspect-[4/5] sm:aspect-[3/4] md:aspect-auto w-full h-full min-h-[300px] sm:min-h-[360px] md:min-h-[460px]'
-    : 'aspect-[16/10] sm:aspect-[16/9] w-full min-h-[190px] sm:min-h-[240px] md:min-h-[280px]';
+  const bannerUrl = rawImageUrl
+    ? getAppScreenshotUrl(rawImageUrl, isPortrait ? 1000 : 1600, isPortrait ? 1600 : 1000)
+    : null;
+  const iconUrl = app.iconUrl ? getAppIconUrl(app.iconUrl, 96) : null;
 
   return (
     <Link
       href={`/apps/${app.slug}`}
-      className={`group/editorial block h-full w-full min-w-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg ${className}`}
+      className={`group/editorial flex flex-col h-full w-full min-w-0 rounded-2xl overflow-hidden border border-zinc-200/80 dark:border-zinc-800/80 hover:border-zinc-300 dark:hover:border-zinc-700 bg-[hsl(var(--card))] shadow-xs hover:shadow-xl hover:shadow-black/15 dark:hover:shadow-black/40 transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${className}`}
     >
+      {/* 1. Full Image Showcase Area (100% visible, zero floating text obstruction) */}
       <div
-        className={`relative w-full h-full min-w-0 rounded-lg overflow-hidden border border-zinc-200/80 dark:border-zinc-800/80 hover:border-zinc-300 dark:hover:border-zinc-700 bg-zinc-950 shadow-xs hover:shadow-xl hover:shadow-black/15 dark:hover:shadow-black/50 transition-all duration-300 ease-out flex flex-col justify-end p-2.5 sm:p-3 md:p-4 ${aspectClasses}`}
+        className={`relative w-full overflow-hidden bg-zinc-950 ${
+          isPortrait
+            ? 'aspect-[4/5] sm:aspect-[3/4] md:aspect-auto md:flex-1 md:min-h-[440px]'
+            : 'aspect-[16/9]'
+        }`}
       >
-        {/* Full-Bleed Artwork / Screenshot (smooth image zoom on hover) */}
         {bannerUrl ? (
           <Image
             src={bannerUrl}
@@ -74,62 +82,51 @@ export function AppEditorialCard({
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             priority={priority}
             unoptimized
-            className={`pointer-events-none object-cover transition-transform duration-500 ease-out group-hover/editorial:scale-105 ${
-              isPortrait ? 'object-top' : 'object-center'
+            className={`pointer-events-none object-cover transition-transform duration-500 ease-out group-hover/editorial:scale-103 ${
+              isPortrait ? 'object-center' : 'object-center'
             }`}
           />
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-950 via-zinc-900 to-black" />
         )}
+      </div>
 
-        {/* Transparent subtle gradient scrim at bottom edge for optimal capsule contrast */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-[2]"
-          style={{
-            background:
-              'linear-gradient(to bottom, transparent 0%, transparent 68%, rgba(0,0,0,0.06) 82%, rgba(0,0,0,0.28) 100%)',
-          }}
-        />
+      {/* 2. Dedicated Bottom Metadata Bar (Below image, pristine text contrast & zero overlay) */}
+      <div className="shrink-0 w-full flex items-center justify-between gap-2.5 sm:gap-3 p-2.5 sm:p-3 md:p-3.5 bg-white/95 dark:bg-zinc-900/95 border-t border-zinc-200/70 dark:border-zinc-800/80 backdrop-blur-sm transition-colors duration-200">
+        {/* App Icon + Title & Category */}
+        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
+          <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700/60 shrink-0 shadow-2xs flex items-center justify-center">
+            {iconUrl ? (
+              <Image
+                src={iconUrl}
+                alt={`${app.name} icon`}
+                width={40}
+                height={40}
+                unoptimized
+                className="w-full h-full object-cover pointer-events-none"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-white font-mono font-bold text-xs bg-indigo-600">
+                {app.name.slice(0, 2).toUpperCase()}
+              </div>
+            )}
+          </div>
 
-        {/* Transparent Frosted Glass Bottom Capsule (Visible Artwork Beneath) */}
-        <div className="relative z-[5] w-full min-w-0">
-          <div className="w-full min-w-0 flex items-center justify-between gap-2 sm:gap-2.5 p-1.5 sm:p-2 md:p-2.5 rounded-md bg-white/50 dark:bg-black/45 backdrop-blur-md border border-white/40 dark:border-white/15 group-hover/editorial:border-white/60 dark:group-hover/editorial:border-white/25 shadow-sm transition-colors duration-200">
-            {/* App Icon */}
-            <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-md overflow-hidden bg-white/60 dark:bg-white/10 border border-white/40 dark:border-white/15 shrink-0 shadow-xs flex items-center justify-center">
-              {iconUrl ? (
-                <Image
-                  src={iconUrl}
-                  alt={`${app.name} icon`}
-                  width={40}
-                  height={40}
-                  unoptimized
-                  className="w-full h-full object-cover pointer-events-none"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-white font-mono font-bold text-xs bg-indigo-600">
-                  {app.name.slice(0, 2).toUpperCase()}
-                </div>
-              )}
-            </div>
-
-            {/* Title & Category in Capsule (Transparent Glass Backing) */}
-            <div className="min-w-0 flex-1 overflow-hidden pr-1">
-              <span className="font-bold text-xs sm:text-sm text-zinc-950 dark:text-white block line-clamp-1 sm:line-clamp-2 font-display drop-shadow-[0_0.5px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">
-                {app.name}
-              </span>
-              <span className="text-[10px] sm:text-[11px] text-zinc-800 dark:text-zinc-300 block truncate font-sans font-medium drop-shadow-[0_0.5px_1px_rgba(255,255,255,0.7)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-                {app.primaryCategory}
-              </span>
-            </div>
-
-            {/* Button inside capsule with transparent styling and group-hover transition */}
-            <span className="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-md bg-white/70 dark:bg-white/15 text-zinc-950 dark:text-white border border-white/50 dark:border-white/20 font-semibold text-[10px] sm:text-[11px] md:text-xs tracking-wide shadow-xs transition-all duration-200 ease-out group-hover/editorial:bg-indigo-600 group-hover/editorial:text-white group-hover/editorial:border-indigo-600 group-hover/editorial:shadow-sm font-display shrink-0">
-              <span>View</span>
-              <ArrowUpRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 opacity-80 group-hover/editorial:opacity-100 transition-transform duration-200 ease-out group-hover/editorial:translate-x-0.5 group-hover/editorial:-translate-y-0.5" />
+          <div className="min-w-0 flex-1 pr-1">
+            <span className="font-bold text-xs sm:text-sm text-zinc-950 dark:text-white block truncate font-display group-hover/editorial:text-indigo-600 dark:group-hover/editorial:text-indigo-400 transition-colors">
+              {app.name}
+            </span>
+            <span className="text-[10px] sm:text-[11px] text-zinc-500 dark:text-zinc-400 block truncate font-sans font-medium">
+              {app.primaryCategory}
             </span>
           </div>
         </div>
+
+        {/* View Action Pill */}
+        <span className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-zinc-100 hover:bg-indigo-600 dark:bg-zinc-800 dark:hover:bg-indigo-600 text-zinc-900 hover:text-white dark:text-zinc-200 dark:hover:text-white border border-zinc-200 dark:border-zinc-700/60 hover:border-indigo-600 font-semibold text-[10.5px] sm:text-xs tracking-wide shadow-2xs transition-all duration-200 ease-out group-hover/editorial:bg-indigo-600 group-hover/editorial:text-white group-hover/editorial:border-indigo-600 font-display shrink-0">
+          <span>View</span>
+          <ArrowUpRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 opacity-80 group-hover/editorial:opacity-100 transition-transform duration-200 ease-out group-hover/editorial:translate-x-0.5 group-hover/editorial:-translate-y-0.5" />
+        </span>
       </div>
     </Link>
   );

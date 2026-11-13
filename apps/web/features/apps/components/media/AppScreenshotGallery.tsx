@@ -2,15 +2,9 @@
 
 import * as React from 'react';
 import { getAppScreenshotUrl } from '@elsesourav/media';
-import { Button, IconButton } from '@elsesourav/ui';
+import { Button } from '@elsesourav/ui';
 import { Lightbox } from '@elsesourav/ui/interior';
-import {
-  ImageIcon,
-  LayoutGrid,
-  ChevronUp,
-  ChevronLeft,
-  ChevronRight,
-} from 'lucide-react';
+import { ImageIcon, LayoutGrid, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   organizeScreenshotGrid,
@@ -69,7 +63,9 @@ export function AppScreenshotGallery({
 
   // Extract pure images for the 4K Lightbox viewer
   const imageList = React.useMemo(() => {
-    return allMedia.filter((item): item is GalleryMediaItem & { type: 'image' } => item.type === 'image');
+    return allMedia.filter(
+      (item): item is GalleryMediaItem & { type: 'image' } => item.type === 'image'
+    );
   }, [allMedia]);
 
   const [aspectMap, setAspectMap] = React.useState<Record<string, ScreenshotAspect>>({});
@@ -122,66 +118,42 @@ export function AppScreenshotGallery({
   return (
     <section
       aria-label={`${appName} screenshots showcase`}
-      className="space-y-3 sm:space-y-4"
+      className="space-y-2 sm:space-y-2.5 w-full overflow-visible"
     >
-      {/* Header bar: Section title, visuals count, navigation arrows & expand toggle */}
-      <div className="flex items-center justify-between gap-2 px-1">
+      {/* Clean, compact header bar */}
+      <div className="flex items-center justify-between gap-2 px-0.5">
         <div className="flex items-center gap-2 min-w-0">
-          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0">
-            <ImageIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0">
+            <ImageIcon className="w-3.5 h-3.5" />
           </div>
           <h2 className="text-xs sm:text-sm font-mono uppercase tracking-wider text-[hsl(var(--foreground))] font-semibold truncate">
             <span className="hidden sm:inline">INTERFACE SHOWCASE & VISUALS</span>
             <span className="sm:hidden">VISUAL SHOWCASE</span>
           </h2>
-          <span className="px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-mono font-medium bg-[hsl(var(--surface-subtle))] text-[hsl(var(--muted-foreground))] border border-[hsl(var(--border))] shrink-0">
+          <span className="px-1.5 py-0.2 rounded-md text-[10px] font-mono font-medium bg-[hsl(var(--surface-subtle))] text-[hsl(var(--muted-foreground))] border border-[hsl(var(--border))] shrink-0">
             {allMedia.length}
           </span>
         </div>
 
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          {/* Track scroll arrows (desktop & tablet, hidden on touch mobile) */}
-          {!isExpanded && allMedia.length > 1 && (
-            <div className="hidden sm:flex items-center gap-1">
-              <IconButton
-                icon={<ChevronLeft className="w-4 h-4" />}
-                aria-label="Scroll screenshots left"
-                size="sm"
-                variant="outline"
-                onClick={() => carouselRef.current?.scrollLeft()}
-                className="h-8 w-8 rounded-lg border-[hsl(var(--border))] hover:border-indigo-500/40 text-[hsl(var(--foreground))]"
-              />
-              <IconButton
-                icon={<ChevronRight className="w-4 h-4" />}
-                aria-label="Scroll screenshots right"
-                size="sm"
-                variant="outline"
-                onClick={() => carouselRef.current?.scrollRight()}
-                className="h-8 w-8 rounded-lg border-[hsl(var(--border))] hover:border-indigo-500/40 text-[hsl(var(--foreground))]"
-              />
-            </div>
-          )}
-
-          {/* Expand / Collapse toggle */}
-          {allMedia.length > 1 && (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setIsExpanded((prev) => !prev)}
-              className="text-xs font-mono rounded-lg h-8 px-2.5 sm:px-3 border-[hsl(var(--border))] hover:border-indigo-500/40 text-[hsl(var(--foreground))]"
-              leftIcon={
-                isExpanded ? (
-                  <ChevronUp className="w-3.5 h-3.5 text-indigo-400" />
-                ) : (
-                  <LayoutGrid className="w-3.5 h-3.5 text-indigo-400" />
-                )
-              }
-            >
-              {isExpanded ? 'Collapse' : `Expand (${allMedia.length})`}
-            </Button>
-          )}
-        </div>
+        {/* Expand / Collapse Action */}
+        {allMedia.length > 1 && (
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setIsExpanded((prev) => !prev)}
+            className="text-xs font-mono rounded-lg h-7 sm:h-8 px-2.5 sm:px-3 border-[hsl(var(--border))] hover:border-indigo-500/40 text-[hsl(var(--foreground))]"
+            leftIcon={
+              isExpanded ? (
+                <ChevronUp className="w-3.5 h-3.5 text-indigo-400" />
+              ) : (
+                <LayoutGrid className="w-3.5 h-3.5 text-indigo-400" />
+              )
+            }
+          >
+            {isExpanded ? 'Collapse' : `Expand (${allMedia.length})`}
+          </Button>
+        )}
       </div>
 
       {/* Main Content Area */}
@@ -189,10 +161,10 @@ export function AppScreenshotGallery({
         {isExpanded ? (
           <motion.div
             key="expanded-grid"
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
           >
             <AppScreenshotExpandedGrid
               appName={appName}
@@ -211,6 +183,7 @@ export function AppScreenshotGallery({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
+            className="overflow-visible"
           >
             <AppScreenshotCarouselTrack
               ref={carouselRef}
@@ -224,7 +197,7 @@ export function AppScreenshotGallery({
         )}
       </AnimatePresence>
 
-      {/* 4K Fullscreen Lightbox Modal with navigation controls */}
+      {/* 4K Fullscreen Lightbox Modal */}
       {lightboxIndex !== null && imageList[lightboxIndex] && (
         <Lightbox
           open={lightboxIndex !== null}
