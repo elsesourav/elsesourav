@@ -31,7 +31,7 @@ export function BlogPagination({ currentPage, totalPages, totalMatches }: BlogPa
     <nav
       id="updates-pagination"
       className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 pt-4 sm:pt-6 border-t border-[hsl(var(--border-subtle))]"
-      aria-label="Blog pagination navigation"
+      aria-label="Updates pagination navigation"
     >
       <div className="text-[11px] sm:text-xs text-[hsl(var(--muted-foreground))]">
         Page <span className="font-semibold text-[hsl(var(--foreground))]">{currentPage}</span> of{' '}

@@ -177,14 +177,11 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
         <AppDetailHero app={app} isAuthenticated={isAuthenticated} />
 
         {/* 2. Visual Showcase / Screenshot Gallery */}
-        {(app.featuredImageUrl ||
-          (app.screenshots && app.screenshots.length > 0) ||
-          app.videoUrl) && (
+        {((app.screenshots && app.screenshots.length > 0) || app.videoUrl) && (
           <Reveal direction="up" distance={16}>
             <AppScreenshotGallery
               appName={app.name}
               screenshots={app.screenshots || []}
-              featuredImageUrl={app.featuredImageUrl}
               videoUrl={app.videoUrl}
             />
           </Reveal>

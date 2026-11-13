@@ -11,7 +11,7 @@ import { Upload, X, AlertCircle, ClipboardPaste, HardDrive, Sparkles, Loader2, C
 const FOLDER_ITEMS = [
   { value: 'general', label: 'general (General application media)' },
   { value: 'apps', label: 'apps (App icons & banners)' },
-  { value: 'blog', label: 'blog (Devlog post covers)' },
+  { value: 'blog', label: 'blog (Devlog & update covers)' },
   { value: 'help', label: 'help (Knowledge base tutorial diagrams)' },
   { value: 'users', label: 'users (User profile avatars)' },
 ];
@@ -20,7 +20,7 @@ const PURPOSE_ITEMS = [
   { value: 'generic', label: 'Generic Asset' },
   { value: 'app_icon', label: 'App Icon' },
   { value: 'app_screenshot', label: 'App Screenshot / Banner' },
-  { value: 'blog_cover', label: 'Blog Cover' },
+  { value: 'blog_cover', label: 'Update Cover' },
   { value: 'help_image', label: 'Help Guide Illustration' },
   { value: 'avatar', label: 'User Avatar' },
 ];

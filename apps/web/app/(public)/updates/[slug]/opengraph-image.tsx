@@ -155,7 +155,7 @@ export default async function Image({ params }: BlogPostOgProps) {
         </div>
 
         <span style={{ fontSize: '14px', color: '#8b5cf6', fontWeight: 600 }}>
-          elsesourav.com/blog/{slug}
+          elsesourav.com/updates/{slug}
         </span>
       </div>
     </div>,

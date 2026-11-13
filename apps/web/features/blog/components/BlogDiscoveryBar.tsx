@@ -43,7 +43,7 @@ export function BlogDiscoveryBar({ categories = [], tags = [] }: BlogDiscoveryBa
     <div
       id="updates-discovery-bar"
       className="space-y-2.5 sm:space-y-3.5 w-full p-2.5 sm:p-4 md:p-5 rounded-xl sm:rounded-2xl border border-[hsl(var(--border-subtle))] bg-[hsl(var(--card))]/60 backdrop-blur-sm shadow-xs"
-      aria-label="Blog discovery controls"
+      aria-label="Updates discovery controls"
     >
       {/* Category Filter Pills */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">

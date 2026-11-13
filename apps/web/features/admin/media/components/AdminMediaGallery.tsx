@@ -19,7 +19,7 @@ import { AdminMediaUploadModal } from './AdminMediaUploadModal';
 const DOMAIN_ITEMS = [
   { value: 'all', label: 'All Domains' },
   { value: 'apps', label: 'Apps' },
-  { value: 'blog', label: 'Blog' },
+  { value: 'blog', label: 'Updates' },
   { value: 'help', label: 'Help' },
   { value: 'users', label: 'Users' },
   { value: 'support', label: 'Support' },

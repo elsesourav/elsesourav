@@ -22,7 +22,7 @@ const CATEGORIES: Array<{ id: string; label: string; domain?: MediaDomain }> = [
   { id: 'all', label: 'All Media' },
   { id: 'users', label: 'Avatars & Profile', domain: 'users' },
   { id: 'apps', label: 'Apps & Tools', domain: 'apps' },
-  { id: 'blog', label: 'Devlogs & Blog', domain: 'blog' },
+  { id: 'blog', label: 'Updates & Devlogs', domain: 'blog' },
   { id: 'general', label: 'General', domain: 'general' },
 ];
 

@@ -34,7 +34,7 @@ export const PLATFORM_OPTIONS: Array<{
   { value: 'discord', label: 'Discord', icon: Globe, defaultLabel: 'Discord Community' },
   { value: 'telegram', label: 'Telegram', icon: Send, defaultLabel: 'Telegram Channel' },
   { value: 'bluesky', label: 'Bluesky', icon: Globe, defaultLabel: 'Bluesky' },
-  { value: 'website', label: 'Website / Blog', icon: Globe, defaultLabel: 'Personal Website' },
+  { value: 'website', label: 'Website / Devlogs', icon: Globe, defaultLabel: 'Personal Website' },
   { value: 'other', label: 'Custom Link', icon: ExternalLink, defaultLabel: 'Custom Link' },
 ];
 
