@@ -131,9 +131,9 @@ export function MarkdownCodeBlock({
 
   return (
     <div
-      className={`my-6 rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800/80 bg-zinc-50 dark:bg-[#070810] text-zinc-900 dark:text-zinc-100 font-mono text-xs shadow-xl transition-colors ${className}`}
+      className={`my-6 rounded-2xl overflow-hidden border border-zinc-200/90 dark:border-zinc-800/80 bg-zinc-100/70 dark:bg-[#070810] text-zinc-900 dark:text-zinc-100 font-mono text-xs shadow-xl transition-colors scroll-mt-20 sm:scroll-mt-24 ${className}`}
     >
-      <div className="flex items-center justify-between px-4 py-2.5 bg-zinc-200/50 dark:bg-zinc-900/90 border-b border-zinc-200 dark:border-zinc-800/80 text-zinc-600 dark:text-zinc-400 text-[11px] select-none">
+      <div className="flex items-center justify-between px-4 py-2.5 bg-zinc-200/60 dark:bg-zinc-900/90 border-b border-zinc-200/90 dark:border-zinc-800/80 text-zinc-600 dark:text-zinc-400 text-[11px] select-none">
         <div className="flex items-center gap-2">
           <span className="uppercase tracking-wider font-semibold text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5">
             <Terminal className="w-3.5 h-3.5 text-primary" />
