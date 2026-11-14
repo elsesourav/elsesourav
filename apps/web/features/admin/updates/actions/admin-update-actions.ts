@@ -2,7 +2,7 @@
 
 import { BlogRepository, BlogService } from '@elsesourav/database';
 import { requireAdmin } from '../../guards/require-admin';
-import { AdminSaveBlogSchema, type AdminSaveBlogSchemaInput, z } from '@elsesourav/validation';
+import { AdminSaveBlogSchema, type AdminSaveBlogSchemaInput, generateBlogSlug, z } from '@elsesourav/validation';
 import { revalidatePath } from 'next/cache';
 
 function formatValidationError(error: z.ZodError): string {
@@ -26,6 +26,17 @@ export async function createBlogPostAction(data: AdminSaveBlogSchemaInput) {
     return {
       success: false,
       error: formatValidationError(parsed.error),
+    };
+  }
+
+  // Pre-check for slug collision to provide immediate feedback and link to existing post
+  const targetSlug = parsed.data.slug || generateBlogSlug(parsed.data.title);
+  const existingRecord = await blogRepo.findPostRecordBySlug(targetSlug);
+  if (existingRecord) {
+    return {
+      success: false,
+      error: `An update post with slug "${targetSlug}" already exists.`,
+      existingPostId: existingRecord.id,
     };
   }
 
@@ -73,6 +84,18 @@ export async function updateBlogPostAction(postId: string, data: AdminSaveBlogSc
       success: false,
       error: formatValidationError(parsed.error),
     };
+  }
+
+  // Pre-check for slug collision on other posts
+  if (parsed.data.slug) {
+    const existingRecord = await blogRepo.findPostRecordBySlug(parsed.data.slug);
+    if (existingRecord && existingRecord.id !== postId) {
+      return {
+        success: false,
+        error: `Another update post already uses the slug "${parsed.data.slug}".`,
+        existingPostId: existingRecord.id,
+      };
+    }
   }
 
   try {

@@ -51,6 +51,19 @@ export class BlogRepository {
     }
   }
 
+  async findPostRecordBySlug(
+    slug: string
+  ): Promise<{ id: string; slug: string; title: string } | null> {
+    try {
+      return await this.prisma.blogPost.findUnique({
+        where: { slug },
+        select: { id: true, slug: true, title: true },
+      });
+    } catch {
+      return null;
+    }
+  }
+
   async findPublicPosts(options: BlogQueryInput = {}): Promise<BlogQueryResult> {
     try {
       const page = Math.max(options.page ?? 1, 1);
@@ -186,6 +199,11 @@ export class BlogRepository {
 
       return mapPrismaBlogPostToDomain(record as unknown as PrismaBlogWithRelations);
     } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+        throw AppError.validation(
+          `An update post with slug '${slug}' already exists. Please choose a different slug or title.`
+        );
+      }
       console.error('BlogRepository.createPost error:', error);
       throw AppError.database('Failed to create blog post', error);
     }
@@ -216,6 +234,11 @@ export class BlogRepository {
 
       return mapPrismaBlogPostToDomain(record as unknown as PrismaBlogWithRelations);
     } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+        throw AppError.validation(
+          `An update post with slug '${data.slug}' already exists. Please choose a different slug.`
+        );
+      }
       throw AppError.database(`Failed to update blog post: ${id}`, error);
     }
   }

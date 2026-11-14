@@ -17,6 +17,7 @@ import {
   FileText,
   Sparkles,
   ArrowLeft,
+  ArrowRight,
   CheckCircle2,
   AlertCircle,
   Loader2,
@@ -67,6 +68,7 @@ export function AdminUpdateForm({ post, categories }: AdminUpdateFormProps) {
   const [isPublishing, setIsPublishing] = React.useState(false);
   const [success, setSuccess] = React.useState<string | null>(null);
   const [error, setError] = React.useState<string | null>(null);
+  const [existingPostId, setExistingPostId] = React.useState<string | null>(null);
 
   const handleTitleChange = (val: string) => {
     setTitle(val);
@@ -85,6 +87,7 @@ export function AdminUpdateForm({ post, categories }: AdminUpdateFormProps) {
     setIsSaving(true);
     setSuccess(null);
     setError(null);
+    setExistingPostId(null);
 
     const payload = {
       title: title.trim(),
@@ -109,6 +112,7 @@ export function AdminUpdateForm({ post, categories }: AdminUpdateFormProps) {
           setSuccess('Update saved successfully.');
         } else {
           setError(res.error || 'Failed to update article.');
+          if (res.existingPostId) setExistingPostId(res.existingPostId);
         }
       } else {
         const res = await createBlogPostAction(payload);
@@ -117,6 +121,7 @@ export function AdminUpdateForm({ post, categories }: AdminUpdateFormProps) {
           router.push(`/admin/updates/${res.postId}`);
         } else {
           setError(res.error || 'Failed to create update.');
+          if (res.existingPostId) setExistingPostId(res.existingPostId);
         }
       }
     } catch {
@@ -226,9 +231,20 @@ export function AdminUpdateForm({ post, categories }: AdminUpdateFormProps) {
       )}
 
       {error && (
-        <div className="p-3.5 sm:p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-500/30 flex items-center gap-2.5 text-xs text-rose-700 dark:text-rose-300">
-          <AlertCircle className="w-4 h-4 shrink-0" />
-          <span>{error}</span>
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-rose-700 dark:text-rose-300">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span className="break-words">{error}</span>
+          </div>
+          {existingPostId && (
+            <Link
+              href={`/admin/updates/${existingPostId}`}
+              className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs whitespace-nowrap transition-colors inline-flex items-center gap-1.5 self-start sm:self-auto shrink-0 shadow-sm"
+            >
+              <span>Edit Existing Post</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          )}
         </div>
       )}
 
