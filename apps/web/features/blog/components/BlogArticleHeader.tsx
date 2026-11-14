@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Badge, UserAvatar } from '@elsesourav/ui';
+import { Badge, UserAvatar, cn } from '@elsesourav/ui';
 import { Lightbox } from '@elsesourav/ui/interior';
 import { getBlogCoverUrl } from '@elsesourav/media';
 import type { PublicBlogPost } from '@elsesourav/types';
@@ -17,6 +17,7 @@ interface BlogArticleHeaderProps {
 
 export function BlogArticleHeader({ post, postUrl }: BlogArticleHeaderProps) {
   const [isLightboxOpen, setIsLightboxOpen] = React.useState(false);
+  const [imageLoaded, setImageLoaded] = React.useState(false);
   const coverRef = React.useRef<HTMLDivElement>(null);
   const coverUrl = post.coverImageUrl ? getBlogCoverUrl(post.coverImageUrl, 1600, 900, 'limit') : null;
   const publishedDate = post.publishedAt
@@ -144,22 +145,31 @@ export function BlogArticleHeader({ post, postUrl }: BlogArticleHeaderProps) {
         <BlogShareButtons title={post.title} url={postUrl} excerpt={post.excerpt} />
       </div>
 
-      {/* Cover Image */}
+      {/* Cover Image — Theme-adaptive container & skeleton loading */}
       {coverUrl && (
         <div
           ref={coverRef}
           onClick={() => setIsLightboxOpen(true)}
-          className="relative aspect-[16/9] w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-[hsl(var(--border))] bg-zinc-950/80 dark:bg-black/90 shadow-2xl group cursor-zoom-in flex items-center justify-center p-2 sm:p-3.5"
+          className="relative aspect-[16/9] w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-[hsl(var(--border))] bg-zinc-100 dark:bg-zinc-900/90 shadow-2xl group cursor-zoom-in flex items-center justify-center p-2 sm:p-3.5 select-none"
           title="Click to view cover in Lightbox"
         >
-          {/* Subtle ambient blurred backdrop so letterbox edges blend organically */}
+          {/* Skeleton loading shimmer — Theme-adaptive light/dark colors */}
+          <div
+            aria-hidden="true"
+            className={cn(
+              'absolute inset-0 skeleton-shimmer bg-zinc-200/90 dark:bg-zinc-800/90 z-[1] transition-opacity duration-300 pointer-events-none',
+              imageLoaded ? 'opacity-0' : 'opacity-100'
+            )}
+          />
+
+          {/* Subtle ambient blurred backdrop (dark mode only for deep atmosphere; hidden in light mode) */}
           <Image
             src={coverUrl}
             alt=""
             aria-hidden="true"
             fill
             unoptimized
-            className="pointer-events-none object-cover blur-3xl opacity-35 dark:opacity-30 scale-110"
+            className="pointer-events-none object-cover blur-3xl opacity-0 dark:opacity-30 scale-110"
           />
 
           {/* Foreground Pristine Artwork — 100% contained, zero cropping */}
@@ -170,7 +180,11 @@ export function BlogArticleHeader({ post, postUrl }: BlogArticleHeaderProps) {
               fill
               priority
               sizes="(max-width: 1024px) 100vw, 1024px"
-              className="pointer-events-none object-contain rounded-xl drop-shadow-md transition-transform duration-300 group-hover:scale-[1.01]"
+              onLoad={() => setImageLoaded(true)}
+              className={cn(
+                'pointer-events-none object-contain rounded-xl drop-shadow-md transition-all duration-300 group-hover:scale-[1.01]',
+                imageLoaded ? 'opacity-100' : 'opacity-0'
+              )}
             />
           </div>
 

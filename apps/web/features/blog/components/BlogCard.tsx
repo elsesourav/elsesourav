@@ -33,42 +33,54 @@ export function BlogCard({ post, isFeatured = false }: BlogCardProps) {
         isFeatured && coverUrl ? 'sm:col-span-2 lg:col-span-3 md:flex-row' : ''
       )}
     >
-      {/* 16:9 Fitted Cover Image Container (Flush, even, zero letterboxing) */}
+      {/* 16:9 Fitted Cover Image Container (Theme-adaptive bg & loading color) */}
       {coverUrl && (
         <Link
           href={`/updates/${post.slug}`}
           className={cn(
-            'relative block overflow-hidden bg-[hsl(var(--surface-subtle))] shrink-0 select-none aspect-[16/9]',
+            'relative block overflow-hidden bg-zinc-100 dark:bg-zinc-900/90 shrink-0 select-none aspect-[16/9]',
             isFeatured
               ? 'w-full md:w-1/2 border-b md:border-b-0 md:border-r border-[hsl(var(--border-subtle))]'
               : 'w-full border-b border-[hsl(var(--border-subtle))]'
           )}
         >
-          {/* Skeleton loading shimmer */}
+          {/* Skeleton loading shimmer — Theme-adaptive light/dark colors */}
           <div
             aria-hidden="true"
             className={cn(
-              'absolute inset-0 skeleton-shimmer bg-zinc-200/60 dark:bg-zinc-800/60 z-[1] transition-opacity duration-300 pointer-events-none',
+              'absolute inset-0 skeleton-shimmer bg-zinc-200/90 dark:bg-zinc-800/90 z-[1] transition-opacity duration-300 pointer-events-none',
               imageLoaded ? 'opacity-0' : 'opacity-100'
             )}
           />
 
-          {/* 16:9 Artwork — Edge-to-edge flush containment without dark bars or arbitrary padding */}
+          {/* Ambient blurred glow (Dark mode only for rich depth; hidden in Light mode for pure clean background) */}
           <Image
             src={coverUrl}
-            alt={post.title}
+            alt=""
+            aria-hidden="true"
             fill
-            sizes={
-              isFeatured
-                ? '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 45vw'
-                : '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-            }
-            onLoad={() => setImageLoaded(true)}
-            className={cn(
-              'pointer-events-none object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]',
-              imageLoaded ? 'opacity-100' : 'opacity-0'
-            )}
+            unoptimized
+            className="pointer-events-none object-cover blur-2xl opacity-0 dark:opacity-30 scale-110"
           />
+
+          {/* Artwork — Contained, uncropped, zero letterboxing on 16:9, theme-matched background on non-16:9 */}
+          <div className="relative w-full h-full flex items-center justify-center z-[2]">
+            <Image
+              src={coverUrl}
+              alt={post.title}
+              fill
+              sizes={
+                isFeatured
+                  ? '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 45vw'
+                  : '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+              }
+              onLoad={() => setImageLoaded(true)}
+              className={cn(
+                'pointer-events-none object-contain transition-transform duration-500 ease-out group-hover:scale-[1.02]',
+                imageLoaded ? 'opacity-100' : 'opacity-0'
+              )}
+            />
+          </div>
         </Link>
       )}
 

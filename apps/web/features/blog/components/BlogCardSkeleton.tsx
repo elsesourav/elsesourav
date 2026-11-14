@@ -13,14 +13,14 @@ export function BlogCardSkeleton({ isFeatured = false }: BlogCardSkeletonProps) 
         isFeatured ? 'sm:col-span-2 lg:col-span-3 md:flex-row' : ''
       )}
     >
-      {/* Cover skeleton — 16:9 fitted */}
+      {/* Cover skeleton — 16:9 fitted (theme-adaptive bg & shimmer) */}
       <div
         className={cn(
-          'aspect-[16/9] w-full overflow-hidden bg-[hsl(var(--surface-subtle))] shrink-0',
+          'aspect-[16/9] w-full overflow-hidden bg-zinc-100 dark:bg-zinc-900/90 shrink-0',
           isFeatured ? 'md:w-1/2 border-b md:border-b-0 md:border-r border-[hsl(var(--border-subtle))]' : 'border-b border-[hsl(var(--border-subtle))]'
         )}
       >
-        <Skeleton className="w-full h-full rounded-none" />
+        <div className="w-full h-full skeleton-shimmer bg-zinc-200/90 dark:bg-zinc-800/90" />
       </div>
 
       {/* Body — compact even padding */}
