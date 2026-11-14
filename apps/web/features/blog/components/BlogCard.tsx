@@ -28,62 +28,57 @@ export function BlogCard({ post, isFeatured = false }: BlogCardProps) {
 
   return (
     <Card
-      className={`group flex flex-col justify-between overflow-hidden rounded-xl sm:rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] hover:border-indigo-500/40 dark:hover:border-indigo-400/40 hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-300 backdrop-blur-sm p-0 ${
+      className={cn(
+        'group flex flex-col justify-between overflow-hidden rounded-xl sm:rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--surface-elevated))] hover:border-indigo-500/40 dark:hover:border-indigo-400/40 hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-300 backdrop-blur-sm p-0',
         isFeatured && coverUrl ? 'sm:col-span-2 lg:col-span-3 md:flex-row' : ''
-      }`}
+      )}
     >
-      {/* Cover Image Container (100% visible, zero-crop fitting with ambient blurred glow) */}
+      {/* 16:9 Fitted Cover Image Container (Flush, even, zero letterboxing) */}
       {coverUrl && (
         <Link
           href={`/updates/${post.slug}`}
-          className={`relative block overflow-hidden bg-zinc-950/80 dark:bg-black/90 shrink-0 select-none ${
+          className={cn(
+            'relative block overflow-hidden bg-[hsl(var(--surface-subtle))] shrink-0 select-none aspect-[16/9]',
             isFeatured
-              ? 'w-full md:w-1/2 aspect-[16/9] md:aspect-auto md:min-h-[280px] lg:min-h-[320px] p-2 sm:p-3 border-b md:border-b-0 md:border-r border-[hsl(var(--border-subtle))]'
-              : 'w-full aspect-[16/9] p-2 sm:p-2.5 border-b border-[hsl(var(--border-subtle))]'
-          }`}
+              ? 'w-full md:w-1/2 border-b md:border-b-0 md:border-r border-[hsl(var(--border-subtle))]'
+              : 'w-full border-b border-[hsl(var(--border-subtle))]'
+          )}
         >
           {/* Skeleton loading shimmer */}
           <div
             aria-hidden="true"
             className={cn(
-              'absolute inset-0 skeleton-shimmer bg-zinc-200/60 dark:bg-zinc-800/60 z-[1] transition-opacity duration-400 pointer-events-none',
+              'absolute inset-0 skeleton-shimmer bg-zinc-200/60 dark:bg-zinc-800/60 z-[1] transition-opacity duration-300 pointer-events-none',
               imageLoaded ? 'opacity-0' : 'opacity-100'
             )}
           />
 
-          {/* Ambient blurred backdrop so letterbox edges blend organically with zero harsh voids */}
+          {/* 16:9 Artwork — Edge-to-edge flush containment without dark bars or arbitrary padding */}
           <Image
             src={coverUrl}
-            alt=""
-            aria-hidden="true"
+            alt={post.title}
             fill
-            unoptimized
-            className="pointer-events-none object-cover blur-2xl opacity-40 dark:opacity-30 scale-110"
+            sizes={
+              isFeatured
+                ? '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 45vw'
+                : '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+            }
+            onLoad={() => setImageLoaded(true)}
+            className={cn(
+              'pointer-events-none object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]',
+              imageLoaded ? 'opacity-100' : 'opacity-0'
+            )}
           />
-
-          {/* Foreground Pristine Artwork — 100% contained, zero cropping, full text & graphic preserved */}
-          <div className="relative w-full h-full flex items-center justify-center z-[2]">
-            <Image
-              src={coverUrl}
-              alt={post.title}
-              fill
-              sizes={
-                isFeatured
-                  ? '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 45vw'
-                  : '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-              }
-              onLoad={() => setImageLoaded(true)}
-              className={cn(
-                'pointer-events-none object-contain rounded-lg drop-shadow-md transition-transform duration-500 ease-out group-hover:scale-[1.02]',
-                imageLoaded ? 'opacity-100' : 'opacity-0'
-              )}
-            />
-          </div>
         </Link>
       )}
 
-      {/* Content Body */}
-      <div className="p-3 sm:p-4 md:p-5 lg:p-6 flex flex-col justify-between flex-1 space-y-3 sm:space-y-4">
+      {/* Content Body — Compact, even padding and clean typographic hierarchy */}
+      <div
+        className={cn(
+          'flex flex-col justify-between flex-1 min-w-0',
+          isFeatured ? 'p-4 sm:p-5 lg:p-6 space-y-3 sm:space-y-4' : 'p-3.5 sm:p-4 space-y-2.5 sm:space-y-3'
+        )}
+      >
         <div className="space-y-2 sm:space-y-2.5">
           {/* Top Row: Category & Metadata */}
           <div className="flex items-center justify-between gap-2 flex-wrap">
@@ -95,7 +90,7 @@ export function BlogCard({ post, isFeatured = false }: BlogCardProps) {
                 {post.category.name}
               </Badge>
             )}
-            <div className="flex items-center gap-2 sm:gap-3 text-[10px] sm:text-[11px] text-[hsl(var(--muted-foreground))] ml-auto font-mono">
+            <div className="flex items-center gap-2 sm:gap-2.5 text-[10px] sm:text-[11px] text-[hsl(var(--muted-foreground))] ml-auto font-mono">
               <span className="flex items-center gap-1">
                 <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[hsl(var(--subtle-foreground))]" />
                 <span>{publishedDate}</span>
@@ -114,11 +109,12 @@ export function BlogCard({ post, isFeatured = false }: BlogCardProps) {
             className="block group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors"
           >
             <h3
-              className={`font-bold text-[hsl(var(--foreground))] tracking-tight leading-snug ${
+              className={cn(
+                'font-bold text-[hsl(var(--foreground))] tracking-tight leading-snug',
                 isFeatured
-                  ? 'text-base sm:text-lg md:text-xl lg:text-2xl line-clamp-3'
-                  : 'text-sm sm:text-base md:text-lg line-clamp-3'
-              }`}
+                  ? 'text-base sm:text-lg md:text-xl lg:text-2xl line-clamp-2 sm:line-clamp-3'
+                  : 'text-sm sm:text-base font-semibold line-clamp-2'
+              )}
             >
               {post.title}
             </h3>
@@ -126,9 +122,10 @@ export function BlogCard({ post, isFeatured = false }: BlogCardProps) {
 
           {/* Excerpt */}
           <p
-            className={`text-xs sm:text-sm text-[hsl(var(--muted-foreground))] leading-relaxed ${
-              isFeatured ? 'line-clamp-2 sm:line-clamp-3 md:line-clamp-4' : 'line-clamp-2 sm:line-clamp-3'
-            }`}
+            className={cn(
+              'text-xs sm:text-sm text-[hsl(var(--muted-foreground))] leading-relaxed',
+              isFeatured ? 'line-clamp-2 sm:line-clamp-3' : 'line-clamp-2'
+            )}
           >
             {post.excerpt}
           </p>
