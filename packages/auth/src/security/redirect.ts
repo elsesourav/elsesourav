@@ -29,6 +29,22 @@ export function sanitizeRedirectUrl(candidateUrl?: string | null, fallbackUrl = 
     return trimmed;
   }
 
+  // Allow trusted development and ecosystem origins (localhost, 127.0.0.1, elsesourav.com, breakout-ball)
+  try {
+    const parsed = new URL(trimmed);
+    const host = parsed.hostname.toLowerCase();
+    if (
+      (parsed.protocol === 'http:' || parsed.protocol === 'https:') &&
+      (host === 'localhost' ||
+        host === '127.0.0.1' ||
+        host.endsWith('.elsesourav.com') ||
+        host === 'elsesourav.com' ||
+        host.includes('breakout-ball'))
+    ) {
+      return trimmed;
+    }
+  } catch {}
+
   // Reject external domains, arbitrary origins, or unparseable URLs
   return fallbackUrl;
 }

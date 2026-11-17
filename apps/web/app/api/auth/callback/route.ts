@@ -89,6 +89,62 @@ export async function GET(request: NextRequest) {
         console.error('Failed to sync OAuth user profile to database:', syncErr);
       }
 
+      const isPopup = requestUrl.searchParams.get('mode') === 'popup';
+      if (isPopup) {
+        const metadata = data.user.user_metadata || {};
+        const displayName =
+          metadata.full_name || metadata.name || metadata.user_name || metadata.preferred_username;
+        const rawUsername =
+          metadata.user_name || metadata.preferred_username || (data.user.email ? data.user.email.split('@')[0] : 'player');
+        const username = String(rawUsername).toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 30);
+        const photoUrl = metadata.avatar_url || metadata.picture || metadata.photoUrl;
+
+        const html = `<!DOCTYPE html>
+<html>
+<head><title>Authentication Complete</title></head>
+<body style="background:#070b1e;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;">
+  <div style="text-align:center;">
+    <h3 style="color:#00f7ff;">Authenticated Successfully</h3>
+    <p style="color:#94a3b8;font-size:12px;">Returning to application...</p>
+  </div>
+  <script>
+    try {
+      if (window.opener) {
+        window.opener.postMessage({
+          type: 'ELSESOURAV_AUTH_SUCCESS',
+          payload: {
+            id: ${JSON.stringify(data.user.id)},
+            fullName: ${JSON.stringify(displayName || 'Player')},
+            username: ${JSON.stringify(username || 'player')},
+            email: ${JSON.stringify(data.user.email || '')},
+            avatarUrl: ${JSON.stringify(photoUrl || '')},
+            token: ${JSON.stringify(data.session?.access_token || '')}
+          }
+        }, '*');
+        setTimeout(() => window.close(), 300);
+      } else {
+        window.location.href = ${JSON.stringify(safeRedirectPath)};
+      }
+    } catch (e) {
+      window.location.href = ${JSON.stringify(safeRedirectPath)};
+    }
+  </script>
+</body>
+</html>`;
+        return new NextResponse(html, {
+          status: 200,
+          headers: { 'Content-Type': 'text/html; charset=utf-8' },
+        });
+      }
+
+      if (safeRedirectPath.startsWith('http://') || safeRedirectPath.startsWith('https://')) {
+        const dest = new URL(safeRedirectPath);
+        if (data.session?.access_token) {
+          dest.hash = `access_token=${data.session.access_token}&refresh_token=${data.session.refresh_token}&token_type=bearer`;
+        }
+        return NextResponse.redirect(dest);
+      }
+
       return NextResponse.redirect(new URL(safeRedirectPath, canonicalOrigin));
     }
 
