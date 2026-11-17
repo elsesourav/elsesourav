@@ -384,7 +384,7 @@ export function AppCard({
                   height={48}
                   onLoad={() => setIconLoaded(true)}
                   className={cn(
-                    'w-full h-full object-cover group-hover:scale-105 transition-all duration-300',
+                    'w-full h-full z-2 object-cover group-hover:scale-105 transition-all duration-300',
                     iconLoaded ? 'opacity-100' : 'opacity-0'
                   )}
                 />
