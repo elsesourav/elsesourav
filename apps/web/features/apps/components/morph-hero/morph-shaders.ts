@@ -97,12 +97,16 @@ void main() {
   // Fast path for static/idle state with no drift: bypass procedural FBM & multiple texture passes
   if (p <= 0.0001 && uDrift < 0.001) {
     vec2 sC = coverUV(vUv, uResolution, uCurrentSize);
-    gl_FragColor = texture2D(tCurrent, sC);
+    vec4 tex = texture2D(tCurrent, sC);
+    vec3 col = mix(uOverlay, tex.rgb, tex.a);
+    gl_FragColor = vec4(col, 1.0);
     return;
   }
   if (p >= 0.9999 && uDrift < 0.001) {
     vec2 sN = coverUV(vUv, uResolution, uNextSize);
-    gl_FragColor = texture2D(tNext, sN);
+    vec4 tex = texture2D(tNext, sN);
+    vec3 col = mix(uOverlay, tex.rgb, tex.a);
+    gl_FragColor = vec4(col, 1.0);
     return;
   }
 
@@ -175,7 +179,8 @@ void main() {
 
   vec3 col = mix(colC, colN, m);
   float alpha = mix(texC.a, texN.a, m);
+  vec3 finalCol = mix(uOverlay, col, alpha);
 
-  gl_FragColor = vec4(col, alpha);
+  gl_FragColor = vec4(finalCol, 1.0);
 }
 `;

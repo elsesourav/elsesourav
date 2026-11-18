@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { PageHeader, Badge, Button } from '@elsesourav/ui';
-import { Plus, GalleryHorizontalEnd } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { getAdminCarouselSlides } from '@/features/admin/carousel/queries/get-admin-carousel';
 import { AdminCarouselTable } from '@/features/admin/carousel/components/AdminCarouselTable';
 

@@ -43,7 +43,9 @@ export function sanitizeRedirectUrl(candidateUrl?: string | null, fallbackUrl = 
     ) {
       return trimmed;
     }
-  } catch {}
+  } catch {
+    // Invalid URL format, fall through to fallback
+  }
 
   // Reject external domains, arbitrary origins, or unparseable URLs
   return fallbackUrl;

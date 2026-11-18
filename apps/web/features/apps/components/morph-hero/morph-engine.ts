@@ -116,7 +116,9 @@ export class MorphEngine {
     if (!this.gl) {
       throw new Error('WebGL is not available in the current environment');
     }
-    this.gl.clearColor(0, 0, 0, 0);
+    const opts = this.getOptions();
+    const overlay = hexToRgb(opts.overlayColor);
+    this.gl.clearColor(overlay[0], overlay[1], overlay[2], 1.0);
 
     this.canvas = this.gl.canvas as HTMLCanvasElement;
     this.canvas.className = 'block w-full h-full relative z-[2] rounded-[inherit]';
@@ -127,7 +129,6 @@ export class MorphEngine {
     this.textures = this.items.map(() => makeFallbackTexture(this.gl));
     this.sizes = this.items.map(() => [1, 1] as [number, number]);
 
-    const opts = this.getOptions();
     this.program = new Program(this.gl, {
       vertex: vertexShader,
       fragment: fragmentShader,
