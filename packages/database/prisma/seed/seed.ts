@@ -305,25 +305,39 @@ async function main() {
       name: 'Dr. Debayan Ganguly Portfolio & CMS',
       slug: 'debayan-ganguly-portfolio',
       shortDescription:
-        'Bilingual academic and research portfolio platform with custom CMS and LaTeX math typesetting.',
+        'Bilingual academic and research portfolio platform with custom CMS, Cloud Firestore, and LaTeX math typesetting.',
       description:
-        'An academic portfolio and administrative CMS built for Dr. Debayan Ganguly (Deputy Director OSD & Ex-officio, Govt of West Bengal), featuring Bengali/English i18n, KaTeX math rendering, and Cloud Firestore.',
+        'An academic portfolio and administrative CMS engineered for Dr. Debayan Ganguly (Deputy Director OSD & Ex-officio, Higher Education Department, Govt. of West Bengal). Features seamless Bengali/English i18n, KaTeX mathematical proofs typesetting, real-time Cloud Firestore integration, and an administrative control panel.',
       documentationMd: `## Overview
 
-An academic and research portfolio website engineered for **Dr. Debayan Ganguly**, Deputy Director OSD & Ex-officio at the Directorate of Technical Education, Government of West Bengal.
+**Dr. Debayan Ganguly Portfolio & CMS** is an academic portfolio and administrative content management system engineered for **Dr. Debayan Ganguly**, Deputy Director OSD & Ex-officio at the Directorate of Technical Education, Higher Education Department, Government of West Bengal.
 
-## What It Does
+Holding a Ph.D. in Computer Science & Engineering from the University of Calcutta (work done at **Indian Statistical Institute, Kolkata**), Dr. Ganguly required an authoritative digital platform balancing academic rigor with frictionless administrative autonomy.
 
-- **Bilingual i18n**: Real-time seamless toggle between English and Bengali (বাংলা).
-- **Custom Admin CMS**: Full administrative management for research grants, publications, honors, and workshops.
-- **LaTeX Math Rendering**: KaTeX integration for mathematical proofs and formula typesetting.
-- **Cloud Firestore**: Real-time reactive data store with zero layout shift skeleton loading.
+## Architectural Highlights
+
+- **Bilingual Internationalization (EN / বাংলা)**: Real-time seamless toggle between English and Bengali across every page and publication listing.
+- **Administrative CMS Engine**: Full control panel for managing research projects, peer-reviewed publications, academic honors, workshops, and custom pages.
+- **Precision LaTeX Math**: KaTeX rendering for theoretical proofs, quantum finite automata transitions, and mathematical formulas at 60 FPS.
+- **Zero Layout Shift**: Real-time Firebase Cloud Firestore with geometric skeleton loaders preventing layout shifts (CLS: 0.00).
 
 ## Live Deployment
 
 - Available at: [debayanganguly.web.app](https://debayanganguly.web.app)`,
-      iconUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=200&q=80',
-      featuredImageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=80',
+      iconUrl:
+        'https://res.cloudinary.com/diqw2sjl8/image/upload/q_auto,f_auto/elsesourav/apps/debayan-ganguly-portfolio/app-icon-512x512-1794987802554.webp',
+      featuredImageUrl:
+        'https://res.cloudinary.com/diqw2sjl8/image/upload/q_auto,f_auto/elsesourav/apps/debayan-ganguly-portfolio/app-cover-landscape-16x9-1794987803948.webp',
+      featuredImageMobileUrl:
+        'https://res.cloudinary.com/diqw2sjl8/image/upload/q_auto,f_auto/elsesourav/apps/debayan-ganguly-portfolio/app-cover-mobile-3x4-1794987820169.webp',
+      screenshots: [
+        'https://res.cloudinary.com/diqw2sjl8/image/upload/q_auto,f_auto/elsesourav/apps/debayan-ganguly-portfolio/screen-01-academic-hero-profile-1794987824578.webp',
+        'https://res.cloudinary.com/diqw2sjl8/image/upload/q_auto,f_auto/elsesourav/apps/debayan-ganguly-portfolio/screen-02-research-portfolio-grants-1794987862834.webp',
+        'https://res.cloudinary.com/diqw2sjl8/image/upload/q_auto,f_auto/elsesourav/apps/debayan-ganguly-portfolio/screen-03-peer-reviewed-publications-1794987915370.webp',
+        'https://res.cloudinary.com/diqw2sjl8/image/upload/q_auto,f_auto/elsesourav/apps/debayan-ganguly-portfolio/screen-04-honors-and-awards-1794987934168.webp',
+        'https://res.cloudinary.com/diqw2sjl8/image/upload/q_auto,f_auto/elsesourav/apps/debayan-ganguly-portfolio/screen-05-workshops-and-keynotes-1794987950491.webp',
+        'https://res.cloudinary.com/diqw2sjl8/image/upload/q_auto,f_auto/elsesourav/apps/debayan-ganguly-portfolio/screen-06-academic-visual-identity-1794987993308.webp',
+      ],
       demoUrl: 'https://debayanganguly.web.app',
       githubUrl: 'https://github.com/elsesourav/debayan-ganguly-portfolio',
       categoryId: catMap['web-apps']!,
@@ -331,7 +345,7 @@ An academic and research portfolio website engineered for **Dr. Debayan Ganguly*
       isFeatured: true,
       currentVersion: '1.0.0',
       publishedAt: new Date('2026-08-14T09:00:00Z'),
-      tags: ['react', 'typescript', 'firebase', 'tailwindcss'],
+      tags: ['react', 'typescript', 'firebase', 'tailwindcss', 'katex', 'bilingual'],
     },
 
     // -------------------------------------------------------------------------
