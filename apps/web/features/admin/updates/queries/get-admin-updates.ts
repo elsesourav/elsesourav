@@ -1,13 +1,13 @@
 import { BlogRepository, BlogService } from '@elsesourav/database';
 import { requireAdmin } from '../../guards/require-admin';
-import type { BlogPost, BlogCategory, BlogTag } from '@elsesourav/types';
+import type { BlogPost, Category, BlogTag } from '@elsesourav/types';
 
 const blogRepo = new BlogRepository();
 const blogService = new BlogService(blogRepo);
 
 export interface AdminUpdatesListData {
   posts: BlogPost[];
-  categories: BlogCategory[];
+  categories: Category[];
   tags: BlogTag[];
 }
 
@@ -39,7 +39,7 @@ export const getAdminBlogList = getAdminUpdatesList;
 
 export interface AdminUpdateEditData {
   post: BlogPost;
-  categories: BlogCategory[];
+  categories: Category[];
   tags: BlogTag[];
 }
 

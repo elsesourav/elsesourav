@@ -186,7 +186,9 @@ export interface Category {
   readonly description?: string;
   readonly icon?: string;
   readonly orderIndex: number;
-  readonly isActive: boolean;
+  readonly isActive?: boolean;
+  readonly appCount?: number;
+  readonly postCount?: number;
 }
 
 export interface Tag {

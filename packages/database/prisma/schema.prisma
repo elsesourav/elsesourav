@@ -150,7 +150,8 @@ model Category {
   isActive    Boolean  @default(true)
   apps        App[]
   appCategories AppCategory[]
-  blogCategories BlogPostCategory[]
+  blogPosts   BlogPost[]
+  postCategories BlogPostCategory[]
 }
 
 model Tag {
@@ -215,7 +216,7 @@ model BlogPost {
   authorId      String?
   author        User?         @relation(fields: [authorId], references: [id])
   categoryId    String?
-  category      BlogCategory? @relation(fields: [categoryId], references: [id])
+  category      Category?     @relation(fields: [categoryId], references: [id])
   categories    BlogPostCategory[]
   tags          BlogPostTag[]
 
@@ -223,15 +224,6 @@ model BlogPost {
   @@index([publishedAt])
   @@index([categoryId])
   @@index([authorId])
-}
-
-model BlogCategory {
-  id          String     @id @default(uuid())
-  name        String
-  slug        String     @unique
-  description String?
-  orderIndex  Int        @default(0)
-  posts       BlogPost[]
 }
 
 model BlogTag {

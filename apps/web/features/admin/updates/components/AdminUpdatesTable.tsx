@@ -4,13 +4,13 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Card, Badge, Input, IconButton } from '@elsesourav/ui';
 import { Dropdown } from '@elsesourav/ui/interior';
-import type { BlogPost, BlogCategory } from '@elsesourav/types';
+import type { BlogPost, Category } from '@elsesourav/types';
 import { archiveBlogPostAction, deleteBlogPostAction } from '../actions/admin-update-actions';
 import { FileText, Search, ExternalLink, Edit, Archive, Trash2 } from 'lucide-react';
 
 export interface AdminUpdatesTableProps {
   initialPosts: readonly BlogPost[];
-  categories: readonly BlogCategory[];
+  categories: readonly Category[];
 }
 
 export function AdminUpdatesTable({ initialPosts, categories }: AdminUpdatesTableProps) {

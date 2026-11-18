@@ -5,6 +5,26 @@ import { requireAdmin } from '../../guards/require-admin';
 import { AdminSaveBlogSchema, type AdminSaveBlogSchemaInput, generateBlogSlug, z } from '@elsesourav/validation';
 import { revalidatePath } from 'next/cache';
 
+function cleanString(val?: string | null): string | undefined {
+  if (!val || val === '$undefined' || val === 'undefined') return undefined;
+  const trimmed = val.trim();
+  return trimmed === '' ? undefined : trimmed;
+}
+
+function sanitizeBlogInput(data: AdminSaveBlogSchemaInput): AdminSaveBlogSchemaInput {
+  return {
+    ...data,
+    slug: cleanString(data.slug),
+    coverImageUrl: cleanString(data.coverImageUrl) || '',
+    authorName: cleanString(data.authorName) || '',
+    authorImageUrl: cleanString(data.authorImageUrl) || '',
+    authorUrl: cleanString(data.authorUrl) || '',
+    authorRole: cleanString(data.authorRole) || '',
+    seoTitle: cleanString(data.seoTitle) || '',
+    seoDescription: cleanString(data.seoDescription) || '',
+  };
+}
+
 function formatValidationError(error: z.ZodError): string {
   const firstIssue = error.issues[0];
   if (!firstIssue) return 'Invalid update post payload';

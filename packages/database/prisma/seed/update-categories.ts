@@ -165,26 +165,6 @@ export async function updateCategories() {
     console.info(`  ✓ Category "${cat.name}" (${cat.slug}) ready.`);
   }
 
-  // Also ensure BlogCategory has matching records
-  const blogCategoryRecords: Record<string, string> = {};
-  for (const cat of CANONICAL_CATEGORIES) {
-    const upserted = await prisma.blogCategory.upsert({
-      where: { slug: cat.slug },
-      update: {
-        name: cat.name,
-        description: cat.description,
-        orderIndex: cat.orderIndex,
-      },
-      create: {
-        name: cat.name,
-        slug: cat.slug,
-        description: cat.description,
-        orderIndex: cat.orderIndex,
-      },
-    });
-    blogCategoryRecords[cat.slug] = upserted.id;
-  }
-
   // 2. Update all apps with new primary categories and AppCategory relations
   console.info('📦 Updating applications with multiple distinct categories...');
   const allApps = await prisma.app.findMany({ select: { id: true, slug: true, name: true } });
@@ -231,13 +211,12 @@ export async function updateCategories() {
     const categorySlugs = mapping?.categories || [primarySlug];
 
     const primaryCat = categoryRecords[primarySlug];
-    const blogCatId = blogCategoryRecords[primarySlug];
 
     if (primaryCat) {
       // Update blog post primary categoryId
       await prisma.blogPost.update({
         where: { id: post.id },
-        data: { categoryId: blogCatId || null },
+        data: { categoryId: primaryCat.id },
       });
 
       // Clear existing BlogPostCategory relations for this post

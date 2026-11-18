@@ -3,7 +3,7 @@ import { BlogService, BlogRepository } from '@elsesourav/database';
 import type {
   BlogPostListItem,
   BlogQueryResult,
-  BlogCategory as DomainBlogCategory,
+  Category as DomainCategory,
   BlogTag as DomainBlogTag,
 } from '@elsesourav/types';
 
@@ -23,6 +23,7 @@ describe('Blog Listing & Discovery Query Pipeline', () => {
       name: 'Engineering',
       slug: 'engineering',
       orderIndex: 1,
+      isActive: true,
     },
     tags: [{ id: 'tag-1', name: 'Next.js', slug: 'nextjs' }],
     readingTime: 5,
@@ -40,9 +41,9 @@ describe('Blog Listing & Discovery Query Pipeline', () => {
     hasMore: false,
   };
 
-  const mockCategories: DomainBlogCategory[] = [
-    { id: 'cat-1', name: 'Engineering', slug: 'engineering', orderIndex: 1, postCount: 10 },
-    { id: 'cat-2', name: 'Productivity', slug: 'productivity', orderIndex: 2, postCount: 4 },
+  const mockCategories: DomainCategory[] = [
+    { id: 'cat-1', name: 'Engineering', slug: 'engineering', orderIndex: 1, isActive: true, postCount: 10 },
+    { id: 'cat-2', name: 'Productivity', slug: 'productivity', orderIndex: 2, isActive: true, postCount: 4 },
   ];
 
   const mockTags: DomainBlogTag[] = [

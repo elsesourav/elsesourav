@@ -1,5 +1,5 @@
 import { BlogRepository, BlogService } from '@elsesourav/database';
-import type { BlogCategory, BlogTag, BlogQueryInput, BlogQueryResult } from '@elsesourav/types';
+import type { Category, BlogTag, BlogQueryInput, BlogQueryResult } from '@elsesourav/types';
 
 const blogRepo = new BlogRepository();
 const blogService = new BlogService(blogRepo);
@@ -8,9 +8,11 @@ export async function getPublicBlogListing(options: BlogQueryInput = {}): Promis
   return blogService.listPublicPosts(options);
 }
 
-export async function getBlogCategories(): Promise<BlogCategory[]> {
+export async function getUpdateCategories(): Promise<Category[]> {
   return blogService.listCategories();
 }
+
+export const getBlogCategories = getUpdateCategories;
 
 export async function getBlogTags(): Promise<BlogTag[]> {
   return blogService.listTags();

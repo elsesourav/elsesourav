@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Card, Button } from '@elsesourav/ui';
 import { Dropdown, FloatingLabelInput } from '@elsesourav/ui/interior';
-import type { BlogPost, BlogCategory, BlogTag } from '@elsesourav/types';
+import type { BlogPost, Category, BlogTag } from '@elsesourav/types';
 import {
   createBlogPostAction, updateBlogPostAction, publishBlogPostAction,
   archiveBlogPostAction, deleteBlogPostAction,
@@ -19,7 +19,7 @@ import { ImageInputWithLibrary } from '@/features/admin/media/components/ImageIn
 
 export interface AdminUpdateFormProps {
   post?: BlogPost;
-  categories: readonly BlogCategory[];
+  categories: readonly Category[];
   tags?: readonly BlogTag[];
 }
 

@@ -1,25 +1,16 @@
 import type {
   BlogPost,
   BlogPostListItem,
-  BlogCategory,
+  Category,
   BlogTag,
   BlogAuthor,
 } from '@elsesourav/types';
+import { createCategory } from './app.factory';
 
 let blogCounter = 1;
 
 export function resetBlogFactoryCounter(): void {
   blogCounter = 1;
-}
-
-export function createBlogCategory(overrides?: Partial<BlogCategory>): BlogCategory {
-  const index = overrides?.orderIndex ?? 1;
-  return {
-    id: overrides?.id || `blog-cat-${index}`,
-    name: overrides?.name || 'Architecture & Engineering',
-    slug: overrides?.slug || 'architecture',
-    orderIndex: index,
-  };
 }
 
 export function createBlogTag(overrides?: Partial<BlogTag>): BlogTag {
@@ -55,7 +46,7 @@ export function createBlogPost(overrides?: Partial<BlogPost>): BlogPost {
       `# ${title}\n\nComprehensive exploration of core design tokens, state management, and high-performance server components.\n\n## Key Takeaways\n\n- Sub-100ms response times\n- Resilient fallback architectures\n- Clean domain separation.`,
     authorId: overrides?.authorId || 'usr-admin-1',
     author: overrides?.author || defaultBlogAuthor,
-    category: overrides?.category || createBlogCategory(),
+    category: overrides?.category || createCategory(),
     tags: overrides?.tags || [
       createBlogTag({ name: 'Turborepo', slug: 'turborepo' }),
       createBlogTag(),

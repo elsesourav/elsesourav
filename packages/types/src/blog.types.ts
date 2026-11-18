@@ -1,4 +1,5 @@
 import type { ID, Timestamp } from './common.types';
+import type { Category } from './app.types';
 
 export type BlogPostStatus = 'draft' | 'published' | 'archived';
 export type BlogStatus = BlogPostStatus;
@@ -9,15 +10,6 @@ export interface BlogAuthor {
   readonly username?: string;
   readonly photoUrl?: string;
   readonly bio?: string;
-}
-
-export interface BlogCategory {
-  readonly id: ID;
-  readonly name: string;
-  readonly slug: string;
-  readonly description?: string;
-  readonly orderIndex: number;
-  readonly postCount?: number;
 }
 
 export interface BlogTag {
@@ -38,8 +30,8 @@ export interface BlogPostListItem {
   readonly authorImageUrl?: string;
   readonly authorUrl?: string;
   readonly authorRole?: string;
-  readonly category?: BlogCategory;
-  readonly categories?: readonly BlogCategory[];
+  readonly category?: Category;
+  readonly categories?: readonly Category[];
   readonly categorySlugs?: readonly string[];
   readonly tags: readonly BlogTag[];
   readonly readingTime: number;
@@ -69,8 +61,8 @@ export interface BlogPost {
   readonly authorUrl?: string;
   readonly authorRole?: string;
   readonly categoryId?: ID;
-  readonly category?: BlogCategory;
-  readonly categories?: readonly BlogCategory[];
+  readonly category?: Category;
+  readonly categories?: readonly Category[];
   readonly categorySlugs?: readonly string[];
   readonly tags: readonly BlogTag[];
   readonly status: BlogPostStatus;

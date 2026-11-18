@@ -4,7 +4,7 @@ import {
   mapPrismaBlogPostToDomain,
   mapPrismaBlogPostToListItem,
   mapPrismaBlogPostToPublic,
-  mapPrismaBlogCategoryToDomain,
+  mapPrismaCategoryToDomain,
   mapPrismaBlogTagToDomain,
   PrismaBlogWithRelations,
 } from '../mappers/blog.mapper';
@@ -13,7 +13,7 @@ import type {
   BlogPost as DomainBlogPost,
   BlogPostListItem,
   PublicBlogPost,
-  BlogCategory as DomainBlogCategory,
+  Category as DomainCategory,
   BlogTag as DomainBlogTag,
   CreateBlogPostInput,
   UpdateBlogPostInput,
@@ -168,6 +168,24 @@ export class BlogRepository {
     }
   }
 
+  private async resolveValidCategoryIds(rawIds: string[]): Promise<string[]> {
+    if (!this.prisma.category?.findUnique) {
+      return [...new Set(rawIds.filter(Boolean))];
+    }
+    const validIds: string[] = [];
+    for (const catId of rawIds) {
+      if (!catId) continue;
+      const cat = await this.prisma.category.findUnique({
+        where: { id: catId },
+        select: { id: true },
+      });
+      if (cat) {
+        validIds.push(cat.id);
+      }
+    }
+    return [...new Set(validIds)];
+  }
+
   async createPost(
     data: CreateBlogPostInput,
     authorId: string,
@@ -186,15 +204,21 @@ export class BlogRepository {
         resolvedAuthorId = user ? user.id : null;
       }
 
-      const resolvedCategoryId =
+      const inputCategoryId =
         data.categoryId ||
         (data.categoryIds && data.categoryIds.length > 0 ? data.categoryIds[0] : null);
-      const uniqueCategoryIds =
+      const rawCategoryIds =
         data.categoryIds && data.categoryIds.length > 0
           ? [...new Set(data.categoryIds)]
-          : resolvedCategoryId
-            ? [resolvedCategoryId]
+          : inputCategoryId
+            ? [inputCategoryId]
             : [];
+
+      const validCategoryIds = await this.resolveValidCategoryIds(rawCategoryIds);
+      const resolvedCategoryId =
+        (inputCategoryId && validCategoryIds.includes(inputCategoryId))
+          ? inputCategoryId
+          : validCategoryIds[0] || null;
 
       const record = await this.prisma.blogPost.create({
         data: {
@@ -210,9 +234,9 @@ export class BlogRepository {
           authorId: resolvedAuthorId,
           categoryId: resolvedCategoryId,
           categories:
-            uniqueCategoryIds.length > 0
+            validCategoryIds.length > 0
               ? {
-                  create: uniqueCategoryIds.map((catId) => ({ categoryId: catId })),
+                  create: validCategoryIds.map((categoryId) => ({ categoryId })),
                 }
               : undefined,
           seoTitle: data.seoTitle || null,
@@ -237,8 +261,9 @@ export class BlogRepository {
           `An update post with slug '${slug}' already exists. Please choose a different slug or title.`
         );
       }
+      const detail = error instanceof Error ? error.message : String(error);
       console.error('BlogRepository.createPost error:', error);
-      throw AppError.database('Failed to create blog post', error);
+      throw AppError.database(`Failed to create blog post: ${detail}`, error);
     }
   }
 
@@ -246,9 +271,30 @@ export class BlogRepository {
     try {
       const uniqueCategoryIds =
         data.categoryIds !== undefined ? [...new Set(data.categoryIds)] : undefined;
-      const resolvedCategoryId =
-        data.categoryId ??
-        (uniqueCategoryIds && uniqueCategoryIds.length > 0 ? uniqueCategoryIds[0] : undefined);
+
+      let validCategoryIds: string[] | undefined = undefined;
+      let resolvedCategoryId: string | null | undefined = undefined;
+
+      if (uniqueCategoryIds !== undefined) {
+        validCategoryIds = await this.resolveValidCategoryIds(uniqueCategoryIds);
+      }
+
+      if (data.categoryId !== undefined || validCategoryIds !== undefined) {
+        const targetId =
+          data.categoryId ??
+          (validCategoryIds && validCategoryIds.length > 0 ? validCategoryIds[0] : null);
+        if (!targetId) {
+          resolvedCategoryId = null;
+        } else if (this.prisma.category?.findUnique) {
+          const cat = await this.prisma.category.findUnique({
+            where: { id: targetId },
+            select: { id: true },
+          });
+          resolvedCategoryId = cat ? cat.id : null;
+        } else {
+          resolvedCategoryId = targetId;
+        }
+      }
 
       const record = await this.prisma.blogPost.update({
         where: { id },
@@ -262,12 +308,12 @@ export class BlogRepository {
           authorImageUrl: data.authorImageUrl,
           authorUrl: data.authorUrl,
           authorRole: data.authorRole,
-          categoryId: resolvedCategoryId,
+          categoryId: resolvedCategoryId !== undefined ? resolvedCategoryId : undefined,
           categories:
-            uniqueCategoryIds !== undefined
+            validCategoryIds !== undefined
               ? {
                   deleteMany: {},
-                  create: uniqueCategoryIds.map((catId) => ({ categoryId: catId })),
+                  create: validCategoryIds.map((categoryId) => ({ categoryId })),
                 }
               : undefined,
           seoTitle: data.seoTitle,
@@ -285,7 +331,9 @@ export class BlogRepository {
           `An update post with slug '${data.slug}' already exists. Please choose a different slug.`
         );
       }
-      throw AppError.database(`Failed to update blog post: ${id}`, error);
+      const detail = error instanceof Error ? error.message : String(error);
+      console.error('BlogRepository.updatePost error:', error);
+      throw AppError.database(`Failed to update blog post ${id}: ${detail}`, error);
     }
   }
 
@@ -400,7 +448,7 @@ export class BlogRepository {
     }
   }
 
-  async listCategories(): Promise<DomainBlogCategory[]> {
+  async listCategories(): Promise<DomainCategory[]> {
     try {
       const records = await this.prisma.category.findMany({
         where: { isActive: true },
@@ -408,7 +456,7 @@ export class BlogRepository {
         include: {
           _count: {
             select: {
-              blogCategories: {
+              postCategories: {
                 where: {
                   post: { status: PublishStatus.PUBLISHED, deletedAt: null },
                 },
@@ -423,11 +471,13 @@ export class BlogRepository {
         name: c.name,
         slug: c.slug,
         description: c.description ?? undefined,
+        icon: c.icon ?? undefined,
         orderIndex: c.orderIndex,
-        postCount: c._count.blogCategories,
+        isActive: c.isActive,
+        postCount: c._count.postCategories,
       }));
     } catch (error) {
-      throw AppError.database('Failed to fetch blog categories', error);
+      throw AppError.database('Failed to fetch categories', error);
     }
   }
 

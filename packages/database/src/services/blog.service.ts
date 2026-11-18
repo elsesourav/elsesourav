@@ -11,7 +11,7 @@ import type {
   BlogPost as DomainBlogPost,
   BlogPostListItem,
   PublicBlogPost,
-  BlogCategory as DomainBlogCategory,
+  Category as DomainCategory,
   BlogTag as DomainBlogTag,
   CreateBlogPostInput,
   UpdateBlogPostInput,
@@ -99,7 +99,7 @@ export class BlogService {
     return this.blogRepo.findRelatedPosts(postId, categoryId, limit);
   }
 
-  async listCategories(): Promise<DomainBlogCategory[]> {
+  async listCategories(): Promise<DomainCategory[]> {
     return this.blogRepo.listCategories();
   }
 

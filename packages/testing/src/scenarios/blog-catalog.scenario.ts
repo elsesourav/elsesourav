@@ -1,19 +1,19 @@
-import type { BlogQueryResult, BlogCategory, BlogTag } from '@elsesourav/types';
+import type { BlogQueryResult, Category, BlogTag } from '@elsesourav/types';
 import {
   fixtureBlogPostListItems,
-  fixtureBlogCategories,
+  fixtureUpdateCategories,
   fixtureBlogTags,
 } from '../fixtures/blog.fixtures';
 
 export interface BlogCatalogScenarioData {
-  readonly categories: readonly BlogCategory[];
+  readonly categories: readonly Category[];
   readonly tags: readonly BlogTag[];
   readonly result: BlogQueryResult;
 }
 
 export function createEmptyBlogCatalogScenario(): BlogCatalogScenarioData {
   return {
-    categories: fixtureBlogCategories,
+    categories: fixtureUpdateCategories,
     tags: fixtureBlogTags,
     result: {
       items: [],
@@ -28,7 +28,7 @@ export function createEmptyBlogCatalogScenario(): BlogCatalogScenarioData {
 
 export function createPopulatedBlogCatalogScenario(): BlogCatalogScenarioData {
   return {
-    categories: fixtureBlogCategories,
+    categories: fixtureUpdateCategories,
     tags: fixtureBlogTags,
     result: {
       items: fixtureBlogPostListItems,

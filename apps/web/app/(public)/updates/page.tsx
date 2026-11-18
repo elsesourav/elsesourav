@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import {
   getPublicBlogListing,
-  getBlogCategories,
+  getUpdateCategories,
   getBlogTags,
 } from '@/features/blog/queries/get-blog';
 import { BlogCard } from '@/features/blog/components/BlogCard';
@@ -57,7 +57,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
   // Parallel server data fetching
   const [categories, tags, listingResult] = await Promise.all([
-    getBlogCategories(),
+    getUpdateCategories(),
     getBlogTags(),
     getPublicBlogListing({
       query: query || undefined,

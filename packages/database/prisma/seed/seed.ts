@@ -891,37 +891,27 @@ Prototype interface exploring administrative user table controls and search perf
   }
 
   // ===========================================================================
-  // 5. SEED BLOG CATEGORIES & DEVLOG ARTICLES
+  // 5. SEED BLOG DEVLOG ARTICLES
   // ===========================================================================
   console.info('  → Seeding Blog Articles & Engineering Notes...');
 
-  const blogCatArchitecture = await prisma.blogCategory.upsert({
-    where: { slug: 'architecture-design' },
-    update: { name: 'Architecture & Design' },
+  const catArchitecture = await prisma.category.upsert({
+    where: { slug: 'architecture' },
+    update: { name: 'Architecture' },
     create: {
-      name: 'Architecture & Design',
-      slug: 'architecture-design',
+      name: 'Architecture',
+      slug: 'architecture',
       description:
         'System design, monorepos, and architectural lessons learned from building software.',
     },
   });
 
-  const blogCatWasm = await prisma.blogCategory.upsert({
-    where: { slug: 'systems-webassembly' },
-    update: { name: 'Systems & WebAssembly' },
+  const catHardware = await prisma.category.upsert({
+    where: { slug: 'hardware' },
+    update: { name: 'Hardware' },
     create: {
-      name: 'Systems & WebAssembly',
-      slug: 'systems-webassembly',
-      description: 'C++, WebAssembly compilation pipelines, SIMD, and low-level web performance.',
-    },
-  });
-
-  const blogCatHardware = await prisma.blogCategory.upsert({
-    where: { slug: 'hardware-robotics' },
-    update: { name: 'Hardware & Robotics' },
-    create: {
-      name: 'Hardware & Robotics',
-      slug: 'hardware-robotics',
+      name: 'Hardware',
+      slug: 'hardware',
       description:
         'Microcontroller engineering, ESP32, motor controllers, and real-time telemetry.',
     },
@@ -986,7 +976,7 @@ To capture text from non-selectable web graphics or video frames, SpectraLens in
 - Local-first WebAssembly pipelines give users privacy without server hosting bills.
 - Designing with strict Manifest V3 lifecycle constraints creates resilient, memory-efficient software.`,
       coverImageUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&q=80',
-      categoryId: blogCatArchitecture.id,
+      categoryId: catArchitecture.id,
       readingTime: 6,
       status: PublishStatus.PUBLISHED,
       publishedAt: new Date('2026-08-20T10:00:00Z'),
@@ -1023,7 +1013,7 @@ em++ -std=c++11 ./cpp/wasm.cpp -O3 -flto -msimd128 -s WASM=1 -o ./js/logic.js
 
 The compiled WASM module exposes a fast C function to JavaScript that accepts pixel buffers directly from an HTML5 Canvas drawing element, classifying the digit in under 1 millisecond.`,
       coverImageUrl: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1200&q=80',
-      categoryId: blogCatWasm.id,
+      categoryId: catArchitecture.id,
       readingTime: 8,
       status: PublishStatus.PUBLISHED,
       publishedAt: new Date('2026-08-10T14:30:00Z'),
@@ -1050,7 +1040,7 @@ Standard L298N motor driver wiring requires 6 pins (2 enable pins for PWM speed 
 
 Instead of relying on SD card filesystems, all HTML, CSS, and WebSocket controller assets are compiled directly into microcontroller program memory. The car streams live MJPEG video and telemetry from an onboard MPU6050 accelerometer at low latency.`,
       coverImageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80',
-      categoryId: blogCatHardware.id,
+      categoryId: catHardware.id,
       readingTime: 7,
       status: PublishStatus.PUBLISHED,
       publishedAt: new Date('2026-07-28T09:00:00Z'),
@@ -1075,7 +1065,7 @@ Every e-commerce platform enforces distinct catalog schemas. Porting a catalog f
 
 Handling thousands of catalog rows without server timeouts requires client-side chunking. By utilizing Web Workers and fast in-memory spreadsheet parsing, sellers can process large SKU listings in seconds right inside their browser.`,
       coverImageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80',
-      categoryId: blogCatArchitecture.id,
+      categoryId: catArchitecture.id,
       readingTime: 9,
       status: PublishStatus.PUBLISHED,
       publishedAt: new Date('2026-07-15T16:00:00Z'),

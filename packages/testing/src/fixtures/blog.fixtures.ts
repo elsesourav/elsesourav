@@ -1,31 +1,34 @@
-import type { BlogPost, BlogPostListItem, BlogCategory, BlogTag } from '@elsesourav/types';
+import type { BlogPost, BlogPostListItem, Category, BlogTag } from '@elsesourav/types';
 import { createBlogPostListItem } from '../factories/blog.factory';
 
-export const fixtureBlogCategoryArch: BlogCategory = {
+export const fixtureCategoryArch: Category = {
   id: 'bcat-arch',
   name: 'Architecture & Systems',
   slug: 'architecture-and-systems',
   orderIndex: 1,
+  isActive: true,
 };
 
-export const fixtureBlogCategorySec: BlogCategory = {
+export const fixtureCategorySec: Category = {
   id: 'bcat-sec',
   name: 'Security & Auth',
   slug: 'security-and-auth',
   orderIndex: 2,
+  isActive: true,
 };
 
-export const fixtureBlogCategoryUx: BlogCategory = {
+export const fixtureCategoryUx: Category = {
   id: 'bcat-ux',
   name: 'Design Systems & UX',
   slug: 'design-systems-and-ux',
   orderIndex: 3,
+  isActive: true,
 };
 
-export const fixtureBlogCategories: readonly BlogCategory[] = [
-  fixtureBlogCategoryArch,
-  fixtureBlogCategorySec,
-  fixtureBlogCategoryUx,
+export const fixtureUpdateCategories: readonly Category[] = [
+  fixtureCategoryArch,
+  fixtureCategorySec,
+  fixtureCategoryUx,
 ];
 
 export const fixtureBlogTagNextjs: BlogTag = {
@@ -78,7 +81,7 @@ When designing ElseSourav, we needed to scale past client-side bundler bottlenec
     username: 'elsesourav',
     photoUrl: 'https://res.cloudinary.com/elsesourav/image/upload/v2/avatars/admin.png',
   },
-  category: fixtureBlogCategoryArch,
+  category: fixtureCategoryArch,
   tags: [fixtureBlogTagNextjs, fixtureBlogTagTurbo],
   coverImageUrl: 'https://res.cloudinary.com/elsesourav/image/upload/v2/banners/arch-banner.png',
   status: 'published',
@@ -109,7 +112,7 @@ Role-based access control cannot rely solely on frontend navigation routing. In 
     username: 'elsesourav',
     photoUrl: 'https://res.cloudinary.com/elsesourav/image/upload/v2/avatars/admin.png',
   },
-  category: fixtureBlogCategorySec,
+  category: fixtureCategorySec,
   tags: [fixtureBlogTagRbac],
   coverImageUrl: 'https://res.cloudinary.com/elsesourav/image/upload/v2/banners/rbac-banner.png',
   status: 'published',
@@ -135,7 +138,7 @@ Relying on ad-hoc Tailwind classes leads to visual drift. By defining semantic C
     displayName: 'Sourav',
     username: 'elsesourav',
   },
-  category: fixtureBlogCategoryUx,
+  category: fixtureCategoryUx,
   tags: [fixtureBlogTagTokens],
   status: 'published',
   readingTime: 5,
@@ -152,7 +155,7 @@ export const fixtureBlogPostDraft: BlogPost = {
   excerpt: 'A draft look at our next graphics pipeline release.',
   content: 'Draft content under active revision.',
   authorId: 'usr-admin-1',
-  category: fixtureBlogCategoryArch,
+  category: fixtureCategoryArch,
   tags: [fixtureBlogTagNextjs],
   status: 'draft',
   readingTime: 2,

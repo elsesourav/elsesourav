@@ -73,7 +73,7 @@ elsesourav/
 5. `Category` (Application taxonomy)
 6. `Tag` / `AppTag` (Application search tags)
 7. `BlogPost` (Engineering devlogs, Markdown body, metadata)
-8. `BlogCategory` (Devlog categories)
+8. `Category` (Unified taxonomy for applications and devlogs)
 9. `BlogTag` / `BlogPostTag` (Devlog tags)
 10. `HelpArticle` (Task guides & documentation in Markdown)
 11. `HelpCategory` (Documentation categories)

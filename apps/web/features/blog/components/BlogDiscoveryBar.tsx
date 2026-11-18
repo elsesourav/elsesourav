@@ -3,11 +3,11 @@
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@elsesourav/ui';
-import type { BlogCategory, BlogTag } from '@elsesourav/types';
+import type { Category, BlogTag } from '@elsesourav/types';
 import { X } from 'lucide-react';
 
 interface BlogDiscoveryBarProps {
-  categories?: readonly BlogCategory[];
+  categories?: readonly Category[];
   tags?: readonly BlogTag[];
 }
 

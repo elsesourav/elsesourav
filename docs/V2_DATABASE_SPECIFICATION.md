@@ -20,7 +20,7 @@ The ElseSourav V2 database layer is built on **PostgreSQL** provisioned via **Su
 3. **`AppLink`**: Actionable URLs (web, iOS, Android, macOS, Linux, Windows) with action triggers (`open`, `download`, `install`).
 4. **`AppVersion`**: Version releases with semver tags, release notes/changelogs, and optional direct downloads.
 5. **`Category` & `Tag`**: Classification hierarchies with many-to-many relationship mapping (`AppTag`).
-6. **`BlogPost` & `BlogCategory`**: Engineering devlogs and articles with reading time and view counts.
+6. **`BlogPost` & `Category`**: Engineering devlogs and articles with reading time and view counts linked to unified platform categories.
 7. **`HelpArticle` & `HelpCategory`**: Support documentation and FAQ articles with user helpfulness feedback.
 8. **`SupportTicket` & `TicketMessage`**: User support triage queue with priorities (`LOW`, `MEDIUM`, `HIGH`, `URGENT`) and conversation threads.
 9. **`UserLibraryItem`**: User software bookmarks with favorites, pinning, and custom developer notes.

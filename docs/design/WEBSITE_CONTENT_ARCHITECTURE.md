@@ -65,7 +65,7 @@ The following content is dynamically editable via the administrative portal with
 - **Documentation**: `description` (`MARKDOWN`) rendered via `MarkdownRenderer`.
 - **Distribution & SemVer**: `version` (`SHORT TEXT`), `changelog` (`MARKDOWN`), `downloadUrl` (`URL`), `webUrl` (`URL`), `githubUrl` (`URL`), `isFeatured` (`BOOLEAN`), `status` (`ENUM`).
 
-### 3.2 Engineering Devlogs (`BlogPost`, `BlogCategory`, `BlogTag`)
+### 3.2 Engineering Devlogs (`BlogPost`, `Category`, `BlogTag`)
 
 - **Editorial**: `title`, `slug`, `excerpt` (`LONG TEXT`), `coverImageUrl` (`MEDIA`), `category` (`RELATION`), `tags` (`RELATION[]`).
 - **Body Content**: `content` (`MARKDOWN`) with syntax highlighting, copy blocks, GFM tables, and math equations.
