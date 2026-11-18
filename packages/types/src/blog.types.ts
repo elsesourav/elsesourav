@@ -39,6 +39,8 @@ export interface BlogPostListItem {
   readonly authorUrl?: string;
   readonly authorRole?: string;
   readonly category?: BlogCategory;
+  readonly categories?: readonly BlogCategory[];
+  readonly categorySlugs?: readonly string[];
   readonly tags: readonly BlogTag[];
   readonly readingTime: number;
   readonly viewsCount: number;
@@ -68,6 +70,8 @@ export interface BlogPost {
   readonly authorRole?: string;
   readonly categoryId?: ID;
   readonly category?: BlogCategory;
+  readonly categories?: readonly BlogCategory[];
+  readonly categorySlugs?: readonly string[];
   readonly tags: readonly BlogTag[];
   readonly status: BlogPostStatus;
   readonly readingTime: number;
@@ -91,6 +95,7 @@ export interface CreateBlogPostInput {
   readonly authorUrl?: string;
   readonly authorRole?: string;
   readonly categoryId?: string;
+  readonly categoryIds?: readonly string[];
   readonly tagIds?: readonly string[];
   readonly seoTitle?: string;
   readonly seoDescription?: string;
@@ -108,6 +113,7 @@ export interface UpdateBlogPostInput {
   readonly authorUrl?: string;
   readonly authorRole?: string;
   readonly categoryId?: string;
+  readonly categoryIds?: readonly string[];
   readonly tagIds?: readonly string[];
   readonly seoTitle?: string;
   readonly seoDescription?: string;

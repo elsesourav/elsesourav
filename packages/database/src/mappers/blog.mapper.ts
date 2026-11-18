@@ -4,6 +4,7 @@ import type {
   BlogTag as PrismaBlogTag,
   BlogPostTag as PrismaBlogPostTag,
   User as PrismaUser,
+  Category as PrismaCategory,
 } from '@prisma/client';
 import type {
   BlogPost as DomainBlogPost,
@@ -18,6 +19,7 @@ import type {
 export type PrismaBlogWithRelations = PrismaBlogPost & {
   author?: PrismaUser | null;
   category?: PrismaBlogCategory | null;
+  categories?: { category: PrismaCategory | PrismaBlogCategory }[];
   tags?: (PrismaBlogPostTag & { tag: PrismaBlogTag })[];
 };
 
@@ -60,6 +62,20 @@ export function mapPrismaBlogPostToListItem(post: PrismaBlogWithRelations): Blog
   const category = post.category ? mapPrismaBlogCategoryToDomain(post.category) : undefined;
   const tags = (post.tags || []).map((pt) => mapPrismaBlogTagToDomain(pt.tag));
 
+  const categories: DomainBlogCategory[] =
+    post.categories && post.categories.length > 0
+      ? post.categories.map((c) => ({
+          id: c.category.id,
+          name: c.category.name,
+          slug: c.category.slug,
+          description: c.category.description ?? undefined,
+          orderIndex: c.category.orderIndex,
+        }))
+      : category
+        ? [category]
+        : [];
+  const categorySlugs = categories.map((c) => c.slug);
+
   return {
     id: post.id,
     slug: post.slug,
@@ -72,6 +88,8 @@ export function mapPrismaBlogPostToListItem(post: PrismaBlogWithRelations): Blog
     authorUrl: post.authorUrl ?? undefined,
     authorRole: post.authorRole ?? undefined,
     category,
+    categories,
+    categorySlugs,
     tags,
     readingTime: post.readingTime,
     viewsCount: post.viewsCount,
@@ -96,6 +114,20 @@ export function mapPrismaBlogPostToDomain(post: PrismaBlogWithRelations): Domain
   const category = post.category ? mapPrismaBlogCategoryToDomain(post.category) : undefined;
   const tags = (post.tags || []).map((pt) => mapPrismaBlogTagToDomain(pt.tag));
 
+  const categories: DomainBlogCategory[] =
+    post.categories && post.categories.length > 0
+      ? post.categories.map((c) => ({
+          id: c.category.id,
+          name: c.category.name,
+          slug: c.category.slug,
+          description: c.category.description ?? undefined,
+          orderIndex: c.category.orderIndex,
+        }))
+      : category
+        ? [category]
+        : [];
+  const categorySlugs = categories.map((c) => c.slug);
+
   return {
     id: post.id,
     slug: post.slug,
@@ -111,6 +143,8 @@ export function mapPrismaBlogPostToDomain(post: PrismaBlogWithRelations): Domain
     authorRole: post.authorRole ?? undefined,
     categoryId: post.categoryId ?? undefined,
     category,
+    categories,
+    categorySlugs,
     tags,
     status: post.status.toLowerCase() as BlogPostStatus,
     readingTime: post.readingTime,

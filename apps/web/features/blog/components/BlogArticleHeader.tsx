@@ -39,9 +39,20 @@ export function BlogArticleHeader({ post, postUrl }: BlogArticleHeaderProps) {
         <span>Back to Updates</span>
       </Link>
 
-      {/* Category Pill */}
-      {post.category && (
-        <div>
+      {/* Category Pills */}
+      <div className="flex items-center gap-1.5 flex-wrap">
+        {post.categories && post.categories.length > 0 ? (
+          post.categories.map((cat) => (
+            <Link key={cat.id} href={`/updates?category=${cat.slug}`}>
+              <Badge
+                variant="info"
+                className="text-xs px-2.5 py-0.5 hover:opacity-80 transition-colors"
+              >
+                {cat.name}
+              </Badge>
+            </Link>
+          ))
+        ) : post.category ? (
           <Link href={`/updates?category=${post.category.slug}`}>
             <Badge
               variant="info"
@@ -50,8 +61,8 @@ export function BlogArticleHeader({ post, postUrl }: BlogArticleHeaderProps) {
               {post.category.name}
             </Badge>
           </Link>
-        </div>
-      )}
+        ) : null}
+      </div>
 
       {/* Main Title */}
       <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-[hsl(var(--foreground))] tracking-tight leading-tight">

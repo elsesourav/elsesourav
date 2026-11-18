@@ -1,4 +1,5 @@
 import type { ID, SortDirection, Timestamp } from './common.types';
+import type { CategorySummary } from './search.types';
 
 export type AppStatus = 'draft' | 'published' | 'archived';
 
@@ -69,6 +70,8 @@ export interface App {
   readonly videoUrl?: string;
   readonly primaryCategory: string;
   readonly categoryId?: string;
+  readonly categories?: readonly CategorySummary[];
+  readonly categorySlugs?: readonly string[];
   readonly tags: readonly string[];
   readonly status: AppStatus;
   readonly orientation?: AppOrientation;
@@ -112,6 +115,8 @@ export interface AppListItem {
   readonly featuredImageMobileUrl?: string;
   readonly primaryCategory: string;
   readonly categorySlug: string;
+  readonly categories?: readonly CategorySummary[];
+  readonly categorySlugs?: readonly string[];
   readonly platforms: readonly AppPlatform[];
   readonly isFeatured: boolean;
   readonly isPinned: boolean;
@@ -146,6 +151,8 @@ export interface PublicApp {
   readonly videoUrl?: string;
   readonly primaryCategory: string;
   readonly categorySlug: string;
+  readonly categories?: readonly CategorySummary[];
+  readonly categorySlugs?: readonly string[];
   readonly tags: readonly string[];
   readonly platforms: readonly AppPlatform[];
   readonly links: readonly AppLink[];
@@ -199,6 +206,7 @@ export interface CreateAppInput {
   readonly featuredImageMobileUrl?: string;
   readonly screenshots?: readonly string[];
   readonly categoryId: string;
+  readonly categoryIds?: readonly string[];
   readonly tagIds?: readonly string[];
   readonly demoUrl?: string;
   readonly videoUrl?: string;
@@ -228,6 +236,7 @@ export interface UpdateAppInput {
   readonly featuredImageMobileUrl?: string;
   readonly screenshots?: readonly string[];
   readonly categoryId?: string;
+  readonly categoryIds?: readonly string[];
   readonly tagIds?: readonly string[];
   readonly demoUrl?: string;
   readonly videoUrl?: string;

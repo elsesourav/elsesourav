@@ -19,6 +19,7 @@ import type {
 export type PrismaAppWithRelations = Omit<PrismaApp, 'requiresAuth'> & {
   requiresAuth?: boolean | null;
   category?: Category | null;
+  categories?: { category: Category }[];
   tags?: { tag: Tag }[];
   links?: PrismaAppLink[];
   versions?: PrismaAppVersion[];
@@ -51,6 +52,28 @@ export function mapPrismaAppToDomain(prismaApp: PrismaAppWithRelations): DomainA
       ? prismaApp.screenshots
       : CURATED_APP_SCREENSHOTS[prismaApp.slug] ?? [];
 
+  const categories =
+    prismaApp.categories && prismaApp.categories.length > 0
+      ? prismaApp.categories.map((c) => ({
+          id: c.category.id,
+          name: c.category.name,
+          slug: c.category.slug,
+          description: c.category.description ?? undefined,
+          orderIndex: c.category.orderIndex,
+        }))
+      : prismaApp.category
+        ? [
+            {
+              id: prismaApp.category.id,
+              name: prismaApp.category.name,
+              slug: prismaApp.category.slug,
+              description: prismaApp.category.description ?? undefined,
+              orderIndex: prismaApp.category.orderIndex,
+            },
+          ]
+        : [];
+  const categorySlugs = categories.map((c) => c.slug);
+
   return {
     id: prismaApp.id,
     slug: prismaApp.slug,
@@ -65,6 +88,8 @@ export function mapPrismaAppToDomain(prismaApp: PrismaAppWithRelations): DomainA
     videoUrl: prismaApp.videoUrl ?? undefined,
     primaryCategory: prismaApp.category?.name || 'General',
     categoryId: prismaApp.categoryId,
+    categories,
+    categorySlugs,
     tags: prismaApp.tags?.map((t) => t.tag.slug) || [],
     platforms: (prismaApp.links?.map((l) => l.platform as AppPlatform) || [
       'web',
@@ -125,6 +150,28 @@ export function mapPrismaAppToDomain(prismaApp: PrismaAppWithRelations): DomainA
 }
 
 export function mapPrismaAppToListItem(prismaApp: PrismaAppWithRelations): AppListItem {
+  const categories =
+    prismaApp.categories && prismaApp.categories.length > 0
+      ? prismaApp.categories.map((c) => ({
+          id: c.category.id,
+          name: c.category.name,
+          slug: c.category.slug,
+          description: c.category.description ?? undefined,
+          orderIndex: c.category.orderIndex,
+        }))
+      : prismaApp.category
+        ? [
+            {
+              id: prismaApp.category.id,
+              name: prismaApp.category.name,
+              slug: prismaApp.category.slug,
+              description: prismaApp.category.description ?? undefined,
+              orderIndex: prismaApp.category.orderIndex,
+            },
+          ]
+        : [];
+  const categorySlugs = categories.map((c) => c.slug);
+
   return {
     id: prismaApp.id,
     slug: prismaApp.slug,
@@ -135,6 +182,8 @@ export function mapPrismaAppToListItem(prismaApp: PrismaAppWithRelations): AppLi
     featuredImageMobileUrl: prismaApp.featuredImageMobileUrl ?? undefined,
     primaryCategory: prismaApp.category?.name || 'General',
     categorySlug: prismaApp.category?.slug || 'general',
+    categories,
+    categorySlugs,
     platforms: (prismaApp.links?.map((l) => l.platform as AppPlatform) || [
       'web',
     ]) as readonly AppPlatform[],
@@ -172,6 +221,8 @@ export function mapPrismaAppToPublicDetail(prismaApp: PrismaAppWithRelations): P
     videoUrl: domain.videoUrl,
     primaryCategory: prismaApp.category?.name || 'General',
     categorySlug: prismaApp.category?.slug || 'general',
+    categories: domain.categories,
+    categorySlugs: domain.categorySlugs,
     tags: domain.tags,
     platforms: domain.platforms,
     links: domain.links,

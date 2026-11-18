@@ -37,6 +37,11 @@ export function AppDiscoveryBar({
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const selectedCategories = React.useMemo(() => {
+    const raw = searchParams.get('category') || '';
+    return raw ? raw.split(',').map((s) => s.trim().toLowerCase()).filter(Boolean) : [];
+  }, [searchParams]);
+
   const currentCategory = searchParams.get('category') || '';
   const currentTag = searchParams.get('tag') || '';
   const currentPlatform = searchParams.get('platform') || '';
@@ -60,6 +65,14 @@ export function AppDiscoveryBar({
 
     const qs = params.toString();
     router.push(qs ? `/apps?${qs}` : '/apps');
+  };
+
+  const toggleCategory = (slug: string) => {
+    const isAlreadySelected = selectedCategories.includes(slug);
+    const next = isAlreadySelected
+      ? selectedCategories.filter((s) => s !== slug)
+      : [...selectedCategories, slug];
+    updateFilters({ category: next.length > 0 ? next.join(',') : null });
   };
 
   const hasActiveFilters = Boolean(
@@ -142,7 +155,7 @@ export function AppDiscoveryBar({
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
         <Button
           type="button"
-          variant={!currentCategory ? 'primary' : 'outline'}
+          variant={selectedCategories.length === 0 ? 'primary' : 'outline'}
           size="xs"
           onClick={() => updateFilters({ category: null })}
           className="rounded-full px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-xs shrink-0"
@@ -151,14 +164,14 @@ export function AppDiscoveryBar({
         </Button>
 
         {categories.map((cat) => {
-          const isActive = currentCategory === cat.slug;
+          const isActive = selectedCategories.includes(cat.slug);
           return (
             <Button
               key={cat.id}
               type="button"
               variant={isActive ? 'primary' : 'outline'}
               size="xs"
-              onClick={() => updateFilters({ category: cat.slug })}
+              onClick={() => toggleCategory(cat.slug)}
               className="rounded-full px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-xs shrink-0"
               rightIcon={
                 cat.appCount !== undefined && cat.appCount > 0 ? (

@@ -25,6 +25,7 @@ export class AppRepository {
 
   private readonly appInclude = {
     category: true,
+    categories: { include: { category: true } },
     tags: { include: { tag: true } },
     links: { orderBy: { displayOrder: 'asc' as const } },
     versions: { orderBy: { releaseDate: 'desc' as const } },
@@ -84,6 +85,7 @@ export class AppRepository {
         orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
         include: {
           category: true,
+          categories: { include: { category: true } },
           links: true,
           stats: true,
         },
@@ -105,13 +107,29 @@ export class AppRepository {
       };
 
       if (options.categoryId) {
-        where.categoryId = options.categoryId;
+        const catFilter: Prisma.AppWhereInput = {
+          OR: [
+            { categoryId: options.categoryId },
+            { categories: { some: { categoryId: options.categoryId } } },
+          ],
+        };
+        where.AND = Array.isArray(where.AND) ? [...where.AND, catFilter] : [catFilter];
       }
 
       if (options.categorySlug) {
-        where.category = {
-          slug: options.categorySlug.trim().toLowerCase(),
-        };
+        const rawSlugs = options.categorySlug
+          .split(',')
+          .map((s) => s.trim().toLowerCase())
+          .filter(Boolean);
+        if (rawSlugs.length > 0) {
+          const slugFilter: Prisma.AppWhereInput = {
+            OR: [
+              { category: { slug: { in: rawSlugs } } },
+              { categories: { some: { category: { slug: { in: rawSlugs } } } } },
+            ],
+          };
+          where.AND = Array.isArray(where.AND) ? [...where.AND, slugFilter] : [slugFilter];
+        }
       }
 
       if (options.tagSlug) {
@@ -150,6 +168,7 @@ export class AppRepository {
         orderBy: { [sortField]: sortDirection },
         include: {
           category: true,
+          categories: { include: { category: true } },
           links: true,
           stats: true,
         },
@@ -185,9 +204,19 @@ export class AppRepository {
       }
 
       if (input.filters?.categorySlug) {
-        where.category = {
-          slug: input.filters.categorySlug.trim().toLowerCase(),
-        };
+        const rawSlugs = input.filters.categorySlug
+          .split(',')
+          .map((s) => s.trim().toLowerCase())
+          .filter(Boolean);
+        if (rawSlugs.length > 0) {
+          const catFilter: Prisma.AppWhereInput = {
+            OR: [
+              { category: { slug: { in: rawSlugs } } },
+              { categories: { some: { category: { slug: { in: rawSlugs } } } } },
+            ],
+          };
+          where.AND = Array.isArray(where.AND) ? [...where.AND, catFilter] : [catFilter];
+        }
       }
 
       if (input.filters?.tagSlug) {
@@ -239,6 +268,7 @@ export class AppRepository {
         orderBy,
         include: {
           category: true,
+          categories: { include: { category: true } },
           links: true,
           stats: true,
         },
@@ -271,6 +301,14 @@ export class AppRepository {
                   deletedAt: null,
                 },
               },
+              appCategories: {
+                where: {
+                  app: {
+                    status: PublishStatus.PUBLISHED,
+                    deletedAt: null,
+                  },
+                },
+              },
             },
           },
         },
@@ -282,7 +320,7 @@ export class AppRepository {
         slug: cat.slug,
         description: cat.description ?? undefined,
         orderIndex: cat.orderIndex,
-        appCount: cat._count.apps,
+        appCount: Math.max(cat._count.appCategories, cat._count.apps),
       }));
     } catch (error) {
       throw AppError.database('Failed to query public categories', error);
@@ -418,41 +456,60 @@ export class AppRepository {
 
   async create(data: CreateAppInput): Promise<DomainApp> {
     try {
-      const record = await this.prisma.app.create({
-        data: {
-          name: data.name.trim(),
-          slug: data.slug.trim().toLowerCase(),
-          shortDescription: data.shortDescription.trim(),
-          description: data.description.trim(),
-          documentationMd: data.documentationMd?.trim() || null,
-          iconUrl: data.iconUrl.trim(),
-          featuredImageUrl: data.featuredImageUrl,
-          featuredImageMobileUrl: data.featuredImageMobileUrl,
-          screenshots: data.screenshots !== undefined ? [...data.screenshots] : undefined,
-          demoUrl: data.demoUrl,
-          videoUrl: data.videoUrl,
-          categoryId: data.categoryId,
-          isFeatured: data.isFeatured ?? false,
-          isPinned: data.isPinned ?? false,
-          requiresAuth: data.requiresAuth ?? false,
-          orientation: data.orientation ?? 'landscape',
-          sortOrder: data.sortOrder ?? 0,
-          bundleSize: data.bundleSize?.trim() || null,
-          primaryLanguage: data.primaryLanguage?.trim() || 'en',
-          authorName: data.authorName?.trim() || null,
-          authorImageUrl: data.authorImageUrl?.trim() || null,
-          authorUrl: data.authorUrl?.trim() || null,
-          authorRole: data.authorRole?.trim() || null,
-          seoTitle: data.seoTitle,
-          seoDescription: data.seoDescription,
-          stats: {
-            create: {
-              views: 0,
-              launches: 0,
-              libraryAdds: 0,
-            },
+      const resolvedCategoryId: string =
+        data.categoryId ||
+        (data.categoryIds && data.categoryIds.length > 0 ? data.categoryIds[0]! : '') ||
+        '';
+      const uniqueCategoryIds =
+        data.categoryIds && data.categoryIds.length > 0
+          ? [...new Set(data.categoryIds)]
+          : resolvedCategoryId
+            ? [resolvedCategoryId]
+            : [];
+
+      const createData: Prisma.AppUncheckedCreateInput = {
+        name: data.name.trim(),
+        slug: data.slug.trim().toLowerCase(),
+        shortDescription: data.shortDescription.trim(),
+        description: data.description.trim(),
+        documentationMd: data.documentationMd?.trim() || null,
+        iconUrl: data.iconUrl.trim(),
+        featuredImageUrl: data.featuredImageUrl,
+        featuredImageMobileUrl: data.featuredImageMobileUrl,
+        screenshots: data.screenshots !== undefined ? [...data.screenshots] : undefined,
+        demoUrl: data.demoUrl,
+        videoUrl: data.videoUrl,
+        categoryId: resolvedCategoryId,
+        categories:
+          uniqueCategoryIds.length > 0
+            ? {
+                create: uniqueCategoryIds.map((categoryId) => ({ categoryId })),
+              }
+            : undefined,
+        isFeatured: data.isFeatured ?? false,
+        isPinned: data.isPinned ?? false,
+        requiresAuth: data.requiresAuth ?? false,
+        orientation: data.orientation ?? 'landscape',
+        sortOrder: data.sortOrder ?? 0,
+        bundleSize: data.bundleSize?.trim() || null,
+        primaryLanguage: data.primaryLanguage?.trim() || 'en',
+        authorName: data.authorName?.trim() || null,
+        authorImageUrl: data.authorImageUrl?.trim() || null,
+        authorUrl: data.authorUrl?.trim() || null,
+        authorRole: data.authorRole?.trim() || null,
+        seoTitle: data.seoTitle,
+        seoDescription: data.seoDescription,
+        stats: {
+          create: {
+            views: 0,
+            launches: 0,
+            libraryAdds: 0,
           },
         },
+      };
+
+      const record = await this.prisma.app.create({
+        data: createData,
         include: this.appInclude,
       });
 
@@ -467,6 +524,12 @@ export class AppRepository {
 
   async update(id: string, data: UpdateAppInput): Promise<DomainApp> {
     try {
+      const uniqueCategoryIds =
+        data.categoryIds !== undefined ? [...new Set(data.categoryIds)] : undefined;
+      const resolvedCategoryId =
+        data.categoryId ??
+        (uniqueCategoryIds && uniqueCategoryIds.length > 0 ? uniqueCategoryIds[0] : undefined);
+
       const record = await this.prisma.app.update({
         where: { id },
         data: {
@@ -482,7 +545,14 @@ export class AppRepository {
           screenshots: data.screenshots !== undefined ? [...data.screenshots] : undefined,
           demoUrl: data.demoUrl,
           videoUrl: data.videoUrl,
-          categoryId: data.categoryId,
+          categoryId: resolvedCategoryId,
+          categories:
+            uniqueCategoryIds !== undefined
+              ? {
+                  deleteMany: {},
+                  create: uniqueCategoryIds.map((categoryId) => ({ categoryId })),
+                }
+              : undefined,
           isFeatured: data.isFeatured,
           isPinned: data.isPinned,
           requiresAuth: data.requiresAuth,

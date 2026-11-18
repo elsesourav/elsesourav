@@ -26,6 +26,7 @@ export const CreateBlogPostSchema = z.object({
   authorUrl: z.string().url('Author URL must be a valid URL').optional().or(z.literal('')),
   authorRole: z.string().max(100).optional().or(z.literal('')),
   categoryId: z.string().min(1, 'Category ID is required').optional(),
+  categoryIds: z.array(z.string()).optional(),
   tagIds: z.array(z.string()).optional().default([]),
   seoTitle: z
     .string()
@@ -56,6 +57,7 @@ export const AdminSaveBlogSchema = z.object({
   authorUrl: z.string().url('Author URL must be a valid URL').optional().or(z.literal('')),
   authorRole: z.string().max(100).optional().or(z.literal('')),
   categoryId: z.string().min(1, 'Category is required'),
+  categoryIds: z.array(z.string()).optional(),
   status: z
     .enum(['draft', 'published', 'archived', 'DRAFT', 'PUBLISHED', 'ARCHIVED'])
     .default('draft'),

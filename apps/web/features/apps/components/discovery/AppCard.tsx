@@ -364,56 +364,64 @@ export function AppCard({
           )}
         </div>
 
-        {/* ── Body: Floating Squircle Icon + Metadata ── */}
-        <div className="relative flex flex-1 flex-col px-2.5 sm:px-3.5 md:px-4 pt-0.5 pb-2 sm:pb-3">
-          {/* Overlapping Floating Squircle Icon */}
-          <div className="-mt-5 mb-1 sm:-mt-6 sm:mb-1.5 flex h-9 w-9 sm:h-11 sm:w-11 md:h-12 md:w-12 items-center justify-center rounded-lg sm:rounded-xl bg-[hsl(var(--card))] shadow-md ring-2 sm:ring-3 ring-[hsl(var(--card))] overflow-hidden transition-colors relative">
-            {iconUrl ? (
-              <>
-                <div
-                  aria-hidden="true"
-                  className={cn(
-                    'absolute inset-0 skeleton-shimmer bg-zinc-200/60 dark:bg-zinc-800/60 z-[1] transition-opacity duration-300 pointer-events-none',
-                    iconLoaded ? 'opacity-0' : 'opacity-100'
-                  )}
-                />
-                <Image
-                  src={iconUrl}
-                  alt={`${app.name} icon`}
-                  width={48}
-                  height={48}
-                  onLoad={() => setIconLoaded(true)}
-                  className={cn(
-                    'w-full h-full z-2 object-cover group-hover:scale-105 transition-all duration-300',
-                    iconLoaded ? 'opacity-100' : 'opacity-0'
-                  )}
-                />
-              </>
-            ) : (
-              <div className="w-full h-full flex items-center justify-center bg-[hsl(var(--surface-subtle))]">
-                {getCategoryFallbackIcon(app.primaryCategory)}
-              </div>
-            )}
-          </div>
-
-          {/* Title & Category Row */}
-          <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-0.5 sm:gap-2 min-w-0">
-            <h3 className="truncate text-xs sm:text-sm md:text-base font-bold tracking-tight text-[hsl(var(--foreground))] group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-snug font-display">
-              {app.name}
-            </h3>
-            {showCategory && (
-              <span className="text-[9px] sm:text-[10px] md:text-[11px] font-mono text-[hsl(var(--muted-foreground))] shrink-0 truncate max-w-full sm:max-w-[140px] md:max-w-none">
-                {app.primaryCategory}
-              </span>
-            )}
-          </div>
-
-          {/* Rating */}
-          {hasRating && (
-            <div className="mt-0.5">
-              <StarRating value={app.ratingAverage!} count={app.ratingCount} size="xs" />
+        {/* ── Body: Identity (Icon + Title & Category) + Metadata ── */}
+        <div className="relative flex flex-1 flex-col p-2.5 sm:p-3.5 md:p-4 space-y-2 sm:space-y-2.5">
+          {/* Header Row: Dedicated App Icon + Title & Category (Clean, 100% visible, zero shadow cut) */}
+          <div className="flex items-start gap-2.5 sm:gap-3">
+            <div className="relative w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-lg sm:rounded-xl overflow-hidden bg-[hsl(var(--surface-subtle))] border border-[hsl(var(--border))] shrink-0 flex items-center justify-center shadow-2xs">
+              {iconUrl ? (
+                <>
+                  <div
+                    aria-hidden="true"
+                    className={cn(
+                      'absolute inset-0 skeleton-shimmer bg-zinc-200/60 dark:bg-zinc-800/60 z-[1] transition-opacity duration-300 pointer-events-none',
+                      iconLoaded ? 'opacity-0' : 'opacity-100'
+                    )}
+                  />
+                  <Image
+                    src={iconUrl}
+                    alt={`${app.name} icon`}
+                    width={48}
+                    height={48}
+                    onLoad={() => setIconLoaded(true)}
+                    className={cn(
+                      'w-full h-full object-cover group-hover:scale-105 transition-all duration-300',
+                      iconLoaded ? 'opacity-100' : 'opacity-0'
+                    )}
+                  />
+                </>
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-[hsl(var(--surface-subtle))]">
+                  {getCategoryFallbackIcon(app.primaryCategory)}
+                </div>
+              )}
             </div>
-          )}
+
+            <div className="min-w-0 flex-1">
+              <h3 className="truncate text-xs sm:text-sm md:text-base font-bold tracking-tight text-[hsl(var(--foreground))] group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-snug font-display">
+                {app.name}
+              </h3>
+              <div className="flex items-center justify-between gap-1.5 mt-0.5">
+                {showCategory && (
+                  <span className="flex items-center gap-1 min-w-0">
+                    <span className="text-[9px] sm:text-[10px] md:text-[11px] font-mono text-[hsl(var(--muted-foreground))] shrink-0 truncate max-w-full sm:max-w-[140px] md:max-w-none">
+                      {app.primaryCategory}
+                    </span>
+                    {app.categories && app.categories.length > 1 && (
+                      <span className="text-[9px] px-1 py-0.2 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-500 font-mono">
+                        +{app.categories.length - 1}
+                      </span>
+                    )}
+                  </span>
+                )}
+                {hasRating && (
+                  <div className="shrink-0">
+                    <StarRating value={app.ratingAverage!} count={app.ratingCount} size="xs" />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
 
           {/* Description */}
           {showDescription && (

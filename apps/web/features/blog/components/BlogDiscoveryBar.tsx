@@ -15,6 +15,11 @@ export function BlogDiscoveryBar({ categories = [], tags = [] }: BlogDiscoveryBa
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const selectedCategories = React.useMemo(() => {
+    const raw = searchParams.get('category') || '';
+    return raw ? raw.split(',').map((s) => s.trim().toLowerCase()).filter(Boolean) : [];
+  }, [searchParams]);
+
   const currentCategory = searchParams.get('category') || '';
   const currentTag = searchParams.get('tag') || '';
   const currentSearch = searchParams.get('q') || searchParams.get('search') || '';
@@ -37,6 +42,14 @@ export function BlogDiscoveryBar({ categories = [], tags = [] }: BlogDiscoveryBa
     router.push(qs ? `/updates?${qs}` : '/updates');
   };
 
+  const toggleCategory = (slug: string) => {
+    const isAlreadySelected = selectedCategories.includes(slug);
+    const next = isAlreadySelected
+      ? selectedCategories.filter((s) => s !== slug)
+      : [...selectedCategories, slug];
+    updateFilters({ category: next.length > 0 ? next.join(',') : null });
+  };
+
   const hasActiveFilters = Boolean(currentCategory || currentTag || currentSearch);
 
   return (
@@ -51,7 +64,7 @@ export function BlogDiscoveryBar({ categories = [], tags = [] }: BlogDiscoveryBa
           type="button"
           onClick={() => updateFilters({ category: null })}
           className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full font-medium transition-all shrink-0 border text-xs ${
-            !currentCategory
+            selectedCategories.length === 0
               ? 'bg-[hsl(var(--primary))] border-transparent text-[hsl(var(--primary-foreground))] shadow-md shadow-indigo-600/20'
               : 'bg-[hsl(var(--surface-subtle))] border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))]'
           }`}
@@ -60,12 +73,12 @@ export function BlogDiscoveryBar({ categories = [], tags = [] }: BlogDiscoveryBa
         </button>
 
         {categories.map((cat) => {
-          const isActive = currentCategory === cat.slug;
+          const isActive = selectedCategories.includes(cat.slug);
           return (
             <button
               key={cat.id}
               type="button"
-              onClick={() => updateFilters({ category: cat.slug })}
+              onClick={() => toggleCategory(cat.slug)}
               className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full font-medium transition-all shrink-0 border flex items-center gap-1.5 text-xs ${
                 isActive
                   ? 'bg-[hsl(var(--primary))] border-transparent text-[hsl(var(--primary-foreground))] shadow-md shadow-indigo-600/20'

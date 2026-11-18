@@ -52,6 +52,7 @@ export async function createBlogPostAction(data: AdminSaveBlogSchemaInput) {
       authorUrl: parsed.data.authorUrl || undefined,
       authorRole: parsed.data.authorRole || undefined,
       categoryId: parsed.data.categoryId,
+      categoryIds: parsed.data.categoryIds || (parsed.data.categoryId ? [parsed.data.categoryId] : undefined),
       seoTitle: parsed.data.seoTitle || undefined,
       seoDescription: parsed.data.seoDescription || undefined,
     });
@@ -110,6 +111,7 @@ export async function updateBlogPostAction(postId: string, data: AdminSaveBlogSc
       authorUrl: parsed.data.authorUrl || undefined,
       authorRole: parsed.data.authorRole || undefined,
       categoryId: parsed.data.categoryId,
+      categoryIds: parsed.data.categoryIds || (parsed.data.categoryId ? [parsed.data.categoryId] : undefined),
       seoTitle: parsed.data.seoTitle || undefined,
       seoDescription: parsed.data.seoDescription || undefined,
       status: parsed.data.status.toLowerCase() as 'draft' | 'published' | 'archived',

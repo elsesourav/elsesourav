@@ -7,24 +7,12 @@ import { Card, Button } from '@elsesourav/ui';
 import { Dropdown, FloatingLabelInput } from '@elsesourav/ui/interior';
 import type { BlogPost, BlogCategory, BlogTag } from '@elsesourav/types';
 import {
-  createBlogPostAction,
-  updateBlogPostAction,
-  publishBlogPostAction,
-  archiveBlogPostAction,
-  deleteBlogPostAction,
+  createBlogPostAction, updateBlogPostAction, publishBlogPostAction,
+  archiveBlogPostAction, deleteBlogPostAction,
 } from '../actions/admin-update-actions';
 import {
-  FileText,
-  Sparkles,
-  ArrowLeft,
-  ArrowRight,
-  CheckCircle2,
-  AlertCircle,
-  Loader2,
-  Upload,
-  Send,
-  Archive,
-  Trash2,
+  FileText, Sparkles, ArrowLeft, ArrowRight, CheckCircle2,
+  AlertCircle, Loader2, Upload, Send, Archive, Trash2,
 } from 'lucide-react';
 import { AdminMarkdownEditor } from '@/features/admin/components/AdminMarkdownEditor';
 import { ImageInputWithLibrary } from '@/features/admin/media/components/ImageInputWithLibrary';
@@ -48,6 +36,11 @@ export function AdminUpdateForm({ post, categories }: AdminUpdateFormProps) {
   const [content, setContent] = React.useState(post?.content || '');
   const [coverImageUrl, setCoverImageUrl] = React.useState(post?.coverImageUrl || '');
   const [categoryId, setCategoryId] = React.useState(post?.categoryId || categories[0]?.id || '');
+  const [categoryIds, setCategoryIds] = React.useState<string[]>(
+    post?.categories && post.categories.length > 0
+      ? post.categories.map((c) => c.id)
+      : post?.categoryId ? [post.categoryId] : categories[0]?.id ? [categories[0].id] : []
+  );
   const [status, setStatus] = React.useState<'draft' | 'published' | 'archived'>(
     (post?.status as 'draft' | 'published' | 'archived') || 'draft'
   );
@@ -73,12 +66,7 @@ export function AdminUpdateForm({ post, categories }: AdminUpdateFormProps) {
   const handleTitleChange = (val: string) => {
     setTitle(val);
     if (!isEditing && !slug) {
-      setSlug(
-        val
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-+|-+$/g, '')
-      );
+      setSlug(val.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''));
     }
   };
 
@@ -95,7 +83,8 @@ export function AdminUpdateForm({ post, categories }: AdminUpdateFormProps) {
       excerpt: excerpt.trim(),
       content: content.trim(),
       coverImageUrl: coverImageUrl.trim() || undefined,
-      categoryId,
+      categoryId: categoryId || categoryIds[0] || '',
+      categoryIds,
       status,
       seoTitle: seoTitle.trim() || undefined,
       seoDescription: seoDescription.trim() || undefined,
@@ -167,12 +156,9 @@ export function AdminUpdateForm({ post, categories }: AdminUpdateFormProps) {
   const handleDelete = async () => {
     if (!post?.id) return;
     if (!window.confirm('Are you sure you want to permanently delete this update?')) return;
-
     try {
       const res = await deleteBlogPostAction(post.id);
-      if (res.success) {
-        router.push('/admin/updates');
-      }
+      if (res.success) router.push('/admin/updates');
     } catch {
       setError('Failed to delete update.');
     }
@@ -330,9 +316,59 @@ export function AdminUpdateForm({ post, categories }: AdminUpdateFormProps) {
               <Dropdown
                 items={categoryItems}
                 value={categoryId}
-                onChange={(val) => setCategoryId(val)}
+                onChange={(val) => {
+                  setCategoryId(val);
+                  if (!categoryIds.includes(val)) setCategoryIds([val, ...categoryIds]);
+                }}
                 className="w-full"
               />
+            </div>
+
+            {/* Multi-category Selector */}
+            <div className="sm:col-span-2 space-y-2 pt-2 border-t border-zinc-200 dark:border-zinc-800/60">
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+                  Assigned Categories (Multi-select)
+                </label>
+                <span className="text-[11px] text-zinc-500">{categoryIds.length} selected</span>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {categoryItems.map((cat) => {
+                  const isSelected = categoryIds.includes(cat.value);
+                  const isPrimary = cat.value === categoryId;
+                  return (
+                    <button
+                      key={cat.value}
+                      type="button"
+                      onClick={() => {
+                        if (isSelected) {
+                          if (categoryIds.length > 1) {
+                            const next = categoryIds.filter((id) => id !== cat.value);
+                            setCategoryIds(next);
+                            if (isPrimary && next[0]) setCategoryId(next[0]);
+                          }
+                        } else {
+                          setCategoryIds([...categoryIds, cat.value]);
+                        }
+                      }}
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
+                        isSelected
+                          ? isPrimary
+                            ? 'bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/40 ring-1 ring-purple-500/20'
+                            : 'bg-zinc-800 text-zinc-100 dark:bg-zinc-200 dark:text-zinc-900 border border-transparent'
+                          : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800/60 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600'
+                      }`}
+                    >
+                      <span>{cat.label}</span>
+                      {isPrimary && (
+                        <span className="text-[9px] uppercase tracking-wider bg-purple-500/30 text-purple-800 dark:text-purple-200 px-1 py-0.2 rounded font-semibold">
+                          Primary
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
 

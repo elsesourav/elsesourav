@@ -8,6 +8,8 @@ import { Sliders, ShieldCheck } from 'lucide-react';
 interface AdminAppVisibilitySettingsProps {
   categoryId: string;
   setCategoryId: (val: string) => void;
+  categoryIds?: string[];
+  setCategoryIds?: (val: string[]) => void;
   categoryItems: { value: string; label: string }[];
   status: 'draft' | 'published' | 'archived';
   setStatus: (val: 'draft' | 'published' | 'archived') => void;
@@ -29,6 +31,8 @@ interface AdminAppVisibilitySettingsProps {
 export function AdminAppVisibilitySettings({
   categoryId,
   setCategoryId,
+  categoryIds,
+  setCategoryIds,
   categoryItems,
   status,
   setStatus,
@@ -86,6 +90,60 @@ export function AdminAppVisibilitySettings({
           onChange={(val) => setSortOrder(Number(val))}
         />
       </div>
+
+      {/* Multi-Category Selection */}
+      {setCategoryIds && (
+        <div className="space-y-2 pt-2 border-t border-zinc-200 dark:border-zinc-800/60">
+          <div className="flex items-center justify-between">
+            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              Assigned Categories (Multi-select)
+            </label>
+            <span className="text-[11px] text-zinc-500">
+              {(categoryIds?.length || 0)} selected
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {categoryItems.map((cat) => {
+              const isSelected = categoryIds?.includes(cat.value);
+              const isPrimary = cat.value === categoryId;
+              return (
+                <button
+                  key={cat.value}
+                  type="button"
+                  onClick={() => {
+                    if (isSelected) {
+                      if (categoryIds && categoryIds.length > 1) {
+                        const next = categoryIds.filter((id) => id !== cat.value);
+                        setCategoryIds(next);
+                        if (isPrimary && next[0]) {
+                          setCategoryId(next[0]);
+                        }
+                      }
+                    } else {
+                      const next = [...(categoryIds || []), cat.value];
+                      setCategoryIds(next);
+                    }
+                  }}
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
+                    isSelected
+                      ? isPrimary
+                        ? 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/40 ring-1 ring-emerald-500/20'
+                        : 'bg-zinc-800 text-zinc-100 dark:bg-zinc-200 dark:text-zinc-900 border border-transparent'
+                      : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800/60 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600'
+                  }`}
+                >
+                  <span>{cat.label}</span>
+                  {isPrimary && (
+                    <span className="text-[9px] uppercase tracking-wider bg-emerald-500/30 text-emerald-800 dark:text-emerald-200 px-1 py-0.2 rounded font-semibold">
+                      Primary
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-zinc-200 dark:border-zinc-800/60">
         {/* Featured Switch */}

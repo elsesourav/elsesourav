@@ -32,6 +32,7 @@ function getCategoryIcon(slug: string) {
       return <Layers className="w-4 h-4 text-violet-500 dark:text-violet-400" />;
     case 'automation':
       return <Cpu className="w-4 h-4 text-amber-500 dark:text-amber-400" />;
+    case 'hardware':
     case 'iot':
     case 'hardware-iot':
       return <Radio className="w-4 h-4 text-cyan-500 dark:text-cyan-400" />;
@@ -53,33 +54,28 @@ export function AppCuratedShelves({
 
     // If an explicit category or tag filter is active, focus the shelf on that topic
     if (activeCategorySlug) {
-      const target = activeCategorySlug.toLowerCase();
+      const targets = activeCategorySlug.toLowerCase().split(',').map((s) => s.trim()).filter(Boolean);
       const matching = apps.filter((a) => {
         const catSlug = (a.categorySlug || '').toLowerCase();
         const catName = (a.primaryCategory || '').toLowerCase();
-        const shortDesc = (a.shortDescription || '').toLowerCase();
-        const name = (a.name || '').toLowerCase();
-        return (
-          catSlug === target ||
-          catSlug.includes(target) ||
-          catName.includes(target) ||
-          shortDesc.includes(target) ||
-          name.includes(target)
-        );
+        const slugs = a.categorySlugs || [];
+        return targets.some((t) => catSlug === t || slugs.includes(t) || catName.includes(t));
       });
       if (matching.length > 0) {
-        const catName =
-          activeCategorySlug === 'games'
-            ? 'Games & Interactive Play'
-            : matching[0]?.primaryCategory ||
-              `${activeCategorySlug.charAt(0).toUpperCase() + activeCategorySlug.slice(1)} Software`;
+        const title =
+          targets.length > 1
+            ? `Filtered: ${targets.map((t) => t.charAt(0).toUpperCase() + t.slice(1).replace(/-/g, ' ')).join(', ')}`
+            : activeCategorySlug === 'games'
+              ? 'Games & Interactive Play'
+              : matching[0]?.primaryCategory ||
+                `${activeCategorySlug.charAt(0).toUpperCase() + activeCategorySlug.slice(1)} Software`;
         return [
           {
             id: activeCategorySlug,
-            title: catName,
-            categorySlug: activeCategorySlug,
-            icon: getCategoryIcon(activeCategorySlug),
-            subtitle: `Curated releases and featured systems matching "${activeCategorySlug}"`,
+            title,
+            categorySlug: targets[0] || '',
+            icon: getCategoryIcon(targets[0] || ''),
+            subtitle: `Curated releases matching "${targets.join(', ')}"`,
             items: matching.slice(0, 10),
           },
         ];
@@ -116,11 +112,39 @@ export function AppCuratedShelves({
     // Default view: Strictly TOP 5 Curated Shelves (Google Play Carousel pattern)
     const shelfDefinitions = [
       {
+        id: 'ai',
+        title: 'Artificial Intelligence & Neural Models',
+        slugs: ['ai', 'ai-ml'],
+        icon: <Sparkles className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />,
+        subtitle: 'Multi-modal assistants, on-device OCR, and neural classification engines',
+      },
+      {
+        id: 'web-apps',
+        title: 'Web Applications & Services',
+        slugs: ['web-apps', 'web'],
+        icon: <Wrench className="w-4 h-4 text-blue-500 dark:text-blue-400" />,
+        subtitle: 'Production web software, real-time dashboards, and collaborative services',
+      },
+      {
         id: 'games',
         title: 'Games & Interactive Play',
         slugs: ['games', 'game', 'play'],
         icon: <Gamepad2 className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />,
         subtitle: 'WebAssembly arcade games, interactive canvases, and physics playgrounds',
+      },
+      {
+        id: 'automation',
+        title: 'Workflow & Automation',
+        slugs: ['automation', 'workflow'],
+        icon: <Cpu className="w-4 h-4 text-amber-500 dark:text-amber-400" />,
+        subtitle: 'Marketplace bulk tools, SKU synchronizers, and productivity systems',
+      },
+      {
+        id: 'tools',
+        title: 'Developer Tools & Utilities',
+        slugs: ['tools', 'utilities'],
+        icon: <Wrench className="w-4 h-4 text-cyan-500 dark:text-cyan-400" />,
+        subtitle: 'Microcontroller telemetry, non-destructive tools, and developer utilities',
       },
       {
         id: 'simulations',
@@ -130,25 +154,18 @@ export function AppCuratedShelves({
         subtitle: 'Interactive physics models, cellular automata, and algorithmic labs',
       },
       {
-        id: 'ai-ml',
-        title: 'AI & Machine Learning',
-        slugs: ['ai-ml', 'ai', 'ml', 'neural'],
-        icon: <Sparkles className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />,
-        subtitle: 'Multi-model assistants, on-device OCR, and neural classification engines',
+        id: 'hardware',
+        title: 'Hardware & IoT Systems',
+        slugs: ['hardware', 'hardware-iot', 'iot'],
+        icon: <Radio className="w-4 h-4 text-rose-500 dark:text-rose-400" />,
+        subtitle: 'Microcontroller telemetry, serial interfaces, and embedded bridges',
       },
       {
-        id: 'automation',
-        title: 'Workflow & Automation',
-        slugs: ['automation', 'workflow', 'e-com'],
-        icon: <Cpu className="w-4 h-4 text-amber-500 dark:text-amber-400" />,
-        subtitle: 'Marketplace bulk tools, SKU synchronizers, and productivity systems',
-      },
-      {
-        id: 'tools-hardware',
-        title: 'Hardware, IoT & Dev Utilities',
-        slugs: ['hardware-iot', 'iot', 'utilities', 'tools', 'web-apps', 'media-design'],
-        icon: <Radio className="w-4 h-4 text-cyan-500 dark:text-cyan-400" />,
-        subtitle: 'Microcontroller telemetry, non-destructive tools, and developer utilities',
+        id: 'ecommerce',
+        title: 'E-Commerce & Digital Storefronts',
+        slugs: ['ecommerce', 'commerce'],
+        icon: <Cpu className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />,
+        subtitle: 'Commerce platforms, inventory engines, and transaction systems',
       },
     ];
 
@@ -159,6 +176,7 @@ export function AppCuratedShelves({
         def.slugs.some(
           (s) =>
             a.categorySlug?.toLowerCase() === s.toLowerCase() ||
+            Boolean(a.categorySlugs?.includes(s.toLowerCase())) ||
             a.primaryCategory?.toLowerCase().includes(s)
         )
       );

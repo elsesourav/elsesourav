@@ -27,6 +27,11 @@ export class BlogRepository {
   private readonly postInclude = {
     author: true,
     category: true,
+    categories: {
+      include: {
+        category: true,
+      },
+    },
     tags: {
       include: {
         tag: true,
@@ -76,7 +81,19 @@ export class BlogRepository {
       };
 
       if (options.categorySlug) {
-        where.category = { slug: options.categorySlug };
+        const rawSlugs = options.categorySlug
+          .split(',')
+          .map((s) => s.trim().toLowerCase())
+          .filter(Boolean);
+        if (rawSlugs.length > 0) {
+          const catFilter: Prisma.BlogPostWhereInput = {
+            OR: [
+              { category: { slug: { in: rawSlugs } } },
+              { categories: { some: { category: { slug: { in: rawSlugs } } } } },
+            ],
+          };
+          where.AND = Array.isArray(where.AND) ? [...where.AND, catFilter] : [catFilter];
+        }
       }
 
       if (options.tagSlug) {
@@ -169,6 +186,16 @@ export class BlogRepository {
         resolvedAuthorId = user ? user.id : null;
       }
 
+      const resolvedCategoryId =
+        data.categoryId ||
+        (data.categoryIds && data.categoryIds.length > 0 ? data.categoryIds[0] : null);
+      const uniqueCategoryIds =
+        data.categoryIds && data.categoryIds.length > 0
+          ? [...new Set(data.categoryIds)]
+          : resolvedCategoryId
+            ? [resolvedCategoryId]
+            : [];
+
       const record = await this.prisma.blogPost.create({
         data: {
           title: data.title,
@@ -181,7 +208,13 @@ export class BlogRepository {
           authorUrl: data.authorUrl || null,
           authorRole: data.authorRole || null,
           authorId: resolvedAuthorId,
-          categoryId: data.categoryId || null,
+          categoryId: resolvedCategoryId,
+          categories:
+            uniqueCategoryIds.length > 0
+              ? {
+                  create: uniqueCategoryIds.map((catId) => ({ categoryId: catId })),
+                }
+              : undefined,
           seoTitle: data.seoTitle || null,
           seoDescription: data.seoDescription || null,
           readingTime:
@@ -211,6 +244,12 @@ export class BlogRepository {
 
   async updatePost(id: string, data: UpdateBlogPostInput): Promise<DomainBlogPost> {
     try {
+      const uniqueCategoryIds =
+        data.categoryIds !== undefined ? [...new Set(data.categoryIds)] : undefined;
+      const resolvedCategoryId =
+        data.categoryId ??
+        (uniqueCategoryIds && uniqueCategoryIds.length > 0 ? uniqueCategoryIds[0] : undefined);
+
       const record = await this.prisma.blogPost.update({
         where: { id },
         data: {
@@ -223,7 +262,14 @@ export class BlogRepository {
           authorImageUrl: data.authorImageUrl,
           authorUrl: data.authorUrl,
           authorRole: data.authorRole,
-          categoryId: data.categoryId,
+          categoryId: resolvedCategoryId,
+          categories:
+            uniqueCategoryIds !== undefined
+              ? {
+                  deleteMany: {},
+                  create: uniqueCategoryIds.map((catId) => ({ categoryId: catId })),
+                }
+              : undefined,
           seoTitle: data.seoTitle,
           seoDescription: data.seoDescription,
           readingTime: data.readingTime,
@@ -289,7 +335,19 @@ export class BlogRepository {
         where.status = options.status;
       }
       if (options.categorySlug && options.categorySlug !== 'all') {
-        where.category = { slug: options.categorySlug };
+        const rawSlugs = options.categorySlug
+          .split(',')
+          .map((s) => s.trim().toLowerCase())
+          .filter(Boolean);
+        if (rawSlugs.length > 0) {
+          const catFilter: Prisma.BlogPostWhereInput = {
+            OR: [
+              { category: { slug: { in: rawSlugs } } },
+              { categories: { some: { category: { slug: { in: rawSlugs } } } } },
+            ],
+          };
+          where.AND = Array.isArray(where.AND) ? [...where.AND, catFilter] : [catFilter];
+        }
       }
       if (options.search && options.search.trim().length > 0) {
         const term = options.search.trim();
@@ -344,13 +402,16 @@ export class BlogRepository {
 
   async listCategories(): Promise<DomainBlogCategory[]> {
     try {
-      const records = await this.prisma.blogCategory.findMany({
+      const records = await this.prisma.category.findMany({
+        where: { isActive: true },
         orderBy: { orderIndex: 'asc' },
         include: {
           _count: {
             select: {
-              posts: {
-                where: { status: PublishStatus.PUBLISHED, deletedAt: null },
+              blogCategories: {
+                where: {
+                  post: { status: PublishStatus.PUBLISHED, deletedAt: null },
+                },
               },
             },
           },
@@ -358,8 +419,12 @@ export class BlogRepository {
       });
 
       return records.map((c) => ({
-        ...mapPrismaBlogCategoryToDomain(c),
-        postCount: c._count.posts,
+        id: c.id,
+        name: c.name,
+        slug: c.slug,
+        description: c.description ?? undefined,
+        orderIndex: c.orderIndex,
+        postCount: c._count.blogCategories,
       }));
     } catch (error) {
       throw AppError.database('Failed to fetch blog categories', error);

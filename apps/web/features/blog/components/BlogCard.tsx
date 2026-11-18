@@ -94,14 +94,26 @@ export function BlogCard({ post, isFeatured = false }: BlogCardProps) {
         <div className="space-y-2 sm:space-y-2.5">
           {/* Top Row: Category & Metadata */}
           <div className="flex items-center justify-between gap-2 flex-wrap">
-            {post.category && (
-              <Badge
-                variant="info"
-                className="text-[9px] sm:text-[10px] px-2 py-0.5 font-medium bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-500/30 text-indigo-700 dark:text-indigo-300"
-              >
-                {post.category.name}
-              </Badge>
-            )}
+            <div className="flex items-center gap-1.5 flex-wrap">
+              {post.categories && post.categories.length > 0 ? (
+                post.categories.map((cat) => (
+                  <Badge
+                    key={cat.id}
+                    variant="info"
+                    className="text-[9px] sm:text-[10px] px-2 py-0.5 font-medium bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-500/30 text-indigo-700 dark:text-indigo-300"
+                  >
+                    {cat.name}
+                  </Badge>
+                ))
+              ) : post.category ? (
+                <Badge
+                  variant="info"
+                  className="text-[9px] sm:text-[10px] px-2 py-0.5 font-medium bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-500/30 text-indigo-700 dark:text-indigo-300"
+                >
+                  {post.category.name}
+                </Badge>
+              ) : null}
+            </div>
             <div className="flex items-center gap-2 sm:gap-2.5 text-[10px] sm:text-[11px] text-[hsl(var(--muted-foreground))] ml-auto font-mono">
               <span className="flex items-center gap-1">
                 <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[hsl(var(--subtle-foreground))]" />

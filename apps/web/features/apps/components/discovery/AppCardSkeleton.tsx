@@ -67,23 +67,17 @@ export function AppCardSkeleton({ variant = 'catalog' }: AppCardSkeletonProps) {
         </div>
       </div>
 
-      {/* Body Area with Floating Squircle Icon */}
-      <div className="relative flex flex-1 flex-col px-4 pt-0.5 pb-3">
-        {/* Overlapping Floating Squircle Icon */}
-        <div className="-mt-6 mb-1.5 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-[hsl(var(--card))] ring-3 ring-[hsl(var(--card))] overflow-hidden shadow-md">
-          <Skeleton className="w-full h-full rounded-lg" />
-        </div>
-
-        {/* Title & Category Row */}
-        <div className="flex items-baseline justify-between gap-2">
-          <Skeleton className="h-4.5 w-3/5 rounded-md" />
-          <Skeleton className="h-3 w-16 rounded font-mono" />
-        </div>
-
-        {/* Rating Stars Skeleton */}
-        <div className="flex items-center gap-1 mt-0.5">
-          <Skeleton className="h-2.5 w-16 rounded" />
-          <Skeleton className="h-2.5 w-8 rounded" />
+      {/* Body Area with Clean App Icon + Title & Category */}
+      <div className="relative flex flex-1 flex-col p-2.5 sm:p-3.5 md:p-4 space-y-2 sm:space-y-2.5">
+        <div className="flex items-start gap-2.5 sm:gap-3">
+          <Skeleton className="w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-lg sm:rounded-xl shrink-0" />
+          <div className="min-w-0 flex-1 space-y-1.5">
+            <Skeleton className="h-4 w-3/5 rounded-md" />
+            <div className="flex items-center justify-between gap-1.5">
+              <Skeleton className="h-3 w-16 rounded font-mono" />
+              <Skeleton className="h-2.5 w-14 rounded" />
+            </div>
+          </div>
         </div>
 
         {/* Description Skeleton */}

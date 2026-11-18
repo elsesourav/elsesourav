@@ -37,14 +37,10 @@ interface AdminAppFormProps {
 }
 
 const LANGUAGE_OPTIONS = [
-  { value: 'en', label: 'English (en)' },
-  { value: 'bn', label: 'Bengali / বাংলা (bn)' },
-  { value: 'hi', label: 'Hindi / हिन्दी (hi)' },
-  { value: 'es', label: 'Spanish / Español (es)' },
-  { value: 'fr', label: 'French / Français (fr)' },
-  { value: 'de', label: 'German / Deutsch (de)' },
-  { value: 'ja', label: 'Japanese / 日本語 (ja)' },
-  { value: 'zh', label: 'Chinese / 中文 (zh)' },
+  { value: 'en', label: 'English (en)' }, { value: 'bn', label: 'Bengali / বাংলা (bn)' },
+  { value: 'hi', label: 'Hindi / हिन्दी (hi)' }, { value: 'es', label: 'Spanish / Español (es)' },
+  { value: 'fr', label: 'French / Français (fr)' }, { value: 'de', label: 'German / Deutsch (de)' },
+  { value: 'ja', label: 'Japanese / 日本語 (ja)' }, { value: 'zh', label: 'Chinese / 中文 (zh)' },
 ];
 
 const STATUS_ITEMS = [
@@ -74,6 +70,11 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
   const [demoUrl, setDemoUrl] = React.useState(app?.demoUrl || '');
   const [videoUrl, setVideoUrl] = React.useState(app?.videoUrl || '');
   const [categoryId, setCategoryId] = React.useState(app?.categoryId || categories[0]?.id || '');
+  const [categoryIds, setCategoryIds] = React.useState<string[]>(
+    app?.categories && app.categories.length > 0
+      ? app.categories.map((c) => c.id)
+      : app?.categoryId ? [app.categoryId] : categories[0]?.id ? [categories[0].id] : []
+  );
   const [status, setStatus] = React.useState<'draft' | 'published' | 'archived'>(
     (app?.status as 'draft' | 'published' | 'archived') || 'draft'
   );
@@ -109,12 +110,7 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
   const handleNameChange = (val: string) => {
     setName(val);
     if (!isEditing && !slug) {
-      setSlug(
-        val
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-+|-+$/g, '')
-      );
+      setSlug(val.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''));
     }
   };
 
@@ -147,7 +143,8 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
       screenshots: screenshots.filter((s) => Boolean(s?.trim())),
       demoUrl: demoUrl.trim() || undefined,
       videoUrl: videoUrl.trim() || undefined,
-      categoryId,
+      categoryId: categoryId || categoryIds[0] || '',
+      categoryIds,
       status,
       isFeatured,
       isPinned,
@@ -423,7 +420,13 @@ export function AdminAppForm({ app, categories }: AdminAppFormProps) {
 
         {/* Taxonomy & Configuration Settings */}
         <AdminAppVisibilitySettings
-          categoryId={categoryId} setCategoryId={setCategoryId} categoryItems={categoryItems}
+          categoryId={categoryId}
+          setCategoryId={(val) => {
+            setCategoryId(val);
+            if (!categoryIds.includes(val)) setCategoryIds([val, ...categoryIds]);
+          }}
+          categoryIds={categoryIds} setCategoryIds={setCategoryIds}
+          categoryItems={categoryItems}
           status={status} setStatus={setStatus} statusItems={statusItems}
           sortOrder={sortOrder} setSortOrder={setSortOrder}
           isFeatured={isFeatured} setIsFeatured={setIsFeatured}

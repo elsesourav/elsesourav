@@ -50,7 +50,18 @@ export function AdminUpdatesTable({ initialPosts, categories }: AdminUpdatesTabl
 
       // Category filter
       if (selectedCategory !== 'all') {
-        if (post.category?.slug !== selectedCategory && post.categoryId !== selectedCategory) {
+        const matchesPrimary =
+          post.category?.slug === selectedCategory ||
+          post.categoryId === selectedCategory ||
+          post.category?.name === selectedCategory;
+        const matchesMulti =
+          post.categories?.some(
+            (c) =>
+              c.slug === selectedCategory ||
+              c.id === selectedCategory ||
+              c.name === selectedCategory
+          ) || post.categorySlugs?.includes(selectedCategory);
+        if (!matchesPrimary && !matchesMulti) {
           return false;
         }
       }
@@ -203,10 +214,28 @@ export function AdminUpdatesTable({ initialPosts, categories }: AdminUpdatesTabl
                       </td>
 
                       {/* Category */}
-                      <td className="py-3 px-3.5 sm:px-4 hidden md:table-cell whitespace-nowrap">
-                        <span className="px-2 py-0.5 rounded-lg bg-zinc-100 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/40 text-zinc-700 dark:text-zinc-300 text-[11px] truncate max-w-[180px] inline-block align-middle">
-                          {post.category?.name || 'General'}
-                        </span>
+                      <td className="py-3 px-3.5 sm:px-4 hidden md:table-cell">
+                        <div className="flex flex-wrap gap-1 max-w-[200px]">
+                          {post.categories && post.categories.length > 0 ? (
+                            post.categories.slice(0, 2).map((cat) => (
+                              <span
+                                key={cat.id}
+                                className="px-1.5 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/40 text-zinc-700 dark:text-zinc-300 text-[10px] whitespace-nowrap"
+                              >
+                                {cat.name}
+                              </span>
+                            ))
+                          ) : (
+                            <span className="px-2 py-0.5 rounded-lg bg-zinc-100 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/40 text-zinc-700 dark:text-zinc-300 text-[11px] truncate max-w-[180px] inline-block align-middle">
+                              {post.category?.name || 'General'}
+                            </span>
+                          )}
+                          {post.categories && post.categories.length > 2 && (
+                            <span className="text-[10px] text-zinc-400 self-center">
+                              +{post.categories.length - 2}
+                            </span>
+                          )}
+                        </div>
                       </td>
 
                       {/* Status Badge (desktop / tablet) */}

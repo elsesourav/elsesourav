@@ -99,6 +99,7 @@ model App {
 
   categoryId       String
   category         Category         @relation(fields: [categoryId], references: [id])
+  categories       AppCategory[]
   tags             AppTag[]
   links            AppLink[]
   versions         AppVersion[]
@@ -148,6 +149,8 @@ model Category {
   orderIndex  Int      @default(0)
   isActive    Boolean  @default(true)
   apps        App[]
+  appCategories AppCategory[]
+  blogCategories BlogPostCategory[]
 }
 
 model Tag {
@@ -164,6 +167,28 @@ model AppTag {
   tag         Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@id([appId, tagId])
+}
+
+model AppCategory {
+  appId       String
+  categoryId  String
+  app         App      @relation(fields: [appId], references: [id], onDelete: Cascade)
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([appId, categoryId])
+  @@index([appId])
+  @@index([categoryId])
+}
+
+model BlogPostCategory {
+  postId      String
+  categoryId  String
+  post        BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([postId, categoryId])
+  @@index([postId])
+  @@index([categoryId])
 }
 
 model BlogPost {
@@ -191,6 +216,7 @@ model BlogPost {
   author        User?         @relation(fields: [authorId], references: [id])
   categoryId    String?
   category      BlogCategory? @relation(fields: [categoryId], references: [id])
+  categories    BlogPostCategory[]
   tags          BlogPostTag[]
 
   @@index([status])

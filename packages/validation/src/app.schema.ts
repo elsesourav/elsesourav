@@ -50,6 +50,7 @@ export const CreateAppSchema = z.object({
   featuredImageMobileUrl: z.string().url().optional(),
   screenshots: z.array(z.string().url('Screenshot must be a valid URL')).optional(),
   categoryId: z.string().min(1, 'Please select a category'),
+  categoryIds: z.array(z.string()).optional(),
   tagIds: z.array(z.string()).optional(),
   demoUrl: z.string().url().optional(),
   videoUrl: z.string().url().optional(),
@@ -91,6 +92,7 @@ export const AdminSaveAppSchema = z.object({
   demoUrl: z.string().url().optional().or(z.literal('')),
   videoUrl: z.string().url().optional().or(z.literal('')),
   categoryId: z.string().min(1, 'Please select a category'),
+  categoryIds: z.array(z.string()).optional(),
   status: z
     .enum(['draft', 'published', 'archived', 'DRAFT', 'PUBLISHED', 'ARCHIVED'])
     .default('draft'),
