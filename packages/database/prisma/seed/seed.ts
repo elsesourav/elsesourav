@@ -434,8 +434,9 @@ This project implements a Feedforward Neural Network with Backpropagation from s
 - **Near-Native Performance**: Core training matrix computations execute in WebAssembly with \`-msimd128\` vector instructions.
 - **Live Canvas Drawing**: Draw digits (0–9) and inspect real-time classification probabilities.
 - **Layer & Weight Visualization**: Interactive visualizer showing activations across input, hidden, and output neuron layers.`,
-      iconUrl: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=200&q=80',
-      featuredImageUrl: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1200&q=80',
+      iconUrl: 'https://res.cloudinary.com/diqw2sjl8/image/upload/q_auto,f_auto/elsesourav/apps/nn-number-rec/app-icon-512x512-1795534866376.webp',
+      featuredImageUrl: 'https://res.cloudinary.com/diqw2sjl8/image/upload/q_auto,f_auto/elsesourav/apps/nn-number-rec/app-cover-landscape-16x9-1795534870336.webp',
+      featuredImageMobileUrl: 'https://res.cloudinary.com/diqw2sjl8/image/upload/q_auto,f_auto/elsesourav/apps/nn-number-rec/app-cover-mobile-3x4-1795534876892.webp',
       demoUrl: 'https://nn.elsesourav.com',
       githubUrl: 'https://github.com/elsesourav/nn-number-rec',
       categoryId: catMap['ai-ml']!,
