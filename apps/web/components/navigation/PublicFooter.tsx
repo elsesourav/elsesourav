@@ -76,8 +76,8 @@ export async function PublicFooter() {
     },
     {
       id: 'linkedin',
-      label: 'LinkedIn (@elsesourav)',
-      url: 'https://linkedin.com/in/elsesourav',
+      label: 'LinkedIn (@souravbarui)',
+      url: 'https://www.linkedin.com/in/souravbarui',
       platform: 'linkedin' as const,
     },
     {

@@ -17,7 +17,7 @@
     <a href="https://x.com/elsesourav">
       <img src="https://img.shields.io/badge/X-@elsesourav-000000?style=for-the-badge&logo=x&logoColor=white" alt="X (Twitter)" />
     </a>
-    <a href="https://linkedin.com/in/elsesourav">
+    <a href="https://www.linkedin.com/in/souravbarui">
       <img src="https://img.shields.io/badge/LinkedIn-Sourav_Barui-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
     </a>
     <a href="https://youtube.com/@elsesourav">
