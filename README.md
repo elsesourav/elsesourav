@@ -158,14 +158,14 @@
 
 <br />
 
-### 1. [Breakout Ball Game](https://elsesourav.github.io/breakout-ball/)
+### 1. [Breakout Ball Game](https://breakout.elsesourav.com)
 
 > **High-Performance Arcade Game powered by WebAssembly (C++), Modern Canvas & Firebase**
 
 - 🕹️ Classic breakout arcade experience re-engineered with modern physics and responsive controls.
 - ⚡ **Core Engine**: Built using **WebAssembly (Wasm)** compiled from **C++** for optimal 60fps collision detection and rendering.
 - ☁️ **Persistence**: Cloud-synchronized high scores, leaderboards, and game states backed by **Firebase**.
-- 🔗 **Links**: [**Play Live Demo 🚀**](https://elsesourav.github.io/breakout-ball/) &nbsp;·&nbsp; [**GitHub Repository 💻**](https://github.com/elsesourav/breakout-ball)
+- 🔗 **Links**: [**Play Live Demo 🚀**](https://breakout.elsesourav.com) &nbsp;·&nbsp; [**GitHub Repository 💻**](https://github.com/elsesourav/breakout-ball)
 
 <div align="center">
   <img src="./images/BREAKOUT_BALL.png" alt="Breakout Ball Game Screenshot" width="100%" style="border-radius: 8px; border: 1px solid #30363d; margin-top: 8px;" />
@@ -192,7 +192,7 @@
 
 ---
 
-### 3. [Neural Network Number Recognition](https://elsesourav.github.io/nn-number-rec/)
+### 3. [Neural Network Number Recognition](https://nn.elsesourav.com)
 
 > **Interactive Handwritten Digit Classifier with Real-time Neural Layer Visualization**
 
@@ -200,7 +200,7 @@
 - 🎨 **Interactive Canvas**: Draw numbers on a responsive tactile grid with dynamic resolution preprocessing.
 - 🔍 **Architecture Inspector**: Live visualization of forward-propagation across input nodes, hidden layers, activation functions, and output probabilities.
 - ⚙️ **Hyperparameter Tuning**: Real-time learning rate adjustments, weight matrices export/import, and instant accuracy metrics.
-- 🔗 **Links**: [**Try Neural Network 🚀**](https://elsesourav.github.io/nn-number-rec/) &nbsp;·&nbsp; [**GitHub Repository 💻**](https://github.com/elsesourav/nn-number-rec/)
+- 🔗 **Links**: [**Try Neural Network 🚀**](https://nn.elsesourav.com) &nbsp;·&nbsp; [**GitHub Repository 💻**](https://github.com/elsesourav/nn-number-rec/)
 
 <div align="center">
   <img src="./images/NN_NUM_REC.png" alt="Neural Network Number Recognition Screenshot" width="100%" style="border-radius: 8px; border: 1px solid #30363d; margin-top: 8px;" />
