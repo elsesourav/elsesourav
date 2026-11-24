@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="./images/COVER.png" alt="ElseSourav Cover Banner" width="100%" style="max-width: 100%; border-radius: 12px; margin-bottom: 16px;" />
+  <img src="./images/PROFILE_BANNER.png" alt="Sourav Barui - Software Engineer & Creator" width="100%" style="max-width: 100%; border-radius: 12px; margin-bottom: 16px;" />
 
   # Hello 👋, I'm Sourav Barui
   ### Software Engineer & Independent Creator from India 🇮🇳
@@ -186,7 +186,7 @@
 - 🔗 **Links**: [**Play Live Demo 🚀**](https://breakout.elsesourav.com) &nbsp;·&nbsp; [**Case Study on ElseSourav 📖**](https://elsesourav.com/apps/breakout-ball) &nbsp;·&nbsp; [**GitHub Repository 💻**](https://github.com/elsesourav/breakout-ball)
 
 <div align="center">
-  <img src="./images/BREAKOUT_BALL.png" alt="Breakout Ball Game Screenshot" width="100%" style="border-radius: 8px; border: 1px solid #30363d; margin-top: 8px;" />
+  <img src="./images/BREAKOUT_BALL_V2.png" alt="Breakout Ball Game Screenshot" width="100%" style="border-radius: 8px; border: 1px solid #30363d; margin-top: 8px;" />
 </div>
 
 <br />
@@ -204,7 +204,7 @@
 - 🔗 **Links**: [**Try Live App 🚀**](https://nn.elsesourav.com) &nbsp;·&nbsp; [**Case Study on ElseSourav 📖**](https://elsesourav.com/apps/nn-number-rec) &nbsp;·&nbsp; [**GitHub Repository 💻**](https://github.com/elsesourav/nn-number-rec)
 
 <div align="center">
-  <img src="./images/NN_NUM_REC.png" alt="Neural Network Number Recognition Screenshot" width="100%" style="border-radius: 8px; border: 1px solid #30363d; margin-top: 8px;" />
+  <img src="./images/NN_NUM_REC_V2.png" alt="Neural Network Number Recognition Screenshot" width="100%" style="border-radius: 8px; border: 1px solid #30363d; margin-top: 8px;" />
 </div>
 
 <br />
