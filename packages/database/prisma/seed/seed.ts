@@ -434,9 +434,9 @@ This project implements a Feedforward Neural Network with Backpropagation from s
 - **Near-Native Performance**: Core training matrix computations execute in WebAssembly with \`-msimd128\` vector instructions.
 - **Live Canvas Drawing**: Draw digits (0–9) and inspect real-time classification probabilities.
 - **Layer & Weight Visualization**: Interactive visualizer showing activations across input, hidden, and output neuron layers.`,
-      iconUrl: 'https://res.cloudinary.com/diqw2sjl8/image/upload/q_auto,f_auto/elsesourav/apps/nn-number-rec/app-icon-512x512-1795535973316.webp',
-      featuredImageUrl: 'https://res.cloudinary.com/diqw2sjl8/image/upload/q_auto,f_auto/elsesourav/apps/nn-number-rec/app-cover-landscape-16x9-1795535975666.webp',
-      featuredImageMobileUrl: 'https://res.cloudinary.com/diqw2sjl8/image/upload/q_auto,f_auto/elsesourav/apps/nn-number-rec/app-cover-mobile-3x4-1795535980448.webp',
+      iconUrl: 'https://res.cloudinary.com/diqw2sjl8/image/upload/q_auto,f_auto/v1795537076/elsesourav/apps/nn-number-rec/app-icon-512x512-1795537074948.webp',
+      featuredImageUrl: 'https://res.cloudinary.com/diqw2sjl8/image/upload/q_auto,f_auto/v1795537078/elsesourav/apps/nn-number-rec/app-cover-landscape-16x9-1795537074948.webp',
+      featuredImageMobileUrl: 'https://res.cloudinary.com/diqw2sjl8/image/upload/q_auto,f_auto/v1795537079/elsesourav/apps/nn-number-rec/app-cover-mobile-3x4-1795537074948.webp',
       demoUrl: 'https://nn.elsesourav.com',
       githubUrl: 'https://github.com/elsesourav/nn-number-rec',
       categoryId: catMap['ai-ml']!,
