@@ -158,14 +158,32 @@
 
 <br />
 
-### 1. [Breakout Ball Game](https://breakout.elsesourav.com)
+### 1. [GLOROV Botanical Commerce Platform](https://www.glorov.com)
+
+> **Enterprise Indian Botanical E-Commerce Platform built with Next.js 15, Medusa v2 Headless Engine & Razorpay**
+
+- 🌿 **Headless Architecture**: Built on **Next.js 15**, **React 19**, and **Medusa v2** with high-throughput product catalog, dynamic filtering, and server-side rendering.
+- 💳 **Checkout & Payments**: Integrated multi-currency payments via **Razorpay**, automated GST calculations, and address verification.
+- 🚚 **Logistics Automation**: End-to-end order synchronization and live shipping label generation via **Shiprocket courier APIs**.
+- 📱 **Cross-Platform**: High-performance responsive web store and companion **Flutter mobile app**.
+- 🔗 **Links**: [**Visit Store 🚀**](https://www.glorov.com) &nbsp;·&nbsp; [**Case Study on ElseSourav 📖**](https://elsesourav.com/apps/glorov) &nbsp;·&nbsp; [**GitHub Repository 💻**](https://github.com/elsesourav/glorov)
+
+<div align="center">
+  <img src="./images/GLOROV.png" alt="GLOROV Botanical Commerce Platform Screenshot" width="100%" style="border-radius: 8px; border: 1px solid #30363d; margin-top: 8px;" />
+</div>
+
+<br />
+
+---
+
+### 2. [Breakout Ball: Cyber Matrix](https://breakout.elsesourav.com)
 
 > **High-Performance Arcade Game powered by WebAssembly (C++), Modern Canvas & Firebase**
 
-- 🕹️ Classic breakout arcade experience re-engineered with modern physics and responsive controls.
-- ⚡ **Core Engine**: Built using **WebAssembly (Wasm)** compiled from **C++** for optimal 60fps collision detection and rendering.
-- ☁️ **Persistence**: Cloud-synchronized high scores, leaderboards, and game states backed by **Firebase**.
-- 🔗 **Links**: [**Play Live Demo 🚀**](https://breakout.elsesourav.com) &nbsp;·&nbsp; [**GitHub Repository 💻**](https://github.com/elsesourav/breakout-ball)
+- 🕹️ Classic breakout arcade experience re-engineered with 100 tactical campaign levels, custom level builder studio, and responsive controls.
+- ⚡ **Core Engine**: Built using **WebAssembly (Wasm)** compiled from **C++** with `-msimd128` vectorization for 60fps collision detection and physics.
+- ☁️ **Persistence & Sync**: Cloud-synchronized high scores, leaderboards, and game states backed by **Firebase**.
+- 🔗 **Links**: [**Play Live Demo 🚀**](https://breakout.elsesourav.com) &nbsp;·&nbsp; [**Case Study on ElseSourav 📖**](https://elsesourav.com/apps/breakout-ball) &nbsp;·&nbsp; [**GitHub Repository 💻**](https://github.com/elsesourav/breakout-ball)
 
 <div align="center">
   <img src="./images/BREAKOUT_BALL.png" alt="Breakout Ball Game Screenshot" width="100%" style="border-radius: 8px; border: 1px solid #30363d; margin-top: 8px;" />
@@ -175,32 +193,15 @@
 
 ---
 
-### 2. [AI Display](https://github.com/elsesourav/ai-display)
+### 3. [Neural Network Number Recognition v2.0](https://nn.elsesourav.com)
 
-> **All-in-One Multi-LLM Chrome Extension with Side-by-Side Comparison & Offline OCR**
+> **100% Client-Side Handwritten Digit Classifier with C++ WebAssembly SIMD128 & Real-Time Synaptic Visualizer**
 
-- 🤖 Access and compare answers simultaneously from **Google Gemini, Bing AI / Copilot, Perplexity, Grok**, and other frontier models in a single unified dashboard.
-- 🔑 **Zero API Keys Required**: Seamless browser session integration with no paid API keys or subscription tokens needed.
-- 📸 **Screen Cropper & OCR**: Built-in screenshot marquee tool with client-side OCR for extracting text and formulas directly from any web page into prompts.
-- 🔗 **Links**: [**Download Extension (.zip) 📦**](https://github.com/elsesourav/ai-display/raw/main/ai-display-extension.zip) &nbsp;·&nbsp; [**GitHub Repository 💻**](https://github.com/elsesourav/ai-display)
-
-<div align="center">
-  <img src="./images/AI_DISPLAY.png" alt="AI Display Chrome Extension Screenshot" width="100%" style="border-radius: 8px; border: 1px solid #30363d; margin-top: 8px;" />
-</div>
-
-<br />
-
----
-
-### 3. [Neural Network Number Recognition](https://nn.elsesourav.com)
-
-> **Interactive Handwritten Digit Classifier with Real-time Neural Layer Visualization**
-
-- 🧠 Custom neural network trained in the browser to accurately identify handwritten numerical digits (0–9).
-- 🎨 **Interactive Canvas**: Draw numbers on a responsive tactile grid with dynamic resolution preprocessing.
-- 🔍 **Architecture Inspector**: Live visualization of forward-propagation across input nodes, hidden layers, activation functions, and output probabilities.
-- ⚙️ **Hyperparameter Tuning**: Real-time learning rate adjustments, weight matrices export/import, and instant accuracy metrics.
-- 🔗 **Links**: [**Try Neural Network 🚀**](https://nn.elsesourav.com) &nbsp;·&nbsp; [**GitHub Repository 💻**](https://github.com/elsesourav/nn-number-rec/)
+- 🧠 **C++ Multilayer Perceptron**: Custom matrix math and backpropagation engine compiled to **WebAssembly** targeting 128-bit SIMD registers (<1ms inference per frame).
+- 🎨 **Interactive Drawing Pad**: Responsive canvas with real-time center-of-mass normalization, stroke anti-aliasing, and automated 28×28 MNIST downsampling.
+- 🔍 **Synaptic Layer Visualizer**: Live forward-propagation graph displaying activations across input nodes (784), hidden neurons (64, 64), and output softmax probabilities (10).
+- ⚙️ **On-Device Training**: Live training on the MNIST dataset directly in browser memory with dynamic learning rate and momentum tuning.
+- 🔗 **Links**: [**Try Live App 🚀**](https://nn.elsesourav.com) &nbsp;·&nbsp; [**Case Study on ElseSourav 📖**](https://elsesourav.com/apps/nn-number-rec) &nbsp;·&nbsp; [**GitHub Repository 💻**](https://github.com/elsesourav/nn-number-rec)
 
 <div align="center">
   <img src="./images/NN_NUM_REC.png" alt="Neural Network Number Recognition Screenshot" width="100%" style="border-radius: 8px; border: 1px solid #30363d; margin-top: 8px;" />
@@ -210,18 +211,17 @@
 
 ---
 
-### 4. [User Manager](https://elsesourav.github.io/user-manager/)
+### 4. [SpectraLens AI](https://chromewebstore.google.com/detail/spectralens-ai/fafhmmacjkmhcdmloiehkloddkjimmok)
 
-> **Cross-Platform Contact & Group Management System with Direct WhatsApp Actions**
+> **Multi-Engine Parallel AI Browser Assistant, Visual DOM Element Scanner & On-Device WASM OCR**
 
-- 👥 Intuitive user management platform designed for direct sales, network marketing, and client coordination.
-- 🔀 **Drag & Drop Organization**: Smooth categorization of leads and members into customizable tiers and teams.
-- 💬 **WhatsApp Automation**: Single-click trigger to initiate chats with target users directly without saving phone numbers manually.
-- 📱 **Multi-Platform**: Packaged and optimized for responsive web, desktop browsers, and Android mobile environments.
-- 🔗 **Links**: [**Launch User Manager 🚀**](https://elsesourav.github.io/user-manager/) &nbsp;·&nbsp; [**GitHub Repository 💻**](https://github.com/elsesourav/user-manager/)
+- 🤖 **Multi-LLM Side-by-Side**: Query and compare answers concurrently from **Google Gemini, ChatGPT, Claude, Perplexity, and Grok** in a unified split-view interface.
+- 🔑 **Zero API Keys Required**: Direct browser session coordination with no subscription tokens, paid API credits, or third-party proxy relays needed.
+- 📸 **Visual DOM Element Scanner & WASM OCR**: Built-in screenshot marquee cropper with on-device WebAssembly OCR to extract code snippets, formulas, and diagrams into prompt context.
+- 🔗 **Links**: [**Chrome Web Store 🌐**](https://chromewebstore.google.com/detail/spectralens-ai/fafhmmacjkmhcdmloiehkloddkjimmok) &nbsp;·&nbsp; [**Case Study on ElseSourav 📖**](https://elsesourav.com/apps/spectralens-ai) &nbsp;·&nbsp; [**GitHub Repository 💻**](https://github.com/elsesourav/spectralens-ai)
 
 <div align="center">
-  <img src="./images/USER_MANAGER.png" alt="User Manager Screenshot" width="100%" style="border-radius: 8px; border: 1px solid #30363d; margin-top: 8px;" />
+  <img src="./images/SPECTRALENS_AI.png" alt="SpectraLens AI Chrome Extension Screenshot" width="100%" style="border-radius: 8px; border: 1px solid #30363d; margin-top: 8px;" />
 </div>
 
 <br />
