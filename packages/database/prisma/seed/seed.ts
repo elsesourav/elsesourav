@@ -529,30 +529,42 @@ A modular browser photo and graphics editor built using vanilla JavaScript modul
       tags: ['canvas', 'algorithms', 'open-source'],
     },
     {
-      name: 'Seller PDF Cropper',
+      name: 'Seller PDF Cropper & Compare',
       slug: 'seller-pdf-cropper',
       shortDescription:
-        'Client-side shipping label and invoice PDF cropper with dynamic text measurement.',
+        '100% client-side shipping label and tax invoice cropper, sequential serial stamping, Order-ID deduplication, and multi-PDF compare suite.',
       description:
-        'A client-side privacy-first utility for cropping multi-page marketplace shipping labels, adding sequential numbering, and rendering print-ready PDFs without uploading data to servers.',
+        'A client-side privacy-first web application powered by React 19, Vite, and pdf-lib for cropping marketplace shipping labels (Flipkart presets), stamping sequential serial numbers and unique A–Z codes, removing duplicate order IDs, and reconciling multi-PDF dispatch manifests directly in the browser.',
       documentationMd: `## Overview
 
-Processes multi-page shipping PDFs directly in the browser using \`pdf-lib\` and \`pdfjs-dist\`.
+**Seller PDF Cropper & Compare v2.0** is an entirely client-side, privacy-first web application designed for high-volume marketplace sellers and e-commerce warehouse dispatchers. It crops multi-page shipping labels and tax invoices, stamps sequential serial numbers and unique dispatch codes, removes duplicate Order IDs, splits output into manageable thermal print chunks, and reconciles multiple PDF manifests.
+
+100% of processing happens directly in your browser memory via Web Workers and \`pdf-lib\`—customer names, delivery addresses, and phone numbers are never transmitted across any network or stored on third-party servers.
 
 ## Features
 
-- **Label Dimension Cropping**: Automatically isolates shipping labels from invoice sheets.
-- **Sequential Numbering**: Dynamic canvas font measurement for numbering packages.
-- **Zero Server Uploads**: Full confidentiality for customer and order data.`,
-      iconUrl: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=200&q=80',
-      featuredImageUrl: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&q=80',
+- **Accurate Millimeter Presets**: Instant Flipkart Shipping Label and Tax Invoice presets plus interactive visual Adjust Crop modal.
+- **Dispatch Serial Numbers & A–Z Keypad**: Stamp sequential indices and rack identifiers with localized white padding that never obscures carrier barcodes.
+- **Order-ID Duplicate Removal**: Detects repeated orders within a single PDF and across multi-file manifests with 1-click clean merge.
+- **Manifest Compare (Set 1 − Set 2)**: Dual-dropzone manifest reconciliation algorithm with virtualized search.
+- **Header Chunk Splitter**: Break massive 1,000+ page jobs into 50, 100, 200, or 500-page thermal print sets with continuous global serial numbering.
+- **Zero Server Uploads**: 100% client-side privacy with full offline PWA support.`,
+      iconUrl:
+        'https://res.cloudinary.com/diqw2sjl8/image/upload/q_auto,f_auto/v1795619931/elsesourav/apps/seller-pdf-cropper/app-icon-512x512-1795619929871.webp',
+      featuredImageUrl:
+        'https://res.cloudinary.com/diqw2sjl8/image/upload/q_auto,f_auto/v1795619932/elsesourav/apps/seller-pdf-cropper/app-cover-landscape-16x9-1795619929871.webp',
+      featuredImageMobileUrl:
+        'https://res.cloudinary.com/diqw2sjl8/image/upload/q_auto,f_auto/v1795619933/elsesourav/apps/seller-pdf-cropper/app-cover-mobile-3x4-1795619929871.webp',
+      demoUrl: 'https://sellerpdfcropper.elsesourav.com',
       githubUrl: 'https://github.com/elsesourav/seller-pdf-cropper',
       categoryId: catMap['utilities']!,
       status: PublishStatus.PUBLISHED,
-      isFeatured: false,
-      currentVersion: '1.0.0',
-      publishedAt: new Date('2025-04-04T12:00:00Z'),
-      tags: ['pdf-tools', 'typescript', 'open-source'],
+      isFeatured: true,
+      currentVersion: '2.0.0',
+      bundleSize: '280 KB',
+      primaryLanguage: 'TypeScript',
+      publishedAt: new Date('2026-11-25T15:00:00Z'),
+      tags: ['pdf-tools', 'typescript', 'ecommerce', 'open-source'],
     },
     {
       name: 'Professional Invoice Maker',
